@@ -1,0 +1,31 @@
+BEGIN_INCLUDE
+    Brush.fr
+    Note.fr
+    Flyby.fr
+    BSystem.fr
+    BFireJet.fr
+    BPalBlue.fr
+    BPalPink.fr
+    BPalGreen.fr
+    BFireball.fr
+    BFlame.fr
+    BWhirligig.fr
+    BBolt.fr
+    BBall.fr
+    BCat.fr
+    BDisper.fr
+    BGlassCat.fr
+    BHarmCat.fr
+    BSimPlasma.fr
+    BRainCat.fr
+    BGreenHalo.fr
+    BHalo1.fr
+    BHalo2.fr
+    BGoldHalo.fr
+    TestTech.fr
+    ProjectInfo0.fr
+    Index.fr
+END_INCLUDE
+BEGIN_PAGES
+    Index
+END_PAGES

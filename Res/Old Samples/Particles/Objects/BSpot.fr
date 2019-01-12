@@ -1,0 +1,9 @@
+BEGIN_RESOURCE FBitmap BSpot
+    Filter = 1
+    BlendMode = 6
+    Saturation = 1.1000
+    AnimSpeed = 30.0000
+    FileName = "BSpot.bmp"
+    UBits = 4
+    VBits = 4
+END_RESOURCE

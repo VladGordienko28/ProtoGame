@@ -1,0 +1,1044 @@
+BEGIN_RESOURCE FLevel Index
+    GameSpeed = 1.0000
+    Camera.Location = [-14.0122; -1.0565]
+    Camera.FOV = [64.0000; 32.0000]
+    Camera.Zoom = 1.0000
+    Camera.ScrollBound = (-2048.0000; -2048.0000; 2048.0000; 2048.0000)
+    Effect[0] = 1.0000
+    Effect[1] = 1.0000
+    Effect[2] = 1.0000
+    Effect[3] = 1.0000
+    Effect[4] = 1.0000
+    Effect[5] = 1.0000
+    RndFlags = 7167
+    BEGIN_ENTITY Brush Brush0
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BChecker
+            NumVerts = 4
+            Vertices[0] = [-12.0000; -2.0000]
+            Vertices[1] = [-12.0000; 9.7500]
+            Vertices[2] = [4.0000; 0.0000]
+            Vertices[3] = [4.0000; -2.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [-16.0000; 5.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5090
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush1
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BChecker
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -1.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [1.0000; 4.0000]
+            Vertices[3] = [8.0000; -1.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [-8.0000; 1.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.4954
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid0
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            bCanSleep = true
+            Material = 4
+            Mass = 5.6250
+            Location = [-25.5000; 17.7500]
+            Size = [2.5000; 2.5000]
+            Layer = 0.4917
+            bHashable = true
+            Inertia = 5.8594
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BIce
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid1
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            bCanSleep = true
+            bSleeping = true
+            Material = 4
+            Mass = 5.6250
+            Location = [-7.0000; 6.2500]
+            Size = [2.5000; 2.5000]
+            Layer = 0.4917
+            bHashable = true
+            Inertia = 5.8594
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BIce
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush2
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BChecker
+            NumVerts = 3
+            Vertices[0] = [0.0000; -3.0000]
+            Vertices[1] = [-2.0000; 4.0000]
+            Vertices[2] = [2.0000; 4.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [2.0000; 9.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.4242
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Spring Spring10
+        BEGIN_COMPONENT FSpringComponent Base
+            Damping = 75.0000
+            Spring = 250.0000
+            Length = 0.2500
+            NumSegs = 3
+            Width = 1.0000
+            Body1 = FEntity::Index.Rigid17
+            Body2 = FEntity::Index.Rigid18
+            Hook1 = [0.0000; -1.0000]
+            Hook2 = [0.0000; 1.0000]
+            Location = [-38.5000; -15.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.4912
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 96.0000; 32.0000; 128.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid2
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            bCanSleep = true
+            bSleeping = true
+            Material = 1
+            Mass = 3.2500
+            Location = [2.0000; 3.5000]
+            Size = [1.0000; 5.0000]
+            Layer = 0.4921
+            bHashable = true
+            Inertia = 7.0417
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BMetal
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush3
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BChecker
+            NumVerts = 3
+            Vertices[0] = [0.0000; -3.0000]
+            Vertices[1] = [-2.0000; 4.0000]
+            Vertices[2] = [2.0000; 4.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [5.0000; 9.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.4099
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush4
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BChecker
+            NumVerts = 3
+            Vertices[0] = [0.0000; -3.0000]
+            Vertices[1] = [-2.0000; 4.0000]
+            Vertices[2] = [2.0000; 4.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [8.0000; 9.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.3528
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid3
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            bCanSleep = true
+            bSleeping = true
+            Material = 1
+            Mass = 3.2500
+            Location = [5.0000; 3.5000]
+            Size = [1.0000; 5.0000]
+            Layer = 0.4921
+            bHashable = true
+            Inertia = 7.0417
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BMetal
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid4
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            bCanSleep = true
+            bSleeping = true
+            Material = 1
+            Mass = 3.2500
+            Location = [8.0000; 3.5000]
+            Size = [1.0000; 5.0000]
+            Layer = 0.4921
+            bHashable = true
+            Inertia = 7.0417
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BMetal
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Spring Spring9
+        BEGIN_COMPONENT FSpringComponent Base
+            Damping = 75.0000
+            Spring = 250.0000
+            Length = 0.2500
+            NumSegs = 3
+            Width = 1.0000
+            Body1 = FEntity::Index.Rigid16
+            Body2 = FEntity::Index.Rigid17
+            Hook1 = [0.0000; -1.0000]
+            Hook2 = [0.0000; 1.0000]
+            Location = [-38.5000; -12.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.4912
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 96.0000; 32.0000; 128.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Spring Spring8
+        BEGIN_COMPONENT FSpringComponent Base
+            Damping = 75.0000
+            Spring = 250.0000
+            Length = 0.2500
+            NumSegs = 3
+            Width = 1.0000
+            Body1 = FEntity::Index.Rigid15
+            Body2 = FEntity::Index.Rigid16
+            Hook1 = [0.0000; -1.0000]
+            Hook2 = [0.0000; 1.0000]
+            Location = [-38.5000; -9.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.4912
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 96.0000; 32.0000; 128.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush5
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BChecker
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [4.0000; 4.0000]
+            Vertices[3] = [4.0000; -4.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [12.0000; -4.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.4937
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush6
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BChecker
+            NumVerts = 4
+            Vertices[0] = [-0.0000; -4.0000]
+            Vertices[1] = [-0.0000; 4.0000]
+            Vertices[2] = [4.0000; 4.0000]
+            Vertices[3] = [4.0000; -4.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [-4.0000; -4.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.4937
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid5
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            Material = 1
+            Mass = 2.6000
+            Location = [4.0000; -4.0000]
+            Size = [2.0000; 2.0000]
+            Layer = 0.4946
+            bHashable = true
+            Inertia = 1.7333
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BWood
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Spring Spring0
+        BEGIN_COMPONENT FSpringComponent Base
+            Damping = 6.0000
+            Spring = 8.0000
+            Length = 3.0000
+            NumSegs = 2
+            Segment = FBitmap::BSpring
+            Width = 1.0000
+            Body1 = FEntity::Index.Brush6
+            Body2 = FEntity::Index.Rigid5
+            Hook1 = [4.0000; 0.0000]
+            Hook2 = [-1.0000; 0.0000]
+            Location = [1.5000; -1.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.9857
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 96.0000; 32.0000; 128.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Spring Spring1
+        BEGIN_COMPONENT FSpringComponent Base
+            Damping = 6.0000
+            Spring = 8.0000
+            Length = 3.0000
+            NumSegs = 2
+            Segment = FBitmap::BSpring
+            Width = 1.0000
+            Body1 = FEntity::Index.Rigid5
+            Body2 = FEntity::Index.Brush5
+            Hook1 = [1.0000; 0.0000]
+            Hook2 = [-4.0000; 0.0000]
+            Location = [6.5000; -1.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.9857
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 96.0000; 32.0000; 128.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush7
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BChecker
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -0.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [12.0000; 4.0000]
+            Vertices[3] = [12.0000; 0.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [-24.0000; -20.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5081
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush8
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BChecker
+            NumVerts = 3
+            Vertices[0] = [-2.0000; -0.0000]
+            Vertices[1] = [0.0000; 3.0000]
+            Vertices[2] = [2.0000; 0.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [-20.0000; -16.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.4242
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid6
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            bCanSleep = true
+            Mass = 500.0000
+            Location = [-20.0000; -12.5000]
+            Size = [16.0000; 1.0000]
+            Layer = 0.4975
+            bHashable = true
+            Inertia = 3000.0000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BMetal
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Hinge Hinge3
+        BEGIN_COMPONENT FHingeComponent Base
+            Body1 = FEntity::Index.Brush8
+            Body2 = FEntity::Index.Rigid6
+            Hook1 = [0.0000; 3.0000]
+            Hook2 = [0.0000; -0.5000]
+            Location = [-17.5000; -15.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 1.0000
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 96.0000; 64.0000; 128.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid7
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            Material = 3
+            Mass = 504.0000
+            Location = [-11.0000; -3.0000]
+            Size = [5.0000; 5.0000]
+            Layer = 0.4907
+            bHashable = true
+            Inertia = 6090.0000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BMetal
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid8
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            Material = 2
+            Mass = 10.4000
+            Location = [-28.0000; -9.0000]
+            Rotation = 65520
+            Size = [2.0000; 2.0000]
+            Layer = 0.4907
+            bHashable = true
+            Inertia = 6.9333
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BMetal
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush9
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BChecker
+            NumVerts = 4
+            Vertices[0] = [-12.0000; -4.0000]
+            Vertices[1] = [-12.0000; 0.0000]
+            Vertices[2] = [16.0000; 0.0000]
+            Vertices[3] = [16.0000; -4.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [-30.5000; -0.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.4914
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid9
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            Material = 1
+            Mass = 1.3000
+            Location = [-32.5000; -10.5000]
+            Size = [1.0000; 2.0000]
+            Layer = 0.4999
+            bHashable = true
+            Inertia = 0.5417
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BChain
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid10
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            Material = 1
+            Mass = 1.3000
+            Location = [-32.5000; -8.0000]
+            Size = [1.0000; 2.0000]
+            Layer = 0.4999
+            bHashable = true
+            Inertia = 0.5417
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BChain
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid11
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            Material = 1
+            Mass = 1.3000
+            Location = [-32.5000; -5.5000]
+            Size = [1.0000; 2.0000]
+            Layer = 0.4999
+            bHashable = true
+            Inertia = 0.5417
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BChain
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid12
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            Material = 1
+            Mass = 1.3000
+            Location = [-32.5000; -13.0000]
+            Size = [1.0000; 2.0000]
+            Layer = 0.4999
+            bHashable = true
+            Inertia = 0.5417
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BChain
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid13
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            Material = 1
+            Mass = 2.6000
+            Location = [-32.5000; -15.5000]
+            Size = [2.0000; 2.0000]
+            Layer = 0.4977
+            bHashable = true
+            Inertia = 1.7333
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BMetal
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Spring Spring2
+        BEGIN_COMPONENT FSpringComponent Base
+            Damping = 75.0000
+            Spring = 250.0000
+            Length = 0.2500
+            NumSegs = 3
+            Width = 1.0000
+            Body1 = FEntity::Index.Brush9
+            Body2 = FEntity::Index.Rigid11
+            Hook1 = [-2.0000; -4.0000]
+            Hook2 = [0.0000; 1.0000]
+            Location = [-30.0000; -6.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.4912
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 96.0000; 32.0000; 128.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Spring Spring3
+        BEGIN_COMPONENT FSpringComponent Base
+            Damping = 75.0000
+            Spring = 250.0000
+            Length = 0.2500
+            NumSegs = 3
+            Width = 1.0000
+            Body1 = FEntity::Index.Rigid11
+            Body2 = FEntity::Index.Rigid10
+            Hook1 = [0.0000; -1.0000]
+            Hook2 = [0.0000; 1.0000]
+            Location = [-30.0000; -9.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.4912
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 96.0000; 32.0000; 128.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Spring Spring4
+        BEGIN_COMPONENT FSpringComponent Base
+            Damping = 75.0000
+            Spring = 250.0000
+            Length = 0.2500
+            NumSegs = 3
+            Width = 1.0000
+            Body1 = FEntity::Index.Rigid10
+            Body2 = FEntity::Index.Rigid9
+            Hook1 = [0.0000; -1.0000]
+            Hook2 = [0.0000; 1.0000]
+            Location = [-30.0000; -12.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.4912
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 96.0000; 32.0000; 128.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Spring Spring5
+        BEGIN_COMPONENT FSpringComponent Base
+            Damping = 75.0000
+            Spring = 250.0000
+            Length = 0.2500
+            NumSegs = 3
+            Width = 1.0000
+            Body1 = FEntity::Index.Rigid9
+            Body2 = FEntity::Index.Rigid12
+            Hook1 = [0.0000; -1.0000]
+            Hook2 = [0.0000; 1.0000]
+            Location = [-30.0000; -15.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.4912
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 96.0000; 32.0000; 128.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Spring Spring6
+        BEGIN_COMPONENT FSpringComponent Base
+            Damping = 75.0000
+            Spring = 250.0000
+            Length = 0.2500
+            NumSegs = 3
+            Width = 1.0000
+            Body1 = FEntity::Index.Rigid12
+            Body2 = FEntity::Index.Rigid13
+            Hook1 = [0.0000; -1.0000]
+            Hook2 = [0.0000; 1.0000]
+            Location = [-30.0000; -18.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.4912
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 96.0000; 32.0000; 128.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Spring Spring11
+        BEGIN_COMPONENT FSpringComponent Base
+            Damping = 75.0000
+            Spring = 250.0000
+            Length = 0.2500
+            NumSegs = 3
+            Width = 1.0000
+            Body1 = FEntity::Index.Rigid18
+            Body2 = FEntity::Index.Rigid19
+            Hook1 = [0.0000; -1.0000]
+            Hook2 = [0.0000; 1.0000]
+            Location = [-38.5000; -18.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.4912
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 96.0000; 32.0000; 128.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid15
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            Material = 1
+            Mass = 1.3000
+            Location = [-35.5000; -5.5000]
+            Size = [1.0000; 2.0000]
+            Layer = 0.5099
+            bHashable = true
+            Inertia = 0.5417
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BChain
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid16
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            Material = 1
+            Mass = 1.3000
+            Location = [-35.5000; -8.0000]
+            Size = [1.0000; 2.0000]
+            Layer = 0.5099
+            bHashable = true
+            Inertia = 0.5417
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BChain
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid17
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            Material = 1
+            Mass = 1.3000
+            Location = [-35.5000; -10.5000]
+            Size = [1.0000; 2.0000]
+            Layer = 0.5099
+            bHashable = true
+            Inertia = 0.5417
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BChain
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid18
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            Material = 1
+            Mass = 1.3000
+            Location = [-35.5000; -13.0000]
+            Size = [1.0000; 2.0000]
+            Layer = 0.5099
+            bHashable = true
+            Inertia = 0.5417
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BChain
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid19
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            Material = 1
+            Mass = 2.6000
+            Location = [-35.5000; -15.5000]
+            Size = [2.0000; 2.0000]
+            Layer = 0.5077
+            bHashable = true
+            Inertia = 1.7333
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BMetal
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Spring Spring7
+        BEGIN_COMPONENT FSpringComponent Base
+            Damping = 75.0000
+            Spring = 250.0000
+            Length = 0.2500
+            NumSegs = 3
+            Width = 1.0000
+            Body1 = FEntity::Index.Brush9
+            Body2 = FEntity::Index.Rigid15
+            Hook1 = [-5.0000; -4.0000]
+            Hook2 = [0.0000; 1.0000]
+            Location = [-38.5000; -6.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.4912
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 96.0000; 32.0000; 128.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Spring Spring12
+        BEGIN_COMPONENT FSpringComponent Base
+            Spring = 500.0000
+            Length = 0.0100
+            NumSegs = 3
+            Width = 1.0000
+            Body1 = FEntity::Index.Brush2
+            Body2 = FEntity::Index.Rigid2
+            Hook1 = [0.0000; -3.0000]
+            Hook2 = [0.0000; 2.4000]
+            Location = [-0.5000; 6.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5098
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 96.0000; 32.0000; 128.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Spring Spring13
+        BEGIN_COMPONENT FSpringComponent Base
+            Spring = 500.0000
+            Length = 0.0100
+            NumSegs = 3
+            Width = 1.0000
+            Body1 = FEntity::Index.Brush3
+            Body2 = FEntity::Index.Rigid3
+            Hook1 = [0.0000; -3.0000]
+            Hook2 = [0.0000; 2.4000]
+            Location = [3.0000; 6.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5098
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 96.0000; 32.0000; 128.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Spring Spring14
+        BEGIN_COMPONENT FSpringComponent Base
+            Spring = 500.0000
+            Length = 0.0100
+            NumSegs = 3
+            Width = 1.0000
+            Body1 = FEntity::Index.Brush4
+            Body2 = FEntity::Index.Rigid4
+            Hook1 = [0.0000; -3.0000]
+            Hook2 = [0.0000; 2.4000]
+            Location = [6.0000; 6.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5098
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 96.0000; 32.0000; 128.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Rigid Rigid14
+        BEGIN_COMPONENT FRigidBodyComponent Base
+            bCanSleep = true
+            Material = 1
+            Mass = 4.0625
+            Location = [-20.0000; 16.5000]
+            Size = [2.5000; 2.5000]
+            Layer = 0.4917
+            bHashable = true
+            Inertia = 4.2318
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BWood
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Note Note0
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-34.0000; 6.0000]
+            Size = [4.0000; 4.0000]
+            Layer = 0.4916
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (64.0000; 32.0000; 96.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Text = "PHYSICS DEMO"
+        END_INSTANCE
+    END_ENTITY
+END_RESOURCE

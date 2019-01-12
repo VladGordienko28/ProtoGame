@@ -1,0 +1,30 @@
+/**
+ * @Pipe: Pipe obstacle.
+ * @Author: Vlad Gordienko.
+ */
+script Pipe
+{
+private:
+    bool    bScored;
+
+    event OnTick( float Delta )
+    {
+        if( !bScored && $Sprite.bFlipV && Location.X<-19.0 )
+        {
+            Pig pig = FindEntity("Pig0");
+            pig.Score++;
+            bScored = true;
+            PlaySoundFX( #SScore, 0.5, 1.0 );
+        }                    
+    } 
+
+
+    thread
+    {
+    @Start:
+        Velocity.X = -3.0;
+        sleep 12.0;
+        if( Velocity.X != 0.0 )
+            delete this;
+    }
+}

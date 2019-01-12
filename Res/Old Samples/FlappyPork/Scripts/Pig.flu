@@ -1,0 +1,166 @@
+/**
+ * @Pig: Flying pig.
+ * @Author: Vlad Gordienko.
+ */
+script Pig
+{
+public:
+    PipeSpawner     Spawner;
+    Brush           Ground;
+    integer         Score, BestScore;
+    
+    event OnPreTick( float Delta )
+    {
+        if( label == @Fly )
+            $Sprite.Rotation    = angle(Velocity+[15.0, 0.0]);
+        
+        if( label != @Relax )
+            Velocity.Y  -= 20.0 * Delta;   
+
+        if( label != @Died )
+            Ground.Scroll.X -= 3.0 * Delta;                     
+    }
+     
+    event OnKeyDown( integer K )
+    {
+        if( K != KEY_LButton )
+            return;
+    
+        if( Level.bIsPause )
+        {
+            base.Level.bIsPause  = false;
+            return;
+        }
+    
+        if( label == @Fly )
+        {
+            Velocity.Y  = 10.0;
+            PlaySoundFX( #SRush, 1.0, 0.95 + randomf()*0.15 );
+        }
+        else if( label == @Relax )
+        {
+            goto @Fly;
+        }
+    }
+    
+    event OnCollide( entity Other, EHitSide Side )
+    {
+        if( Other is #Brush )
+        {
+            if( Brush(Other).Type == BRUSH_Solid )
+            {
+                SolveSolid(true);
+                if( label == @Fly )
+                    goto @Died;
+            }
+        }
+    }
+     
+    event OnBeginTouch( entity Other )
+    {
+        if( label == @Fly )
+        {
+            if( Velocity.Y > 0.0 )
+                Velocity.Y = 0.0;
+            goto @Died;
+        }
+    }
+
+    fn SpawnPipes()
+    {
+        assert(Spawner != undefined);
+        vector  Loc = Spawner.Location - [0.0, 12.0+randomf()*9.0];
+        Pipe    Top, Bottom;
+        
+        Bottom = new Pipe;
+        Bottom.SetLocation(Loc);
+        
+        Top = new Pipe;
+        Top.$Sprite.bFlipV = true;
+        Top.SetLocation(Loc+[0.0, 16.0+6.0]);
+    }
+
+    fn StopAll()
+    {
+        Pipe p;
+        foreach( p: AllEntities(#Pipe) )
+            p.Velocity = [0.0, 0.0];        
+    }
+    
+    fn ClearPipes()
+    {
+        Pipe p;
+        foreach( p: AllEntities(#Pipe) )
+            delete p;   
+    }
+    
+    event OnRender()
+    {
+        $Painter.Color  = rgba( 255, 255, 255, 255 );
+        $Painter.Font   = #Consolas24;
+        vector v = $Painter.Project([-22, 21]);
+        $Painter.TextOut( v, string(Score), 1.0 );
+        $Painter.Color  = rgba( 255, 128,128, 255 );       
+        $Painter.TextOut( v+[0.0, 22.0], string(BestScore), 1.0 );       
+        
+        if( Level.bIsPause )
+        {
+            $Painter.Color  = rgba( 255, 255, 255, 255 );         
+            $Painter.TextOut( [$Painter.Width/2.0-60, $Painter.Height/2.0], "PAUSE", 1.0 );
+        }
+    }      
+
+    fn SetBlackEffect()
+    {
+        $Painter.Effect[0]  = 0.0;
+        $Painter.Effect[1]  = 0.0;        
+        $Painter.Effect[2]  = 0.0;
+        $Painter.Effect[3]  = 1.0;
+        $Painter.Effect[4]  = 1.0;        
+        $Painter.Effect[5]  = 1.0;    
+        $Painter.Effect[6]  = 0.0;
+        $Painter.Effect[7]  = 0.0;        
+        $Painter.Effect[8]  = 0.0;
+        $Painter.Effect[9]  = 0.0;           
+    }
+
+
+    thread
+    {
+        SetBlackEffect();
+        $Painter.PushEffect(0.0);   
+        goto @Relax;             
+    
+        // Just fly and watch scrolling bg.
+    @Relax:
+        if( Score > BestScore )
+            BestScore = Score;
+        Score   = 0;
+        $Painter.PopEffect( 2.5 );
+        $Sprite.Rotation    = 0;    
+        ClearPipes();
+        SetLocation(proto.Location);
+        $Sprite.PlayAnim( "Flap", 12.0, ANIM_Loop );
+        stop;
+
+        // In-game.        
+    @Fly:
+        while( true )
+        {
+            SpawnPipes();
+            sleep 3.0 + randomf()*2.0;
+        }
+    
+        // MEAT!
+    @Died:
+        PlaySoundFX( #SGrunt, 1.0, 1.1 );
+        StopAll();
+        $Sprite.Rotation = 49152;
+        $Sprite.PauseAnim();
+        sleep 1.0;
+        SetBlackEffect();
+        $Painter.PushEffect(1.0);
+        sleep 1.0;
+        goto @Relax;                   
+    }
+}

@@ -1,0 +1,18 @@
+BEGIN_RESOURCE FScript Model
+    FileName = ""
+    Group = "System"
+    Family = ""
+    BEGIN_COMPONENT FModelComponent Base
+            bFixedAngle = true
+            bFixedSize = true
+            Layer = 0.4000
+            Color = #ffffffff
+            bUnlit = true
+            Texture = FBitmap::BSystem
+            MapXSize = 30
+            MapYSize = 15
+            TileSize = [2.0000; 2.0000]
+            TilesPerU = 4
+            TilesPerV = 4
+    END_COMPONENT
+END_RESOURCE

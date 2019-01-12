@@ -1,0 +1,8 @@
+BEGIN_RESOURCE FBitmap BPig
+    BlendMode = 1
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    FileName = "BPig.bmp"
+    UBits = 6
+    VBits = 4
+END_RESOURCE

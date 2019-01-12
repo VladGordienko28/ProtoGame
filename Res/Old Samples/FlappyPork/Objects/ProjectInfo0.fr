@@ -1,0 +1,6 @@
+BEGIN_RESOURCE FProjectInfo ProjectInfo0
+    GameName = "FlappyBird clone"
+    Author = "Vlad"
+    WindowType = 2
+    bQuitByEsc = true
+END_RESOURCE

@@ -1,0 +1,45 @@
+/**
+ * @Switch: Logic circuit switch.
+ * @Author: Vlad Gordienko.
+ */
+script Switch
+{
+public:
+    bool        bTurnOn;
+
+    fn Update( entity User )
+    {
+        if( bTurnOn )
+        {
+            $Sprite.TexCoords.Min   = [0.0, 32.0];
+            $Sprite.TexCoords.Max   = [32.0, 64.0];
+            $Logic.InduceSignal( User, "Used" );                        
+        }
+        else
+        {
+            $Sprite.TexCoords.Min   = [0.0, 0.0];
+            $Sprite.TexCoords.Max   = [32.0, 32.0];
+            $Logic.InduceSignal( User, "Deused" );        
+        }
+    }
+    
+    event OnBeginTouch( entity Other )
+    {
+        bTurnOn = !bTurnOn;
+        Update( Other );
+    }     
+    
+    event OnBeginPlay()
+    {
+        if( bTurnOn )
+        {
+            $Sprite.TexCoords.Min   = [0.0, 32.0];
+            $Sprite.TexCoords.Max   = [32.0, 64.0];                      
+        }
+        else
+        {
+            $Sprite.TexCoords.Min   = [0.0, 0.0];
+            $Sprite.TexCoords.Max   = [32.0, 32.0];       
+        }       
+    }
+}

@@ -1,0 +1,30 @@
+BEGIN_RESOURCE FLevel MyLevel
+    GameSpeed = 1.0000
+    Camera.FOV = [64.0000; 32.0000]
+    Camera.Zoom = 1.0000
+    Camera.ScrollBound = (-2048.0000; -2048.0000; 2048.0000; 2048.0000)
+    Effect[0] = 1.0000
+    Effect[1] = 1.0000
+    Effect[2] = 1.0000
+    Effect[3] = 1.0000
+    Effect[4] = 1.0000
+    Effect[5] = 1.0000
+    RndFlags = 7167
+    BEGIN_ENTITY MyScript MyScript0
+        BEGIN_COMPONENT FRectComponent Base
+            Size = [8.0000; 8.0000]
+            Layer = 0.4970
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+        END_COMPONENT
+        BEGIN_INSTANCE
+            range.Desc = "Azaza"
+            range.Min = -228.0000
+            range.Max = 228.0000
+        END_INSTANCE
+    END_ENTITY
+END_RESOURCE

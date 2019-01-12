@@ -1,0 +1,9 @@
+.gitignore	eol=lf
+.gitattributes	eol=lf
+
+*.fr		-text
+*.fluproj	-text
+*.flu		-text
+
+*.vsh		-text
+*.fsh		-text

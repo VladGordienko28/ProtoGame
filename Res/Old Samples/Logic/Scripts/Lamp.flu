@@ -1,0 +1,40 @@
+/**
+ * @Lamp: Logic circuit lamp.
+ * @Author: Vlad Gordienko.
+ */
+script Lamp
+{
+public:
+    fn SetState( bool bEnabled )
+    {
+        if( bEnabled )
+        {
+            $Sprite.TexCoords.Min   = [0.0, 0.0];
+            $Sprite.TexCoords.Max   = [64.0, 32.0];
+            $Light.bEnabled         = true;
+        }
+        else
+        {
+            $Sprite.TexCoords.Min   = [0.0, 32.0];
+            $Sprite.TexCoords.Max   = [64.0, 64.0];
+            $Light.bEnabled         = false;            
+        }
+    }
+    
+    event OnBeginPlay()
+    {
+        SetState( $Light.bEnabled );
+    }
+
+    event OnReceiveSignal( entity Creator, entity Circuit, string InJack )
+    {
+        if( InJack == "On" )
+        {
+            SetState(true);
+        }
+        else if( InJack == "Off" )
+        {
+            SetState(false);
+        }
+    }
+}

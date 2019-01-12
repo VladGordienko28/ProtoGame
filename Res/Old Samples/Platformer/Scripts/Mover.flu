@@ -1,0 +1,23 @@
+/**
+ * @Mover: Simple platformer moving platform.
+ * @Author: Vlad Gordienko.
+ */
+script Mover
+{
+public:
+    float           MoveSpeed;
+    
+    event OnBeginPlay()
+    {
+        $Keyframe.Start( MoveSpeed, true );
+    }
+    
+    event OnCollide( entity Other, EHitSide Side )
+    {
+        if( Other is #Player )
+        {
+            Player p = Player(Other);
+            p.SolveOneway(true);
+        }
+    }
+}

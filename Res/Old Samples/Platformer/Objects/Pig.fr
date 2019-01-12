@@ -1,0 +1,22 @@
+BEGIN_RESOURCE FScript Pig
+    Group = "Game"
+    FileName = "Pig.flu"
+    ScriptFlags = 128
+    BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Size = [2.0000; 2.0000]
+            Layer = 0.5000
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+    END_COMPONENT
+    BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            bUnlit = true
+            bFlipH = true
+            Animation = FAnimation::APig
+            Scale = [3.0100; 2.3000]
+    END_COMPONENT
+    BEGIN_INSTANCE
+    END_INSTANCE
+END_RESOURCE

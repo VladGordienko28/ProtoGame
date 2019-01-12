@@ -1,0 +1,11 @@
+BEGIN_INCLUDE
+    MyScript.fr
+    MyStatic.fr
+    ProjectInfo0.fr
+    MyLevel.fr
+END_INCLUDE
+BEGIN_PAGES
+    MyStatic
+    MyScript
+    MyLevel
+END_PAGES

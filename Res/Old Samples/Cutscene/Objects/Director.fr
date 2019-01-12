@@ -1,0 +1,24 @@
+BEGIN_RESOURCE FScript Director
+    Group = "Cinema"
+    FileName = "Director.flu"
+    ScriptFlags = 128
+    BEGIN_COMPONENT FRectComponent Base
+            Size = [2.0000; 2.0000]
+            Layer = 0.5000
+            bFixedAngle = true
+    END_COMPONENT
+    BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (64.0000; 32.0000; 96.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+    END_COMPONENT
+    BEGIN_COMPONENT FPainterComponent Painter
+    END_COMPONENT
+    BEGIN_COMPONENT FInputComponent Input
+    END_COMPONENT
+    BEGIN_INSTANCE
+    END_INSTANCE
+END_RESOURCE

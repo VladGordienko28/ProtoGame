@@ -1,0 +1,16 @@
+BEGIN_RESOURCE FScript Orb
+    BEGIN_COMPONENT FRectComponent Base
+            Size = [2.0000; 2.0000]
+            Layer = 0.5000
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+    END_COMPONENT
+    BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BOrbs
+    END_COMPONENT
+END_RESOURCE

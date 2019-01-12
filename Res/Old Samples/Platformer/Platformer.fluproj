@@ -1,0 +1,39 @@
+BEGIN_INCLUDE
+    Brush.fr
+    Light.fr
+    Model.fr
+    Warp.fr
+    Player.fr
+    AmbSound.fr
+    JumpPad.fr
+    Sky.fr
+    Mover.fr
+    Pig.fr
+    Deco.fr
+    Emitter.fr
+    BSystem.fr
+    BBot.fr
+    BSheet.fr
+    BTiles.fr
+    BSky.fr
+    BClouds.fr
+    BFirefly.fr
+    WascoSans32_0.fr
+    ProjectInfo0.fr
+    ABot.fr
+    Meadow.fr
+    AJumpPad.fr
+    APig.fr
+    SJump.fr
+    SEnemKill.fr
+    SDie.fr
+    SDam.fr
+    StrangeStuff.fr
+    Font1.fr
+    SWind.fr
+    SCrickets.fr
+END_INCLUDE
+BEGIN_PAGES
+    Player
+    Meadow
+END_PAGES

@@ -1,0 +1,17 @@
+BEGIN_INCLUDE
+    Brush.fr
+    Light.fr
+    Grid.fr
+    Note.fr
+    AmbSound.fr
+    BSystem.fr
+    pieces.fr
+    Courier33_0.fr
+    ProjectInfo0.fr
+    Index.fr
+    Courier33.fr
+END_INCLUDE
+BEGIN_PAGES
+    Grid
+    Index
+END_PAGES

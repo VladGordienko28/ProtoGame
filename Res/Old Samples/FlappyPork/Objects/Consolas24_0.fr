@@ -1,0 +1,10 @@
+BEGIN_RESOURCE FBitmap Consolas24_0
+    Filter = 1
+    BlendMode = 2
+    Saturation = 1.5000
+    AnimSpeed = 30.0000
+    Owner = FFont::Consolas24
+    FileName = "Consolas24_0.bmp"
+    UBits = 8
+    VBits = 8
+END_RESOURCE

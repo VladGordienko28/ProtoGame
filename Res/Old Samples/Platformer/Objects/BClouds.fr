@@ -1,0 +1,10 @@
+BEGIN_RESOURCE FBitmap BClouds
+    Filter = 1
+    BlendMode = 2
+    PanUSpeed = 0.0750
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    FileName = "BClouds.bmp"
+    UBits = 6
+    VBits = 6
+END_RESOURCE

@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="GUI.h" />
+    <ClInclude Include="FrButton.h" />
+    <ClInclude Include="FrColDlg.h" />
+    <ClInclude Include="FrEdit.h" />
+    <ClInclude Include="FrForm.h" />
+    <ClInclude Include="FrGuiBas.h" />
+    <ClInclude Include="FrGuiClr.h" />
+    <ClInclude Include="FrList.h" />
+    <ClInclude Include="FrMenu.h" />
+    <ClInclude Include="FrMessage.h" />
+    <ClInclude Include="FrNotify.h" />
+    <ClInclude Include="FrSplit.h" />
+    <ClInclude Include="FrTabControl.h" />
+    <ClInclude Include="FrWidgets.h" />
+    <ClInclude Include="FrColRibb.h" />
+    <ClInclude Include="FrTree.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FrButton.cpp" />
+    <ClCompile Include="FrColDlg.cpp" />
+    <ClCompile Include="FrEdit.cpp" />
+    <ClCompile Include="FrForm.cpp" />
+    <ClCompile Include="FrGuiBas.cpp" />
+    <ClCompile Include="FrList.cpp" />
+    <ClCompile Include="FrMenu.cpp" />
+    <ClCompile Include="FrSplit.cpp" />
+    <ClCompile Include="FrTabControl.cpp" />
+    <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="FrColRibb.cpp" />
+    <ClCompile Include="FrTree.cpp" />
+  </ItemGroup>
+</Project>

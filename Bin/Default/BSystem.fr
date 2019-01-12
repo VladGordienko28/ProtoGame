@@ -1,0 +1,9 @@
+BEGIN_RESOURCE FBitmap BSystem
+    FileName = "BSystem.bmp"
+    Group = "System"
+    BlendMode = 1
+    UBits = 7
+    VBits = 7
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+END_RESOURCE

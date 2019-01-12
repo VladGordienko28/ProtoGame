@@ -1,0 +1,11 @@
+BEGIN_RESOURCE FAnimation AJumpPad
+    Sheet = FBitmap::BSheet
+    FrameW = 32
+    FrameH = 32
+    Group = "Stuff"
+    NumSeqs = 2
+    Sequences[0].Name = "Still"
+    Sequences[0].Count = 1
+    Sequences[1].Name = "Kick"
+    Sequences[1].Count = 2
+END_RESOURCE

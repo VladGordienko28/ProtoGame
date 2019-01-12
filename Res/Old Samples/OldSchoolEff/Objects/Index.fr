@@ -1,0 +1,325 @@
+BEGIN_RESOURCE FLevel Index
+    GameSpeed = 1.0000
+    Camera.Location = [-24.0676; -2.7602]
+    Camera.FOV = [64.0000; 32.0000]
+    Camera.Zoom = 0.5200
+    Camera.ScrollBound = (-2048.0000; -2048.0000; 2048.0000; 2048.0000)
+    Effect[0] = 1.0000
+    Effect[1] = 1.0000
+    Effect[2] = 1.0000
+    Effect[3] = 1.0000
+    Effect[4] = 1.0000
+    Effect[5] = 1.0000
+    RndFlags = 7167
+    BEGIN_ENTITY Brush Brush0
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FFireBitmap::BFireJet
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [4.0000; 4.0000]
+            Vertices[3] = [4.0000; -4.0000]
+            TexCoords.Origin = [-4.0000; -4.0000]
+            TexCoords.XAxis = [0.1216; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.1207]
+            Location = [-28.0000; -4.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5021
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush1
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FFireBitmap::BFireball
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [4.0000; 4.0000]
+            Vertices[3] = [4.0000; -4.0000]
+            TexCoords.Origin = [-4.0000; -4.0000]
+            TexCoords.XAxis = [0.1216; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.1207]
+            Location = [-19.5000; -4.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5021
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush2
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FFireBitmap::BWhirligig
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; 12.0000]
+            Vertices[2] = [12.0000; 12.0000]
+            Vertices[3] = [12.0000; -4.0000]
+            TexCoords.Origin = [-4.0000; -4.0000]
+            TexCoords.XAxis = [0.0624; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.0626]
+            Location = [-10.5000; -8.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5057
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush3
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FFireBitmap::BBall
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [4.0000; 4.0000]
+            Vertices[3] = [4.0000; -4.0000]
+            TexCoords.Origin = [-4.0000; -4.0000]
+            TexCoords.XAxis = [0.1216; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.1207]
+            Location = [6.5000; -4.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5021
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush4
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FFireBitmap::BBolt
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; 12.0000]
+            Vertices[2] = [-0.0000; 12.0000]
+            Vertices[3] = [0.0000; -4.0000]
+            TexCoords.Origin = [-4.0000; -4.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.0626]
+            Location = [18.0000; -7.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.4910
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush5
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FFireBitmap::BFlame
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; 0.0000]
+            Vertices[3] = [0.0000; -4.0000]
+            TexCoords.Origin = [-4.0000; -4.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [26.0000; -2.5000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5027
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush6
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FGlassBitmap::BGlassCat
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; 12.0000]
+            Vertices[2] = [12.0000; 12.0000]
+            Vertices[3] = [12.0000; -4.0000]
+            TexCoords.Origin = [-4.0000; -4.0000]
+            TexCoords.XAxis = [0.0624; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.0626]
+            Location = [105.0000; -8.5000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5057
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush7
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FHarmonicBitmap::BHarmCat
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; 12.0000]
+            Vertices[2] = [12.0000; 12.0000]
+            Vertices[3] = [12.0000; -4.0000]
+            TexCoords.Origin = [-4.0000; -4.0000]
+            TexCoords.XAxis = [0.0624; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.0626]
+            Location = [87.5000; -8.5000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5057
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush8
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FPlasmaBitmap::BSimPlasma
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; 12.0000]
+            Vertices[2] = [12.0000; 12.0000]
+            Vertices[3] = [12.0000; -4.0000]
+            TexCoords.Origin = [-4.0000; -4.0000]
+            TexCoords.XAxis = [0.0624; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.0626]
+            Location = [52.0000; -8.5000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5057
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush9
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FWaterBitmap::BRainCat
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; 12.0000]
+            Vertices[2] = [12.0000; 12.0000]
+            Vertices[3] = [12.0000; -4.0000]
+            TexCoords.Origin = [-4.0000; -4.0000]
+            TexCoords.XAxis = [0.0624; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.0626]
+            Location = [70.0000; -8.5000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5057
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush10
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FWaterBitmap::BHalo1
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [4.0000; 4.0000]
+            Vertices[3] = [4.0000; -4.0000]
+            TexCoords.Origin = [-4.0000; -4.0000]
+            TexCoords.XAxis = [0.1216; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.1207]
+            Location = [32.0000; -4.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5021
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush11
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FWaterBitmap::BHalo2
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [4.0000; 4.0000]
+            Vertices[3] = [4.0000; -4.0000]
+            TexCoords.Origin = [-4.0000; -4.0000]
+            TexCoords.XAxis = [0.1216; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.1207]
+            Location = [42.0000; -4.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5021
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Flyby Flyby0
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-28.0000; -4.0000]
+            Size = [4.0000; 4.0000]
+            Layer = 1.0000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 32.0000; 64.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_COMPONENT FKeyframeComponent Keyframe
+            NumPoints = 2
+            Points[0].Location = [-28.0000; -4.5000]
+            Points[0].bCCW = true
+            Points[1].Location = [109.5000; -4.5000]
+            Points[1].bCCW = true
+        END_COMPONENT
+        BEGIN_INSTANCE
+            FlySpeed = 2.0000
+            bLooped = true
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush12
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FTechBitmap::TestTech
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; 12.0000]
+            Vertices[2] = [12.0000; 12.0000]
+            Vertices[3] = [12.0000; -4.0000]
+            TexCoords.Origin = [-4.0000; -4.0000]
+            TexCoords.XAxis = [0.0624; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.0626]
+            Location = [122.5000; -8.5000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5057
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+END_RESOURCE

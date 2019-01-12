@@ -1,0 +1,30 @@
+BEGIN_RESOURCE FScript Counter
+    FileName = "Counter.flu"
+    ScriptFlags = 128
+    BEGIN_COMPONENT FRectComponent Base
+            Size = [6.0000; 6.0000]
+            Layer = 0.5000
+            bFixedAngle = true
+            bFixedSize = true
+    END_COMPONENT
+    BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumPlugs = 1
+            NumJacks = 3
+            PlugsName[0] = "Counted"
+            JacksName[0] = "Reset"
+            JacksName[1] = "Inc"
+            JacksName[2] = "Dec"
+    END_COMPONENT
+    BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (96.0000; 0.0000; 128.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #808080ff
+            Texture = FBitmap::BSystem
+    END_COMPONENT
+    BEGIN_INSTANCE
+            N = 4
+    END_INSTANCE
+END_RESOURCE

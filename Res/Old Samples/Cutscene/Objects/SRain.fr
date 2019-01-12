@@ -1,0 +1,3 @@
+BEGIN_RESOURCE FSound SRain
+    FileName = "SRain.wav"
+END_RESOURCE

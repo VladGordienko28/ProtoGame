@@ -1,0 +1,7 @@
+BEGIN_RESOURCE FBitmap BSwitch
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    FileName = "BSwitch.bmp"
+    UBits = 5
+    VBits = 6
+END_RESOURCE

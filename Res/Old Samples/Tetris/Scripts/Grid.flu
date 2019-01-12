@@ -1,0 +1,292 @@
+/**
+ * @Grid: Tetris game grid.
+ * @Author: Vlad Gordienko.
+ */
+script Grid
+{
+public:
+    vector[4]   Piece;
+    vector      PiecePos;
+    integer     PieceType;
+    integer     Score;
+    
+    /*
+        Creates a random piece.
+    */
+    fn CreateRandomPiece()
+    {
+        PieceType   = random(7);
+        switch( PieceType )
+        {
+            case 0:
+            {
+                // I.
+                Piece[0]    = [-1, -1];
+                Piece[1]    = [-1, 0];
+                Piece[2]    = [-1, 1];
+                Piece[3]    = [-1, 2];                                               
+                break;
+            }
+            case 1:
+            {
+                // O.
+                Piece[0]    = [0, 0];
+                Piece[1]    = [0, 1];
+                Piece[2]    = [1, 0];
+                Piece[3]    = [1, 1];                                               
+                break;
+            }         
+            case 2:
+            {
+                // Z.
+                Piece[0]    = [-1, 1];
+                Piece[1]    = [0, 1];
+                Piece[2]    = [0, 0];
+                Piece[3]    = [1, 0];                                               
+                break;
+            }  
+            case 3:
+            {
+                // S.
+                Piece[0]    = [-1, 0];
+                Piece[1]    = [0, 0];
+                Piece[2]    = [0, 1];
+                Piece[3]    = [1, 1];                                               
+                break;
+            } 
+            case 4:
+            {
+                // J.
+                Piece[0]    = [-1, 1];
+                Piece[1]    = [-1, 0];
+                Piece[2]    = [0, 0];
+                Piece[3]    = [1, 0];                                               
+                break;
+            }                
+            case 5:
+            {
+                // L.
+                Piece[0]    = [-1, 0];
+                Piece[1]    = [0, 0];
+                Piece[2]    = [1, 0];
+                Piece[3]    = [1, 1];                                               
+                break;
+            }  
+            case 6:
+            {
+                // T.
+                Piece[0]    = [-1, 0];
+                Piece[1]    = [0, 0];
+                Piece[2]    = [0, 1];
+                Piece[3]    = [1, 0];                                               
+                break;
+            }                        
+        }
+        
+        // Place to proper location.
+        PiecePos    = [MapXSize/2, MapYSize-2];
+        if( PieceType == 0 )
+            PiecePos.Y--;
+        
+        if( !TestFit([0.0, 0.0]) )
+            goto @GameOver;
+    }
+    
+    /*
+        Test figure fit to position.
+    */
+    bool TestFit( vector Bias )
+    {
+        integer i;
+        for( i=0; i<4; i++ )
+        {
+            integer x = round(PiecePos.X+Bias.X+Piece[i].X);
+            integer y = round(PiecePos.Y+Bias.Y+Piece[i].Y);           
+            
+            if( x<0 || x>=MapXSize || y<0 || y>=MapYSize )
+                return false;
+            if( GetTile( x, y ) != 0 )
+                return false;
+        }
+        return true;
+    }
+    
+    /*
+        Move piece downward and test for hit.
+    */    
+    fn MovePieceDown()
+    {
+        if( TestFit([0, -1]) )
+            PiecePos.Y--;
+        else
+        {
+            DrawPiece(PieceType+1);
+            EraseCollapsed();
+            CreateRandomPiece();    
+        }
+    }
+    
+    /*
+        Rotate figure, if we can.
+    */
+    fn RotatePiece()
+    {
+        integer i;
+        vector[4] Stored;
+        for( i=0; i<4; i++ ) Stored[i] = Piece[i];
+        for( i=0; i<4; i++ )
+            Piece[i] = [Stored[i].Y, -Stored[i].X];
+        if( !TestFit([0, 0]) )
+            for( i=0; i<4; i++ ) Piece[i] = Stored[i];           
+    }
+            
+    /*
+        Erase all collapsed lines.
+    */
+    fn EraseCollapsed()
+    {
+        integer x, y, z;
+        bool bAll;
+        
+        for( y=0; y<MapYSize; y++ )
+        {
+            // Detect for full.
+            bAll = true;
+            for( x=0; x<MapXSize; x++ )
+                if( GetTile( x, y ) == 0 )
+                {
+                    bAll = false;
+                    break;
+                }
+                
+            // Shift downward.
+            if( bAll )
+            {
+                for( z=y; z<MapYSize-1; z++ )
+                    for( x=0; x<MapXSize; x++ )
+                        SetTile( x, z, GetTile(x, z+1) );
+                y--;
+                Score   += 100;
+            }  
+        }    
+    }
+    
+    /*
+        Draw piece at model.
+    */
+    fn DrawPiece( integer iType )
+    {
+        integer i;
+        for( i=0; i<4; i++ )
+            SetTile( round(PiecePos.x+Piece[i].x), round(PiecePos.y+Piece[i].y), iType );
+    }
+    
+    /*
+        Key has been pressed.
+    */
+    event OnKeyDown( integer K )
+    {
+        if( K == KEY_Space && label != @GameOver )
+            base.Level.bIsPause = !Level.bIsPause;
+    
+        if( Level.bIsPause || label != @Play )
+            return;
+    
+        if( K == KEY_Up )
+        {
+            DrawPiece(0);        
+            RotatePiece();
+            DrawPiece(PieceType+1);            
+        }
+    }
+    
+    /*
+        Key holded.
+    */
+    event OnKeyPressed( integer K )
+    {
+        if( Level.bIsPause || label != @Play )
+            return; 
+    
+        DrawPiece(0);
+        if( K == KEY_Left )
+        {
+            if( TestFit([-1, 0]) )
+                PiecePos.X--;
+        } 
+        else if( K == KEY_Right )         
+        {
+            if( TestFit([1, 0]) )
+                PiecePos.X++;
+        }    
+        else if( K == KEY_Down )
+        {
+            MovePieceDown();
+        }                                             
+                       
+        DrawPiece(PieceType+1);    
+    }
+    
+    
+    /*
+        Render tetris scores.
+    */
+    event OnRender()
+    {
+        $Painter.Color  = rgba( 200, 200, 200, 200 );
+        $Painter.Font   = #Courier33;
+        if( label == @GameOver )
+        {
+            $Painter.TextOut( [$Painter.Width/2.0-110.0, $Painter.Height/2.0-15.0], "GAME OVER!", 1.0 );
+            return;
+        }
+        else
+        {
+            if( Level.bIsPause )
+                $Painter.TextOut( [$Painter.Width/2.0-110.0, $Painter.Height/2.0-15.0], "PAUSE", 1.0 );
+        
+            string Sc = string(Score);
+            while( Sc.length < 7 )
+                Sc = "0" + Sc;
+                
+            $Painter.TextOut( [$Painter.Width-350, $Painter.Height/4.0-15.0], "SCORE "+Sc, 1.0 );       
+        }
+    }
+    
+
+    /*
+        Clear all tiles.
+    */
+    fn ClearModel()
+    {
+        integer x, y;
+        for( y=0; y<MapYSize; y++ )
+            for( x=0; x<MapXSize; x++ )
+                SetTile( x, y, 0 );                               
+    }
+
+
+    /*
+         Gameplay thread.
+    */     
+    thread
+    {
+    @Start:
+        ClearModel();
+        Score   = 0;
+        CreateRandomPiece();
+        DrawPiece(PieceType+1);            
+    
+    @Play:
+        sleep 1.0;    
+        DrawPiece(0);         
+            MovePieceDown();
+        DrawPiece(PieceType+1);         
+        goto @Play;
+    
+    @GameOver:
+        sleep 3.0;
+        wait KeyIsPressed(KEY_Space);
+        goto @Start;
+    }   
+}

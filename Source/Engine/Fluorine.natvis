@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010"> 
+  
+  <!-- Fluorine TColor -->
+  <Type Name="TColor">
+    <DisplayString>{{ Hex={D, x} }}</DisplayString>   
+    
+    <Expand> 
+      <Item Name="R">(Byte)R, x</Item>
+      <Item Name="G">(Byte)G, x</Item>
+      <Item Name="B">(Byte)B, x</Item>
+      <Item Name="A">(Byte)A, x</Item>
+    </Expand>   
+  </Type>
+  
+  <!-- Fluorine String --> 
+  <Type Name="String">
+    <DisplayString Condition="Internal != nullptr">{{ Text[{Internal->Length}]={Internal->Data,su} }}</DisplayString>
+    <DisplayString Condition="Internal == nullptr"> empty </DisplayString>
+    
+    <StringView Condition="Internal != nullptr"> Internal->Data,su </StringView>    
+    
+    <Expand> 
+      <Item Name="[Length]" Condition="Internal != nullptr"> Internal->Length </Item>
+      <Item Name="[RefsCount]" Condition="Internal != nullptr"> Internal->RefsCount </Item>   
+      <Item Name="[Data]" Condition="Internal != nullptr"> Internal->Data,su </Item> 
+    </Expand>  
+  </Type>
+  
+  <!-- Fluorine TArray -->
+  <Type Name="TArray&lt;*&gt;">
+     <DisplayString>{{ Count={Count} }}</DisplayString>  
+     <Expand>
+      <Item Name="[Count]"> Count </Item>
+      <ArrayItems> 
+        <Size> Count </Size> 
+        <ValuePointer> ($T1*)Data </ValuePointer> 
+      </ArrayItems>  
+     </Expand>  
+  </Type> 
+
+</AutoVisualizer>

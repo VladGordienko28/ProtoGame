@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="FrGLRender.cpp" />
+    <ClCompile Include="OpenGL.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FrGLRender.h" />
+    <ClInclude Include="FrGLShader.h" />
+    <ClInclude Include="glext.h" />
+    <ClInclude Include="OpenGLRend.h" />
+    <ClInclude Include="FrGLExt.h" />
+    <ClInclude Include="FrGLFbo.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="final.fsh">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="flu_shader.fsh">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="flu_shader.vsh">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="final.vsh">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="horiz_blur.fsh">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="vert_blur.fsh">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="vert_blur.vsh">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="horiz_blur.vsh">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{05a5e8c8-bd51-4eda-a640-8f7fe179f792}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,4 @@
+BEGIN_RESOURCE FSound SDam
+    Group = "FX"
+    FileName = "SDam.wav"
+END_RESOURCE

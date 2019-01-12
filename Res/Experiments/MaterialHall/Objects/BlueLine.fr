@@ -1,0 +1,9 @@
+BEGIN_RESOURCE FBitmap BlueLine
+    Filter = 1
+    BlendMode = 4
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    FileName = "BlueLine.png"
+    UBits = 6
+    VBits = 6
+END_RESOURCE

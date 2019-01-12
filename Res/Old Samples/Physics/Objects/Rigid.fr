@@ -1,0 +1,20 @@
+BEGIN_RESOURCE FScript Rigid
+    Group = "Physics"
+    FileName = "Rigid.flu"
+    ScriptFlags = 128
+    BEGIN_COMPONENT FRigidBodyComponent Base
+            bCanSleep = true
+            Mass = 1.0000
+            Size = [2.0000; 2.0000]
+            Layer = 0.5000
+            bHashable = true
+    END_COMPONENT
+    BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+    END_COMPONENT
+    BEGIN_INSTANCE
+    END_INSTANCE
+END_RESOURCE

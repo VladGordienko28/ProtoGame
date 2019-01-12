@@ -1,0 +1,13 @@
+BEGIN_RESOURCE FAnimation APig
+    Sheet = FBitmap::BSheet
+    FrameW = 21
+    FrameH = 16
+    Group = "Stuff"
+    NumSeqs = 2
+    Sequences[0].Name = "Sleep"
+    Sequences[0].Start = 27
+    Sequences[0].Count = 1
+    Sequences[1].Name = "Attack"
+    Sequences[1].Start = 24
+    Sequences[1].Count = 3
+END_RESOURCE

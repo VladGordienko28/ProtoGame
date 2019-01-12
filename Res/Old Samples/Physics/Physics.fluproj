@@ -1,0 +1,19 @@
+BEGIN_INCLUDE
+    Brush.fr
+    Note.fr
+    Hinge.fr
+    Spring.fr
+    Rigid.fr
+    BSystem.fr
+    BWood.fr
+    BMetal.fr
+    BIce.fr
+    BSpring.fr
+    BChain.fr
+    BChecker.fr
+    ProjectInfo0.fr
+    Index.fr
+END_INCLUDE
+BEGIN_PAGES
+    Index
+END_PAGES

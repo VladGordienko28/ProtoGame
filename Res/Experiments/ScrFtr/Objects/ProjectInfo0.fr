@@ -1,0 +1,6 @@
+BEGIN_RESOURCE FProjectInfo ProjectInfo0
+    GameName = "<Game>"
+    Author = "<Author>"
+    DefaultWidth = 800
+    DefaultHeight = 600
+END_RESOURCE

@@ -1,0 +1,32 @@
+BEGIN_RESOURCE FScript BoolOp
+    FileName = "BoolOp.flu"
+    ScriptFlags = 128
+    BEGIN_COMPONENT FRectComponent Base
+            Size = [6.0000; 6.0000]
+            Layer = 0.5000
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+    END_COMPONENT
+    BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumPlugs = 2
+            NumJacks = 4
+            PlugsName[0] = "True"
+            PlugsName[1] = "False"
+            JacksName[0] = "A_On"
+            JacksName[1] = "A_Off"
+            JacksName[2] = "B_On"
+            JacksName[3] = "B_Off"
+    END_COMPONENT
+    BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (96.0000; 32.0000; 128.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+    END_COMPONENT
+    BEGIN_INSTANCE
+    END_INSTANCE
+END_RESOURCE

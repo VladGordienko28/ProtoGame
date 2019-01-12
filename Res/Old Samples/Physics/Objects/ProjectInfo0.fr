@@ -1,0 +1,7 @@
+BEGIN_RESOURCE FProjectInfo ProjectInfo0
+    GameName = "PhysDem"
+    Author = "Vlad"
+    bNoPause = true
+    WindowType = 2
+    bQuitByEsc = true
+END_RESOURCE

@@ -1,0 +1,70 @@
+/**
+ * @Pig: Simple arcade enemy(pig, MEAT).
+ * @Author: Vlad Gordienko.
+ */
+script Pig: family Enemies
+{
+public:
+    event OnBeginPlay()
+    {
+        entity e;
+        foreach( e : AllEntities(#Player) )
+        {
+            player  = e;
+            break;
+        }
+        if( player == undefined )
+            delete this;
+    }
+    
+    event OnPreTick( float Delta )
+    {
+        if( label == @Dead )
+            Velocity.Y -= 30.0 * Delta;
+    }
+    
+    event OnHide()
+    {
+        if( label == @Attack )
+            delete this;
+    }
+    
+    fn TakeDamage( entity Other, string Type, integer Amount ) unified
+    {
+        goto @Dead;
+    }
+ 
+    bool IsAlive() unified
+    {
+        return label != @Dead;
+    }
+ 
+private:
+    Player      player;
+
+    thread
+    {
+    @Idle:
+        $Sprite.PlayAnim( "Sleep", 1.0, ANIM_Once );
+        while( true )
+        {
+            if( IsShown() && abs(player.Location.Y-Location.Y) <= 6.0 )
+                goto @Attack;
+            sleep 0.25;
+        }                                
+    
+    @Attack:
+        $Sprite.PlayAnim( "Attack", 10.0, ANIM_Loop );
+        Velocity.X      = player.Location.X>Location.X ? 20.0 : -20.0;
+        $Sprite.bFlipH  = Velocity.X < 0.0;
+        stop;
+    
+    @Dead:
+        Velocity.X  = player.Velocity.X > 0.0 ? 10.0 : -10.0;
+        Velocity.Y  = 10.0;        
+        $Sprite.PauseAnim();
+        $Sprite.bFlipV  = true;
+        sleep 5.0;
+        delete this;    
+    }
+}

@@ -1,0 +1,4 @@
+BEGIN_RESOURCE FSound SCrickets
+    Group = "Scene"
+    FileName = "SCrickets.wav"
+END_RESOURCE

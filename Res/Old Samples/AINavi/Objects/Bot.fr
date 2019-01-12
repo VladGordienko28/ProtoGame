@@ -1,0 +1,30 @@
+BEGIN_RESOURCE FScript Bot
+    FileName = "Bot.flu"
+    ScriptFlags = 128
+    BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Size = [1.5000; 6.7500]
+            Layer = 0.5000
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+    END_COMPONENT
+    BEGIN_COMPONENT FPuppetComponent Puppet
+            Health = 100
+            MoveSpeed = 5.0000
+            JumpHeight = 8.0000
+            GravityScale = 15.0000
+            LookRadius = 16.0000
+    END_COMPONENT
+    BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            bUnlit = true
+            Animation = FAnimation::ABot
+            Offset = [0.0000; 0.5600]
+            Scale = [5.2500; 7.8600]
+    END_COMPONENT
+    BEGIN_COMPONENT FPainterComponent Painter
+    END_COMPONENT
+    BEGIN_INSTANCE
+    END_INSTANCE
+END_RESOURCE

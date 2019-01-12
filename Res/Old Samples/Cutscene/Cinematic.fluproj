@@ -1,0 +1,30 @@
+BEGIN_INCLUDE
+    Brush.fr
+    Light.fr
+    Model.fr
+    AmbSound.fr
+    Sky.fr
+    WeatherEm.fr
+    Deco.fr
+    Emitter.fr
+    Director.fr
+    Flyby.fr
+    BSystem.fr
+    BClouds.fr
+    BSky.fr
+    BTiles.fr
+    BDrops.fr
+    BFirefly.fr
+    BSprites.fr
+    BPuff.fr
+    ProjectInfo0.fr
+    MyLevel.fr
+    SWind.fr
+    SThunder.fr
+    SCrickets.fr
+    SRain.fr
+END_INCLUDE
+BEGIN_PAGES
+    Director
+    MyLevel
+END_PAGES

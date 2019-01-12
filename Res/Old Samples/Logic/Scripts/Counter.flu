@@ -1,0 +1,31 @@
+/**
+ * @Counter: Count N events and induce signal.
+ * @Author: Vlad Gordienko.
+ */
+script Counter
+{
+public:
+    integer     N;
+
+    event OnReceiveSignal( entity Creator, entity Circuit, string InJack )
+    {
+        if( InJack == "Reset" )
+        {
+            i   = 0;
+        }
+        else if( InJack == "Inc" )
+        {
+            i++;
+        }
+        else if( InJack == "Dec" )
+        {
+            i--;
+        }      
+    
+        if( i == N )
+            $Logic.InduceSignal( Creator, "Counted" );
+    }       
+    
+private:
+    integer     i;  
+}

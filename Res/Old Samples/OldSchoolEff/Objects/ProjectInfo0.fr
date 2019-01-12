@@ -1,0 +1,9 @@
+BEGIN_RESOURCE FProjectInfo ProjectInfo0
+    GameName = "90s Demos"
+    Author = "Vlad"
+    bNoPause = true
+    WindowType = 2
+    bQuitByEsc = true
+    DefaultWidth = 800
+    DefaultHeight = 600
+END_RESOURCE

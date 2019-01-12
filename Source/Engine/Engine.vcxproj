@@ -1,0 +1,280 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{21CD5A96-8CFC-4B02-9993-CFA046A96865}</ProjectGuid>
+    <RootNamespace>Engine</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)Libs\$(ProjectName)\$(Configuration) $(PlatformShortName)\</OutDir>
+    <IntDir>$(SolutionDir)Libs\$(ProjectName)\$(Configuration) $(PlatformShortName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)Libs\$(ProjectName)\$(Configuration) $(PlatformShortName)\</OutDir>
+    <IntDir>$(SolutionDir)Libs\$(ProjectName)\$(Configuration) $(PlatformShortName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)Libs\$(ProjectName)\$(Configuration) $(PlatformShortName)\</OutDir>
+    <IntDir>$(SolutionDir)Libs\$(ProjectName)\$(Configuration) $(PlatformShortName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)Libs\$(ProjectName)\$(Configuration) $(PlatformShortName)\</OutDir>
+    <IntDir>$(SolutionDir)Libs\$(ProjectName)\$(Configuration) $(PlatformShortName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(SolutionDir)Libs\$(ProjectName)\$(Configuration) $(PlatformShortName)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(SolutionDir)Libs\$(ProjectName)\$(Configuration) $(PlatformShortName)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(SolutionDir)Libs\$(ProjectName)\$(Configuration) $(PlatformShortName)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(SolutionDir)Libs\$(ProjectName)\$(Configuration) $(PlatformShortName)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Core\FrArray.h" />
+    <ClInclude Include="Core\FrBase.h" />
+    <ClInclude Include="Core\FrBuff.h" />
+    <ClInclude Include="Core\FrBuild.h" />
+    <ClInclude Include="Core\FrClass.h" />
+    <ClInclude Include="Core\FrColor.h" />
+    <ClInclude Include="Core\FrCorUtils.h" />
+    <ClInclude Include="Core\FrEncode.h" />
+    <ClInclude Include="Core\FrExpImp.h" />
+    <ClInclude Include="Core\FrFile.h" />
+    <ClInclude Include="Core\FrIni.h" />
+    <ClInclude Include="Core\FrLog.h" />
+    <ClInclude Include="Core\FrMap.h" />
+    <ClInclude Include="Core\FrMath.h" />
+    <ClInclude Include="Core\FrNetBas.h" />
+    <ClInclude Include="Core\FrObject.h" />
+    <ClInclude Include="Core\FrRand.h" />
+    <ClInclude Include="Core\FrSerial.h" />
+    <ClInclude Include="Core\FrMemory.h" />
+    <ClInclude Include="Core\FrString.h" />
+    <ClInclude Include="Database.h" />
+    <ClInclude Include="Engine.h" />
+    <ClInclude Include="FrAnim.h" />
+    <ClInclude Include="FrApp.h" />
+    <ClInclude Include="FrAudio.h" />
+    <ClInclude Include="FrBitmap.h" />
+    <ClInclude Include="FrBlock.h" />
+    <ClInclude Include="FrCode.h" />
+    <ClInclude Include="FrCollHash.h" />
+    <ClInclude Include="FrCom.h" />
+    <ClInclude Include="FrComTyp.h" />
+    <ClInclude Include="FrDbgDraw.h" />
+    <ClInclude Include="FrDemoEff.h" />
+    <ClInclude Include="FrEntity.h" />
+    <ClInclude Include="FrEvent.h" />
+    <ClInclude Include="FrFont.h" />
+    <ClInclude Include="FrGFX.h" />
+    <ClInclude Include="FrInput.h" />
+    <ClInclude Include="FrLevel.h" />
+    <ClInclude Include="FrMaterial.h" />
+    <ClInclude Include="FrModi.h" />
+    <ClInclude Include="FrOpCode.h" />
+    <ClInclude Include="FrPath.h" />
+    <ClInclude Include="FrPhysEng.h" />
+    <ClInclude Include="FrProject.h" />
+    <ClInclude Include="FrRender.h" />
+    <ClInclude Include="FrRes.h" />
+    <ClInclude Include="FrScript.h" />
+    <ClInclude Include="FrSkelet.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Core\FrClass.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\Engine.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Core\FrCore.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\Engine.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Core\FrEncode.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\Engine.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Core\FrIni.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Engine.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Core\FrMath.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\Engine.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Core\FrObject.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\Engine.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="FrAI.cpp" />
+    <ClCompile Include="FrAnim.cpp" />
+    <ClCompile Include="FrApp.cpp" />
+    <ClCompile Include="FrAudio.cpp" />
+    <ClCompile Include="FrBitmap.cpp" />
+    <ClCompile Include="FrBlock.cpp" />
+    <ClCompile Include="FrCnvPrim.cpp" />
+    <ClCompile Include="FrCode.cpp" />
+    <ClCompile Include="FrCollision.cpp" />
+    <ClCompile Include="FrComBas.cpp" />
+    <ClCompile Include="FrDbgDraw.cpp" />
+    <ClCompile Include="FrDemoEff.cpp" />
+    <ClCompile Include="FrEmit.cpp" />
+    <ClCompile Include="FrFont.cpp" />
+    <ClCompile Include="FrGFX.cpp" />
+    <ClCompile Include="FrHUD.cpp" />
+    <ClCompile Include="FrInput.cpp" />
+    <ClCompile Include="FrLevel.cpp" />
+    <ClCompile Include="FrLogic.cpp" />
+    <ClCompile Include="FrMaterial.cpp" />
+    <ClCompile Include="FrModel.cpp" />
+    <ClCompile Include="FrModi.cpp" />
+    <ClCompile Include="FrNative.cpp" />
+    <ClCompile Include="FrPath.cpp" />
+    <ClCompile Include="FrPhysEng.cpp" />
+    <ClCompile Include="FrPhysic.cpp" />
+    <ClCompile Include="FrPortal.cpp" />
+    <ClCompile Include="FrProject.cpp" />
+    <ClCompile Include="FrRes.cpp" />
+    <ClCompile Include="FrScript.cpp">
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessToFile>
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</PreprocessToFile>
+    </ClCompile>
+    <ClCompile Include="FrSkelAnim.cpp" />
+    <ClCompile Include="FrSkelet.cpp" />
+    <ClCompile Include="FrSprite.cpp" />
+    <ClCompile Include="FrTest.cpp" />
+    <ClCompile Include="FrThings.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="Fluorine.natvis" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

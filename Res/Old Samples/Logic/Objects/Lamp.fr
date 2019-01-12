@@ -1,0 +1,32 @@
+BEGIN_RESOURCE FScript Lamp
+    FileName = "Lamp.flu"
+    ScriptFlags = 128
+    BEGIN_COMPONENT FRectComponent Base
+            Size = [6.0000; 3.0000]
+            Layer = 0.8500
+            bFixedAngle = true
+            bFixedSize = true
+    END_COMPONENT
+    BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 2
+            JacksName[0] = "On"
+            JacksName[1] = "Off"
+    END_COMPONENT
+    BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 64.0000; 32.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BLight
+    END_COMPONENT
+    BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #ffffffff
+            Radius = 16.0000
+            Brightness = 1.0000
+    END_COMPONENT
+    BEGIN_INSTANCE
+    END_INSTANCE
+END_RESOURCE

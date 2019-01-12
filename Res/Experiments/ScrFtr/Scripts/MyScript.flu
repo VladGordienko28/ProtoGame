@@ -1,0 +1,108 @@
+/**
+ * @MyScript: Experimental script features.
+ * @Author: Vlad
+ */
+script MyScript
+{
+public:
+    integer[] arr;
+    integer i;
+
+    static string StaticString;
+
+    static integer static_add( integer a, integer b )
+    {
+        //i++;
+        MyStatic.Spam(a);
+        return a + b;
+    }
+
+
+    struct Range
+    {
+        string Desc;
+        float Min, Max;
+    }
+
+    
+    //!! broken
+    delegate fn MyFuncPtr( integer i );
+
+    MyFuncPtr func;
+    
+    fn _log( integer i )
+    {
+        log( "log_%i", i );
+    }
+    fn _debug( integer i )
+    {
+        debug( "debug_%i", i );
+    }
+        
+
+    fn testDelegate()
+    {
+        func = _log;
+        func(5);
+    
+        func = _debug;
+        func(6);  
+    
+    }
+
+
+
+    Range range;
+
+    event OnBeginPlay()    
+    {
+        //info( "Info" );    
+    }
+
+    thread
+    {
+        interrupt;
+/*
+        // Dynamic array test.        
+        arr.length = 12;
+        
+        for( i=0; i<10; i++ )
+            arr[i] = (i*2);
+
+        arr.length = 5;
+               
+        for( i=0; i<arr.length; i++ )
+            log( "arr[%i] = %i", i, arr[i] );
+
+        // Struct testing.
+        
+  */      
+                
+       // info("Vlad");
+         info( "*Struct Info*" );
+        info( "Dest='%s' Min=%f Max=%f", range.Desc, range.Min, range.Max );
+              
+       range.Desc = "Particle";
+       range.Min = 8.9;
+       range.Max = 10;
+       
+       range.Max += range.Min;
+       
+        info( "*Struct Info*" );
+        info( "Dest='%s' Min=%f Max=%f", range.Desc, range.Min, range.Max );
+    
+        testDelegate();
+        
+        MyStatic.Spam(3);
+        
+        MyStatic.StaticInt++;
+        info( "Its launch number %i", MyStatic.StaticInt );
+        
+        StaticString += string(MyStatic.StaticInt);
+        debug( "String '%s'", StaticString );
+        
+        notice( "add of %d", static_add(3, 6) );
+    }
+
+ 
+}

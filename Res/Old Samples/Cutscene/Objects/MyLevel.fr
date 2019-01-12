@@ -1,0 +1,3034 @@
+BEGIN_RESOURCE FLevel MyLevel
+    GameSpeed = 1.0000
+    Camera.Location = [-50.0000; -44.0000]
+    Camera.FOV = [64.0000; 32.0000]
+    Camera.Zoom = 1.0000
+    Camera.ScrollBound = (-2048.0000; -2048.0000; 2048.0000; 2048.0000)
+    Effect[0] = 1.1000
+    Effect[1] = 1.1500
+    Effect[2] = 1.2000
+    Effect[3] = 1.0000
+    Effect[4] = 0.9700
+    Effect[5] = 0.9500
+    Effect[9] = 0.3000
+    AmbientLight = #34404200
+    RndFlags = 6653
+    Sky = FSkyComponent::MyLevel.Sky0.Base
+    BEGIN_ENTITY Sky Sky0
+        BEGIN_COMPONENT FSkyComponent Base
+            Parallax = [0.0100; 0.0100]
+            Offset = [10.0000; 0.0000]
+            Extent = 8.0000
+            Location = [-56.0000; -5.5000]
+            Size = [24.0000; 16.0000]
+            Layer = 0.4969
+            bFixedAngle = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush0
+        BEGIN_COMPONENT FBrushComponent Base
+            Color = #aeaeaeff
+            Texture = FBitmap::BSky
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -12.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [20.0000; 8.0000]
+            Vertices[3] = [20.0000; -12.0000]
+            TexCoords.Origin = [-4.0000; 4.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.0626]
+            Location = [-64.0000; -1.5000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.0140
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+            bFrozen = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Model Model0
+        BEGIN_COMPONENT FModelComponent Base
+            MapXSize = 34
+            MapYSize = 15
+            TileSize = [4.0000; 4.0000]
+            TilesPerU = 8
+            TilesPerV = 8
+            Texture = FBitmap::BTiles
+            Color = #ffffffff
+            Location = [-12.0000; -20.0000]
+            Layer = 0.2426
+            bFixedAngle = true
+            bFixedSize = true
+            bFrozen = true
+            Map[0] = 9
+            Map[1] = 10
+            Map[2] = 10
+            Map[3] = 10
+            Map[4] = 10
+            Map[5] = 11
+            Map[34] = 10
+            Map[35] = 10
+            Map[36] = 10
+            Map[37] = 10
+            Map[38] = 10
+            Map[39] = 11
+            Map[68] = 10
+            Map[69] = 10
+            Map[70] = 10
+            Map[71] = 10
+            Map[72] = 10
+            Map[73] = 11
+            Map[75] = 17
+            Map[76] = 18
+            Map[77] = 19
+            Map[87] = 17
+            Map[88] = 18
+            Map[89] = 18
+            Map[90] = 18
+            Map[91] = 18
+            Map[92] = 19
+            Map[94] = 17
+            Map[95] = 18
+            Map[96] = 18
+            Map[97] = 19
+            Map[99] = 4352
+            Map[100] = 4608
+            Map[101] = 4864
+            Map[102] = 9
+            Map[103] = 10
+            Map[104] = 10
+            Map[105] = 10
+            Map[106] = 10
+            Map[107] = 11
+            Map[109] = 9
+            Map[110] = 10
+            Map[111] = 11
+            Map[113] = 17
+            Map[114] = 18
+            Map[115] = 18
+            Map[116] = 18
+            Map[117] = 19
+            Map[121] = 9
+            Map[122] = 10
+            Map[123] = 10
+            Map[124] = 10
+            Map[125] = 10
+            Map[126] = 11
+            Map[128] = 9
+            Map[129] = 10
+            Map[130] = 10
+            Map[131] = 11
+            Map[133] = 2304
+            Map[134] = 2560
+            Map[135] = 2816
+            Map[136] = 9
+            Map[137] = 10
+            Map[138] = 10
+            Map[139] = 10
+            Map[140] = 10
+            Map[141] = 11
+            Map[143] = 1
+            Map[144] = 2
+            Map[145] = 3
+            Map[147] = 9
+            Map[148] = 10
+            Map[149] = 10
+            Map[150] = 10
+            Map[151] = 5
+            Map[152] = 6
+            Map[155] = 9
+            Map[156] = 10
+            Map[157] = 10
+            Map[158] = 10
+            Map[159] = 2
+            Map[160] = 3
+            Map[162] = 1
+            Map[163] = 2
+            Map[164] = 2
+            Map[165] = 3
+            Map[167] = 256
+            Map[168] = 512
+            Map[169] = 768
+            Map[170] = 1
+            Map[171] = 2
+            Map[172] = 2
+            Map[173] = 2
+            Map[174] = 2
+            Map[175] = 3
+            Map[177] = 16
+            Map[178] = 2068
+            Map[179] = 16
+            Map[181] = 1
+            Map[182] = 2
+            Map[183] = 2
+            Map[184] = 2
+            Map[185] = 3
+            Map[189] = 9
+            Map[190] = 10
+            Map[191] = 10
+            Map[192] = 45
+            Map[193] = 2068
+            Map[194] = 4120
+            Map[196] = 4096
+            Map[197] = 2074
+            Map[198] = 2075
+            Map[199] = 4120
+            Map[201] = 4096
+            Map[202] = 2068
+            Map[203] = 4096
+            Map[204] = 16
+            Map[205] = 8
+            Map[206] = 2068
+            Map[207] = 2068
+            Map[208] = 4120
+            Map[209] = 16
+            Map[212] = 20
+            Map[215] = 16
+            Map[216] = 2068
+            Map[217] = 2072
+            Map[218] = 16
+            Map[219] = 4096
+            Map[223] = 9
+            Map[224] = 10
+            Map[225] = 45
+            Map[227] = 20
+            Map[236] = 5120
+            Map[240] = 20
+            Map[241] = 12
+            Map[246] = 12
+            Map[250] = 20
+            Map[257] = 1
+            Map[258] = 45
+            Map[261] = 12
+            Map[270] = 1024
+            Map[274] = 20
+            Map[284] = 20
+            Map[291] = 16
+            Map[308] = 12
+            Map[317] = 28
+            Map[318] = 29
+            Map[319] = 30
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush1
+        BEGIN_COMPONENT FBrushComponent Base
+            Color = #c9c9c9ff
+            Texture = FBitmap::BClouds
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -12.0000]
+            Vertices[1] = [-4.0000; 8.0000]
+            Vertices[2] = [20.0000; 4.0000]
+            Vertices[3] = [20.0000; -12.0000]
+            TexCoords.Origin = [-4.0000; 4.0000]
+            TexCoords.XAxis = [0.2322; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2008]
+            Location = [-64.0000; -1.5000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.0426
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+            bFrozen = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush2
+        BEGIN_COMPONENT FBrushComponent Base
+            Color = #c9c9c9ff
+            Texture = FBitmap::BClouds
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -12.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [20.0000; 4.0000]
+            Vertices[3] = [20.0000; -16.5000]
+            TexCoords.Origin = [-4.0000; 4.0000]
+            TexCoords.XAxis = [0.1383; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.1031]
+            Location = [-64.0000; -1.5000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.0997
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+            bFrozen = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light0
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-55.5000; 1.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.4963
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #3e7d9cff
+            Radius = 16.0000
+            Brightness = 0.3000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light1
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-64.5000; -12.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5678
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #74469aff
+            Radius = 16.0000
+            Brightness = 0.3000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light2
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-47.5000; -12.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.4963
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #a29331ff
+            Radius = 16.0000
+            Brightness = 0.3000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light3
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-2.0000; 18.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.7111
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #c0952eff
+            Radius = 15.0000
+            Brightness = 0.5000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light4
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [2.0000; 10.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.7111
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #c0952eff
+            Radius = 15.0000
+            Brightness = 0.5000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light5
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [21.0000; 10.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.7111
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #c0952eff
+            Radius = 15.0000
+            Brightness = 1.1000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light6
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-0.5000; 15.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5032
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            Color = #526b6eff
+            Radius = 40.0000
+            Brightness = 0.1000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light7
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [41.5000; 15.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5032
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            Color = #526b6eff
+            Radius = 40.0000
+            Brightness = 0.1000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light8
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-1.5000; 18.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5019
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            Color = #e4b22cff
+            Radius = 16.0000
+            Brightness = 0.2000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light9
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [3.0000; 10.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5019
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            Color = #e4b22cff
+            Radius = 16.0000
+            Brightness = 0.2000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light10
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [22.5000; 10.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5019
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            Color = #e4b22cff
+            Radius = 16.0000
+            Brightness = 0.2000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light12
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [55.0000; -2.2500]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5019
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            Color = #cb2ae2ff
+            Radius = 20.0000
+            Brightness = 0.2000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco0
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [36.0000; 14.0000]
+            Size = [4.0000; 8.0000]
+            Layer = 0.5092
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 3
+            Frequency = 1.1000
+            Amplitude = 1.5000
+            TexCoords = (0.0000; 0.0000; 32.0000; 64.0000)
+            Color = #d2d2d2ff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light11
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [54.0000; -2.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.7111
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #ae2dbdff
+            Radius = 15.0000
+            Brightness = 1.1000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco9
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [83.5000; 4.0000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.3384
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 1.0000
+            Amplitude = 0.5000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco1
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [24.5000; 4.0000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.2526
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 2
+            Frequency = 0.9000
+            Amplitude = 0.5000
+            TexCoords = (64.0000; 0.0000; 128.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco2
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [44.0000; 8.0000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.2526
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 2
+            Frequency = 0.9100
+            Amplitude = 0.5000
+            TexCoords = (64.0000; 0.0000; 128.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco3
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [7.5000; 7.5000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.2383
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 1.0000
+            Amplitude = 0.5000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco4
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [34.5000; 8.0000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.1955
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 1.0000
+            Amplitude = 0.5000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco5
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [46.0000; 7.5000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.2669
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 1.0000
+            Amplitude = 0.5000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            bFlipH = true
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco6
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [19.5000; 4.0000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.3098
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 1.0000
+            Amplitude = 0.5000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            bFlipH = true
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco7
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [4.0000; 8.0000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.9000
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 0.9900
+            Amplitude = 0.5000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            bFlipH = true
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco8
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-3.5000; 8.0000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.4526
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 2
+            Frequency = 0.9000
+            Amplitude = 0.5000
+            TexCoords = (64.0000; 0.0000; 128.0000; 64.0000)
+            bFlipH = true
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Emitter Emitter0
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [12.5000; 11.5000]
+            Size = [4.0000; 4.0000]
+            Layer = 0.4943
+        END_COMPONENT
+        BEGIN_COMPONENT FPhysEmitterComponent PhysEmitter
+            SpeedRange[0] = [-1.0000; -1.0000]
+            SpeedRange[1] = [1.0000; 1.0000]
+            MaxParticles = 50
+            LifeRange[0] = 5.0000
+            LifeRange[1] = 7.0000
+            SpawnArea = [20.0000; 20.0000]
+            EmitPerSec = 5
+            SizeRange[0] = 0.5000
+            SizeRange[1] = 0.6000
+            bUnlit = true
+            Colors[0] = #ffffff00
+            Colors[1] = #ffffffc8
+            Colors[2] = #ffffff00
+            Texture = FBitmap::BFirefly
+            SpinRange[0] = -0.1000
+            SpinRange[1] = 0.1000
+            NumUTiles = 1
+            NumVTiles = 1
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 0.0000; 64.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light13
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [81.5000; 10.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.7111
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #c0952eff
+            Radius = 18.0000
+            Brightness = 0.9000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light14
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [82.5000; 10.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5019
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            Color = #e4b22cff
+            Radius = 17.0000
+            Brightness = 0.2000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Emitter Emitter1
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [80.5000; 14.0000]
+            Size = [4.0000; 4.0000]
+            Layer = 0.4943
+        END_COMPONENT
+        BEGIN_COMPONENT FPhysEmitterComponent PhysEmitter
+            SpeedRange[0] = [-1.0000; -1.0000]
+            SpeedRange[1] = [1.0000; 1.0000]
+            MaxParticles = 50
+            LifeRange[0] = 5.0000
+            LifeRange[1] = 7.0000
+            SpawnArea = [20.0000; 20.0000]
+            EmitPerSec = 5
+            SizeRange[0] = 0.5000
+            SizeRange[1] = 0.6000
+            bUnlit = true
+            Colors[0] = #ffffff00
+            Colors[1] = #ffffffc8
+            Colors[2] = #ffffff00
+            Texture = FBitmap::BFirefly
+            SpinRange[0] = -0.1000
+            SpinRange[1] = 0.1000
+            NumUTiles = 1
+            NumVTiles = 1
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 0.0000; 64.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light15
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [87.5000; 16.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5032
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            Color = #526b6eff
+            Radius = 40.0000
+            Brightness = 0.1000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Emitter Emitter2
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [54.0000; 3.0000]
+            Size = [4.0000; 4.0000]
+            Layer = 0.4943
+        END_COMPONENT
+        BEGIN_COMPONENT FPhysEmitterComponent PhysEmitter
+            SpeedRange[0] = [-1.0000; -1.0000]
+            SpeedRange[1] = [1.0000; 1.0000]
+            MaxParticles = 30
+            LifeRange[0] = 5.0000
+            LifeRange[1] = 7.0000
+            SpawnArea = [20.0000; 20.0000]
+            EmitPerSec = 3
+            SizeRange[0] = 0.5000
+            SizeRange[1] = 0.6000
+            bUnlit = true
+            Colors[0] = #d60ee200
+            Colors[1] = #c711f3c8
+            Colors[2] = #b011f900
+            Texture = FBitmap::BFirefly
+            SpinRange[0] = -0.1000
+            SpinRange[1] = 0.1000
+            NumUTiles = 1
+            NumVTiles = 1
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 0.0000; 64.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco12
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [40.0000; 14.0000]
+            Size = [4.0000; 8.0000]
+            Layer = 0.5092
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 3
+            Frequency = 1.1000
+            Amplitude = 1.5000
+            TexCoords = (32.0000; 0.0000; 64.0000; 64.0000)
+            Color = #d2d2d2ff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light16
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [117.5000; 9.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.7211
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #c0952eff
+            Radius = 18.0000
+            Brightness = 0.9000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light17
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [118.5000; 9.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5119
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            Color = #e4b22cff
+            Radius = 17.0000
+            Brightness = 0.2000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco10
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [95.5000; 3.5000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.3384
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 1.0000
+            Amplitude = 0.5000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco11
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [104.5000; 3.5000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.4241
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 0.9000
+            Amplitude = 0.5000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            bFlipH = true
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light18
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [100.0000; 3.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.7782
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #a91f39ff
+            Radius = 18.0000
+            Brightness = 0.9000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light19
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [101.0000; 3.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5976
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            Color = #e11b65ff
+            Radius = 17.0000
+            Brightness = 0.2000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Emitter Emitter3
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [118.5000; 11.5000]
+            Size = [4.0000; 4.0000]
+            Layer = 0.4943
+        END_COMPONENT
+        BEGIN_COMPONENT FPhysEmitterComponent PhysEmitter
+            SpeedRange[0] = [-1.0000; -1.0000]
+            SpeedRange[1] = [1.0000; 1.0000]
+            MaxParticles = 50
+            LifeRange[0] = 5.0000
+            LifeRange[1] = 7.0000
+            SpawnArea = [20.0000; 20.0000]
+            EmitPerSec = 5
+            SizeRange[0] = 0.5000
+            SizeRange[1] = 0.6000
+            bUnlit = true
+            Colors[0] = #ffffff00
+            Colors[1] = #ffffffc8
+            Colors[2] = #ffffff00
+            Texture = FBitmap::BFirefly
+            SpinRange[0] = -0.1000
+            SpinRange[1] = 0.1000
+            NumUTiles = 1
+            NumVTiles = 1
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 0.0000; 64.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY WeatherEm WeatherEm0
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [99.5000; 11.5000]
+            Size = [7.0000; 7.0000]
+            Layer = 0.5068
+        END_COMPONENT
+        BEGIN_COMPONENT FWeatherEmitterComponent WeatherEmitter
+            WeatherType = 1
+            SpeedRange[0] = 30.0000
+            SpeedRange[1] = 40.0000
+            MaxParticles = 1000
+            LifeRange[0] = 3.0000
+            LifeRange[1] = 3.0000
+            SpawnArea = [32.0000; 10.0000]
+            SizeRange[0] = 0.4000
+            SizeRange[1] = 0.5000
+            Colors[0] = #ffffffff
+            Colors[1] = #ffffffff
+            Colors[2] = #ffffffff
+            Texture = FBitmap::BDrops
+            NumUTiles = 2
+            NumVTiles = 2
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 0.0000; 64.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Director Director0
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-58.5000; -35.0000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.5097
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (64.0000; 32.0000; 96.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_COMPONENT FPainterComponent Painter
+        END_COMPONENT
+        BEGIN_COMPONENT FInputComponent Input
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Model Model1
+        BEGIN_COMPONENT FModelComponent Base
+            MapXSize = 17
+            MapYSize = 9
+            TileSize = [4.0000; 4.0000]
+            TilesPerU = 8
+            TilesPerV = 8
+            Texture = FBitmap::BTiles
+            Color = #bebebeff
+            Location = [-80.0000; -64.0000]
+            Layer = 0.3025
+            bFixedAngle = true
+            bFixedSize = true
+            Map[0] = 10
+            Map[1] = 10
+            Map[2] = 10
+            Map[3] = 10
+            Map[4] = 10
+            Map[5] = 10
+            Map[6] = 10
+            Map[7] = 10
+            Map[8] = 10
+            Map[9] = 10
+            Map[10] = 10
+            Map[11] = 10
+            Map[12] = 10
+            Map[13] = 10
+            Map[14] = 10
+            Map[15] = 10
+            Map[16] = 10
+            Map[17] = 2
+            Map[18] = 2
+            Map[19] = 2
+            Map[20] = 2
+            Map[21] = 2
+            Map[22] = 2
+            Map[23] = 2
+            Map[24] = 2
+            Map[25] = 2
+            Map[26] = 2
+            Map[27] = 2
+            Map[28] = 2
+            Map[29] = 2
+            Map[30] = 2
+            Map[31] = 2
+            Map[32] = 2
+            Map[33] = 2
+            Map[34] = 2058
+            Map[35] = 2059
+            Map[36] = 4096
+            Map[37] = 4116
+            Map[38] = 2048
+            Map[39] = 2048
+            Map[40] = 2072
+            Map[41] = 4116
+            Map[42] = 2048
+            Map[43] = 2048
+            Map[44] = 4136
+            Map[45] = 2088
+            Map[46] = 2048
+            Map[47] = 2048
+            Map[48] = 2068
+            Map[49] = 8
+            Map[50] = 2088
+            Map[51] = 10
+            Map[52] = 5
+            Map[53] = 6
+            Map[54] = 20
+            Map[58] = 20
+            Map[61] = 32
+            Map[62] = 32
+            Map[65] = 20
+            Map[67] = 32
+            Map[68] = 10
+            Map[69] = 11
+            Map[71] = 20
+            Map[75] = 20
+            Map[78] = 32
+            Map[79] = 32
+            Map[82] = 20
+            Map[84] = 32
+            Map[85] = 2
+            Map[86] = 3
+            Map[87] = 28
+            Map[88] = 29
+            Map[89] = 30
+            Map[91] = 28
+            Map[92] = 29
+            Map[93] = 30
+            Map[95] = 32
+            Map[96] = 32
+            Map[99] = 20
+            Map[101] = 32
+            Map[102] = 2072
+            Map[103] = 16
+            Map[112] = 32
+            Map[113] = 32
+            Map[115] = 28
+            Map[116] = 29
+            Map[117] = 30
+            Map[118] = 32
+            Map[129] = 32
+            Map[130] = 32
+            Map[135] = 32
+            Map[146] = 32
+            Map[147] = 32
+            Map[152] = 32
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco13
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-66.0000; -46.0000]
+            Size = [4.0000; 8.0000]
+            Layer = 0.5092
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 3
+            Frequency = 0.8000
+            Amplitude = 0.5000
+            TexCoords = (0.0000; 0.0000; 32.0000; 64.0000)
+            Color = #676767ff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco14
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-22.0000; -42.5000]
+            Size = [5.0000; 9.0000]
+            Layer = 0.5092
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 3
+            Frequency = 0.9500
+            Amplitude = 0.4500
+            TexCoords = (0.0000; 0.0000; 32.0000; 64.0000)
+            bFlipH = true
+            Color = #676767ff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco15
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-50.0000; -46.0000]
+            Size = [4.0000; 8.0000]
+            Layer = 0.5092
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 3
+            Frequency = 0.9000
+            Amplitude = 0.5100
+            TexCoords = (32.0000; 0.0000; 64.0000; 64.0000)
+            Color = #676767ff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Flyby Flyby0
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-44.0000; -45.0000]
+            Size = [5.0000; 5.0000]
+            Layer = 0.7924
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 32.0000; 64.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_COMPONENT FKeyframeComponent Keyframe
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Speed = 10.0000
+            Zoom = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco16
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-56.5000; -51.5000]
+            Size = [9.0000; 9.0000]
+            Layer = 0.3812
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 0.9000
+            Amplitude = 0.4000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            bFlipH = true
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco17
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-39.5000; -51.5000]
+            Size = [9.0000; 9.0000]
+            Layer = 0.4669
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 0.9900
+            Amplitude = 0.4000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco18
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-34.2500; -51.7500]
+            Size = [8.5000; 8.5000]
+            Layer = 0.4526
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 2
+            Frequency = 0.9000
+            Amplitude = 0.4000
+            TexCoords = (64.0000; 0.0000; 128.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco19
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-17.5000; -52.5000]
+            Size = [7.5000; 7.5000]
+            Layer = 0.2812
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 2
+            Frequency = 0.9000
+            Amplitude = 0.4000
+            TexCoords = (64.0000; 0.0000; 128.0000; 64.0000)
+            bFlipH = true
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco20
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-76.5000; -35.0000]
+            Size = [9.0000; 10.0000]
+            Layer = 0.4669
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 0.9000
+            Amplitude = 0.4000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light20
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-61.5000; -45.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.7158
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #cdd4dcff
+            Radius = 32.0000
+            Brightness = 1.2000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light21
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-18.5000; -45.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.8158
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #cdd4dcff
+            Radius = 30.0000
+            Brightness = 1.2000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Emitter Emitter4
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-33.0000; -44.5000]
+            Size = [6.0000; 6.0000]
+            Layer = 0.6444
+        END_COMPONENT
+        BEGIN_COMPONENT FPhysEmitterComponent PhysEmitter
+            SpeedRange[0] = [-2.0000; 0.0000]
+            SpeedRange[1] = [-4.0000; 0.0000]
+            MaxParticles = 100
+            LifeRange[0] = 7.0000
+            LifeRange[1] = 7.0000
+            SpawnArea = [15.0000; 20.0000]
+            EmitPerSec = 10
+            SizeRange[0] = 5.0000
+            SizeRange[1] = 8.0000
+            bUnlit = true
+            Colors[0] = #ffffff00
+            Colors[1] = #ffffff04
+            Colors[2] = #ffffff00
+            Texture = FBitmap::BPuff
+            SpinRange[0] = -1.0000
+            SpinRange[1] = 1.0000
+            NumUTiles = 2
+            NumVTiles = 2
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 0.0000; 64.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Model Model2
+        BEGIN_COMPONENT FModelComponent Base
+            MapXSize = 19
+            MapYSize = 8
+            TileSize = [4.0000; 4.0000]
+            TilesPerU = 8
+            TilesPerV = 8
+            Texture = FBitmap::BTiles
+            Color = #ffffffff
+            Location = [-8.0000; -64.0000]
+            Layer = 0.4095
+            bFixedAngle = true
+            bFixedSize = true
+            Map[0] = 514
+            Map[1] = 514
+            Map[2] = 514
+            Map[3] = 514
+            Map[4] = 514
+            Map[5] = 2
+            Map[6] = 2
+            Map[7] = 2
+            Map[8] = 514
+            Map[9] = 514
+            Map[10] = 514
+            Map[11] = 514
+            Map[12] = 514
+            Map[13] = 514
+            Map[14] = 514
+            Map[15] = 512
+            Map[16] = 512
+            Map[17] = 512
+            Map[18] = 512
+            Map[19] = 8
+            Map[20] = 8
+            Map[21] = 4122
+            Map[22] = 4123
+            Map[23] = 4120
+            Map[24] = 4104
+            Map[25] = 4116
+            Map[26] = 8
+            Map[27] = 2088
+            Map[28] = 2074
+            Map[29] = 2075
+            Map[30] = 2056
+            Map[31] = 4116
+            Map[32] = 4096
+            Map[33] = 4116
+            Map[34] = 2056
+            Map[35] = 2074
+            Map[36] = 2075
+            Map[37] = 2072
+            Map[38] = 4864
+            Map[44] = 4
+            Map[46] = 32
+            Map[50] = 20
+            Map[52] = 20
+            Map[57] = 1280
+            Map[58] = 1536
+            Map[65] = 32
+            Map[69] = 20
+            Map[71] = 4
+            Map[76] = 768
+            Map[84] = 32
+            Map[88] = 4
+            Map[95] = 4096
+            Map[103] = 32
+            Map[122] = 32
+            Map[141] = 32
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light22
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [19.5000; -44.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.8158
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #cdd4dcff
+            Radius = 30.0000
+            Brightness = 1.2000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light23
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [54.5000; -44.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.8158
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #cdd4dcff
+            Radius = 30.0000
+            Brightness = 1.2000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Emitter Emitter5
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [49.5000; -51.5000]
+            Size = [6.0000; 6.0000]
+            Layer = 0.6444
+        END_COMPONENT
+        BEGIN_COMPONENT FPhysEmitterComponent PhysEmitter
+            SpeedRange[0] = [-2.0000; 0.0000]
+            SpeedRange[1] = [-4.0000; 0.0000]
+            MaxParticles = 100
+            LifeRange[0] = 7.0000
+            LifeRange[1] = 7.0000
+            SpawnArea = [15.0000; 20.0000]
+            EmitPerSec = 10
+            SizeRange[0] = 5.0000
+            SizeRange[1] = 8.0000
+            bUnlit = true
+            Colors[0] = #ffffff00
+            Colors[1] = #ffffff04
+            Colors[2] = #ffffff00
+            Texture = FBitmap::BPuff
+            SpinRange[0] = -1.0000
+            SpinRange[1] = 1.0000
+            NumUTiles = 2
+            NumVTiles = 2
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 0.0000; 64.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco21
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [8.5000; -55.5000]
+            Size = [9.0000; 9.0000]
+            Layer = 0.6669
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 0.9900
+            Amplitude = 0.4000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco22
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [64.5000; -56.0000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.2526
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 2
+            Frequency = 0.9000
+            Amplitude = 0.5000
+            TexCoords = (64.0000; 0.0000; 128.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco23
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [56.7500; -55.7500]
+            Size = [8.5000; 8.5000]
+            Layer = 0.6240
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 2
+            Frequency = 0.9100
+            Amplitude = 0.5000
+            TexCoords = (64.0000; 0.0000; 128.0000; 64.0000)
+            bFlipH = true
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco24
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [35.0000; -55.5000]
+            Size = [9.0000; 9.0000]
+            Layer = 0.6669
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 0.9900
+            Amplitude = 0.4000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco25
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [28.0000; -56.0000]
+            Size = [9.0000; 9.0000]
+            Layer = 0.4669
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 0.9500
+            Amplitude = 0.4000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco26
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [17.0000; -56.0000]
+            Size = [8.5000; 8.5000]
+            Layer = 0.4526
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 2
+            Frequency = 0.9100
+            Amplitude = 0.5000
+            TexCoords = (64.0000; 0.0000; 128.0000; 64.0000)
+            bFlipH = true
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco27
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-6.0000; -56.5000]
+            Size = [7.5000; 7.5000]
+            Layer = 0.6812
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 2
+            Frequency = 0.9100
+            Amplitude = 0.5000
+            TexCoords = (64.0000; 0.0000; 128.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Flyby Flyby1
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [14.0000; -53.0000]
+            Size = [4.0000; 4.0000]
+            Layer = 0.8036
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 32.0000; 64.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_COMPONENT FKeyframeComponent Keyframe
+            NumPoints = 2
+            Points[0].Location = [14.0000; -53.0000]
+            Points[0].bCCW = true
+            Points[1].Location = [46.0000; -53.0000]
+            Points[1].bCCW = true
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Speed = 3.0000
+            Zoom = 0.6600
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Model Model3
+        BEGIN_COMPONENT FModelComponent Base
+            MapXSize = 15
+            MapYSize = 9
+            TileSize = [4.0000; 4.0000]
+            TilesPerU = 8
+            TilesPerV = 8
+            Texture = FBitmap::BTiles
+            Color = #ffffffff
+            Location = [72.0000; -64.0000]
+            Layer = 0.3901
+            bFixedAngle = true
+            bFixedSize = true
+            Map[2] = 4352
+            Map[3] = 4608
+            Map[4] = 4608
+            Map[5] = 4608
+            Map[6] = 4864
+            Map[8] = 2304
+            Map[9] = 2560
+            Map[10] = 2560
+            Map[11] = 2560
+            Map[12] = 1280
+            Map[13] = 1536
+            Map[16] = 13
+            Map[17] = 2318
+            Map[18] = 2560
+            Map[19] = 2560
+            Map[20] = 2560
+            Map[21] = 2821
+            Map[22] = 6
+            Map[23] = 256
+            Map[24] = 512
+            Map[25] = 512
+            Map[26] = 512
+            Map[27] = 768
+            Map[32] = 256
+            Map[33] = 512
+            Map[34] = 512
+            Map[35] = 512
+            Map[36] = 768
+            Map[38] = 4122
+            Map[39] = 2075
+            Map[40] = 2074
+            Map[41] = 2075
+            Map[42] = 4096
+            Map[45] = 4864
+            Map[47] = 4120
+            Map[48] = 2074
+            Map[49] = 2075
+            Map[50] = 2074
+            Map[51] = 4123
+            Map[60] = 2816
+            Map[75] = 1280
+            Map[76] = 1536
+            Map[90] = 2816
+            Map[105] = 2821
+            Map[120] = 2816
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light24
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [119.0000; -38.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.8158
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #d9cad0ff
+            Radius = 30.0000
+            Brightness = 1.2000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light25
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [93.5000; -36.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.8158
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #d9cad0ff
+            Radius = 30.0000
+            Brightness = 1.2000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco28
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [84.5000; -47.5000]
+            Size = [9.0000; 9.0000]
+            Layer = 0.6669
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 0.9900
+            Amplitude = 0.4000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco29
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [89.5000; -47.5000]
+            Size = [9.0000; 9.0000]
+            Layer = 0.4669
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 0.9900
+            Amplitude = 0.4000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            bFlipH = true
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco30
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [107.0000; -51.0000]
+            Size = [10.0000; 10.5000]
+            Layer = 0.4384
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 0.9900
+            Amplitude = 0.4000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco31
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [114.0000; -51.0000]
+            Size = [10.0000; 10.5000]
+            Layer = 0.5198
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 0.9900
+            Amplitude = 0.4000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            bFlipH = true
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco32
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [97.5000; -48.0000]
+            Size = [9.0000; 9.0000]
+            Layer = 0.6669
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 0.9800
+            Amplitude = 0.4000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light26
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [102.5000; -44.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.8158
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            Color = #d51d78ff
+            Radius = 32.0000
+            Brightness = 0.1000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Flyby Flyby2
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [102.0000; -48.0000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.8806
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 32.0000; 64.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_COMPONENT FKeyframeComponent Keyframe
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Speed = 10.0000
+            Zoom = 0.8500
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Emitter Emitter6
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [101.0000; -51.0000]
+            Size = [4.0000; 4.0000]
+            Layer = 0.8943
+        END_COMPONENT
+        BEGIN_COMPONENT FPhysEmitterComponent PhysEmitter
+            SpeedRange[0] = [-1.0000; -1.0000]
+            SpeedRange[1] = [1.0000; 1.0000]
+            MaxParticles = 30
+            LifeRange[0] = 5.0000
+            LifeRange[1] = 7.0000
+            SpawnArea = [20.0000; 20.0000]
+            EmitPerSec = 3
+            SizeRange[0] = 0.5000
+            SizeRange[1] = 0.6000
+            bUnlit = true
+            Colors[0] = #d60ee200
+            Colors[1] = #c711f3c8
+            Colors[2] = #b011f900
+            Texture = FBitmap::BFirefly
+            SpinRange[0] = -0.1000
+            SpinRange[1] = 0.1000
+            NumUTiles = 1
+            NumVTiles = 1
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 0.0000; 64.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Model Model4
+        BEGIN_COMPONENT FModelComponent Base
+            MapXSize = 17
+            MapYSize = 10
+            TileSize = [4.0000; 4.0000]
+            TilesPerU = 8
+            TilesPerV = 8
+            Texture = FBitmap::BTiles
+            Color = #ffffffff
+            Location = [149.0000; -64.0000]
+            Layer = 0.3924
+            bFixedAngle = true
+            bFixedSize = true
+            Map[0] = 2304
+            Map[1] = 2560
+            Map[2] = 2560
+            Map[3] = 2560
+            Map[4] = 2560
+            Map[5] = 2560
+            Map[6] = 2560
+            Map[7] = 2560
+            Map[8] = 2560
+            Map[9] = 2816
+            Map[11] = 4352
+            Map[12] = 4608
+            Map[13] = 4608
+            Map[14] = 4608
+            Map[15] = 4864
+            Map[17] = 256
+            Map[18] = 512
+            Map[19] = 512
+            Map[20] = 512
+            Map[21] = 512
+            Map[22] = 512
+            Map[23] = 512
+            Map[24] = 512
+            Map[25] = 512
+            Map[26] = 768
+            Map[28] = 2304
+            Map[29] = 2560
+            Map[30] = 2560
+            Map[31] = 2560
+            Map[32] = 2816
+            Map[34] = 4120
+            Map[35] = 2068
+            Map[36] = 2048
+            Map[37] = 2048
+            Map[38] = 2068
+            Map[39] = 2072
+            Map[40] = 2048
+            Map[41] = 2068
+            Map[42] = 2048
+            Map[43] = 4096
+            Map[45] = 256
+            Map[46] = 512
+            Map[47] = 512
+            Map[48] = 512
+            Map[49] = 768
+            Map[52] = 20
+            Map[55] = 20
+            Map[58] = 20
+            Map[62] = 4096
+            Map[63] = 2048
+            Map[64] = 2068
+            Map[65] = 2088
+            Map[66] = 4096
+            Map[69] = 20
+            Map[72] = 12
+            Map[75] = 20
+            Map[81] = 20
+            Map[82] = 32
+            Map[86] = 12
+            Map[92] = 12
+            Map[98] = 20
+            Map[99] = 32
+            Map[115] = 12
+            Map[116] = 32
+            Map[133] = 32
+            Map[150] = 32
+            Map[167] = 32
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Emitter Emitter7
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [181.0000; -41.0000]
+            Size = [4.0000; 4.0000]
+            Layer = 0.4943
+        END_COMPONENT
+        BEGIN_COMPONENT FPhysEmitterComponent PhysEmitter
+            SpeedRange[0] = [-1.0000; -1.0000]
+            SpeedRange[1] = [1.0000; 1.0000]
+            MaxParticles = 50
+            LifeRange[0] = 5.0000
+            LifeRange[1] = 7.0000
+            SpawnArea = [25.0000; 25.0000]
+            EmitPerSec = 10
+            SizeRange[0] = 0.5000
+            SizeRange[1] = 0.6000
+            bUnlit = true
+            Colors[0] = #ffffff00
+            Colors[1] = #ffffffc8
+            Colors[2] = #ffffff00
+            Texture = FBitmap::BFirefly
+            SpinRange[0] = -0.1000
+            SpinRange[1] = 0.1000
+            NumUTiles = 1
+            NumVTiles = 1
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 0.0000; 64.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light27
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [155.0000; -42.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.7211
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #c0952eff
+            Radius = 18.0000
+            Brightness = 0.9000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light28
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [167.0000; -46.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.7211
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #c0952eff
+            Radius = 18.0000
+            Brightness = 0.9000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light29
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [179.5000; -42.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.7211
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #c0952eff
+            Radius = 18.0000
+            Brightness = 0.9000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light30
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [203.0000; -38.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.7211
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #c0952eff
+            Radius = 18.0000
+            Brightness = 0.9000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light31
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [155.5000; -42.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5119
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            Color = #e4b22cff
+            Radius = 17.0000
+            Brightness = 0.2000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light32
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [167.5000; -46.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5119
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            Color = #e4b22cff
+            Radius = 17.0000
+            Brightness = 0.2000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light33
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [179.0000; -42.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5119
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            Color = #e4b22cff
+            Radius = 17.0000
+            Brightness = 0.2000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light34
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [203.5000; -38.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5119
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            Color = #e4b22cff
+            Radius = 17.0000
+            Brightness = 0.2000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco33
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [154.5000; -52.0000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.4526
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 2
+            Frequency = 0.9000
+            Amplitude = 0.5000
+            TexCoords = (64.0000; 0.0000; 128.0000; 64.0000)
+            bFlipH = true
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco34
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [204.5000; -48.0000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.6812
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 2
+            Frequency = 0.9000
+            Amplitude = 0.5000
+            TexCoords = (64.0000; 0.0000; 128.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco35
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [168.0000; -51.5000]
+            Size = [9.0000; 9.0000]
+            Layer = 0.6669
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 0.9900
+            Amplitude = 0.4000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco36
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [180.0000; -51.5000]
+            Size = [9.0000; 9.0000]
+            Layer = 1.0000
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 0.9500
+            Amplitude = 0.4000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            bFlipH = true
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Light Light35
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [182.0000; -38.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5032
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            Color = #526b6eff
+            Radius = 40.0000
+            Brightness = 0.1000
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Flyby Flyby3
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [182.0000; -48.0000]
+            Size = [6.0000; 6.0000]
+            Layer = 0.8080
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 32.0000; 64.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_COMPONENT FKeyframeComponent Keyframe
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Speed = 10.0000
+            Zoom = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Model Model5
+        BEGIN_COMPONENT FModelComponent Base
+            MapXSize = 30
+            MapYSize = 15
+            TileSize = [4.0000; 4.0000]
+            TilesPerU = 8
+            TilesPerV = 8
+            Texture = FBitmap::BTiles
+            Color = #ffffffff
+            Location = [224.0000; -64.0000]
+            Layer = 0.4066
+            bFixedAngle = true
+            bFixedSize = true
+            bFrozen = true
+            Map[0] = 10
+            Map[1] = 10
+            Map[2] = 10
+            Map[3] = 10
+            Map[4] = 10
+            Map[5] = 10
+            Map[6] = 10
+            Map[7] = 10
+            Map[8] = 10
+            Map[9] = 10
+            Map[10] = 10
+            Map[11] = 9
+            Map[12] = 10
+            Map[13] = 10
+            Map[14] = 10
+            Map[15] = 10
+            Map[16] = 10
+            Map[17] = 10
+            Map[18] = 11
+            Map[30] = 10
+            Map[31] = 10
+            Map[32] = 10
+            Map[33] = 10
+            Map[34] = 10
+            Map[35] = 10
+            Map[36] = 10
+            Map[37] = 10
+            Map[38] = 10
+            Map[39] = 10
+            Map[40] = 10
+            Map[41] = 1
+            Map[42] = 2
+            Map[43] = 2
+            Map[44] = 2
+            Map[45] = 2
+            Map[46] = 2
+            Map[47] = 2
+            Map[48] = 3
+            Map[60] = 1
+            Map[61] = 2
+            Map[62] = 2
+            Map[63] = 2
+            Map[64] = 2
+            Map[65] = 2
+            Map[66] = 2
+            Map[67] = 2
+            Map[68] = 2
+            Map[69] = 2
+            Map[70] = 3
+            Map[71] = 4096
+            Map[72] = 2072
+            Map[73] = 2088
+            Map[74] = 2048
+            Map[75] = 2072
+            Map[76] = 2088
+            Map[77] = 2072
+            Map[78] = 4096
+            Map[80] = 17
+            Map[81] = 18
+            Map[82] = 18
+            Map[83] = 19
+            Map[90] = 4096
+            Map[91] = 2048
+            Map[92] = 2048
+            Map[93] = 2074
+            Map[94] = 2075
+            Map[95] = 2048
+            Map[96] = 2068
+            Map[97] = 2072
+            Map[98] = 2048
+            Map[99] = 2048
+            Map[100] = 4096
+            Map[103] = 32
+            Map[106] = 32
+            Map[110] = 9
+            Map[111] = 10
+            Map[112] = 10
+            Map[113] = 11
+            Map[126] = 20
+            Map[133] = 32
+            Map[136] = 32
+            Map[140] = 1
+            Map[141] = 2
+            Map[142] = 2
+            Map[143] = 3
+            Map[156] = 20
+            Map[163] = 32
+            Map[166] = 32
+            Map[170] = 4096
+            Map[171] = 2074
+            Map[172] = 2075
+            Map[173] = 4120
+            Map[186] = 20
+            Map[193] = 32
+            Map[196] = 32
+            Map[215] = 28
+            Map[216] = 29
+            Map[217] = 30
+            Map[223] = 32
+            Map[226] = 32
+            Map[253] = 32
+            Map[256] = 32
+            Map[283] = 32
+            Map[286] = 32
+            Map[313] = 32
+            Map[316] = 32
+            Map[343] = 32
+            Map[346] = 32
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco37
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [235.5000; -47.5000]
+            Size = [9.0000; 9.0000]
+            Layer = 0.6669
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 2.0000
+            Amplitude = 0.7000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            bFlipH = true
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco38
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [250.0000; -47.5000]
+            Size = [9.0000; 9.0000]
+            Layer = 0.6669
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 1.9000
+            Amplitude = 0.7000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco39
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [286.0000; -51.5000]
+            Size = [9.0000; 9.0000]
+            Layer = 0.6669
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 1.9000
+            Amplitude = 0.7000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco40
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [316.5000; -39.5000]
+            Size = [9.0000; 9.0000]
+            Layer = 0.6669
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 1
+            Frequency = 1.9000
+            Amplitude = 0.7000
+            TexCoords = (0.0000; 64.0000; 64.0000; 128.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco41
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [243.5000; -48.0000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.4098
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 2
+            Frequency = 0.9000
+            Amplitude = 0.5000
+            TexCoords = (64.0000; 0.0000; 128.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco42
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [225.0000; -47.5000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.6812
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 2
+            Frequency = 0.9000
+            Amplitude = 0.5000
+            TexCoords = (64.0000; 0.0000; 128.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco43
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [275.0000; -52.0000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.3955
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 2
+            Frequency = 0.9000
+            Amplitude = 0.5000
+            TexCoords = (64.0000; 0.0000; 128.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco44
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [308.0000; -40.0000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.4098
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 2
+            Frequency = 0.9000
+            Amplitude = 0.5000
+            TexCoords = (64.0000; 0.0000; 128.0000; 64.0000)
+            bFlipH = true
+            Color = #ffffffff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco45
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [250.0000; -38.5000]
+            Size = [5.0000; 9.0000]
+            Layer = 0.5092
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 3
+            Frequency = 1.5000
+            Amplitude = 1.5000
+            TexCoords = (0.0000; 0.0000; 32.0000; 64.0000)
+            bFlipH = true
+            Color = #a1a1a1ff
+            Texture = FBitmap::BSprites
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Flyby Flyby4
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [257.0000; -42.0000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.8050
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 32.0000; 64.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_COMPONENT FKeyframeComponent Keyframe
+            NumPoints = 2
+            Points[0].Location = [257.0000; -42.0000]
+            Points[0].bCCW = true
+            Points[1].Location = [288.0000; -39.5000]
+            Points[1].bCCW = true
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Speed = 2.0000
+            Zoom = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Emitter Emitter8
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [270.5000; -26.0000]
+            Size = [16.0000; 16.0000]
+            Layer = 0.4927
+        END_COMPONENT
+        BEGIN_COMPONENT FPhysEmitterComponent PhysEmitter
+            SpeedRange[0] = [0.0000; -30.0000]
+            SpeedRange[1] = [0.0000; -40.0000]
+            MaxParticles = 1000
+            LifeRange[0] = 3.0000
+            LifeRange[1] = 3.0000
+            SpawnArea = [50.0000; 0.0000]
+            EmitPerSec = 300
+            SizeRange[0] = 0.5000
+            SizeRange[1] = 0.7000
+            Colors[0] = #ffffffff
+            Colors[1] = #ffffffff
+            Colors[2] = #ffffffff
+            Texture = FBitmap::BDrops
+            NumUTiles = 2
+            NumVTiles = 2
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 0.0000; 64.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Flyby Flyby5
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [20.0000; 12.5000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.8045
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 32.0000; 64.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_COMPONENT FKeyframeComponent Keyframe
+            NumPoints = 2
+            Points[0].Location = [20.0000; 12.0000]
+            Points[0].bCCW = true
+            Points[1].Location = [96.0000; 10.0000]
+            Points[1].bCCW = true
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Speed = 3.0000
+            Zoom = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY AmbSound AmbSound0
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-44.0000; -41.5000]
+            Size = [5.0000; 5.0000]
+            Layer = 0.9353
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SWind
+            Radius = 32.0000
+            Gain = 1.0000
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY AmbSound AmbSound1
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [14.5000; -47.0000]
+            Size = [5.0000; 5.0000]
+            Layer = 0.9353
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SWind
+            Radius = 32.0000
+            Gain = 1.0000
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY AmbSound AmbSound2
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [42.5000; -48.5000]
+            Size = [5.0000; 5.0000]
+            Layer = 0.9353
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SWind
+            Radius = 32.0000
+            Gain = 1.0000
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY AmbSound AmbSound3
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [102.0000; -44.0000]
+            Size = [5.0000; 5.0000]
+            Layer = 0.9353
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SWind
+            Radius = 32.0000
+            Gain = 1.0000
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY AmbSound AmbSound4
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [181.0000; -43.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5047
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SCrickets
+            Radius = 64.0000
+            Gain = 1.0000
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY AmbSound AmbSound5
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [181.5000; -50.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5060
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SWind
+            Radius = 32.0000
+            Gain = 1.0000
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY AmbSound AmbSound6
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [32.5000; 6.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5026
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SCrickets
+            Radius = 64.0000
+            Gain = 1.0000
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY AmbSound AmbSound7
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [94.0000; 3.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5026
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SCrickets
+            Radius = 64.0000
+            Gain = 1.0000
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY AmbSound AmbSound8
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [46.5000; 17.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.4961
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SWind
+            Radius = 64.0000
+            Gain = 0.7500
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY AmbSound AmbSound9
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [106.0000; 6.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.4961
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SWind
+            Radius = 64.0000
+            Gain = 0.7500
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY AmbSound AmbSound10
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [241.5000; -41.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5026
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SCrickets
+            Radius = 64.0000
+            Gain = 1.0000
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY AmbSound AmbSound11
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [306.5000; -35.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5026
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SCrickets
+            Radius = 64.0000
+            Gain = 1.0000
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY AmbSound AmbSound12
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [255.5000; -37.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5065
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SRain
+            Radius = 64.0000
+            Gain = 1.0000
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY AmbSound AmbSound13
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [296.5000; -28.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5065
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SRain
+            Radius = 64.0000
+            Gain = 1.0000
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+END_RESOURCE

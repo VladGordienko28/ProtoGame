@@ -1,0 +1,11 @@
+BEGIN_RESOURCE FBitmap BPuff
+    Format = 1
+    Filter = 1
+    BlendMode = 6
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    Group = "Particles"
+    FileName = "BPuff.bmp"
+    UBits = 6
+    VBits = 6
+END_RESOURCE

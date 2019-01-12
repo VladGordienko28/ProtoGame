@@ -1,0 +1,3 @@
+BEGIN_RESOURCE FSound SWind
+    FileName = "SWind.wav"
+END_RESOURCE

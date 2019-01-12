@@ -1,0 +1,24 @@
+BEGIN_RESOURCE FScript Mover
+    Group = "Game"
+    FileName = "Mover.flu"
+    ScriptFlags = 128
+    BEGIN_COMPONENT FMoverComponent Base
+            Size = [8.0000; 2.5000]
+            Layer = 0.5000
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+    END_COMPONENT
+    BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.6000]
+            TexCoords = (64.0000; 0.0000; 128.0000; 32.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSheet
+    END_COMPONENT
+    BEGIN_COMPONENT FKeyframeComponent Keyframe
+    END_COMPONENT
+    BEGIN_INSTANCE
+            MoveSpeed = 10.0000
+    END_INSTANCE
+END_RESOURCE

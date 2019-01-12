@@ -1,0 +1,51 @@
+/**
+ * @BoolOp: Binary boolean logic.
+ * @Author: Vlad Gordienko.
+ */
+script BoolOp
+{
+public:
+    enum EOperation
+    {
+        OP_And,
+        OP_Or,
+        OP_Xor
+    }
+ 
+    EOperation  Operation;
+ 
+    fn Update()
+    {
+        bool Result;
+        
+        switch( Operation )
+        {
+            case OP_And:
+                Result = A && B;
+                break;
+                
+            case OP_Or:
+                Result = A || B;
+                break;  
+                              
+            case OP_Xor:
+                Result = (!A && B) || (A && !B);
+                break;                                       
+        }
+        
+        $Logic.InduceSignal( this, Result ? "True" : "False" );
+    }
+ 
+    event OnReceiveSignal( entity Creator, entity Circuit, string InJack )
+    {
+        if( InJack == "A_On" )          A = true;
+        else if( InJack == "B_On" )     B = true;
+        else if( InJack == "A_Off" )    A = false;
+        else if( InJack == "B_Off" )    B = false;
+        Update();
+    } 
+ 
+ 
+private:
+    bool        A, B;
+}

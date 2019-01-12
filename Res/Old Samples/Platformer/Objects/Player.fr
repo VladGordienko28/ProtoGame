@@ -1,0 +1,27 @@
+BEGIN_RESOURCE FScript Player
+    Group = "Game"
+    FileName = "Player.flu"
+    ScriptFlags = 128
+    BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Size = [1.5000; 6.7500]
+            Layer = 0.9100
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+    END_COMPONENT
+    BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            bUnlit = true
+            Animation = FAnimation::ABot
+            Offset = [0.0000; 0.5600]
+            Scale = [5.2500; 7.8600]
+    END_COMPONENT
+    BEGIN_COMPONENT FInputComponent Input
+    END_COMPONENT
+    BEGIN_COMPONENT FPainterComponent Painter
+    END_COMPONENT
+    BEGIN_INSTANCE
+            Health = 3
+    END_INSTANCE
+END_RESOURCE

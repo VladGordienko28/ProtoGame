@@ -1,0 +1,4 @@
+BEGIN_RESOURCE FSound SWind
+    Group = "Scene"
+    FileName = "SWind.wav"
+END_RESOURCE

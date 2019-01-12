@@ -1,0 +1,19 @@
+BEGIN_RESOURCE FMaterial MDirty
+    MainLayer = FDiffuseLayer::MDirty.DiffuseLayer0
+    BEGIN_LAYER FDiffuseLayer DiffuseLayer0
+            Bitmap = FBitmap::Dirt
+            BlendMode = 4
+            OverlayColor = #ffffffff
+            Scaler.Scale = [1.0000; 1.0000]
+    END_LAYER
+    BEGIN_LAYER FDiffuseLayer DiffuseLayer1
+            Bitmap = FBitmap::RedLine
+            BlendMode = 4
+            bUnlit = true
+            OverlayColor = #ffffffff
+            Scaler.Scale = [3.0000; 1.0000]
+            Oscillator.Amplitude = [3.0000; 3.0000]
+            Oscillator.Frequency = [0.5000; 0.2500]
+            Oscillator.Phase = [2.0000; 0.0000]
+    END_LAYER
+END_RESOURCE

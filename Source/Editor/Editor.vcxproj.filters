@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="FrEdMenu.cpp" />
+    <ClCompile Include="FrEdTic.cpp" />
+    <ClCompile Include="FrEdToolBar.cpp" />
+    <ClCompile Include="FrFields.cpp" />
+    <ClCompile Include="FrGamBld.cpp" />
+    <ClCompile Include="FrGraph.cpp" />
+    <ClCompile Include="FrGUIRender.cpp" />
+    <ClCompile Include="FrHello.cpp" />
+    <ClCompile Include="FrLevPage.cpp" />
+    <ClCompile Include="FrPlayPage.cpp" />
+    <ClCompile Include="FrProjFile.cpp" />
+    <ClCompile Include="FrResBrow.cpp" />
+    <ClCompile Include="FrResExp.cpp" />
+    <ClCompile Include="FrResImp.cpp" />
+    <ClCompile Include="FrScriptPage.cpp" />
+    <ClCompile Include="FrTask.cpp" />
+    <ClCompile Include="FrTileEd.cpp" />
+    <ClCompile Include="FrUndoRedo.cpp" />
+    <ClCompile Include="FrWatch.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="FrAnimPage.cpp" />
+    <ClCompile Include="FrBitPage.cpp" />
+    <ClCompile Include="FrCSG.cpp" />
+    <ClCompile Include="FrEditor.cpp" />
+    <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="FrGizmo.cpp" />
+    <ClCompile Include="FrSkelPage.cpp" />
+    <ClCompile Include="Png\lodepng.cpp">
+      <Filter>Png</Filter>
+    </ClCompile>
+    <ClCompile Include="FrEdComp.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FrEdMenu.h" />
+    <ClInclude Include="FrEdToolBar.h" />
+    <ClInclude Include="FrEdUtil.h" />
+    <ClInclude Include="FrFields.h" />
+    <ClInclude Include="FrGamBld.h" />
+    <ClInclude Include="FrHello.h" />
+    <ClInclude Include="FrKeyEdit.h" />
+    <ClInclude Include="FrLevPage.h" />
+    <ClInclude Include="FrMusPlay.h" />
+    <ClInclude Include="FrPage.h" />
+    <ClInclude Include="FrPlayPage.h" />
+    <ClInclude Include="FrResBrow.h" />
+    <ClInclude Include="FrScriptPage.h" />
+    <ClInclude Include="FrSplash.h" />
+    <ClInclude Include="FrTask.h" />
+    <ClInclude Include="FrTileEd.h" />
+    <ClInclude Include="FrUndoRedo.h" />
+    <ClInclude Include="Editor.h" />
+    <ClInclude Include="FrAbout.h" />
+    <ClInclude Include="FrAnimPage.h" />
+    <ClInclude Include="FrBitPage.h" />
+    <ClInclude Include="FrEditor.h" />
+    <ClInclude Include="Res\resource.h">
+      <Filter>Res</Filter>
+    </ClInclude>
+    <ClInclude Include="FrGizmo.h" />
+    <ClInclude Include="FrSkelPage.h" />
+    <ClInclude Include="Png\lodepng.h">
+      <Filter>Png</Filter>
+    </ClInclude>
+    <ClInclude Include="FrFontView.h" />
+    <ClInclude Include="FrRename.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\GUI\Res\Consolas13_0.bmp">
+      <Filter>Res</Filter>
+    </Image>
+    <Image Include="Res\edicon.ico">
+      <Filter>Res</Filter>
+    </Image>
+    <Image Include="..\GUI\Res\WascoSans9_0.bmp">
+      <Filter>Res</Filter>
+    </Image>
+    <Image Include="Res\Splash.bmp">
+      <Filter>Res</Filter>
+    </Image>
+    <Image Include="..\GUI\Res\GuiIcons.bmp">
+      <Filter>Res</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\GUI\Res\Consolas13.flf">
+      <Filter>Res</Filter>
+    </None>
+    <None Include="Res\dragitem.cur">
+      <Filter>Res</Filter>
+    </None>
+    <None Include="..\GUI\Res\WascoSans9.flf">
+      <Filter>Res</Filter>
+    </None>
+    <None Include="Res\nodrop.cur">
+      <Filter>Res</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Res">
+      <UniqueIdentifier>{a35c08ab-7d20-46a0-b37e-f1cbb71f902c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Png">
+      <UniqueIdentifier>{c573bdb6-f321-495a-96af-3ba1007c1005}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Res\Editor.rc">
+      <Filter>Res</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

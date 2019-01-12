@@ -1,0 +1,10 @@
+BEGIN_RESOURCE FBitmap Dirt
+    Format = 1
+    Filter = 1
+    BlendMode = 4
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    FileName = "Dirt.png"
+    UBits = 7
+    VBits = 7
+END_RESOURCE

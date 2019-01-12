@@ -1,0 +1,3 @@
+BEGIN_RESOURCE FSound SThunder
+    FileName = "SThunder.wav"
+END_RESOURCE

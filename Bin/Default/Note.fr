@@ -1,0 +1,21 @@
+BEGIN_RESOURCE FScript Note
+    FileName = "Note.flu"
+    Group = "System"
+    ScriptFlags = 128
+    BEGIN_COMPONENT FRectComponent Base
+            bFixedAngle = true
+            Size = [3.0000; 3.0000]
+            Layer = 0.5000
+    END_COMPONENT
+    BEGIN_COMPONENT FSpriteComponent Sprite
+            Color = #ffffffff
+            bUnlit = true
+            bHidden = true
+            Texture = FBitmap::BSystem
+            Scale = [1.0000; 1.0000]
+            TexCoords = (64.0000; 32.0000; 96.0000; 64.0000)
+    END_COMPONENT
+    BEGIN_INSTANCE
+            Text = "..."
+    END_INSTANCE
+END_RESOURCE

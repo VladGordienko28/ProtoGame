@@ -1,0 +1,4 @@
+BEGIN_RESOURCE FSound SEnemKill
+    Group = "FX"
+    FileName = "SEnemKill.wav"
+END_RESOURCE

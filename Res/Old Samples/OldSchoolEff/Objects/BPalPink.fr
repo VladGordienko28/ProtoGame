@@ -1,0 +1,7 @@
+BEGIN_RESOURCE FBitmap BPalPink
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    Group = "Palettes"
+    FileName = "BPalPink.bmp"
+    UBits = 8
+END_RESOURCE

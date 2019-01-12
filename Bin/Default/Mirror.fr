@@ -1,0 +1,12 @@
+BEGIN_RESOURCE FScript Mirror
+    FileName = ""
+    Group = "System"
+    Family = ""
+    BEGIN_COMPONENT FMirrorComponent Base
+            bFixedAngle = true
+            bFixedSize = true
+            Layer = 0.7500
+            Color = #1e90ffff
+            Width = 16.0000
+    END_COMPONENT
+END_RESOURCE

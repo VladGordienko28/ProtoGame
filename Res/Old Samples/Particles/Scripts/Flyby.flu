@@ -1,0 +1,20 @@
+/**
+ * @Flyby: Flyby observer.
+ * @Author: Vlad Gordienko.
+ */
+script Flyby
+{
+public:
+    float   FlySpeed;
+    bool    bLooped;
+    
+    thread
+    {
+        $Keyframe.Start( FlySpeed, bLooped );
+        while( true )    
+        {
+            (Level).Camera.Location = Location;
+            interrupt;
+        }   
+    }
+}

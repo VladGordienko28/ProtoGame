@@ -1,0 +1,3 @@
+BEGIN_RESOURCE FMusic StrangeStuff
+    FileName = "Music\StrangeStuff.ogg"
+END_RESOURCE

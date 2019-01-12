@@ -1,0 +1,126 @@
+BEGIN_RESOURCE FLevel Index
+    GameSpeed = 1.0000
+    Camera.FOV = [60.0000; 35.0000]
+    Camera.Zoom = 1.0000
+    Camera.ScrollBound = (-2048.0000; -2048.0000; 2048.0000; 2048.0000)
+    Effect[0] = 1.0000
+    Effect[1] = 1.0000
+    Effect[2] = 1.0000
+    Effect[3] = 1.0000
+    Effect[4] = 1.0000
+    Effect[5] = 1.0000
+    RndFlags = 7167
+    BEGIN_ENTITY Note Note0
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [9.5000; -7.5000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.4938
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (64.0000; 32.0000; 96.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Text = "TETRIS DEMO"
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Grid Grid0
+        BEGIN_COMPONENT FModelComponent Base
+            MapXSize = 10
+            MapYSize = 20
+            TileSize = [1.5000; 1.5000]
+            TilesPerU = 4
+            TilesPerV = 4
+            bUnlit = true
+            Texture = FBitmap::pieces
+            Color = #ffffffff
+            Location = [-20.0000; -15.0000]
+            Layer = 0.6852
+            bFixedAngle = true
+            bFixedSize = true
+            Map[16] = 4
+            Map[17] = 4
+            Map[18] = 4
+            Map[26] = 4
+            Map[28] = 4
+            Map[36] = 4
+            Map[38] = 4
+            Map[46] = 4
+            Map[48] = 4
+            Map[56] = 4
+            Map[58] = 4
+            Map[83] = 4
+            Map[84] = 4
+            Map[85] = 4
+            Map[93] = 4
+            Map[103] = 4
+            Map[113] = 4
+            Map[123] = 4
+            Map[141] = 4
+            Map[151] = 4
+            Map[161] = 4
+            Map[162] = 4
+            Map[171] = 4
+            Map[181] = 4
+            Map[182] = 4
+            Map[183] = 4
+        END_COMPONENT
+        BEGIN_COMPONENT FInputComponent Input
+        END_COMPONENT
+        BEGIN_COMPONENT FPainterComponent Painter
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush0
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::pieces
+            NumVerts = 4
+            Vertices[0] = [-4.5000; -31.5000]
+            Vertices[1] = [-4.5000; 4.0000]
+            Vertices[2] = [56.5000; 4.0000]
+            Vertices[3] = [56.5000; -31.5000]
+            TexCoords.Origin = [-4.5000; 81.5000]
+            TexCoords.XAxis = [0.0037; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.0066]
+            Location = [-26.5000; 13.5000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.1719
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+            bFrozen = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush1
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::pieces
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -26.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [11.0000; 4.0000]
+            Vertices[3] = [11.0000; -26.0000]
+            TexCoords.Origin = [-20.5000; 70.5000]
+            TexCoords.XAxis = [0.0157; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.0076]
+            Location = [-16.0000; 11.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5039
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+            bFrozen = true
+        END_COMPONENT
+    END_ENTITY
+END_RESOURCE

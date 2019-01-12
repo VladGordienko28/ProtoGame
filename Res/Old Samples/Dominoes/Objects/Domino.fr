@@ -1,0 +1,24 @@
+BEGIN_RESOURCE FScript Domino
+    FileName = "Domino.flu"
+    ScriptFlags = 128
+    BEGIN_COMPONENT FRigidBodyComponent Base
+            bCanSleep = true
+            bSleeping = true
+            Material = 2
+            Mass = 10.4000
+            Size = [1.0000; 4.0000]
+            Layer = 0.7000
+            bFixedSize = true
+            bHashable = true
+            Inertia = 14.7333
+    END_COMPONENT
+    BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 64.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BDomino
+    END_COMPONENT
+    BEGIN_INSTANCE
+    END_INSTANCE
+END_RESOURCE

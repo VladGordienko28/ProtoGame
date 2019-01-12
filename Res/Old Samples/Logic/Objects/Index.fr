@@ -1,0 +1,1851 @@
+BEGIN_RESOURCE FLevel Index
+    GameSpeed = 1.0000
+    Camera.Location = [-31.0000; -41.0000]
+    Camera.FOV = [64.0000; 32.0000]
+    Camera.Zoom = 1.0000
+    Camera.ScrollBound = (-64.0000; -64.0000; 200.0000; 2048.0000)
+    Effect[0] = 1.0000
+    Effect[1] = 1.0000
+    Effect[2] = 1.0000
+    Effect[3] = 1.0000
+    Effect[4] = 1.0000
+    Effect[5] = 1.0000
+    AmbientLight = #20202d00
+    RndFlags = 7103
+    BEGIN_ENTITY Switch Switch6
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [97.0000; -50.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5067
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumPlugs = 2
+            PlugsName[0] = "Used"
+            PlugsName[1] = "Deused"
+            Plugs[0].Num = 2
+            Plugs[0][0].Target = FLogicComponent::Index.Schedule4.Logic
+            Plugs[0][1].Target = FLogicComponent::Index.Buzzer5.Logic
+            Plugs[1].Num = 6
+            Plugs[1][0].iJack = 1
+            Plugs[1][0].Target = FLogicComponent::Index.Schedule4.Logic
+            Plugs[1][1].iJack = 1
+            Plugs[1][1].Target = FLogicComponent::Index.Lamp17.Logic
+            Plugs[1][2].iJack = 1
+            Plugs[1][2].Target = FLogicComponent::Index.Lamp18.Logic
+            Plugs[1][3].iJack = 1
+            Plugs[1][3].Target = FLogicComponent::Index.Lamp19.Logic
+            Plugs[1][4].iJack = 1
+            Plugs[1][4].Target = FLogicComponent::Index.Lamp20.Logic
+            Plugs[1][5].Target = FLogicComponent::Index.Buzzer5.Logic
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 32.0000; 32.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSwitch
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Schedule Schedule4
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [97.5000; -43.5000]
+            Size = [6.0000; 6.0000]
+            Layer = 0.4931
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumPlugs = 4
+            NumJacks = 2
+            PlugsName[0] = "A"
+            PlugsName[1] = "B"
+            PlugsName[2] = "C"
+            PlugsName[3] = "D"
+            JacksName[0] = "Start"
+            JacksName[1] = "Stop"
+            Plugs[0].Num = 2
+            Plugs[0][0].Target = FLogicComponent::Index.Lamp17.Logic
+            Plugs[0][1].iJack = 1
+            Plugs[0][1].Target = FLogicComponent::Index.Lamp20.Logic
+            Plugs[1].Num = 2
+            Plugs[1][0].Target = FLogicComponent::Index.Lamp18.Logic
+            Plugs[1][1].iJack = 1
+            Plugs[1][1].Target = FLogicComponent::Index.Lamp17.Logic
+            Plugs[2].Num = 2
+            Plugs[2][0].Target = FLogicComponent::Index.Lamp19.Logic
+            Plugs[2][1].iJack = 1
+            Plugs[2][1].Target = FLogicComponent::Index.Lamp18.Logic
+            Plugs[3].Num = 3
+            Plugs[3][0].Target = FLogicComponent::Index.Lamp20.Logic
+            Plugs[3][1].iJack = 1
+            Plugs[3][1].Target = FLogicComponent::Index.Lamp19.Logic
+            Plugs[3][2].Target = FLogicComponent::Index.Schedule4.Logic
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (96.0000; 64.0000; 128.0000; 96.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #808080ff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Delays[0] = 0.2000
+            Delays[1] = 0.2000
+            Delays[2] = 0.2000
+            Delays[3] = 0.2000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Buzzer Buzzer5
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [104.0000; -57.5000]
+            Size = [6.0000; 6.0000]
+            Layer = 0.6779
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 1
+            JacksName[0] = "Play"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SClick
+            Gain = 0.8000
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Lamp Lamp20
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [108.0000; -35.5000]
+            Size = [6.0000; 3.0000]
+            Layer = 0.8477
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 2
+            JacksName[0] = "On"
+            JacksName[1] = "Off"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 64.0000; 32.0000)
+            Color = #df1515ff
+            Texture = FBitmap::BLight
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            LightFunc = 1
+            Color = #be1a1aff
+            Radius = 20.0000
+            Brightness = 0.8500
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Lamp Lamp19
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [101.0000; -35.5000]
+            Size = [6.0000; 3.0000]
+            Layer = 0.8477
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 2
+            JacksName[0] = "On"
+            JacksName[1] = "Off"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 64.0000; 32.0000)
+            Color = #2edf15ff
+            Texture = FBitmap::BLight
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            LightFunc = 1
+            Color = #27be1aff
+            Radius = 20.0000
+            Brightness = 0.8500
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Lamp Lamp18
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [94.0000; -35.5000]
+            Size = [6.0000; 3.0000]
+            Layer = 0.8477
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 2
+            JacksName[0] = "On"
+            JacksName[1] = "Off"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 64.0000; 32.0000)
+            Color = #e3e015ff
+            Texture = FBitmap::BLight
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            LightFunc = 1
+            Color = #c2b41aff
+            Radius = 20.0000
+            Brightness = 0.8500
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Switch Switch4
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [2.0000; -50.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5067
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumPlugs = 2
+            PlugsName[0] = "Used"
+            PlugsName[1] = "Deused"
+            Plugs[0].Num = 2
+            Plugs[0][0].Target = FLogicComponent::Index.Schedule3.Logic
+            Plugs[0][1].Target = FLogicComponent::Index.Buzzer3.Logic
+            Plugs[1].Num = 6
+            Plugs[1][0].iJack = 1
+            Plugs[1][0].Target = FLogicComponent::Index.Lamp14.Logic
+            Plugs[1][1].iJack = 1
+            Plugs[1][1].Target = FLogicComponent::Index.Schedule3.Logic
+            Plugs[1][2].iJack = 1
+            Plugs[1][2].Target = FLogicComponent::Index.Lamp12.Logic
+            Plugs[1][3].iJack = 1
+            Plugs[1][3].Target = FLogicComponent::Index.Lamp13.Logic
+            Plugs[1][4].iJack = 1
+            Plugs[1][4].Target = FLogicComponent::Index.Lamp11.Logic
+            Plugs[1][5].Target = FLogicComponent::Index.Buzzer3.Logic
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 32.0000; 32.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSwitch
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Lamp Lamp17
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [87.0000; -35.5000]
+            Size = [6.0000; 3.0000]
+            Layer = 0.8477
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 2
+            JacksName[0] = "On"
+            JacksName[1] = "Off"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 64.0000; 32.0000)
+            Color = #1523e8ff
+            Texture = FBitmap::BLight
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            LightFunc = 1
+            Color = #1c1ac6ff
+            Radius = 20.0000
+            Brightness = 0.8500
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Lamp Lamp16
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [51.5000; -36.5000]
+            Size = [6.0000; 3.0000]
+            Layer = 0.8477
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 2
+            JacksName[0] = "On"
+            JacksName[1] = "Off"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 64.0000; 32.0000)
+            Color = #1523e8ff
+            Texture = FBitmap::BLight
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            LightFunc = 1
+            Color = #1c1ac6ff
+            Radius = 30.0000
+            Brightness = 0.8900
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Lamp Lamp15
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [43.0000; -36.5000]
+            Size = [6.0000; 3.0000]
+            Layer = 0.8477
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 2
+            JacksName[0] = "On"
+            JacksName[1] = "Off"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 64.0000; 32.0000)
+            Color = #dd2b2bff
+            Texture = FBitmap::BLight
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #e32d2dff
+            Radius = 30.0000
+            Brightness = 0.8900
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Buzzer Buzzer4
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [56.5000; -56.0000]
+            Size = [6.0000; 6.0000]
+            Layer = 0.5779
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 1
+            JacksName[0] = "Play"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SClick
+            Gain = 0.8000
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Switch Switch5
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [48.0000; -50.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5067
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumPlugs = 2
+            PlugsName[0] = "Used"
+            PlugsName[1] = "Deused"
+            Plugs[0].Num = 3
+            Plugs[0][0].Target = FLogicComponent::Index.Buzzer4.Logic
+            Plugs[0][1].Target = FLogicComponent::Index.Lamp16.Logic
+            Plugs[0][2].iJack = 1
+            Plugs[0][2].Target = FLogicComponent::Index.Lamp15.Logic
+            Plugs[1].Num = 3
+            Plugs[1][0].Target = FLogicComponent::Index.Buzzer4.Logic
+            Plugs[1][1].iJack = 1
+            Plugs[1][1].Target = FLogicComponent::Index.Lamp16.Logic
+            Plugs[1][2].Target = FLogicComponent::Index.Lamp15.Logic
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 32.0000; 32.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSwitch
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Buzzer Buzzer3
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [13.0000; -53.0000]
+            Size = [6.0000; 6.0000]
+            Layer = 0.4921
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 1
+            JacksName[0] = "Play"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SClick
+            Gain = 0.8000
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Lamp Lamp14
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [15.0000; -41.5000]
+            Size = [6.0000; 3.0000]
+            Layer = 0.8477
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 2
+            JacksName[0] = "On"
+            JacksName[1] = "Off"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 64.0000; 32.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BLight
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            LightFunc = 1
+            Color = #ffffffff
+            Radius = 20.0000
+            Brightness = 0.7000
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Lamp Lamp13
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-5.0000; -41.5000]
+            Size = [6.0000; 3.0000]
+            Layer = 0.8477
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 2
+            JacksName[0] = "On"
+            JacksName[1] = "Off"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 64.0000; 32.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BLight
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            LightFunc = 1
+            Color = #ffffffff
+            Radius = 20.0000
+            Brightness = 0.7000
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Lamp Lamp12
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [15.0000; -33.5000]
+            Size = [6.0000; 3.0000]
+            Layer = 0.8477
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 2
+            JacksName[0] = "On"
+            JacksName[1] = "Off"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 64.0000; 32.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BLight
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            LightFunc = 1
+            Color = #ffffffff
+            Radius = 20.0000
+            Brightness = 0.7000
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Lamp Lamp11
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-5.0000; -33.5000]
+            Size = [6.0000; 3.0000]
+            Layer = 0.8477
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 2
+            JacksName[0] = "On"
+            JacksName[1] = "Off"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 64.0000; 32.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BLight
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            LightFunc = 1
+            Color = #ffffffff
+            Radius = 20.0000
+            Brightness = 0.7000
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Schedule Schedule3
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [4.5000; -38.5000]
+            Size = [6.0000; 6.0000]
+            Layer = 0.4996
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumPlugs = 4
+            NumJacks = 2
+            PlugsName[0] = "A"
+            PlugsName[1] = "B"
+            PlugsName[2] = "C"
+            PlugsName[3] = "D"
+            JacksName[0] = "Start"
+            JacksName[1] = "Stop"
+            Plugs[0].Num = 2
+            Plugs[0][0].Target = FLogicComponent::Index.Lamp13.Logic
+            Plugs[0][1].Target = FLogicComponent::Index.Buzzer3.Logic
+            Plugs[1].Num = 2
+            Plugs[1][0].Target = FLogicComponent::Index.Lamp11.Logic
+            Plugs[1][1].Target = FLogicComponent::Index.Buzzer3.Logic
+            Plugs[2].Num = 2
+            Plugs[2][0].Target = FLogicComponent::Index.Lamp12.Logic
+            Plugs[2][1].Target = FLogicComponent::Index.Buzzer3.Logic
+            Plugs[3].Num = 2
+            Plugs[3][0].Target = FLogicComponent::Index.Lamp14.Logic
+            Plugs[3][1].Target = FLogicComponent::Index.Buzzer3.Logic
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (96.0000; 64.0000; 128.0000; 96.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #808080ff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Delays[0] = 0.5000
+            Delays[1] = 0.4000
+            Delays[2] = 0.3000
+            Delays[3] = 0.2000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Model Model0
+        BEGIN_COMPONENT FModelComponent Base
+            MapXSize = 66
+            MapYSize = 10
+            TileSize = [4.0000; 4.0000]
+            TilesPerU = 8
+            TilesPerV = 8
+            Texture = FBitmap::BTiles
+            Color = #ffffffff
+            Location = [-64.0000; -64.0000]
+            Layer = 0.0140
+            bFixedAngle = true
+            bFixedSize = true
+            bFrozen = true
+            Map[0] = 10
+            Map[1] = 10
+            Map[2] = 10
+            Map[3] = 10
+            Map[4] = 10
+            Map[5] = 10
+            Map[6] = 10
+            Map[7] = 10
+            Map[8] = 10
+            Map[9] = 10
+            Map[10] = 10
+            Map[11] = 10
+            Map[12] = 10
+            Map[13] = 10
+            Map[14] = 10
+            Map[15] = 10
+            Map[16] = 10
+            Map[17] = 10
+            Map[18] = 10
+            Map[19] = 10
+            Map[20] = 10
+            Map[21] = 10
+            Map[22] = 10
+            Map[23] = 10
+            Map[24] = 10
+            Map[25] = 10
+            Map[26] = 10
+            Map[27] = 10
+            Map[28] = 10
+            Map[29] = 10
+            Map[30] = 10
+            Map[31] = 10
+            Map[32] = 10
+            Map[33] = 10
+            Map[34] = 10
+            Map[35] = 10
+            Map[36] = 10
+            Map[37] = 10
+            Map[38] = 10
+            Map[39] = 10
+            Map[40] = 10
+            Map[41] = 10
+            Map[42] = 10
+            Map[43] = 10
+            Map[44] = 10
+            Map[45] = 10
+            Map[46] = 10
+            Map[47] = 10
+            Map[48] = 10
+            Map[49] = 10
+            Map[50] = 10
+            Map[51] = 10
+            Map[52] = 10
+            Map[53] = 10
+            Map[54] = 10
+            Map[55] = 10
+            Map[56] = 10
+            Map[57] = 10
+            Map[58] = 10
+            Map[59] = 10
+            Map[60] = 10
+            Map[61] = 10
+            Map[62] = 10
+            Map[63] = 10
+            Map[64] = 10
+            Map[65] = 10
+            Map[66] = 10
+            Map[67] = 10
+            Map[68] = 10
+            Map[69] = 10
+            Map[70] = 10
+            Map[71] = 10
+            Map[72] = 10
+            Map[73] = 10
+            Map[74] = 10
+            Map[75] = 10
+            Map[76] = 10
+            Map[77] = 10
+            Map[78] = 10
+            Map[79] = 10
+            Map[80] = 10
+            Map[81] = 10
+            Map[82] = 10
+            Map[83] = 10
+            Map[84] = 10
+            Map[85] = 10
+            Map[86] = 10
+            Map[87] = 10
+            Map[88] = 10
+            Map[89] = 10
+            Map[90] = 10
+            Map[91] = 10
+            Map[92] = 10
+            Map[93] = 10
+            Map[94] = 10
+            Map[95] = 10
+            Map[96] = 10
+            Map[97] = 10
+            Map[98] = 10
+            Map[99] = 10
+            Map[100] = 10
+            Map[101] = 10
+            Map[102] = 10
+            Map[103] = 10
+            Map[104] = 10
+            Map[105] = 10
+            Map[106] = 10
+            Map[107] = 10
+            Map[108] = 10
+            Map[109] = 10
+            Map[110] = 10
+            Map[111] = 10
+            Map[112] = 10
+            Map[113] = 10
+            Map[114] = 10
+            Map[115] = 10
+            Map[116] = 10
+            Map[117] = 10
+            Map[118] = 10
+            Map[119] = 10
+            Map[120] = 10
+            Map[121] = 10
+            Map[122] = 10
+            Map[123] = 10
+            Map[124] = 10
+            Map[125] = 10
+            Map[126] = 10
+            Map[127] = 10
+            Map[128] = 10
+            Map[129] = 10
+            Map[130] = 10
+            Map[131] = 10
+            Map[132] = 2
+            Map[133] = 2
+            Map[134] = 2
+            Map[135] = 2
+            Map[136] = 2
+            Map[137] = 2
+            Map[138] = 2
+            Map[139] = 2
+            Map[140] = 2
+            Map[141] = 2
+            Map[142] = 2
+            Map[143] = 2
+            Map[144] = 2
+            Map[145] = 2
+            Map[146] = 2
+            Map[147] = 2
+            Map[148] = 2
+            Map[149] = 2
+            Map[150] = 2
+            Map[151] = 2
+            Map[152] = 2
+            Map[153] = 2
+            Map[154] = 2
+            Map[155] = 2
+            Map[156] = 2
+            Map[157] = 2
+            Map[158] = 2
+            Map[159] = 2
+            Map[160] = 2
+            Map[161] = 2
+            Map[162] = 2
+            Map[163] = 2
+            Map[164] = 2
+            Map[165] = 2
+            Map[166] = 2
+            Map[167] = 2
+            Map[168] = 2
+            Map[169] = 2
+            Map[170] = 2
+            Map[171] = 2
+            Map[172] = 2
+            Map[173] = 2
+            Map[174] = 2
+            Map[175] = 2
+            Map[176] = 2
+            Map[177] = 2
+            Map[178] = 2
+            Map[179] = 2
+            Map[180] = 2
+            Map[181] = 2
+            Map[182] = 2
+            Map[183] = 2
+            Map[184] = 2
+            Map[185] = 2
+            Map[186] = 2
+            Map[187] = 2
+            Map[188] = 2
+            Map[189] = 2
+            Map[190] = 2
+            Map[191] = 2
+            Map[192] = 2
+            Map[193] = 2
+            Map[194] = 2
+            Map[195] = 2
+            Map[196] = 2
+            Map[197] = 2
+            Map[198] = 2
+            Map[199] = 2
+            Map[200] = 2
+            Map[201] = 2
+            Map[202] = 2
+            Map[203] = 2
+            Map[204] = 2
+            Map[205] = 2
+            Map[206] = 2
+            Map[207] = 2
+            Map[208] = 2
+            Map[209] = 2
+            Map[210] = 2
+            Map[211] = 2
+            Map[212] = 2
+            Map[213] = 2
+            Map[214] = 2
+            Map[215] = 2
+            Map[216] = 2
+            Map[217] = 2
+            Map[218] = 2
+            Map[219] = 2
+            Map[220] = 2
+            Map[221] = 2
+            Map[222] = 2
+            Map[223] = 2
+            Map[224] = 2
+            Map[225] = 2
+            Map[226] = 2
+            Map[227] = 2
+            Map[228] = 2
+            Map[229] = 2
+            Map[230] = 2
+            Map[231] = 2
+            Map[232] = 2
+            Map[233] = 2
+            Map[234] = 2
+            Map[235] = 2
+            Map[236] = 2
+            Map[237] = 2
+            Map[238] = 2
+            Map[239] = 2
+            Map[240] = 2
+            Map[241] = 2
+            Map[242] = 2
+            Map[243] = 2
+            Map[244] = 2
+            Map[245] = 2
+            Map[246] = 2
+            Map[247] = 2
+            Map[248] = 2
+            Map[249] = 2
+            Map[250] = 2
+            Map[251] = 2
+            Map[252] = 2
+            Map[253] = 2
+            Map[254] = 2
+            Map[255] = 2
+            Map[256] = 2
+            Map[257] = 2
+            Map[258] = 2
+            Map[259] = 2
+            Map[260] = 2
+            Map[261] = 2
+            Map[262] = 2
+            Map[263] = 2
+            Map[264] = 2
+            Map[265] = 2
+            Map[266] = 2
+            Map[267] = 2
+            Map[268] = 2
+            Map[269] = 2
+            Map[270] = 2
+            Map[271] = 2
+            Map[272] = 2
+            Map[273] = 2
+            Map[274] = 2
+            Map[275] = 2
+            Map[276] = 2
+            Map[277] = 2
+            Map[278] = 2
+            Map[279] = 2
+            Map[280] = 2
+            Map[281] = 2
+            Map[282] = 2
+            Map[283] = 2
+            Map[284] = 2
+            Map[285] = 2
+            Map[286] = 2
+            Map[287] = 2
+            Map[288] = 2
+            Map[289] = 2
+            Map[290] = 2
+            Map[291] = 2
+            Map[292] = 2
+            Map[293] = 2
+            Map[294] = 2
+            Map[295] = 2
+            Map[296] = 2
+            Map[297] = 2
+            Map[298] = 2
+            Map[299] = 2
+            Map[300] = 2
+            Map[301] = 2
+            Map[302] = 2
+            Map[303] = 2
+            Map[304] = 2
+            Map[305] = 2
+            Map[306] = 2
+            Map[307] = 2
+            Map[308] = 2
+            Map[309] = 2
+            Map[310] = 2
+            Map[311] = 2
+            Map[312] = 2
+            Map[313] = 2
+            Map[314] = 2
+            Map[315] = 2
+            Map[316] = 2
+            Map[317] = 2
+            Map[318] = 2
+            Map[319] = 2
+            Map[320] = 2
+            Map[321] = 2
+            Map[322] = 2
+            Map[323] = 2
+            Map[324] = 2
+            Map[325] = 2
+            Map[326] = 2
+            Map[327] = 2
+            Map[328] = 2
+            Map[329] = 2
+            Map[330] = 2
+            Map[331] = 2
+            Map[332] = 2
+            Map[333] = 2
+            Map[334] = 2
+            Map[335] = 2
+            Map[336] = 2
+            Map[337] = 2
+            Map[338] = 2
+            Map[339] = 2
+            Map[340] = 2
+            Map[341] = 2
+            Map[342] = 2
+            Map[343] = 2
+            Map[344] = 2
+            Map[345] = 2
+            Map[346] = 2
+            Map[347] = 2
+            Map[348] = 2
+            Map[349] = 2
+            Map[350] = 2
+            Map[351] = 2
+            Map[352] = 2
+            Map[353] = 2
+            Map[354] = 2
+            Map[355] = 2
+            Map[356] = 2
+            Map[357] = 2
+            Map[358] = 2
+            Map[359] = 2
+            Map[360] = 2
+            Map[361] = 2
+            Map[362] = 2
+            Map[363] = 2
+            Map[364] = 2
+            Map[365] = 2
+            Map[366] = 2
+            Map[367] = 2
+            Map[368] = 2
+            Map[369] = 2
+            Map[370] = 2
+            Map[371] = 2
+            Map[372] = 2
+            Map[373] = 2
+            Map[374] = 2
+            Map[375] = 2
+            Map[376] = 2
+            Map[377] = 2
+            Map[378] = 2
+            Map[379] = 2
+            Map[380] = 2
+            Map[381] = 2
+            Map[382] = 2
+            Map[383] = 2
+            Map[384] = 2
+            Map[385] = 2
+            Map[386] = 2
+            Map[387] = 2
+            Map[388] = 2
+            Map[389] = 2
+            Map[390] = 2
+            Map[391] = 2
+            Map[392] = 2
+            Map[393] = 2
+            Map[394] = 2
+            Map[395] = 2
+            Map[396] = 2
+            Map[397] = 2
+            Map[398] = 2
+            Map[399] = 2
+            Map[400] = 2
+            Map[401] = 2
+            Map[402] = 2
+            Map[403] = 2
+            Map[404] = 2
+            Map[405] = 2
+            Map[406] = 2
+            Map[407] = 2
+            Map[408] = 2
+            Map[409] = 2
+            Map[410] = 2
+            Map[411] = 2
+            Map[412] = 2
+            Map[413] = 2
+            Map[414] = 2
+            Map[415] = 2
+            Map[416] = 2
+            Map[417] = 2
+            Map[418] = 2
+            Map[419] = 2
+            Map[420] = 2
+            Map[421] = 2
+            Map[422] = 2
+            Map[423] = 2
+            Map[424] = 2
+            Map[425] = 2
+            Map[426] = 2
+            Map[427] = 2
+            Map[428] = 2
+            Map[429] = 2
+            Map[430] = 2
+            Map[431] = 2
+            Map[432] = 2
+            Map[433] = 2
+            Map[434] = 2
+            Map[435] = 2
+            Map[436] = 2
+            Map[437] = 2
+            Map[438] = 2
+            Map[439] = 2
+            Map[440] = 2
+            Map[441] = 2
+            Map[442] = 2
+            Map[443] = 2
+            Map[444] = 2
+            Map[445] = 2
+            Map[446] = 2
+            Map[447] = 2
+            Map[448] = 2
+            Map[449] = 2
+            Map[450] = 2
+            Map[451] = 2
+            Map[452] = 2
+            Map[453] = 2
+            Map[454] = 2
+            Map[455] = 2
+            Map[456] = 2
+            Map[457] = 2
+            Map[458] = 2
+            Map[459] = 2
+            Map[460] = 2
+            Map[461] = 2
+            Map[462] = 2
+            Map[463] = 2
+            Map[464] = 2
+            Map[465] = 2
+            Map[466] = 2
+            Map[467] = 2
+            Map[468] = 2
+            Map[469] = 2
+            Map[470] = 2
+            Map[471] = 2
+            Map[472] = 2
+            Map[473] = 2
+            Map[474] = 2
+            Map[475] = 2
+            Map[476] = 2
+            Map[477] = 2
+            Map[478] = 2
+            Map[479] = 2
+            Map[480] = 2
+            Map[481] = 2
+            Map[482] = 2
+            Map[483] = 2
+            Map[484] = 2
+            Map[485] = 2
+            Map[486] = 2
+            Map[487] = 2
+            Map[488] = 2
+            Map[489] = 2
+            Map[490] = 2
+            Map[491] = 2
+            Map[492] = 2
+            Map[493] = 2
+            Map[494] = 2
+            Map[495] = 2
+            Map[496] = 2
+            Map[497] = 2
+            Map[498] = 2
+            Map[499] = 2
+            Map[500] = 2
+            Map[501] = 2
+            Map[502] = 2
+            Map[503] = 2
+            Map[504] = 2
+            Map[505] = 2
+            Map[506] = 2
+            Map[507] = 2
+            Map[508] = 2
+            Map[509] = 2
+            Map[510] = 2
+            Map[511] = 2
+            Map[512] = 2
+            Map[513] = 2
+            Map[514] = 2
+            Map[515] = 2
+            Map[516] = 2
+            Map[517] = 2
+            Map[518] = 2
+            Map[519] = 2
+            Map[520] = 2
+            Map[521] = 2
+            Map[522] = 2
+            Map[523] = 2
+            Map[524] = 2
+            Map[525] = 2
+            Map[526] = 2
+            Map[527] = 2
+            Map[528] = 2
+            Map[529] = 2
+            Map[530] = 2
+            Map[531] = 2
+            Map[532] = 2
+            Map[533] = 2
+            Map[534] = 2
+            Map[535] = 2
+            Map[536] = 2
+            Map[537] = 2
+            Map[538] = 2
+            Map[539] = 2
+            Map[540] = 2
+            Map[541] = 2
+            Map[542] = 2
+            Map[543] = 2
+            Map[544] = 2
+            Map[545] = 2
+            Map[546] = 2
+            Map[547] = 2
+            Map[548] = 2
+            Map[549] = 2
+            Map[550] = 2
+            Map[551] = 2
+            Map[552] = 2
+            Map[553] = 2
+            Map[554] = 2
+            Map[555] = 2
+            Map[556] = 2
+            Map[557] = 2
+            Map[558] = 2
+            Map[559] = 2
+            Map[560] = 2
+            Map[561] = 2
+            Map[562] = 2
+            Map[563] = 2
+            Map[564] = 2
+            Map[565] = 2
+            Map[566] = 2
+            Map[567] = 2
+            Map[568] = 2
+            Map[569] = 2
+            Map[570] = 2
+            Map[571] = 2
+            Map[572] = 2
+            Map[573] = 2
+            Map[574] = 2
+            Map[575] = 2
+            Map[576] = 2
+            Map[577] = 2
+            Map[578] = 2
+            Map[579] = 2
+            Map[580] = 2
+            Map[581] = 2
+            Map[582] = 2
+            Map[583] = 2
+            Map[584] = 2
+            Map[585] = 2
+            Map[586] = 2
+            Map[587] = 2
+            Map[588] = 2
+            Map[589] = 2
+            Map[590] = 2
+            Map[591] = 2
+            Map[592] = 2
+            Map[593] = 2
+            Map[594] = 2
+            Map[595] = 2
+            Map[596] = 2
+            Map[597] = 2
+            Map[598] = 2
+            Map[599] = 2
+            Map[600] = 2
+            Map[601] = 2
+            Map[602] = 2
+            Map[603] = 2
+            Map[604] = 2
+            Map[605] = 2
+            Map[606] = 2
+            Map[607] = 2
+            Map[608] = 2
+            Map[609] = 2
+            Map[610] = 2
+            Map[611] = 2
+            Map[612] = 2
+            Map[613] = 2
+            Map[614] = 2
+            Map[615] = 2
+            Map[616] = 2
+            Map[617] = 2
+            Map[618] = 2
+            Map[619] = 2
+            Map[620] = 2
+            Map[621] = 2
+            Map[622] = 2
+            Map[623] = 2
+            Map[624] = 2
+            Map[625] = 2
+            Map[626] = 2
+            Map[627] = 2
+            Map[628] = 2
+            Map[629] = 2
+            Map[630] = 2
+            Map[631] = 2
+            Map[632] = 2
+            Map[633] = 2
+            Map[634] = 2
+            Map[635] = 2
+            Map[636] = 2
+            Map[637] = 2
+            Map[638] = 2
+            Map[639] = 2
+            Map[640] = 2
+            Map[641] = 2
+            Map[642] = 2
+            Map[643] = 2
+            Map[644] = 2
+            Map[645] = 2
+            Map[646] = 2
+            Map[647] = 2
+            Map[648] = 2
+            Map[649] = 2
+            Map[650] = 2
+            Map[651] = 2
+            Map[652] = 2
+            Map[653] = 2
+            Map[654] = 2
+            Map[655] = 2
+            Map[656] = 2
+            Map[657] = 2
+            Map[658] = 2
+            Map[659] = 2
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Player Player0
+        BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Location = [-58.0000; -51.5000]
+            Size = [2.0000; 9.0000]
+            Layer = 0.9435
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            Animation = FAnimation::ABot
+            Offset = [0.0000; 0.7500]
+            Scale = [7.0000; 10.5000]
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush0
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -24.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [4.0000; 4.0000]
+            Vertices[3] = [4.0000; -24.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [-68.0000; -40.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5053
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush1
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [260.0000; 4.0000]
+            Vertices[3] = [260.0000; -4.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [-60.0000; -60.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.4719
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Switch Switch3
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-42.0000; -50.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.4942
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumPlugs = 2
+            PlugsName[0] = "Used"
+            PlugsName[1] = "Deused"
+            Plugs[0].Num = 2
+            Plugs[0][0].Target = FLogicComponent::Index.Lamp10.Logic
+            Plugs[0][1].Target = FLogicComponent::Index.Buzzer2.Logic
+            Plugs[1].Num = 2
+            Plugs[1][0].iJack = 1
+            Plugs[1][0].Target = FLogicComponent::Index.Lamp10.Logic
+            Plugs[1][1].Target = FLogicComponent::Index.Buzzer2.Logic
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 32.0000; 32.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSwitch
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Lamp Lamp10
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-36.0000; -38.0000]
+            Size = [6.0000; 3.0000]
+            Layer = 0.8477
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 2
+            JacksName[0] = "On"
+            JacksName[1] = "Off"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 64.0000; 32.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BLight
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            LightFunc = 1
+            Color = #ffffffff
+            Radius = 29.0000
+            Brightness = 0.9000
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Buzzer Buzzer2
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-32.0000; -59.5000]
+            Size = [6.0000; 6.0000]
+            Layer = 0.6355
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 1
+            JacksName[0] = "Play"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SClick
+            Gain = 0.9000
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY BoolOp BoolOp0
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [128.5000; -43.5000]
+            Size = [6.0000; 6.0000]
+            Layer = 0.5048
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumPlugs = 2
+            NumJacks = 4
+            PlugsName[0] = "True"
+            PlugsName[1] = "False"
+            JacksName[0] = "A_On"
+            JacksName[1] = "A_Off"
+            JacksName[2] = "B_On"
+            JacksName[3] = "B_Off"
+            Plugs[0].Num = 1
+            Plugs[0][0].Target = FLogicComponent::Index.Lamp0.Logic
+            Plugs[1].Num = 1
+            Plugs[1][0].iJack = 1
+            Plugs[1][0].Target = FLogicComponent::Index.Lamp0.Logic
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (96.0000; 32.0000; 128.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Switch Switch0
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [126.5000; -50.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5067
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumPlugs = 2
+            PlugsName[0] = "Used"
+            PlugsName[1] = "Deused"
+            Plugs[0].Num = 2
+            Plugs[0][0].Target = FLogicComponent::Index.BoolOp0.Logic
+            Plugs[0][1].Target = FLogicComponent::Index.Buzzer0.Logic
+            Plugs[1].Num = 2
+            Plugs[1][0].iJack = 1
+            Plugs[1][0].Target = FLogicComponent::Index.BoolOp0.Logic
+            Plugs[1][1].Target = FLogicComponent::Index.Buzzer0.Logic
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 32.0000; 32.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSwitch
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Switch Switch1
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [130.5000; -50.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5067
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumPlugs = 2
+            PlugsName[0] = "Used"
+            PlugsName[1] = "Deused"
+            Plugs[0].Num = 2
+            Plugs[0][0].iJack = 2
+            Plugs[0][0].Target = FLogicComponent::Index.BoolOp0.Logic
+            Plugs[0][1].Target = FLogicComponent::Index.Buzzer0.Logic
+            Plugs[1].Num = 2
+            Plugs[1][0].iJack = 3
+            Plugs[1][0].Target = FLogicComponent::Index.BoolOp0.Logic
+            Plugs[1][1].Target = FLogicComponent::Index.Buzzer0.Logic
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 32.0000; 32.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSwitch
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Lamp Lamp0
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [129.0000; -35.5000]
+            Size = [6.0000; 3.0000]
+            Layer = 0.8477
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 2
+            JacksName[0] = "On"
+            JacksName[1] = "Off"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 64.0000; 32.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BLight
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            LightFunc = 1
+            Color = #ffffffff
+            Radius = 29.0000
+            Brightness = 0.9000
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush2
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -12.0000]
+            Vertices[1] = [-4.0000; 20.0000]
+            Vertices[2] = [4.0000; 20.0000]
+            Vertices[3] = [4.0000; -12.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [204.0000; -52.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.4903
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Switch Switch2
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [150.0000; -50.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5067
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumPlugs = 2
+            PlugsName[0] = "Used"
+            PlugsName[1] = "Deused"
+            Plugs[0].Num = 2
+            Plugs[0][0].Target = FLogicComponent::Index.BoolOp1.Logic
+            Plugs[0][1].Target = FLogicComponent::Index.Buzzer0.Logic
+            Plugs[1].Num = 2
+            Plugs[1][0].iJack = 1
+            Plugs[1][0].Target = FLogicComponent::Index.BoolOp1.Logic
+            Plugs[1][1].Target = FLogicComponent::Index.Buzzer0.Logic
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 32.0000; 32.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSwitch
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Switch Switch7
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [154.0000; -50.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5067
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumPlugs = 2
+            PlugsName[0] = "Used"
+            PlugsName[1] = "Deused"
+            Plugs[0].Num = 2
+            Plugs[0][0].iJack = 2
+            Plugs[0][0].Target = FLogicComponent::Index.BoolOp1.Logic
+            Plugs[0][1].Target = FLogicComponent::Index.Buzzer0.Logic
+            Plugs[1].Num = 2
+            Plugs[1][0].iJack = 3
+            Plugs[1][0].Target = FLogicComponent::Index.BoolOp1.Logic
+            Plugs[1][1].Target = FLogicComponent::Index.Buzzer0.Logic
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 32.0000; 32.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSwitch
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Switch Switch8
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [172.5000; -50.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5067
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumPlugs = 2
+            PlugsName[0] = "Used"
+            PlugsName[1] = "Deused"
+            Plugs[0].Num = 2
+            Plugs[0][0].Target = FLogicComponent::Index.BoolOp2.Logic
+            Plugs[0][1].Target = FLogicComponent::Index.Buzzer0.Logic
+            Plugs[1].Num = 2
+            Plugs[1][0].iJack = 1
+            Plugs[1][0].Target = FLogicComponent::Index.BoolOp2.Logic
+            Plugs[1][1].Target = FLogicComponent::Index.Buzzer0.Logic
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 32.0000; 32.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSwitch
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Switch Switch9
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [176.5000; -50.0000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.5067
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumPlugs = 2
+            PlugsName[0] = "Used"
+            PlugsName[1] = "Deused"
+            Plugs[0].Num = 2
+            Plugs[0][0].iJack = 2
+            Plugs[0][0].Target = FLogicComponent::Index.BoolOp2.Logic
+            Plugs[0][1].Target = FLogicComponent::Index.Buzzer0.Logic
+            Plugs[1].Num = 2
+            Plugs[1][0].iJack = 3
+            Plugs[1][0].Target = FLogicComponent::Index.BoolOp2.Logic
+            Plugs[1][1].Target = FLogicComponent::Index.Buzzer0.Logic
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 32.0000; 32.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BSwitch
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY BoolOp BoolOp1
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [152.5000; -43.5000]
+            Size = [6.0000; 6.0000]
+            Layer = 0.5048
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumPlugs = 2
+            NumJacks = 4
+            PlugsName[0] = "True"
+            PlugsName[1] = "False"
+            JacksName[0] = "A_On"
+            JacksName[1] = "A_Off"
+            JacksName[2] = "B_On"
+            JacksName[3] = "B_Off"
+            Plugs[0].Num = 1
+            Plugs[0][0].Target = FLogicComponent::Index.Lamp1.Logic
+            Plugs[1].Num = 1
+            Plugs[1][0].iJack = 1
+            Plugs[1][0].Target = FLogicComponent::Index.Lamp1.Logic
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (96.0000; 32.0000; 128.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Operation = 1
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY BoolOp BoolOp2
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [175.0000; -43.5000]
+            Size = [6.0000; 6.0000]
+            Layer = 0.5048
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumPlugs = 2
+            NumJacks = 4
+            PlugsName[0] = "True"
+            PlugsName[1] = "False"
+            JacksName[0] = "A_On"
+            JacksName[1] = "A_Off"
+            JacksName[2] = "B_On"
+            JacksName[3] = "B_Off"
+            Plugs[0].Num = 1
+            Plugs[0][0].Target = FLogicComponent::Index.Lamp2.Logic
+            Plugs[1].Num = 1
+            Plugs[1][0].iJack = 1
+            Plugs[1][0].Target = FLogicComponent::Index.Lamp2.Logic
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (96.0000; 32.0000; 128.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Operation = 2
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Lamp Lamp1
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [152.5000; -36.0000]
+            Size = [6.0000; 3.0000]
+            Layer = 0.8477
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 2
+            JacksName[0] = "On"
+            JacksName[1] = "Off"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 64.0000; 32.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BLight
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            LightFunc = 1
+            Color = #ffffffff
+            Radius = 29.0000
+            Brightness = 0.9000
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Lamp Lamp2
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [175.5000; -35.5000]
+            Size = [6.0000; 3.0000]
+            Layer = 0.8477
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 2
+            JacksName[0] = "On"
+            JacksName[1] = "Off"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 64.0000; 32.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BLight
+        END_COMPONENT
+        BEGIN_COMPONENT FLightComponent Light
+            LightFunc = 1
+            Color = #ffffffff
+            Radius = 29.0000
+            Brightness = 0.9000
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Buzzer Buzzer0
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [160.5000; -57.5000]
+            Size = [6.0000; 6.0000]
+            Layer = 0.6779
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 1
+            JacksName[0] = "Play"
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Sound = FSound::SClick
+            Gain = 0.8000
+            Pitch = 1.0000
+        END_INSTANCE
+    END_ENTITY
+END_RESOURCE

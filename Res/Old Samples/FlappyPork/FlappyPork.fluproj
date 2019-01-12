@@ -1,0 +1,24 @@
+BEGIN_INCLUDE
+    Brush.fr
+    PipeSpawner.fr
+    Pig.fr
+    Pipe.fr
+    BSystem.fr
+    BPig.fr
+    BPipe.fr
+    BSky.fr
+    BGround.fr
+    BBlack.fr
+    Consolas24_0.fr
+    ProjectInfo0.fr
+    APig.fr
+    Index.fr
+    Consolas24.fr
+    SRush.fr
+    SScore.fr
+    SGrunt.fr
+END_INCLUDE
+BEGIN_PAGES
+    Pig
+    Index
+END_PAGES

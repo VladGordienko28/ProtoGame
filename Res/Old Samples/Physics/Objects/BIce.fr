@@ -1,0 +1,7 @@
+BEGIN_RESOURCE FBitmap BIce
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    FileName = "BIce.bmp"
+    UBits = 4
+    VBits = 4
+END_RESOURCE

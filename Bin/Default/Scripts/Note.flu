@@ -1,0 +1,9 @@
+/**
+ * @Note: Object to leave message.
+ * @Author: Vlad Gordienko.
+ */
+script Note
+{
+public:
+    string          Text;
+}

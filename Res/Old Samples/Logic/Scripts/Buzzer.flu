@@ -1,0 +1,19 @@
+/**
+ * @Buzzer: Sound buzzer.
+ * @Author: Vlad Gordienko.
+ */
+script Buzzer
+{
+public:
+    Sound       Sound;
+    float       Gain;
+    float       Pitch;
+    
+    event OnReceiveSignal( entity Creator, entity Circuit, string InJack )
+    {
+        if( InJack == "Play" && Sound != null )
+        {
+            PlaySoundFX( Sound, Gain, Pitch );
+        }
+    }   
+}

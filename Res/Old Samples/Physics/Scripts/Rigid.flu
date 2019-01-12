@@ -1,0 +1,22 @@
+/**
+ * @Rigid: Rigid body object.
+ * @Author: Vlad Gordienko.
+ */
+script Rigid
+{
+public:
+    event OnCollide( entity Other, EHitSide Side )
+    {
+        SolveSolid(true);
+    } 
+    event OnPreTick( float Delta )
+    {
+        Forces += [0.0, -9.8] * Mass;
+        if( Velocity.Y < -20.0 )
+            Velocity.Y  = -20.0;
+            
+        // Fell out of the scene.
+        if( Location.Y < -200.0 )
+            delete this;
+    }
+}

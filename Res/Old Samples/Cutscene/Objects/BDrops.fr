@@ -1,0 +1,9 @@
+BEGIN_RESOURCE FBitmap BDrops
+    BlendMode = 6
+    Saturation = 1.5000
+    AnimSpeed = 30.0000
+    Group = "Particles"
+    FileName = "BDrops.bmp"
+    UBits = 3
+    VBits = 3
+END_RESOURCE

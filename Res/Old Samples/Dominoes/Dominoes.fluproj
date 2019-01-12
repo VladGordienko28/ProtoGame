@@ -1,0 +1,12 @@
+BEGIN_INCLUDE
+    Brush.fr
+    Domino.fr
+    BDomino.fr
+    BChecker.fr
+    ProjectInfo0.fr
+    Index.fr
+END_INCLUDE
+BEGIN_PAGES
+    Domino
+    Index
+END_PAGES

@@ -1,0 +1,8 @@
+BEGIN_RESOURCE FBitmap BSpring
+    BlendMode = 1
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    FileName = "BSpring.bmp"
+    UBits = 3
+    VBits = 4
+END_RESOURCE

@@ -1,0 +1,9 @@
+BEGIN_RESOURCE FBitmap RedLine
+    Filter = 1
+    BlendMode = 4
+    Saturation = 2.0000
+    AnimSpeed = 30.0000
+    FileName = "RedLine.png"
+    UBits = 7
+    VBits = 7
+END_RESOURCE

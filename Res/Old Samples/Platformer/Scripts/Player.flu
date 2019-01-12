@@ -1,0 +1,234 @@
+/**
+ * @Player: Demogame player.
+ * @Author: Vlad Gordienko.
+ */
+script Player: family Players
+{
+public:
+    integer         Health;
+    integer         Score;
+    
+    event OnPreTick( float Delta )
+    {
+        if( label == @Dead )
+        {
+            Velocity.Y  -= 30.0 * Delta;
+            return;
+        }
+        
+        if( KeyIsPressed(KEY_Left) )
+        {
+            Velocity.X      = -8.0;
+            $Sprite.bFlipH  = true;
+        }
+        else if( KeyIsPressed(KEY_Right) )
+        {
+            Velocity.X      = +8.0;
+            $Sprite.bFlipH  = false;
+        }                           
+        else
+            Velocity.X      = 0.0;
+            
+        if( KeyIsPressed(KEY_Up) && bCanJump )
+        {
+            if( Floor != undefined && !Floor is #JumpPad )
+            {
+                Velocity.Y  = Velocity.X != 0.0 ? 14.3 : 13.0;
+                bCanJump    = false;
+                bJumping    = true;
+                PlaySoundFX( #SJump, 0.4, 1.0 );
+            }
+        }
+        else if( !KeyIsPressed(KEY_Up) && bJumping )
+        {
+            bJumping    = false;
+            bCanJump    = true;
+            if( Velocity.Y > 0.0 )
+                Velocity.Y = 0.0;
+        }
+        
+        Velocity.Y  -= 17.0 * Delta;
+        if( Velocity.Y < -20.0 )
+            Velocity.Y = -20.0;
+            
+        if( Floor != undefined && !(Floor is #JumpPad) )
+        {
+            if( Velocity.X != 0.0 )
+                $Sprite.PlayAnim( "Walk", 7.5, ANIM_Loop );
+            else
+                $Sprite.PlayAnim( "Idle", 1.0, ANIM_Once );
+        }
+        else
+            $Sprite.PlayAnim( "Jump", 1.0, ANIM_Once );      
+    }
+    
+    
+    event OnCollide( entity Other, EHitSide Side )
+    {
+        if( label == @Dead )
+            return;
+    
+        if( Other is #Brush )
+        {
+            Brush B = Brush(Other);
+            if( B.Type == BRUSH_Solid )
+                SolveSolid( true );
+            else
+                SolveOneway( true );                       
+        }        
+    }
+    
+    
+    event OnBeginPlay()
+    {
+        PlayMusic( #StrangeStuff, 1.5 );
+        SetBlackEffect();
+        $Painter.PushEffect(0.0);
+        $Painter.PopEffect(1.5);
+
+        Level level = Level;
+
+        bCanJump                    = true;
+        Health                      = 3;
+        Score                       = 0;
+        PainlessTime                = 0.0;
+        level.Camera.Location       = Location;
+        level.Camera.Zoom           = 1.0;
+        goto @Alive;              
+    }
+    
+
+    event OnTick( float Delta )
+    {
+        if( label != @Alive )
+            return;
+            
+        Level level = Level;
+        if( level.Camera.Location.X < Location.X-5.0 ) level.Camera.Location.X = Location.X - 5.0;
+        if( level.Camera.Location.X > Location.X+5.0 ) level.Camera.Location.X = Location.X + 5.0;             
+        if( level.Camera.Location.Y < Location.Y-5.0 ) level.Camera.Location.Y = Location.Y - 5.0;
+        if( level.Camera.Location.Y > Location.Y+5.0 ) level.Camera.Location.Y = Location.Y + 5.0;   
+
+        if( Location.Y+Size.Y < (Level).Camera.ScrollBound.Min.Y )
+            TakeDamage( this, "Fall", 999 );                                                               
+    }
+
+
+    event OnRender()
+    {
+        $Painter.Color  = rgba( 255, 255, 255, 255 );
+        $Painter.Texture = #BSheet;
+        integer i;
+        for( i=1; i<=5; i++ )
+            if( i <= Health )
+                $Painter.Tile( [52.0*i, $Painter.Height-48.0], [32.0, 32.0], [0.0, 240.0], [16.0, 16.0] );
+            else
+                $Painter.Tile( [52.0*i, $Painter.Height-48.0], [32.0, 32.0], [16.0, 240.0], [16.0, 16.0] );
+                
+        $Painter.Font   = #Font1;
+        string Sc   = string(Score);
+        while( Sc.length < 7 ) Sc = "0" + Sc;
+        $Painter.TextOut( [52.0, 16.0], Sc, 1.0 );
+        
+        if( Level.bIsPause )
+            $Painter.TextOut( [$Painter.Width*0.5-50.0, $Painter.Height*0.5-13.0], "PAUSE", 1.0 );
+    }
+    
+    
+    event OnBeginTouch( entity Other )
+    {
+        if( label == @Dead )
+            return;
+    
+        if( Other in Enemies && Enemies(Other).IsAlive() )
+        {
+            if( Velocity.Y<0.0 && Location.Y>Other.GetAABB().Max.Y )
+            {
+                (Enemies(Other)).TakeDamage( this, "Smash", 1 );
+                Velocity.Y  = KeyIsPressed(KEY_Up) ? 12.0 : 10.0;   
+                PlaySoundFX( #SEnemKill, 0.4, 1.0 );
+                Score   += 100;                                         
+            }
+            else
+            {
+                if( PainlessTime <= 0.0 )
+                    TakeDamage( Other, "Bite", 1 );
+            }                                                                        
+        }
+    }
+    
+    
+    fn TakeDamage( entity Other, string Type, integer Amount ) unified
+    {
+        PlaySoundFX( #SDam, 0.4, 1.0 );
+        PainlessTime    = 1.5;
+        Health          -= Amount;
+        
+        if( Health <= 0 )
+            goto @Dead;
+    }           
+
+
+    event OnKeyDown( integer K )
+    {
+        if( K == KEY_Space )
+            base.Level.bIsPause = !base.Level.bIsPause;
+            
+        // Cheats testing.
+        if( K == KEY_Y )   // Last letter of cheat. 
+            if( MatchKeyCombo("XYZZY") )
+            {
+                Health = 5;
+                info("You're cheater!!!");
+            }
+    }                 
+
+private:
+    bool            bJumping;
+    bool            bCanJump;
+    float           PainlessTime;
+ 
+ 
+    fn SetBlackEffect()
+    {
+        $Painter.Effect[0]  = 0.0;
+        $Painter.Effect[1]  = 0.0;        
+        $Painter.Effect[2]  = 0.0;
+        $Painter.Effect[3]  = 1.0;
+        $Painter.Effect[4]  = 1.0;        
+        $Painter.Effect[5]  = 1.0;    
+        $Painter.Effect[6]  = 0.0;
+        $Painter.Effect[7]  = 0.0;        
+        $Painter.Effect[8]  = 0.0;
+        $Painter.Effect[9]  = 0.0;           
+    }
+ 
+    //
+    // Player's thread.
+    //
+    thread
+    {
+    @Alive:
+        wait PainlessTime > 0.0;
+        while( PainlessTime>0.0 )
+        {
+            $Sprite.bHidden = !$Sprite.bHidden;
+            PainlessTime    -= 0.05;
+            sleep 0.05;
+        }
+        $Sprite.bHidden = false;
+        goto @Alive; 
+    
+    @Dead:
+        PlayMusic( null, 1.5 );
+        PlaySoundFX( #SDie, 0.4, 1.0 );
+        Velocity.X  = Velocity.X>0.0 ? 15.0 : -15.0;
+        Velocity.Y  = 10.0;
+        $Sprite.PlayAnim( "Idle", 1.0, ANIM_Once );
+        $Sprite.bFlipV  = true;     
+        SetBlackEffect();
+        $Painter.PushEffect(2.0);
+        sleep 2.0;
+        TravelTo( Level.Original, true ); 
+    }
+}

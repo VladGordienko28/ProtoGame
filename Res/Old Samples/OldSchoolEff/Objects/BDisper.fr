@@ -1,0 +1,8 @@
+BEGIN_RESOURCE FBitmap BDisper
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    Group = "Stuff"
+    FileName = "BDisper.bmp"
+    UBits = 8
+    VBits = 8
+END_RESOURCE

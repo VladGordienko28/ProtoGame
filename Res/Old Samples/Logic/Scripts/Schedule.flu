@@ -1,0 +1,37 @@
+/**
+ * @Schedule: Step by step executor.
+ * @Author: Vlad Gordienko.
+ */
+script Schedule
+{
+public:
+    float[4]    Delays;
+    
+    event OnReceiveSignal( entity Creator, entity Circuit, string InJack )
+    {
+        if( InJack == "Start" )
+            goto @Start;   
+        else if( InJack == "Stop" )
+            goto @Stop;                              
+    }
+
+
+    thread
+    {
+    @Stop:
+        stop;
+        
+    @Start:
+        sleep Delays[0];
+        $Logic.InduceSignal( this, "A" );
+        
+        sleep Delays[1];
+        $Logic.InduceSignal( this, "B" );  
+              
+        sleep Delays[2];
+        $Logic.InduceSignal( this, "C" );  
+              
+        sleep Delays[3];
+        $Logic.InduceSignal( this, "D" );        
+    }
+}

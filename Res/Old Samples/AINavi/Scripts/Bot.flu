@@ -1,0 +1,136 @@
+/**
+ * @Bot: AI demonstration silly bot.
+ * @Author: Vlad Gordienko, who silly too.
+ */
+script Bot
+{
+private:
+    integer     TotalOrbs;
+    integer     NumOrbs;
+    Orb         DesiredOrb;
+
+    // Test git text files attribute
+
+    fn CountOrbs()
+    {
+        Orb orb;
+        NumOrbs = 0;
+        DesiredOrb  = undefined;
+        foreach( orb : AllEntities(#Orb) )
+        {
+            NumOrbs++;
+            DesiredOrb  = orb;
+        }                   
+    }
+
+    event OnBeginPlay()
+    {
+        // Initially count orbs.
+        CountOrbs();
+        TotalOrbs   = NumOrbs;
+    }
+    
+    event OnRender()
+    {
+        $Painter.Color  = rgba( 255, 255, 255, 255 );
+        $Painter.Font   = #Font1;
+        
+        if( NumOrbs != 0 )
+            $Painter.TextOut( [32.0, 32.0], string(TotalOrbs-NumOrbs)+" OF "+string(TotalOrbs), 1.0 );
+        else
+            $Painter.TextOut( [32.0, 32.0], "ROAM", 1.0 );            
+    }
+
+    event OnCollide( entity Other, EHitSide Side )
+    {
+        if( Other is #Brush )
+        {
+            Brush B = Brush(Other);
+            if( B.Type == BRUSH_Solid )
+                SolveSolid( true );
+            else
+                SolveOneway( true );                       
+        }
+    }
+
+    event OnPreTick( float Delta )
+    {
+        // Fall via gravity.
+        Velocity.y -= $Puppet.GravityScale * Delta;
+        if( Velocity.y < -15.0 )
+            Velocity.y  = -15.0;     
+
+        // Choose animation.
+        if( Floor != undefined )
+        {
+            if( Velocity.X != 0.0 )
+                $Sprite.PlayAnim( "Walk", 6.5, ANIM_Loop );
+            else
+                $Sprite.PlayAnim( "Idle", 1.0, ANIM_Once );
+        }
+        else
+            $Sprite.PlayAnim( "Jump", 1.0, ANIM_Once );
+
+        // Sprite flipping.
+        if( $Sprite.bFlipH && Velocity.X>0.0 )
+            $Sprite.bFlipH = false;     
+        if( !$Sprite.bFlipH && Velocity.X<0.0 )
+            $Sprite.bFlipH = true;                                                
+    }
+    
+    
+    event OnBeginTouch( entity Other )
+    {
+        if( Other is #Orb )
+        {
+            delete Other;
+            CountOrbs();
+            goto @Restart;            
+        }
+    }
+
+   
+    event OnTick( float Delta )
+    {
+        Level level = Level;
+        if( level.Camera.Location.X < Location.X-5.0 ) level.Camera.Location.X = Location.X - 5.0;
+        if( level.Camera.Location.X > Location.X+5.0 ) level.Camera.Location.X = Location.X + 5.0;             
+        if( level.Camera.Location.Y < Location.Y-5.0 ) level.Camera.Location.Y = Location.Y - 5.0;
+        if( level.Camera.Location.Y > Location.Y+5.0 ) level.Camera.Location.Y = Location.Y + 5.0;                                                                
+    }    
+
+    thread
+    {
+    @Restart:
+        while( true )
+        {
+            // Wait until ai landed.
+            wait Floor != undefined;
+            
+            if( DesiredOrb != undefined )
+            {
+                // Go to desired one.
+                if( !$Puppet.CreatePathTo(DesiredOrb.Location) )
+                {
+                    Velocity    = [0.0, 0.0];
+                    sleep 1.0;
+                    log( "Unreachable orb %x", DesiredOrb );
+                    continue;
+                }
+            }
+            else
+            {
+                // No orbs, just waking around.
+                if( !$Puppet.CreateRandomPath() )
+                {
+                    Velocity    = [0.0, 0.0];
+                    interrupt;
+                    continue;
+                }
+            }
+            
+            // Walk to temporal goal in chain of nodes.
+            wait $Puppet.MoveToGoal();  
+        }
+    }
+}

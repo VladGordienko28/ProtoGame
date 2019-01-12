@@ -1,0 +1,8 @@
+BEGIN_RESOURCE FAnimation APig
+    Sheet = FBitmap::BPig
+    FrameW = 21
+    FrameH = 16
+    NumSeqs = 1
+    Sequences[0].Name = "Flap"
+    Sequences[0].Count = 3
+END_RESOURCE

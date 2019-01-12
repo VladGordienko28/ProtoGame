@@ -1,0 +1,31 @@
+BEGIN_RESOURCE FScript Schedule
+    FileName = "Schedule.flu"
+    ScriptFlags = 128
+    BEGIN_COMPONENT FRectComponent Base
+            Size = [6.0000; 6.0000]
+            Layer = 0.5000
+            bFixedAngle = true
+            bFixedSize = true
+    END_COMPONENT
+    BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumPlugs = 4
+            NumJacks = 2
+            PlugsName[0] = "A"
+            PlugsName[1] = "B"
+            PlugsName[2] = "C"
+            PlugsName[3] = "D"
+            JacksName[0] = "Start"
+            JacksName[1] = "Stop"
+    END_COMPONENT
+    BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (96.0000; 64.0000; 128.0000; 96.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #808080ff
+            Texture = FBitmap::BSystem
+    END_COMPONENT
+    BEGIN_INSTANCE
+    END_INSTANCE
+END_RESOURCE

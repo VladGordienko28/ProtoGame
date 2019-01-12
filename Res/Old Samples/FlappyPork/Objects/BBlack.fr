@@ -1,0 +1,7 @@
+BEGIN_RESOURCE FBitmap BBlack
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    FileName = "BBlack.bmp"
+    UBits = 3
+    VBits = 3
+END_RESOURCE

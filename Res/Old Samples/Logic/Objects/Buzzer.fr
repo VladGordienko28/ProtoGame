@@ -1,0 +1,27 @@
+BEGIN_RESOURCE FScript Buzzer
+    FileName = "Buzzer.flu"
+    ScriptFlags = 128
+    BEGIN_COMPONENT FRectComponent Base
+            Size = [6.0000; 6.0000]
+            Layer = 0.5000
+            bFixedAngle = true
+            bFixedSize = true
+    END_COMPONENT
+    BEGIN_COMPONENT FLogicComponent Logic
+            bEnabled = true
+            NumJacks = 1
+            JacksName[0] = "Play"
+    END_COMPONENT
+    BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (64.0000; 0.0000; 96.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+    END_COMPONENT
+    BEGIN_INSTANCE
+            Gain = 1.0000
+            Pitch = 1.0000
+    END_INSTANCE
+END_RESOURCE

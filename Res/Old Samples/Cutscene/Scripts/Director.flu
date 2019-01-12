@@ -1,0 +1,170 @@
+/**
+ * @Director: Cinematic scene director.
+ * @Author: Vlad Gordienko.
+ */
+script Director
+{
+private: 
+    //
+    // Effects setters. 
+    //
+    fn SetBlackEffect()
+    {
+        $Painter.Effect[0]  = 0.0;
+        $Painter.Effect[1]  = 0.0;        
+        $Painter.Effect[2]  = 0.0;
+        $Painter.Effect[3]  = 1.0;
+        $Painter.Effect[4]  = 1.0;        
+        $Painter.Effect[5]  = 1.0;    
+        $Painter.Effect[6]  = 0.0;
+        $Painter.Effect[7]  = 0.0;        
+        $Painter.Effect[8]  = 0.0;
+        $Painter.Effect[9]  = 0.0;           
+    }
+    fn SetSunsetEffect()
+    {
+        $Painter.Effect[0]  = 0.85;
+        $Painter.Effect[1]  = 0.6;        
+        $Painter.Effect[2]  = 0.85;
+        $Painter.Effect[3]  = 1.1;
+        $Painter.Effect[4]  = 1.2;        
+        $Painter.Effect[5]  = 1.15;    
+        $Painter.Effect[6]  = -0.02;
+        $Painter.Effect[7]  = 0.0;        
+        $Painter.Effect[8]  = -0.05;
+        $Painter.Effect[9]  = 0.3;           
+    }       
+    fn SetNightEffect()
+    {
+        $Painter.Effect[0]  = 0.65;
+        $Painter.Effect[1]  = 0.6;        
+        $Painter.Effect[2]  = 0.85;
+        $Painter.Effect[3]  = 1.1;
+        $Painter.Effect[4]  = 1.2;        
+        $Painter.Effect[5]  = 1.1;    
+        $Painter.Effect[6]  = -0.02;
+        $Painter.Effect[7]  = 0.0;        
+        $Painter.Effect[8]  = -0.05;
+        $Painter.Effect[9]  = 0.4;           
+    }       
+    
+    fn SetStormEffect()
+    {
+        $Painter.Effect[0]  = 0.5;
+        $Painter.Effect[1]  = 0.5;        
+        $Painter.Effect[2]  = 1.2;
+        $Painter.Effect[3]  = 1.7;
+        $Painter.Effect[4]  = 1.0;        
+        $Painter.Effect[5]  = 1.0;    
+        $Painter.Effect[6]  = 0.0;
+        $Painter.Effect[7]  = 0.0;        
+        $Painter.Effect[8]  = 0.0;
+        $Painter.Effect[9]  = 0.6;           
+    }        
+    fn SetLightEffect()
+    {
+        $Painter.Effect[0]  = 10.0;
+        $Painter.Effect[1]  = 10.0;        
+        $Painter.Effect[2]  = 10.0;
+        $Painter.Effect[3]  = 1.7;
+        $Painter.Effect[4]  = 1.0;        
+        $Painter.Effect[5]  = 1.0;    
+        $Painter.Effect[6]  = 0.0;
+        $Painter.Effect[7]  = 0.0;        
+        $Painter.Effect[8]  = 0.0;
+        $Painter.Effect[9]  = 0.6;          
+    }    
+    
+    
+    //
+    // Scenario.
+    //
+    thread
+    {   
+        //goto @Scene4;
+    
+        // Scene 1.
+        @Scene1:
+            SetBlackEffect();
+            $Painter.PushEffect(0.0);
+            $Painter.PopEffect(1.5);
+            Flyby(FindEntity("Flyby0")).Start();
+            sleep 7.0;
+            SetBlackEffect();
+            $Painter.PushEffect(1.5);
+            sleep 1.5;
+
+        // Scene 2.
+        @Scene2:
+            Flyby(FindEntity("Flyby1")).Start();
+            $Painter.PopEffect(1.5);
+            sleep 12.0;
+            SetBlackEffect();
+            $Painter.PushEffect(1.5);
+            sleep 1.5;           
+              
+        // Scene 3.
+        @Scene3:
+            Flyby(FindEntity("Flyby2")).Start();
+            $Painter.PopEffect(1.5);   
+            sleep 3.0;
+            SetSunsetEffect();
+            $Painter.PushEffect( 7.0 );
+            sleep 10.0;
+            SetBlackEffect();
+            $Painter.PushEffect(1.5);
+            sleep 1.5;                                                     
+        
+        // Scene 4.
+        @Scene4:
+            Flyby(FindEntity("Flyby3")).Start(); 
+            SetSunsetEffect();
+            $Painter.PushEffect( 1.5 ); 
+            sleep 1.5;                                  
+            SetNightEffect();
+            $Painter.PushEffect( 7.0 );
+            sleep 10.0;
+            SetBlackEffect();
+            $Painter.PushEffect(1.5);                        
+            sleep 1.5;  
+               
+        // Scene 4.1.
+        @Scene41:
+            Flyby(FindEntity("Flyby5")).Start();                                 
+            SetNightEffect();
+            $Painter.PushEffect(1.5);
+            sleep 25.0;
+            SetBlackEffect();
+            $Painter.PushEffect(1.5);                        
+            sleep 1.5; 
+                
+        // Scene 5.
+        @Scene5:
+            Flyby(FindEntity("Flyby4")).Start();   
+            SetStormEffect();
+            $Painter.PushEffect(1.0);
+            sleep 1.5;
+            //--
+            PlaySoundFX( #SThunder, 1.0, 1.0 );
+            SetLightEffect(); 
+            $Painter.PushEffect(0.2);                
+            sleep 0.2;                    
+            SetStormEffect();
+            $Painter.PushEffect(0.5);    
+            //--
+            sleep 5.0;
+            //--
+            PlaySoundFX( #SThunder, 1.0, 1.01 );
+            SetLightEffect(); 
+            $Painter.PushEffect(0.2);                
+            sleep 0.2;                    
+            SetStormEffect();
+            $Painter.PushEffect(0.5);        
+            //--
+            sleep 8.0;
+            SetBlackEffect();
+            $Painter.PushEffect(1.5);                        
+            sleep 1.5; 
+            goto @Scene1;                
+    } 
+}

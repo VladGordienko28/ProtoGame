@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{36e49054-5c9c-4d3c-887e-eb078eb70e82}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Core\FrArray.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FrBase.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FrBuild.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FrClass.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FrColor.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FrEncode.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FrExpImp.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FrFile.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FrIni.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FrLog.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FrMap.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FrMath.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FrObject.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FrRand.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FrSerial.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FrString.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="FrCode.h" />
+    <ClInclude Include="FrCollHash.h" />
+    <ClInclude Include="FrCom.h" />
+    <ClInclude Include="FrComTyp.h" />
+    <ClInclude Include="FrDemoEff.h" />
+    <ClInclude Include="FrEntity.h" />
+    <ClInclude Include="FrEvent.h" />
+    <ClInclude Include="FrFont.h" />
+    <ClInclude Include="FrGFX.h" />
+    <ClInclude Include="FrInput.h" />
+    <ClInclude Include="FrLevel.h" />
+    <ClInclude Include="FrOpCode.h" />
+    <ClInclude Include="FrPath.h" />
+    <ClInclude Include="FrPhysEng.h" />
+    <ClInclude Include="FrProject.h" />
+    <ClInclude Include="FrRender.h" />
+    <ClInclude Include="FrRes.h" />
+    <ClInclude Include="FrScript.h" />
+    <ClInclude Include="Engine.h" />
+    <ClInclude Include="FrAnim.h" />
+    <ClInclude Include="FrApp.h" />
+    <ClInclude Include="FrAudio.h" />
+    <ClInclude Include="FrBitmap.h" />
+    <ClInclude Include="FrBlock.h" />
+    <ClInclude Include="Database.h" />
+    <ClInclude Include="Core\FrMemory.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="FrSkelet.h" />
+    <ClInclude Include="Core\FrCorUtils.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="FrModi.h" />
+    <ClInclude Include="FrMaterial.h" />
+    <ClInclude Include="Core\FrBuff.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FrNetBas.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="FrDbgDraw.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Core\FrClass.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\FrCore.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\FrEncode.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\FrMath.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\FrObject.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="FrCode.cpp" />
+    <ClCompile Include="FrCollision.cpp" />
+    <ClCompile Include="FrComBas.cpp" />
+    <ClCompile Include="FrDemoEff.cpp" />
+    <ClCompile Include="FrEmit.cpp" />
+    <ClCompile Include="FrFont.cpp" />
+    <ClCompile Include="FrGFX.cpp" />
+    <ClCompile Include="FrHUD.cpp" />
+    <ClCompile Include="FrInput.cpp" />
+    <ClCompile Include="FrLevel.cpp" />
+    <ClCompile Include="FrLogic.cpp" />
+    <ClCompile Include="FrModel.cpp" />
+    <ClCompile Include="FrNative.cpp" />
+    <ClCompile Include="FrPath.cpp" />
+    <ClCompile Include="FrPhysEng.cpp" />
+    <ClCompile Include="FrPhysic.cpp" />
+    <ClCompile Include="FrPortal.cpp" />
+    <ClCompile Include="FrProject.cpp" />
+    <ClCompile Include="FrRes.cpp" />
+    <ClCompile Include="FrScript.cpp" />
+    <ClCompile Include="FrSprite.cpp" />
+    <ClCompile Include="FrTest.cpp" />
+    <ClCompile Include="FrThings.cpp" />
+    <ClCompile Include="FrAI.cpp" />
+    <ClCompile Include="FrAnim.cpp" />
+    <ClCompile Include="FrApp.cpp" />
+    <ClCompile Include="FrAudio.cpp" />
+    <ClCompile Include="FrBitmap.cpp" />
+    <ClCompile Include="FrBlock.cpp" />
+    <ClCompile Include="FrCnvPrim.cpp" />
+    <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="FrModi.cpp" />
+    <ClCompile Include="FrSkelet.cpp" />
+    <ClCompile Include="FrSkelAnim.cpp" />
+    <ClCompile Include="FrMaterial.cpp" />
+    <ClCompile Include="Core\FrIni.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="FrDbgDraw.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="Fluorine.natvis" />
+  </ItemGroup>
+</Project>

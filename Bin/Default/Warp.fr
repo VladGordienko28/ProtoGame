@@ -1,0 +1,12 @@
+BEGIN_RESOURCE FScript Warp
+    FileName = ""
+    Group = "System"
+    Family = ""
+    BEGIN_COMPONENT FWarpComponent Base
+            bFixedSize = true
+            Layer = 0.7500
+            bHidden = false
+            Color = #ffffffff
+            Width = 16.0000
+    END_COMPONENT
+END_RESOURCE

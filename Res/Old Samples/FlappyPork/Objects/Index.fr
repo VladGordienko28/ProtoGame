@@ -1,0 +1,140 @@
+BEGIN_RESOURCE FLevel Index
+    GameSpeed = 1.0000
+    Camera.Location = [-8.2000; 6.1000]
+    Camera.FOV = [64.0000; 32.0000]
+    Camera.Zoom = 1.0000
+    Camera.ScrollBound = (-2048.0000; -2048.0000; 2048.0000; 2048.0000)
+    Effect[0] = 1.0000
+    Effect[1] = 1.0000
+    Effect[2] = 1.0000
+    Effect[3] = 1.0000
+    Effect[4] = 1.0000
+    Effect[5] = 1.0000
+    RndFlags = 7167
+    BEGIN_ENTITY Pig Pig0
+        BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Location = [-19.0000; 8.5000]
+            Size = [2.0000; 2.0000]
+            Layer = 0.9857
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            bUnlit = true
+            Animation = FAnimation::APig
+            Scale = [3.0100; 2.3000]
+        END_COMPONENT
+        BEGIN_COMPONENT FInputComponent Input
+        END_COMPONENT
+        BEGIN_COMPONENT FPainterComponent Painter
+        END_COMPONENT
+        BEGIN_INSTANCE
+            Spawner = FEntity::Index.PipeSpawner0
+            Ground = FEntity::Index.Brush0
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush0
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BGround
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [24.0000; 4.0000]
+            Vertices[3] = [24.0000; -4.0000]
+            TexCoords.Origin = [-4.0000; -4.0000]
+            TexCoords.XAxis = [0.2438; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.1216]
+            Location = [-20.0000; -12.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.7143
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY PipeSpawner PipeSpawner0
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [7.5000; 13.0000]
+            Size = [7.0000; 7.0000]
+            Layer = 1.0000
+            bFixedAngle = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 64.0000; 32.0000; 96.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush1
+        BEGIN_COMPONENT FBrushComponent Base
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSky
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -5.5000]
+            Vertices[1] = [-4.0000; 40.0000]
+            Vertices[2] = [24.0000; 40.0000]
+            Vertices[3] = [24.0000; -5.5000]
+            TexCoords.Origin = [-4.0000; -5.5000]
+            TexCoords.XAxis = [0.2036; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.0248]
+            Location = [-20.0000; -4.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.0140
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush2
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BBlack
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -29.0000]
+            Vertices[1] = [-4.0000; 19.0000]
+            Vertices[2] = [4.0000; 19.0000]
+            Vertices[3] = [4.0000; -29.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [-28.0000; 17.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.4980
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush3
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BBlack
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -29.0000]
+            Vertices[1] = [-4.0000; 19.0000]
+            Vertices[2] = [4.0000; 19.0000]
+            Vertices[3] = [4.0000; -29.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [8.0000; 17.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.8980
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+END_RESOURCE

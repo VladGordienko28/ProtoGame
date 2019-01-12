@@ -1,0 +1,32 @@
+BEGIN_RESOURCE FScript Lissajous
+    BEGIN_COMPONENT FRectComponent Base
+            Size = [3.0000; 3.0000]
+            Layer = 0.6000
+    END_COMPONENT
+    BEGIN_COMPONENT FLissajousEmitterComponent Emitter
+            Alpha = 1.5000
+            Beta = 1.0000
+            Delta = 20.0000
+            X = 5.0000
+            Y = 5.0000
+            MaxParticles = 30
+            LifeRange[0] = 5.0000
+            LifeRange[1] = 5.0000
+            EmitPerSec = 4
+            SizeRange[0] = 1.0000
+            SizeRange[1] = 5.0000
+            bUnlit = true
+            Colors[0] = #ffffffff
+            Colors[1] = #ffffffff
+            Colors[2] = #ffffffff
+            NumUTiles = 1
+            NumVTiles = 1
+    END_COMPONENT
+    BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 0.0000; 64.0000; 32.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+    END_COMPONENT
+END_RESOURCE

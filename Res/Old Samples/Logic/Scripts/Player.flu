@@ -1,0 +1,86 @@
+/**
+ * @Player: Demo player.
+ * @Author: Vlad Gordienko.
+ */
+script Player
+{
+public:
+    event OnCollide( entity Other, EHitSide Side )
+    {
+        if( Other is #Brush )
+            SolveSolid(true);
+    }
+
+    event OnPreTick( float Delta )
+    {
+        // Fall via gravity.
+        Velocity.y -= 15.0 * Delta;
+        if( Velocity.y < -15.0 )
+            Velocity.y  = -15.0;      
+    
+        // X movement.
+        if( KeyIsPressed(KEY_Left) )
+        {
+            $Sprite.bFlipH  = true;        
+            Velocity.X  = -8.0;
+        }
+        else if( KeyIsPressed(KEY_Right) )
+        {
+            $Sprite.bFlipH  = false;
+            Velocity.X  = 8.0;
+        } 
+        else
+            Velocity.X  = 0.0;                            
+
+        // Adjust Y-movement.
+        if( KeyIsPressed(KEY_Up) && bCanJump )
+        {
+            if( Floor != undefined )
+            {
+                Velocity.Y  = Velocity.X != 0.0 ? 14.3 : 13.0;
+                bCanJump    = false;
+                bJumping    = true;
+            }                           
+        }
+        else if( !KeyIsPressed(KEY_Up) && bJumping )
+        {
+            bJumping    = false;
+            bCanJump    = true;
+            if( Velocity.Y > 0.0 )
+                Velocity.Y = 0.0;
+        }   
+    
+        // Choose animation.
+        if( Floor != undefined )
+        {
+            if( Velocity.X != 0.0 )
+                $Sprite.PlayAnim( "Walk", 6.5, ANIM_Loop );
+            else
+                $Sprite.PlayAnim( "Idle", 1.0, ANIM_Once );
+        }
+        else
+            $Sprite.PlayAnim( "Jump", 1.0, ANIM_Once );    
+    }
+       
+private:
+    bool            bCanJump;
+    bool            bJumping;    
+    
+    event OnBeginPlay()
+    {
+        // Setup variables.
+        bCanJump                = true;
+        (Level).Camera.Location = Location;                    
+    }
+    
+    event OnTick( float Delta )
+    {
+        // Attach camera.
+        Level lev = Level;
+        lev.Camera.Zoom = 1.0;
+        if( lev.Camera.Location.X < Location.X-5.0 ) lev.Camera.Location.X = Location.X - 5.0;
+        if( lev.Camera.Location.X > Location.X+5.0 ) lev.Camera.Location.X = Location.X + 5.0;             
+        if( lev.Camera.Location.Y < Location.Y-5.0 ) lev.Camera.Location.Y = Location.Y - 5.0;
+        if( lev.Camera.Location.Y > Location.Y+5.0 ) lev.Camera.Location.Y = Location.Y + 5.0;          
+    }       
+}

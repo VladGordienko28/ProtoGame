@@ -1,0 +1,3 @@
+BEGIN_RESOURCE FSound SRush
+    FileName = "SRush.wav"
+END_RESOURCE

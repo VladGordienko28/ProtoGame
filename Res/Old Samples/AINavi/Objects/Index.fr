@@ -1,0 +1,758 @@
+BEGIN_RESOURCE FLevel Index
+    GameSpeed = 1.0000
+    Camera.Location = [28.7211; -45.6116]
+    Camera.FOV = [64.0000; 32.0000]
+    Camera.Zoom = 1.0000
+    Camera.ScrollBound = (-9999.0000; -9999.0000; 9999.0000; 9999.0000)
+    Effect[0] = 1.0000
+    Effect[1] = 1.0000
+    Effect[2] = 1.0000
+    Effect[3] = 1.0000
+    Effect[4] = 1.0000
+    Effect[5] = 1.0000
+    RndFlags = 7167
+    BEGIN_ENTITY Model Model0
+        BEGIN_COMPONENT FModelComponent Base
+            MapXSize = 129
+            MapYSize = 12
+            TileSize = [2.0000; 2.0000]
+            TilesPerU = 8
+            TilesPerV = 8
+            bUnlit = true
+            Texture = FBitmap::BTiles
+            Color = #ffffffff
+            Location = [-136.0000; -72.0000]
+            Layer = 0.0140
+            bFixedAngle = true
+            bFixedSize = true
+            bFrozen = true
+            Map[85] = 1
+            Map[86] = 2
+            Map[87] = 2
+            Map[88] = 3
+            Map[104] = 1
+            Map[105] = 2
+            Map[106] = 2
+            Map[107] = 2
+            Map[108] = 2
+            Map[109] = 2
+            Map[110] = 2
+            Map[111] = 2
+            Map[112] = 2
+            Map[113] = 2
+            Map[114] = 2
+            Map[115] = 2
+            Map[116] = 2
+            Map[117] = 3
+            Map[123] = 2
+            Map[124] = 2
+            Map[125] = 2
+            Map[126] = 2
+            Map[127] = 3
+            Map[214] = 1
+            Map[215] = 2
+            Map[216] = 2
+            Map[217] = 3
+            Map[233] = 1
+            Map[234] = 2
+            Map[235] = 2
+            Map[236] = 2
+            Map[237] = 2
+            Map[238] = 2
+            Map[239] = 2
+            Map[240] = 2
+            Map[241] = 2
+            Map[242] = 2
+            Map[243] = 2
+            Map[244] = 2
+            Map[245] = 2
+            Map[246] = 3
+            Map[252] = 2
+            Map[253] = 2
+            Map[254] = 2
+            Map[255] = 2
+            Map[256] = 3
+            Map[343] = 1
+            Map[344] = 2
+            Map[345] = 2
+            Map[346] = 3
+            Map[381] = 2
+            Map[382] = 2
+            Map[383] = 2
+            Map[384] = 2
+            Map[385] = 3
+            Map[472] = 1
+            Map[473] = 2
+            Map[474] = 2
+            Map[475] = 3
+            Map[506] = 1
+            Map[507] = 3
+            Map[510] = 2
+            Map[511] = 2
+            Map[512] = 2
+            Map[513] = 2
+            Map[514] = 3
+            Map[518] = 1
+            Map[519] = 2
+            Map[520] = 2
+            Map[521] = 2
+            Map[522] = 2
+            Map[523] = 3
+            Map[601] = 1
+            Map[602] = 2
+            Map[603] = 2
+            Map[604] = 3
+            Map[635] = 1
+            Map[636] = 3
+            Map[639] = 2
+            Map[640] = 2
+            Map[641] = 2
+            Map[642] = 2
+            Map[643] = 3
+            Map[647] = 1
+            Map[648] = 2
+            Map[649] = 2
+            Map[650] = 2
+            Map[651] = 2
+            Map[652] = 3
+            Map[730] = 1
+            Map[731] = 2
+            Map[732] = 2
+            Map[733] = 3
+            Map[768] = 2
+            Map[769] = 2
+            Map[770] = 2
+            Map[771] = 2
+            Map[772] = 3
+            Map[776] = 1
+            Map[777] = 2
+            Map[778] = 2
+            Map[779] = 2
+            Map[780] = 2
+            Map[781] = 3
+            Map[822] = 1
+            Map[823] = 2
+            Map[824] = 2
+            Map[825] = 3
+            Map[859] = 1
+            Map[860] = 2
+            Map[861] = 2
+            Map[862] = 3
+            Map[897] = 2
+            Map[898] = 2
+            Map[899] = 2
+            Map[900] = 2
+            Map[901] = 3
+            Map[905] = 1
+            Map[906] = 2
+            Map[907] = 2
+            Map[908] = 2
+            Map[909] = 2
+            Map[910] = 3
+            Map[951] = 1
+            Map[952] = 2
+            Map[953] = 2
+            Map[954] = 3
+            Map[988] = 1
+            Map[989] = 2
+            Map[990] = 2
+            Map[991] = 3
+            Map[1026] = 2
+            Map[1027] = 2
+            Map[1028] = 2
+            Map[1029] = 2
+            Map[1030] = 3
+            Map[1034] = 1
+            Map[1035] = 2
+            Map[1036] = 2
+            Map[1037] = 2
+            Map[1038] = 2
+            Map[1039] = 3
+            Map[1042] = 1
+            Map[1043] = 2
+            Map[1044] = 2
+            Map[1045] = 2
+            Map[1046] = 3
+            Map[1050] = 1
+            Map[1051] = 2
+            Map[1052] = 2
+            Map[1053] = 2
+            Map[1054] = 2
+            Map[1055] = 2
+            Map[1056] = 2
+            Map[1057] = 2
+            Map[1058] = 2
+            Map[1059] = 2
+            Map[1060] = 2
+            Map[1061] = 2
+            Map[1062] = 2
+            Map[1063] = 2
+            Map[1064] = 2
+            Map[1065] = 3
+            Map[1080] = 1
+            Map[1081] = 2
+            Map[1082] = 2
+            Map[1083] = 3
+            Map[1088] = 1
+            Map[1089] = 2
+            Map[1090] = 2
+            Map[1091] = 2
+            Map[1092] = 2
+            Map[1093] = 2
+            Map[1094] = 2
+            Map[1095] = 2
+            Map[1096] = 2
+            Map[1097] = 2
+            Map[1098] = 2
+            Map[1099] = 2
+            Map[1100] = 2
+            Map[1101] = 2
+            Map[1102] = 2
+            Map[1103] = 2
+            Map[1104] = 2
+            Map[1105] = 2
+            Map[1106] = 2
+            Map[1107] = 3
+            Map[1111] = 1
+            Map[1112] = 2
+            Map[1113] = 2
+            Map[1114] = 3
+            Map[1117] = 1
+            Map[1118] = 2
+            Map[1119] = 2
+            Map[1120] = 3
+            Map[1125] = 1
+            Map[1126] = 2
+            Map[1127] = 2
+            Map[1128] = 2
+            Map[1129] = 2
+            Map[1130] = 2
+            Map[1131] = 2
+            Map[1132] = 2
+            Map[1133] = 2
+            Map[1134] = 2
+            Map[1135] = 3
+            Map[1138] = 1
+            Map[1139] = 2
+            Map[1140] = 2
+            Map[1141] = 2
+            Map[1142] = 2
+            Map[1143] = 2
+            Map[1144] = 2
+            Map[1145] = 2
+            Map[1146] = 2
+            Map[1147] = 2
+            Map[1148] = 3
+            Map[1155] = 2
+            Map[1156] = 2
+            Map[1157] = 2
+            Map[1158] = 2
+            Map[1159] = 3
+            Map[1171] = 1
+            Map[1172] = 2
+            Map[1173] = 2
+            Map[1174] = 2
+            Map[1175] = 3
+            Map[1179] = 1
+            Map[1180] = 2
+            Map[1181] = 2
+            Map[1182] = 2
+            Map[1183] = 2
+            Map[1184] = 2
+            Map[1185] = 2
+            Map[1186] = 2
+            Map[1187] = 2
+            Map[1188] = 2
+            Map[1189] = 2
+            Map[1190] = 2
+            Map[1191] = 2
+            Map[1192] = 2
+            Map[1193] = 2
+            Map[1194] = 3
+            Map[1209] = 1
+            Map[1210] = 2
+            Map[1211] = 2
+            Map[1212] = 3
+            Map[1217] = 1
+            Map[1218] = 2
+            Map[1219] = 2
+            Map[1220] = 2
+            Map[1221] = 2
+            Map[1222] = 2
+            Map[1223] = 2
+            Map[1224] = 2
+            Map[1225] = 2
+            Map[1226] = 2
+            Map[1227] = 2
+            Map[1228] = 2
+            Map[1229] = 2
+            Map[1230] = 2
+            Map[1231] = 2
+            Map[1232] = 2
+            Map[1233] = 2
+            Map[1234] = 2
+            Map[1235] = 2
+            Map[1236] = 3
+            Map[1240] = 1
+            Map[1241] = 2
+            Map[1242] = 2
+            Map[1243] = 3
+            Map[1246] = 1
+            Map[1247] = 2
+            Map[1248] = 2
+            Map[1249] = 3
+            Map[1254] = 1
+            Map[1255] = 2
+            Map[1256] = 2
+            Map[1257] = 2
+            Map[1258] = 2
+            Map[1259] = 2
+            Map[1260] = 2
+            Map[1261] = 2
+            Map[1262] = 2
+            Map[1263] = 2
+            Map[1264] = 3
+            Map[1267] = 1
+            Map[1268] = 2
+            Map[1269] = 2
+            Map[1270] = 2
+            Map[1271] = 2
+            Map[1272] = 2
+            Map[1273] = 2
+            Map[1274] = 2
+            Map[1275] = 2
+            Map[1276] = 2
+            Map[1277] = 3
+            Map[1300] = 1
+            Map[1301] = 2
+            Map[1302] = 2
+            Map[1303] = 2
+            Map[1304] = 3
+            Map[1326] = 1
+            Map[1327] = 2
+            Map[1328] = 2
+            Map[1329] = 2
+            Map[1330] = 2
+            Map[1331] = 2
+            Map[1332] = 2
+            Map[1333] = 2
+            Map[1334] = 2
+            Map[1335] = 3
+            Map[1375] = 1
+            Map[1376] = 2
+            Map[1377] = 2
+            Map[1378] = 3
+            Map[1383] = 1
+            Map[1384] = 2
+            Map[1385] = 2
+            Map[1386] = 2
+            Map[1387] = 2
+            Map[1388] = 2
+            Map[1389] = 2
+            Map[1390] = 2
+            Map[1391] = 2
+            Map[1392] = 2
+            Map[1393] = 3
+            Map[1455] = 1
+            Map[1456] = 2
+            Map[1457] = 2
+            Map[1458] = 2
+            Map[1459] = 2
+            Map[1460] = 2
+            Map[1461] = 2
+            Map[1462] = 2
+            Map[1463] = 2
+            Map[1464] = 3
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush14
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-16.0000; 0.0000]
+            Vertices[1] = [-16.0000; 4.0000]
+            Vertices[2] = [4.0000; 4.0000]
+            Vertices[3] = [4.0000; -0.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [-48.0000; -52.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.3312
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Bot Bot0
+        BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Location = [-0.5000; -49.0000]
+            Size = [1.5000; 6.7500]
+            Layer = 0.4909
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FPuppetComponent Puppet
+            Health = 100
+            MoveSpeed = 5.0000
+            JumpHeight = 8.0000
+            GravityScale = 15.0000
+            LookRadius = 16.0000
+        END_COMPONENT
+        BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            bUnlit = true
+            Animation = FAnimation::ABot
+            Offset = [0.0000; 0.5600]
+            Scale = [5.2500; 7.8600]
+        END_COMPONENT
+        BEGIN_COMPONENT FPainterComponent Painter
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush4
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; 0.0000]
+            Vertices[2] = [4.0000; -0.0000]
+            Vertices[3] = [4.0000; -4.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [26.0000; -52.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5026
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush10
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-4.0000; 0.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [18.0000; 4.0000]
+            Vertices[3] = [18.0000; 0.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [80.0000; -56.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5026
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Orb Orb3
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [24.0000; -48.0000]
+            Size = [2.0000; 2.0000]
+            Layer = 0.4997
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BOrbs
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush8
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -2.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [18.0000; 4.0000]
+            Vertices[3] = [18.0000; -2.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [54.0000; -54.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5026
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush7
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [4.0000; 4.0000]
+            Vertices[3] = [4.0000; -4.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [-36.0000; -56.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5026
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush5
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -20.0000]
+            Vertices[1] = [-4.0000; 2.0000]
+            Vertices[2] = [4.0000; 2.0000]
+            Vertices[3] = [4.0000; -20.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [38.0000; -52.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5026
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Orb Orb5
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [69.5000; -48.0000]
+            Size = [2.0000; 2.0000]
+            Layer = 0.4997
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (16.0000; 0.0000; 32.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BOrbs
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Orb Orb4
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-56.0000; -45.5000]
+            Size = [2.0000; 2.0000]
+            Layer = 0.4997
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BOrbs
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush9
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -0.5000]
+            Vertices[1] = [-4.0000; 3.5000]
+            Vertices[2] = [28.0000; 3.5000]
+            Vertices[3] = [28.0000; -0.5000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [-96.0000; -55.5000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5026
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush3
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -4.0000]
+            Vertices[1] = [-4.0000; -0.0000]
+            Vertices[2] = [36.0000; -0.0000]
+            Vertices[3] = [36.0000; -4.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [-20.0000; -52.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5026
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Orb Orb0
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-20.0000; -48.0000]
+            Size = [2.0000; 2.0000]
+            Layer = 0.4997
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BOrbs
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Orb Orb1
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-36.0000; -49.0000]
+            Size = [2.0000; 2.0000]
+            Layer = 0.4997
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 16.0000; 16.0000; 32.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BOrbs
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Orb Orb2
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-98.0000; -41.0000]
+            Size = [2.0000; 2.0000]
+            Layer = 0.4997
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (16.0000; 0.0000; 32.0000; 16.0000)
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BOrbs
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush0
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -14.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [6.0000; 4.0000]
+            Vertices[3] = [6.0000; -14.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [114.0000; -58.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5015
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush1
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -6.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [8.0000; 4.0000]
+            Vertices[3] = [8.0000; -6.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [-128.0000; -58.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5087
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush2
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -2.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [6.0000; 4.0000]
+            Vertices[3] = [6.0000; -2.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [-112.0000; -54.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.4923
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush6
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-4.0000; 0.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [24.0000; 4.0000]
+            Vertices[3] = [24.0000; -0.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [76.0000; -72.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.4913
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush11
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-0.0000; -4.0000]
+            Vertices[2] = [4.0000; -0.0000]
+            Vertices[3] = [4.0000; -4.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [102.0000; -62.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.4988
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+END_RESOURCE

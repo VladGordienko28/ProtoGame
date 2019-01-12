@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="FrConsole.h" />
+    <ClInclude Include="FrGame.h" />
+    <ClInclude Include="FrJoy.h" />
+    <ClInclude Include="Res\resource.h">
+      <Filter>Res</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FrConsole.cpp" />
+    <ClCompile Include="FrGame.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Game.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Res\icon.ico">
+      <Filter>Res</Filter>
+    </Image>
+    <Image Include="..\GUI\Res\Consolas13_0.bmp">
+      <Filter>Res</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Res">
+      <UniqueIdentifier>{4d34da76-5782-444d-a581-326e98a9ee5f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\GUI\Res\Consolas13.flf">
+      <Filter>Res</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Res\Game.rc">
+      <Filter>Res</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

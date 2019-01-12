@@ -1,0 +1,24 @@
+BEGIN_RESOURCE FMaterial MNoise
+    MainLayer = FDiffuseLayer::MNoise.DiffuseLayer0
+    BEGIN_LAYER FDiffuseLayer DiffuseLayer1
+            Bitmap = FBitmap::Noise
+            BlendMode = 2
+            bUnlit = true
+            OverlayColor = #808080ff
+            Panner.Direction = 16384
+            Panner.Speed = 2.5000
+            Scaler.Scale = [1.0000; 1.0000]
+            Oscillator.Amplitude = [2.0000; 2.0000]
+            Oscillator.Frequency = [2.1000; 2.1000]
+            Oscillator.Phase = [3.0000; 3.0000]
+    END_LAYER
+    BEGIN_LAYER FDiffuseLayer DiffuseLayer0
+            Bitmap = FBitmap::Noise
+            bUnlit = true
+            OverlayColor = #808080ff
+            Panner.Speed = 2.5000
+            Scaler.Scale = [1.0000; 1.0000]
+            Oscillator.Amplitude = [2.0000; 2.0000]
+            Oscillator.Frequency = [2.1000; 2.1000]
+    END_LAYER
+END_RESOURCE

@@ -1,0 +1,34 @@
+script JumpPad
+{
+public:
+    float           KickSpeed;
+    
+    event OnCollide( entity Other, EHitSide Side )    
+    {
+        if( !Other is #Player )
+            return;
+        Player player = Player(Other);
+        player.SolveSolid(true);
+        if( Side == HSIDE_Bottom )
+        {
+            player.Velocity.Y   = KickSpeed;
+            player.bJumping     = false;
+            player.bCanJump     = true;
+            goto @Kick;
+        }
+    }            
+
+
+    thread
+    {
+    @Still:
+        $Sprite.PlayAnim( "Still", 1.0, ANIM_Once );
+        stop;
+
+    @Kick:
+        PlaySoundFX( #SJump, 0.45, 0.8 );
+        $Sprite.PlayAnim( "Kick", 6.0, ANIM_Once );
+        sleep 0.35;
+        goto @Still;                                
+    }
+}

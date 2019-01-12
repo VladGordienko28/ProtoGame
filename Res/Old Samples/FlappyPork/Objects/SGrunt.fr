@@ -1,0 +1,3 @@
+BEGIN_RESOURCE FSound SGrunt
+    FileName = "SGrunt.wav"
+END_RESOURCE
