@@ -238,7 +238,7 @@ inline String CFrame::ReadString()
 	{
 		// Wide string.
 		if( Len > 0 )
-			MemCopy( Buffer, Code, Len*sizeof(Char) );
+			mem::copy( Buffer, Code, Len*sizeof(Char) );
 		Code += Len * sizeof(Char);
 		Buffer[Len] = '\0';
 	}

@@ -25,7 +25,7 @@ public:
 	{
 		Int32 i = Data.Num();
 		Data.SetNum(i + Count);
-		MemCopy( &Data[i], Mem, Count );
+		mem::copy( &Data[i], Mem, Count );
 	}
 	void SerializeRef( FObject*& Obj )
 	{
@@ -72,7 +72,7 @@ public:
 	void SerializeData( void* Mem, SizeT Count )
 	{
 		assert(Pos+Count <= Data.Num());
-		MemCopy( Mem, &Data[Pos], Count );
+		mem::copy( Mem, &Data[Pos], Count );
 		Pos += Count;
 	}
 	void SerializeRef( FObject*& Obj )

@@ -144,7 +144,7 @@ public:
 	void SetNestLevel( Int32 InNestLevel )
 	{
 		assert(InNestLevel*4 < 64);
-		MemZero( Whitespace, sizeof(Whitespace) );
+		mem::zero( Whitespace, sizeof(Whitespace) );
 		for( Int32 i=0; i<InNestLevel*4; i++ )
 			Whitespace[i] = L' ';
 	}
@@ -745,7 +745,7 @@ public:
 
 		while( true )
 		{
-			MemZero( ObjName, sizeof(ObjName) );
+			mem::zero( ObjName, sizeof(ObjName) );
 			for( Char* C=ObjName; C!=&ObjName[31] && *Walk>32 && *Walk!='.'; C++, Walk++ )
 				*C = *Walk;
 			Walk++;
@@ -887,7 +887,7 @@ struct TLoadObject
 	void ParseProp( const String& Line )
 	{
 		TLoadProperty Prop;
-		MemZero( &Prop, sizeof(TLoadProperty) );
+		mem::zero( &Prop, sizeof(TLoadProperty) );
 		Int32 iPos = 0;
 		Char *NameWalk = Prop.Name, *ValueWalk = Prop.Value;
 

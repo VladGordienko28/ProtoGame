@@ -105,7 +105,7 @@ void FModelComponent::ReallocMap()
 	// Reallocate data, and zero map, since
 	// reallocation cause tiles shuffle.
 	Map.SetNum( MapXSize * MapYSize );
-	MemZero( &Map[0], MapXSize*MapYSize*sizeof(UInt16) );
+	mem::zero( &Map[0], MapXSize*MapYSize*sizeof(UInt16) );
 }
 
 

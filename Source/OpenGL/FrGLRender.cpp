@@ -23,7 +23,7 @@ COpenGLRender::COpenGLRender( HWND InhWnd )
 	// Initialize OpenGL.
 	PIXELFORMATDESCRIPTOR Pfd;
 	Int32 nPixelFormat;
-	MemZero( &Pfd, sizeof(PIXELFORMATDESCRIPTOR) );
+	mem::zero( &Pfd, sizeof(PIXELFORMATDESCRIPTOR) );
 	Pfd.dwFlags		= PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
 	nPixelFormat	= ChoosePixelFormat( hDc, &Pfd );
 	SetPixelFormat( hDc, nPixelFormat, &Pfd );
@@ -2046,7 +2046,7 @@ void CGLShaderBase::SetValue( Int32 iUniform, UInt32 Dimension, const void* Valu
 	// Check if value changed.
 	if( Dimension != 0 )
 	{
-		if( MemCmp( Value, Uniforms[iUniform].FloatValue, Dimension*sizeof(Float) ) )
+		if( mem::cmp( Value, Uniforms[iUniform].FloatValue, Dimension*sizeof(Float) ) )
 			return;
 	}
 	else
@@ -2087,14 +2087,14 @@ void CGLShaderBase::SetValue( Int32 iUniform, UInt32 Dimension, const void* Valu
 				break;
 		}
 
-		MemCopy( Uniform.FloatValue, Value, Dimension!=0 ? Dimension*sizeof(Float) : sizeof(Int32) );
+		mem::copy( Uniform.FloatValue, Value, Dimension!=0 ? Dimension*sizeof(Float) : sizeof(Int32) );
 	}
 	else
 	{
 		// Shader disabled, so wait for activation.
 		TUniform& Uniform = Uniforms[iUniform];
 
-		MemCopy( Uniform.FloatValue, Value, Dimension!=0 ? Dimension*sizeof(Float) : sizeof(Int32) );
+		mem::copy( Uniform.FloatValue, Value, Dimension!=0 ? Dimension*sizeof(Float) : sizeof(Int32) );
 		Uniform.Dimension = Dimension;
 
 		if( !Uniform.bDirty )

@@ -44,51 +44,7 @@
 #define arr_len(arr) (sizeof(arr)/sizeof(arr[0]))
 
 
-/*-----------------------------------------------------------------------------
-    Memory functions.
------------------------------------------------------------------------------*/
 
-inline void* MemAlloc( SizeT Count )
-{
-	return calloc( Count, 1 );
-}
-inline void* MemMalloc( SizeT Count )
-{
-	return malloc( Count );
-}
-inline void* MemRealloc( void* Addr, SizeT NewCount )
-{
-	return realloc( Addr, NewCount );
-}
-inline void MemFree( void* Addr )
-{
-	free( Addr );
-}
-inline void MemZero( void* Addr, SizeT Count )
-{
-	memset( Addr, 0, Count );
-}
-inline void MemSet( void* Addr, SizeT Count, UInt8 Value )
-{
-	memset( Addr, Value, Count );
-}
-inline Bool MemCmp( const void* A, const void* B, SizeT Count )
-{
-	return memcmp( A, B, Count ) == 0;
-}
-inline void MemCopy( void* Dst, const void* Src, SizeT Count )
-{
-	memcpy( Dst, Src, Count );
-}
-inline void MemSwap( void* A, void* B, SizeT Count )
-{
-	UInt8 Buffer[1024];
-	MemCopy( Buffer, A, Count );
-	MemCopy( A, B, Count );
-	MemCopy( B, Buffer, Count );
-}
-
-#define MemAlloca( size )	_alloca(size);
 
 /*-----------------------------------------------------------------------------
     CPlatformBase.

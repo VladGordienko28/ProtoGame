@@ -415,7 +415,7 @@ void String::Flush()
 				Depth++;
 
 				TInternal* NextItem = Item->DeadNext;
-				MemFree(Item);
+				mem::free(Item);
 				Item = NextItem;
 			}
 
@@ -587,7 +587,7 @@ void TArrayBase::Reallocate( void*& Data, Int32& Count, Int32 NewCount, SizeT In
 	if( NewCount == 0 )
 	{
 		// Get rid data.
-		MemFree( Data );
+		mem::free( Data );
 		Data	= nullptr;
 		Count	= 0;
 	} 
@@ -596,7 +596,7 @@ void TArrayBase::Reallocate( void*& Data, Int32& Count, Int32 NewCount, SizeT In
 		// Allocate new data.
 		Int32 OverItems	= ExtraSpace( InnerSize );
 		Int32 TrueNew		= align( NewCount, OverItems );
-		Data				= MemAlloc( TrueNew * InnerSize );
+		Data				= mem::alloc( TrueNew * InnerSize );
 		Count				= NewCount;
 	}
 	else
@@ -611,8 +611,8 @@ void TArrayBase::Reallocate( void*& Data, Int32& Count, Int32 NewCount, SizeT In
 			{
 				// Need extra items.
 				Int32 TrueNew	= align( NewCount, OverItems );
-				Data	= MemRealloc( Data, TrueNew * InnerSize );
-				MemZero
+				Data	= mem::realloc( Data, TrueNew * InnerSize );
+				mem::zero
 				( 
 					(UInt8*)Data + Count * InnerSize,
 					(NewCount - Count) * InnerSize
@@ -621,7 +621,7 @@ void TArrayBase::Reallocate( void*& Data, Int32& Count, Int32 NewCount, SizeT In
 			else
 			{
 				// Memory enough, but need zero.
-				MemZero
+				mem::zero
 				( 
 					(UInt8*)Data + Count * InnerSize,
 					(NewCount - Count) * InnerSize
@@ -638,7 +638,7 @@ void TArrayBase::Reallocate( void*& Data, Int32& Count, Int32 NewCount, SizeT In
 			Int32 TrueOld		= align( Count, OverItems );
 
 			if( TrueOld != TrueNew )
-				Data = MemRealloc( Data, TrueNew * InnerSize );
+				Data = mem::realloc( Data, TrueNew * InnerSize );
 
 			Count	= NewCount;
 		}

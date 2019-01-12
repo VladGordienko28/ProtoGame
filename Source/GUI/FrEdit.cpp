@@ -243,7 +243,7 @@ void WEdit::OnKeyDown( Int32 Key )
 		if( NumChars )
 		{
 			Char* TxtToCpy = new Char[NumChars+1]();
-			MemCopy( TxtToCpy, &Text[CaretBegin], NumChars*sizeof(Char) );
+			mem::copy( TxtToCpy, &Text[CaretBegin], NumChars*sizeof(Char) );
 			GPlat->ClipboardCopy( TxtToCpy );
 			delete[] TxtToCpy;
 		}

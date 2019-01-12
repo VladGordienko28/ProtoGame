@@ -350,7 +350,7 @@ void CFrame::ProcessCode( TRegister* Result )
 			{
 				// General purpose l to r.
 				UInt8 iReg = ReadByte();
-				MemCopy( Regs[iReg].Value, Regs[iReg].Addr, ReadByte() );
+				mem::copy( Regs[iReg].Value, Regs[iReg].Addr, ReadByte() );
 				break;
 			}
 			case CODE_LToRDWord:
@@ -372,7 +372,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				// General purpose assignment.
 				UInt8 iDst = ReadByte();
 				UInt8 iSrc = ReadByte();
-				MemCopy( Regs[iDst].Addr, Regs[iSrc].Value, ReadByte() );
+				mem::copy( Regs[iDst].Addr, Regs[iSrc].Value, ReadByte() );
 				break;
 			}
 			case CODE_AssignDWord:
@@ -487,7 +487,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				// Get an r-value member.
 				UInt8 iReg = ReadByte();
 				UInt8 Offset = ReadByte();
-				MemCopy( &Regs[iReg].Value[0], &Regs[iReg].Value[Offset], arr_len(TRegister::Value)-Offset );
+				mem::copy( &Regs[iReg].Value[0], &Regs[iReg].Value[Offset], arr_len(TRegister::Value)-Offset );
 				break;
 			}
 			case CODE_DynPop:
@@ -504,7 +504,7 @@ void CFrame::ProcessCode( TRegister* Result )
 
 				if( InnerSize != 0 )
 				{
-					MemCopy( Regs[iReg].Value, (UInt8*)Array->Data + Index*InnerSize, InnerSize );
+					mem::copy( Regs[iReg].Value, (UInt8*)Array->Data + Index*InnerSize, InnerSize );
 					TArrayBase::Reallocate( Array->Data, Array->Count, Array->Count-1, InnerSize );
 				}
 				else
@@ -531,7 +531,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				if( InnerSize != 0 )
 				{
 					TArrayBase::Reallocate( Array->Data, Array->Count, Index+1, InnerSize );
-					MemCopy( (UInt8*)Array->Data + Index*InnerSize, Regs[iElem].Value, InnerSize );
+					mem::copy( (UInt8*)Array->Data + Index*InnerSize, Regs[iElem].Value, InnerSize );
 				}
 				else
 				{
@@ -554,7 +554,7 @@ void CFrame::ProcessCode( TRegister* Result )
 
 				if( InnerSize != 0 )
 				{
-					MemSwap
+					mem::swap
 					( 
 						(UInt8*)Array->Data + Index*InnerSize, 
 						(UInt8*)Array->Data + (Array->Count-1)*InnerSize, 
@@ -565,7 +565,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				else
 				{
 					((String*)(UInt8*)Array->Data + Index*sizeof(String))->~String();
-					MemSwap
+					mem::swap
 					( 
 						(UInt8*)Array->Data + Index*sizeof(String), 
 						(UInt8*)Array->Data + (Array->Count-1)*sizeof(String), 
@@ -847,7 +847,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				UInt8 i1	= ReadByte();
 				UInt8 i2 = ReadByte();	
 				UInt8 Size = ReadByte();
-				*(Bool*)(Regs[i1].Value) = Size != 0 ? MemCmp( Regs[i1].Value, Regs[i2].Value, Size ) : Regs[i1].StrValue == Regs[i2].StrValue;
+				*(Bool*)(Regs[i1].Value) = Size != 0 ? mem::cmp( Regs[i1].Value, Regs[i2].Value, Size ) : Regs[i1].StrValue == Regs[i2].StrValue;
 				break;
 			}
 			case CODE_NotEqual:
@@ -856,7 +856,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				UInt8 i1	= ReadByte();
 				UInt8 i2 = ReadByte();	
 				UInt8 Size = ReadByte();
-				*(Bool*)(Regs[i1].Value) = Size != 0 ? !MemCmp( Regs[i1].Value, Regs[i2].Value, Size ) : Regs[i1].StrValue != Regs[i2].StrValue;
+				*(Bool*)(Regs[i1].Value) = Size != 0 ? !mem::cmp( Regs[i1].Value, Regs[i2].Value, Size ) : Regs[i1].StrValue != Regs[i2].StrValue;
 				break;
 			}
 			case CODE_ConditionalOp:
@@ -867,7 +867,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				UInt8 iSecond	= ReadByte();
 				UInt8 Decision	= *(Bool*)(Regs[ReadByte()].Value) ? iFirst : iSecond;
 
-				MemCopy( Regs[iRes].Value, Regs[Decision].Value, sizeof(TRegister::Value) );
+				mem::copy( Regs[iRes].Value, Regs[Decision].Value, sizeof(TRegister::Value) );
 				Regs[iRes].StrValue = Regs[Decision].StrValue;
 				break;
 			}
@@ -1166,7 +1166,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				// Perform switch statement.
 				Int32 Expr = 0;
 				UInt8 Size = ReadByte();
-				MemCopy( &Expr, Regs[ReadByte()].Value, Size );
+				mem::copy( &Expr, Regs[ReadByte()].Value, Size );
 				UInt8* AddrDef = &Bytecode->Code[ReadWord()];
 				Code = &Bytecode->Code[ReadWord()];
 				Int32 NumLabs = ReadByte();
@@ -1174,7 +1174,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				for( Int32 i=0; i<NumLabs; i++ )
 				{
 					Int32 Label	= 0;
-					MemCopy( &Label, Code, Size );
+					mem::copy( &Label, Code, Size );
 					Code += Size;
 					UInt16 Addr		= ReadWord();
 

@@ -144,7 +144,7 @@ void CLevelTransactor::TrackLeave()
 		Transactions.SetNum(HISTORY_LIMIT);
 		delete Transactions[0];
 
-		MemCopy
+		mem::copy
 		(
 			&Transactions[0],
 			&Transactions[1],
@@ -232,7 +232,7 @@ public:
 	{
 		SizeT i	= Transaction->Data.Num();
 		Transaction->Data.SetNum(i+Count);
-		MemCopy( &Transaction->Data[i], Mem, Count );
+		mem::copy( &Transaction->Data[i], Mem, Count );
 	}
 	void SerializeRef( FObject*& Obj )
 	{
@@ -311,7 +311,7 @@ public:
 	// CSerializer interface.
 	void SerializeData( void* Mem, SizeT Count )
 	{
-		MemCopy( Mem, &Transaction->Data[StreamPos], Count );
+		mem::copy( Mem, &Transaction->Data[StreamPos], Count );
 		StreamPos	+= Count;
 	}
 	void SerializeRef( FObject*& Obj )
@@ -390,7 +390,7 @@ TTransaction::~TTransaction()
 	Names.Empty();
 
 	if( ComData )
-		MemFree( ComData );
+		mem::free( ComData );
 }
 
 
@@ -508,8 +508,8 @@ void TTransaction::Restore()
 		);
 
 		assert(DSize==ComSourceSize);
-		MemCopy( &Data[0], DData, DSize );
-		MemFree( DData );
+		mem::copy( &Data[0], DData, DSize );
+		mem::free( DData );
 	}
 #endif
 

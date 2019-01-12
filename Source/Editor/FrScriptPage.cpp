@@ -909,7 +909,7 @@ WCodeEditor::~WCodeEditor()
 	// Destroy Undo/Redo stack.
 	for( Int32 i=0; i<UndoStack.Num(); i++ )
 		if( UndoStack[i] )
-			MemFree(UndoStack[i]);
+			mem::free(UndoStack[i]);
 	UndoStack.Empty();
 }
 
@@ -1546,10 +1546,10 @@ void WCodeEditor::PopCopyClick( WWidget* Sender )
 	{
 		// Copy chunk of line, no \n symbols required.
 		Int32 NumChars = CaretXEnd - CaretXBegin;
-		Char* Text = (Char*)MemAlloc( (NumChars+1)*sizeof(Char) );
-		MemCopy( Text, &Lines[CaretYBegin].Text[CaretXBegin], NumChars*sizeof(Char) );
+		Char* Text = (Char*)mem::alloc( (NumChars+1)*sizeof(Char) );
+		mem::copy( Text, &Lines[CaretYBegin].Text[CaretXBegin], NumChars*sizeof(Char) );
 		GPlat->ClipboardCopy( Text );
-		MemFree( Text );
+		mem::free( Text );
 	}
 	else
 	{
@@ -1560,33 +1560,33 @@ void WCodeEditor::PopCopyClick( WWidget* Sender )
 		for( Int32 Y=CaretYBegin; Y<=CaretYEnd; Y++ )
 			NumChars += Lines[Y].Text.Len() + 4;
 
-		Char* Text = (Char*)MemAlloc( (NumChars+1)*sizeof(Char) );
+		Char* Text = (Char*)mem::alloc( (NumChars+1)*sizeof(Char) );
 
 		// Copy text and insert /n symbol.
 		Char* Walk = Text;
 		for( Int32 Y=CaretYBegin; Y<=CaretYEnd; Y++ )
 			if( Y == CaretYEnd )
 			{
-				MemCopy( Walk, &Lines[Y].Text[0], CaretXEnd*sizeof(Char) );
+				mem::copy( Walk, &Lines[Y].Text[0], CaretXEnd*sizeof(Char) );
 				Walk += CaretXEnd;
 			}
 			else if( Y == CaretYBegin )
 			{
-				MemCopy( Walk, &Lines[Y].Text[CaretXBegin], (Lines[Y].Text.Len()-CaretXBegin)*sizeof(Char) );
+				mem::copy( Walk, &Lines[Y].Text[CaretXBegin], (Lines[Y].Text.Len()-CaretXBegin)*sizeof(Char) );
 				Walk += Lines[Y].Text.Len()-CaretXBegin;
 				*Walk = L'\n';
 				Walk++;
 			}
 			else
 			{
-				MemCopy( Walk, &Lines[Y].Text[0], Lines[Y].Text.Len()*sizeof(Char) );
+				mem::copy( Walk, &Lines[Y].Text[0], Lines[Y].Text.Len()*sizeof(Char) );
 				Walk += Lines[Y].Text.Len();
 				*Walk = L'\n';
 				Walk++;
 			}
 
 		GPlat->ClipboardCopy( Text );
-		MemFree( Text );
+		mem::free( Text );
 	}
 }
 
@@ -2653,7 +2653,7 @@ void WCodeEditor::EndTransaction()
 	for( Int32 i=UndoTop+1; i<UndoStack.Num(); i++ )
 		if( UndoStack[i] )
 		{
-			MemFree( UndoStack[i] );
+			mem::free( UndoStack[i] );
 			UndoStack[i]	= nullptr;
 		}
 
@@ -2663,9 +2663,9 @@ void WCodeEditor::EndTransaction()
 	{
 		// Destroy first record and shift others.
 		UndoStack.SetNum(HISTORY_LIMIT);
-		MemFree(UndoStack[0]);
+		mem::free(UndoStack[0]);
 
-		MemCopy
+		mem::copy
 		(
 			&UndoStack[0],
 			&UndoStack[1],
@@ -2688,7 +2688,7 @@ void WCodeEditor::SaveToUndoStack( Int32 iSlot )
 	// Release old data.
 	if( UndoStack[iSlot] )
 	{
-		MemFree(UndoStack[iSlot]);
+		mem::free(UndoStack[iSlot]);
 		UndoStack[iSlot]	= nullptr;
 	}
 	
@@ -2699,7 +2699,7 @@ void WCodeEditor::SaveToUndoStack( Int32 iSlot )
 	ReqMem	+= Lines.Num() * sizeof(Int32);
 
 	// Write all required data into buffer.
-	UInt8*	Buffer	= (UInt8*)MemAlloc(ReqMem);
+	UInt8*	Buffer	= (UInt8*)mem::alloc(ReqMem);
 	UInt8*	Walk	= Buffer;
 
 	// Write editor stuff.
@@ -2714,7 +2714,7 @@ void WCodeEditor::SaveToUndoStack( Int32 iSlot )
 		TLine& Line	= Lines[iLine];
 
 		*(Int32*)Walk	= Line.Text.Len();	Walk += sizeof(Int32);
-		MemCopy( Walk, *Line.Text, Line.Text.Len()*sizeof(Char) );
+		mem::copy( Walk, *Line.Text, Line.Text.Len()*sizeof(Char) );
 		Walk	+= Line.Text.Len()*sizeof(Char);
 	}
 
@@ -2736,7 +2736,7 @@ void WCodeEditor::SaveToUndoStack( Int32 iSlot )
 
 	// Save to slot.
 	UndoStack[iSlot]	= Compressed;
-	MemFree(Buffer);
+	mem::free(Buffer);
 #else
 	// Don't compress.
 	UndoStack[iSlot]	= Buffer;
@@ -2800,7 +2800,7 @@ void WCodeEditor::LoadFromUndoStack( Int32 iSlot )
 
 #if UNDO_TEXT_COMPRESS
 	// Free.
-	MemFree( Data );
+	mem::free( Data );
 #endif
 }
 

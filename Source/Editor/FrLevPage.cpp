@@ -2269,6 +2269,16 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 					COLOR_White, 
 					TVector( 10.f, 38.f ) 
 				);
+
+#if FLU_PROFILE_MEMORY
+	Canvas->DrawText
+				( 
+					String::Format( L"Mem: %.2f kB", Double(mem::stats().totalAllocatedBytes) / 1024 ), 
+					Root->Font1, 
+					COLOR_White, 
+					TVector( 10.f, 55.f ) 
+				);
+#endif
 }
 
 
@@ -2297,7 +2307,7 @@ public:
 	{
 		Int32 OldNum = Buffer.Num();
 		Buffer.SetNum( OldNum+Count );
-		MemCopy( &Buffer[OldNum], Mem, Count );
+		mem::copy( &Buffer[OldNum], Mem, Count );
 	}
 	void SerializeRef( FObject*& Obj )
 	{
@@ -2345,7 +2355,7 @@ public:
 	// CSerializer interface.
 	void SerializeData( void* Mem, SizeT Count )
 	{
-		MemCopy( Mem, &Buffer[iPos], Count );
+		mem::copy( Mem, &Buffer[iPos], Count );
 		iPos	+= Count;
 	}
 	void SerializeRef( FObject*& Obj )

@@ -54,7 +54,7 @@ static void JoystickTick()
 		}
 
 		// Store it.
-		MemCopy( OldKeys, Keys, sizeof(Keys) );
+		mem::copy( OldKeys, Keys, sizeof(Keys) );
 	}
 }
 

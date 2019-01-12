@@ -172,7 +172,7 @@ FBitmap* ImportBMP( String Filename, String ResName )
 		// RGBA.
 		Bitmap->Format	= BF_RGBA;
 		Bitmap->AllocateBlock( sizeof(TColor)*Bitmap->USize*Bitmap->VSize );
-		MemCopy( Bitmap->GetData(), TempData, sizeof(TColor)*Bitmap->USize*Bitmap->VSize );
+		mem::copy( Bitmap->GetData(), TempData, sizeof(TColor)*Bitmap->USize*Bitmap->VSize );
 	}
 
 	delete[] TempData;
@@ -420,7 +420,7 @@ FBitmap* ImportPNG( String Filename, String ResName )
 		// RGBA.
 		Bitmap->Format	= BF_RGBA;
 		Bitmap->AllocateBlock( sizeof(TColor)*Bitmap->USize*Bitmap->VSize );
-		MemCopy( Bitmap->GetData(), SourceData, sizeof(TColor)*Bitmap->USize*Bitmap->VSize );
+		mem::copy( Bitmap->GetData(), SourceData, sizeof(TColor)*Bitmap->USize*Bitmap->VSize );
 	}
 
 	// Turn on alpha or not?
@@ -518,7 +518,7 @@ FFont* ImportFLF( String Filename, String ResName )
 		TArray<UInt8>	Remap(65536);
 		TArray<TGlyph>	Glyphs;
 		Int32			iMaxChar = 0;
-		MemSet( &Remap[0], Remap.Num()*sizeof(UInt8), 0xff );
+		mem::set( &Remap[0], Remap.Num()*sizeof(UInt8), 0xff );
 
 		// Read info about each glyph.
 		while( !feof(File) )

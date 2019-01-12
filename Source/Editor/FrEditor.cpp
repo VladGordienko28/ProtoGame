@@ -866,7 +866,7 @@ static	CPlatformBase*	_WinPlatPtr = GPlat = &WinPlat;
 static Char* StackTrace( LPEXCEPTION_POINTERS InException )	
 {
 	static Char Text[2048];
-	MemZero( Text, sizeof(Text) );
+	mem::zero( Text, sizeof(Text) );
 	DWORD64 Offset64 = 0;
 	DWORD Offset	 = 0;
 
@@ -875,7 +875,7 @@ static Char* StackTrace( LPEXCEPTION_POINTERS InException )
 	HANDLE	Thread		= GetCurrentThread();
 
 	// Symbol info.
-	SYMBOL_INFO* Symbol	= (SYMBOL_INFO*)MemAlloc( sizeof(SYMBOL_INFO) + 1024 );
+	SYMBOL_INFO* Symbol	= (SYMBOL_INFO*)mem::alloc( sizeof(SYMBOL_INFO) + 1024 );
 	Symbol->SizeOfStruct	= sizeof(SYMBOL_INFO);
 	Symbol->MaxNameLen		= 1024;
 	DWORD SymOptions		= SymGetOptions();
@@ -885,12 +885,12 @@ static Char* StackTrace( LPEXCEPTION_POINTERS InException )
 
 	// Line info.
 	IMAGEHLP_LINE64 Line;
-	MemZero( &Line, sizeof(IMAGEHLP_LINE64) );
+	mem::zero( &Line, sizeof(IMAGEHLP_LINE64) );
 	Line.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
 
 	// Setup frame info.
 	STACKFRAME64 StackFrame;
-	MemZero( &StackFrame, sizeof(STACKFRAME64) );
+	mem::zero( &StackFrame, sizeof(STACKFRAME64) );
 	
 #if FLU_X32
 	if( InException )
@@ -952,7 +952,7 @@ static Char* StackTrace( LPEXCEPTION_POINTERS InException )
 		}
 	}
 
-	MemFree( Symbol );
+	mem::free( Symbol );
 	return Text;
 }
 #pragma optimize ( "", on )

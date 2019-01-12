@@ -206,7 +206,7 @@ CObjectDatabase::CObjectDatabase()
 {
 	// Store as global accessible.
 	GObjectDatabase = this;
-	MemZero( GHash, sizeof(GHash) );
+	mem::zero( GHash, sizeof(GHash) );
 }
 
 
@@ -531,7 +531,7 @@ public:
 	void SerializeData( void* Mem, SizeT Count )
 	{
 		assert(Offset<65536);
-		MemCopy( &GBuffer[Offset], Mem, Count );
+		mem::copy( &GBuffer[Offset], Mem, Count );
 		Offset += Count;
 	}
 	void SerializeRef( FObject*& Obj )
@@ -556,7 +556,7 @@ public:
 	void SerializeData( void* Mem, SizeT Count )
 	{
 		assert(Offset<65536);
-		MemCopy( Mem, &GBuffer[Offset], Count );
+		mem::copy( Mem, &GBuffer[Offset], Count );
 		Offset += Count;
 	}
 	void SerializeRef( FObject*& Obj )

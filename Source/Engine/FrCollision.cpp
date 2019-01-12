@@ -57,7 +57,7 @@ CCollisionHash::CCollisionHash( FLevel* InLevel )
 		HashNumItems( 0 )
 {
 	// Initialize tables.
-	MemZero( Hash, sizeof(Hash) );
+	mem::zero( Hash, sizeof(Hash) );
 
 	// Initialize hash function tables.
 	static Bool bTabInit = false;

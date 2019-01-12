@@ -164,7 +164,7 @@ FDemoBitmap::FDemoBitmap()
 FDemoBitmap::~FDemoBitmap()
 {
 	if( EffectPtr )
-		MemFree( EffectPtr );
+		mem::free( EffectPtr );
 }
 
 
@@ -200,7 +200,7 @@ void FDemoBitmap::Init( Int32 InU, Int32 InV )
 	paletteSimple( &Palette.Colors[0] );
 
 	// Allocate demo bitmap data.
-	EffectPtr			= (UInt8*)MemAlloc( USize * VSize );
+	EffectPtr			= (UInt8*)mem::alloc( USize * VSize );
 }
 
 
@@ -253,7 +253,7 @@ void FDemoBitmap::PostLoad()
 	bDynamic		= true;
 
 	// Allocate data.
-	EffectPtr		= (UInt8*)MemAlloc( USize * VSize );
+	EffectPtr		= (UInt8*)mem::alloc( USize * VSize );
 }
 
 
@@ -1480,7 +1480,7 @@ void FWaterBitmap::Init( Int32 InU, Int32 InV )
 
 	// Allocate z-buffer.
 	ZBuffer	= new UInt8[USize*VSize >> 1];
-	MemSet( ZBuffer, USize*VSize >> 1, 128 );
+	mem::set( ZBuffer, USize*VSize >> 1, 128 );
 
 	WaterAmpl	= 128;
 	NumDrops	= 0;
@@ -1760,7 +1760,7 @@ void FWaterBitmap::Redraw()
 	else
 	{
 		// Nothing to draw.
-		MemZero( GetData(), USize*VSize*sizeof(UInt8) );
+		mem::zero( GetData(), USize*VSize*sizeof(UInt8) );
 		bRedrawn	= true;
 	}
 }
@@ -1776,7 +1776,7 @@ void FWaterBitmap::PostLoad()
 
 	// Allocate Z-Buffer.
 	ZBuffer	= new UInt8[USize*VSize >> 1];
-	MemSet( ZBuffer, USize*VSize >> 1, 128 );
+	mem::set( ZBuffer, USize*VSize >> 1, 128 );
 }
 
 
@@ -1808,7 +1808,7 @@ void FWaterBitmap::EditChange()
 
 	// Copy palette.
 	if( Image )
-		MemCopy
+		mem::copy
 			( 
 				&Palette.Colors[0], 
 				&Image->Palette.Colors[0], 
@@ -2018,7 +2018,7 @@ void FTechBitmap::Init( Int32 InU, Int32 InV )
 
 	// Allocate z-buffer.
 	ZBuffer	= new UInt8[USize*VSize];
-	MemZero( ZBuffer, USize*VSize*sizeof(UInt8) );
+	mem::zero( ZBuffer, USize*VSize*sizeof(UInt8) );
 
 	BumpMapLight = 150;
 	BumpMapAngle = 30;
@@ -2064,7 +2064,7 @@ void FTechBitmap::DeletePanels( Int32 X, Int32 Y, Int32 Area )
 void FTechBitmap::Erase()
 {
 	NumPanels = 0;
-	MemZero( ZBuffer, USize*VSize*sizeof(UInt8) );
+	mem::zero( ZBuffer, USize*VSize*sizeof(UInt8) );
 }
 
 
@@ -2452,7 +2452,7 @@ void FTechBitmap::PostLoad()
 
 	// Allocate Z-buffer.
 	ZBuffer = new UInt8[USize*VSize];
-	MemZero( ZBuffer, USize*VSize*sizeof(UInt8) );
+	mem::zero( ZBuffer, USize*VSize*sizeof(UInt8) );
 }
 
 
@@ -2607,7 +2607,7 @@ void FGlassBitmap::Redraw()
 			RenderGlassII();
 	}
 	else
-		MemZero( GetData(), USize*VSize*sizeof(UInt8) );
+		mem::zero( GetData(), USize*VSize*sizeof(UInt8) );
 
 	bRedrawn	= true;
 }
@@ -2653,7 +2653,7 @@ void FGlassBitmap::EditChange()
 
 	// Copy palette.
 	if( Image )
-		MemCopy
+		mem::copy
 			( 
 				&Palette.Colors[0], 
 				&Image->Palette.Colors[0], 
@@ -2833,7 +2833,7 @@ void FHarmonicBitmap::Redraw()
 			RenderHarmonicV();
 	}
 	else
-		MemZero( GetData(), USize*VSize*sizeof(UInt8) );
+		mem::zero( GetData(), USize*VSize*sizeof(UInt8) );
 
 	bRedrawn	= true;
 }
@@ -2856,7 +2856,7 @@ void FHarmonicBitmap::EditChange()
 
 	// Copy palette.
 	if( Image )
-		MemCopy
+		mem::copy
 			( 
 				&Palette.Colors[0], 
 				&Image->Palette.Colors[0], 

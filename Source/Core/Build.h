@@ -30,6 +30,7 @@
 
 // Profile
 #define FLU_ENABLE_PROFILER 1 || FLU_DEBUG
+#define FLU_PROFILE_MEMORY FLU_DEBUG
 
 // Assertions
 #define FLU_ENABLE_ASSERT 1 || FLU_DEBUG

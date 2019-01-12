@@ -68,7 +68,7 @@ void InitHSLBitmaps()
 		ABitmap->Data.SetNum(4*4*sizeof(TColor));
 
 		TColor* Data = (TColor*)ABitmap->GetData();
-		MemSet( Data, 4*4*sizeof(TColor), 0xff );
+		mem::set( Data, 4*4*sizeof(TColor), 0xff );
 		Data[0] = Data[1] = Data[14] = Data[15] =
 		Data[10] = Data[11] = Data[4] = Data[5] = TColor( 0x80, 0x80, 0x80, 0xff );
 	}

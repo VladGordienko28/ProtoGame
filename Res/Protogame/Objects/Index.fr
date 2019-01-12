@@ -1,6 +1,6 @@
 BEGIN_RESOURCE FLevel Index
     GameSpeed = 1.0000
-    Camera.Location = [3.4722; -7.6747]
+    Camera.Location = [59.1872; -12.1230]
     Camera.FOV = [64.0000; 32.0000]
     Camera.Zoom = 1.0000
     Camera.ScrollBound = (-2048.0000; -2048.0000; 2048.0000; 2048.0000)

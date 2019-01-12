@@ -771,7 +771,7 @@ void CTypeInfo::DestroyValue( const void* Addr ) const
 
 //
 // Copy a value from Src to Dst, this function is
-// optimized, via MemCopy for speed.
+// optimized, via mem::copy for speed.
 //
 void CTypeInfo::CopyValue( void* Dst, const void* Src ) const
 {
@@ -794,7 +794,7 @@ void CTypeInfo::CopyValue( void* Dst, const void* Src ) const
 		}
 		else
 		{
-			MemCopy( Dst, Src, TypeSize(false) );
+			mem::copy( Dst, Src, TypeSize(false) );
 		}
 	}
 	else
@@ -817,7 +817,7 @@ void CTypeInfo::CopyValue( void* Dst, const void* Src ) const
 			}
 			else
 			{
-				MemCopy( DArray->Data, SArray->Data, Elem.TypeSize(true)*SArray->Count );
+				mem::copy( DArray->Data, SArray->Data, Elem.TypeSize(true)*SArray->Count );
 			}
 		}
 	}
@@ -853,7 +853,7 @@ Bool CTypeInfo::CompareValue( const void* A, const void* B ) const
 		}
 		else
 		{
-			return MemCmp( A, B, TypeSize(false) );
+			return mem::cmp( A, B, TypeSize(false) );
 		}
 	}
 	else

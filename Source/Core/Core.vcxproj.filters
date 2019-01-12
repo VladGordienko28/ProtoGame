@@ -4,8 +4,19 @@
     <ClInclude Include="Core.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="Build.h" />
+    <ClInclude Include="Heap.h">
+      <Filter>Heap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="Heap.cpp">
+      <Filter>Heap</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Heap">
+      <UniqueIdentifier>{5b50bc07-a73d-4242-a65c-faf43d13eca0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

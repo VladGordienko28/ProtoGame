@@ -212,6 +212,16 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 					TVector( 10, 10 ) 
 				);
 
+#if FLU_PROFILE_MEMORY
+	Canvas->DrawText
+				( 
+					String::Format( L"Mem: %.2f kB", Double(mem::stats().totalAllocatedBytes) / 1024 ), 
+					Root->Font1, 
+					COLOR_White, 
+					TVector( 10.f, 30.f ) 
+				);
+#endif
+
 	// In-pause mode.
 	if( PlayLevel->bIsPause )
 		Canvas->DrawText

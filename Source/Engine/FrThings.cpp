@@ -394,7 +394,7 @@ FBrushComponent::FBrushComponent()
 {
 	bHashable	= true;
 	bRenderable	= true;
-	MemZero( Vertices, sizeof(Vertices) );
+	mem::zero( Vertices, sizeof(Vertices) );
 }
 
 

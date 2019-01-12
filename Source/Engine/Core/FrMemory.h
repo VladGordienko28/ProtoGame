@@ -54,7 +54,7 @@ public:
 		Size	= N;
 		Top		= StartAdd = Buffer;
 		EndAddr	= StartAdd + Size;
-		MemZero( Buffer, sizeof(Buffer) );
+		mem::zero( Buffer, sizeof(Buffer) );
 	}
 	~CStaticPool()
 	{}
@@ -85,12 +85,12 @@ public:
 	CDynamicPool( SizeT InSize )
 	{
 		Size	= InSize;
-		Top		= StartAdd = (UInt8*)MemAlloc(align(Size, DEFAULT_ALIGNMENT));
+		Top		= StartAdd = (UInt8*)mem::alloc(align(Size, DEFAULT_ALIGNMENT));
 		EndAddr	= StartAdd + Size;
 	}
 	~CDynamicPool()
 	{
-		MemFree(StartAdd);
+		mem::free(StartAdd);
 		Size	= 0;
 		EndAddr	= StartAdd = Top = nullptr;
 	}
@@ -167,7 +167,7 @@ inline void* CStackPoolBase::Push0( SizeT NumBytes )
 		return nullptr;
 
 	Top += NumBytes;
-	MemZero( Res, NumBytes );
+	mem::zero( Res, NumBytes );
 	return Res;
 }
 
@@ -226,7 +226,7 @@ template<SizeT PAGE_SIZE> inline CPagePool<PAGE_SIZE>::~CPagePool()
 	for( Integer iPage=0; iPage<Pages.Num(); iPage++ )
 	{
 		TPage& Page = Pages[iPage];
-		MemFree( Page.Data );
+		mem::free( Page.Data );
 		Page.NumUsed = 0;
 	}
 	Pages.Empty();
@@ -261,7 +261,7 @@ template<SizeT PAGE_SIZE> inline Int32 CPagePool<PAGE_SIZE>::AddPage()
 	f_guard;
 
 	TPage New;
-	New.Data	= (Byte*)MemAlloc(PAGE_SIZE);
+	New.Data	= (Byte*)mem::alloc(PAGE_SIZE);
 	New.NumUsed	= 0;
 	assert(New.Data);
 

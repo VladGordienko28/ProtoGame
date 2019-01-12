@@ -191,7 +191,7 @@ CWavMusicStream::~CWavMusicStream()
 		fclose(Stream);
 		Stream	= nullptr;
 	}
-	MemFree(Data);
+	mem::free(Data);
 }
 
 
@@ -483,7 +483,7 @@ COggMusicStream::COggMusicStream( COpenALAudio* InOpenALAudio )
 	alGenBuffers( AUDIO_MAX_STREAM_BUFFERS,	Buffers );
 
 	// Allocate memory for all buffers.
-	Data	= (UInt8*)MemMalloc(AUDIO_STREAM_BUFFER_SIZE);
+	Data	= (UInt8*)mem::malloc(AUDIO_STREAM_BUFFER_SIZE);
 
 	// Stuff.
 	FadeInTime		= 0.f;
@@ -591,7 +591,7 @@ COggMusicStream::~COggMusicStream()
 	alDeleteBuffers( AUDIO_MAX_STREAM_BUFFERS, Buffers );
 
 	// Buffer's data.
-	MemFree( Data );
+	mem::free( Data );
 
 	// Unload file.
 	if( Stream )
@@ -1168,7 +1168,7 @@ void COpenALAudio::RegisterSound( FSound* Sound )
 
 	// Read RIFF header.
 	TRIFFHeader RiffHeader;
-	MemCopy( &RiffHeader, Data, sizeof(TRIFFHeader) );
+	mem::copy( &RiffHeader, Data, sizeof(TRIFFHeader) );
 	Data	+= sizeof(TRIFFHeader);
 
 	if( !RiffHeader.IsValid() )
@@ -1180,7 +1180,7 @@ void COpenALAudio::RegisterSound( FSound* Sound )
 
 	// Read in the 2nd chunk for the wave info.
 	TWAVEFormat WaveFormat;
-	MemCopy( &WaveFormat, Data, sizeof(TWAVEFormat) );
+	mem::copy( &WaveFormat, Data, sizeof(TWAVEFormat) );
 	Data	+= sizeof(TWAVEFormat);
 
 	if( !WaveFormat.IsValid() )
@@ -1199,7 +1199,7 @@ void COpenALAudio::RegisterSound( FSound* Sound )
 	Int32		Timeout = 256;
 	while( 1 )
 	{
-		MemCopy( &WaveData, Data, sizeof(TWAVEData) );
+		mem::copy( &WaveData, Data, sizeof(TWAVEData) );
 
 		if( !WaveData.IsValid() )
 		{

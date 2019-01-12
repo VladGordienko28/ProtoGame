@@ -46,7 +46,7 @@ CSplash::CSplash( LPCTSTR BitmapID )
 {
 	TStaticBitmap* Bitmap	= LoadBitmapFromResource(GEditor->hInstance, BitmapID);
 	{
-		BITMAPINFO*	Info	= (BITMAPINFO*)MemAlloc(sizeof(BITMAPINFO)+sizeof(RGBQUAD)*Bitmap->Palette.Colors.Num());
+		BITMAPINFO*	Info	= (BITMAPINFO*)mem::alloc(sizeof(BITMAPINFO)+sizeof(RGBQUAD)*Bitmap->Palette.Colors.Num());
 		HDC			hDc		= GetDC(nullptr);
 
 		Info->bmiHeader.biBitCount		= 8;
@@ -80,9 +80,9 @@ CSplash::CSplash( LPCTSTR BitmapID )
 		UInt8	Buffer[1024];
 		for( Int32 V=0; V<Bitmap->VSize/2; V++ )
 		{
-			MemCopy( Buffer, &Data[V*Bitmap->USize], Bitmap->USize );
-			MemCopy( &Data[V*Bitmap->USize], &Data[(Bitmap->VSize-V-1)*Bitmap->USize], Bitmap->USize );
-			MemCopy( &Data[(Bitmap->VSize-V-1)*Bitmap->USize], Buffer, Bitmap->USize );
+			mem::copy( Buffer, &Data[V*Bitmap->USize], Bitmap->USize );
+			mem::copy( &Data[V*Bitmap->USize], &Data[(Bitmap->VSize-V-1)*Bitmap->USize], Bitmap->USize );
+			mem::copy( &Data[(Bitmap->VSize-V-1)*Bitmap->USize], Buffer, Bitmap->USize );
 		}
 
 		// To hBitmap;
@@ -96,7 +96,7 @@ CSplash::CSplash( LPCTSTR BitmapID )
 			DIB_RGB_COLORS
 		);
 		ReleaseDC( nullptr, hDc );
-		MemFree( Info );
+		mem::free( Info );
 	}
 	delete Bitmap;
 	

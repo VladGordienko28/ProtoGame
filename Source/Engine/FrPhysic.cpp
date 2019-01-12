@@ -587,7 +587,7 @@ FPhysicComponent::FPhysicComponent()
 		Floor( nullptr ),
 		Zone( nullptr )
 {
-	MemZero( Touched, sizeof(Touched) );
+	mem::zero( Touched, sizeof(Touched) );
 	bHashable	= true;
 
 	bTickable	= true;
@@ -676,7 +676,7 @@ FMoverComponent::FMoverComponent()
 		NumRds( 0 ),
 		OldLocation( 0.f, 0.f )
 {
-	MemZero( Riders, sizeof(Riders) );
+	mem::zero( Riders, sizeof(Riders) );
 	bHashable	= true;
 
 	bTickable	= true;

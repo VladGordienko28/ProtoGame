@@ -22,7 +22,7 @@ FPainterComponent::FPainterComponent()
 	Color			= COLOR_White;
 	Font			= nullptr;
 	Texture			= nullptr;
-	MemZero( Effect, sizeof(Effect) );
+	mem::zero( Effect, sizeof(Effect) );
 }
 
 

@@ -497,7 +497,7 @@ void CCodeEmitter::SerializeData( void* Mem, SizeT Count )
 {
 	SizeT OldLoc = Tell();
 	Bytecode->Code.SetNum( Bytecode->Code.Num() + Count );
-	MemCopy( &Bytecode->Code[OldLoc], Mem, Count );
+	mem::copy( &Bytecode->Code[OldLoc], Mem, Count );
 }
 
 
@@ -4876,7 +4876,7 @@ void CCompiler::ReplNest( EReplType Repl, UInt16 DestAddr )
 //
 void CCompiler::ResetRegs()
 {
-	MemZero( Regs, sizeof(Regs) );
+	mem::zero( Regs, sizeof(Regs) );
 }
 
 
@@ -5417,7 +5417,7 @@ void CCompiler::GetToken( TToken& T, Bool bAllowNeg, Bool bAllowVect )
 			( C == 0x0d )||( C == 0x0a ) );
 
 	// Preinitialize the token.
-	MemZero( Buffer, sizeof(Buffer) );
+	mem::zero( Buffer, sizeof(Buffer) );
 	T.Text				= L"";
 	T.Type				= TOK_None;
 	T.iLine				= PrevLine;
@@ -5601,7 +5601,7 @@ void CCompiler::GetToken( TToken& T, Bool bAllowNeg, Bool bAllowVect )
 		else if( T.Text == L"\"" )
 		{
 			// Literal string constant.
-			MemZero( Buffer, sizeof(Buffer) );
+			mem::zero( Buffer, sizeof(Buffer) );
 			Walk = Buffer;
 
 			do 

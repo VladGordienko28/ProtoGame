@@ -256,7 +256,7 @@ void CBlockManager::SaveAllBlocks( String InFileName )
 				LZW.Encode( B->Data, B->Size, OutBuffer, OutSize );		
 				Serialize( Saver, OutSize );
 				Saver.SerializeData( OutBuffer, OutSize );
-				MemFree( OutBuffer );
+				mem::free( OutBuffer );
 			}
 			else if( B->Flags & BLOCK_RLE )
 			{
@@ -267,7 +267,7 @@ void CBlockManager::SaveAllBlocks( String InFileName )
 				RLE.Encode( B->Data, B->Size, OutBuffer, OutSize );		
 				Serialize( Saver, OutSize );
 				Saver.SerializeData( OutBuffer, OutSize );
-				MemFree( OutBuffer );
+				mem::free( OutBuffer );
 			}
 			else
 			{
@@ -327,11 +327,11 @@ void CBlockManager::LoadAllBlocks( String InFileName )
 				// Load LZW data and uncompress it.
 				UInt32 InSize;
 				Serialize( Loader, InSize );
-				void* InBuffer	= MemMalloc( InSize );
+				void* InBuffer	= mem::malloc( InSize );
 				Loader.SerializeData( InBuffer, InSize );
 				CLZWCompressor LZW;
 				LZW.Decode( InBuffer, InSize, B->Data, B->Size );
-				MemFree( InBuffer );
+				mem::free( InBuffer );
 				B->Data	= InBuffer;
 			}
 			else if( B->Flags & BLOCK_RLE )
@@ -339,16 +339,16 @@ void CBlockManager::LoadAllBlocks( String InFileName )
 				// Load RLE data and uncompress it.
 				UInt32 InSize;
 				Serialize( Loader, InSize );
-				void* InBuffer	= MemMalloc( InSize );
+				void* InBuffer	= mem::malloc( InSize );
 				Loader.SerializeData( InBuffer, InSize );
 				CRLECompressor RLE;
 				RLE.Decode( InBuffer, InSize, B->Data, B->Size );
-				MemFree( InBuffer );
+				mem::free( InBuffer );
 			}
 			else
 			{
 				// Load not compressed data.
-				B->Data	= MemMalloc(B->Size);
+				B->Data	= mem::malloc(B->Size);
 				Loader.SerializeData( B->Data, B->Size );
 			}
 		}
@@ -379,7 +379,7 @@ void CBlockManager::Flush()
 
 			if( (B->Flags & BLOCK_Loaded) && !(B->Flags & BLOCK_Persistent) )
 			{
-				MemFree( B->Data );
+				mem::free( B->Data );
 				B->Data		= nullptr;
 				B->Flags	&= ~BLOCK_Loaded;
 			}
@@ -452,27 +452,27 @@ void CBlockManager::UploadBlock( Int32 iBlock )
 		// Load LZW data and uncompress it.
 		UInt32 InSize;
 		Serialize( *ResFile, InSize );
-		void* InBuffer	= MemMalloc( InSize );
+		void* InBuffer	= mem::malloc( InSize );
 		ResFile->SerializeData( InBuffer, InSize );
 		CLZWCompressor LZW;
 		LZW.Decode( InBuffer, InSize, B->Data, B->Size );
-		MemFree( InBuffer );
+		mem::free( InBuffer );
 	}
 	else if( B->Flags & BLOCK_RLE )
 	{
 		// Load RLE data and uncompress it.
 		UInt32 InSize;
 		Serialize( *ResFile, InSize );
-		void* InBuffer	= MemMalloc( InSize );
+		void* InBuffer	= mem::malloc( InSize );
 		ResFile->SerializeData( InBuffer, InSize );
 		CRLECompressor RLE;
 		RLE.Decode( InBuffer, InSize, B->Data, B->Size );
-		MemFree( InBuffer );
+		mem::free( InBuffer );
 	}
 	else
 	{
 		// Load not compressed data.
-		B->Data	= MemMalloc(B->Size);
+		B->Data	= mem::malloc(B->Size);
 		ResFile->SerializeData( B->Data, B->Size );
 	}
 
@@ -505,7 +505,7 @@ void CBlockManager::Tick( Float Delta )
 				if( B->Cost <= 0.0 )
 				{
 					// Block expired.
-					MemFree( B->Data );
+					mem::free( B->Data );
 					B->Data		= nullptr;
 					B->Flags	&= ~BLOCK_Loaded;
 
@@ -579,7 +579,7 @@ TDataBlock::TDataBlock( Int32 InSize )
 {
 	assert(GIsEditor);
 
-	Data		= MemAlloc(align(InSize, 16));
+	Data		= mem::alloc(align(InSize, 16));
 	Flags		= BLOCK_Loaded;
 	Size		= InSize;
 	Cost		= 0.0;
@@ -594,7 +594,7 @@ TDataBlock::~TDataBlock()
 {
 	if( Data )
 	{
-		MemFree( Data );
+		mem::free( Data );
 		Data	= nullptr;
 	}
 }

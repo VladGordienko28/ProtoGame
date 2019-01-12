@@ -139,7 +139,7 @@ void FFont::SerializeThis( CSerializer& S )
 		if( MapSize > 0 )
 		{
 			// Mark each glyph as blank.
-			MemSet
+			mem::set
 				(
 					&Remap[0],
 					MapSize*sizeof(UInt8),

@@ -74,7 +74,7 @@ public:
 		Node.Location		= Location;
 		Node.Weight			= 0;
 		Node.Marker			= nullptr;
-		MemCopy( Node.iEdges, iEdges, sizeof(iEdges) );
+		mem::copy( Node.iEdges, iEdges, sizeof(iEdges) );
 		return Node;
 	}
 

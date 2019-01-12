@@ -100,7 +100,7 @@ void CWinPlatform::ClipboardCopy( Char* Str )
 	{
 		SizeT Size = (wcslen(Str)+1) * sizeof(Char);
 		HGLOBAL hMem = GlobalAlloc( GMEM_MOVEABLE, Size );
-		MemCopy( GlobalLock(hMem), Str, Size );
+		mem::copy( GlobalLock(hMem), Str, Size );
 		GlobalUnlock( hMem );
 		EmptyClipboard();
 		SetClipboardData( CF_UNICODETEXT, hMem );

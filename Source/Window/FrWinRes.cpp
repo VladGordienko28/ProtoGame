@@ -37,7 +37,7 @@ public:
 	// CSerializer interface.
 	void SerializeData( void* Mem, SizeT Count )
 	{
-		MemCopy( Mem, (UInt8*)Memory + Pos, Count );
+		mem::copy( Mem, (UInt8*)Memory + Pos, Count );
 		Pos	+= Count;
 	}
 	void SerializeRef( FObject*& Obj )
@@ -136,7 +136,7 @@ TStaticFont* LoadFontFromResource( HINSTANCE hInstance, LPCTSTR FontID, LPCTSTR 
 {
 	CResourceStream		Stream( hInstance, FontID, L"FLUFONT" );
 
-	AnsiChar* Text = (AnsiChar*)MemAlloc(Stream.TotalSize()+sizeof(AnsiChar));
+	AnsiChar* Text = (AnsiChar*)mem::alloc(Stream.TotalSize()+sizeof(AnsiChar));
 	AnsiChar* Walk = Text, *End = Text + Stream.TotalSize(); 
 	Stream.SerializeData( Text, Stream.TotalSize() );
 	// Temporal workaround for FLU-50. Need to be redesigned.
@@ -188,7 +188,7 @@ TStaticFont* LoadFontFromResource( HINSTANCE hInstance, LPCTSTR FontID, LPCTSTR 
 	Page->BlendMode = BLEND_Translucent;
 	Font->Bitmaps.Push( Page );
 
-	MemFree(Text);
+	mem::free(Text);
 	#undef to_next
 
 	// Convert palette from RGB to RGBA format with solid white color and alpha mask.

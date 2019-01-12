@@ -213,7 +213,7 @@ void WColorRibbon::UpdateRibbon()
 	else
 	{
 		// Nothing to render.
-		MemZero( Ribbon->GetData(), Ribbon->GetBlockSize() );
+		mem::zero( Ribbon->GetData(), Ribbon->GetBlockSize() );
 	}
 
 	Ribbon->bRedrawn = true;

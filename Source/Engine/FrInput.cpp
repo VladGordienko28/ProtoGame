@@ -15,7 +15,7 @@
 CInput::CInput()
 {
 	// Nothing pressed.
-	MemZero( Keys, sizeof(Keys) );
+	mem::zero( Keys, sizeof(Keys) );
 
 	// Default system remap. In case of
 	// some weird platform, platform should
@@ -48,8 +48,8 @@ CInput::CInput()
 void CInput::Reset()
 {
 	// Unpress everything.
-	MemZero( Keys, sizeof(Keys) );
-	MemZero( KeysHistory, sizeof(KeysHistory) );
+	mem::zero( Keys, sizeof(Keys) );
+	mem::zero( KeysHistory, sizeof(KeysHistory) );
 	MouseX			= 0;
 	MouseY			= 0;
 	WheelScroll		= 0;

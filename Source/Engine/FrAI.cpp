@@ -35,7 +35,7 @@ FPuppetComponent::FPuppetComponent()
 	LookPeriod			= 0.f;
 	LookRadius			= 16.f;
 	LookCounter			= 0.f;
-	MemZero( LookList, sizeof(LookList) );
+	mem::zero( LookList, sizeof(LookList) );
 
 	bTickable	= true;
 }
@@ -146,7 +146,7 @@ void FPuppetComponent::LookAtPuppets()
 	// Prepare.
 	Int32	iLookee = 0;
 	Float	Dist2	= LookRadius*LookRadius; 
-	MemZero( LookList, sizeof(LookList) );
+	mem::zero( LookList, sizeof(LookList) );
 
 	for( FPuppetComponent* Other=Level->FirstPuppet; Other; Other = Other->NextPuppet )
 	{

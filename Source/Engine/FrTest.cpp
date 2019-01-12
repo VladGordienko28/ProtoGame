@@ -745,8 +745,8 @@ public:
 		for( Integer i=0; i<DstSize; i++ )
 			wprintf( L"%d ", ((Byte*)Dest)[i] );
 	
-		MemFree( Out );
-		MemFree(Dest);
+		mem::free( Out );
+		mem::free(Dest);
 	}
 
 	*/
@@ -3207,7 +3207,7 @@ void CLZWCompressor::Decode( const void* InBuffer, DWord InSize, void*& OutBuffe
 	OutSize		= *(Integer*)In;
 	iWalk.iByte	+= sizeof(Integer);
 
-	OutBuffer	= MemAlloc(OutSize);
+	OutBuffer	= mem::alloc(OutSize);
 	Byte*	Out		= (Byte*)OutBuffer;
 	Integer	oWalk	= 0;
 	
@@ -3218,7 +3218,7 @@ void CLZWCompressor::Decode( const void* InBuffer, DWord InSize, void*& OutBuffe
 		GLZWTable[i].Prefix	= 0;
 		GLZWTable[i].Value	= 0;
 	}
-	MemZero( GLZWStack, sizeof(GLZWStack) );
+	mem::zero( GLZWStack, sizeof(GLZWStack) );
 
 	// Setup LZW.
 	Integer Value=0;

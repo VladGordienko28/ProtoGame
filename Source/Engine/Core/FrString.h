@@ -178,7 +178,7 @@ inline String::String( const Char* Other )
 	{
 		Int32 RealLen	= (Int32)wcslen(Other);
 		Initialize( Internal, RealLen );
-		MemCopy( Internal->Data, Other, RealLen*sizeof(Char) );
+		mem::copy( Internal->Data, Other, RealLen*sizeof(Char) );
 	}
 }
 inline String::String( const Char* Other, Int32 InLen )
@@ -187,7 +187,7 @@ inline String::String( const Char* Other, Int32 InLen )
 	if( Other && *Other && InLen )
 	{
 		Initialize( Internal, InLen );
-		MemCopy( Internal->Data, Other, InLen*sizeof(Char) );
+		mem::copy( Internal->Data, Other, InLen*sizeof(Char) );
 	}
 }
 
@@ -245,7 +245,7 @@ inline String& String::operator=( const Char* Str )
 	if( RealLen )
 	{
 		Initialize( Internal, RealLen );
-		MemCopy( Internal->Data, Str, RealLen*sizeof(Char) );
+		mem::copy( Internal->Data, Str, RealLen*sizeof(Char) );
 	}
 	return *this;
 }
@@ -265,7 +265,7 @@ inline Char& String::operator[]( Int32 i )
 		{
 			TInternal* Indirected = nullptr;
 			Initialize( Indirected, Internal->Length );
-			MemCopy( Indirected->Data, Internal->Data, Internal->Length*sizeof(Char) );
+			mem::copy( Indirected->Data, Internal->Data, Internal->Length*sizeof(Char) );
 			Internal->RefsCount--;
 			Internal = Indirected;
 		}
@@ -333,7 +333,7 @@ inline String& String::operator+=( const Char* Str )
 		{
 			Int32 L1 = Len(), LR = L1+L2;
 			Reinitialize( Internal, LR );
-			MemCopy( &Internal->Data[L1], Str, L2*sizeof(Char) );
+			mem::copy( &Internal->Data[L1], Str, L2*sizeof(Char) );
 		}
 		else
 			*this = Str;
@@ -348,7 +348,7 @@ inline String& String::operator+=( const String& Other )
 		{
 			Int32 L1 = Len(), L2 = Other.Len(), LR = L1+L2;
 			Reinitialize( Internal, LR );
-			MemCopy( &Internal->Data[L1], Other.Internal->Data, L2*sizeof(Char) );
+			mem::copy( &Internal->Data[L1], Other.Internal->Data, L2*sizeof(Char) );
 		}
 		else
 			*this = Other;
@@ -384,7 +384,7 @@ inline void String::Initialize( TInternal*& Internal, Int32 InLen )
 	}
 	else
 	{
-		Internal		= (TInternal*)MemMalloc(sizeof(TInternal)+(InLen+1)*sizeof(Char));
+		Internal		= (TInternal*)mem::malloc(sizeof(TInternal)+(InLen+1)*sizeof(Char));
 		Internal->Data[InLen] = L'\0';
 	}
 
@@ -402,7 +402,7 @@ inline void String::Reinitialize( TInternal*& Internal, Int32 NewLen )
 			TInternal* New = nullptr;
 			Initialize( New, NewLen );
 			Int32 MinLen = New->Length < Internal->Length ? New->Length : Internal->Length;
-			MemCopy( New->Data, Internal->Data, MinLen*sizeof(Char) );
+			mem::copy( New->Data, Internal->Data, MinLen*sizeof(Char) );
 			New->Data[MinLen] = L'\0';
 			Deinitialize( Internal );
 			Internal = New;
@@ -429,7 +429,7 @@ inline void String::Deinitialize( TInternal*& Internal )
 			}
 			else
 			{
-				MemFree( Internal );
+				mem::free( Internal );
 			}
 		}
 		Internal	= nullptr;

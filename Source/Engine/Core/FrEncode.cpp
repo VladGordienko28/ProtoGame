@@ -135,7 +135,7 @@ void CLZWCompressor::Encode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 {
 	// Allocate out buffer, with some extra memory
 	// just in case.
-	OutBuffer	= MemAlloc(InSize+InSize*2+8);
+	OutBuffer	= mem::alloc(InSize+InSize*2+8);
 	OutSize		= 0;
 
 	UInt8*	In		= (UInt8*)InBuffer;	
@@ -196,7 +196,7 @@ void CLZWCompressor::Encode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 
 	// Set out buffer length.
 	OutSize		= (SizeT)(Out - OutBuffer);
-	OutBuffer	= MemRealloc( OutBuffer, OutSize );
+	OutBuffer	= mem::realloc( OutBuffer, OutSize );
 }
 
 
@@ -213,11 +213,11 @@ void CLZWCompressor::Decode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 	In			+= sizeof(SizeT);
 
 	// Allocate out buffer size.
-	OutBuffer		= MemAlloc(OutSize);
+	OutBuffer		= mem::alloc(OutSize);
 	UInt8*	Out		= (UInt8*)OutBuffer;
 
 	// Setup LZW table.
-	MemZero( GLZWStack, sizeof(GLZWStack) );
+	mem::zero( GLZWStack, sizeof(GLZWStack) );
 	for( SizeT i=0; i<LZW_TABLE_SIZE; i++ )
 		GLZWTable[i].Code	= -1;
 
@@ -348,9 +348,9 @@ CFutileCompressor::CFutileCompressor()
 //
 void CFutileCompressor::Encode( const void* InBuffer, SizeT InSize, void*& OutBuffer, SizeT& OutSize )
 {
-	OutBuffer	= MemMalloc(InSize);
+	OutBuffer	= mem::malloc(InSize);
 	OutSize		= InSize;
-	MemCopy( OutBuffer, InBuffer, InSize );
+	mem::copy( OutBuffer, InBuffer, InSize );
 }
 
 
@@ -359,9 +359,9 @@ void CFutileCompressor::Encode( const void* InBuffer, SizeT InSize, void*& OutBu
 //
 void CFutileCompressor::Decode( const void* InBuffer, SizeT InSize, void*& OutBuffer, SizeT& OutSize )
 {
-	OutBuffer	= MemMalloc(InSize);
+	OutBuffer	= mem::malloc(InSize);
 	OutSize		= InSize;
-	MemCopy( OutBuffer, InBuffer, InSize );
+	mem::copy( OutBuffer, InBuffer, InSize );
 }
 
 
@@ -400,7 +400,7 @@ void CRLECompressor::Encode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 {
 	// Allocate out buffer, with some extra memory
 	// just in case.
-	OutBuffer	= MemMalloc(InSize+InSize/2+4);
+	OutBuffer	= mem::malloc(InSize+InSize/2+4);
 	OutSize		= 0;
 
 	UInt8*	In	= (UInt8*)InBuffer;	
@@ -434,7 +434,7 @@ void CRLECompressor::Encode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 	}
 
 	// Set-up real size for out buffer.
-	OutBuffer	= MemRealloc( OutBuffer, OutSize );
+	OutBuffer	= mem::realloc( OutBuffer, OutSize );
 }
 
 
@@ -450,7 +450,7 @@ void CRLECompressor::Decode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 	OutSize		= *(SizeT*)In;
 	iWalk		+= sizeof(SizeT);
 
-	OutBuffer	= MemMalloc(OutSize);
+	OutBuffer		= mem::malloc(OutSize);
 	UInt8*	Out		= (UInt8*)OutBuffer;
 	SizeT	oWalk	= 0;
 	

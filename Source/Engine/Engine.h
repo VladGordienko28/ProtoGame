@@ -64,6 +64,8 @@ template<class K, class V> class TMap;
 // Flu includes.
 #include "Core/Core.h"
 
+using namespace flu; //todo: remove this;
+
 // Engine includes.
 #include "Core\FrBase.h"
 #include "Core\FrString.h"

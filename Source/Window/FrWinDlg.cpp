@@ -17,7 +17,7 @@ Bool ExecuteColorDialog( HWND hWnd, TColor& PickedColor, const TColor Default )
 {
 	static COLORREF CustomColors[16] = {};
 	CHOOSECOLOR CC;
-	MemZero( &CC, sizeof(CHOOSECOLOR) );
+	mem::zero( &CC, sizeof(CHOOSECOLOR) );
 	CC.lStructSize	= sizeof(CHOOSECOLOR);
 	CC.hwndOwner	= hWnd;
 	CC.rgbResult	= RGB( Default.R, Default.G, Default.B );
@@ -51,8 +51,8 @@ Bool ExecuteOpenFileDialog( HWND hWnd, String& FileName, String Directory, const
 {
 	OPENFILENAME	OPN;
 	Char			File[256];
-	MemZero( &OPN, sizeof(OPENFILENAME) );
-	MemZero( &File[0], sizeof(File) );
+	mem::zero( &OPN, sizeof(OPENFILENAME) );
+	mem::zero( &File[0], sizeof(File) );
 	OPN.lStructSize		= sizeof(OPENFILENAME);
 	OPN.hwndOwner		= hWnd;
 	OPN.lpstrFile		= File;
@@ -89,8 +89,8 @@ Bool ExecuteSaveFileDialog( HWND hWnd, String& FileName, String Directory, const
 {
 	OPENFILENAME	SAV;
 	Char			File[256];
-	MemZero( &SAV, sizeof(OPENFILENAME) );
-	MemZero( &File[0], sizeof(File) );
+	mem::zero( &SAV, sizeof(OPENFILENAME) );
+	mem::zero( &File[0], sizeof(File) );
 	SAV.lStructSize		= sizeof(OPENFILENAME);
 	SAV.hwndOwner		= hWnd;
 	SAV.lpstrFile		= File;

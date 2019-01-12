@@ -37,7 +37,7 @@ WHelloPage::WHelloPage( WContainer* InOwner, WWindow* InRoot )
 		RecentFiles[i]	= GEditor->Config->ReadString( L"Editor", L"Recent", *String::Format(L"Recent[%i]", i), L"" );
 
 	// Allocate links.
-	MemZero( Recent, sizeof(Recent) );
+	mem::zero( Recent, sizeof(Recent) );
 	for( Int32 i=0; i<arr_len(Recent); i++ )
 	{
 		if( !RecentFiles[i] )
