@@ -1,7 +1,8 @@
 BEGIN_RESOURCE FProjectInfo ProjectInfo0
-    GameName = "<Game>"
-    Author = "<Author>"
+    GameName = "ProtoGame"
+    Author = "Tough Guys"
     bNoPause = true
-    DefaultWidth = 800
-    DefaultHeight = 600
+    WindowType = 1
+    DefaultWidth = 1200
+    DefaultHeight = 720
 END_RESOURCE

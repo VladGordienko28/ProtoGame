@@ -1,6 +1,6 @@
 BEGIN_RESOURCE FLevel Index
     GameSpeed = 1.0000
-    Camera.Location = [20.9874; -9.6764]
+    Camera.Location = [3.4722; -7.6747]
     Camera.FOV = [64.0000; 32.0000]
     Camera.Zoom = 1.0000
     Camera.ScrollBound = (-2048.0000; -2048.0000; 2048.0000; 2048.0000)
@@ -274,7 +274,7 @@ BEGIN_RESOURCE FLevel Index
             TexCoords.YAxis = [0.0000; -0.0586]
             Location = [-72.0000; 26.5000]
             Size = [1.0000; 1.0000]
-            Layer = 0.5558
+            Layer = 0.2987
             bFixedAngle = true
             bFixedSize = true
             bHashable = true
@@ -302,7 +302,8 @@ BEGIN_RESOURCE FLevel Index
     END_ENTITY
     BEGIN_ENTITY Sky Sky0
         BEGIN_COMPONENT FSkyComponent Base
-            Parallax = [0.0500; 0.0500]
+            Parallax = [0.2000; 0.2000]
+            Offset = [-2.2400; 0.0000]
             Extent = 8.0000
             Location = [-68.0000; 24.0000]
             Size = [24.0000; 16.0000]
