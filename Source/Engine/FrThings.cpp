@@ -357,7 +357,7 @@ void FRectComponent::Render( CCanvas* Canvas )
 				Coords.Origin - XAxis,
 			};
 
-			for( Integer i=0; i<8; i++ )
+			for( Int32 i=0; i<8; i++ )
 				Canvas->DrawCoolPoint( Points[i], 8.f, COLOR_White );
 		}
 	}
@@ -416,7 +416,7 @@ void FBrushComponent::SerializeThis( CSerializer& S )
 	Serialize( S, TexCoords );
 	Serialize( S, Scroll );
 
-	for( Integer i=0; i<NumVerts; i++ )
+	for( Int32 i=0; i<NumVerts; i++ )
 		Serialize( S, Vertices[i] );
 }
 
@@ -473,7 +473,7 @@ void FBrushComponent::Render( CCanvas* Canvas )
 	// Transform and store vertices in TRenderPoly.
 	TRenderPoly Poly;
 	Poly.NumVerts	= NumVerts;
-	for( Integer i=0; i<NumVerts; i++ )
+	for( Int32 i=0; i<NumVerts; i++ )
 		Poly.Vertices[i]	= Vertices[i] + Location;
 
 	// Draw textured surface.
@@ -491,7 +491,7 @@ void FBrushComponent::Render( CCanvas* Canvas )
 		Coords.Origin	+= Scroll;
 
 		// Compute texture coords.
-		for( Integer i=0; i<NumVerts; i++ )
+		for( Int32 i=0; i<NumVerts; i++ )
 			Poly.TexCoords[i]	= TransformPointBy( Vertices[i], Coords );
 
 		Canvas->DrawPoly( Poly );
@@ -525,7 +525,7 @@ void FBrushComponent::Render( CCanvas* Canvas )
 			WireColor	= COLOR_Gray + WireColor*0.5f;
 
 		V1 = Poly.Vertices[Poly.NumVerts-1];
-		for( Integer i=0; i<Poly.NumVerts; i++ )
+		for( Int32 i=0; i<Poly.NumVerts; i++ )
 		{
 			V2 = Poly.Vertices[i];
 			Canvas->DrawLine( V1, V2, WireColor, false );
@@ -554,7 +554,7 @@ void FBrushComponent::Render( CCanvas* Canvas )
 
 	// Draw a stretch points.
 	if( bSelected )
-		for( Integer i=0; i<NumVerts; i++ )
+		for( Int32 i=0; i<NumVerts; i++ )
 			Canvas->DrawCoolPoint( Poly.Vertices[i], 8.f, Color2 );
 }
 

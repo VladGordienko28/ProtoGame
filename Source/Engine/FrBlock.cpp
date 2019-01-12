@@ -53,7 +53,7 @@ CBlockManager::~CBlockManager()
 		freeandnil(ResFile);
 
 	// Destroy blocks.
-	for( Integer i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.Num(); i++ )
 		if( Blocks[i] )
 			freeandnil(Blocks[i]);
 }
@@ -63,7 +63,7 @@ CBlockManager::~CBlockManager()
 // Return pointer to the block's data.
 // If iBlock is not loaded, block will be loaded.
 //
-void* CBlockManager::GetBlock( Integer iBlock )
+void* CBlockManager::GetBlock( Int32 iBlock )
 {
 	assert(iBlock>=0 && iBlock<Blocks.Num());
 	assert(Blocks[iBlock]);
@@ -85,7 +85,7 @@ void* CBlockManager::GetBlock( Integer iBlock )
 // Return the size of block, even if it not actually
 // loaded. This routine doesn't load block no way.
 //
-DWord CBlockManager::GetBlockSize( Integer iBlock )
+UInt32 CBlockManager::GetBlockSize( Int32 iBlock )
 {
 	assert(iBlock>=0 && iBlock<Blocks.Num());
 	assert(Blocks[iBlock]);
@@ -101,7 +101,7 @@ DWord CBlockManager::GetBlockSize( Integer iBlock )
 //
 // Allocate new data block, used only for editor.
 //
-Integer CBlockManager::AllocateBlock( Integer BytesCount, DWord ExtraFlags )
+Int32 CBlockManager::AllocateBlock( Int32 BytesCount, UInt32 ExtraFlags )
 {
 	assert(GIsEditor);
 	assert(BytesCount>0);
@@ -112,10 +112,10 @@ Integer CBlockManager::AllocateBlock( Integer BytesCount, DWord ExtraFlags )
 	B->Cost			= 0.0;
 	B->FileRecord	= 0;
 
-	Integer iSlot = -1;
+	Int32 iSlot = -1;
 
 	// Try find available slot.
-	for( Integer i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.Num(); i++ )
 		if( !Blocks[i] )
 		{
 			iSlot	= i;
@@ -138,7 +138,7 @@ Integer CBlockManager::AllocateBlock( Integer BytesCount, DWord ExtraFlags )
 //
 // Release the block. Editor only.
 //
-void CBlockManager::ReleaseBlock( Integer iBlock )
+void CBlockManager::ReleaseBlock( Int32 iBlock )
 {
 	assert(iBlock>=0 && iBlock<Blocks.Num());
 
@@ -163,8 +163,8 @@ void CBlockManager::SaveAllBlocks( String InFileName )
 
 	// Count resources info.
 	{
-		Integer NumRes = 0, DbSize = 0;
-		for( Integer i=0; i<Blocks.Num(); i++ )
+		Int32 NumRes = 0, DbSize = 0;
+		for( Int32 i=0; i<Blocks.Num(); i++ )
 			if( Blocks[i] )
 			{
 				NumRes++;
@@ -176,9 +176,9 @@ void CBlockManager::SaveAllBlocks( String InFileName )
 
 	// Save header of each resource, and store
 	// position of data offset in file.
-	TArray<Integer> OffsetMap(Blocks.Num());
+	TArray<Int32> OffsetMap(Blocks.Num());
 
-	for( Integer i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.Num(); i++ )
 		if( Blocks[i] )
 		{
 			// Valid block.
@@ -235,7 +235,7 @@ void CBlockManager::SaveAllBlocks( String InFileName )
 		}
 
 	// Save all block's data.
-	for( Integer i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.Num(); i++ )
 		if( Blocks[i] )
 		{
 			// Valid block.
@@ -289,7 +289,7 @@ void CBlockManager::LoadAllBlocks( String InFileName )
 	CFileLoader Loader(InFileName);
 
 	// Resources count.
-	Integer NumRes, DbSize;
+	Int32 NumRes, DbSize;
 	Serialize( Loader, DbSize );
 	Serialize( Loader, NumRes );
 
@@ -297,10 +297,10 @@ void CBlockManager::LoadAllBlocks( String InFileName )
 	Blocks.SetNum( DbSize );
 
 	// Load main information about each block.
-	for( Integer i=0; i<NumRes; i++ )
+	for( Int32 i=0; i<NumRes; i++ )
 	{
 		TDataBlock* B	= new TDataBlock();
-		Integer iSlot;
+		Int32 iSlot;
 		
 		// Load.
 		Serialize( Loader, iSlot );
@@ -313,7 +313,7 @@ void CBlockManager::LoadAllBlocks( String InFileName )
 	}
 
 	// Load all blocks data.
-	for( Integer i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.Num(); i++ )
 		if( Blocks[i] )
 		{
 			TDataBlock* B	= Blocks[i];
@@ -325,7 +325,7 @@ void CBlockManager::LoadAllBlocks( String InFileName )
 			if( B->Flags & BLOCK_LZW )
 			{
 				// Load LZW data and uncompress it.
-				DWord InSize;
+				UInt32 InSize;
 				Serialize( Loader, InSize );
 				void* InBuffer	= MemMalloc( InSize );
 				Loader.SerializeData( InBuffer, InSize );
@@ -337,7 +337,7 @@ void CBlockManager::LoadAllBlocks( String InFileName )
 			else if( B->Flags & BLOCK_RLE )
 			{
 				// Load RLE data and uncompress it.
-				DWord InSize;
+				UInt32 InSize;
 				Serialize( Loader, InSize );
 				void* InBuffer	= MemMalloc( InSize );
 				Loader.SerializeData( InBuffer, InSize );
@@ -354,7 +354,7 @@ void CBlockManager::LoadAllBlocks( String InFileName )
 		}
 
 	// Mark each resource as loaded.
-	for( Integer i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.Num(); i++ )
 		if( Blocks[i] )
 			Blocks[i]->Flags	|= BLOCK_Loaded;
 }
@@ -372,7 +372,7 @@ void CBlockManager::Flush()
 {
 	assert(!GIsEditor);
 
-	for( Integer i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.Num(); i++ )
 		if( Blocks[i] )
 		{
 			TDataBlock* B	= Blocks[i];
@@ -396,7 +396,7 @@ void CBlockManager::LoadMetadata()
 	assert(!GIsEditor);
 
 	// Resources count.
-	Integer NumRes, DbSize;
+	Int32 NumRes, DbSize;
 	Serialize( *ResFile, DbSize );
 	Serialize( *ResFile, NumRes );
 
@@ -404,10 +404,10 @@ void CBlockManager::LoadMetadata()
 	Blocks.SetNum( DbSize );
 
 	// Load main information about each block.
-	for( Integer i=0; i<NumRes; i++ )
+	for( Int32 i=0; i<NumRes; i++ )
 	{
 		TDataBlock* B	= new TDataBlock();
-		Integer iSlot;
+		Int32 iSlot;
 		
 		// Load.
 		Serialize( *ResFile, iSlot );
@@ -420,12 +420,12 @@ void CBlockManager::LoadMetadata()
 	}
 
 	// Mark each resource as not loaded.
-	for( Integer i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.Num(); i++ )
 		if( Blocks[i] )
 			Blocks[i]->Flags	&= ~BLOCK_Loaded;
 
 	// Load all persistent blocks.
-	for( Integer i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.Num(); i++ )
 		if( Blocks[i] && (Blocks[i]->Flags & BLOCK_Persistent) )
 			UploadBlock( i );
 }
@@ -435,7 +435,7 @@ void CBlockManager::LoadMetadata()
 // Upload single resource. Used to dynamic load
 // blocks during playing.
 //
-void CBlockManager::UploadBlock( Integer iBlock )
+void CBlockManager::UploadBlock( Int32 iBlock )
 {  
 	assert(!GIsEditor);
 	assert(iBlock>=0 && iBlock<Blocks.Num());
@@ -450,7 +450,7 @@ void CBlockManager::UploadBlock( Integer iBlock )
 	if( B->Flags & BLOCK_LZW )
 	{
 		// Load LZW data and uncompress it.
-		DWord InSize;
+		UInt32 InSize;
 		Serialize( *ResFile, InSize );
 		void* InBuffer	= MemMalloc( InSize );
 		ResFile->SerializeData( InBuffer, InSize );
@@ -461,7 +461,7 @@ void CBlockManager::UploadBlock( Integer iBlock )
 	else if( B->Flags & BLOCK_RLE )
 	{
 		// Load RLE data and uncompress it.
-		DWord InSize;
+		UInt32 InSize;
 		Serialize( *ResFile, InSize );
 		void* InBuffer	= MemMalloc( InSize );
 		ResFile->SerializeData( InBuffer, InSize );
@@ -493,7 +493,7 @@ void CBlockManager::Tick( Float Delta )
 {
 	assert(!GIsEditor);
 
-	for( Integer i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.Num(); i++ )
 		if( Blocks[i] )
 		{
 			TDataBlock* B	= Blocks[i];
@@ -526,12 +526,12 @@ void CBlockManager::Tick( Float Delta )
 //
 void CBlockManager::DebugManager()
 {
-	Integer	NumBytes		= 0, 
+	Int32	NumBytes		= 0, 
 			NumAvailable	= 0, 
 			NumLoaded		= 0;
 
 	// Count statistic.
-	for( Integer i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.Num(); i++ )
 		if( Blocks[i] )
 		{
 			TDataBlock* B = Blocks[i];
@@ -575,7 +575,7 @@ TDataBlock::TDataBlock()
 //
 // In editor block constructor.
 //
-TDataBlock::TDataBlock( Integer InSize )
+TDataBlock::TDataBlock( Int32 InSize )
 {
 	assert(GIsEditor);
 

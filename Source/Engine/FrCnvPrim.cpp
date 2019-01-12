@@ -26,14 +26,14 @@ void CCanvas::DrawCircle
 	Float Radius,
 	TColor Color,
 	Bool bStipple,
-	Integer Detail 
+	Int32 Detail 
 )
 {
 	TVector P1, P2;
 	P1.X = Center.X + Radius * FastSinF( 2.f * 0 * PI / Detail );
 	P1.Y = Center.Y + Radius * FastCosF( 2.f * 0 * PI / Detail );
 
-	for( Integer i=1; i<=Detail; i++ )
+	for( Int32 i=1; i<=Detail; i++ )
 	{
 		P2.X = Center.X + Radius * FastSinF( 2.f * i * PI / Detail );
 		P2.Y = Center.Y + Radius * FastCosF( 2.f * i * PI / Detail );
@@ -55,7 +55,7 @@ void CCanvas::DrawSmoothLine
 	const TVector& B,
 	TColor Color,
 	Bool bStipple,
-	Integer Detail 
+	Int32 Detail 
 )
 {
 	// Precompute values.
@@ -64,11 +64,11 @@ void CCanvas::DrawSmoothLine
 	Float DFX = LineX / Detail;
 	TVector P1 = A, P2;
 	Float XWalk = A.X;
-	Integer X = 2048;
-	Integer DX = 4096 / Detail;
+	Int32 X = 2048;
+	Int32 DX = 4096 / Detail;
 
 	// Draw chain of lines.
-	for( Integer i=0; i<=Detail; i++ )
+	for( Int32 i=0; i<=Detail; i++ )
 	{
 		Float Y = B.Y - (Sin8192(X) + 1.f) * LineY;
 		P2 = TVector( XWalk, Y );
@@ -153,7 +153,7 @@ void CCanvas::DrawCoolPoint( const TVector& P, Float Size, TColor Color )
 void CCanvas::DrawText
 (	
 	const Char* Text,
-	Integer Len,
+	Int32 Len,
 	FFont* Font, 
 	TColor Color,
 	const TVector& Start, 
@@ -175,7 +175,7 @@ void CCanvas::DrawText
 		TVector Walk = Start;
 
 		// For each character in string.
-		for( Integer i=0; i<Len; i++ )
+		for( Int32 i=0; i<Len; i++ )
 		{
 			// Handle whitespace glyph.
 			if( Text[i] == L' ' )
@@ -216,10 +216,10 @@ void CCanvas::DrawText
 		List.DrawColor	= Color;
 
 		TVector Walk	= Start;
-		Integer NumRnd	= 0;
+		Int32 NumRnd	= 0;
 
 		// For each character in string.
-		for( Integer i=0; i<Len; i++ )
+		for( Int32 i=0; i<Len; i++ )
 		{
 			// Handle whitespace glyph.
 			if( Text[i] == L' ' )
@@ -374,7 +374,7 @@ TVector TViewInfo::Deproject( Float InX, Float InY ) const
 // Initialize render list for rectangles
 // with various colors.
 //
-TRenderList::TRenderList( Integer InNumRcts )
+TRenderList::TRenderList( Int32 InNumRcts )
 {
 	Flags		= POLY_None;
 	Texture		= nullptr;
@@ -389,7 +389,7 @@ TRenderList::TRenderList( Integer InNumRcts )
 // Initialize render list for rectangles
 // with shared color.
 //
-TRenderList::TRenderList( Integer InNumRcts, TColor InColor )
+TRenderList::TRenderList( Int32 InNumRcts, TColor InColor )
 {
 	Flags		= POLY_None;
 	Texture		= nullptr;

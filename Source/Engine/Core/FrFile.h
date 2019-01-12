@@ -37,7 +37,7 @@ public:
 	}
 	void SerializeRef( FObject*& Obj )
 	{
-		Integer Id;
+		Int32 Id;
 		Serialize( *this, Id );
 		Obj	= Id != -1 ? GObjectDatabase->GObjects[Id] : nullptr;
 	}
@@ -95,7 +95,7 @@ public:
 	}
 	void SerializeRef( FObject*& Obj )
 	{
-		Integer Id	= Obj ? Obj->GetId() : -1;
+		Int32 Id	= Obj ? Obj->GetId() : -1;
 		Serialize( *this, Id );
 	}
 	SizeT TotalSize()
@@ -150,7 +150,7 @@ public:
 		if( fgetws( Buffer, 2048, File ) )
 		{
 			// Very ugly.
-			for( Integer i=0; i<2048; i++ )
+			for( Int32 i=0; i<2048; i++ )
 				if( Buffer[i] == L'\n' )
 				{
 					Buffer[i] = L'\0';

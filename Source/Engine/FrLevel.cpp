@@ -54,7 +54,7 @@ FLevel::~FLevel()
 	freeandnil(Navigator);
 
 	// Destroy all my entities.
-	for( Integer i=0; i<Entities.Num(); i++ )
+	for( Int32 i=0; i<Entities.Num(); i++ )
 		if( Entities[i] )
 			DestroyObject( Entities[i], true );
 }
@@ -145,7 +145,7 @@ void FLevel::BeginPlay()
 	GFXManager	= new CGFXManager( this );
 
 	// Notify all entities and their components.
-	for( Integer i=0; i<Entities.Num(); i++ )
+	for( Int32 i=0; i<Entities.Num(); i++ )
 		Entities[i]->BeginPlay();
 
 	// Mark level as played.
@@ -157,7 +157,7 @@ void FLevel::BeginPlay()
 
 	// Notify all entities because everything are initialized
 	// for playing.
-	for( Integer i=0; i<Entities.Num(); i++ )
+	for( Int32 i=0; i<Entities.Num(); i++ )
 		if( Entities[i]->Script->IsScriptable() )
 			Entities[i]->OnBeginPlay();
 }
@@ -173,12 +173,12 @@ void FLevel::EndPlay()
 
 	// Call in script OnEndPlay, while all objects are
 	// valid.
-	for( Integer i=0; i<Entities.Num(); i++ )
+	for( Int32 i=0; i<Entities.Num(); i++ )
 		if( Entities[i]->Script->IsScriptable() )
 			Entities[i]->OnEndPlay();
 
 	// Notify all entities and their components.
-	for( Integer i=0; i<Entities.Num(); i++ )
+	for( Int32 i=0; i<Entities.Num(); i++ )
 		Entities[i]->EndPlay();
 
 	// Release the collision hash.
@@ -221,7 +221,7 @@ FBrushComponent* FLevel::TestPointGeom( const TVector& P )
 
 	// Get list of brushes.
 	FBrushComponent* Brushes[MAX_COLL_LIST_OBJS];
-	Integer NumBrshs;
+	Int32 NumBrshs;
 	CollHash->GetOverlappedByClass
 								( 
 									TRect( P, 0.1f ),
@@ -230,7 +230,7 @@ FBrushComponent* FLevel::TestPointGeom( const TVector& P )
 									(FBaseComponent**)Brushes
 								);
 
-	for( Integer iBrush=0; iBrush<NumBrshs; iBrush++ )
+	for( Int32 iBrush=0; iBrush<NumBrshs; iBrush++ )
 	{
 		FBrushComponent* Brush = Brushes[iBrush];
 
@@ -268,7 +268,7 @@ FBrushComponent* FLevel::TestLineGeom( const TVector& A, const TVector& B, Bool 
 
 	// Get list of brushes.
 	FBrushComponent* Brushes[MAX_COLL_LIST_OBJS];
-	Integer NumBrshs;
+	Int32 NumBrshs;
 	CollHash->GetOverlappedByClass
 								( 
 									Bounds,
@@ -277,7 +277,7 @@ FBrushComponent* FLevel::TestLineGeom( const TVector& A, const TVector& B, Bool 
 									(FBaseComponent**)Brushes
 								);
 
-	for( Integer iBrush=0; iBrush<NumBrshs; iBrush++ )
+	for( Int32 iBrush=0; iBrush<NumBrshs; iBrush++ )
 	{
 		FBrushComponent* Brush = Brushes[iBrush];
 
@@ -335,14 +335,14 @@ void FLevel::Tick( Float Delta )
 	if( bIsPlaying && !bIsPause )
 	{
 		// Normally play level.
-		for( Integer i=0; i<Entities.Num(); i++ )
+		for( Int32 i=0; i<Entities.Num(); i++ )
 			if( Entities[i]->Thread )
 				Entities[i]->Thread->Tick( Delta );
 
-		for( Integer i=0; i<TickObjects.Num(); i++ )
+		for( Int32 i=0; i<TickObjects.Num(); i++ )
 			TickObjects[i]->PreTick( Delta );
 
-		for( Integer i=0; i<TickObjects.Num(); i++ )
+		for( Int32 i=0; i<TickObjects.Num(); i++ )
 			TickObjects[i]->Tick( Delta );
 
 		// Update GFX interpolation.
@@ -351,12 +351,12 @@ void FLevel::Tick( Float Delta )
 	else
 	{
 		// We not play, just edit level or in pause.
-		for( Integer i=0; i<TickObjects.Num(); i++ )
+		for( Int32 i=0; i<TickObjects.Num(); i++ )
 			TickObjects[i]->TickNonPlay( Delta );
 	}
 
 	// Destroy all marked entities.
-	for( Integer iEntity=0; iEntity<Entities.Num(); )
+	for( Int32 iEntity=0; iEntity<Entities.Num(); )
 		if( Entities[iEntity]->Base->bDestroyed )
 		{
 			ReleaseEntity( iEntity );
@@ -392,7 +392,7 @@ FEntity* FLevel::CreateEntity( FScript* InScript, String InName, TVector InLocat
 	else
 	{
 		// Generate new unique name.
-		for( Integer iUniq=0; ; iUniq++ )
+		for( Int32 iUniq=0; ; iUniq++ )
 		{
 			String TestName = String::Format( L"%s%d", *InScript->GetName(), iUniq );
 			if( !GObjectDatabase->FindObject( TestName, FEntity::MetaClass, this ) )
@@ -441,7 +441,7 @@ void FLevel::DestroyEntity( FEntity* Entity )
 // FLevel::Tick, call it after level tick, it's
 // cleanup all references also.
 //
-void FLevel::ReleaseEntity( Integer iEntity )
+void FLevel::ReleaseEntity( Int32 iEntity )
 {
 	FEntity* Entity = Entities[iEntity];
 	assert(Entity && Entity->Base->bDestroyed);
@@ -471,7 +471,7 @@ FEntity* FLevel::FindEntity( String InName )
 {
 	String UpperName = String::UpperCase(InName);
 
-	for( Integer iEnt=0; iEnt<Entities.Num(); iEnt++ )
+	for( Int32 iEnt=0; iEnt<Entities.Num(); iEnt++ )
 		if( UpperName == String::UpperCase(Entities[iEnt]->GetName()) )
 			return Entities[iEnt];
 
@@ -484,9 +484,9 @@ FEntity* FLevel::FindEntity( String InName )
 // Return index of the given entity in the level's
 // database, if entity not found return -1.
 //
-Integer FLevel::GetEntityIndex( FEntity* Entity )
+Int32 FLevel::GetEntityIndex( FEntity* Entity )
 { 
-	for( Integer i=0; i<Entities.Num(); i++ )
+	for( Int32 i=0; i<Entities.Num(); i++ )
 		if( Entities[i] == Entity )
 			return i;
 
@@ -519,7 +519,7 @@ FEntity::~FEntity()
 {
 	assert(Thread == nullptr);
 
-	for( Integer i=0; i<Components.Num(); i++ )
+	for( Int32 i=0; i<Components.Num(); i++ )
 		DestroyObject( Components[i], true );
 
 	DestroyObject( Base, true );
@@ -549,7 +549,7 @@ void FEntity::Init( FScript* InScript, FLevel* InLevel )
 	BasCom->InitForEntity( this );
 
 	// Extra components.
-	for( Integer i=0; i<Script->Components.Num(); i++ )
+	for( Int32 i=0; i<Script->Components.Num(); i++ )
 	{
 		FExtraComponent* Source = Script->Components[i];
 		FExtraComponent* Com = (FExtraComponent*)GObjectDatabase->CopyObject
@@ -647,7 +647,7 @@ void FEntity::BeginPlay()
 
 	// Notify all components.
 	Base->BeginPlay();
-	for( Integer e=0; e<Components.Num(); e++ )
+	for( Int32 e=0; e<Components.Num(); e++ )
 		Components[e]->BeginPlay();
 }
 
@@ -659,7 +659,7 @@ void FEntity::EndPlay()
 {
 	// Notify all components.
 	Base->EndPlay();
-	for( Integer e=0; e<Components.Num(); e++ )
+	for( Int32 e=0; e<Components.Num(); e++ )
 		Components[e]->EndPlay();
 
 	// Destroy thread if any.

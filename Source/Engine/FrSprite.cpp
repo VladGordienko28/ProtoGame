@@ -303,7 +303,7 @@ void FAnimatedSpriteComponent::Tick( Float Delta )
 
 	// Prepare.
 	TAnimSequence* Seq	= &Animation->Sequences[iSequence];
-	Integer	MaxFrames	= Seq->Count-1, iFrame;
+	Int32	MaxFrames	= Seq->Count-1, iFrame;
 
 	// Process according type.
 	switch( AnimType )
@@ -399,7 +399,7 @@ void FAnimatedSpriteComponent::Render( CCanvas* Canvas )
 	{
 		// Draw animation.
 		TAnimSequence* Seq	= &Animation->Sequences[iSequence];
-		Integer iDrawFrame	= Floor(Frame) + Seq->Start;
+		Int32 iDrawFrame	= Floor(Frame) + Seq->Start;
 
 		Rect.Texture	= Animation->Sheet;
 		Rect.TexCoords	= Animation->GetTexCoords( iDrawFrame );
@@ -466,7 +466,7 @@ void FAnimatedSpriteComponent::nativePlayAnim( CFrame& Frame )
 		return;
 	}
 
-	Integer iSeq = Animation->FindSequence( ASeqName );
+	Int32 iSeq = Animation->FindSequence( ASeqName );
 	if( iSeq == -1 )
 	{
 		debug( L"Anim: Sequence '%s' not found in '%s'", *ASeqName, *Animation->GetName() );
@@ -583,8 +583,8 @@ void FParallaxLayerComponent::Render( CCanvas* Canvas )
 	// How much tiles draw.
 	TVector Period = Scale + Gap;
 	TVector Area = Canvas->View.Bounds.Size();
-	Integer NumX = Ceil(Area.X / Period.X) + 1;
-	Integer NumY = Ceil(Area.Y / Period.Y) + 1;
+	Int32 NumX = Ceil(Area.X / Period.X) + 1;
+	Int32 NumY = Ceil(Area.Y / Period.Y) + 1;
 
 	// Compute parallax parameters.
 	TVector Bias;
@@ -613,8 +613,8 @@ void FParallaxLayerComponent::Render( CCanvas* Canvas )
 		Exchange( Rect.TexCoords.Min.Y, Rect.TexCoords.Max.Y );
 
 	// Draw all rectangles.
-	for( Integer Y=0; Y<NumY; Y++ )
-	for( Integer X=0; X<NumX; X++ )		
+	for( Int32 Y=0; Y<NumY; Y++ )
+	for( Int32 X=0; X<NumX; X++ )		
 	{
 		TVector Origin = Canvas->View.Bounds.Min - Bias + TVector( X*Period.X, Y*Period.Y ) - Scale*0.5f;
 		Rect.Bounds	= TRect( Origin, Scale );

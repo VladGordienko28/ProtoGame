@@ -19,7 +19,7 @@ inline Float RandomF()
 //
 // Random value in range [0..Maximum-1]
 //
-inline Integer Random( Integer Maximum )
+inline Int32 Random( Int32 Maximum )
 {
 	return rand() % Maximum;
 }
@@ -28,7 +28,7 @@ inline Integer Random( Integer Maximum )
 //
 // Random value in range [From..To]
 //
-inline Integer RandomRange( Integer From, Integer To )
+inline Int32 RandomRange( Int32 From, Int32 To )
 {
 	return From + Random(To-From+1);
 }

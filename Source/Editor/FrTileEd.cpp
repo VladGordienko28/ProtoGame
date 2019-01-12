@@ -28,7 +28,7 @@ WTileEditor::WTilesGrid::WTilesGrid( WWindow* InRoot, WTileEditor* InEditor )
 //
 // Mouse press tile editor.
 //
-void WTileEditor::WTilesGrid::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WTileEditor::WTilesGrid::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseDown( Button, X, Y );
 
@@ -54,7 +54,7 @@ void WTileEditor::WTilesGrid::OnMouseDown( EMouseButton Button, Integer X, Integ
 //
 // Mouse release button.
 //
-void WTileEditor::WTilesGrid::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WTileEditor::WTilesGrid::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseUp( Button, X, Y );
 
@@ -66,7 +66,7 @@ void WTileEditor::WTilesGrid::OnMouseUp( EMouseButton Button, Integer X, Integer
 //
 // Mouse move on tiles grid.
 //
-void WTileEditor::WTilesGrid::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WTileEditor::WTilesGrid::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseMove( Button, X, Y );
 
@@ -82,9 +82,9 @@ void WTileEditor::WTilesGrid::OnMouseMove( EMouseButton Button, Integer X, Integ
 		FModelComponent* Model = Editor->Model;
 
 		// Compute tile index below cursor.
-		Integer NewX = Trunc( X * Model->TilesPerU / 256.f );
-		Integer NewY = Trunc( Y * Model->TilesPerV / 256.f );
-		Integer iTile = NewX + NewY * Model->TilesPerU;
+		Int32 NewX = Trunc( X * Model->TilesPerU / 256.f );
+		Int32 NewY = Trunc( Y * Model->TilesPerV / 256.f );
+		Int32 iTile = NewX + NewY * Model->TilesPerU;
 
 		if( Model->Selected.Num() == 0 )
 		{
@@ -112,7 +112,7 @@ void WTileEditor::WTilesGrid::OnMouseMove( EMouseButton Button, Integer X, Integ
 //
 // When user drag something above tiles grid.
 //
-void WTileEditor::WTilesGrid::OnDragOver( void* Data, Integer X, Integer Y, Bool& bAccept )
+void WTileEditor::WTilesGrid::OnDragOver( void* Data, Int32 X, Int32 Y, Bool& bAccept )
 {
 	bAccept = Data && ((FObject*)Data)->IsA(FTexture::MetaClass) && Editor->Model;
 }
@@ -121,7 +121,7 @@ void WTileEditor::WTilesGrid::OnDragOver( void* Data, Integer X, Integer Y, Bool
 //
 // When user drop bitmap on tiles grid.
 //
-void WTileEditor::WTilesGrid::OnDragDrop( void* Data, Integer X, Integer Y )
+void WTileEditor::WTilesGrid::OnDragDrop( void* Data, Int32 X, Int32 Y )
 {
 	Editor->Model->Texture = (FTexture*)Data;
 }
@@ -156,24 +156,24 @@ void WTileEditor::WTilesGrid::OnPaint( CGUIRenderBase* Render )
 					);
 
 		// Draw selection marks.
-		for( Integer i=0; i<Model->Selected.Num(); i++ )
+		for( Int32 i=0; i<Model->Selected.Num(); i++ )
 		{
 			TColor MarkColor = Model->Selected[0] == 0 ? COLOR_DeepPink : COLOR_DeepSkyBlue;
 
-			Integer X = Model->Selected[i] % Model->TilesPerU;
-			Integer Y = Model->Selected[i] / Model->TilesPerU;
+			Int32 X = Model->Selected[i] % Model->TilesPerU;
+			Int32 Y = Model->Selected[i] / Model->TilesPerU;
 
 			Render->DrawRegion( TPoint( Base.X + X*Dx + 1, Base.Y + Y*Dy + 1 ), TSize( Dx-2, Dy-2 ), MarkColor, MarkColor, BPAT_Diagonal );
 			Render->DrawRegion( TPoint( Base.X + X*Dx + 1, Base.Y + Y*Dy + 1 ), TSize( Dx-2, Dy-2 ), MarkColor, MarkColor, BPAT_PolkaDot );
 		}
 
 		// Draw grid.
-		for( Integer i=0; i<Model->TilesPerU; i+=2 )
+		for( Int32 i=0; i<Model->TilesPerU; i+=2 )
 		{
 			Render->DrawRegion( TPoint( Base.X+X, Base.Y ), TSize( Dx, Size.Height ), COLOR_White, TColor( 0x31, 0x31, 0x31, 0xff ), BPAT_None );
 			X += Dx * 2;
 		}
-		for( Integer i=0; i<Model->TilesPerV; i+=2 )
+		for( Int32 i=0; i<Model->TilesPerV; i+=2 )
 		{
 			Render->DrawRegion( TPoint( Base.X, Base.Y+Y ), TSize( Size.Width, Dy ), COLOR_White, TColor( 0x31, 0x31, 0x31, 0xff ), BPAT_None );
 			Y += Dy * 2;
@@ -340,7 +340,7 @@ void WTileEditor::Hide()
 //
 // Show the tile editor.
 //
-void WTileEditor::Show( Integer X, Integer Y )
+void WTileEditor::Show( Int32 X, Int32 Y )
 {
 	// Show form.
 	WForm::Show( X, Y );
@@ -361,19 +361,19 @@ void WTileEditor::ButtonRemoveRightClick( WWidget* Sender )
 {
 	if( Model && Model->MapXSize > 1 )
 	{
-		Word* Buffer = new Word[Model->MapXSize*Model->MapYSize]();
-		MemCopy( Buffer, &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(Word) );
+		UInt16* Buffer = new UInt16[Model->MapXSize*Model->MapYSize]();
+		MemCopy( Buffer, &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(UInt16) );
 
 		Model->MapXSize = Max( Model->MapXSize - 1, 1 );
 		Model->Map.SetNum( Model->MapXSize * Model->MapYSize );
-		MemZero( &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(Word) );
+		MemZero( &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(UInt16) );
 
-		for( Integer y=0; y<Model->MapYSize; y++ )
+		for( Int32 y=0; y<Model->MapYSize; y++ )
 			MemCopy
 					(
 						&Model->Map[y * Model->MapXSize],
 						&Buffer[y * (Model->MapXSize+1)],
-						Model->MapXSize * sizeof(Word)
+						Model->MapXSize * sizeof(UInt16)
 					);
 
 		delete[] Buffer;
@@ -388,19 +388,19 @@ void WTileEditor::ButtonAddRightClick( WWidget* Sender )
 {
 	if( Model )
 	{
-		Word* Buffer = new Word[Model->MapXSize*Model->MapYSize]();
-		MemCopy( Buffer, &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(Word) );
+		UInt16* Buffer = new UInt16[Model->MapXSize*Model->MapYSize]();
+		MemCopy( Buffer, &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(UInt16) );
 
-		Model->MapXSize = Min<Integer>( Model->MapXSize + 1, FModelComponent::MAX_TILES_SIDE );
+		Model->MapXSize = Min<Int32>( Model->MapXSize + 1, FModelComponent::MAX_TILES_SIDE );
 		Model->Map.SetNum( Model->MapXSize * Model->MapYSize );
-		MemZero( &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(Word) );
+		MemZero( &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(UInt16) );
 
-		for( Integer y=0; y<Model->MapYSize; y++ )
+		for( Int32 y=0; y<Model->MapYSize; y++ )
 			MemCopy
 					( 
 						&Model->Map[y*Model->MapXSize], 
 						&Buffer[y * (Model->MapXSize-1)], 
-						(Model->MapXSize-1) * sizeof(Word) 
+						(Model->MapXSize-1) * sizeof(UInt16) 
 					);
 
 		delete[] Buffer;
@@ -415,19 +415,19 @@ void WTileEditor::ButtonRemoveLeftClick( WWidget* Sender )
 {
 	if( Model && Model->MapXSize > 1 )
 	{
-		Word* Buffer = new Word[Model->MapXSize*Model->MapYSize]();
-		MemCopy( Buffer, &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(Word) );
+		UInt16* Buffer = new UInt16[Model->MapXSize*Model->MapYSize]();
+		MemCopy( Buffer, &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(UInt16) );
 
 		Model->MapXSize = Max( Model->MapXSize - 1, 1 );
 		Model->Map.SetNum( Model->MapXSize * Model->MapYSize );
-		MemZero( &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(Word) );
+		MemZero( &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(UInt16) );
 
-		for( Integer y=0; y<Model->MapYSize; y++ )
+		for( Int32 y=0; y<Model->MapYSize; y++ )
 			MemCopy
 					(
 						&Model->Map[y * Model->MapXSize],
 						&Buffer[y * (Model->MapXSize+1) + 1],
-						Model->MapXSize * sizeof(Word)
+						Model->MapXSize * sizeof(UInt16)
 					);
 
 		delete[] Buffer;
@@ -446,19 +446,19 @@ void WTileEditor::ButtonAddLeftClick( WWidget* Sender )
 {
 	if( Model && Model->MapXSize < FModelComponent::MAX_TILES_SIDE )
 	{
-		Word* Buffer = new Word[Model->MapXSize*Model->MapYSize]();
-		MemCopy( Buffer, &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(Word) );
+		UInt16* Buffer = new UInt16[Model->MapXSize*Model->MapYSize]();
+		MemCopy( Buffer, &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(UInt16) );
 
-		Model->MapXSize = Min<Integer>( Model->MapXSize + 1, FModelComponent::MAX_TILES_SIDE );
+		Model->MapXSize = Min<Int32>( Model->MapXSize + 1, FModelComponent::MAX_TILES_SIDE );
 		Model->Map.SetNum( Model->MapXSize * Model->MapYSize );
-		MemZero( &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(Word) );
+		MemZero( &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(UInt16) );
 
-		for( Integer y=0; y<Model->MapYSize; y++ )
+		for( Int32 y=0; y<Model->MapYSize; y++ )
 			MemCopy
 					( 
 						&Model->Map[1 + y*Model->MapXSize], 
 						&Buffer[y * (Model->MapXSize-1)], 
-						(Model->MapXSize-1) * sizeof(Word) 
+						(Model->MapXSize-1) * sizeof(UInt16) 
 					);
 
 		delete[] Buffer;
@@ -481,7 +481,7 @@ void WTileEditor::ButtonRemoveDownClick( WWidget* Sender )
 				(
 					&Model->Map[0],
 					&Model->Map[Model->MapXSize],
-					Model->MapXSize * Model->MapYSize * sizeof(Word)
+					Model->MapXSize * Model->MapYSize * sizeof(UInt16)
 				);
 
 		Model->MapYSize = Max( Model->MapYSize - 1, 1 );
@@ -501,20 +501,20 @@ void WTileEditor::ButtonAddDownClick( WWidget* Sender )
 {
 	if( Model && Model->MapYSize < FModelComponent::MAX_TILES_SIDE )
 	{
-		Model->MapYSize = Min<Integer>( Model->MapYSize + 1, FModelComponent::MAX_TILES_SIDE );
+		Model->MapYSize = Min<Int32>( Model->MapYSize + 1, FModelComponent::MAX_TILES_SIDE );
 		Model->Map.SetNum( Model->MapXSize * Model->MapYSize );
 
 		MemCopy
 				( 
 					&Model->Map[Model->MapXSize],
 					&Model->Map[0],
-					Model->MapXSize * (Model->MapYSize-1) * sizeof(Word)
+					Model->MapXSize * (Model->MapYSize-1) * sizeof(UInt16)
 				);
 
 		MemZero
 				( 
 					&Model->Map[0],
-					Model->MapXSize * sizeof(Word)
+					Model->MapXSize * sizeof(UInt16)
 				);
 
 #if SAVE_TILE_LOC
@@ -544,7 +544,7 @@ void WTileEditor::ButtonAddUpClick( WWidget* Sender )
 {
 	if( Model )
 	{
-		Model->MapYSize = Min<Integer>( Model->MapYSize + 1, FModelComponent::MAX_TILES_SIDE );
+		Model->MapYSize = Min<Int32>( Model->MapYSize + 1, FModelComponent::MAX_TILES_SIDE );
 		Model->Map.SetNum( Model->MapXSize * Model->MapYSize );
 	}
 }

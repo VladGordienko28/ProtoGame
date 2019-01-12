@@ -81,7 +81,7 @@ void FSkeletonComponent::nativePlayAnim( CFrame& Frame )
 		log( L"Skel: No skeleton in \"%s\"", *GetFullName() );
 		return;
 	}
-	Integer iFound = Skeleton->FindAction(InActionName);
+	Int32 iFound = Skeleton->FindAction(InActionName);
 	if( iFound == -1 )
 	{
 		log( L"Skel: Action \"%s\" not found in \"%s\"", *InActionName, *Skeleton->GetFullName() );

@@ -2,8 +2,7 @@
     FrEngine.h: Engine general include file.
     Copyright Jun.2016 Vlad Gordienko.
 =============================================================================*/
-#ifndef _FLU_ENGINE_
-#define _FLU_ENGINE_
+#pragma once
 
 // Disable annoying warnings.
 #pragma warning(disable : 4200)
@@ -62,9 +61,10 @@ struct TViewInfo;
 template<class T> class TArray;
 template<class K, class V> class TMap;
 
+// Flu includes.
+#include "Core/Core.h"
 
 // Engine includes.
-#include "Core\FrBuild.h"
 #include "Core\FrBase.h"
 #include "Core\FrString.h"
 #include "Core\FrLog.h"
@@ -116,7 +116,6 @@ template<class K, class V> class TMap;
 #include "Database.h"
 
 
-#endif
 /*-----------------------------------------------------------------------------
     The End.
 -----------------------------------------------------------------------------*/

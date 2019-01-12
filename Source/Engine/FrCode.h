@@ -19,7 +19,7 @@ public:
 	{
 		union 
 		{
-			Byte	Value[32];
+			UInt8	Value[32];
 			void*	Addr;
 		};
 		String	StrValue;
@@ -68,9 +68,9 @@ public:
 	static CStaticPool<512*1024> GLocalsMem;
 
 	// CFrame interface.
-	CFrame( FEntity* InThis, CFunction* InFunction, Integer InDepth = 1, CFrame* InPrevFrame = nullptr );
+	CFrame( FEntity* InThis, CFunction* InFunction, Int32 InDepth = 1, CFrame* InPrevFrame = nullptr );
 	CFrame( FEntity* InThis, CThreadCode* InThread );
-	CFrame( FScript* InScript, CFunction* InStatic, Integer InDepth = 1, CFrame* InPrevFrame = nullptr );
+	CFrame( FScript* InScript, CFunction* InStatic, Int32 InDepth = 1, CFrame* InPrevFrame = nullptr );
 	~CFrame();
 	void ScriptError( Char* Fmt, ... );
 
@@ -81,7 +81,7 @@ private:
 	public:
 		// Variables.
 		TArray<FEntity*>	Collection;
-		Integer				i;
+		Int32				i;
 
 		// Constructor.
 		TForeach()
@@ -92,9 +92,9 @@ private:
 
 	// Frame internal.
 	CFrame*			PrevFrame;
-	Integer			Depth;	
-	Byte*			Code;
-	Byte*			Locals;
+	Int32			Depth;	
+	UInt8*			Code;
+	UInt8*			Locals;
 	TForeach		Foreach;
 
 	// Opcodes execution.
@@ -106,10 +106,10 @@ private:
 
 public:
 	// Constants readers.
-	inline Byte ReadByte();
-	inline Word ReadWord();
+	inline UInt8 ReadByte();
+	inline UInt16 ReadWord();
 	inline Bool ReadBool();
-	inline Integer ReadInteger();
+	inline Int32 ReadInteger();
 	inline Float ReadFloat();
 	inline TAngle ReadAngle();
 	inline TColor ReadColor();
@@ -160,11 +160,11 @@ public:
 	EThreadStatus		Status;
 	FEntity*			Entity;
 	CFrame				Frame;
-	Integer				LabelId;
+	Int32				LabelId;
 	union
 	{
 		Float			SleepTime;	// THR_Sleep.
-		Byte*			WaitExpr;	// THR_Wait.
+		UInt8*			WaitExpr;	// THR_Wait.
 	};
 
 	// CThreadFrame interface.
@@ -178,10 +178,10 @@ public:
     CFrame implementation.
 -----------------------------------------------------------------------------*/
 
-inline Byte CFrame::ReadByte()
+inline UInt8 CFrame::ReadByte()
 {
-	Byte R = *Code;
-	Code += sizeof(Byte);
+	UInt8 R = *Code;
+	Code += sizeof(UInt8);
 	return R;
 }
 
@@ -192,10 +192,10 @@ inline Bool CFrame::ReadBool()
 	return R;
 }
 
-inline Integer CFrame::ReadInteger()
+inline Int32 CFrame::ReadInteger()
 {
-	Integer R = *(Integer*)Code;
-	Code += sizeof(Integer);
+	Int32 R = *(Int32*)Code;
+	Code += sizeof(Int32);
 	return R;
 }
 
@@ -222,14 +222,14 @@ inline TColor CFrame::ReadColor()
 
 inline String CFrame::ReadString()
 {
-	Integer Len = ReadInteger();
+	Int32 Len = ReadInteger();
 	Char Buffer[STRING_ARRAY_MAX+1];
 
 	if( Len < 0 )
 	{
 		// Ansi string.
-		Integer RealLen = -Len;
-		for( Integer i=0; i<RealLen; i++ )
+		Int32 RealLen = -Len;
+		for( Int32 i=0; i<RealLen; i++ )
 			Buffer[i] = ((AnsiChar*)Code)[i];
 		Code += RealLen * sizeof(AnsiChar);
 		Buffer[RealLen] = '\0';
@@ -259,22 +259,22 @@ inline TRect CFrame::ReadAABB()
 	return R;
 }
 
-inline Word CFrame::ReadWord()
+inline UInt16 CFrame::ReadWord()
 {
-	Word R = *(Word*)Code;
-	Code += sizeof(Word);
+	UInt16 R = *(UInt16*)Code;
+	Code += sizeof(UInt16);
 	return R;
 }
 
 inline FResource* CFrame::ReadResource()
 {
-	Byte iRes = ReadByte();
+	UInt8 iRes = ReadByte();
 	return iRes != 0xff ? Script->ResTable[iRes] : nullptr;
 }
 
 inline FEntity* CFrame::ReadEntity()
 {
-	Integer iEntity = ReadInteger();
+	Int32 iEntity = ReadInteger();
 	return iEntity != -1 ? (FEntity*)GObjectDatabase->GObjects[iEntity] : nullptr;	
 }
 
@@ -287,14 +287,14 @@ inline FScript* CFrame::ReadScript()
 
 inline FScript* CFrame::ReadScriptSafe()
 {
-	Integer i = ReadInteger();
+	Int32 i = ReadInteger();
 	return i != -1 ? As<FScript>(GObjectDatabase->GObjects[i]) : nullptr;
 }
 
 inline EPropType CFrame::ReadPropType()
 {
 	EPropType R = (EPropType)*Code;
-	Code += sizeof(Byte);
+	Code += sizeof(UInt8);
 	return R;
 }
 
@@ -304,9 +304,9 @@ inline EPropType CFrame::ReadPropType()
 -----------------------------------------------------------------------------*/
 
 // Parameters grabbers.
-#define POP_BYTE			(*(Byte*)(Frame.Regs[Frame.ReadByte()].Value))
+#define POP_BYTE			(*(UInt8*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POP_BOOL			(*(Bool*)(Frame.Regs[Frame.ReadByte()].Value))		
-#define POP_INTEGER			(*(Integer*)(Frame.Regs[Frame.ReadByte()].Value))
+#define POP_INTEGER			(*(Int32*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POP_FLOAT			(*(Float*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POP_ANGLE			(*(TAngle*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POP_COLOR			(*(TColor*)(Frame.Regs[Frame.ReadByte()].Value))
@@ -318,7 +318,7 @@ inline EPropType CFrame::ReadPropType()
 
 #define POPA_BYTE			((Byte*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POPA_BOOL			((Bool*)(Frame.Regs[Frame.ReadByte()].Value))		
-#define POPA_INTEGER		((Integer*)(Frame.Regs[Frame.ReadByte()].Value))
+#define POPA_INTEGER		((Int32*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POPA_FLOAT			((Float*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POPA_ANGLE			((TAngle*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POPA_COLOR			((TColor*)(Frame.Regs[Frame.ReadByte()].Value))

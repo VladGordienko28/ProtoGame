@@ -27,7 +27,7 @@ Bool CNavigator::MakePathTo( FPuppetComponent* Seeker, TVector InDest )
 	Seeker->iHoldenNode	= -1;
 
 	// Get seeker's nearest node.
-	Integer	iStart	= FindNearestNode( Seeker->Body->Location, false, 32.f );
+	Int32	iStart	= FindNearestNode( Seeker->Body->Location, false, 32.f );
 	if( iStart == -1 )
 	{
 		// Failed to attach Seeker to navi network.
@@ -36,7 +36,7 @@ Bool CNavigator::MakePathTo( FPuppetComponent* Seeker, TVector InDest )
 	TPathNode&	Start	= Nodes[iStart];
 
 	// Get destination nearest node.
-	Integer iDest	= FindNearestNode( InDest, true, 32.f );
+	Int32 iDest	= FindNearestNode( InDest, true, 32.f );
 	if( iDest == -1 )
 	{
 		// Failed to attach Destination to navi network.
@@ -130,7 +130,7 @@ ToDestDirectly:
 			// B1: The node actually holded by Seeker, so try to make
 			//	path to the next node.
 			ClearPaths();
-			Integer	iPath	= BreadthFirstSearch( Seeker, iStart, iDest );
+			Int32	iPath	= BreadthFirstSearch( Seeker, iStart, iDest );
 			if( iPath == -1 )
 			{
 				// The path doesn't exists or impassiable for Seeker.
@@ -171,12 +171,12 @@ ToDestDirectly:
 			{
 				// The seeker has valid floor, so walk to node.
 				ClearPaths();
-				Integer iPath = BreadthFirstSearch( Seeker, iStart, iDest );
+				Int32 iPath = BreadthFirstSearch( Seeker, iStart, iDest );
 
 				if( iPath != -1 && Edges[iPath].PathType==PATH_Walk )
 				{
 					// Make some shortcut for walking.
-					Integer		iShort	= Edges[iPath].iFinish;
+					Int32		iShort	= Edges[iPath].iFinish;
 					TPathNode&	Short	= Nodes[iShort];
 
 					if( iDest == iShort )
@@ -231,7 +231,7 @@ NoPath:
 Bool CNavigator::MakeRandomPath( FPuppetComponent* Seeker )
 {
 	// Get seeker's nearest node.
-	Integer	iStart	= FindNearestNode( Seeker->Body->Location, false, 32.f );
+	Int32	iStart	= FindNearestNode( Seeker->Body->Location, false, 32.f );
 	if( iStart == -1 )
 	{
 		// Failed to attach Seeker to navi network.
@@ -251,11 +251,11 @@ Bool CNavigator::MakeRandomPath( FPuppetComponent* Seeker )
 			)
 		{
 			// End of chain reached, so make a new random path.
-			Integer iPath = -1, iFinish = -1; 
+			Int32 iPath = -1, iFinish = -1; 
 			enum{ NUM_RANDOM_SAMPLES = 8 };
-			for( Integer i=0; i<NUM_RANDOM_SAMPLES; i++ )
+			for( Int32 i=0; i<NUM_RANDOM_SAMPLES; i++ )
 			{
-				Integer iTestPath, iTestFinish;
+				Int32 iTestPath, iTestFinish;
 				iTestFinish	= Random(Nodes.Num());
 				ClearPaths();
 				iTestPath	= BreadthFirstSearch( Seeker, iStart, iTestFinish );
@@ -287,7 +287,7 @@ Bool CNavigator::MakeRandomPath( FPuppetComponent* Seeker )
 			// Follow the path next.
 			assert(Seeker->iGoalNode != -1);
 			ClearPaths();
-			Integer iPath = BreadthFirstSearch( Seeker, iStart, Seeker->iGoalNode );
+			Int32 iPath = BreadthFirstSearch( Seeker, iStart, Seeker->iGoalNode );
 
 			if( iPath != -1 )
 			{
@@ -410,7 +410,7 @@ void Serialize( CSerializer& S, CNavigator*& V )
 //
 void CNavigator::ClearPaths()
 {
-	for( Integer iNode=0; iNode<Nodes.Num(); iNode++ )
+	for( Int32 iNode=0; iNode<Nodes.Num(); iNode++ )
 	{
 		TPathNode& Node = Nodes[iNode];
 
@@ -427,20 +427,20 @@ void CNavigator::ClearPaths()
 // and etc. ). Return the global index of TPathEdge from the iStart to the
 // next node in the path's list. If no path found return -1.
 //
-Integer CNavigator::BreadthFirstSearch( FPuppetComponent* Seeker, Integer iStart, Integer iFinish )
+Int32 CNavigator::BreadthFirstSearch( FPuppetComponent* Seeker, Int32 iStart, Int32 iFinish )
 {
 	// An internal queue used only in bfs purposes.
 	// It's not good brilliant, but it's fast enough.
 	enum{ BFS_QUEUE_SIZE	= 2048 };
 	enum{ BFS_QUEUE_SIZE1	= BFS_QUEUE_SIZE-1 };
-	static Integer	BFSQueue[BFS_QUEUE_SIZE];
-	static Integer	BFSHead, BFSTail;
+	static Int32	BFSQueue[BFS_QUEUE_SIZE];
+	static Int32	BFSHead, BFSTail;
 
 	// Initialize queue.
 	BFSHead	= 0;
 	BFSTail	= 0;
 
-	Integer iFrom, iNext, iEdge;
+	Int32 iFrom, iNext, iEdge;
 
 	// Add iStart node to the queue.
 	Nodes[iStart].Weight	= 0;
@@ -488,7 +488,7 @@ Integer CNavigator::BreadthFirstSearch( FPuppetComponent* Seeker, Integer iStart
 
 Found:
 	// Path found, traverse the path and return the edge.
-	Integer	iNode;
+	Int32	iNode;
 	for ( 
 			iNode = iFinish; 
 			Nodes[iNode].iParent != iStart; 
@@ -525,13 +525,13 @@ Found:
 // Tries to find a nearest node to point. Nodes will checked only
 // in radius, if no node found return -1.
 //
-Integer CNavigator::FindNearestNode( TVector P, Bool bTraceLine, Float Radius )
+Int32 CNavigator::FindNearestNode( TVector P, Bool bTraceLine, Float Radius )
 {
-	Integer	Result		= -1;
+	Int32	Result		= -1;
 	Float	RadiusSq	= Radius * Radius;
 	Float	BestDist	= 100000.0f;
 
-	for( Integer iNode=0; iNode<Nodes.Num(); iNode++ )
+	for( Int32 iNode=0; iNode<Nodes.Num(); iNode++ )
 	{
 		TPathNode& Node		= Nodes[iNode];
 		Float	TestDist	= (Node.Location - P).SizeSquared();
@@ -669,7 +669,7 @@ TPathNode::TPathNode()
 	iParent		= -1;
 	Weight		= 0xffff;
 
-	for( Integer i=0; i<NUM_EDGES; i++ )
+	for( Int32 i=0; i<NUM_EDGES; i++ )
 		iEdges[i] = -1;
 }
 

@@ -16,18 +16,18 @@ public:
 	// Variables.
 	union
 	{
-		struct{ Byte R, G, B, A; };
-		DWord D;
+		struct{ UInt8 R, G, B, A; };
+		UInt32 D;
 	};
 
 	// Constructor.
 	TColor()
 		:	D( 0 )
 	{}
-	TColor( DWord InD )
+	TColor( UInt32 InD )
 		:	D( InD )
 	{}
-	TColor( Byte InR, Byte InG, Byte InB, Byte InA )
+	TColor( UInt8 InR, UInt8 InG, UInt8 InB, UInt8 InA )
 		:	R( InR ), G( InG ), B( InB ), A( InA )
 	{}
 	TColor( Float InR, Float InG, Float InB )
@@ -50,38 +50,38 @@ public:
 	{
 		return TColor
 					( 
-						Min( 0xff, (Integer)R + (Integer)C.R ),
-						Min( 0xff, (Integer)G + (Integer)C.G ),
-						Min( 0xff, (Integer)B + (Integer)C.B ),
-						Min( 0xff, (Integer)A + (Integer)C.A ) 
+						Min( 0xff, (Int32)R + (Int32)C.R ),
+						Min( 0xff, (Int32)G + (Int32)C.G ),
+						Min( 0xff, (Int32)B + (Int32)C.B ),
+						Min( 0xff, (Int32)A + (Int32)C.A ) 
 					);
 	}
 	TColor operator-( const TColor C ) const
 	{
 		return TColor
 					( 
-						Max( 0x00, (Integer)R - (Integer)C.R ),
-						Max( 0x00, (Integer)G - (Integer)C.G ),
-						Max( 0x00, (Integer)B - (Integer)C.B ),
-						Max( 0x00, (Integer)A - (Integer)C.A ) 
+						Max( 0x00, (Int32)R - (Int32)C.R ),
+						Max( 0x00, (Int32)G - (Int32)C.G ),
+						Max( 0x00, (Int32)B - (Int32)C.B ),
+						Max( 0x00, (Int32)A - (Int32)C.A ) 
 					);
 	}
-	TColor operator*( Byte Brig ) const
+	TColor operator*( UInt8 Brig ) const
 	{
 		return TColor
 					( 
-						((Integer)R * (Integer)Brig) >> 8,
-				   		((Integer)G * (Integer)Brig) >> 8,
-						((Integer)B * (Integer)Brig) >> 8,
-						((Integer)A * (Integer)Brig) >> 8 
+						((Int32)R * (Int32)Brig) >> 8,
+				   		((Int32)G * (Int32)Brig) >> 8,
+						((Int32)B * (Int32)Brig) >> 8,
+						((Int32)A * (Int32)Brig) >> 8 
 					);
 	}
 	TColor operator*( const TColor& C ) const
 	{
-		return TColor( ((Integer)R * (Integer)C.R) >> 8,
-				   	   ((Integer)G * (Integer)C.G) >> 8,
-					   ((Integer)B * (Integer)C.B) >> 8,
-					   ((Integer)A * (Integer)C.A) >> 8 );
+		return TColor( ((Int32)R * (Int32)C.R) >> 8,
+				   	   ((Int32)G * (Int32)C.G) >> 8,
+					   ((Int32)B * (Int32)C.B) >> 8,
+					   ((Int32)A * (Int32)C.A) >> 8 );
 	}
 	TColor operator*( const Float F ) const
 	{
@@ -95,26 +95,26 @@ public:
 	}
 	TColor operator+=( const TColor C )
 	{
-		R	= Min( 0xff, (Integer)R + (Integer)C.R );
-		G	= Min( 0xff, (Integer)G + (Integer)C.G );
-		B	= Min( 0xff, (Integer)B + (Integer)C.B );
-		A	= Min( 0xff, (Integer)A + (Integer)C.A );
+		R	= Min( 0xff, (Int32)R + (Int32)C.R );
+		G	= Min( 0xff, (Int32)G + (Int32)C.G );
+		B	= Min( 0xff, (Int32)B + (Int32)C.B );
+		A	= Min( 0xff, (Int32)A + (Int32)C.A );
 		return *this;
 	}
 	TColor operator-=( const TColor C )
 	{
-		R	= Max( 0x00, (Integer)R - (Integer)C.R );
-		G	= Max( 0x00, (Integer)G - (Integer)C.G );
-		B	= Max( 0x00, (Integer)B - (Integer)C.B );
-		A	= Max( 0x00, (Integer)A - (Integer)C.A );
+		R	= Max( 0x00, (Int32)R - (Int32)C.R );
+		G	= Max( 0x00, (Int32)G - (Int32)C.G );
+		B	= Max( 0x00, (Int32)B - (Int32)C.B );
+		A	= Max( 0x00, (Int32)A - (Int32)C.A );
 		return *this;
 	}
 	TColor operator*=( const TColor C )
 	{
-		R	= ((Integer)R * (Integer)C.R) >> 8;
-		G	= ((Integer)G * (Integer)C.G) >> 8;
-		B	= ((Integer)B * (Integer)C.B) >> 8;
-		A	= ((Integer)A * (Integer)C.A) >> 8;
+		R	= ((Int32)R * (Int32)C.R) >> 8;
+		G	= ((Int32)G * (Int32)C.G) >> 8;
+		B	= ((Int32)B * (Int32)C.B) >> 8;
+		A	= ((Int32)A * (Int32)C.A) >> 8;
 		return *this;
 	}
 	TColor operator*=( Float F )
@@ -126,12 +126,12 @@ public:
 		return *this;
 	}
 
-	TColor operator*=( Byte Brig )
+	TColor operator*=( UInt8 Brig )
 	{
-		R	= ((Integer)R * (Integer)Brig) >> 8;
-		G	= ((Integer)G * (Integer)Brig) >> 8;
-		B	= ((Integer)B * (Integer)Brig) >> 8;
-		A	= ((Integer)A * (Integer)Brig) >> 8;
+		R	= ((Int32)R * (Int32)Brig) >> 8;
+		G	= ((Int32)G * (Int32)Brig) >> 8;
+		B	= ((Int32)B * (Int32)Brig) >> 8;
+		A	= ((Int32)A * (Int32)Brig) >> 8;
 		return *this;
 	}
 
@@ -162,8 +162,8 @@ public:
 		return Result;
 	}
 
-	static void RGBToHSL( TColor Color, Byte& H, Byte& S, Byte& L );
-	static TColor HSLToRGB( Byte H, Byte S, Byte L );
+	static void RGBToHSL( TColor Color, UInt8& H, UInt8& S, UInt8& L );
+	static TColor HSLToRGB( UInt8 H, UInt8 S, UInt8 L );
 };
 
 

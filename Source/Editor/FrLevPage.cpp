@@ -66,7 +66,7 @@ public:
 	{
 		EntitiesList->Empty();
 
-		for( Integer iEnt=0; iEnt<Page->Level->Entities.Num(); iEnt++ )
+		for( Int32 iEnt=0; iEnt<Page->Level->Entities.Num(); iEnt++ )
 		{
 			FEntity* Entity = Page->Level->Entities[iEnt];
 
@@ -84,7 +84,7 @@ public:
 	}
 
 	// WForm interface.
-	void Show( Integer X = 0, Integer Y = 0 )
+	void Show( Int32 X = 0, Int32 Y = 0 )
 	{
 		Location	= TPoint( X, Y );
 		bVisible	= true;
@@ -129,7 +129,7 @@ public:
 //
 // Onto Transmigration!
 //
-static TArray<Byte> GEntityClipboard;
+static TArray<UInt8> GEntityClipboard;
 
 
 //
@@ -292,7 +292,7 @@ WLevelPage::WLevelPage( FLevel* InLevel, WContainer* InOwner, WWindow* InRoot )
 	RndFlagsPopup->AddItem( L"Show HUD",		WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
 	RndFlagsPopup->AddItem( L"Show Effects",	WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
 	RndFlagsPopup->AddItem( L"Show Paths",		WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
-	for( Integer i=0; i<RndFlagsPopup->Items.Num(); i++ )
+	for( Int32 i=0; i<RndFlagsPopup->Items.Num(); i++ )
 		RndFlagsPopup->Items[i].bChecked	= Level->RndFlags & (1 << i);
 }
 
@@ -411,7 +411,7 @@ void WLevelPage::UpdateInspector()
 //
 // When user drag something above viewport.
 //
-void WLevelPage::OnDragOver( void* Data, Integer X, Integer Y, Bool& bAccept )
+void WLevelPage::OnDragOver( void* Data, Int32 X, Int32 Y, Bool& bAccept )
 {
 	bAccept	= false;
 
@@ -448,7 +448,7 @@ void WLevelPage::OnDragOver( void* Data, Integer X, Integer Y, Bool& bAccept )
 //
 // When user drop something.
 //
-void WLevelPage::OnDragDrop( void* Data, Integer X, Integer Y )
+void WLevelPage::OnDragDrop( void* Data, Int32 X, Int32 Y )
 {
 	FObject*	Obj = (FObject*)Data;
 
@@ -490,7 +490,7 @@ void WLevelPage::OnDragDrop( void* Data, Integer X, Integer Y )
 				if( Prop && TYPE_TEXTURE.MatchWith(*Prop) )
 				{
 					Transactor->TrackEnter();
-						*(FTexture**)(((Byte*)Entity->Base)+Prop->Offset) = As<FTexture>(Obj);
+						*(FTexture**)(((UInt8*)Entity->Base)+Prop->Offset) = As<FTexture>(Obj);
 					Transactor->TrackLeave();
 				}
 			}
@@ -523,7 +523,7 @@ void WLevelPage::OnPaint( CGUIRenderBase* Render )
 //
 // When user press keyboard button.
 //
-void WLevelPage::OnKeyDown( Integer Key )
+void WLevelPage::OnKeyDown( Int32 Key )
 {  
 	if( Key == VK_DELETE )
 	{
@@ -561,7 +561,7 @@ void WLevelPage::OnKeyDown( Integer Key )
 //
 // When user release keyboard button.
 //
-void WLevelPage::OnKeyUp( Integer Key )
+void WLevelPage::OnKeyUp( Int32 Key )
 { 
 	WEditorPage::OnKeyUp( Key );
 }
@@ -610,7 +610,7 @@ static TPoint	RLastPos		= TPoint( 0, 0 );
 //
 // On mouse up on viewport.
 //
-void WLevelPage::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WLevelPage::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	if( (Button == MB_Left) && (bLeftPressed) )
 	{
@@ -640,7 +640,7 @@ void WLevelPage::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 //
 // On mouse press on viewport.
 //
-void WLevelPage::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WLevelPage::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	if( Button == MB_Left )
 	{
@@ -664,12 +664,12 @@ void WLevelPage::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 //
 // User scroll mouse wheel.
 //
-void WLevelPage::OnMouseScroll( Integer Delta )
+void WLevelPage::OnMouseScroll( Int32 Delta )
 {
 	if( Selector.Selected.Num() != 0 && Tool == LEV_Edit )
 	{
 		// Change the entity layer.
-		for( Integer i=0; i<Selector.Selected.Num(); i++ )
+		for( Int32 i=0; i<Selector.Selected.Num(); i++ )
 		{
 			FBaseComponent* Base = Selector.Selected[i]->Base;
 			Base->Layer -= Delta / 8400.f;
@@ -710,7 +710,7 @@ void WLevelPage::OnMouseScroll( Integer Delta )
 //
 // User double click on viewport.
 //
-void WLevelPage::OnDblClick( EMouseButton Button, Integer X, Integer Y )
+void WLevelPage::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WEditorPage::OnDblClick( Button, X, Y );
 
@@ -759,9 +759,9 @@ public:
 	union
 	{
 		struct{ int dummy; };
-		struct{ FBrushComponent* VBrush; Integer ViVert; };						// DRAG_Vertex.
+		struct{ FBrushComponent* VBrush; Int32 ViVert; };						// DRAG_Vertex.
 		struct{ FBaseComponent* SBase; WLevelPage::EStretchHandle SHandle; };	// DRAG_Scale.
-		struct{ FLogicComponent* LSource; Integer LPlug; };						// DRAG_LogicLink.
+		struct{ FLogicComponent* LSource; Int32 LPlug; };						// DRAG_LogicLink.
 		struct{ TVector AScale; };												// DRAG_TexAlign;
 	};
 
@@ -773,7 +773,7 @@ public:
 //
 // Process mouse drag.
 //
-void WLevelPage::OnMouseDrag( EMouseButton Button, Integer X, Integer Y, Integer DeltaX, Integer DeltaY )
+void WLevelPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 DeltaX, Int32 DeltaY )
 {
 	// Transform widget delta to world vector.
 	TVector Delta;
@@ -796,14 +796,14 @@ void WLevelPage::OnMouseDrag( EMouseButton Button, Integer X, Integer Y, Integer
 		{
 			// Move vertex.
 			FBrushComponent* B	= DragInfo.VBrush;
-			Integer i	= DragInfo.ViVert;
+			Int32 i	= DragInfo.ViVert;
 			B->Vertices[i]	+= Delta;
 			break;	
 		}
 		case DRAG_Translate:
 		{
 			// Translate selected.
-			for( Integer i=0; i<Selector.Selected.Num(); i++ )
+			for( Int32 i=0; i<Selector.Selected.Num(); i++ )
 			{
 				FBaseComponent* Base = Selector.Selected[i]->Base;
 				Base->Location += Delta;
@@ -827,9 +827,9 @@ void WLevelPage::OnMouseDrag( EMouseButton Button, Integer X, Integer Y, Integer
 		case DRAG_Rotate:
 		{
 			// Rotate entities.
-			Integer RotDelta = -DeltaX*32 - DeltaY*8;
+			Int32 RotDelta = -DeltaX*32 - DeltaY*8;
 
-			for( Integer i=0; i<Selector.Selected.Num(); i++ )
+			for( Int32 i=0; i<Selector.Selected.Num(); i++ )
 				if( !Selector.Selected[i]->Base->bFixedAngle )
 				{
 					FBaseComponent* Base = Selector.Selected[i]->Base;
@@ -913,7 +913,7 @@ void WLevelPage::OnMouseDrag( EMouseButton Button, Integer X, Integer Y, Integer
 		case DRAG_TexAlign:
 		{
 			// Align textures on brushes.
-			for( Integer i=0; i<Selector.Selected.Num(); i++ )
+			for( Int32 i=0; i<Selector.Selected.Num(); i++ )
 			{
 				if( Selector.Selected[i]->Base->IsA(FBrushComponent::MetaClass) )
 				{
@@ -922,7 +922,7 @@ void WLevelPage::OnMouseDrag( EMouseButton Button, Integer X, Integer Y, Integer
 					if( Button == MB_Left && Root->bAlt )
 					{
 						// Rotate texture.
-						Integer RotDelta = -DeltaX*32 - DeltaY*8;
+						Int32 RotDelta = -DeltaX*32 - DeltaY*8;
 						Brush->TexCoords = Brush->TexCoords << RotDelta;
 					}
 					else if( Button == MB_Left )
@@ -934,8 +934,8 @@ void WLevelPage::OnMouseDrag( EMouseButton Button, Integer X, Integer Y, Integer
 					{
 						// Scale texture.
 						DragInfo.AScale	+= TVector( DeltaX, DeltaY ) * 0.03125f;		
-						Integer dX	= Trunc(DragInfo.AScale.X);
-						Integer dY	= Trunc(DragInfo.AScale.Y);
+						Int32 dX	= Trunc(DragInfo.AScale.X);
+						Int32 dY	= Trunc(DragInfo.AScale.Y);
 
 						DragInfo.AScale.X	-= dX;
 						DragInfo.AScale.Y	-= dY;
@@ -957,14 +957,14 @@ void WLevelPage::OnMouseDrag( EMouseButton Button, Integer X, Integer Y, Integer
 //
 // When user finish drag.
 //
-void WLevelPage::OnMouseEndDrag( EMouseButton Button, Integer X, Integer Y )
+void WLevelPage::OnMouseEndDrag( EMouseButton Button, Int32 X, Int32 Y )
 {
 	switch( DragInfo.DragType )	
 	{
 		case DRAG_Translate:
 		{
 			// Snap location.
-			for( Integer i=0; i<Selector.Selected.Num(); i++ )
+			for( Int32 i=0; i<Selector.Selected.Num(); i++ )
 			{
 				FBaseComponent* Base = Selector.Selected[i]->Base;
 				Base->Location.Snap(TranslationSnap);
@@ -977,17 +977,17 @@ void WLevelPage::OnMouseEndDrag( EMouseButton Button, Integer X, Integer Y )
 		{
 			// Snap the vertex.
 			FBrushComponent* B = DragInfo.VBrush;
-			Integer i = DragInfo.ViVert;
+			Int32 i = DragInfo.ViVert;
 			B->Vertices[i].Snap(TranslationSnap);
 	
 			// Merge overlap vertices.
-			for( Integer v=0; v<B->NumVerts && B->NumVerts>3; v++ )
+			for( Int32 v=0; v<B->NumVerts && B->NumVerts>3; v++ )
 			{
 				TVector&	V1 = B->Vertices[v],
 							V2 = B->Vertices[(v+1) % B->NumVerts];
 				if( (V1-V2).SizeSquared() < EPSILON )
 				{
-					for( Integer m=v; m<B->NumVerts-1; m++ )
+					for( Int32 m=v; m<B->NumVerts-1; m++ )
 						B->Vertices[m] = B->Vertices[m+1];
 					B->NumVerts--;
 					v--;
@@ -1008,7 +1008,7 @@ void WLevelPage::OnMouseEndDrag( EMouseButton Button, Integer X, Integer Y )
 		case DRAG_Rotate:
 		{
 			// Snap rotation.
-			for( Integer i=0; i<Selector.Selected.Num(); i++ )
+			for( Int32 i=0; i<Selector.Selected.Num(); i++ )
 				if( !Selector.Selected[i]->Base->bFixedAngle )
 				{
 					FBaseComponent* Base = Selector.Selected[i]->Base;
@@ -1022,7 +1022,7 @@ void WLevelPage::OnMouseEndDrag( EMouseButton Button, Integer X, Integer Y )
 			// Try to connect.
 			ELogicSocket SocType = LOGSOC_Jack;
 			FLogicComponent* L	= nullptr;
-			Integer iJack = GetSocketAt( X, Y, SocType, L );
+			Int32 iJack = GetSocketAt( X, Y, SocType, L );
 			if( iJack != -1 )
 			{
 				// Link 'em.
@@ -1041,7 +1041,7 @@ void WLevelPage::OnMouseEndDrag( EMouseButton Button, Integer X, Integer Y )
 		case DRAG_TexAlign:
 		{
 			// Snap texture matrix.
-			for( Integer i=0; i<Selector.Selected.Num(); i++ )
+			for( Int32 i=0; i<Selector.Selected.Num(); i++ )
 			{
 				if( Selector.Selected[i]->Base->IsA(FBrushComponent::MetaClass) )
 				{
@@ -1073,7 +1073,7 @@ void WLevelPage::OnMouseEndDrag( EMouseButton Button, Integer X, Integer Y )
 //
 // On mouse move in viewport.
 //
-void WLevelPage::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WLevelPage::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	// Is moved with hold button.
 	if( bLeftPressed )
@@ -1212,7 +1212,7 @@ void WLevelPage::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 //
 // Process mouse click.
 //
-void WLevelPage::OnMouseClick( EMouseButton Button, Integer X, Integer Y )
+void WLevelPage::OnMouseClick( EMouseButton Button, Int32 X, Int32 Y )
 {
 	switch( Tool )
 	{
@@ -1225,7 +1225,7 @@ void WLevelPage::OnMouseClick( EMouseButton Button, Integer X, Integer Y )
 			// Test with vertex.
 			{
 				FBrushComponent* Brush;
-				Integer iVert = GetVertexAt( X, Y, Brush );
+				Int32 iVert = GetVertexAt( X, Y, Brush );
 				if( iVert != -1 )
 				{
 					ClickVertex( Brush, iVert, Button, X, Y );
@@ -1237,7 +1237,7 @@ void WLevelPage::OnMouseClick( EMouseButton Button, Integer X, Integer Y )
 			{
 				FLogicComponent* L;
 				ELogicSocket	Sock	= LOGSOC_Plug;
-				Integer iPlug			= GetSocketAt( X, Y, Sock, L );
+				Int32 iPlug			= GetSocketAt( X, Y, Sock, L );
 				if( (iPlug != -1) && (Button == MB_Right) )
 				{
 					// Unplug all.
@@ -1360,7 +1360,7 @@ void WLevelPage::OnMouseClick( EMouseButton Button, Integer X, Integer Y )
 //
 // When user click brush vertex.
 //
-void WLevelPage::ClickVertex( FBrushComponent* Brush, Integer iVert, EMouseButton Button, Integer X, Integer Y )
+void WLevelPage::ClickVertex( FBrushComponent* Brush, Int32 iVert, EMouseButton Button, Int32 X, Int32 Y )
 {
 	if( Button == MB_Right )
 	{
@@ -1379,7 +1379,7 @@ void WLevelPage::ClickVertex( FBrushComponent* Brush, Integer iVert, EMouseButto
 //
 // User click entity.
 //
-void WLevelPage::ClickEntity( FEntity* Entity, EMouseButton Button, Integer X, Integer Y )
+void WLevelPage::ClickEntity( FEntity* Entity, EMouseButton Button, Int32 X, Int32 Y )
 {
 	if( Button == MB_Left )
 	{
@@ -1436,7 +1436,7 @@ void WLevelPage::ClickEntity( FEntity* Entity, EMouseButton Button, Integer X, I
 //
 // User click backdrop.
 //
-void WLevelPage::ClickBackdrop( EMouseButton Button, Integer X, Integer Y )
+void WLevelPage::ClickBackdrop( EMouseButton Button, Int32 X, Int32 Y )
 {
 	if( Button == MB_Left )
 	{
@@ -1467,7 +1467,7 @@ void WLevelPage::ClickBackdrop( EMouseButton Button, Integer X, Integer Y )
 //
 // Start mouse drag.
 //
-void WLevelPage::OnMouseBeginDrag( EMouseButton Button, Integer X, Integer Y )
+void WLevelPage::OnMouseBeginDrag( EMouseButton Button, Int32 X, Int32 Y )
 { 
 	switch( Tool )
 	{
@@ -1490,7 +1490,7 @@ void WLevelPage::OnMouseBeginDrag( EMouseButton Button, Integer X, Integer Y )
 			{
 				ELogicSocket Sock	= LOGSOC_Plug;
 				FLogicComponent* L	= nullptr;
-				Integer iPlug		= GetSocketAt( X, Y, Sock, L );
+				Int32 iPlug		= GetSocketAt( X, Y, Sock, L );
 
 				if( iPlug != -1 )
 				{
@@ -1519,7 +1519,7 @@ void WLevelPage::OnMouseBeginDrag( EMouseButton Button, Integer X, Integer Y )
 			// Test with vertex.
 			{
 				FBrushComponent* Brush;
-				Integer iVert = GetVertexAt( X, Y, Brush );
+				Int32 iVert = GetVertexAt( X, Y, Brush );
 				if( iVert != -1 )
 				{
 					Transactor->TrackEnter();
@@ -1616,13 +1616,13 @@ void WLevelPage::OnMouseBeginDrag( EMouseButton Button, Integer X, Integer Y )
 // By the way, its take care about layer, priority to
 // the top. If bFast don't taking into account layer.
 //
-FEntity* WLevelPage::GetEntityAt( Integer X, Integer Y, Bool bFast )
+FEntity* WLevelPage::GetEntityAt( Int32 X, Int32 Y, Bool bFast )
 {
 	FEntity*	Result		= nullptr;
 	Float		BestLayer	= -9999.9f;
 	TVector		V			= ScreenToWorld( X, Y );
 
-	for( Integer i=0; i<Level->Entities.Num(); i++ )
+	for( Int32 i=0; i<Level->Entities.Num(); i++ )
 	{
 		FEntity*		Entity = Level->Entities[i];
 		FBaseComponent* Base	= Entity->Base;
@@ -1738,9 +1738,9 @@ FEntity* WLevelPage::GetEntityAt( Integer X, Integer Y, Bool bFast )
 // If hit handle return OutBase, it own this handle.
 // Note: Looking for control points only for selected actors.
 //
-WLevelPage::EStretchHandle WLevelPage::GetStretchHandleAt( Integer X, Integer Y, FBaseComponent*& OutBase )
+WLevelPage::EStretchHandle WLevelPage::GetStretchHandleAt( Int32 X, Int32 Y, FBaseComponent*& OutBase )
 {
-	for( Integer iEntity=0; iEntity<Selector.Selected.Num(); iEntity++ )
+	for( Int32 iEntity=0; iEntity<Selector.Selected.Num(); iEntity++ )
 	{
 		FBaseComponent* Base = Selector.Selected[iEntity]->Base;
 
@@ -1768,11 +1768,11 @@ WLevelPage::EStretchHandle WLevelPage::GetStretchHandleAt( Integer X, Integer Y,
 		};
 
 		// Transform handles.
-		for( Integer i=1; i<STH_MAX; i++ )
+		for( Int32 i=1; i<STH_MAX; i++ )
 			WorldToScreen( Handles[i], Handles[i].X, Handles[i].Y );
 
 		// Test for hit.
-		for( Integer i=1; i<STH_MAX; i++ )
+		for( Int32 i=1; i<STH_MAX; i++ )
 			if( Abs(X-Handles[i].X) <= 8.f && Abs(Y-Handles[i].Y) <= 8.f )
 			{
 				// Found.
@@ -1793,7 +1793,7 @@ WLevelPage::EStretchHandle WLevelPage::GetStretchHandleAt( Integer X, Integer Y,
 //  B. SType == LOGSOC_Plug | SType == LOGSOC_Jack: Find by type only.
 // Return socket index.
 //
-Integer WLevelPage::GetSocketAt( Integer X, Integer Y, ELogicSocket& SType, FLogicComponent*& L )
+Int32 WLevelPage::GetSocketAt( Int32 X, Int32 Y, ELogicSocket& SType, FLogicComponent*& L )
 {
 	L = nullptr;
 
@@ -1804,7 +1804,7 @@ Integer WLevelPage::GetSocketAt( Integer X, Integer Y, ELogicSocket& SType, FLog
 			continue;
 
 		if( SType != LOGSOC_Jack )
-			for( Integer j=0; j<Test->NumPlugs; j++ )
+			for( Int32 j=0; j<Test->NumPlugs; j++ )
 			{
 				TVector S = Test->GetPlugPos(j);
 				WorldToScreen( S, S.X, S.Y );
@@ -1818,7 +1818,7 @@ Integer WLevelPage::GetSocketAt( Integer X, Integer Y, ELogicSocket& SType, FLog
 			}
 
 		if( SType != LOGSOC_Plug )
-			for( Integer j=0; j<Test->NumJacks; j++ )
+			for( Int32 j=0; j<Test->NumJacks; j++ )
 			{
 				TVector S = Test->GetJackPos(j);
 				WorldToScreen( S, S.X, S.Y );
@@ -1841,12 +1841,12 @@ Integer WLevelPage::GetSocketAt( Integer X, Integer Y, ELogicSocket& SType, FLog
 // Return brush vertex at widget location, if found return its index and brush in
 // OutBrush, if not found, return -1 and OutBrush is nullptr.
 //
-Integer WLevelPage::GetVertexAt( Integer X, Integer Y, FBrushComponent*& OutBrush )
+Int32 WLevelPage::GetVertexAt( Int32 X, Int32 Y, FBrushComponent*& OutBrush )
 {
 	TVector Pix( X, Y );
 	OutBrush	= nullptr;
 
-	for( Integer k=0; k<Selector.Selected.Num(); k++ )
+	for( Int32 k=0; k<Selector.Selected.Num(); k++ )
 	{
 		FBaseComponent* Base = Selector.Selected[k]->Base;
 
@@ -1854,7 +1854,7 @@ Integer WLevelPage::GetVertexAt( Integer X, Integer Y, FBrushComponent*& OutBrus
 			continue;
 
 		FBrushComponent* Brush = As<FBrushComponent>(Base);
-		for( Integer iVert=0; iVert<Brush->NumVerts; iVert++ )
+		for( Int32 iVert=0; iVert<Brush->NumVerts; iVert++ )
 		{
 			TVector V;
 			WorldToScreen( Brush->Location + Brush->Vertices[iVert], V.X, V.Y );
@@ -1874,31 +1874,31 @@ Integer WLevelPage::GetVertexAt( Integer X, Integer Y, FBrushComponent*& OutBrus
 //
 // Paint tiles on model.
 //
-void WLevelPage::PaintModelAt( FModelComponent* Model, Integer iLayer, Integer X, Integer Y )
+void WLevelPage::PaintModelAt( FModelComponent* Model, Int32 iLayer, Int32 X, Int32 Y )
 {
 	TVector V = ScreenToWorld( X, Y ); 
-	Integer iTile = Model->WorldToMapIndex( V.X, V.Y );
+	Int32 iTile = Model->WorldToMapIndex( V.X, V.Y );
 
 	if( iTile != -1 && Model->Selected.Num() > 0 )
 	{
-		Integer Tx = Model->Selected[0] % Model->TilesPerU;
-		Integer Ty = Model->Selected[0] / Model->TilesPerU;
+		Int32 Tx = Model->Selected[0] % Model->TilesPerU;
+		Int32 Ty = Model->Selected[0] / Model->TilesPerU;
 
-		Integer Mx = iTile % Model->MapXSize;
-		Integer My = iTile / Model->MapXSize;
+		Int32 Mx = iTile % Model->MapXSize;
+		Int32 My = iTile / Model->MapXSize;
 
-		for( Integer i=0; i<Model->Selected.Num(); i++ )
+		for( Int32 i=0; i<Model->Selected.Num(); i++ )
 		{
-			Integer TDx = (Model->Selected[i] % Model->TilesPerU) - Tx;
-			Integer TDy = (Model->Selected[i] / Model->TilesPerU) - Ty;
+			Int32 TDx = (Model->Selected[i] % Model->TilesPerU) - Tx;
+			Int32 TDy = (Model->Selected[i] / Model->TilesPerU) - Ty;
 
-			Integer Nx = Mx + TDx;
-			Integer Ny = My - TDy;
+			Int32 Nx = Mx + TDx;
+			Int32 Ny = My - TDy;
 
 			// Plot tile, if in valid range.
 			if( Nx >= 0 && Ny >= 0 && Nx < Model->MapXSize && Ny < Model->MapYSize )
 			{
-				Word*	TilePtr = &Model->Map[Nx + Ny*Model->MapXSize];
+				UInt16*	TilePtr = &Model->Map[Nx + Ny*Model->MapXSize];
 
 				if( iLayer == 0 )
 				{
@@ -1908,7 +1908,7 @@ void WLevelPage::PaintModelAt( FModelComponent* Model, Integer iLayer, Integer X
 				else
 				{
 					*TilePtr	&= 0x00ff;
-					*TilePtr	|= ((Integer)Model->Selected[i]) << 8;
+					*TilePtr	|= ((Int32)Model->Selected[i]) << 8;
 				}
 			}
 		}
@@ -1919,7 +1919,7 @@ void WLevelPage::PaintModelAt( FModelComponent* Model, Integer iLayer, Integer X
 //
 // Add entity to specified location.
 //
-FEntity* WLevelPage::AddEntityTo( FScript* Script, Integer X, Integer Y )
+FEntity* WLevelPage::AddEntityTo( FScript* Script, Int32 X, Int32 Y )
 {
 	FEntity* Entity;
 	Transactor->TrackEnter();
@@ -1939,7 +1939,7 @@ FEntity* WLevelPage::AddEntityTo( FScript* Script, Integer X, Integer Y )
 //
 // Return true, if given point hits the roller.
 //
-Bool WLevelPage::GetRollerAt( Integer X, Integer Y )
+Bool WLevelPage::GetRollerAt( Int32 X, Int32 Y )
 {
 	if( !Roller.bVisible )
 		return false;
@@ -1956,7 +1956,7 @@ Bool WLevelPage::GetRollerAt( Integer X, Integer Y )
 //
 // Transform point in widget coords to the level worlds.
 //
-TVector WLevelPage::ScreenToWorld( Integer X, Integer Y )
+TVector WLevelPage::ScreenToWorld( Int32 X, Int32 Y )
 {
 	TPoint P = ClientToWindow(TPoint::Zero);
 	TViewInfo View
@@ -2009,7 +2009,7 @@ void WLevelPage::WorldToScreen( TVector V, Float& OutX, Float& OutY )
 void WLevelPage::DrawPathsNetwork( CCanvas* Canvas, CNavigator* Navigator )
 {
 	// Draw all nodes.
-	for( Integer iNode=0; iNode<Navigator->Nodes.Num(); iNode++ )
+	for( Int32 iNode=0; iNode<Navigator->Nodes.Num(); iNode++ )
 	{
 		TPathNode& Node = Navigator->Nodes[iNode];
 
@@ -2024,7 +2024,7 @@ void WLevelPage::DrawPathsNetwork( CCanvas* Canvas, CNavigator* Navigator )
 	// Draw all edges.
 	TVector Bias( 0.f, (5.f*Canvas->View.FOV.Y*Canvas->View.Zoom)/(Canvas->View.Height) );
 
-	for( Integer iEdge=0; iEdge<Navigator->Edges.Num(); iEdge++ )
+	for( Int32 iEdge=0; iEdge<Navigator->Edges.Num(); iEdge++ )
 	{
 		TPathEdge& Edge = Navigator->Edges[iEdge];
 
@@ -2049,7 +2049,7 @@ void WLevelPage::DrawKeyframe( CCanvas* Canvas, FEntity* Entity )
 {
 	// Find keyframe component in entity.
 	FKeyframeComponent* Keyframe = nullptr;
-	for( Integer i=0; i<Entity->Components.Num(); i++ )
+	for( Int32 i=0; i<Entity->Components.Num(); i++ )
 		if( Entity->Components[i]->IsA(FKeyframeComponent::MetaClass) )
 		{
 			Keyframe	= (FKeyframeComponent*)Entity->Components[i];
@@ -2060,7 +2060,7 @@ void WLevelPage::DrawKeyframe( CCanvas* Canvas, FEntity* Entity )
 		return;
 
 	// Draw trajectory.
-	for( Integer i=1; i<Keyframe->Points.Num(); i++ )
+	for( Int32 i=1; i<Keyframe->Points.Num(); i++ )
 		Canvas->DrawLine
 					( 
 						Keyframe->Points[i-1].Location,
@@ -2070,7 +2070,7 @@ void WLevelPage::DrawKeyframe( CCanvas* Canvas, FEntity* Entity )
 					);
 
 	// Draw control points.
-	for( Integer i=0; i<Keyframe->Points.Num(); i++ )
+	for( Int32 i=0; i<Keyframe->Points.Num(); i++ )
 	{
 		Canvas->DrawPoint
 						(
@@ -2092,7 +2092,7 @@ void WLevelPage::DrawKeyframe( CCanvas* Canvas, FEntity* Entity )
 	// Draw keys numbers in viewport space.
 	TPoint P = ClientToWindow(TPoint::Zero);
 	Canvas->PushTransform(TViewInfo( P.X, P.Y, Size.Width, Size.Height ));
-	for( Integer i=0; i<Keyframe->Points.Num(); i++ )
+	for( Int32 i=0; i<Keyframe->Points.Num(); i++ )
 	{
 		Float X, Y;
 		WorldToScreen( Keyframe->Points[i].Location, X, Y );
@@ -2128,7 +2128,7 @@ void WLevelPage::DrawLogicCircuit( CCanvas* Canvas )
 		Canvas->PushTransform(TViewInfo( P.X, P.Y, Size.Width, Size.Height ));
 		{
 			// Draw plugs.
-			for( Integer i=0; i<Logic->NumPlugs; i++ )
+			for( Int32 i=0; i<Logic->NumPlugs; i++ )
 			{
 				Float X, Y;
 				WorldToScreen( Logic->GetPlugPos(i), X, Y );
@@ -2143,7 +2143,7 @@ void WLevelPage::DrawLogicCircuit( CCanvas* Canvas )
 			}
 
 			// Draw jacks.
-			for( Integer i=0; i<Logic->NumJacks; i++ )
+			for( Int32 i=0; i<Logic->NumJacks; i++ )
 			{
 				Float X, Y;
 				WorldToScreen( Logic->GetJackPos(i), X, Y );
@@ -2224,7 +2224,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 	Roller.Draw( Canvas, DragInfo.DragType == DRAG_Rotate );
 	
 	// Draw trajectories for all selected objects.
-	for( Integer i=0; i<Selector.Selected.Num(); i++ )
+	for( Int32 i=0; i<Selector.Selected.Num(); i++ )
 		DrawKeyframe( Canvas, Selector.Selected[i] );
 
 	// Draws logic.
@@ -2238,7 +2238,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 		{
 			// Highlight drag vertex.
 			FBrushComponent* B = DragInfo.VBrush;
-			Integer i = DragInfo.ViVert;
+			Int32 i = DragInfo.ViVert;
 			Canvas->DrawCoolPoint( B->Vertices[i] + B->Location, 10.f, COLOR_DeepPink );
 			break;
 		}
@@ -2283,7 +2283,7 @@ class CEntityBufferWriter: public CSerializer
 {
 public:
 	// Variables.
-	TArray<Byte>	Buffer;
+	TArray<UInt8>	Buffer;
 
 	// CEntityBufferWriter interface.
 	CEntityBufferWriter()
@@ -2295,7 +2295,7 @@ public:
 	// CSerializer interface.
 	void SerializeData( void* Mem, SizeT Count )
 	{
-		Integer OldNum = Buffer.Num();
+		Int32 OldNum = Buffer.Num();
 		Buffer.SetNum( OldNum+Count );
 		MemCopy( &Buffer[OldNum], Mem, Count );
 	}
@@ -2331,11 +2331,11 @@ class CEntityBufferReader: public CSerializer
 {
 public:
 	// Variables.
-	TArray<Byte>	Buffer;
-	Integer			iPos;
+	TArray<UInt8>	Buffer;
+	Int32			iPos;
 
 	// CEntityBufferReader interface.
-	CEntityBufferReader( TArray<Byte>& InBuffer )
+	CEntityBufferReader( TArray<UInt8>& InBuffer )
 		:	Buffer( InBuffer ),
 			iPos( 0 )
 	{
@@ -2395,21 +2395,21 @@ void WLevelPage::PopCopyClick( WWidget* Sender )
 
 	// Components.
 	Entity->Base->SerializeThis( Writer );
-	for( Integer e=0; e<Entity->Components.Num(); e++ )
+	for( Int32 e=0; e<Entity->Components.Num(); e++ )
 		Entity->Components[e]->SerializeThis( Writer );
 
 	// Instance buffer.
 	if( Entity->InstanceBuffer )
 	{
 		FScript* Script = Entity->Script;
-		Integer NumProps = Script->Properties.Num();
+		Int32 NumProps = Script->Properties.Num();
 		Serialize( Writer, NumProps );
-		for( Integer iProp=0; iProp<Script->Properties.Num(); iProp++ )
+		for( Int32 iProp=0; iProp<Script->Properties.Num(); iProp++ )
 		{
 			CProperty* Prop = Script->Properties[iProp];
 
-			Byte Type	= (Byte)Prop->Type;
-			Byte ArrDim = Prop->ArrayDim;
+			UInt8 Type	= (UInt8)Prop->Type;
+			UInt8 ArrDim = Prop->ArrayDim;
 			Serialize( Writer, Type );
 			Serialize( Writer, ArrDim );
 			Prop->SerializeValue( &Entity->InstanceBuffer->Data[Prop->Offset], Writer );
@@ -2446,7 +2446,7 @@ void WLevelPage::PopPasteClick( WWidget* Sender )
 
 		// Generate new unique name.
 		
-		for( Integer iUniq=0; ; iUniq++ )
+		for( Int32 iUniq=0; ; iUniq++ )
 		{
 			String TestName = String::Format( L"%s%d", *Script->GetName(), iUniq );
 			if( !GObjectDatabase->FindObject( TestName, FEntity::MetaClass, Level ) )
@@ -2467,7 +2467,7 @@ void WLevelPage::PopPasteClick( WWidget* Sender )
 		FBaseComponent* Base = CopyObject( Script->Base, Script->Base->GetName(), Entity );
 		Base->SerializeThis( Reader );
 		Base->InitForEntity( Entity );
-		for( Integer e=0; e<Script->Components.Num(); e++ )
+		for( Int32 e=0; e<Script->Components.Num(); e++ )
 		{
 			FExtraComponent* Extra = CopyObject( Script->Components[e], Script->Components[e]->GetName(), Entity );
 			Extra->SerializeThis( Reader );
@@ -2480,14 +2480,14 @@ void WLevelPage::PopPasteClick( WWidget* Sender )
 			Entity->InstanceBuffer = new CInstanceBuffer(Script->Properties);
 			Entity->InstanceBuffer->Data.SetNum(Script->InstanceSize);
 
-			Integer NumProps;
+			Int32 NumProps;
 			Serialize( Reader, NumProps );
 			if( NumProps == Script->Properties.Num() )
-				for( Integer iProp=0; iProp<Script->Properties.Num(); iProp++ )
+				for( Int32 iProp=0; iProp<Script->Properties.Num(); iProp++ )
 				{
 					CProperty* Prop = Script->Properties[iProp];
-					Byte Type;
-					Byte ArrDim;
+					UInt8 Type;
+					UInt8 ArrDim;
 					Serialize( Reader, Type );
 					Serialize( Reader, ArrDim );
 
@@ -2534,7 +2534,7 @@ void WLevelPage::PopCutClick( WWidget* Sender )
 //
 void WLevelPage::PopFreezeSelectedClick( WWidget* Sender )
 {
-	for( Integer i=0; i<Selector.Selected.Num(); i++ )
+	for( Int32 i=0; i<Selector.Selected.Num(); i++ )
 		Selector.Selected[i]->Base->bFrozen	= true;
 	Selector.UnselectAll();
 }
@@ -2545,7 +2545,7 @@ void WLevelPage::PopFreezeSelectedClick( WWidget* Sender )
 //
 void WLevelPage::PopUnfreezeAllClick( WWidget* Sender )
 {
-	for( Integer i=0; i<Level->Entities.Num(); i++ )
+	for( Int32 i=0; i<Level->Entities.Num(); i++ )
 		Level->Entities[i]->Base->bFrozen	= false;
 }
 
@@ -2559,7 +2559,7 @@ void WLevelPage::PopRndFlagClick( WWidget* Sender )
 	Level->RndFlags	= 0;
 
 	// Copy from popup.
-	for( Integer i=0; i<RndFlagsPopup->Items.Num(); i++ )
+	for( Int32 i=0; i<RndFlagsPopup->Items.Num(); i++ )
 		if( RndFlagsPopup->Items[i].bChecked )
 			Level->RndFlags	|= 1 << i;
 }
@@ -2586,7 +2586,7 @@ void WLevelPage::PopDeleteClick( WWidget* Sender )
 {
 	Transactor->TrackEnter();
 	{
-		for( Integer i=0; i<Selector.Selected.Num(); i++ )
+		for( Int32 i=0; i<Selector.Selected.Num(); i++ )
 			Level->DestroyEntity( Selector.Selected[i] );
 
 		Selector.UnselectAll();
@@ -2615,7 +2615,7 @@ void WLevelPage::PopSelectAllClick( WWidget* Sender )
 void WLevelPage::PopRemoveVertexClick( WWidget* Sender )
 {
 	FBrushComponent* C = DragInfo.VBrush;
-	Integer iVert = DragInfo.ViVert;
+	Int32 iVert = DragInfo.ViVert;
 	DragInfo.DragType = DRAG_None;
 
 	if( C->NumVerts <= 3 )
@@ -2627,7 +2627,7 @@ void WLevelPage::PopRemoveVertexClick( WWidget* Sender )
 	Transactor->TrackEnter();
 	{
 		// Shift vertices to replace.
-		for( Integer i=iVert; i<C->NumVerts-1; i++ )
+		for( Int32 i=iVert; i<C->NumVerts-1; i++ )
 			C->Vertices[i] = C->Vertices[i+1];
 
 		C->NumVerts--;
@@ -2642,7 +2642,7 @@ void WLevelPage::PopRemoveVertexClick( WWidget* Sender )
 void WLevelPage::PopInsertVertexClick( WWidget* Sender )
 {
 	FBrushComponent* C = DragInfo.VBrush;
-	Integer iVert = DragInfo.ViVert;
+	Int32 iVert = DragInfo.ViVert;
 	DragInfo.DragType = DRAG_None;
 
 	if( C->NumVerts >= FBrushComponent::MAX_BRUSH_VERTS )
@@ -2654,7 +2654,7 @@ void WLevelPage::PopInsertVertexClick( WWidget* Sender )
 	Transactor->TrackEnter();
 	{
 		// Shift vertices to exempt space.
-		for( Integer i=C->NumVerts; i>=iVert+1; i-- )
+		for( Int32 i=C->NumVerts; i>=iVert+1; i-- )
 			C->Vertices[i] = C->Vertices[i-1];
 
 		C->NumVerts++;
@@ -2672,7 +2672,7 @@ void WLevelPage::PopCSGUnionClick( WWidget* Sender )
 {
 	Transactor->TrackEnter();
 	{
-		for( Integer i=0; i<Selector.Selected.Num(); i++ )
+		for( Int32 i=0; i<Selector.Selected.Num(); i++ )
 			if( Selector.Selected[i]->Base->IsA(FBrushComponent::MetaClass) )
 			{
 				FBrushComponent* B = (FBrushComponent*)Selector.Selected[i]->Base;
@@ -2693,7 +2693,7 @@ void WLevelPage::PopCSGIntersectionClick( WWidget* Sender )
 {
 	Transactor->TrackEnter();
 	{
-		for( Integer i=0; i<Selector.Selected.Num(); i++ )
+		for( Int32 i=0; i<Selector.Selected.Num(); i++ )
 			if( Selector.Selected[i]->Base->IsA(FBrushComponent::MetaClass) )
 			{
 				FBrushComponent* B = (FBrushComponent*)Selector.Selected[i]->Base;
@@ -2714,7 +2714,7 @@ void WLevelPage::PopCSGDifferenceClick( WWidget* Sender )
 {
 	Transactor->TrackEnter();
 	{
-		for( Integer i=0; i<Selector.Selected.Num(); i++ )
+		for( Int32 i=0; i<Selector.Selected.Num(); i++ )
 			if( Selector.Selected[i]->Base->IsA(FBrushComponent::MetaClass) )
 			{
 				FBrushComponent* B = (FBrushComponent*)Selector.Selected[i]->Base;
@@ -2748,13 +2748,13 @@ void WLevelPage::PopDuplicateClick( WWidget* Sender )
 {
 	Transactor->TrackEnter();
 	{
-		for( Integer iSource=0; iSource<Selector.Selected.Num(); iSource++ )
+		for( Int32 iSource=0; iSource<Selector.Selected.Num(); iSource++ )
 		{
 			FEntity* Source	= Selector.Selected[iSource];
 
 			// Generate new unique name.
 			String EntityName;
-			for( Integer iUniq=0; ; iUniq++ )
+			for( Int32 iUniq=0; ; iUniq++ )
 			{
 				String TestName = String::Format( L"%s%d", *Source->Script->GetName(), iUniq );
 				if( !GObjectDatabase->FindObject( TestName, FEntity::MetaClass, Level ) )
@@ -2774,7 +2774,7 @@ void WLevelPage::PopDuplicateClick( WWidget* Sender )
 			// Copy components.
 			FBaseComponent* Base = CopyObject( Source->Base, Source->Base->GetName(), New );
 			Base->InitForEntity( New );
-			for( Integer e=0; e<Source->Components.Num(); e++ )
+			for( Int32 e=0; e<Source->Components.Num(); e++ )
 			{
 				FExtraComponent* Extra = CopyObject( Source->Components[e], Source->Components[e]->GetName(), New );
 				Extra->InitForEntity( New );
@@ -2952,7 +2952,7 @@ void TSelector::UnselectAll()
 {
 	// Unselect even if incidentally set bSelected to non selected.
 	if( Level )
-		for( Integer i=0; i<Level->Entities.Num(); i++ )
+		for( Int32 i=0; i<Level->Entities.Num(); i++ )
 			Level->Entities[i]->Base->bSelected = false;
 
 	Selected.Empty();
@@ -2969,7 +2969,7 @@ String TSelector::GetSelectionInfo() const
 		return L"Nothing";
 
 	FScript* Shared = Selected[0]->Script;
-	for( Integer i=1; i<Selected.Num(); i++ )
+	for( Int32 i=1; i<Selected.Num(); i++ )
 		if( Selected[i]->Script != Shared )
 		{
 			Shared	= nullptr;
@@ -2987,7 +2987,7 @@ void TSelector::SelectAll()
 {
 	UnselectAll();
 
-	for( Integer i=0; i<Level->Entities.Num(); i++ )
+	for( Int32 i=0; i<Level->Entities.Num(); i++ )
 		SelectEntity( Level->Entities[i], true );
 }
 
@@ -2999,7 +2999,7 @@ void TSelector::SelectByScript( FScript* InScript )
 {
 	UnselectAll();
 
-	for( Integer i=0; i<Level->Entities.Num(); i++ )
+	for( Int32 i=0; i<Level->Entities.Num(); i++ )
 		if( Level->Entities[i]->Script == InScript )
 			SelectEntity( Level->Entities[i], true );
 }
@@ -3030,7 +3030,7 @@ void WLevelPage::TRoller::Update( TSelector& Sel )
 	// Find master entity for roller.
 	// Should be last selected.
 	FEntity* Master = nullptr;
-	for( Integer i=Sel.Selected.Num()-1; i>=0; i-- )
+	for( Int32 i=Sel.Selected.Num()-1; i>=0; i-- )
 		if( !Sel.Selected[i]->Base->bFixedAngle )
 		{
 			Master	= Sel.Selected[i];

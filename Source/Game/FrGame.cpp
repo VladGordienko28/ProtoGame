@@ -29,7 +29,7 @@
 //
 static LRESULT CALLBACK WndProc( HWND hWnd, UINT Message, WPARAM WParam, LPARAM LParam );
 static Char* StackTrace( LPEXCEPTION_POINTERS InException );
-static Integer HandleException( LPEXCEPTION_POINTERS InException );
+static Int32 HandleException( LPEXCEPTION_POINTERS InException );
 static String GetFileName( String FileName );
 static String GetFileDir( String FileName );
 
@@ -55,7 +55,7 @@ CGame::CGame()
 	// Say hello to user.
 	log( L"========================="			);
 	log( L"=    Fluorine Engine    ="			);
-	log( L"=      %s        =",			FLU_VER	);
+	log( L"=      %s        =",			FLU_VERSION	);
 	log( L"========================="			);
 	log( L"" );
 
@@ -97,7 +97,7 @@ Bool CGame::LoadGame( String Directory, String Name )
 	// Build list of all levels.
 	Level	= nullptr;
 	LevelList.Empty();
-	for( Integer i=0; i<GObjectDatabase->GObjects.Num(); i++ )
+	for( Int32 i=0; i<GObjectDatabase->GObjects.Num(); i++ )
 	{
 		FObject* Object = GObjectDatabase->GObjects[i];
 		if( Object && Object->IsA(FLevel::MetaClass) )
@@ -170,7 +170,7 @@ void CGame::Init( HINSTANCE InhInstance )
 	// Allocate subsystems.
 	GRender		= new COpenGLRender( hWnd );
 
-#if _WIN64
+#if FLU_X64
 	GAudio		= new CNullAudio();
 #else
 	GAudio		= new COpenALAudio();
@@ -376,7 +376,7 @@ void CGame::Exit()
 //
 static Double		GOldTime;
 static Double		GfpsTime;
-static Integer		GfpsCount;
+static Int32		GfpsCount;
 
 //
 // Exception handle variables.
@@ -395,7 +395,7 @@ void CGame::MainLoop()
 	GfpsCount		= 0;
 	
 	// Entry point.
-#ifndef _DEBUG
+#ifndef FLU_DEBUG
 	__try
 #endif
 	{
@@ -447,7 +447,7 @@ void CGame::MainLoop()
 
 	ExitLoop:;
 	}
-#ifndef _DEBUG
+#ifndef FLU_DEBUG
 	__except( HandleException(GetExceptionInformation()) )
 	{
 		// GPF Error.
@@ -477,7 +477,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			// Key has been pressed.
 			//
 			if( !GGame->Console->IsActive() )
-				GGame->GInput->OnKeyDown( (Integer)WParam );
+				GGame->GInput->OnKeyDown( (Int32)WParam );
 			if(  WParam==VK_ESCAPE && GGame->Project && GGame->Project->Info->bQuitByEsc )
 				SendMessage( GGame->hWnd, WM_CLOSE, 0, 0 );
 			break;
@@ -489,7 +489,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			// Key has been released.
 			//
 			if( !GGame->Console->IsActive() )
-				GGame->GInput->OnKeyUp( (Integer)WParam );
+				GGame->GInput->OnKeyUp( (Int32)WParam );
 			break;
 		}
 		case WM_MOUSEMOVE:
@@ -499,8 +499,8 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			//
 			if( !GGame->Console->IsActive() )
 			{
-				static Integer OldX, OldY;
-				Integer	X	= GET_X_LPARAM( LParam ), 
+				static Int32 OldX, OldY;
+				Int32	X	= GET_X_LPARAM( LParam ), 
 						Y	= GET_Y_LPARAM( LParam );
 
 				if( OldX != X || OldY != Y )
@@ -517,7 +517,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 								ly			= WinHeight*((RealFOV.Y-CamFOV.Y)/2.f)/RealFOV.Y,
 								lw			= WinWidth,
 								lh			= WinHeight*(CamFOV.Y/RealFOV.Y);
-						Integer	TestX		= X,
+						Int32	TestX		= X,
 								TestY		= Y-ly;
 
 						// Test bounds.
@@ -565,7 +565,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			//
 #if FLU_CONSOLE
 			// Show or hide console.
-			if( (Integer)WParam == CON_TOGGLE_BUTTON )
+			if( (Int32)WParam == CON_TOGGLE_BUTTON )
 				GGame->Console->ShowToggle();
 #endif
 			if( GGame->Console->IsActive() )
@@ -617,12 +617,12 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			//
 			if ( !GGame->Console->IsActive() )
 			{
-				Integer SrlDlt	= GET_WHEEL_DELTA_WPARAM(WParam);
-				Integer	Times	= Clamp( SrlDlt/120, -5, 5 );
-				Integer	Key		= Times > 0 ? KEY_WheelUp : KEY_WheelDown;
+				Int32 SrlDlt	= GET_WHEEL_DELTA_WPARAM(WParam);
+				Int32	Times	= Clamp( SrlDlt/120, -5, 5 );
+				Int32	Key		= Times > 0 ? KEY_WheelUp : KEY_WheelDown;
 
 				GGame->GInput->WheelScroll	+= SrlDlt;
-				for( Integer i=0; i<Abs(Times); i++ )
+				for( Int32 i=0; i<Abs(Times); i++ )
 				{
 					GGame->GInput->OnKeyDown( Key );
 					GGame->GInput->OnKeyUp( Key );
@@ -639,7 +639,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			//
 			if ( !GGame->Console->IsActive() )
 			{
-				Integer	Key	=	Message == WM_LBUTTONUP	?	KEY_LButton :
+				Int32	Key	=	Message == WM_LBUTTONUP	?	KEY_LButton :
 								Message == WM_RBUTTONUP	?	KEY_RButton :
 															KEY_MButton;
 				GGame->GInput->OnKeyUp( Key );
@@ -662,7 +662,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			//
 			if ( !GGame->Console->IsActive() )
 			{
-				Integer	Key	=	Message == WM_LBUTTONDOWN	?	KEY_LButton :
+				Int32	Key	=	Message == WM_LBUTTONDOWN	?	KEY_LButton :
 								Message == WM_RBUTTONDOWN	?	KEY_RButton :
 																KEY_MButton;
 				GGame->GInput->OnKeyDown( Key );
@@ -750,7 +750,7 @@ void CGame::RunLevel( FLevel* Source, Bool bCopy )
 //
 FLevel* CGame::FindLevel( String LevName )
 {
-	for( Integer i=0; i<LevelList.Num(); i++ )
+	for( Int32 i=0; i<LevelList.Num(); i++ )
 		if(	String::UpperCase(LevelList[i]->GetName()) == 
 			String::UpperCase(LevName) )
 				return LevelList[i];
@@ -768,7 +768,7 @@ FLevel* CGame::FindLevel( String LevName )
 //
 static String GetFileName( String FileName )
 {
-	Integer i, j;
+	Int32 i, j;
 
 	for( i=FileName.Len()-1; i>=0; i-- )
 		if( FileName[i] == L'\\' )
@@ -784,7 +784,7 @@ static String GetFileName( String FileName )
 //
 static String GetFileDir( String FileName )
 { 
-	Integer i;
+	Int32 i;
 	for( i=FileName.Len()-1; i>=0; i-- )
 		if( FileName[i] == L'\\' )
 			break;
@@ -890,14 +890,14 @@ void CGame::ConsoleExecute( String CmdLine )
 	else if( String::CompareText(Token, L"GPF") == 0 )
 	{
 		// Crash application!
-		*((Integer*)0)	= 1720;
+		*((Int32*)0)	= 1720;
 	}
 	else if( Level && Level->bIsPlaying )
 	{
 		// Try to execute for entity.
 		String Arg = L"???";
 
-		for( Integer iEntity=0; iEntity<Level->Entities.Num(); iEntity++ )
+		for( Int32 iEntity=0; iEntity<Level->Entities.Num(); iEntity++ )
 			Level->Entities[iEntity]->OnProcess( Token, Arg );
 	}
 	else
@@ -924,11 +924,11 @@ void CGame::SetCaption( String NewCaption )
 //
 // Resize an application window.
 //
-void CGame::SetSize( Integer NewWidth, Integer NewHeight, EAppWindowType NewType )
+void CGame::SetSize( Int32 NewWidth, Int32 NewHeight, EAppWindowType NewType )
 {
 	// Device caps.	
-	Integer	ScreenWidth		= GetSystemMetrics(SM_CXSCREEN);
-	Integer	ScreenHeight	= GetSystemMetrics(SM_CYSCREEN);
+	Int32	ScreenWidth		= GetSystemMetrics(SM_CXSCREEN);
+	Int32	ScreenHeight	= GetSystemMetrics(SM_CYSCREEN);
 	
 	// Clamp size.
 	NewWidth	= Clamp( NewWidth, MIN_GAME_X, ScreenWidth );
@@ -1061,7 +1061,7 @@ static Char* StackTrace( LPEXCEPTION_POINTERS InException )
 	STACKFRAME64 StackFrame;
 	MemZero( &StackFrame, sizeof(STACKFRAME64) );
 
-#if !_WIN64
+#if FLU_X32
 	if( InException )
 	{
 		StackFrame.AddrStack.Offset	= InException->ContextRecord->Esp;
@@ -1130,7 +1130,7 @@ static Char* StackTrace( LPEXCEPTION_POINTERS InException )
 //
 // __try..__except exception handler.
 //
-static Integer HandleException( LPEXCEPTION_POINTERS InException )
+static Int32 HandleException( LPEXCEPTION_POINTERS InException )
 {
 	GErrorText = StackTrace( InException );
 	return EXCEPTION_EXECUTE_HANDLER;
@@ -1147,12 +1147,10 @@ public:
 	CGameDebugOutput()
 		:	bUseStdConsole(false)
 	{
-#if FDEBUG_LOG
 		// Open log file.
 		LogFile	= _wfopen( *(String(FLU_NAME)+L".log"), L"w" );
-#endif
 
-#if _DEBUG
+#if FLU_DEBUG
 		// Use Std console or VS Output?
 		bUseStdConsole	= !IsDebuggerPresent();
 		if( bUseStdConsole )
@@ -1172,9 +1170,8 @@ public:
 	{
 		if( bUseStdConsole )
 			FreeConsole();
-#if FDEBUG_LOG
+
 		fclose( LogFile );
-#endif
 	}
 
 	//
@@ -1184,7 +1181,7 @@ public:
 	// Output C++ log message.
 	void Logf( ESeverity Severity, Char* Text, ... )
 	{
-#if FDEBUG_LOG || _DEBUG
+#if FLU_DEBUG
 		Char Dest[2048] = {};
 		va_list ArgPtr;
 		va_start( ArgPtr, Text );
@@ -1195,13 +1192,11 @@ public:
 			GGame->Console->LogCallback( Dest, TCR_Gray );
 
 		wcscat_s( Dest, L"\n" );
-#endif
 
-#if FDEBUG_LOG
+
 		fwprintf( LogFile, Dest );
 #endif
-
-#if _DEBUG
+#if FLU_DEBUG
 		if( bUseStdConsole )
 		{
 			static WORD SeverityColors[SVR_MAX] = 
@@ -1232,9 +1227,8 @@ public:
 		va_end( ArgPtr );
 
 		debug( L"**WARNING: %s", Dest );
-#if FDEBUG_LOG
 		fflush( LogFile );
-#endif
+
 		MessageBox( 0, Dest, L"Warning", MB_OK | MB_ICONWARNING | MB_TASKMODAL );
 	}
 
@@ -1249,15 +1243,13 @@ public:
 
 		debug( L"**CRITICAL ERROR: %s", Dest );
 		String Stack = StackTrace(nullptr);
-		DWord Footprint = MurmurHash((Byte*)*Stack, Stack.Len()*sizeof(Char));
+		UInt32 Footprint = MurmurHash((UInt8*)*Stack, Stack.Len()*sizeof(Char));
 		String FullText = String::Format( L"%s\nStack Footprint: 0x%08x\n\nHistory: %s", Dest, Footprint, *Stack );
 
 		if( !IsDebuggerPresent() )
 			MessageBox( 0, *FullText, L"Critical Error", MB_OK | MB_ICONERROR | MB_TASKMODAL );
 
-#if FDEBUG_LOG
 		fflush( LogFile );
-#endif  
 
 		// Exit process or enter debug.
 		if( IsDebuggerPresent() )
@@ -1314,9 +1306,7 @@ private:
 	Bool	bUseStdConsole;
 	HANDLE	ConsoleHandle;
 
-#if FDEBUG_LOG
 	FILE*	LogFile;
-#endif
 };
 
 

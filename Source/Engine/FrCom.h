@@ -139,7 +139,7 @@ private:
 	// Collision hash internal.
 	friend CCollisionHash;
 	Bool		bHashed;
-	DWord		HashMark;
+	UInt32		HashMark;
 	TRect		HashAABB;
 
 	// Natives.

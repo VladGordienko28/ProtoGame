@@ -2,15 +2,14 @@
 	Window.h: Window general include file.
 	Created by Vlad Gordienko, Feb. 2018.
 =============================================================================*/
-#ifndef _FLU_WINDOW_
-#define _FLU_WINDOW_
+#pragma once
 
 // C++ includes.
 #include <windows.h>
 #include <windowsx.h>
 
 // Flu includes.
-#include "../Engine/Engine.h"
+#include "Engine/Engine.h"
 
 // Window includes.
 #include "FrPlat.h"
@@ -34,8 +33,6 @@ extern Bool ExecuteSaveFileDialog( HWND hWnd, String& FileName, String Directory
 extern TStaticBitmap* LoadBitmapFromResource( HINSTANCE hInstance, LPCTSTR ResID );
 extern TStaticFont* LoadFontFromResource( HINSTANCE hInstance, LPCTSTR FontID, LPCTSTR BitmapID );
 
-
-#endif
 /*-----------------------------------------------------------------------------
     The End.
 -----------------------------------------------------------------------------*/

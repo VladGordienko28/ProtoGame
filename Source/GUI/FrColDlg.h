@@ -19,9 +19,9 @@ public:
 
 	// WWidget interface.  
 	void OnPaint( CGUIRenderBase* Render );
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
 
 	// WForm interface.
 	void Hide();
@@ -50,7 +50,7 @@ private:
 	void UpdateFromHSL( WWidget* Sender );
 	void UpdateFromA( WWidget* Sender );
 	void RefreshSL();
-	void SetAlphaBlend( Byte Alpha );
+	void SetAlphaBlend( UInt8 Alpha );
 
 	// Notifications.
 	void ButtonOkClick( WWidget* Sender );

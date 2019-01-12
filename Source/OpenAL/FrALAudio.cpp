@@ -23,7 +23,7 @@ struct TRIFFHeader
 public:
 	// Fields.
 	AnsiChar		chunkID[4];
-	DWord			chunkSize;
+	UInt32			chunkSize;
 	AnsiChar		format[4];
 
 	// Functions.
@@ -49,13 +49,13 @@ struct TWAVEFormat
 public:
 	// Fields.
 	AnsiChar		subChunkID[4];
-	DWord			subChunkSize;
-	Word			audioFormat;
-	Word			numChannels;
-	DWord			sampleRate;
-	DWord			byteRate;
-	Word			blockAlign;
-	Word			bitsPerSample;
+	UInt32			subChunkSize;
+	UInt16			audioFormat;
+	UInt16			numChannels;
+	UInt32			sampleRate;
+	UInt32			byteRate;
+	UInt16			blockAlign;
+	UInt16			bitsPerSample;
 
 	// Functions.
 	Bool IsValid() const
@@ -87,7 +87,7 @@ struct TWAVEData
 public:
 	// Fields.
 	AnsiChar		subChunkID[4];
-	DWord			subChunk2Size;
+	UInt32			subChunk2Size;
 
 	// Functions.
 	Bool IsValid() const
@@ -124,17 +124,17 @@ public:
 	COpenALAudio*	ALAudio;
 
 	// Wav specific.
-	DWord			FileSize;
+	UInt32			FileSize;
 	ALenum			WavFormat;
-	DWord			WavSize;
-	DWord			WavFrequency;
-	DWord			WavEntry;
+	UInt32			WavSize;
+	UInt32			WavFrequency;
+	UInt32			WavEntry;
 
 	// CWavMusicStream interface.
 	CWavMusicStream( COpenALAudio* InOpenALAudio );
 	~CWavMusicStream();
 	void LoadFromFile( const String& FileName );
-	Bool ReadBlock( Integer iBuff );
+	Bool ReadBlock( Int32 iBuff );
 
 	// CMusicStreamBase interface.
 	void Tick( Float Delta );
@@ -261,7 +261,7 @@ void CWavMusicStream::LoadFromFile( const String& FileName )
 	Stream	= _wfopen( *FileName, L"rb" );
 	{
 		// File size.
-		DWord OldPos = ftell( Stream );
+		UInt32 OldPos = ftell( Stream );
 		fseek( Stream, 0, SEEK_END );
 		FileSize = ftell( Stream );
 		fseek( Stream, OldPos, SEEK_SET );
@@ -290,8 +290,8 @@ void CWavMusicStream::LoadFromFile( const String& FileName )
 	// Skip wav crap.
 	if( WaveFormat.subChunkSize > 16 )
 	{
-		Word tmp;
-		fread( &tmp, sizeof(Word), 1, Stream );
+		UInt16 tmp;
+		fread( &tmp, sizeof(UInt16), 1, Stream );
 	}
 
 	TWAVEData	WaveData;
@@ -310,7 +310,7 @@ void CWavMusicStream::LoadFromFile( const String& FileName )
 
 
 	// Initially read blocks.
-	for( Integer i=0; i<AUDIO_MAX_STREAM_BUFFERS; i++ )
+	for( Int32 i=0; i<AUDIO_MAX_STREAM_BUFFERS; i++ )
 	{
 		ReadBlock( i );
 		alSourceQueueBuffers( iALSource, 1, &Buffers[i] );
@@ -325,10 +325,10 @@ void CWavMusicStream::LoadFromFile( const String& FileName )
 // Read a block of data from file to buffer return
 // true if full block loaded and false if chunk of it.
 //
-Bool CWavMusicStream::ReadBlock( Integer iBuff )
+Bool CWavMusicStream::ReadBlock( Int32 iBuff )
 {
-	Integer	Pos			= ftell(Stream);
-	Integer	TotalSize	= Min<Integer>( AUDIO_STREAM_BUFFER_SIZE, WavSize-Pos );
+	Int32	Pos			= ftell(Stream);
+	Int32	TotalSize	= Min<Int32>( AUDIO_STREAM_BUFFER_SIZE, WavSize-Pos );
 
 	fread( Data, 1, TotalSize, Stream );
 
@@ -360,7 +360,7 @@ void CWavMusicStream::Tick( Float Delta )
 		ALuint iALBuff;
 		alSourceUnqueueBuffers( iALSource, 1, &iALBuff );
 
-		Integer i;
+		Int32 i;
 		for( i=0; i<AUDIO_MAX_STREAM_BUFFERS; i++ )
 			if( iALBuff == Buffers[i] )
 				break;
@@ -443,7 +443,7 @@ public:
 	Float			FadeOutTime;
 	ALuint			Buffers[AUDIO_MAX_STREAM_BUFFERS];
 	ALuint			iALSource;
-	Byte*			Data;
+	UInt8*			Data;
 	COpenALAudio*	ALAudio;
 
 	// Ogg/Vorbis specific.
@@ -456,7 +456,7 @@ public:
 	COggMusicStream( COpenALAudio* InOpenALAudio );
 	~COggMusicStream();
 	void LoadFromFile( const String& FileName );
-	Bool ReadBlock( Integer iBuff );
+	Bool ReadBlock( Int32 iBuff );
 
 	// CMusicStreamBase interface.
 	void Tick( Float Delta );
@@ -483,7 +483,7 @@ COggMusicStream::COggMusicStream( COpenALAudio* InOpenALAudio )
 	alGenBuffers( AUDIO_MAX_STREAM_BUFFERS,	Buffers );
 
 	// Allocate memory for all buffers.
-	Data	= (Byte*)MemMalloc(AUDIO_STREAM_BUFFER_SIZE);
+	Data	= (UInt8*)MemMalloc(AUDIO_STREAM_BUFFER_SIZE);
 
 	// Stuff.
 	FadeInTime		= 0.f;
@@ -567,7 +567,7 @@ void COggMusicStream::LoadFromFile( const String& FileName )
 	Format			= VorbisInfo.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
 
 	// Initially read blocks.
-	for( Integer i=0; i<AUDIO_MAX_STREAM_BUFFERS; i++ )
+	for( Int32 i=0; i<AUDIO_MAX_STREAM_BUFFERS; i++ )
 	{
 		ReadBlock( i );
 		alSourceQueueBuffers( iALSource, 1, &Buffers[i] );
@@ -608,12 +608,12 @@ COggMusicStream::~COggMusicStream()
 // Read a block of data from file to buffer return
 // true if full block loaded and false if chunk of it.
 //
-Bool COggMusicStream::ReadBlock( Integer iBuff )
+Bool COggMusicStream::ReadBlock( Int32 iBuff )
 {
-	Integer TotalSize = 0, Size;
+	Int32 TotalSize = 0, Size;
 	while( TotalSize < AUDIO_STREAM_BUFFER_SIZE )
 	{
-		Integer Section;
+		Int32 Section;
 		Size = ov_read
 		(
 			&OGGStream,
@@ -661,7 +661,7 @@ void COggMusicStream::Tick( Float Delta )
 		ALuint iALBuff;
 		alSourceUnqueueBuffers( iALSource, 1, &iALBuff );
 
-		Integer i;
+		Int32 i;
 		for( i=0; i<AUDIO_MAX_STREAM_BUFFERS; i++ )
 			if( iALBuff == Buffers[i] )
 				break;
@@ -797,7 +797,7 @@ COpenALAudio::COpenALAudio()
 	ALfloat DefaultVel[3] = { 0.f, 0.f, 0.f };
 
 	// Allocate OpenAL sources for FX.
-	for( Integer i=0; i<AUDIO_MAX_FX; i++ )
+	for( Int32 i=0; i<AUDIO_MAX_FX; i++ )
 	{
 		TALFX&	FX	= FXSources[i];
 
@@ -817,7 +817,7 @@ COpenALAudio::COpenALAudio()
 	Stream	= new COggMusicStream( this );
 
 	// Allocate OpenAL ambient sources.
-	for( Integer i=0; i<AUDIO_MAX_AMBIENT; i++ )
+	for( Int32 i=0; i<AUDIO_MAX_AMBIENT; i++ )
 	{
 		TALAmbientSource& Source = AmbientSources[i];
 
@@ -855,20 +855,20 @@ COpenALAudio::~COpenALAudio()
 	delete Stream;
 
 	// Kill FX'es.
-	for( Integer i=0; i<AUDIO_MAX_FX; i++ )
+	for( Int32 i=0; i<AUDIO_MAX_FX; i++ )
 	{
 		alDeleteSources( 1, &FXSources[i].iALId );
 	}
 
 	// Kill all ambient sources.
-	for( Integer i=0; i<AUDIO_MAX_AMBIENT; i++ )
+	for( Int32 i=0; i<AUDIO_MAX_AMBIENT; i++ )
 	{
 		alDeleteSources( 1, &AmbientSources[i].iALId );
 	}
 
 	// Clean up all buffers being FSound's.
 	if( GObjectDatabase )
-		for( Integer i=0; i<GObjectDatabase->GObjects.Num(); i++ )
+		for( Int32 i=0; i<GObjectDatabase->GObjects.Num(); i++ )
 			if( GObjectDatabase->GObjects[i] && GObjectDatabase->GObjects[i]->IsA(FSound::MetaClass) )
 			{
 				FSound*	S = (FSound*)GObjectDatabase->GObjects[i];
@@ -904,7 +904,7 @@ void COpenALAudio::Tick( Float Delta, FLevel* Scene )
 		TCoords		Listener = TCoords( Camera.Location, Camera.Rotation );
 
 		// Turn on, or turn off ambient emitters.
-		for( Integer i=0; i<Emitters.Num(); i++ )
+		for( Int32 i=0; i<Emitters.Num(); i++ )
 		{
 			TAmbientEmitter& E	= Emitters[i];
 
@@ -921,7 +921,7 @@ void COpenALAudio::Tick( Float Delta, FLevel* Scene )
 			if( E.iSource == -1 && (Camera.Location-E.Position).SizeSquared() <= E.RadiusSq )
 			{
 				// This emitter is close now.
-				Integer j;
+				Int32 j;
 				for( j=0; j<AUDIO_MAX_AMBIENT; j++ )
 					if( AmbientSources[j].iEmitter == -1 )
 						break;
@@ -936,7 +936,7 @@ void COpenALAudio::Tick( Float Delta, FLevel* Scene )
 		}
 
 		// Process each active close emitters.
-		for( Integer i=0; i<AUDIO_MAX_AMBIENT; i++ )
+		for( Int32 i=0; i<AUDIO_MAX_AMBIENT; i++ )
 		{
 			TALAmbientSource& S = AmbientSources[i];
 			if( S.iEmitter == -1 ) continue;
@@ -966,7 +966,7 @@ void COpenALAudio::StopAmbient( FObject* Owner )
 		return;
 
 	// Find emitter by it owner.
-	for( Integer i=0; i<Emitters.Num(); i++ )
+	for( Int32 i=0; i<Emitters.Num(); i++ )
 	{
 		TAmbientEmitter& E = Emitters[i];
 
@@ -1015,7 +1015,7 @@ void COpenALAudio::PlayAmbient
 
 	// Don't add multiple times.
 	if( Owner )
-		for( Integer i=0; i<Emitters.Num(); i++ )
+		for( Int32 i=0; i<Emitters.Num(); i++ )
 			if( Owner == Emitters[i].Owner )
 				return;
 
@@ -1041,7 +1041,7 @@ void COpenALAudio::PlayAmbient
 void COpenALAudio::CountRefs( CSerializer& S )
 {
 	// Check in Emitters.
-	for( Integer i=0; i<Emitters.Num(); i++ )
+	for( Int32 i=0; i<Emitters.Num(); i++ )
 	{
 		TAmbientEmitter& E = Emitters[i];
 
@@ -1066,7 +1066,7 @@ void COpenALAudio::CountRefs( CSerializer& S )
 	}
 
 	// Check in FX'es.
-	for( Integer i=0; i<AUDIO_MAX_FX; i++ )
+	for( Int32 i=0; i<AUDIO_MAX_FX; i++ )
 	{
 		TALFX& FX = FXSources[i];
 
@@ -1091,7 +1091,7 @@ void COpenALAudio::CountRefs( CSerializer& S )
 void COpenALAudio::FlushAmbients()
 {
 	// Stop ambients.
-	for( Integer i=0; i<AUDIO_MAX_AMBIENT; i++ )
+	for( Int32 i=0; i<AUDIO_MAX_AMBIENT; i++ )
 	{
 		alSourceStop( AmbientSources[i].iALId );
 		AmbientSources[i].iEmitter	= -1;
@@ -1109,7 +1109,7 @@ void COpenALAudio::Flush()
 	Stream->PlayMusic( nullptr, 2.f );
 
 	// Stop FX'es.
-	for( Integer i=0; i<AUDIO_MAX_FX; i++ )
+	for( Int32 i=0; i<AUDIO_MAX_FX; i++ )
 	{
 		TALFX& FX = FXSources[i];
 
@@ -1120,7 +1120,7 @@ void COpenALAudio::Flush()
 	}
 
 	// Stop ambients.
-	for( Integer i=0; i<AUDIO_MAX_AMBIENT; i++ )
+	for( Int32 i=0; i<AUDIO_MAX_AMBIENT; i++ )
 	{
 		alSourceStop( AmbientSources[i].iALId );
 		AmbientSources[i].iEmitter	= -1;
@@ -1129,7 +1129,7 @@ void COpenALAudio::Flush()
 
 	// Kill all FSound's buffers.
 	if( GProject )
-		for( Integer i=0; i<GProject->GObjects.Num(); i++ )
+		for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
 			if( GProject->GObjects[i] && GProject->GObjects[i]->IsA(FSound::MetaClass) )
 			{
 				FSound* Sample	= As<FSound>(GProject->GObjects[i]);
@@ -1163,7 +1163,7 @@ void COpenALAudio::RegisterSound( FSound* Sound )
 		return;
 
 	// Get audio data.
-	Byte* Data	= (Byte*)Sound->GetData();
+	UInt8* Data	= (UInt8*)Sound->GetData();
 	assert(Data);
 
 	// Read RIFF header.
@@ -1192,11 +1192,11 @@ void COpenALAudio::RegisterSound( FSound* Sound )
 
 	// Skip wav unused crap.
 	if( WaveFormat.subChunkSize > 16 )
-		Data	+= sizeof(Word);
+		Data	+= sizeof(UInt16);
 
 	// Skip useless data, until 'data' found.
 	TWAVEData	WaveData;
-	Integer		Timeout = 256;
+	Int32		Timeout = 256;
 	while( 1 )
 	{
 		MemCopy( &WaveData, Data, sizeof(TWAVEData) );
@@ -1245,8 +1245,8 @@ void COpenALAudio::PlayFX( FSound* Sound, Float Gain, Float Pitch )
 		RegisterSound( Sound );
 
 	// Try to find available FX slot.
-	Integer iSource = 0;
-	for( Integer i=0; i<AUDIO_MAX_FX; i++ )
+	Int32 iSource = 0;
+	for( Int32 i=0; i<AUDIO_MAX_FX; i++ )
 	{
 		ALint	State;
 		alGetSourcei( FXSources[i].iALId, AL_SOURCE_STATE, &State );

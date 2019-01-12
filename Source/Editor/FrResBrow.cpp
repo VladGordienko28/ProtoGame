@@ -194,7 +194,7 @@ public:
 		WForm::OnClose();
 		Hide();
 	}
-	void Show( Integer X = 0, Integer Y = 0 ) override
+	void Show( Int32 X = 0, Int32 Y = 0 ) override
 	{
 		WForm::Show( X, Y );
 		NameEdit->Text			= L"";
@@ -274,7 +274,7 @@ public:
 	}
 
 	// WWidget interface.
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y ) override
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y ) override
 	{
 		WListBox::OnMouseUp( Button, X, Y );
 		if( Button == MB_Right && ItemIndex != -1 )
@@ -406,7 +406,7 @@ void WLevelsPage::Refresh()
 		return;
 
 	// Collect all levels.
-	for( Integer i=0; i<GProject->GObjects.Num(); i++ )
+	for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
 		if	(	
 				GProject->GObjects[i] && 
 				GProject->GObjects[i]->IsA(FLevel::MetaClass) 
@@ -426,7 +426,7 @@ void WLevelsPage::CountRefs( CSerializer& S )
 {
 	Bool bRefresh = false;
 
-	for( Integer i=0; i<LevelsList->Items.Num(); i++ )
+	for( Int32 i=0; i<LevelsList->Items.Num(); i++ )
 	{
 		FLevel* Level = (FLevel*)LevelsList->Items[i].Data;
 		Serialize( S, Level );
@@ -561,19 +561,19 @@ public:
 	}
 
 	// WWidget interface.
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y ) override
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y ) override
 	{
 		WTreeView::OnMouseUp( Button, X, Y );
 		bReadyForDrag = false;
 		if( Button == MB_Right && GetSelected() != -1 )
 			Popup->Show(Root->MousePos);
 	}
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y ) override
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y ) override
 	{
 		WTreeView::OnMouseDown( Button, X, Y );
 		bReadyForDrag = Button == MB_Left && GetSelectedScript() != nullptr;
 	}
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y ) override
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y ) override
 	{
 		WTreeView::OnMouseMove( Button, X, Y );
 		FScript* Selected = GetSelectedScript();
@@ -583,7 +583,7 @@ public:
 		}
 		bReadyForDrag = false;
 	}
-	void OnDblClick( EMouseButton Button, Integer X, Integer Y ) override
+	void OnDblClick( EMouseButton Button, Int32 X, Int32 Y ) override
 	{
 		WTreeView::OnDblClick( Button, X, Y );
 		bReadyForDrag = false;
@@ -613,8 +613,8 @@ private:
 		FScript* Script = GetSelectedScript();
 		if( GObjectDatabase && Script )
 		{
-			Integer NumEntity = 0;
-			for( Integer i=0; i < GObjectDatabase->GObjects.Num(); i++ )
+			Int32 NumEntity = 0;
+			for( Int32 i=0; i < GObjectDatabase->GObjects.Num(); i++ )
 				if( GObjectDatabase->GObjects[i] )
 				{
 					FEntity* Entity = As<FEntity>(GObjectDatabase->GObjects[i]);
@@ -631,7 +631,7 @@ private:
 	}
 	FScript* GetSelectedScript()
 	{
-		Integer i = GetSelected();
+		Int32 i = GetSelected();
 		return i != -1 ? (FScript*)DataOf(i) : nullptr;
 	}
 };
@@ -753,7 +753,7 @@ void WScriptsPage::Refresh()
 	ScriptsView->Empty();
 
 	// For each object in project.
-	for( Integer i=0; i<GProject->GObjects.Num(); i++ )
+	for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
 		if( GProject->GObjects[i] && GProject->GObjects[i]->IsA(FScript::MetaClass) )
 		{
 			FScript* Script = (FScript*)GProject->GObjects[i];
@@ -782,7 +782,7 @@ void WScriptsPage::CountRefs( CSerializer& S )
 {
 	Bool bRefresh = false;
 
-	for( Integer i=0; i<ScriptsView->Nodes.Num(); i++ )
+	for( Int32 i=0; i<ScriptsView->Nodes.Num(); i++ )
 	{
 		FScript* Script = (FScript*)ScriptsView->Nodes[i].Data;
 		Serialize( S, Script );
@@ -804,7 +804,7 @@ void WScriptsPage::CountRefs( CSerializer& S )
 //
 void WScriptsPage::ButtonRemoveClick( WWidget* Sender )
 {
-	Integer iSelected = ScriptsView->GetSelected();
+	Int32 iSelected = ScriptsView->GetSelected();
 	FScript* Script = iSelected != -1 ? (FScript*)ScriptsView->DataOf(iSelected) : nullptr;
 
 	if( Script )
@@ -831,7 +831,7 @@ void WScriptsPage::ButtonCreateClick( WWidget* Sender )
 //
 void WScriptsPage::ButtonEditClick( WWidget* Sender )
 {
-	Integer iSelected = ScriptsView->GetSelected();
+	Int32 iSelected = ScriptsView->GetSelected();
 	FScript* Script = iSelected != -1 ? (FScript*)ScriptsView->DataOf(iSelected) : nullptr;
 
 	if( Script )
@@ -873,7 +873,7 @@ void WScriptsPage::ViewDblClick( WWidget* Sender )
 //
 void WScriptsPage::ViewSelectionChange( WWidget* Sender )
 {
-	Integer iSelected = ScriptsView->GetSelected();
+	Int32 iSelected = ScriptsView->GetSelected();
 	Browser->Selected = iSelected != -1 ? (FScript*)ScriptsView->DataOf(iSelected) : nullptr;
 }
 
@@ -947,7 +947,7 @@ void WResourcePane::Refresh()
 
 
 	// For each object.
-	for( Integer i=0; i<GProject->GObjects.Num(); i++ )
+	for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
 		if( GProject->GObjects[i] && GProject->GObjects[i]->IsA(FResource::MetaClass) )
 		{
 			FResource*	Res = (FResource*)GProject->GObjects[i];
@@ -1003,7 +1003,7 @@ void WResourcePane::Refresh()
 				Icon.PicSize	= TSize( Icon.Picture->USize, Icon.Picture->VSize );
 
 				// Compute new scale, but keep aspect ratio.
-				Integer Scale = Max( 1, Max( Icon.Picture->USize, Icon.Picture->VSize )/RES_ICON_SIZE );
+				Int32 Scale = Max( 1, Max( Icon.Picture->USize, Icon.Picture->VSize )/RES_ICON_SIZE );
 				Icon.Scale.Width		= Max( 1, Icon.Picture->USize/Scale );
 				Icon.Scale.Height	= Max( 1, Icon.Picture->VSize/Scale );
 			}
@@ -1020,14 +1020,14 @@ void WResourcePane::Refresh()
 					TRect Frame = Anim->GetTexCoords(Anim->Sequences[0].Start);
 					Icon.Picture			= Anim->Sheet;
 
-					Icon.PicOffset.X	= Integer( (Float)Anim->Sheet->USize*Frame.Min.X );
-					Icon.PicOffset.Y	= Integer( (Float)Anim->Sheet->VSize*Frame.Max.Y );
-					Icon.PicSize.Width	= Integer( (Float)Anim->Sheet->USize*(Frame.Max.X-Frame.Min.X) );
-					Icon.PicSize.Height	= Integer( (Float)Anim->Sheet->VSize*(Frame.Min.Y-Frame.Max.Y) );
+					Icon.PicOffset.X	= Int32( (Float)Anim->Sheet->USize*Frame.Min.X );
+					Icon.PicOffset.Y	= Int32( (Float)Anim->Sheet->VSize*Frame.Max.Y );
+					Icon.PicSize.Width	= Int32( (Float)Anim->Sheet->USize*(Frame.Max.X-Frame.Min.X) );
+					Icon.PicSize.Height	= Int32( (Float)Anim->Sheet->VSize*(Frame.Min.Y-Frame.Max.Y) );
 
 					Float Scale = Max( 1, Max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
-					Icon.Scale.Width	= Max<Integer>( 1, Icon.PicSize.Width/Scale );
-					Icon.Scale.Height	= Max<Integer>( 1, Icon.PicSize.Height/Scale );
+					Icon.Scale.Width	= Max<Int32>( 1, Icon.PicSize.Width/Scale );
+					Icon.Scale.Height	= Max<Int32>( 1, Icon.PicSize.Height/Scale );
 				}
 				else
 				{
@@ -1051,7 +1051,7 @@ void WResourcePane::Refresh()
 				Icon.Scale		= TSize( 32, 32 );
 
 				// Maybe draw as billboard.
-				for( Integer e=0; e<Script->Components.Num(); e++ )
+				for( Int32 e=0; e<Script->Components.Num(); e++ )
 				{
 					FExtraComponent* Com = Script->Components[e];
 					if( Com->IsA(FAnimatedSpriteComponent::MetaClass) )
@@ -1063,14 +1063,14 @@ void WResourcePane::Refresh()
 							TRect Frame = Anim->GetTexCoords(Anim->Sequences[0].Start);
 							Icon.Picture			= Anim->Sheet;
 
-							Icon.PicOffset.X	= Integer( (Float)Anim->Sheet->USize*Frame.Min.X );
-							Icon.PicOffset.Y	= Integer( (Float)Anim->Sheet->VSize*Frame.Max.Y );
-							Icon.PicSize.Width	= Integer( (Float)Anim->Sheet->USize*(Frame.Max.X-Frame.Min.X) );
-							Icon.PicSize.Height	= Integer( (Float)Anim->Sheet->VSize*(Frame.Min.Y-Frame.Max.Y) );
+							Icon.PicOffset.X	= Int32( (Float)Anim->Sheet->USize*Frame.Min.X );
+							Icon.PicOffset.Y	= Int32( (Float)Anim->Sheet->VSize*Frame.Max.Y );
+							Icon.PicSize.Width	= Int32( (Float)Anim->Sheet->USize*(Frame.Max.X-Frame.Min.X) );
+							Icon.PicSize.Height	= Int32( (Float)Anim->Sheet->VSize*(Frame.Min.Y-Frame.Max.Y) );
 
 							Float Scale = Max( 1, Max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
-							Icon.Scale.Width	= Max<Integer>( 1, Icon.PicSize.Width/Scale );
-							Icon.Scale.Height	= Max<Integer>( 1, Icon.PicSize.Height/Scale );
+							Icon.Scale.Width	= Max<Int32>( 1, Icon.PicSize.Width/Scale );
+							Icon.Scale.Height	= Max<Int32>( 1, Icon.PicSize.Height/Scale );
 							break;
 						}
 						else
@@ -1085,14 +1085,14 @@ void WResourcePane::Refresh()
 							TRect	Frame			= Sprite->TexCoords;
 							Icon.Picture			= Sprite->Texture;
 
-							Icon.PicOffset.X	= Integer( Frame.Min.X );
-							Icon.PicOffset.Y	= Integer( Frame.Min.Y );
-							Icon.PicSize.Width	= Integer( (Frame.Max.X-Frame.Min.X) );
-							Icon.PicSize.Height	= Integer( (Frame.Max.Y-Frame.Min.Y) );
+							Icon.PicOffset.X	= Int32( Frame.Min.X );
+							Icon.PicOffset.Y	= Int32( Frame.Min.Y );
+							Icon.PicSize.Width	= Int32( (Frame.Max.X-Frame.Min.X) );
+							Icon.PicSize.Height	= Int32( (Frame.Max.Y-Frame.Min.Y) );
 
 							Float Scale = Max( 1, Max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
-							Icon.Scale.Width	= Max<Integer>( 1, Icon.PicSize.Width/Scale );
-							Icon.Scale.Height	= Max<Integer>( 1, Icon.PicSize.Height/Scale );
+							Icon.Scale.Width	= Max<Int32>( 1, Icon.PicSize.Width/Scale );
+							Icon.Scale.Height	= Max<Int32>( 1, Icon.PicSize.Height/Scale );
 							break;
 						}
 						else
@@ -1107,14 +1107,14 @@ void WResourcePane::Refresh()
 							TRect	Frame			= Sprite->TexCoords;
 							Icon.Picture			= Sprite->Texture;
 
-							Icon.PicOffset.X	= Integer( (Float)Icon.Picture->USize*Frame.Min.X );
-							Icon.PicOffset.Y	= Integer( (Float)Icon.Picture->VSize*Frame.Max.Y );
-							Icon.PicSize.Width	= Integer( (Float)Icon.Picture->USize*(Frame.Max.X-Frame.Min.X) );
-							Icon.PicSize.Height	= Integer( (Float)Icon.Picture->VSize*(Frame.Min.Y-Frame.Max.Y) );
+							Icon.PicOffset.X	= Int32( (Float)Icon.Picture->USize*Frame.Min.X );
+							Icon.PicOffset.Y	= Int32( (Float)Icon.Picture->VSize*Frame.Max.Y );
+							Icon.PicSize.Width	= Int32( (Float)Icon.Picture->USize*(Frame.Max.X-Frame.Min.X) );
+							Icon.PicSize.Height	= Int32( (Float)Icon.Picture->VSize*(Frame.Min.Y-Frame.Max.Y) );
 
 							Float Scale = Max( 1, Max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
-							Icon.Scale.Width	= Max<Integer>( 1, Icon.PicSize.Width/Scale );
-							Icon.Scale.Height	= Max<Integer>( 1, Icon.PicSize.Height/Scale );
+							Icon.Scale.Width	= Max<Int32>( 1, Icon.PicSize.Width/Scale );
+							Icon.Scale.Height	= Max<Int32>( 1, Icon.PicSize.Height/Scale );
 							break;
 						}
 						else
@@ -1201,7 +1201,7 @@ void WResourcePane::Refresh()
 //
 // User click on resource panel.
 //
-void WResourcePane::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WResourcePane::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WPanel::OnMouseDown( Button, X, Y );
 
@@ -1212,7 +1212,7 @@ void WResourcePane::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 
 		// Get clicked resource.
 		FResource* Res = nullptr;
-		for( Integer i=0; i<Icons.Num(); i++ )
+		for( Int32 i=0; i<Icons.Num(); i++ )
 		{
 			TIcon& Icon = Icons[i];
 
@@ -1245,7 +1245,7 @@ void WResourcePane::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 //
 // User hover mouse above panel.
 //
-void WResourcePane::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WResourcePane::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WPanel::OnMouseMove( Button, X, Y );
 
@@ -1261,7 +1261,7 @@ void WResourcePane::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 //
 // User just release mouse button.
 //
-void WResourcePane::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WResourcePane::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WPanel::OnMouseUp( Button, X, Y );
 	bReadyForDrag = false;
@@ -1271,7 +1271,7 @@ void WResourcePane::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 //
 // Double click on browser.
 //
-void WResourcePane::OnDblClick( EMouseButton Button, Integer X, Integer Y )
+void WResourcePane::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WPanel::OnDblClick( Button, X, Y );
 	bReadyForDrag		= false;
@@ -1285,15 +1285,15 @@ void WResourcePane::OnDblClick( EMouseButton Button, Integer X, Integer Y )
 void WResourcePane::ScrollChange( WWidget* Sender )
 {
 	// Prepare for walking.
-	Integer TotalWidth	= Size.Width - PANE_ICONS_STEP;
-	Integer XCount		= TotalWidth / (RES_ICON_SIZE + PANE_ICONS_STEP);
-	Integer XSpacing	= (TotalWidth - XCount*(RES_ICON_SIZE + PANE_ICONS_STEP)) / Max(1, XCount);
-	Integer	XWalk		= PANE_ICONS_STEP;
-	Integer	YWalk		= PANE_ICONS_STEP;
+	Int32 TotalWidth	= Size.Width - PANE_ICONS_STEP;
+	Int32 XCount		= TotalWidth / (RES_ICON_SIZE + PANE_ICONS_STEP);
+	Int32 XSpacing	= (TotalWidth - XCount*(RES_ICON_SIZE + PANE_ICONS_STEP)) / Max(1, XCount);
+	Int32	XWalk		= PANE_ICONS_STEP;
+	Int32	YWalk		= PANE_ICONS_STEP;
 
 	// Walk through all icons and compute initial location,
 	// without scroll yet.
-	for( Integer i=0; i<Icons.Num(); i++ )
+	for( Int32 i=0; i<Icons.Num(); i++ )
 	{
 		TIcon& Icon = Icons[i];
 
@@ -1310,8 +1310,8 @@ void WResourcePane::ScrollChange( WWidget* Sender )
 	}
 
 	// Apply scroll for each icon.
-	Integer YScroll = Max( 0, YWalk-RES_ICON_SIZE-30 )*ScrollBar->Value / 100;
-	for( Integer i=0; i<Icons.Num(); i++ )
+	Int32 YScroll = Max( 0, YWalk-RES_ICON_SIZE-30 )*ScrollBar->Value / 100;
+	for( Int32 i=0; i<Icons.Num(); i++ )
 		Icons[i].Position.Y -= YScroll;
 }
 
@@ -1319,7 +1319,7 @@ void WResourcePane::ScrollChange( WWidget* Sender )
 //
 // Scroll browser via mouse wheel.
 //
-void WResourcePane::OnMouseScroll( Integer Delta )
+void WResourcePane::OnMouseScroll( Int32 Delta )
 {
 	ScrollBar->Value = Clamp
 	( 
@@ -1338,7 +1338,7 @@ void WResourcePane::CountRefs( CSerializer& S )
 {
 	// Detect whether changed some icon.
 	Bool bChanged = false;
-	for( Integer i=0; i<Icons.Num(); i++ )
+	for( Int32 i=0; i<Icons.Num(); i++ )
 	{
 		auto& Icon = Icons[i];
 		Serialize( S, Icon.Resource );
@@ -1384,7 +1384,7 @@ void WResourcePane::OnPaint( CGUIRenderBase* Render )
 	);
 
 	// Iterate through all icons.
-	for( Integer i=0; i<Icons.Num(); i++ )
+	for( Int32 i=0; i<Icons.Num(); i++ )
 	{
 		TIcon& Icon = Icons[i];
 		Bool bSelected = Icon.Resource == Page->Browser->GetSelected();
@@ -1443,7 +1443,7 @@ void WResourcePane::OnPaint( CGUIRenderBase* Render )
 		}
 
 		// Draw overlay label.
-		Integer Width = Root->Font1->TextWidth( Icon.TypeName );
+		Int32 Width = Root->Font1->TextWidth( Icon.TypeName );
 		Render->DrawText
 		( 
 			Base + Icon.Position + TPoint( RES_ICON_SIZE/2-Width/2, RES_ICON_SIZE - 17 ),
@@ -1520,7 +1520,7 @@ public:
 		WForm::OnClose();
 		Hide();
 	}
-	void Show( Integer X, Integer Y )
+	void Show( Int32 X, Int32 Y )
 	{
 		// Start with dialog.
 		if( ExecuteOpenFileDialog
@@ -1626,7 +1626,7 @@ public:
 		ClassCombo				= new WComboBox( this, InRoot );	
 		ClassCombo->Location	= TPoint( 50, 29 );
 		ClassCombo->SetSize( 160, 18 );
-		for( Integer i=0; i<CClassDatabase::GClasses.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GClasses.Num(); i++ )
 		{
 			CClass*	Class	= CClassDatabase::GClasses[i];
 			if( Class->IsA(FDemoBitmap::MetaClass) && !(Class->Flags & CLASS_Abstract) )
@@ -1670,7 +1670,7 @@ public:
 		HeightCombo->Location	= TPoint( 110, 120 );
 		HeightCombo->SetSize( 64, 18 );
 
-		for( Integer i=5; i<=8; i++ )
+		for( Int32 i=5; i<=8; i++ )
 		{
 			WidthCombo->AddItem( String::Format( L"%d", 1 << i ), nullptr );
 			HeightCombo->AddItem( String::Format( L"%d", 1 << i ), nullptr );
@@ -1689,7 +1689,7 @@ public:
 	}
 
 	// WForm interface.
-	void Show( Integer X = 0, Integer Y = 0 )
+	void Show( Int32 X = 0, Int32 Y = 0 )
 	{
 		WForm::Show( X, Y );
 		NameEdit->Text		= L"";
@@ -1724,8 +1724,8 @@ public:
 
 		CClass* DemoClass	= (CClass*)ClassCombo->Items[ClassCombo->ItemIndex].Data;
 		assert(DemoClass);
-		DWord	USize		= 1 << (WidthCombo->ItemIndex + 5);
-		DWord	VSize		= 1 << (HeightCombo->ItemIndex + 5);
+		UInt32	USize		= 1 << (WidthCombo->ItemIndex + 5);
+		UInt32	VSize		= 1 << (HeightCombo->ItemIndex + 5);
 		assert(USize>=2 && USize<=256);
 		assert(VSize>=2 && VSize<=256);
 
@@ -1797,7 +1797,7 @@ public:
 		BaseCombo				= new WComboBox( this, InRoot );	
 		BaseCombo->Location		= TPoint( 145, 77 );
 		BaseCombo->SetSize( 160, 18 );
-		for( Integer i=0; i<CClassDatabase::GClasses.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GClasses.Num(); i++ )
 		{
 			CClass*	Class	= CClassDatabase::GClasses[i];
 			if( Class->IsA(FBaseComponent::MetaClass) && !(Class->Flags & CLASS_Abstract) )
@@ -1818,7 +1818,7 @@ public:
 		ExtraList				= new WListBox( ExtraPanel, InRoot );
 		ExtraList->Location		= TPoint( 10, 10 );
 		ExtraList->SetSize( 180, 200 );
-		for( Integer i=0; i<CClassDatabase::GClasses.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GClasses.Num(); i++ )
 		{
 			CClass*	Class	= CClassDatabase::GClasses[i];
 			if( Class->IsA(FExtraComponent::MetaClass) && !(Class->Flags & CLASS_Abstract) )
@@ -1883,15 +1883,15 @@ public:
 	}
 	void UpdateSingleCompFlags()
 	{
-		for( Integer i=0; i<ExtraList->Items.Num(); i++ )
+		for( Int32 i=0; i<ExtraList->Items.Num(); i++ )
 			ExtraList->Items[i].bEnabled = true;
 
-		for( Integer iUsed=0; iUsed<ExtraUsedList->Items.Num(); iUsed++ )
+		for( Int32 iUsed=0; iUsed<ExtraUsedList->Items.Num(); iUsed++ )
 		{
 			CClass* UsedClass = (CClass*)ExtraUsedList->Items[iUsed].Data;
 			if( UsedClass->Flags & CLASS_SingleComp )
 			{
-				for( Integer i=0; i<ExtraList->Items.Num(); i++ )
+				for( Int32 i=0; i<ExtraList->Items.Num(); i++ )
 					if( ExtraList->Items[i].Data == UsedClass )
 					{
 						ExtraList->Items[i].bEnabled = false;
@@ -1906,7 +1906,7 @@ public:
 
 
 	// WForm interface.
-	void Show( Integer X = 0, Integer Y = 0 )
+	void Show( Int32 X = 0, Int32 Y = 0 )
 	{
 		WForm::Show( X, Y );
 
@@ -2003,7 +2003,7 @@ public:
 		}
 		if( !StaticCheck->bChecked )
 		{
-			for( Integer i=0; i<ExtraUsedList->Items.Num(); i++ )
+			for( Int32 i=0; i<ExtraUsedList->Items.Num(); i++ )
 			{
 				CClass* Class = (CClass*)ExtraUsedList->Items[i].Data;
 				String  Name  = ExtraUsedList->Items[i].Name;
@@ -2019,7 +2019,7 @@ public:
 					return;
 				}
 
-				for( Integer j=i+1; j<ExtraUsedList->Items.Num(); j++ )
+				for( Int32 j=i+1; j<ExtraUsedList->Items.Num(); j++ )
 					if( ExtraUsedList->Items[j].Name == Name )
 					{
 						Root->ShowMessage
@@ -2054,7 +2054,7 @@ public:
 			Base->InitForScript( Script );
 
 			// Extras.
-			for( Integer i=0; i<ExtraUsedList->Items.Num(); i++ )
+			for( Int32 i=0; i<ExtraUsedList->Items.Num(); i++ )
 			{
 				CClass*	ExtraClass	= (CClass*)ExtraUsedList->Items[i].Data;
 				String	ExtraName	= ExtraUsedList->Items[i].Name;
@@ -2210,7 +2210,7 @@ public:
 		WForm::OnClose();
 		Hide();
 	}
-	void Show( Integer X = 0, Integer Y = 0 )
+	void Show( Int32 X = 0, Int32 Y = 0 )
 	{
 		WForm::Show( X, Y );
 		NameEdit->Text		= L"";
@@ -2325,7 +2325,7 @@ public:
 		WForm::OnClose();
 		Hide();
 	}
-	void Show( Integer X = 0, Integer Y = 0 )
+	void Show( Int32 X = 0, Int32 Y = 0 )
 	{
 		WForm::Show( X, Y );
 		NameEdit->Text		= L"";
@@ -2440,7 +2440,7 @@ public:
 		WForm::OnClose();
 		Hide();
 	}
-	void Show( Integer X = 0, Integer Y = 0 )
+	void Show( Int32 X = 0, Int32 Y = 0 )
 	{
 		WForm::Show( X, Y );
 		NameEdit->Text		= L"";
@@ -2610,7 +2610,7 @@ WAssetsPage::WAssetsPage( WResourceBrowser* InBrowser, WContainer* InOwner, WWin
 	ClassPopup	= new WPopupMenu( Root, Root );
 	ClassPopup->AddItem( L"All", WIDGET_EVENT(WAssetsPage::PopClassAllClick), true );
 	ClassPopup->AddItem( L"" );
-	for( Integer i=0; i<CClassDatabase::GClasses.Num(); i++ )
+	for( Int32 i=0; i<CClassDatabase::GClasses.Num(); i++ )
 	{
 		CClass* Class = CClassDatabase::GClasses[i];
 		if	(	
@@ -2624,7 +2624,7 @@ WAssetsPage::WAssetsPage( WResourceBrowser* InBrowser, WContainer* InOwner, WWin
 			ClassPopup->AddItem( Class->GetAltName(), WIDGET_EVENT(WAssetsPage::PopClassClick), true );
 		}
 	}
-	for( Integer i=0; i<ClassPopup->Items.Num(); i++ )
+	for( Int32 i=0; i<ClassPopup->Items.Num(); i++ )
 		ClassPopup->Items[i].bChecked	= true;
 
 	// Create dialogs.
@@ -2782,7 +2782,7 @@ void WAssetsPage::ButtonRemoveClick( WWidget* Sender )
 	if( !Res->IsA(FScript::MetaClass) )
 	{
 		// Some resource.
-		Integer S	= MessageBox
+		Int32 S	= MessageBox
 		(
 			GEditor->hWnd,
 			*String::Format( L"Do you really want to destroy resource '%s'?", *Res->GetName() ),
@@ -2796,7 +2796,7 @@ void WAssetsPage::ButtonRemoveClick( WWidget* Sender )
 			FFont* Font = As<FFont>(Res);
 			if( Font )
 			{
-				for( Integer i=0; i<Font->Bitmaps.Num(); i++ )
+				for( Int32 i=0; i<Font->Bitmaps.Num(); i++ )
 					if( Font->Bitmaps[i] )
 						DestroyObject( Font->Bitmaps[i], true );
 			}
@@ -2805,7 +2805,7 @@ void WAssetsPage::ButtonRemoveClick( WWidget* Sender )
 			FMaterial* Material = As<FMaterial>(Res);
 			if( Material )
 			{
-				for( Integer i=0; i<Material->Layers.Num(); i++ )
+				for( Int32 i=0; i<Material->Layers.Num(); i++ )
 					DestroyObject( Material->Layers[i], true );
 			}
 
@@ -2820,8 +2820,8 @@ void WAssetsPage::ButtonRemoveClick( WWidget* Sender )
 		FScript* Script	= As<FScript>(Res);
 
 		// Count entities being this script.
-		Integer NumEnts = 0;
-		for( Integer i=0; i<GProject->GObjects.Num(); i++ )
+		Int32 NumEnts = 0;
+		for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
 			if( GProject->GObjects[i] && GProject->GObjects[i]->IsA(FEntity::MetaClass) )
 			{
 				FEntity* Entity	= As<FEntity>(GProject->GObjects[i]);
@@ -2829,7 +2829,7 @@ void WAssetsPage::ButtonRemoveClick( WWidget* Sender )
 					NumEnts++;
 			}
 
-		Integer S	= MessageBox
+		Int32 S	= MessageBox
 		(
 			GEditor->hWnd,
 			*String::Format( L"Do you really want to destroy script '%s' and %d entities being it?", *Script->GetName(), NumEnts ),
@@ -2843,7 +2843,7 @@ void WAssetsPage::ButtonRemoveClick( WWidget* Sender )
 			GEditor->DropAllScripts();
 
 			// Kill all entities.
-			for( Integer i=0; i<GProject->GObjects.Num(); i++ )
+			for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
 				if( GProject->GObjects[i] && GProject->GObjects[i]->IsA(FEntity::MetaClass) )
 				{
 					FEntity* Entity	= As<FEntity>(GProject->GObjects[i]);
@@ -2967,12 +2967,12 @@ void WAssetsPage::PopClassClick( WWidget* Sender )
 	assert(arr_len(GUglyFilter) >= ClassPopup->Items.Num());
 
 	// 'Not all are now'.
-	Integer iChecked = 0;
+	Int32 iChecked = 0;
 	for( iChecked=1; iChecked<ClassPopup->Items.Num(); iChecked++ )
 		if( ClassPopup->Items[iChecked].bChecked != GUglyFilter[iChecked] )
 			break;
 
-	for( Integer i=0; i<ClassPopup->Items.Num(); i++ )
+	for( Int32 i=0; i<ClassPopup->Items.Num(); i++ )
 	{
 		ClassPopup->Items[i].bChecked	= false;
 		GUglyFilter[i]					= false;
@@ -2997,7 +2997,7 @@ void WAssetsPage::PopClassAllClick( WWidget* Sender )
 	assert(arr_len(GUglyFilter) >= ClassPopup->Items.Num());
 
 	// If 'all' selected, mark everything.
-	for( Integer i=0; i<ClassPopup->Items.Num(); i++ )
+	for( Int32 i=0; i<ClassPopup->Items.Num(); i++ )
 	{
 		ClassPopup->Items[i].bChecked	= true;
 		GUglyFilter[i]					= true;
@@ -3047,7 +3047,7 @@ WResourceList::~WResourceList()
 //
 // Mouse down on list.
 //
-void WResourceList::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WResourceList::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	if( Button == MB_Left )
 	{
@@ -3058,7 +3058,7 @@ void WResourceList::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 	else if( Button == MB_Right )
 	{
 		// Right click on resource browser.
-		Integer i = YToIndex(Y);
+		Int32 i = YToIndex(Y);
 		SetItemIndex( i, true );
 
 		if( ItemIndex != -1  )
@@ -3072,7 +3072,7 @@ void WResourceList::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 //
 // User hover mouse over list.
 //
-void WResourceList::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WResourceList::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WListBox::OnMouseMove( Button, X, Y );
 
@@ -3089,7 +3089,7 @@ void WResourceList::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse down on list.
 //
-void WResourceList::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WResourceList::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WListBox::OnMouseUp( Button, X, Y );
 	bReadyForDrag = false;
@@ -3141,7 +3141,7 @@ void WResourceList::Refresh()
 	Empty();
 
 	// For each object in project.
-	for( Integer i=0; i<GProject->GObjects.Num(); i++ )
+	for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
 		if( GProject->GObjects[i] && GProject->GObjects[i]->IsA(FResource::MetaClass) )
 		{
 			FResource*	Res = (FResource*)GProject->GObjects[i];

@@ -16,7 +16,7 @@ public:
 	// CGLFbo interface.
 	CGLFbo();
 	~CGLFbo();
-	void Bind( Integer NewX, Integer NewY );
+	void Bind( Int32 NewX, Int32 NewY );
 	void Unbind();
 
 	// Accessors.
@@ -31,7 +31,7 @@ private:
 	enum{ DEFAULT_FBO_HEIGHT = 256 };
 
 	// Variables.
-	Integer XSize, YSize;
+	Int32 XSize, YSize;
 	GLuint FrameBuffer;
 	GLuint TextureId;
 };
@@ -93,7 +93,7 @@ void CGLFbo::Unbind()
 //
 // Turn on the FBO.
 //
-void CGLFbo::Bind( Integer NewX, Integer NewY )
+void CGLFbo::Bind( Int32 NewX, Int32 NewY )
 {
 	// Resize if required.
 	if( NewX != XSize || NewY != YSize )

@@ -21,9 +21,9 @@ public:
 	// WWidget interface.
 	WButton( WContainer* InOwner, WWindow* InRoot );
 	void OnPaint( CGUIRenderBase* Render ) ;
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
 
 	// WButton interface.
 	virtual void OnClick();
@@ -53,9 +53,9 @@ public:
 
 	// WCheckBox interface.
 	WCheckBox( WContainer* InOwner, WWindow* InRoot );
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
 	void OnPaint( CGUIRenderBase* Render );
 
 	// WCheckBox interface.
@@ -88,9 +88,9 @@ public:
 	// WCheckBox interface.
 	WRadioButton( WContainer* InOwner, WWindow* InRoot );
 	~WRadioButton();
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
 	void OnPaint( CGUIRenderBase* Render );
 
 	// WRadioButton interface.
@@ -122,7 +122,7 @@ public:
 	// WWidget interface.
 	WLinkLabel( WContainer* InOwner, WWindow* InRoot );
 	void OnPaint( CGUIRenderBase* Render );
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
 
 	// WLinkLabel interface.
 	virtual void OnClick();

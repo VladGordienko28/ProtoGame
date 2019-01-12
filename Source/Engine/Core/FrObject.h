@@ -15,7 +15,7 @@ class FObject
 REGISTER_CLASS_H(FObject);
 protected:
 	// Variables.
-	Integer		Id;
+	Int32		Id;
 	CClass*		Class;
 	String		Name;
 	FObject*	Owner;
@@ -43,7 +43,7 @@ public:
 	{
 		return Class;
 	}
-	inline Integer GetId()
+	inline Int32 GetId()
 	{
 		return Id;
 	}
@@ -74,7 +74,7 @@ class CObjectDatabase: public CClassDatabase
 public:
 	// Tables.
 	TArray<FObject*>	GObjects;
-	TArray<Integer>		GAvailable;
+	TArray<Int32>		GAvailable;
 	FObject*			GHash[2048];
 
 	// Constructor.
@@ -92,7 +92,7 @@ public:
 	void HashObject( FObject* Obj );
 	void UnhashObject( FObject* Obj );
 	void RenameObject( FObject* Obj, String NewName );
-	Integer ReferenceCountTo( FObject* Obj );
+	Int32 ReferenceCountTo( FObject* Obj );
 };
 
 extern CObjectDatabase*	GObjectDatabase;

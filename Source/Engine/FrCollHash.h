@@ -36,9 +36,9 @@ public:
 	~CCollisionHash();
 	void AddToHash( FBaseComponent* Object );
 	void RemoveFromHash( FBaseComponent* Object );
-	void GetOverlapped( TRect Bounds, Integer& OutNumObjs, FBaseComponent** OutList );
-	void GetOverlappedByClass( TRect Bounds, CClass* Class, Integer& OutNumObjs, FBaseComponent** OutList );
-	void GetOverlappedByScript( TRect Bounds, FScript* Script, Integer& OutNumObjs, FBaseComponent** OutList );
+	void GetOverlapped( TRect Bounds, Int32& OutNumObjs, FBaseComponent** OutList );
+	void GetOverlappedByClass( TRect Bounds, CClass* Class, Int32& OutNumObjs, FBaseComponent** OutList );
+	void GetOverlappedByScript( TRect Bounds, FScript* Script, Int32& OutNumObjs, FBaseComponent** OutList );
 	void DebugHash();
 
 private:
@@ -54,14 +54,14 @@ private:
 	CDynamicPool		Pool;
 	THashItem*			Hash[COLL_HASH_SIZE];
 	THashItem*			FirstAvail;
-	DWord				Mark;
+	UInt32				Mark;
 
-	void GetHashIndex( TVector V, Integer& iX, Integer& iY );
+	void GetHashIndex( TVector V, Int32& iX, Int32& iY );
 
 	// Stats.
-	Integer				HashActivItems;
-	Integer				HashObjects;
-	Integer				HashNumItems;
+	Int32				HashActivItems;
+	Int32				HashObjects;
+	Int32				HashNumItems;
 };
 
 

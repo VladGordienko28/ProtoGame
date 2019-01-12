@@ -22,7 +22,7 @@ public:
 	WScriptPage( FScript* InScript, WContainer* InOwner, WWindow* InRoot );
 	~WScriptPage();	
 	void SaveScriptText( Bool bAsk );
-	void HighlightError( Integer iLine );
+	void HighlightError( Int32 iLine );
 
 	// WTabPage interface.
 	Bool OnQueryClose();
@@ -97,7 +97,7 @@ public:
 	WCodeEditor( WScriptPage* InPage, WContainer* InOwner, WWindow* InRoot );
 	~WCodeEditor();
 	void SetDirty( Bool InbDirty );
-	void ScrollToLine( Integer iLine );
+	void ScrollToLine( Int32 iLine );
 	Bool FindText( String S, Bool bMatchCase );
 	void Undo();
 	void Redo();
@@ -105,25 +105,25 @@ public:
 	// WWidget interface.
 	void OnActivate();
 	void OnDeactivate();
-	void OnDblClick( EMouseButton Button, Integer X, Integer Y );
+	void OnDblClick( EMouseButton Button, Int32 X, Int32 Y );
 	void OnPaint( CGUIRenderBase* Render );
-	void OnMouseScroll( Integer Delta );
-	void OnDragOver( void* Data, Integer X, Integer Y, Bool& bAccept );
-	void OnDragDrop( void* Data, Integer X, Integer Y );		
+	void OnMouseScroll( Int32 Delta );
+	void OnDragOver( void* Data, Int32 X, Int32 Y, Bool& bAccept );
+	void OnDragDrop( void* Data, Int32 X, Int32 Y );		
 	void OnResize();
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
 	void OnCharType( Char TypedChar );
-	void OnKeyUp( Integer Key );
-	void OnKeyDown( Integer Key );
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
+	void OnKeyUp( Int32 Key );
+	void OnKeyDown( Int32 Key );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
 
 private:
 	// A highlight span.
 	struct TSpan
 	{
-		Integer		Type	: 4;
-		Integer		Length	: 28;
+		Int32		Type	: 4;
+		Int32		Length	: 28;
 		TSpan*		Next;
 	};
 	
@@ -159,7 +159,7 @@ private:
 
 		WCodeEditor*		Editor;
 		TArray<TEntry>		Entries;
-		Integer				iX;
+		Int32				iX;
 
 		WAutoComplete( WCodeEditor* InCodeEditor, WWindow* InRoot );
 		~WAutoComplete();
@@ -168,8 +168,8 @@ private:
 		void Filter();
 		void AddEntry( EAutoType InType, String InLabel, String InText );
 		void OnPaint( CGUIRenderBase* Render );
-		void OnDblClick( EMouseButton Button, Integer X, Integer Y );   
-		void OnKeyDown( Integer Key );
+		void OnDblClick( EMouseButton Button, Int32 X, Int32 Y );   
+		void OnKeyDown( Int32 Key );
 		void FillBy( CClass* Class );
 		void FillBy( TArray<FExtraComponent*>& InArr );
 		void FillBy( FScript* Script );
@@ -180,7 +180,7 @@ private:
 	CDynamicPool			Pool;
 
 	// Internal variables.
-	Integer					ScrollTop;
+	Int32					ScrollTop;
 	TSize					CharSize;
 	Float					LastHighlightTime;
 	Float					LastTypeTime;
@@ -188,12 +188,12 @@ private:
 	// Caret info.
 	Bool					bDrag;
 	Bool					bReadyDrag;
-	Integer					DragX;
-	Integer					DragY;
-	Integer					CaretXBegin;
-	Integer					CaretXEnd;
-	Integer					CaretYBegin;
-	Integer					CaretYEnd;
+	Int32					DragX;
+	Int32					DragY;
+	Int32					CaretXBegin;
+	Int32					CaretXEnd;
+	Int32					CaretYBegin;
+	Int32					CaretYEnd;
 	TPoint					EnclosingBrackets[2];
 
 	// Widgets.
@@ -215,22 +215,22 @@ private:
 	void HighlightAll();
 	void ClearSelected();
 	void SelectAll();
-	Bool IsInSelection( Integer X, Integer Y );
-	Integer XToColumn( Integer X, Integer iLine );
-	Integer ColumnToX( Integer iColumn );
-	Integer YToLine( Integer Y );
-	Integer LineToY( Integer iLine );
+	Bool IsInSelection( Int32 X, Int32 Y );
+	Int32 XToColumn( Int32 X, Int32 iLine );
+	Int32 ColumnToX( Int32 iColumn );
+	Int32 YToLine( Int32 Y );
+	Int32 LineToY( Int32 iLine );
 	void HighlightBrackets( Bool bUnmark = false );
 
 	// Undo/Redo management.
 	enum{ HISTORY_LIMIT	= 20 };
 	TArray<void*>		UndoStack;
-	Integer				UndoTop;
+	Int32				UndoTop;
 	Bool				bUndoLock;
 	void BeginTransaction();
 	void EndTransaction();
-	void SaveToUndoStack( Integer iSlot );
-	void LoadFromUndoStack( Integer iSlot );
+	void SaveToUndoStack( Int32 iSlot );
+	void LoadFromUndoStack( Int32 iSlot );
 
 	// Friends.
 	friend class WGotoLineDialog;
@@ -255,7 +255,7 @@ public:
 	( 
 		String InText, 
 		FScript* Script = nullptr, 
-		Integer iLine = -1, 
+		Int32 iLine = -1, 
 		TColor InColor = COLOR_White
 	);
 	void Clear();
@@ -268,12 +268,12 @@ private:
 	struct TMessage
 	{
 		FScript* Script;
-		Integer iLine;
+		Int32 iLine;
 	};
 	TArray<TMessage>	Messages;
 	WLog*				Log;
 
-	void GotoMessage( WWidget* Sender, Integer iMessage );
+	void GotoMessage( WWidget* Sender, Int32 iMessage );
 };
 
 

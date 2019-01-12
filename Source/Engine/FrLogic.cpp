@@ -49,9 +49,9 @@ void FLogicComponent::InitForEntity( FEntity* InEntity )
 //
 void FLogicComponent::CleanBadConnectors()
 {
-	for( Integer iPlug=0; iPlug<MAX_LOGIC_PLUGS; iPlug++ )
+	for( Int32 iPlug=0; iPlug<MAX_LOGIC_PLUGS; iPlug++ )
 	{
-		for( Integer iConn = 0; iConn<Plugs[iPlug].Num(); )
+		for( Int32 iConn = 0; iConn<Plugs[iPlug].Num(); )
 			if( Plugs[iPlug][iConn].Target == nullptr )
 				Plugs[iPlug].Remove( iConn );
 			else
@@ -71,11 +71,11 @@ void FLogicComponent::EditChange()
 	NumPlugs	= 0;
 	NumJacks	= 0;
 
-	for( Integer i=0; i<MAX_LOGIC_JACKS; i++ )
+	for( Int32 i=0; i<MAX_LOGIC_JACKS; i++ )
 		if( JacksName[i] )
 			NumJacks++;
 
-	for( Integer i=0; i<MAX_LOGIC_PLUGS; i++ )
+	for( Int32 i=0; i<MAX_LOGIC_PLUGS; i++ )
 		if( PlugsName[i] )
 			NumPlugs++;
 }
@@ -85,7 +85,7 @@ void FLogicComponent::EditChange()
 // Add a new connector from the iPlug-th plug to the logic element
 // InTarget to the iJack-th jack.
 //
-void FLogicComponent::AddConnector( FLogicComponent* InTarget, Integer iPlug, Integer iJack )
+void FLogicComponent::AddConnector( FLogicComponent* InTarget, Int32 iPlug, Int32 iJack )
 {
 	TLogicConnector Connector;
 
@@ -103,7 +103,7 @@ void FLogicComponent::AddConnector( FLogicComponent* InTarget, Integer iPlug, In
 //
 // Remove all connectors from the iPlug plug.
 //
-void FLogicComponent::RemoveConnectors( Integer iPlug )
+void FLogicComponent::RemoveConnectors( Int32 iPlug )
 {
 	Plugs[iPlug].Empty();
 }
@@ -118,16 +118,16 @@ void FLogicComponent::SerializeThis( CSerializer& S )
 
 	Serialize( S, bEnabled );
 
-	for( Integer i=0; i<MAX_LOGIC_PLUGS; i++ )
+	for( Int32 i=0; i<MAX_LOGIC_PLUGS; i++ )
 		Serialize( S, PlugsName[i] );
 
-	for( Integer i=0; i<MAX_LOGIC_JACKS; i++ )
+	for( Int32 i=0; i<MAX_LOGIC_JACKS; i++ )
 		Serialize( S, JacksName[i] );
 
 	Serialize( S, NumPlugs );
 	Serialize( S, NumJacks );
 
-	for( Integer i=0; i<MAX_LOGIC_PLUGS; i++ )
+	for( Int32 i=0; i<MAX_LOGIC_PLUGS; i++ )
 		Serialize( S, Plugs[i] );
 
 	// Here should destroy unused refs.
@@ -146,18 +146,18 @@ void FLogicComponent::Import( CImporterBase& Im )
 	IMPORT_INTEGER( NumPlugs );
 	IMPORT_INTEGER( NumJacks );
 
-	for( Integer i=0; i<MAX_LOGIC_PLUGS; i++ )
+	for( Int32 i=0; i<MAX_LOGIC_PLUGS; i++ )
 		PlugsName[i] = Im.ImportString( *String::Format( L"PlugsName[%d]", i ) );
 
-	for( Integer i=0; i<MAX_LOGIC_JACKS; i++ )
+	for( Int32 i=0; i<MAX_LOGIC_JACKS; i++ )
 		JacksName[i] = Im.ImportString( *String::Format( L"JacksName[%d]", i ) );
 
 	// Import all connections.
-	for( Integer i=0; i<MAX_LOGIC_PLUGS; i++ )
+	for( Int32 i=0; i<MAX_LOGIC_PLUGS; i++ )
 		if( PlugsName[i] )
 		{
 			Plugs[i].SetNum(Im.ImportInteger(*String::Format( L"Plugs[%i].Num" , i )));
-			for( Integer j=0; j<Plugs[i].Num(); j++ )
+			for( Int32 j=0; j<Plugs[i].Num(); j++ )
 			{
 				TLogicConnector& Conn = Plugs[i][j];
 
@@ -178,21 +178,21 @@ void FLogicComponent::Export( CExporterBase& Ex )
 	EXPORT_INTEGER( NumPlugs );
 	EXPORT_INTEGER( NumJacks );
 
-	for( Integer i=0; i<MAX_LOGIC_PLUGS; i++ )
+	for( Int32 i=0; i<MAX_LOGIC_PLUGS; i++ )
 		if( PlugsName[i] )
 			Ex.ExportString( *String::Format( L"PlugsName[%d]", i ), PlugsName[i] );
 
-	for( Integer i=0; i<MAX_LOGIC_JACKS; i++ )
+	for( Int32 i=0; i<MAX_LOGIC_JACKS; i++ )
 		if( JacksName[i] )
 			Ex.ExportString( *String::Format( L"JacksName[%d]", i ), JacksName[i] );
 
 	// This way sucks! To store connectors and
 	// plugs! But works well.
-	for( Integer i=0; i<MAX_LOGIC_PLUGS; i++ )
+	for( Int32 i=0; i<MAX_LOGIC_PLUGS; i++ )
 		if( PlugsName[i] )
 		{
 			Ex.ExportInteger( *String::Format( L"Plugs[%i].Num" , i ), Plugs[i].Num() );
-			for( Integer j=0; j<Plugs[i].Num(); j++ )
+			for( Int32 j=0; j<Plugs[i].Num(); j++ )
 			{
 				TLogicConnector& Conn = Plugs[i][j];
 
@@ -206,7 +206,7 @@ void FLogicComponent::Export( CExporterBase& Ex )
 //
 // Return the world location of the iPlug (right-side) socket.
 //
-TVector FLogicComponent::GetPlugPos( Integer iPlug )
+TVector FLogicComponent::GetPlugPos( Int32 iPlug )
 {
 	iPlug	= Clamp( iPlug, 0, NumPlugs );
 
@@ -222,7 +222,7 @@ TVector FLogicComponent::GetPlugPos( Integer iPlug )
 //
 // Return the world location of the iJack (left-side) socket.
 //
-TVector FLogicComponent::GetJackPos( Integer iJack )
+TVector FLogicComponent::GetJackPos( Int32 iJack )
 {
 	iJack	= Clamp( iJack, 0, NumJacks );
 
@@ -264,16 +264,16 @@ void FLogicComponent::Render( CCanvas* Canvas )
 	Canvas->DrawLineRect( Base->Location, Base->Size, 0, WireColor, false );
 
 	// Draw the plugs sockets.
-	for( Integer i=0; i<NumPlugs; i++ )
+	for( Int32 i=0; i<NumPlugs; i++ )
 		Canvas->DrawPoint( GetPlugPos(i), 7.f, WireColor );
 
 	// Draw the jacks sockets.
-	for( Integer i=0; i<NumJacks; i++ )
+	for( Int32 i=0; i<NumJacks; i++ )
 		Canvas->DrawPoint( GetJackPos(i), 7.f, WireColor );
 
 	// Draw connectors.
-	for( Integer iPlug=0; iPlug<NumPlugs; iPlug++ )
-		for( Integer iConn=0; iConn<Plugs[iPlug].Num(); iConn++ )
+	for( Int32 iPlug=0; iPlug<NumPlugs; iPlug++ )
+		for( Int32 iConn=0; iConn<Plugs[iPlug].Num(); iConn++ )
 		{
 			TLogicConnector& Conn = Plugs[iPlug][iConn];
 
@@ -303,8 +303,8 @@ void FLogicComponent::nativeInduceSignal( CFrame& Frame )
 		return;
 	   
 	// Find the plug by it name.
-	Integer iPlug = -1;
-	for( Integer i=0; i<NumPlugs; i++ )
+	Int32 iPlug = -1;
+	for( Int32 i=0; i<NumPlugs; i++ )
 		if( PlugsName[i] == PlugName )
 		{
 			iPlug	= i;
@@ -318,7 +318,7 @@ void FLogicComponent::nativeInduceSignal( CFrame& Frame )
 	}
 
 	// Send the signal over the wires.
-	for( Integer i=0; i<Plugs[iPlug].Num(); i++ )
+	for( Int32 i=0; i<Plugs[iPlug].Num(); i++ )
 	{
 		TLogicConnector& Conn = Plugs[iPlug][i];
 

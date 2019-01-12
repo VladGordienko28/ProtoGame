@@ -14,7 +14,7 @@
 //
 void paletteSimple( TColor* Palette )
 {
-	for( Integer i=0; i<256; i++ )
+	for( Int32 i=0; i<256; i++ )
 	{
 		Palette[i].R	= i;
 		Palette[i].G	= i;
@@ -29,7 +29,7 @@ void paletteSimple( TColor* Palette )
 //
 void palettePlasma( TColor* Palette )
 {
-	for( Integer i=0; i<256; i++ )
+	for( Int32 i=0; i<256; i++ )
 	{
 		Palette[i]		= TColor::HSLToRGB( ~i, 0xff, 0x80 );
 		Palette[i].A	= 0xff;
@@ -42,7 +42,7 @@ void palettePlasma( TColor* Palette )
 //
 void paletteFire( TColor* Palette )
 {
-	for( Integer i=0; i<256; i++ )
+	for( Int32 i=0; i<256; i++ )
 	{
 		Palette[i]		= TColor::HSLToRGB( i/0x03, 0xff, Min( 0xff, i*0x02 ) );
 		Palette[i].A	= 0xff;
@@ -55,7 +55,7 @@ void paletteFire( TColor* Palette )
 //
 void paletteTech( TColor* Palette )
 {
-	for( Integer i=0; i<256; i++ )
+	for( Int32 i=0; i<256; i++ )
 	{
 		Palette[i].R	= i >> 1;
 		Palette[i].G	= i;
@@ -72,17 +72,17 @@ void paletteTech( TColor* Palette )
 //
 // Effects shared variables.
 //
-DWord		RndSeed = 0x28282828;
-Integer		ShiftTab[256];
-Byte		SineTab[256];
-Byte		WaveTab[1536];
+UInt32		RndSeed = 0x28282828;
+Int32		ShiftTab[256];
+UInt8		SineTab[256];
+UInt8		WaveTab[1536];
 
 
 //
 // XORShift fast random generator.
 // Its amazing!
 //
-inline Byte RandomByte()
+inline UInt8 RandomByte()
 {
 	RndSeed ^= ( RndSeed << 13 );
 	RndSeed	^= ( RndSeed >> 4 );
@@ -99,17 +99,17 @@ void InitTables()
 	// -1..1 shift table.
 	// It's affect fire diffusion, make it
 	// more stable, i.e. set more zeros than 1 or -1.
-	for( Integer i=0; i<256; i++ )
+	for( Int32 i=0; i<256; i++ )
 		ShiftTab[i] = RandomByte() < 200 ? 0 : RandomByte() > 128 ? 1 : -1;
 
 	// Sine table.
-	for( Integer i=0; i<256; i++ )
+	for( Int32 i=0; i<256; i++ )
 		SineTab[i] = Sin(i/256.f*2.f*PI)*127.f+128;
 
 	// Wave table.
-	for( Integer i=0; i<1536; i++ )
+	for( Int32 i=0; i<1536; i++ )
 	{
-		Integer W = i / 2 - 256;
+		Int32 W = i / 2 - 256;
 		if( (i-512) < 256 ) 
 			W++;
 		WaveTab[i] = Clamp( W, 0, 255 );
@@ -129,8 +129,8 @@ void InitTables()
 //
 // Saved registers for assembler.
 //
-DWord	SavedESP;
-DWord	SavedEBP;
+UInt32	SavedESP;
+UInt32	SavedEBP;
 
 
 /*-----------------------------------------------------------------------------
@@ -171,7 +171,7 @@ FDemoBitmap::~FDemoBitmap()
 //
 // Initialize dynamic bitmap.
 //
-void FDemoBitmap::Init( Integer InU, Integer InV )
+void FDemoBitmap::Init( Int32 InU, Int32 InV )
 {
 	assert(GIsEditor);
 
@@ -200,7 +200,7 @@ void FDemoBitmap::Init( Integer InU, Integer InV )
 	paletteSimple( &Palette.Colors[0] );
 
 	// Allocate demo bitmap data.
-	EffectPtr			= (Byte*)MemAlloc( USize * VSize );
+	EffectPtr			= (UInt8*)MemAlloc( USize * VSize );
 }
 
 
@@ -222,10 +222,10 @@ void FDemoBitmap::EditChange()
 		if( PaletteRef->Format == BF_Palette8 )
 		{
 			// Copy via other palette.
-			Byte* Inds = (Byte*)PaletteRef->GetData();
+			UInt8* Inds = (UInt8*)PaletteRef->GetData();
 			TColor* Pal	= (TColor*)&PaletteRef->Palette.Colors[0];
 
-			for( Integer i=0; i<256; i++ )
+			for( Int32 i=0; i<256; i++ )
 				Palette.Colors[i] = Pal[Inds[i]];
 		}
 		else
@@ -233,7 +233,7 @@ void FDemoBitmap::EditChange()
 			// Copy directly from other's data.
 			TColor* Other = (TColor*)PaletteRef->GetData();
 
-			for( Integer i=0; i<256; i++ )
+			for( Int32 i=0; i<256; i++ )
 				Palette.Colors[i] = Other[i];
 		}
 	}
@@ -253,7 +253,7 @@ void FDemoBitmap::PostLoad()
 	bDynamic		= true;
 
 	// Allocate data.
-	EffectPtr		= (Byte*)MemAlloc( USize * VSize );
+	EffectPtr		= (UInt8*)MemAlloc( USize * VSize );
 }
 
 
@@ -282,7 +282,7 @@ void* FDemoBitmap::GetData()
 SizeT FDemoBitmap::GetBlockSize()
 {
 	// 8-Bits image.
-	return USize*VSize*sizeof(Byte);
+	return USize*VSize*sizeof(UInt8);
 }
 
 
@@ -313,7 +313,7 @@ FPlasmaBitmap::~FPlasmaBitmap()
 //
 // Plasma initialization.
 //
-void FPlasmaBitmap::Init( Integer InU, Integer InV )
+void FPlasmaBitmap::Init( Int32 InU, Int32 InV )
 {
 	FDemoBitmap::Init( InU, InV );
 
@@ -328,7 +328,7 @@ void FPlasmaBitmap::Init( Integer InU, Integer InV )
 	palettePlasma( &Palette.Colors[0] );
 
 	// Allocate plasma heat buffer.
-	HeatBuffer		= new Byte[USize*VSize >> 2];
+	HeatBuffer		= new UInt8[USize*VSize >> 2];
 }
 
 
@@ -337,18 +337,18 @@ void FPlasmaBitmap::Init( Integer InU, Integer InV )
 //
 void FPlasmaBitmap::CalculatePlasma()
 {
-	Integer U2Size	= USize >> 1;
-	Integer V2Size	= VSize >> 1;
-	Integer U2Bits	= UBits - 1;
-	Integer A, B, C, D;
+	Int32 U2Size	= USize >> 1;
+	Int32 V2Size	= VSize >> 1;
+	Int32 U2Bits	= UBits - 1;
+	Int32 A, B, C, D;
 
-	for( Integer V=0; V<V2Size; V++ )
+	for( Int32 V=0; V<V2Size; V++ )
 	{
-		Byte*	HeatLine	= &HeatBuffer[V << U2Bits];
+		UInt8*	HeatLine	= &HeatBuffer[V << U2Bits];
 
 		B		= PlasmaTable[1][(V-Phase) & 0xff];
 
-		for( Integer U=0; U<U2Size; U++ )
+		for( Int32 U=0; U<U2Size; U++ )
 		{
 			A	= PlasmaTable[0][(U-Phase) & 0xff];
 			C	= PlasmaTable[2][((U+V)+Phase) & 0xff];
@@ -365,28 +365,28 @@ void FPlasmaBitmap::CalculatePlasma()
 //
 void FPlasmaBitmap::RenderPlasma()
 {
-	Byte*	Data		= (Byte*)GetData();
-	Integer U2Size		= USize >> 1;
-	Integer V2Size		= VSize >> 1;
-	Integer U2Bits		= UBits - 1;
-	Integer U2Mask		= UMask >> 1;
-	Integer V2Mask		= VMask >> 1;
+	UInt8*	Data		= (UInt8*)GetData();
+	Int32 U2Size		= USize >> 1;
+	Int32 V2Size		= VSize >> 1;
+	Int32 U2Bits		= UBits - 1;
+	Int32 U2Mask		= UMask >> 1;
+	Int32 V2Mask		= VMask >> 1;
 
-	for( Integer V=0; V<V2Size; V++ )
+	for( Int32 V=0; V<V2Size; V++ )
 	{
 		// Get lines and apply some phase panning.
-		Byte*	HeatLine	= &HeatBuffer[((V+0+Phase) & V2Mask) << U2Bits];
-		Byte*	NextLine	= &HeatBuffer[((V+1+Phase) & V2Mask) << U2Bits];
-		Byte*	Data0Line	= &Data[V*2+0 << UBits];
-		Byte*	Data1Line	= &Data[V*2+1 << UBits];
+		UInt8*	HeatLine	= &HeatBuffer[((V+0+Phase) & V2Mask) << U2Bits];
+		UInt8*	NextLine	= &HeatBuffer[((V+1+Phase) & V2Mask) << U2Bits];
+		UInt8*	Data0Line	= &Data[V*2+0 << UBits];
+		UInt8*	Data1Line	= &Data[V*2+1 << UBits];
 
-		for( Integer U=0; U<U2Size; U++ )
+		for( Int32 U=0; U<U2Size; U++ )
 		{
 			// Sample heat values.
-			Integer A	= HeatLine[(U+HeatLine[(U+0)&U2Mask]+0) & U2Mask];
-			Integer B	= HeatLine[(U+HeatLine[(U+1)&U2Mask]+1) & U2Mask];
-			Integer C	= NextLine[(U+NextLine[(U+0)&U2Mask]+0) & U2Mask];
-			Integer D	= NextLine[(U+NextLine[(U+1)&U2Mask]+1) & U2Mask];
+			Int32 A	= HeatLine[(U+HeatLine[(U+0)&U2Mask]+0) & U2Mask];
+			Int32 B	= HeatLine[(U+HeatLine[(U+1)&U2Mask]+1) & U2Mask];
+			Int32 C	= NextLine[(U+NextLine[(U+0)&U2Mask]+0) & U2Mask];
+			Int32 D	= NextLine[(U+NextLine[(U+1)&U2Mask]+1) & U2Mask];
 			
 			// Super sampling.
 			Data0Line[U*2+0]	= A;
@@ -401,7 +401,7 @@ void FPlasmaBitmap::RenderPlasma()
 //
 // Mouse click on plasma.
 //
-void FPlasmaBitmap::MouseClick( Integer Button, Integer X, Integer Y )
+void FPlasmaBitmap::MouseClick( Int32 Button, Int32 X, Int32 Y )
 {
 	if( Button == 1 )
 	{
@@ -414,12 +414,12 @@ void FPlasmaBitmap::MouseClick( Integer Button, Integer X, Integer Y )
 //
 // Mouse move plasma.
 //
-void FPlasmaBitmap::MouseMove( Integer Button, Integer X, Integer Y )
+void FPlasmaBitmap::MouseMove( Int32 Button, Int32 X, Int32 Y )
 {
 	if( Button == 1 )
 	{
 		// Apply palette shift.
-		Integer Delta	= X - (Integer)PaletteShift;
+		Int32 Delta	= X - (Int32)PaletteShift;
 
 		// Figure out another way to shift palette.
 		// This way sucks!
@@ -430,7 +430,7 @@ void FPlasmaBitmap::MouseMove( Integer Button, Integer X, Integer Y )
 			{
 				TColor C	= Palette.Colors[0];
 
-				for( Integer i=0; i<255; i++ )
+				for( Int32 i=0; i<255; i++ )
 					Palette.Colors[i] = Palette.Colors[i+1];
 
 				Palette.Colors[255] = C;
@@ -443,7 +443,7 @@ void FPlasmaBitmap::MouseMove( Integer Button, Integer X, Integer Y )
 			{
 				TColor C	= Palette.Colors[255];
 
-				for( Integer i=254; i>=0; i-- )
+				for( Int32 i=254; i>=0; i-- )
 					Palette.Colors[i+1]	= Palette.Colors[i];
 
 				Palette.Colors[0]	= C;
@@ -486,7 +486,7 @@ void FPlasmaBitmap::Redraw()
 //
 void FPlasmaBitmap::SetPlasmaTable()
 {
-	for( Integer i=0; i<256; i++ )
+	for( Int32 i=0; i<256; i++ )
 	{
 		PlasmaTable[0][i]	= Round( Sin(i*(PlasmaA*6.283f/USize*2.f))*31.5f + 32.f );
 		PlasmaTable[1][i]	= Round( Sin(i*(PlasmaB*6.283f/USize*2.f))*31.5f + 32.f );
@@ -504,7 +504,7 @@ void FPlasmaBitmap::PostLoad()
 	FDemoBitmap::PostLoad();
 	SetPlasmaTable();
 	PaletteShift	= 0;
-	HeatBuffer		= new Byte[USize*VSize >> 2];
+	HeatBuffer		= new UInt8[USize*VSize >> 2];
 }
 
 
@@ -547,7 +547,7 @@ FFireBitmap::FFireBitmap()
 //
 // Fire initialization.
 //
-void FFireBitmap::Init( Integer InU, Integer InV )
+void FFireBitmap::Init( Int32 InU, Int32 InV )
 {
 	FDemoBitmap::Init( InU, InV );
 
@@ -597,7 +597,7 @@ void FFireBitmap::SerializeThis( CSerializer& S )
 	if( S.GetMode() == SM_Save )
 	{
 		// Save only long-lived sparks.
-		for( Integer i=0; i<NumSparks; )
+		for( Int32 i=0; i<NumSparks; )
 		{
 			if( Sparks[i].Type >= _SPARK_Particle )
 			{
@@ -628,10 +628,10 @@ void FFireBitmap::Import( CImporterBase& Im )
 	IMPORT_INTEGER( NumSparks );
 
 	// Import each spark as two integers.
-	for( Integer i=0; i<NumSparks; i++ )
+	for( Int32 i=0; i<NumSparks; i++ )
 	{
-		*(Integer*)(&Sparks[i].Type)	=	Im.ImportInteger( *String::Format( L"Sparks[%d].A", i ) );
-		*(Integer*)(&Sparks[i].ParamA)	=	Im.ImportInteger( *String::Format( L"Sparks[%d].B", i ) );
+		*(Int32*)(&Sparks[i].Type)	=	Im.ImportInteger( *String::Format( L"Sparks[%d].A", i ) );
+		*(Int32*)(&Sparks[i].ParamA)	=	Im.ImportInteger( *String::Format( L"Sparks[%d].B", i ) );
 	}
 }		
 
@@ -644,7 +644,7 @@ void FFireBitmap::Export( CExporterBase& Ex )
 	FDemoBitmap::Export( Ex );
 
 	// Save only long-lived sparks.
-	for( Integer i=0; i<NumSparks; )
+	for( Int32 i=0; i<NumSparks; )
 	{
 		if( Sparks[i].Type >= _SPARK_Particle )
 		{
@@ -657,10 +657,10 @@ void FFireBitmap::Export( CExporterBase& Ex )
 	EXPORT_INTEGER( NumSparks );
 
 	// Export each spark as two integers.
-	for( Integer i=0; i<NumSparks; i++ )
+	for( Int32 i=0; i<NumSparks; i++ )
 	{
-		Ex.ExportInteger( *String::Format( L"Sparks[%d].A", i ), *(Integer*)(&Sparks[i].Type) );
-		Ex.ExportInteger( *String::Format( L"Sparks[%d].B", i ), *(Integer*)(&Sparks[i].ParamA) );
+		Ex.ExportInteger( *String::Format( L"Sparks[%d].A", i ), *(Int32*)(&Sparks[i].Type) );
+		Ex.ExportInteger( *String::Format( L"Sparks[%d].B", i ), *(Int32*)(&Sparks[i].ParamA) );
 	}
 }
 
@@ -690,12 +690,12 @@ void FFireBitmap::EditChange()
 //
 // Delete sparks near cursor.
 //
-void FFireBitmap::DeleteSparks( Integer X, Integer Y, Integer Size )
+void FFireBitmap::DeleteSparks( Int32 X, Int32 Y, Int32 Size )
 {
 	if( (X<0)||(Y<0)||(X>=USize)||(Y>=VSize) )
 		return;
 
-	for( Integer i=0; i<NumSparks; )
+	for( Int32 i=0; i<NumSparks; )
 	{
 		if( Abs(X-Sparks[i].X)<=Size && Abs(Y-Sparks[i].Y)<=Size )
 		{
@@ -712,8 +712,8 @@ void FFireBitmap::DeleteSparks( Integer X, Integer Y, Integer Size )
 //
 void FFireBitmap::RenderRisingFire()
 {
-	Byte*	Data	= (Byte*)GetData();
-	Byte	Seed	= Phase;
+	UInt8*	Data	= (UInt8*)GetData();
+	UInt8	Seed	= Phase;
 
 #if 0
 	// Naive algorithm.
@@ -734,19 +734,19 @@ void FFireBitmap::RenderRisingFire()
 		}
 #else
 	// Cool algorithm.
-	Byte*	ThisLine	= &Data[(VSize-2) << UBits];
-	Byte*	NextLine	= &Data[(VSize-1) << UBits];
+	UInt8*	ThisLine	= &Data[(VSize-2) << UBits];
+	UInt8*	NextLine	= &Data[(VSize-1) << UBits];
 
-	for( Integer V=0; V<VSize; V++ )
+	for( Int32 V=0; V<VSize; V++ )
 	{
-		Byte*	NextLine2	= &Data[V << UBits];
+		UInt8*	NextLine2	= &Data[V << UBits];
 
-		for( Integer U=0; U<USize; U++ )
+		for( Int32 U=0; U<USize; U++ )
 		{
-			Byte	Value	= FireTable[NextLine[U]+NextLine2[U]];
+			UInt8	Value	= FireTable[NextLine[U]+NextLine2[U]];
 			if( Value )
 			{
-				Integer Bias = ShiftTab[++Seed];
+				Int32 Bias = ShiftTab[++Seed];
 				ThisLine[(U+Bias) & UMask]	= Value;
 			}
 			else
@@ -767,8 +767,8 @@ void FFireBitmap::RenderRisingFire()
 //
 void FFireBitmap::RenderStillFire()
 {
-	Byte*	Data	= (Byte*)GetData();
-	Byte	Seed	= Phase;
+	UInt8*	Data	= (UInt8*)GetData();
+	UInt8	Seed	= Phase;
 
 #if 0
 	// Naive algo.
@@ -789,17 +789,17 @@ void FFireBitmap::RenderStillFire()
 		}
 #else
 	// Improved algorithm.
-	Byte*	ThisLine	= &Data[(VSize-1) << UBits];
-	for( Integer V=0; V<VSize; V++ )
+	UInt8*	ThisLine	= &Data[(VSize-1) << UBits];
+	for( Int32 V=0; V<VSize; V++ )
 	{
-		Byte*	NextLine	= &Data[V << UBits];
+		UInt8*	NextLine	= &Data[V << UBits];
 
-		for( Integer U=0; U<USize; U++ )
+		for( Int32 U=0; U<USize; U++ )
 		{
-			Byte Value = FireTable[ThisLine[U]+NextLine[U]];
+			UInt8 Value = FireTable[ThisLine[U]+NextLine[U]];
 			if( Value )
 			{
-				Integer Bias = ShiftTab[++Seed];
+				Int32 Bias = ShiftTab[++Seed];
 				ThisLine[(U+Bias) & UMask]	= Value;
 			}
 			else
@@ -817,7 +817,7 @@ void FFireBitmap::RenderStillFire()
 //
 // Draw a lighting bolt.
 //
-void FFireBitmap::DrawLighting( Integer X1, Integer Y1, Integer X2, Integer Y2, Byte Heat1, Byte Heat2 )
+void FFireBitmap::DrawLighting( Int32 X1, Int32 Y1, Int32 X2, Int32 Y2, UInt8 Heat1, UInt8 Heat2 )
 {
 	// Don't draw collapsed.
 	if( X1 == X2 && Y1 == Y2 )
@@ -825,25 +825,25 @@ void FFireBitmap::DrawLighting( Integer X1, Integer Y1, Integer X2, Integer Y2, 
 
 	// Preinitialize.
 	// Used some fixed math magic in 24:8 format.
-	Byte*	Data		= (Byte*)GetData();
-	Integer	Length		= Trunc(FastSqrt(Sqr<Float>(X1-X2)+Sqr<Float>(Y1-Y2))*256.f);
-	Integer	LastX		= X1 << 8;
-	Integer LastY		= Y1 << 8;
-	Integer	FromX		= X1 << 8;
-	Integer FromY		= Y1 << 8;
-	Integer	DestX		= X2 << 8;
-	Integer DestY		= Y2 << 8;
-	Integer Dx			= ((DestX-LastX) << 8) / Length;
-	Integer Dy			= ((DestY-LastY) << 8) / Length;
-	Integer Nx			= -Dy;
-	Integer Ny			= +Dx;
-	Integer Walk		= 0; 
-	Integer Heat		= Heat1 << 8;
-	Integer Dh			= ((Heat2-Heat1) << 8) / (Length>>8);
+	UInt8*	Data		= (UInt8*)GetData();
+	Int32 Length		= Trunc(FastSqrt(Sqr<Float>(X1-X2)+Sqr<Float>(Y1-Y2))*256.f);
+	Int32 LastX			= X1 << 8;
+	Int32 LastY			= Y1 << 8;
+	Int32 FromX			= X1 << 8;
+	Int32 FromY			= Y1 << 8;
+	Int32 DestX			= X2 << 8;
+	Int32 DestY			= Y2 << 8;
+	Int32 Dx			= ((DestX-LastX) << 8) / Length;
+	Int32 Dy			= ((DestY-LastY) << 8) / Length;
+	Int32 Nx			= -Dy;
+	Int32 Ny			= +Dx;
+	Int32 Walk			= 0; 
+	Int32 Heat			= Heat1 << 8;
+	Int32 Dh			= ((Heat2-Heat1) << 8) / (Length>>8);
 
 	while( Walk < Length )
 	{
-		Integer X, Y;
+		Int32 X, Y;
 		Walk += (256*5) + (RandomByte()*256*4 >> 8);
 
 		if( Walk > Length )
@@ -855,16 +855,16 @@ void FFireBitmap::DrawLighting( Integer X1, Integer Y1, Integer X2, Integer Y2, 
 		else
 		{
 			// Make some jag.
-			Integer Jag	= (RandomByte()*10) - (5*256);
+			Int32 Jag	= (RandomByte()*10) - (5*256);
 
 			X	= FromX + (Dx*Walk >> 8) + (Nx*Jag >> 8);
 			Y	= FromY + (Dy*Walk >> 8) + (Ny*Jag >> 8);
 		}
 
-		Integer SegX	= X-LastX;
-		Integer SegY	= Y-LastY;
-		Integer Seg		= Max( Abs(SegX), Abs(SegY) );
-		Integer i		= Seg >> 8;
+		Int32 SegX	= X-LastX;
+		Int32 SegY	= Y-LastY;
+		Int32 Seg		= Max( Abs(SegX), Abs(SegY) );
+		Int32 i		= Seg >> 8;
 
 		SegX	= (SegX << 8) / Seg;
 		SegY	= (SegY << 8) / Seg;
@@ -890,10 +890,10 @@ void FFireBitmap::DrawLighting( Integer X1, Integer Y1, Integer X2, Integer Y2, 
 //
 inline void AdvanceSpark(	
 							FFireBitmap::TSpark& Spark, 
-							Integer XVel, 
-							Integer YVel, 
-							Integer UMask, 
-							Integer VMask 
+							Int32 XVel, 
+							Int32 YVel, 
+							Int32 UMask, 
+							Int32 VMask 
 						)
 {
 	if( XVel < 0 )
@@ -925,9 +925,9 @@ inline void AdvanceSpark(
 //
 void FFireBitmap::RedrawSparks()
 {
-	Byte* Data = (Byte*)GetData();
+	UInt8* Data = (UInt8*)GetData();
 
-	for( Integer i=0; i<NumSparks; i++ )
+	for( Int32 i=0; i<NumSparks; i++ )
 	{
 		TSpark& Spark = Sparks[i];
 
@@ -955,7 +955,7 @@ void FFireBitmap::RedrawSparks()
 			case SPARK_Jitter:
 			{
 				// Vertical jitter.
-				Byte	V = SineTab[Spark.ParamC];
+				UInt8	V = SineTab[Spark.ParamC];
 				put_fire_pix( Spark.X, Spark.Y+((V*Spark.ParamA)>>8), Spark.Heat );
 				Spark.ParamC += Spark.ParamB;
 				break;
@@ -963,7 +963,7 @@ void FFireBitmap::RedrawSparks()
 			case SPARK_Twister:
 			{
 				// Horizontal jitter.
-				Byte	V = SineTab[Spark.ParamC];
+				UInt8	V = SineTab[Spark.ParamC];
 				put_fire_pix( Spark.X+((V*Spark.ParamA)>>8), Spark.Y, Spark.Heat );
 				Spark.ParamC += Spark.ParamB;
 				break;
@@ -973,7 +973,7 @@ void FFireBitmap::RedrawSparks()
 				// Simple fireball emitter.
 				if( NumSparks<MAX_FIRE_SPARKS && RandomByte()<128 )
 				{
-					Integer k = NumSparks++;
+					Int32 k = NumSparks++;
 					TSpark& Other = Sparks[k];
 
 					Other.Type		= _SPARK_Particle;
@@ -992,7 +992,7 @@ void FFireBitmap::RedrawSparks()
 				// Jet to right.
 				if( NumSparks<MAX_FIRE_SPARKS && RandomByte()<64 )
 				{
-					Integer k = NumSparks++;
+					Int32 k = NumSparks++;
 					TSpark& Other = Sparks[k];
 
 					Other.Type		= _SPARK_Particle;
@@ -1011,7 +1011,7 @@ void FFireBitmap::RedrawSparks()
 				// Jet to left.
 				if( NumSparks<MAX_FIRE_SPARKS && RandomByte()<64 )
 				{
-					Integer k = NumSparks++;
+					Int32 k = NumSparks++;
 					TSpark& Other = Sparks[k];
 
 					Other.Type		= _SPARK_Particle;
@@ -1030,7 +1030,7 @@ void FFireBitmap::RedrawSparks()
 				// Jet to up.
 				if( NumSparks<MAX_FIRE_SPARKS && RandomByte()<64 )
 				{
-					Integer k = NumSparks++;
+					Int32 k = NumSparks++;
 					TSpark& Other = Sparks[k];
 
 					Other.Type		= _SPARK_Particle;
@@ -1049,7 +1049,7 @@ void FFireBitmap::RedrawSparks()
 				// Jet to down.
 				if( NumSparks<MAX_FIRE_SPARKS && RandomByte()<64 )
 				{
-					Integer k = NumSparks++;
+					Int32 k = NumSparks++;
 					TSpark& Other = Sparks[k];
 
 					Other.Type		= _SPARK_Particle;
@@ -1068,7 +1068,7 @@ void FFireBitmap::RedrawSparks()
 				// Spawn some spermatozoids.
 				if( NumSparks<MAX_FIRE_SPARKS && RandomByte()<15 )
 				{
-					Integer k = NumSparks++;
+					Int32 k = NumSparks++;
 					TSpark& Other = Sparks[k];
 
 					Other.Type		= _SPARK_Particle;
@@ -1094,7 +1094,7 @@ void FFireBitmap::RedrawSparks()
 				// Whirligig effect.
 				if( NumSparks<MAX_FIRE_SPARKS )
 				{
-					Integer k = NumSparks++;
+					Int32 k = NumSparks++;
 					TSpark& Other = Sparks[k];
 
 					Other.Type		= _SPARK_Orbit;
@@ -1115,7 +1115,7 @@ void FFireBitmap::RedrawSparks()
 				// Whirligig effect.
 				if( NumSparks<MAX_FIRE_SPARKS )
 				{
-					Integer k = NumSparks++;
+					Int32 k = NumSparks++;
 					TSpark& Other = Sparks[k];
 
 					Other.Type		= _SPARK_Particle;
@@ -1134,7 +1134,7 @@ void FFireBitmap::RedrawSparks()
 				// Ball lighting effect.
 				if( RandomByte() > Spark.ParamA )
 				{
-					Integer Angle = RandomByte();
+					Int32 Angle = RandomByte();
 					DrawLighting
 							( 
 								Spark.X, 
@@ -1256,7 +1256,7 @@ void FFireBitmap::RedrawSparks()
 //
 // Add a new spark to the fire bitmap.
 //
-void FFireBitmap::AddSpark( Integer X, Integer Y )
+void FFireBitmap::AddSpark( Int32 X, Int32 Y )
 {
 	// Check out of bounds.
 	if(	( X < 0 ) || 
@@ -1266,7 +1266,7 @@ void FFireBitmap::AddSpark( Integer X, Integer Y )
 		( NumSparks >= MAX_FIRE_SPARKS-1 ) )
 			return;
 
-	Integer i = NumSparks++;
+	Int32 i = NumSparks++;
 	TSpark& Spark = Sparks[i];
 
 	// Common info.
@@ -1320,8 +1320,8 @@ void FFireBitmap::AddSpark( Integer X, Integer Y )
 		case SPARK_Cloud:
 		{
 			// Cloud of sparks.
-			Integer XVel	= (SineTab[(DrawParams.Direction+64) & 0xff] * DrawParams.Speed) >> 8;
-			Integer YVel	= (SineTab[(DrawParams.Direction   ) & 0xff] * DrawParams.Speed) >> 8;
+			Int32 XVel	= (SineTab[(DrawParams.Direction+64) & 0xff] * DrawParams.Speed) >> 8;
+			Int32 YVel	= (SineTab[(DrawParams.Direction   ) & 0xff] * DrawParams.Speed) >> 8;
 			Spark.ParamA	= 128 - DrawParams.Speed/2 + XVel;
 			Spark.ParamB	= 128 - DrawParams.Speed/2 + YVel;
 			Spark.ParamC	= DrawParams.Area;
@@ -1364,7 +1364,7 @@ void FFireBitmap::Erase()
 //
 void FFireBitmap::SetFireTable()
 {
-	for( Integer iHeat=0; iHeat<512; iHeat++ )
+	for( Int32 iHeat=0; iHeat<512; iHeat++ )
 	{
 		// Pretty strange formula, but it's works well.
 		Float Value = ((Float)iHeat/2.f - 16.f * RandomF());
@@ -1381,14 +1381,14 @@ Bool	GCapFire	= false;
 //
 // User click at fire bitmap.
 //
-void FFireBitmap::MouseClick( Integer Button, Integer X, Integer Y )
+void FFireBitmap::MouseClick( Int32 Button, Int32 X, Int32 Y )
 {
 	if( Button == 1 )
 	{
 		// Left button.
 		if( GCapFire )
 		{
-			for( Integer i=NumSparks-1; i>=0; i-- )
+			for( Int32 i=NumSparks-1; i>=0; i-- )
 				if( Sparks[i].Type == SPARK_LineLighting || 
 					Sparks[i].Type == SPARK_RampLighting )
 				{
@@ -1421,12 +1421,12 @@ void FFireBitmap::MouseClick( Integer Button, Integer X, Integer Y )
 //
 // User move cursor at fire bitmap.
 //
-void FFireBitmap::MouseMove( Integer Button, Integer X, Integer Y )
+void FFireBitmap::MouseMove( Int32 Button, Int32 X, Int32 Y )
 {
 	// Whether play with lighting bolt?
 	if( GCapFire )
 	{
-		for( Integer i=NumSparks-1; i>=0; i-- )
+		for( Int32 i=NumSparks-1; i>=0; i-- )
 			if( Sparks[i].Type == SPARK_LineLighting || 
 				Sparks[i].Type == SPARK_RampLighting )
 			{
@@ -1451,7 +1451,7 @@ void FFireBitmap::MouseMove( Integer Button, Integer X, Integer Y )
 	}
 
 	// Draw torch cursor.
-	Byte* Data = (Byte*)GetData(); 
+	UInt8* Data = (UInt8*)GetData(); 
 	put_fire_pix( X, Y, 255 );
 }
 
@@ -1474,12 +1474,12 @@ FWaterBitmap::FWaterBitmap()
 //
 // Initialize water bitmap.
 //
-void FWaterBitmap::Init( Integer InU, Integer InV )
+void FWaterBitmap::Init( Int32 InU, Int32 InV )
 {
 	FDemoBitmap::Init( InU, InV );
 
 	// Allocate z-buffer.
-	ZBuffer	= new Byte[USize*VSize >> 1];
+	ZBuffer	= new UInt8[USize*VSize >> 1];
 	MemSet( ZBuffer, USize*VSize >> 1, 128 );
 
 	WaterAmpl	= 128;
@@ -1495,7 +1495,7 @@ void FWaterBitmap::Init( Integer InU, Integer InV )
 //
 // User click water bitmap.
 //
-void FWaterBitmap::MouseClick( Integer Button, Integer X, Integer Y )
+void FWaterBitmap::MouseClick( Int32 Button, Int32 X, Int32 Y )
 {
 	if( Image )
 	{
@@ -1510,7 +1510,7 @@ void FWaterBitmap::MouseClick( Integer Button, Integer X, Integer Y )
 //
 // User move cursor over the water.
 //
-void FWaterBitmap::MouseMove( Integer Button, Integer X, Integer Y )
+void FWaterBitmap::MouseMove( Int32 Button, Int32 X, Int32 Y )
 {
 	if( Image )
 	{
@@ -1522,10 +1522,10 @@ void FWaterBitmap::MouseMove( Integer Button, Integer X, Integer Y )
 		// Draw a wavy cursor.
 		X >>= 1;
 		Y >>= 1;
-		Byte* WaterA = ZBuffer;
-		Byte* WaterB = ZBuffer + (USize >> 1);
-		Integer U2Mask = UMask >> 1;
-		Integer V2Mask = VMask >> 1;
+		UInt8* WaterA = ZBuffer;
+		UInt8* WaterB = ZBuffer + (USize >> 1);
+		Int32 U2Mask = UMask >> 1;
+		Int32 V2Mask = VMask >> 1;
 
 		put_wat_pixa( X, Y, 145 );
 		put_wat_pixb( X, Y, ~145 );
@@ -1557,10 +1557,10 @@ void FWaterBitmap::Export( CExporterBase& Ex )
 	EXPORT_INTEGER( NumDrops );
 
 	// Export each drop as two integers.
-	for( Integer i=0; i<NumDrops; i++ )
+	for( Int32 i=0; i<NumDrops; i++ )
 	{
-		Ex.ExportInteger( *String::Format( L"Drops[%d].A", i ), *(Integer*)(&Drops[i].Type) );
-		Ex.ExportInteger( *String::Format( L"Drops[%d].B", i ), *(Integer*)(&Drops[i].ParamA) );
+		Ex.ExportInteger( *String::Format( L"Drops[%d].A", i ), *(Int32*)(&Drops[i].Type) );
+		Ex.ExportInteger( *String::Format( L"Drops[%d].B", i ), *(Int32*)(&Drops[i].ParamA) );
 	}
 }
 
@@ -1574,10 +1574,10 @@ void FWaterBitmap::Import( CImporterBase& Im )
 	IMPORT_INTEGER( NumDrops );
 
 	// Import each drop as two integers.
-	for( Integer i=0; i<NumDrops; i++ )
+	for( Int32 i=0; i<NumDrops; i++ )
 	{
-		*(Integer*)(&Drops[i].Type)		=	Im.ImportInteger( *String::Format( L"Drops[%d].A", i ) );
-		*(Integer*)(&Drops[i].ParamA)	=	Im.ImportInteger( *String::Format( L"Drops[%d].B", i ) );
+		*(Int32*)(&Drops[i].Type)		=	Im.ImportInteger( *String::Format( L"Drops[%d].A", i ) );
+		*(Int32*)(&Drops[i].ParamA)	=	Im.ImportInteger( *String::Format( L"Drops[%d].B", i ) );
 	}
 }
 
@@ -1585,7 +1585,7 @@ void FWaterBitmap::Import( CImporterBase& Im )
 //
 // Delete drops near cursor.
 //
-void FWaterBitmap::DeleteDrops( Integer X, Integer Y, Integer Size )
+void FWaterBitmap::DeleteDrops( Int32 X, Int32 Y, Int32 Size )
 {
 	if( (X<0)||(Y<0)||(X>=USize)||(Y>=VSize) )
 		return;
@@ -1593,7 +1593,7 @@ void FWaterBitmap::DeleteDrops( Integer X, Integer Y, Integer Size )
 	X /= 2;
 	Y /= 2;
 
-	for( Integer i=0; i<NumDrops; )
+	for( Int32 i=0; i<NumDrops; )
 	{
 		if( Abs(X-Drops[i].X)<=Size && Abs(Y-Drops[i].Y)<=Size )
 		{
@@ -1610,9 +1610,9 @@ void FWaterBitmap::DeleteDrops( Integer X, Integer Y, Integer Size )
 //
 void FWaterBitmap::SetDistortionTable()
 {
-	for( Integer i=0; i<1024; i++ )
+	for( Int32 i=0; i<1024; i++ )
 	{
-		Integer Val		= Trunc((i-511)*((Float)WaterAmpl/512.f));
+		Int32 Val		= Trunc((i-511)*((Float)WaterAmpl/512.f));
 		DistTable[i]	= Clamp( Val, -128, 127 );
 	}
 }
@@ -1627,15 +1627,15 @@ void FWaterBitmap::RenderWater()
 	{
 		assert(Image);
 
-		Byte* Data = (Byte*)Image->GetData();
-		Byte* Water	= (Byte*)GetData();
+		UInt8* Data = (UInt8*)Image->GetData();
+		UInt8* Water	= (UInt8*)GetData();
 
-		for( Integer V=0; V<VSize; V++ )
+		for( Int32 V=0; V<VSize; V++ )
 		{
-			Byte* WaterLine = &Water[V << UBits];
-			Byte* DataLine  = &Data[V << UBits];
+			UInt8* WaterLine = &Water[V << UBits];
+			UInt8* DataLine  = &Data[V << UBits];
 
-			for( Integer U=0; U<USize; U++ )
+			for( Int32 U=0; U<USize; U++ )
 			{
 				WaterLine[U] = DataLine[(U+WaterLine[U]) & UMask];
 			}
@@ -1649,45 +1649,45 @@ void FWaterBitmap::RenderWater()
 //
 void FWaterBitmap::CalculateWater()
 {
-	Byte* Data			= (Byte*)GetData();
-	Integer U2Size		= USize >> 1;
-	Integer V2Size		= VSize >> 1;
-	Integer U2Mask		= UMask >> 1;
-	Integer V2Mask		= VMask >> 1;
+	UInt8* Data			= (UInt8*)GetData();
+	Int32 U2Size		= USize >> 1;
+	Int32 V2Size		= VSize >> 1;
+	Int32 U2Mask		= UMask >> 1;
+	Int32 V2Mask		= VMask >> 1;
 	
 	if( Phase & 1 )
 	{
 		// Apply odd water filter.
-		Byte*	ThisWater1	= ZBuffer + ((V2Size-1) << UBits);
-		Byte*	ThisWater2	= ThisWater1 + U2Size;
+		UInt8*	ThisWater1	= ZBuffer + ((V2Size-1) << UBits);
+		UInt8*	ThisWater2	= ThisWater1 + U2Size;
 
-		for( Integer V=0; V<V2Size; V++ )
+		for( Int32 V=0; V<V2Size; V++ )
 		{
-			Byte*	NextWater1	= ZBuffer + (V << UBits);
-			Byte*	NextWater2	= NextWater1 + U2Size;
-			Byte*	Data0		= &Data[((V*2+0) & VMask) << UBits];
-			Byte*	Data1		= &Data[((V*2+1) & VMask) << UBits];
+			UInt8*	NextWater1	= ZBuffer + (V << UBits);
+			UInt8*	NextWater2	= NextWater1 + U2Size;
+			UInt8*	Data0		= &Data[((V*2+0) & VMask) << UBits];
+			UInt8*	Data1		= &Data[((V*2+1) & VMask) << UBits];
 
-			for( Integer U=0; U<U2Size; U++ )
+			for( Int32 U=0; U<U2Size; U++ )
 			{
 				// Sample values.
-				Integer A = ThisWater1[U];
-				Integer B = ThisWater1[(U+1) & U2Mask];
-				Integer C = NextWater1[U];
-				Integer D = NextWater1[(U+1) & U2Mask];
-				Integer E = ThisWater1[(U+2) & U2Mask];
-				Integer F = NextWater1[(U+2) & U2Mask];
-				Integer G = ThisWater1[(U+3) & U2Mask];
-				Integer H = NextWater1[(U+3) & U2Mask];
+				Int32 A = ThisWater1[U];
+				Int32 B = ThisWater1[(U+1) & U2Mask];
+				Int32 C = NextWater1[U];
+				Int32 D = NextWater1[(U+1) & U2Mask];
+				Int32 E = ThisWater1[(U+2) & U2Mask];
+				Int32 F = NextWater1[(U+2) & U2Mask];
+				Int32 G = ThisWater1[(U+3) & U2Mask];
+				Int32 H = NextWater1[(U+3) & U2Mask];
 
 				// Put pixel.
 				ThisWater2[U] = WaveTab[512+A+B+C+D-2*ThisWater2[U]];
 
 				// Compute deltas.
-				Integer DH = D-H;
-				Integer BG = B-G;
-				Integer AE = A-E;
-				Integer CF = C-F;
+				Int32 DH = D-H;
+				Int32 BG = B-G;
+				Int32 AE = A-E;
+				Int32 CF = C-F;
 
 				// Resample water depth to bitmap.
 				Data0[U*2+0]	= DistTable[512+AE*2];
@@ -1703,21 +1703,21 @@ void FWaterBitmap::CalculateWater()
 	else
 	{
 		// Apply even water filter.
-		Byte*	PrevWater1	= ZBuffer + ((V2Size-1) << UBits);
-		Byte*	PrevWater2	= PrevWater1 + U2Size;
+		UInt8*	PrevWater1	= ZBuffer + ((V2Size-1) << UBits);
+		UInt8*	PrevWater2	= PrevWater1 + U2Size;
 
-		for( Integer V=0; V<V2Size; V++ )
+		for( Int32 V=0; V<V2Size; V++ )
 		{
-			Byte*	ThisWater1	= ZBuffer + (V << UBits);
-			Byte*	ThisWater2	= ThisWater1 + U2Size;
+			UInt8*	ThisWater1	= ZBuffer + (V << UBits);
+			UInt8*	ThisWater2	= ThisWater1 + U2Size;
 
-			for( Integer U=0; U<U2Size; U++ )
+			for( Int32 U=0; U<U2Size; U++ )
 			{
 				// Sample values.
-				Integer A = PrevWater2[(U-1) & U2Mask];
-				Integer B = PrevWater2[U];
-				Integer C = ThisWater2[(U-1) & U2Mask];
-				Integer D = ThisWater2[U];
+				Int32 A = PrevWater2[(U-1) & U2Mask];
+				Int32 B = PrevWater2[U];
+				Int32 C = ThisWater2[(U-1) & U2Mask];
+				Int32 D = ThisWater2[U];
 
 				// Put pixel.
 				ThisWater1[U] = WaveTab[512+A+B+C+D-2*ThisWater1[U]];
@@ -1760,7 +1760,7 @@ void FWaterBitmap::Redraw()
 	else
 	{
 		// Nothing to draw.
-		MemZero( GetData(), USize*VSize*sizeof(Byte) );
+		MemZero( GetData(), USize*VSize*sizeof(UInt8) );
 		bRedrawn	= true;
 	}
 }
@@ -1775,7 +1775,7 @@ void FWaterBitmap::PostLoad()
 	SetDistortionTable();
 
 	// Allocate Z-Buffer.
-	ZBuffer	= new Byte[USize*VSize >> 1];
+	ZBuffer	= new UInt8[USize*VSize >> 1];
 	MemSet( ZBuffer, USize*VSize >> 1, 128 );
 }
 
@@ -1823,7 +1823,7 @@ void FWaterBitmap::EditChange()
 //
 // Add a new drop to the water bitmap.
 //
-void FWaterBitmap::AddDrop( Integer X, Integer Y )
+void FWaterBitmap::AddDrop( Int32 X, Int32 Y )
 {
 	// Check out of bounds.
 	if(	( X < 0 ) || 
@@ -1833,7 +1833,7 @@ void FWaterBitmap::AddDrop( Integer X, Integer Y )
 		( NumDrops >= MAX_WATER_DROPS-1 ) )
 			return;
 
-	Integer i = NumDrops++;
+	Int32 i = NumDrops++;
 	TDrop& Drop = Drops[i];
 
 	// Common info.
@@ -1883,13 +1883,13 @@ void FWaterBitmap::AddDrop( Integer X, Integer Y )
 //
 void FWaterBitmap::RedrawDrops()
 {
-	Byte* WaterA	= ZBuffer;
-	Byte* WaterB	= ZBuffer + (USize >> 1);
-	Integer U2Mask	= UMask >> 1;
-	Integer V2Mask	= VMask >> 1;
-	Integer XSize	= USize / 2;
+	UInt8* WaterA	= ZBuffer;
+	UInt8* WaterB	= ZBuffer + (USize >> 1);
+	Int32 U2Mask	= UMask >> 1;
+	Int32 V2Mask	= VMask >> 1;
+	Int32 XSize	= USize / 2;
 
-	for( Integer i=0; i<NumDrops; i++ )
+	for( Int32 i=0; i<NumDrops; i++ )
 	{
 		TDrop& Drop = Drops[i];
 
@@ -1905,7 +1905,7 @@ void FWaterBitmap::RedrawDrops()
 			case DROP_RandomPoint:
 			{
 				// Noisy point.
-				Byte Depth = 128 + (Drop.ParamA * RandomByte() >> 8);
+				UInt8 Depth = 128 + (Drop.ParamA * RandomByte() >> 8);
 				put_wat_pixa( Drop.X, Drop.Y, Depth );
 				put_wat_pixb( Drop.X, Drop.Y, ~Depth );
 				break;
@@ -1913,7 +1913,7 @@ void FWaterBitmap::RedrawDrops()
 			case DROP_Oscillator:
 			{
 				// Simple oscillator.
-				Byte Depth = 128-Drop.ParamA/2 + (SineTab[Drop.Depth] * Drop.ParamA >> 8);
+				UInt8 Depth = 128-Drop.ParamA/2 + (SineTab[Drop.Depth] * Drop.ParamA >> 8);
 				put_wat_pixa( Drop.X, Drop.Y, Depth );
 				put_wat_pixb( Drop.X, Drop.Y, Depth );
 				Drop.Depth += Drop.ParamB;
@@ -1946,8 +1946,8 @@ void FWaterBitmap::RedrawDrops()
 			case DROP_VertLine:
 			{
 				// Vertical line oscillation.
-				Byte Depth = 128-Drop.ParamA/2 + (SineTab[Drop.Depth] * Drop.ParamA >> 8);
-				for( Integer Y=0; Y<Drop.ParamC; Y++ )
+				UInt8 Depth = 128-Drop.ParamA/2 + (SineTab[Drop.Depth] * Drop.ParamA >> 8);
+				for( Int32 Y=0; Y<Drop.ParamC; Y++ )
 				{
 					put_wat_pixa( Drop.X, Drop.Y+Y, Depth );
 					put_wat_pixb( Drop.X, Drop.Y+Y, Depth );
@@ -1958,8 +1958,8 @@ void FWaterBitmap::RedrawDrops()
 			case DROP_HorizLine:
 			{
 				// Horizontal line oscillation.
-				Byte Depth = 128-Drop.ParamA/2 + (SineTab[Drop.Depth] * Drop.ParamA >> 8);
-				for( Integer X=0; X<Drop.ParamC; X++ )
+				UInt8 Depth = 128-Drop.ParamA/2 + (SineTab[Drop.Depth] * Drop.ParamA >> 8);
+				for( Int32 X=0; X<Drop.ParamC; X++ )
 				{
 					put_wat_pixa( Drop.X+X, Drop.Y, Depth );
 					put_wat_pixb( Drop.X+X, Drop.Y, Depth );
@@ -2012,13 +2012,13 @@ FTechBitmap::~FTechBitmap()
 //
 // Initialize tech bitmap.
 //
-void FTechBitmap::Init( Integer InU, Integer InV )
+void FTechBitmap::Init( Int32 InU, Int32 InV )
 {
 	FDemoBitmap::Init( InU, InV );
 
 	// Allocate z-buffer.
-	ZBuffer	= new Byte[USize*VSize];
-	MemZero( ZBuffer, USize*VSize*sizeof(Byte) );
+	ZBuffer	= new UInt8[USize*VSize];
+	MemZero( ZBuffer, USize*VSize*sizeof(UInt8) );
 
 	BumpMapLight = 150;
 	BumpMapAngle = 30;
@@ -2033,12 +2033,12 @@ void FTechBitmap::Init( Integer InU, Integer InV )
 //
 // Delete panels near cursor.
 //
-void FTechBitmap::DeletePanels( Integer X, Integer Y, Integer Area )
+void FTechBitmap::DeletePanels( Int32 X, Int32 Y, Int32 Area )
 {
 	if( (X<0)||(Y<0)||(X>=USize)||(Y>=VSize) )
 		return;
 
-	for( Integer i=0; i<NumPanels; )
+	for( Int32 i=0; i<NumPanels; )
 	{
 		if( Abs(X-Panels[i].X)<=Area && Abs(Y-Panels[i].Y)<=Area )
 		{
@@ -2064,14 +2064,14 @@ void FTechBitmap::DeletePanels( Integer X, Integer Y, Integer Area )
 void FTechBitmap::Erase()
 {
 	NumPanels = 0;
-	MemZero( ZBuffer, USize*VSize*sizeof(Byte) );
+	MemZero( ZBuffer, USize*VSize*sizeof(UInt8) );
 }
 
 
 //
 // User click water bitmap.
 //
-void FTechBitmap::MouseClick( Integer Button, Integer X, Integer Y )
+void FTechBitmap::MouseClick( Int32 Button, Int32 X, Int32 Y )
 {
 	if( Button == 1 )
 		AddPanel( X, Y );
@@ -2083,7 +2083,7 @@ void FTechBitmap::MouseClick( Integer Button, Integer X, Integer Y )
 //
 // User move cursor over the bitmap.
 //
-void FTechBitmap::MouseMove( Integer Button, Integer X, Integer Y )
+void FTechBitmap::MouseMove( Int32 Button, Int32 X, Int32 Y )
 {
 	if( Button == 1 )
 		AddPanel( X, Y );
@@ -2117,10 +2117,10 @@ void FTechBitmap::Import( CImporterBase& Im )
 	IMPORT_INTEGER( NumPanels );
 
 	// Import each spark as two integers.
-	for( Integer i=0; i<NumPanels; i++ )
+	for( Int32 i=0; i<NumPanels; i++ )
 	{
-		*(Integer*)(&Panels[i].Type)	=	Im.ImportInteger( *String::Format( L"Panels[%d].A", i ) );
-		*(Integer*)(&Panels[i].ParamA)	=	Im.ImportInteger( *String::Format( L"Panels[%d].B", i ) );
+		*(Int32*)(&Panels[i].Type)	=	Im.ImportInteger( *String::Format( L"Panels[%d].A", i ) );
+		*(Int32*)(&Panels[i].ParamA)	=	Im.ImportInteger( *String::Format( L"Panels[%d].B", i ) );
 	}
 }
 
@@ -2134,10 +2134,10 @@ void FTechBitmap::Export( CExporterBase& Ex )
 	EXPORT_INTEGER( NumPanels );
 
 	// Export each panel as two integers.
-	for( Integer i=0; i<NumPanels; i++ )
+	for( Int32 i=0; i<NumPanels; i++ )
 	{
-		Ex.ExportInteger( *String::Format( L"Panels[%d].A", i ), *(Integer*)(&Panels[i].Type) );
-		Ex.ExportInteger( *String::Format( L"Panels[%d].B", i ), *(Integer*)(&Panels[i].ParamA) );
+		Ex.ExportInteger( *String::Format( L"Panels[%d].A", i ), *(Int32*)(&Panels[i].Type) );
+		Ex.ExportInteger( *String::Format( L"Panels[%d].B", i ), *(Int32*)(&Panels[i].ParamA) );
 	}
 }
 
@@ -2145,28 +2145,28 @@ void FTechBitmap::Export( CExporterBase& Ex )
 //
 // Smooth filter.
 //
-void FTechBitmap::ApplyFilter1( Integer X, Integer Y, Integer Area )
+void FTechBitmap::ApplyFilter1( Int32 X, Int32 Y, Int32 Area )
 {
-	Byte* Source = ZBuffer;
+	UInt8* Source = ZBuffer;
 
-	for( Integer U=X; U<X+Area; U++ )
+	for( Int32 U=X; U<X+Area; U++ )
 	{
-		Integer UZ = U & UMask;
-		Integer UP = (U+1) & UMask;
-		Integer UN = (U-1) & UMask;
+		Int32 UZ = U & UMask;
+		Int32 UP = (U+1) & UMask;
+		Int32 UN = (U-1) & UMask;
 
-		for( Integer V=Y; V<Y+Area; V++ )
+		for( Int32 V=Y; V<Y+Area; V++ )
 		{
-			Integer VZ = (V & VMask) << UBits;
-			Integer VP = ((V+1) & VMask) << UBits;
-			Integer VN = ((V-1) & VMask) << UBits;
+			Int32 VZ = (V & VMask) << UBits;
+			Int32 VP = ((V+1) & VMask) << UBits;
+			Int32 VN = ((V-1) & VMask) << UBits;
 
 			Source[UZ+VZ] = 
 				(
-					(Integer)Source[UP + VZ] +
-					(Integer)Source[UN + VZ] +
-					(Integer)Source[UZ + VP] +
-					(Integer)Source[UZ + VN]
+					(Int32)Source[UP + VZ] +
+					(Int32)Source[UN + VZ] +
+					(Int32)Source[UZ + VP] +
+					(Int32)Source[UZ + VN]
 				) / 4;
 		}
 	}
@@ -2176,28 +2176,28 @@ void FTechBitmap::ApplyFilter1( Integer X, Integer Y, Integer Area )
 //
 // Noisy filter.
 //
-void FTechBitmap::ApplyFilter2( Integer X, Integer Y, Integer Area )
+void FTechBitmap::ApplyFilter2( Int32 X, Int32 Y, Int32 Area )
 {
-	Byte* Source = ZBuffer;
+	UInt8* Source = ZBuffer;
 
-	for( Integer U=X; U<X+Area; U++ )
+	for( Int32 U=X; U<X+Area; U++ )
 	{
-		Integer UZ = U & UMask;
-		Integer UP = (U+1) & UMask;
-		Integer UN = (U-1) & UMask;
+		Int32 UZ = U & UMask;
+		Int32 UP = (U+1) & UMask;
+		Int32 UN = (U-1) & UMask;
 
-		for( Integer V=Y; V<Y+Area; V++ )
+		for( Int32 V=Y; V<Y+Area; V++ )
 		{
-			Integer VZ = (V & VMask) << UBits;
-			Integer VP = ((V+1) & VMask) << UBits;
-			Integer VN = ((V-1) & VMask) << UBits;
+			Int32 VZ = (V & VMask) << UBits;
+			Int32 VP = ((V+1) & VMask) << UBits;
+			Int32 VN = ((V-1) & VMask) << UBits;
 
 			Source[UZ+VZ] = 
 				(
-					(Integer)Source[UP + VZ] +
-					(Integer)Source[UN + VZ] +
-					(Integer)Source[UZ + VP] +
-					(Integer)Source[UZ + VN]
+					(Int32)Source[UP + VZ] +
+					(Int32)Source[UN + VZ] +
+					(Int32)Source[UZ + VP] +
+					(Int32)Source[UZ + VN]
 				) / 4 - 2;
 		}
 	}
@@ -2209,7 +2209,7 @@ void FTechBitmap::ApplyFilter2( Integer X, Integer Y, Integer Area )
 //
 void FTechBitmap::RedrawPanels()
 {
-	for( Integer i=0; i<NumPanels; i++ )
+	for( Int32 i=0; i<NumPanels; i++ )
 	{
 		TPanel& Panel = Panels[i];
 
@@ -2246,9 +2246,9 @@ void FTechBitmap::RedrawPanels()
 			}
 			case TECH_Wave:
 			{
-				for( Integer X=0; X<Panel.ParamD; X++ )
+				for( Int32 X=0; X<Panel.ParamD; X++ )
 				{
-					Byte* Pixel = &ZBuffer[((X+Panel.X) & UMask) + ((Panel.Y & VMask) << UBits)];
+					UInt8* Pixel = &ZBuffer[((X+Panel.X) & UMask) + ((Panel.Y & VMask) << UBits)];
 					if( *Pixel < Panel.ParamC )
 						*Pixel = Panel.ParamC;
 				}
@@ -2260,9 +2260,9 @@ void FTechBitmap::RedrawPanels()
 			}
 			case TECH_Segments:
 			{
-				for( Integer X=0; X<Panel.ParamD; X++ )
+				for( Int32 X=0; X<Panel.ParamD; X++ )
 				{
-					Byte* Pixel = &ZBuffer[((X+Panel.X) & UMask) + ((Panel.Y & VMask) << UBits)];
+					UInt8* Pixel = &ZBuffer[((X+Panel.X) & UMask) + ((Panel.Y & VMask) << UBits)];
 					if( *Pixel < Panel.ParamC )
 						*Pixel = Panel.ParamC;
 				}
@@ -2276,9 +2276,9 @@ void FTechBitmap::RedrawPanels()
 			case TECH_Straight:
 			{
 				Panel.X = (Panel.X + 1) & UMask;
-				for( Integer Y=0; Y<Panel.ParamD; Y++ )
+				for( Int32 Y=0; Y<Panel.ParamD; Y++ )
 				{
-					Byte* Pixel = &ZBuffer[Panel.X + (((Y+Panel.Y)& VMask) << UBits)];
+					UInt8* Pixel = &ZBuffer[Panel.X + (((Y+Panel.Y)& VMask) << UBits)];
 					if( *Pixel < Panel.Depth )
 						*Pixel = Panel.Depth;
 				}
@@ -2287,8 +2287,8 @@ void FTechBitmap::RedrawPanels()
 			case TECH_Circle:
 			{
 				Panel.ParamC++;
-				Integer X = Panel.X + (SineTab[Panel.ParamC]*Panel.ParamA >> 8);
-				Integer Y = Panel.Y + (SineTab[255 & (Panel.ParamC+64)]*Panel.ParamA >> 8);
+				Int32 X = Panel.X + (SineTab[Panel.ParamC]*Panel.ParamA >> 8);
+				Int32 Y = Panel.Y + (SineTab[255 & (Panel.ParamC+64)]*Panel.ParamA >> 8);
 
 				put_tech_pix( X, Y, SineTab[Panel.ParamC] );
 
@@ -2358,7 +2358,7 @@ void FTechBitmap::RedrawPanels()
 //
 // Add a new panel to the bitmap.
 //
-void FTechBitmap::AddPanel( Integer X, Integer Y )
+void FTechBitmap::AddPanel( Int32 X, Int32 Y )
 {
 	// Check out of bounds.
 	if(	( X < 0 ) || 
@@ -2368,7 +2368,7 @@ void FTechBitmap::AddPanel( Integer X, Integer Y )
 		( NumPanels >= MAX_TECH_PANELS-1 ) )
 			return;
 
-	Integer i = NumPanels++;
+	Int32 i = NumPanels++;
 	TPanel& Panel = Panels[i];
 
 	// Common info.
@@ -2423,18 +2423,18 @@ void FTechBitmap::Redraw()
 //
 void FTechBitmap::CalculateBumpMap()
 {
-	Byte* Data = static_cast<Byte*>(GetData());
-	Byte* Source = ZBuffer;
+	UInt8* Data = static_cast<UInt8*>(GetData());
+	UInt8* Source = ZBuffer;
 
-	for( Integer V=0; V<VSize; V++ )
+	for( Int32 V=0; V<VSize; V++ )
 	{
-		Byte* DataLine = Data + (V << UBits);
-		Byte* SourceLine = Source + (V << UBits);
+		UInt8* DataLine = Data + (V << UBits);
+		UInt8* SourceLine = Source + (V << UBits);
 
-		for( Integer U=0; U<USize; U++ )
+		for( Int32 U=0; U<USize; U++ )
 		{
-			Integer A = SourceLine[(U+1) & UMask];
-			Integer B = SourceLine[(U-1) & UMask];
+			Int32 A = SourceLine[(U+1) & UMask];
+			Int32 B = SourceLine[(U-1) & UMask];
 
 			DataLine[U] = LightTable[255 + A + (B >> 2) - B];
 		}
@@ -2451,8 +2451,8 @@ void FTechBitmap::PostLoad()
 	SetLigthTable();
 
 	// Allocate Z-buffer.
-	ZBuffer = new Byte[USize*VSize];
-	MemZero( ZBuffer, USize*VSize*sizeof(Byte) );
+	ZBuffer = new UInt8[USize*VSize];
+	MemZero( ZBuffer, USize*VSize*sizeof(UInt8) );
 }
 
 
@@ -2475,10 +2475,10 @@ void FTechBitmap::EditChange()
 		if( PaletteRef->Format == BF_Palette8 )
 		{
 			// Copy via other palette.
-			Byte* Inds = (Byte*)PaletteRef->GetData();
+			UInt8* Inds = (UInt8*)PaletteRef->GetData();
 			TColor* Pal	= (TColor*)&PaletteRef->Palette.Colors[0];
 
-			for( Integer i=0; i<256; i++ )
+			for( Int32 i=0; i<256; i++ )
 				Palette.Colors[i] = Pal[Inds[i]];
 		}
 		else
@@ -2486,7 +2486,7 @@ void FTechBitmap::EditChange()
 			// Copy directly from other's data.
 			TColor* Other = (TColor*)PaletteRef->GetData();
 
-			for( Integer i=0; i<256; i++ )
+			for( Int32 i=0; i<256; i++ )
 				Palette.Colors[i] = Other[i];
 		}
 	}
@@ -2500,10 +2500,10 @@ void FTechBitmap::SetLigthTable()
 {
 	Float LampAngle = PI * BumpMapAngle / 255.f;
 
-	for( Integer i=0; i<575; i++ )
+	for( Int32 i=0; i<575; i++ )
 	{
 		Float Normal = ArcTan((255.f-i)/95.f) + PI*0.5f;
-		Integer TempLight = Round(Cos(Normal-LampAngle)*200.f);
+		Int32 TempLight = Round(Cos(Normal-LampAngle)*200.f);
 		Float Reflected = Abs(2.f*Normal - LampAngle - BumpMapLight*PI/255.f);
 
 		if( Reflected < 0.1f )
@@ -2540,7 +2540,7 @@ FGlassBitmap::~FGlassBitmap()
 //
 // Initialize glass bitmap.
 //
-void FGlassBitmap::Init( Integer InU, Integer InV )
+void FGlassBitmap::Init( Int32 InU, Int32 InV )
 {
 	FDemoBitmap::Init( InU, InV );
 	
@@ -2566,7 +2566,7 @@ void FGlassBitmap::Erase()
 //
 // Tap over glass.
 //
-void FGlassBitmap::MouseClick( Integer Button, Integer X, Integer Y )
+void FGlassBitmap::MouseClick( Int32 Button, Int32 X, Int32 Y )
 {
 }
 
@@ -2574,10 +2574,10 @@ void FGlassBitmap::MouseClick( Integer Button, Integer X, Integer Y )
 //
 // Shift the glass.
 //
-void FGlassBitmap::MouseMove( Integer Button, Integer X, Integer Y )
+void FGlassBitmap::MouseMove( Int32 Button, Int32 X, Int32 Y )
 {
-	static Integer OldX;
-	static Integer OldY;
+	static Int32 OldX;
+	static Int32 OldY;
 
 	if( Button == 1 )
 	{
@@ -2607,7 +2607,7 @@ void FGlassBitmap::Redraw()
 			RenderGlassII();
 	}
 	else
-		MemZero( GetData(), USize*VSize*sizeof(Byte) );
+		MemZero( GetData(), USize*VSize*sizeof(UInt8) );
 
 	bRedrawn	= true;
 }
@@ -2691,20 +2691,20 @@ void FGlassBitmap::RenderGlassI()
 {
 	// Compute position.
 	Float	Time = GPlat->Now();
-	Integer PosX = (HOffset + Round(Time*HSpeed)) & UMask;
-	Integer PosY = (VOffset + Round(Time*VSpeed)) & VMask;
+	Int32 PosX = (HOffset + Round(Time*HSpeed)) & UMask;
+	Int32 PosY = (VOffset + Round(Time*VSpeed)) & VMask;
 
-	Byte* Dst = (Byte*)GetData();
-	Byte* Img = (Byte*)Image->GetData();
-	Byte* Gls = (Byte*)Glass->GetData();
+	UInt8* Dst = (UInt8*)GetData();
+	UInt8* Img = (UInt8*)Image->GetData();
+	UInt8* Gls = (UInt8*)Glass->GetData();
 
-	for( Integer V=0; V<VSize; V++ )
+	for( Int32 V=0; V<VSize; V++ )
 	{
-		Byte* DstLine	= &Dst[V << UBits];
-		Byte* ImgLine	= &Img[V << UBits];
-		Byte* GlsLine	= &Gls[((V+PosY) & VMask) << UBits];
+		UInt8* DstLine	= &Dst[V << UBits];
+		UInt8* ImgLine	= &Img[V << UBits];
+		UInt8* GlsLine	= &Gls[((V+PosY) & VMask) << UBits];
 
-		for( Integer U=0; U<USize; U++ )
+		for( Int32 U=0; U<USize; U++ )
 		{
 			DstLine[U]	= ImgLine[(GlsLine[(PosX+U) & UMask]+U) & UMask];
 		}
@@ -2719,20 +2719,20 @@ void FGlassBitmap::RenderGlassII()
 {
 	// Compute position.
 	Float	Time = GPlat->Now();
-	Integer PosX = (HOffset + Round(Time*HSpeed)) & UMask;
-	Integer PosY = (VOffset + Round(Time*VSpeed)) & VMask;
+	Int32 PosX = (HOffset + Round(Time*HSpeed)) & UMask;
+	Int32 PosY = (VOffset + Round(Time*VSpeed)) & VMask;
 
-	Byte* Dst = (Byte*)GetData();
-	Byte* Img = (Byte*)Image->GetData();
-	Byte* Gls = (Byte*)Glass->GetData();
+	UInt8* Dst = (UInt8*)GetData();
+	UInt8* Img = (UInt8*)Image->GetData();
+	UInt8* Gls = (UInt8*)Glass->GetData();
 
-	for( Integer V=0; V<VSize; V++ )
+	for( Int32 V=0; V<VSize; V++ )
 	{
-		Byte* DstLine	= &Dst[V << UBits];
-		Byte* ImgLine	= &Img[((V+PosY) & VMask) << UBits];
-		Byte* GlsLine	= &Gls[V << UBits];
+		UInt8* DstLine	= &Dst[V << UBits];
+		UInt8* ImgLine	= &Img[((V+PosY) & VMask) << UBits];
+		UInt8* GlsLine	= &Gls[V << UBits];
 
-		for( Integer U=0; U<USize; U++ )
+		for( Int32 U=0; U<USize; U++ )
 		{
 			DstLine[U]	= ImgLine[(GlsLine[U]+U+PosX) & UMask];
 		}
@@ -2765,7 +2765,7 @@ FHarmonicBitmap::~FHarmonicBitmap()
 //
 // Initialize harmonic bitmap.
 //
-void FHarmonicBitmap::Init( Integer InU, Integer InV )
+void FHarmonicBitmap::Init( Int32 InU, Int32 InV )
 {
 	FDemoBitmap::Init( InU, InV );
 	Direction	= WAVE_Horizontal;
@@ -2790,7 +2790,7 @@ void FHarmonicBitmap::Erase()
 //
 // Harmonic click.
 //
-void FHarmonicBitmap::MouseClick( Integer Button, Integer X, Integer Y )
+void FHarmonicBitmap::MouseClick( Int32 Button, Int32 X, Int32 Y )
 {
 }
 
@@ -2798,10 +2798,10 @@ void FHarmonicBitmap::MouseClick( Integer Button, Integer X, Integer Y )
 //
 // Shift the harmonic.
 //
-void FHarmonicBitmap::MouseMove( Integer Button, Integer X, Integer Y )
+void FHarmonicBitmap::MouseMove( Int32 Button, Int32 X, Int32 Y )
 {
-	static Integer OldX;
-	static Integer OldY;
+	static Int32 OldX;
+	static Int32 OldY;
 
 	if( Button == 1 )
 	{
@@ -2833,7 +2833,7 @@ void FHarmonicBitmap::Redraw()
 			RenderHarmonicV();
 	}
 	else
-		MemZero( GetData(), USize*VSize*sizeof(Byte) );
+		MemZero( GetData(), USize*VSize*sizeof(UInt8) );
 
 	bRedrawn	= true;
 }
@@ -2907,16 +2907,16 @@ void FHarmonicBitmap::Export( CExporterBase& Ex )
 //
 void FHarmonicBitmap::RenderHarmonicV()
 {
-	Byte* Dst	= (Byte*)GetData();
-	Byte* Src	= (Byte*)Image->GetData();
+	UInt8* Dst	= (UInt8*)GetData();
+	UInt8* Src	= (UInt8*)Image->GetData();
 
-	for( Integer U=0; U<USize; U++ )
+	for( Int32 U=0; U<USize; U++ )
 	{
-		Byte*	DstRow	= &Dst[U];
-		Byte*	SrcRow	= &Src[(U+HOffset) & VMask];
-		Integer WaveOff	= VOffset + ((SineTab[(Phase+((U*WaveFreq)>>4)) & 0xff]*WaveAmpl) >> 8);
+		UInt8*	DstRow	= &Dst[U];
+		UInt8*	SrcRow	= &Src[(U+HOffset) & VMask];
+		Int32 WaveOff	= VOffset + ((SineTab[(Phase+((U*WaveFreq)>>4)) & 0xff]*WaveAmpl) >> 8);
 
-		for( Integer V=0; V<VSize; V++ )
+		for( Int32 V=0; V<VSize; V++ )
 		{
 			DstRow[V << UBits]	= SrcRow[((V+WaveOff) & VMask) << UBits];
 		}
@@ -2929,16 +2929,16 @@ void FHarmonicBitmap::RenderHarmonicV()
 //
 void FHarmonicBitmap::RenderHarmonicH()
 {
-	Byte* Dst	= (Byte*)GetData();
-	Byte* Src	= (Byte*)Image->GetData();
+	UInt8* Dst	= (UInt8*)GetData();
+	UInt8* Src	= (UInt8*)Image->GetData();
 
-	for( Integer V=0; V<VSize; V++ )
+	for( Int32 V=0; V<VSize; V++ )
 	{
-		Byte*	DstLine	= &Dst[V << UBits];
-		Byte*	SrcLine	= &Src[((V+VOffset) & VMask) << UBits];
-		Integer WaveOff	= HOffset + ((SineTab[(Phase+((V*WaveFreq)>>4)) & 0xff]*WaveAmpl) >> 8);
+		UInt8*	DstLine	= &Dst[V << UBits];
+		UInt8*	SrcLine	= &Src[((V+VOffset) & VMask) << UBits];
+		Int32 WaveOff	= HOffset + ((SineTab[(Phase+((V*WaveFreq)>>4)) & 0xff]*WaveAmpl) >> 8);
 
-		for( Integer U=0; U<USize; U++ )
+		for( Int32 U=0; U<USize; U++ )
 		{
 			DstLine[U] = SrcLine[(U+WaveOff) & UMask];
 		}

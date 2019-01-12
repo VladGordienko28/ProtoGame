@@ -12,9 +12,9 @@
 //
 // Script fields alignment bounds.
 //
-#if _WIN64
+#if FLU_X64
 	#define SCRIPT_PROP_ALIGN	8
-#elif _WIN32
+#elif FLU_X32
 	#define SCRIPT_PROP_ALIGN	4
 #else 
 	#error Bad platform configuration
@@ -42,7 +42,7 @@ enum EAccessModifier
 //
 // Temporal word variable.
 //
-static Word GTempWord	= 0xCAFE; 
+static UInt16 GTempWord	= 0xCAFE; 
 
 
 //
@@ -82,8 +82,8 @@ public:
 	// Text information.
 	ETokenType		Type;
 	String			Text;
-	Integer			iLine;
-	Integer			iPos;
+	Int32			iLine;
+	Int32			iPos;
 
 	// An information about token
 	// property type.
@@ -92,13 +92,13 @@ public:
 	// Constant values if TOK_Const.
 	union
 	{
-		Byte			cByte;
+		UInt8			cByte;
 		Bool			cBool;
-		Integer			cInteger;
+		Int32			cInteger;
 		Float			cFloat;
 		FResource*		cResource;
 		FEntity*		cEntity;
-		Byte			_Payload[sizeof(TRegister::Value)];
+		UInt8			_Payload[sizeof(TRegister::Value)];
 	};
 	String			cString;
 
@@ -147,7 +147,7 @@ public:
 	// Variables.
 	CTypeInfo	Type;
 	Bool		bLValue;
-	Byte		iReg;
+	UInt8		iReg;
 
 	// Constructor.
 	TExprResult()
@@ -224,7 +224,7 @@ struct TNest
 public:
 	// Variables.
 	ENestType		Type;
-	TArray<Word>	Addrs[REPL_MAX];
+	TArray<UInt16>	Addrs[REPL_MAX];
 };
 
 
@@ -240,7 +240,7 @@ class CFamily
 public:
 	// Variables.
 	String				Name;		// An family name.
-	Integer				iFamily;	// An unique family number.
+	Int32				iFamily;	// An unique family number.
 	TArray<FScript*>	Scripts;	// List of family members.
 	TArray<String>		VFNames;	// List of names of all virtual functions.
 	TArray<CFunction*>	Proto;		// Signature for each function to match, order same as in VFNames.
@@ -302,7 +302,7 @@ public:
 		if( Other->ParmsCount != Params.Num() )
 			return false;
 
-		for( Integer i=0; i<Params.Num(); i++ )
+		for( Int32 i=0; i<Params.Num(); i++ )
 			if( !Params[i].MatchWith(*Other->Locals[i]) )
 				return false;
 
@@ -336,8 +336,8 @@ private:
 	Compiler::TError&					FatalError;	
 
 	// Parsing.
-	Integer								TextLine, TextPos;
-	Integer								PrevLine, PrevPos;
+	Int32								TextLine, TextPos;
+	Int32								PrevLine, PrevPos;
 
 	// General.
 	CObjectDatabase*					Database;
@@ -355,7 +355,7 @@ private:
 	// Second pass variables.
 	CCodeEmitter						Emitter;
 	CBytecode*							Bytecode;
-	Integer								NestTop;
+	Int32								NestTop;
 	TNest								Nest[16];
 	Bool								bValidExpr;
 	Bool								IsStaticScope;
@@ -371,10 +371,10 @@ private:
 	void CompileSecondPass( FScript* InScript );
 
 	// Expression compilation.
-	TExprResult CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool bAllowAssign = false, DWord InPri = 0 );
-	Bool CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, Byte iConReg, TExprResult& Result );
+	TExprResult CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool bAllowAssign = false, UInt32 InPri = 0 );
+	Bool CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, UInt8 iConReg, TExprResult& Result );
 	Bool CompileFuncCastExpr( const TToken& ToType, TExprResult& Result );
-	Byte GetCast( EPropType Src, EPropType Dst );
+	UInt8 GetCast( EPropType Src, EPropType Dst );
 	TExprResult CompileProtoExpr( FScript* Prototype );
 	
 	// Second pass compilation.
@@ -391,12 +391,12 @@ private:
 	// Nest.
 	void PushNest( ENestType InType );
 	void PopNest();
-	void ReplNest( EReplType Repl, Word DestAddr );
+	void ReplNest( EReplType Repl, UInt16 DestAddr );
 
 	// Registers management.
 	void ResetRegs();
-	Byte GetReg();
-	void FreeReg( Byte iReg );
+	UInt8 GetReg();
+	void FreeReg( UInt8 iReg );
 
 	// Declarations compiling.
 	void CompileDeclaration();
@@ -405,14 +405,14 @@ private:
 	void CompileStructDecl();
 	void CompileDelegateDecl();
 	void CompileConstDecl();
-	Bool CompileVarDecl( TArray<CProperty*>& Vars, SizeT& VarsSize, DWord InFlags, Bool bSimpleOnly = false, Bool bDetectFunc = true );
+	Bool CompileVarDecl( TArray<CProperty*>& Vars, SizeT& VarsSize, UInt32 InFlags, Bool bSimpleOnly = false, Bool bDetectFunc = true );
 	void CompileFunctionDecl();
 	void CompileThreadDecl();
 	
 	// Lexical analysis.
 	void GetToken( TToken& T, Bool bAllowNeg = false, Bool bAllowVect = false );
 	void GotoToken( const TToken& T );
-	Integer ReadInteger( const Char* Purpose );
+	Int32 ReadInteger( const Char* Purpose );
 	Float ReadFloat( const Char* Purpose );
 	String ReadString( const Char* Purpose );
 	void RequireIdentifier( const Char* Name, const Char* Purpose );
@@ -432,16 +432,16 @@ private:
 	CFunction* FindFunction( const TArray<CFunction*>& FuncList, String Name );
 	CProperty* FindProperty( const TArray<CProperty*>& List, String Name );
 	TToken* FindConstant( String Name );
-	Integer FindDelegate( String Name );
+	Int32 FindDelegate( String Name );
 	CEnum* FindEnum( FScript* Script, String Name, Bool bOwnOnly = false );
 	CStruct* FindStruct( FScript* Script, String Name, Bool bOwnOnly = false );
 	FScript* FindScript( String Name );
 	CFamily* FindFamily( String Name );
-	Byte FindEnumElement( String Elem );
+	UInt8 FindEnumElement( String Elem );
 	CNativeFunction* FindUnaryOp( String Name, const CTypeInfo& ArgType = TYPE_None );
 	CNativeFunction* FindBinaryOp( String Name, const CTypeInfo& Arg1 = TYPE_None, const CTypeInfo& Arg2 = TYPE_None );
 	CNativeFunction* FindNative( String Name );
-	Integer FindStaticEvent( String Name );
+	Int32 FindStaticEvent( String Name );
 
 	// Miscs.
 	void CollectAllEvents();
@@ -506,7 +506,7 @@ void CCodeEmitter::SerializeData( void* Mem, SizeT Count )
 //
 void CCodeEmitter::SerializeRef( FObject*& Obj )
 {
-	Integer iObj = Obj ? Obj->GetId() : -1;
+	Int32 iObj = Obj ? Obj->GetId() : -1;
 	Serialize( *this, iObj );
 }
 
@@ -518,7 +518,7 @@ static void Serialize( CSerializer& S, EOpCode V )
 {
 	// Force to be byte.
 	assert(S.GetMode() == SM_Save);
-	S.SerializeData( &V, sizeof(Byte) );
+	S.SerializeData( &V, sizeof(UInt8) );
 }
 
 
@@ -529,7 +529,7 @@ static void Serialize( CSerializer& S, EPropType V )
 {
 	// Force to be byte.
 	assert(S.GetMode() == SM_Save);
-	S.SerializeData( &V, sizeof(Byte) );
+	S.SerializeData( &V, sizeof(UInt8) );
 }
 
 
@@ -600,14 +600,14 @@ static void Serialize( CCompiler* Compiler, CSerializer& S, FScript* Owner, TTok
 			if( Const.cResource )
 			{
 				// Add to list.
-				Byte iRes = Owner->ResTable.AddUnique( Const.cResource );
+				UInt8 iRes = Owner->ResTable.AddUnique( Const.cResource );
 				assert(Owner->ResTable.Num() < 256);
 				Serialize( S, iRes );
 			}
 			else
 			{
 				// null resource.
-				Byte iRes = 0xff;
+				UInt8 iRes = 0xff;
 				Serialize( S, iRes );
 			}
 			break;
@@ -620,7 +620,7 @@ static void Serialize( CCompiler* Compiler, CSerializer& S, FScript* Owner, TTok
 			break;
 
 		default:
-			error( L"Unsupported constant type %d", (Byte)Const.TypeInfo.Type );
+			error( L"Unsupported constant type %d", (UInt8)Const.TypeInfo.Type );
 	}
 }
 
@@ -645,7 +645,7 @@ Bool TDelegateInfo::MatchSignature( CFunction* Func ) const
 	if( Func->ResultVar && !Func->ResultVar->MatchWith(ResultType) )
 		return false;
 
-	for( Integer i=0; i<Func->ParmsCount; i++ )
+	for( Int32 i=0; i<Func->ParmsCount; i++ )
 	{
 		if( ParamsType[i].bOut && !(Func->Locals[i]->Flags & PROP_OutParm) )
 			return false;
@@ -687,7 +687,7 @@ CCompiler::CCompiler( CObjectDatabase* InDatabase, TArray<String>& OutWarnings, 
 CCompiler::~CCompiler()
 {
 	// Destroy temporal families list.
-	for( Integer i=0; i<Families.Num(); i++ )
+	for( Int32 i=0; i<Families.Num(); i++ )
 		delete Families[i];
 	Families.Empty();
 }
@@ -716,15 +716,15 @@ Bool CCompiler::CompileAll()
 		// Perform compilation step by step.
 		StoreAllScripts();
 
-		for( Integer i=0; i<Storage.Num(); i++ )
+		for( Int32 i=0; i<Storage.Num(); i++ )
 			ParseHeader( Storage[i].Script );
 
-		for( Integer i=0; i<Storage.Num(); i++ )
+		for( Int32 i=0; i<Storage.Num(); i++ )
 		{
 			CompileFirstPass( Storage[i].Script );
 		}
 
-		for( Integer i=0; i<Storage.Num(); i++ )
+		for( Int32 i=0; i<Storage.Num(); i++ )
 		{
 			CompileSecondPass( Storage[i].Script );
 		}
@@ -732,8 +732,8 @@ Bool CCompiler::CompileAll()
 		RestoreAfterSuccess();
 
 		// Count lines.
-		Integer  NumLines = 0;
-		for( Integer i=0; i<Storage.Num(); i++ )
+		Int32  NumLines = 0;
+		for( Int32 i=0; i<Storage.Num(); i++ )
 			NumLines += Storage[i].Script->Text.Num();
 
 		// Everything ok, so notify and return.
@@ -947,7 +947,7 @@ void CCompiler::CompileSecondPass( FScript* InScript )
 	{
 		assert(Family->VFNames.Num()==Family->Proto.Num());
 		Script->VFTable.SetNum( Family->VFNames.Num() );
-		for( Integer i=0; i<Script->VFTable.Num(); i++ )
+		for( Int32 i=0; i<Script->VFTable.Num(); i++ )
 			Script->VFTable[i] = FindFunction( Script->Methods, Family->VFNames[i] );
 	}
 	else
@@ -956,11 +956,11 @@ void CCompiler::CompileSecondPass( FScript* InScript )
 	// Fill list of events.
 	Script->Events.Empty();
 	Script->Events.SetNum(_EVENT_MAX);
-	for( Integer i=0; i<Script->Methods.Num(); i++ )
+	for( Int32 i=0; i<Script->Methods.Num(); i++ )
 		if( Script->Methods[i]->Flags & FUNC_Event )
 		{ 
 			CFunction*	Func	= Script->Methods[i];
-			Integer		iEvent	= FindStaticEvent(Func->Name);
+			Int32		iEvent	= FindStaticEvent(Func->Name);
 			assert(iEvent != -1);
 			Script->Events[iEvent]	= Func;
 		}
@@ -980,11 +980,11 @@ void CCompiler::CompileSecondPass( FScript* InScript )
 
 	// Compile all functions.
 	IsStaticScope = false;
-	for( Integer i=0; i<Script->Methods.Num(); i++ )
+	for( Int32 i=0; i<Script->Methods.Num(); i++ )
 		CompileCode( Script->Methods[i] );
 
 	IsStaticScope = true;
-	for( Integer i=0; i<Script->StaticFunctions.Num(); i++ )
+	for( Int32 i=0; i<Script->StaticFunctions.Num(); i++ )
 		CompileCode( Script->StaticFunctions[i] );
 }
 
@@ -1055,7 +1055,7 @@ if( lval.bLValue )\
 	}\
 	else\
 	{\
-		Byte VarSize = lval.Type.TypeSize(true);\
+		UInt8 VarSize = lval.Type.TypeSize(true);\
 		emit( CODE_LToR );\
 		emit( lval.iReg );\
 		emit( VarSize );\
@@ -1077,7 +1077,7 @@ if( lval.bLValue )\
 		emit( lside.iReg );\
 		emit( rside.iReg );\
 	}\
-	else if( lside.Type.TypeSize(true) == sizeof(DWord) )\
+	else if( lside.Type.TypeSize(true) == sizeof(UInt32) )\
 	{\
 		emit( CODE_AssignDWord );\
 		emit( lside.iReg );\
@@ -1085,7 +1085,7 @@ if( lval.bLValue )\
 	}\
 	else\
 	{\
-		Byte VarSize = lside.Type.TypeSize(true);\
+		UInt8 VarSize = lside.Type.TypeSize(true);\
 		emit( CODE_Assign );\
 		emit( lside.iReg );\
 		emit( rside.iReg );\
@@ -1099,7 +1099,7 @@ if( lval.bLValue )\
 //
 #define emit_opcode( iopcode )\
 {\
-	Byte code = (Byte)iopcode;\
+	UInt8 code = (UInt8)iopcode;\
 	emit(code);\
 }\
 
@@ -1115,12 +1115,12 @@ if( lval.bLValue )\
 //	bAllowAssign	- Whether allow assignment in expression.
 //	InPri			- Binary operator priority, don't touch it, use just 0.
 //
-TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool bAllowAssign, DWord InPri )
+TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool bAllowAssign, UInt32 InPri )
 {
 	// Scrap.
 	CProperty*			Prop;
 	TToken*				Const;
-	Byte				iEnumEl;
+	UInt8				iEnumEl;
 	CNativeFunction*	Native;
 	FScript*			CastScript;
 	CFamily*			CastFamily;
@@ -1167,8 +1167,8 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 	else if( T.Text == KW_assert )
 	{
 		// Assertion.
-		Word Line = TextLine + 1;
-		Byte iReg = CompileExpr( TYPE_Bool, true, false, 0 ).iReg;
+		UInt16 Line = TextLine + 1;
+		UInt8 iReg = CompileExpr( TYPE_Bool, true, false, 0 ).iReg;
 
 		emit( CODE_Assert );
 		emit( Line );
@@ -1196,7 +1196,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 		// Parse each arg.
 		do
 		{
-			Integer i = String::Pos( L"%", Text );
+			Int32 i = String::Pos( L"%", Text );
 			if( i == -1 )
 				break;
 
@@ -1267,7 +1267,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 		emit( CODE_Log );
 		SerializeEnum( Emitter, Severity );
 		emit( Fmt );
-		for( Integer i=0; i<Args.Num(); i++ )
+		for( Int32 i=0; i<Args.Num(); i++ )
 		{
 			emit( Args[i].Type.Type );
 			emit( Args[i].iReg );
@@ -1298,7 +1298,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 			ScriptExpr.Type.iFamily	= Known->iFamily;
 
 			emit( CODE_ConstResource );
-			Byte iRes = Script->ResTable.AddUnique( Known );
+			UInt8 iRes = Script->ResTable.AddUnique( Known );
 			assert(Script->ResTable.Num() < 256);
 			emit( iRes );
 			emit( ScriptExpr.iReg );
@@ -1390,7 +1390,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 			Error( L"Labels doesn't allowed, without thread" );
 
 		String LabName = GetIdentifier( L"label" );
-		Integer iLabel = Script->Thread->GetLabelId( *LabName );
+		Int32 iLabel = Script->Thread->GetLabelId( *LabName );
 
 		if( iLabel == -1 )
 			Error( L"Label '@%s' not found", *LabName );
@@ -1416,7 +1416,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 		ExprRes.iReg		= GetReg();
 		ExprRes.Type		= *Prop;
 
-		Word Offset	= Prop->Offset;
+		UInt16 Offset	= Prop->Offset;
 
 		emit( CODE_LocalVar );
 		emit( ExprRes.iReg );
@@ -1429,7 +1429,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 		ExprRes.iReg		= GetReg();
 		ExprRes.Type		= *Prop;
 
-		Word Offset	= Prop->Offset;
+		UInt16 Offset	= Prop->Offset;
 
 		emit( CODE_StaticProperty );
 		emit( Script );
@@ -1471,7 +1471,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 			if( Native->Params[0].Type.Type != Arg.Type.Type )	// It's ok, since it's a simple types.
 			{
 				// Add cast.
-				Byte Cast = GetCast( Arg.Type.Type, Native->Params[0].Type.Type );
+				UInt8 Cast = GetCast( Arg.Type.Type, Native->Params[0].Type.Type );
 				assert(Cast != 0x00);
 
 				emit( Cast );
@@ -1489,13 +1489,13 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 	else if( Native = FindNative(T.Text) )
 	{
 		// Native function call.
-		TArray<Byte>	ArgRegs;
+		TArray<UInt8>	ArgRegs;
 
 		if( Native->Flags & NFUN_Foreach )
 			Error( L"Iteration function '%s' is not allowed here", *Native->Name );
 
 		RequireSymbol( L"(", L"function call" );
-		for( Integer i=0; i<Native->NumParams; i++ )
+		for( Int32 i=0; i<Native->NumParams; i++ )
 		{
 			ArgRegs.Push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
 			if( i < Native->NumParams-1 )
@@ -1506,7 +1506,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 		if (Native->Flags & NFUN_Extended)
 		{
 			// Emit as extended.
-			Word iExtended = CClassDatabase::GFuncs.FindItem(Native);
+			UInt16 iExtended = CClassDatabase::GFuncs.FindItem(Native);
 
 			emit_opcode(CODE_CallExtended);
 			emit(iExtended);
@@ -1517,7 +1517,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 			emit_opcode( Native->iOpCode );
 		}
 
-		for( Integer i=0; i<ArgRegs.Num(); i++ )
+		for( Int32 i=0; i<ArgRegs.Num(); i++ )
 		{
 			emit( ArgRegs[i] );
 			FreeReg( ArgRegs[i] );
@@ -1544,10 +1544,10 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 	else if( Function = FindFunction( Script->StaticFunctions, T.Text ) )
 	{
 		// An own static function call.
-		TArray<Byte>	ArgRegs;
+		TArray<UInt8>	ArgRegs;
 
 		RequireSymbol( L"(", L"function call" );
-		for( Integer i=0; i<Function->ParmsCount; i++ )
+		for( Int32 i=0; i<Function->ParmsCount; i++ )
 		{
 			ArgRegs.Push( CompileExpr( Function->Locals[i]->Type, true, false, 0 ).iReg );
 			if( i < Function->ParmsCount-1 )
@@ -1555,15 +1555,15 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 		}
 		RequireSymbol( L")", L"function call" );
 
-		Integer iStatic = Script->StaticFunctions.FindItem(Function);
+		Int32 iStatic = Script->StaticFunctions.FindItem(Function);
 		assert(iStatic != -1 && iStatic <= 255);
-		Byte Tmp = iStatic;
+		UInt8 Tmp = iStatic;
 
 		emit( CODE_CallStatic );
 		emit( Script );
 		emit( Tmp );
 
-		for( Integer i=0; i<ArgRegs.Num(); i++ )
+		for( Int32 i=0; i<ArgRegs.Num(); i++ )
 		{
 			emit( ArgRegs[i] );
 			FreeReg( ArgRegs[i] );
@@ -1612,7 +1612,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 					ExprRes.iReg		= GetReg();
 					ExprRes.Type		= *Prop;
 
-					Word Offset	= Prop->Offset;
+					UInt16 Offset	= Prop->Offset;
 
 					emit( CODE_StaticProperty );
 					emit( CastScript );
@@ -1622,10 +1622,10 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 				else if( Function = FindFunction( CastScript->StaticFunctions, StaticName ) )
 				{
 					// An own static function call.
-					TArray<Byte>	ArgRegs;
+					TArray<UInt8>	ArgRegs;
 
 					RequireSymbol( L"(", L"function call" );
-					for( Integer i=0; i<Function->ParmsCount; i++ )
+					for( Int32 i=0; i<Function->ParmsCount; i++ )
 					{
 						ArgRegs.Push( CompileExpr( Function->Locals[i]->Type, true, false, 0 ).iReg );
 						if( i < Function->ParmsCount-1 )
@@ -1633,15 +1633,15 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 					}
 					RequireSymbol( L")", L"function call" );
 
-					Integer iStatic = CastScript->StaticFunctions.FindItem(Function);
+					Int32 iStatic = CastScript->StaticFunctions.FindItem(Function);
 					assert(iStatic != -1 && iStatic <= 255);
-					Byte Tmp = iStatic;
+					UInt8 Tmp = iStatic;
 
 					emit( CODE_CallStatic );
 					emit( CastScript );
 					emit( Tmp );
 
-					for( Integer i=0; i<ArgRegs.Num(); i++ )
+					for( Int32 i=0; i<ArgRegs.Num(); i++ )
 					{
 						emit( ArgRegs[i] );
 						FreeReg( ArgRegs[i] );
@@ -1768,7 +1768,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 				RequireSymbol( L"]", L"array index" );
 
 				CTypeInfo Elem( ExprRes.Type.Type, 1, ExprRes.Type.Inner );
-				Byte InnerSize	= Elem.TypeSize(true);
+				UInt8 InnerSize	= Elem.TypeSize(true);
 
 				emit( CODE_DynArrayElem );
 				emit( ExprRes.iReg );
@@ -1792,8 +1792,8 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 				TExprResult Index = CompileExpr( TYPE_Integer, true, false, 0 );
 				RequireSymbol( L"]", L"array index" );
 
-				Byte InnerSize	= ExprRes.Type.TypeSize(true);
-				Byte ArrSize	= ExprRes.Type.ArrayDim;
+				UInt8 InnerSize	= ExprRes.Type.TypeSize(true);
+				UInt8 ArrSize	= ExprRes.Type.ArrayDim;
 				emit( CODE_ArrayElem );
 				emit( ExprRes.iReg );
 				emit( Index.iReg );
@@ -1846,7 +1846,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 						TExprResult NewLength = CompileExpr( TYPE_Integer, true, false, 0 );
 
 						CTypeInfo Elem( ExprRes.Type.Type, 1, ExprRes.Type.Inner );
-						Byte InnerSize	= Elem.Type != TYPE_String ? Elem.TypeSize(true) : 0;
+						UInt8 InnerSize	= Elem.Type != TYPE_String ? Elem.TypeSize(true) : 0;
 
 						emit(CODE_DynSetLength);
 						emit(ExprRes.iReg);
@@ -1873,7 +1873,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 				{
 					// Push a new item to array.
 					CTypeInfo Inner( ExprRes.Type.Type, 1, ExprRes.Type.Inner );
-					Byte InnerSize = Inner.Type != TYPE_String ? Inner.TypeSize() : 0;
+					UInt8 InnerSize = Inner.Type != TYPE_String ? Inner.TypeSize() : 0;
 
 					RequireSymbol(L"(", L"push");
 					TExprResult NewElem = CompileExpr( Inner, true, false, 0 );
@@ -1894,7 +1894,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 				{
 					// Pop item from array.
 					CTypeInfo Inner( ExprRes.Type.Type, 1, ExprRes.Type.Inner );
-					Byte InnerSize = Inner.Type != TYPE_String ? Inner.TypeSize() : 0;
+					UInt8 InnerSize = Inner.Type != TYPE_String ? Inner.TypeSize() : 0;
 
 					RequireSymbol( L"(", L"pop" );
 					RequireSymbol( L")", L"pop" );
@@ -1916,7 +1916,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 					RequireSymbol(L")", L"remove");
 
 					CTypeInfo Inner( ExprRes.Type.Type, 1, ExprRes.Type.Inner );
-					Byte InnerSize = Inner.Type != TYPE_String ? Inner.TypeSize() : 0;
+					UInt8 InnerSize = Inner.Type != TYPE_String ? Inner.TypeSize() : 0;
 
 					emit( CODE_DynRemove );
 					emit( ExprRes.iReg );
@@ -1940,7 +1940,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 				if( !Member )
 					Error( L"'%s' is not a struct member", *MemberName );
 
-				Byte Offset = Member->Offset; 
+				UInt8 Offset = Member->Offset; 
 
 				ExprRes.Type	= *Member;
 				ExprRes.bLValue	= true;
@@ -1952,7 +1952,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 			{
 				// Vector member.
 				String Elem = String::LowerCase(GetIdentifier( L"vector member" ));
-				Byte Offset = 0xff;
+				UInt8 Offset = 0xff;
 				Offset = Elem == L"x" ? PROPERTY_OFFSET(TVector, X) : Elem == L"y" ? PROPERTY_OFFSET(TVector, Y) : 0xff;
 				if( Offset == 0xff )
 					Error( L"Unknown vector member '%s'", *Elem );
@@ -1965,7 +1965,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 			{
 				// TRect member.
 				String Elem = String::LowerCase(GetIdentifier( L"aabb member" ));
-				Byte Offset = 0xff;
+				UInt8 Offset = 0xff;
 				Offset = Elem == L"min" ? PROPERTY_OFFSET(TRect, Min) : Elem == L"max" ? PROPERTY_OFFSET(TRect, Max) : 0xff;
 				if( Offset == 0xff )
 					Error( L"Unknown aabb member '%s'", *Elem );
@@ -1978,7 +1978,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 			{
 				// Color member.
 				String Elem = String::LowerCase(GetIdentifier( L"color member" ));
-				Byte Offset = 0xff;
+				UInt8 Offset = 0xff;
 				Offset =	Elem == L"r" ? PROPERTY_OFFSET(TColor, R) : 
 							Elem == L"g" ? PROPERTY_OFFSET(TColor, G) :  
 							Elem == L"b" ? PROPERTY_OFFSET(TColor, B) : 
@@ -2005,7 +2005,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 					if( !(Prop->Flags & PROP_Editable) )
 						Error( L"Property '%s' is not editable", *MemberName );
 
-						Word Offset = Prop->Offset;
+						UInt16 Offset = Prop->Offset;
 						emit_ltor( ExprRes );
 						emit( CODE_ResourceProperty );
 						emit( ExprRes.iReg );
@@ -2027,11 +2027,11 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 				else if( CNativeFunction* Native = ExprRes.Type.Class->FindMethod(*MemberName) )
 				{
 					// Resource method.
-					Word iNative = CClassDatabase::GFuncs.FindItem( Native );
-					TArray<Byte> ArgRegs;
+					UInt16 iNative = CClassDatabase::GFuncs.FindItem( Native );
+					TArray<UInt8> ArgRegs;
 
 					RequireSymbol( L"(", L"resource native method" );
-					for( Integer i=0; i<Native->NumParams; i++ )
+					for( Int32 i=0; i<Native->NumParams; i++ )
 					{
 						ArgRegs.Push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
 
@@ -2044,7 +2044,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 					emit( CODE_ResourceMethod );
 					emit( ExprRes.iReg );
 					emit( iNative );
-					for( Integer i=0; i<ArgRegs.Num(); i++ )
+					for( Int32 i=0; i<ArgRegs.Num(); i++ )
 					{
 						emit( ArgRegs[i] );
 						FreeReg( ArgRegs[i] );
@@ -2151,7 +2151,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 					if( !Info.MatchSignature(Func) )
 						Error( L"Signatures of delegate and function are mismatched" );
 
-					Integer iFunc = Script->Methods.FindItem(Func);
+					Int32 iFunc = Script->Methods.FindItem(Func);
 					assert(iFunc != -1);
 					emit(CODE_DelegateCnstr);
 					emit(ExprRes.iReg);
@@ -2192,12 +2192,12 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 	if( ExprRes.Type.Type == TYPE_Delegate && MatchSymbol(L"(") )
 	{
 		emit_ltor(ExprRes);
-		TArray<Byte>	ArgRegs;
+		TArray<UInt8>	ArgRegs;
 
 		assert(ExprRes.Type.iSignature != -1);
 		TDelegateInfo& Info = DelegatesInfo[ExprRes.Type.iSignature];
 
-		for( Integer i=0; i<Info.ParamsType.Num(); i++ )
+		for( Int32 i=0; i<Info.ParamsType.Num(); i++ )
 		{
 			TDelegateInfo::CParameter& P = Info.ParamsType[i];
 
@@ -2223,7 +2223,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 		emit( CODE_CallDelegate );
 		emit( ExprRes.iReg );
 
-		for( Integer i=0; i<ArgRegs.Num(); i++ )
+		for( Int32 i=0; i<ArgRegs.Num(); i++ )
 		{
 			emit( ArgRegs[i] );
 			FreeReg( ArgRegs[i] );
@@ -2309,7 +2309,7 @@ OperLoop:
 		emit_ltor( ExprRes );
 
 		TExprResult Other = CompileExpr( ExprRes.Type, true, false, 7 );
-		Byte VarSize = ExprRes.Type.Type == TYPE_String ? 0 : ExprRes.Type.TypeSize(true);
+		UInt8 VarSize = ExprRes.Type.Type == TYPE_String ? 0 : ExprRes.Type.TypeSize(true);
 
 		emit( T.Text == L"==" ? CODE_Equal : CODE_NotEqual );
 		emit( ExprRes.iReg );
@@ -2325,7 +2325,7 @@ OperLoop:
 	{
 		// Short circuit operators.
 		Bool	bAnd	= T.Text == L"&&";
-		Integer Prior	= bAnd ? 3 : 2;
+		Int32 Prior	= bAnd ? 3 : 2;
 
 		if( ExprRes.Type.Type != TYPE_Bool || ExprRes.Type.ArrayDim != 1 )
 			Error( L"Bool type expected in '%s' operator", *T.Text );
@@ -2335,7 +2335,7 @@ OperLoop:
 		if( bAnd )
 		{
 			// Logical 'and'.
-			Word DstExpr1, DstExpr2, DstOut;
+			UInt16 DstExpr1, DstExpr2, DstOut;
 			TExprResult Result;
 			Result.bLValue			= false;
 			Result.iReg				= GetReg();
@@ -2363,8 +2363,8 @@ OperLoop:
 			DstOut	= Emitter.Tell();
 			emit( GTempWord );
 
-			*(Word*)&Bytecode->Code[DstExpr1]	= Emitter.Tell();
-			*(Word*)&Bytecode->Code[DstExpr2]	= Emitter.Tell();
+			*(UInt16*)&Bytecode->Code[DstExpr1]	= Emitter.Tell();
+			*(UInt16*)&Bytecode->Code[DstExpr2]	= Emitter.Tell();
 
 			// Emit false.
 			Bool bFalse = false;
@@ -2372,7 +2372,7 @@ OperLoop:
 			emit( bFalse );
 			emit( Result.iReg );
 
-			*(Word*)&Bytecode->Code[DstOut]	= Emitter.Tell();
+			*(UInt16*)&Bytecode->Code[DstOut]	= Emitter.Tell();
 
 			FreeReg( ExprRes.iReg );
 			FreeReg( Second.iReg );
@@ -2381,7 +2381,7 @@ OperLoop:
 		else
 		{
 			// Logical 'or'.
-			Word DstOut1, DstOut2, DstExpr2, DstZr;
+			UInt16 DstOut1, DstOut2, DstExpr2, DstZr;
 			Bool bTrue = true, bFalse = false;
 			TExprResult Result;
 			Result.bLValue			= false;
@@ -2401,7 +2401,7 @@ OperLoop:
 			DstOut1		= Emitter.Tell();
 			emit( GTempWord );
 
-			*(Word*)&Bytecode->Code[DstExpr2]	= Emitter.Tell();
+			*(UInt16*)&Bytecode->Code[DstExpr2]	= Emitter.Tell();
 			TExprResult Second = CompileExpr( TYPE_Bool, true, false, Prior );
 
 			emit( CODE_JumpZero );
@@ -2417,13 +2417,13 @@ OperLoop:
 			DstOut2		= Emitter.Tell();
 			emit( GTempWord );
 
-			*(Word*)&Bytecode->Code[DstZr]	= Emitter.Tell();
+			*(UInt16*)&Bytecode->Code[DstZr]	= Emitter.Tell();
 			emit( CODE_ConstBool );
 			emit( bFalse );
 			emit( Result.iReg );
 
-			*(Word*)&Bytecode->Code[DstOut1]	= Emitter.Tell();
-			*(Word*)&Bytecode->Code[DstOut2]	= Emitter.Tell();
+			*(UInt16*)&Bytecode->Code[DstOut1]	= Emitter.Tell();
+			*(UInt16*)&Bytecode->Code[DstOut2]	= Emitter.Tell();
 
 			FreeReg( ExprRes.iReg );
 			FreeReg( Second.iReg );
@@ -2463,7 +2463,7 @@ OperLoop:
 				// Cast second if any.
 				if( Second.Type.Type != Oper->Params[1].Type.Type )
 				{
-					Byte Cast = GetCast( Second.Type.Type, Oper->Params[0].Type.Type );
+					UInt8 Cast = GetCast( Second.Type.Type, Oper->Params[0].Type.Type );
 					emit( Cast );
 					emit( Second.iReg );
 				}
@@ -2487,13 +2487,13 @@ OperLoop:
 				// Apply cast if any.
 				if( ExprRes.Type.Type != Oper->Params[0].Type.Type )
 				{
-					Byte Cast = GetCast( ExprRes.Type.Type, Oper->Params[0].Type.Type );
+					UInt8 Cast = GetCast( ExprRes.Type.Type, Oper->Params[0].Type.Type );
 					emit( Cast );
 					emit( ExprRes.iReg );
 				}
 				if( Second.Type.Type != Oper->Params[1].Type.Type )
 				{
-					Byte Cast = GetCast( Second.Type.Type, Oper->Params[0].Type.Type );
+					UInt8 Cast = GetCast( Second.Type.Type, Oper->Params[0].Type.Type );
 					emit( Cast );
 					emit( Second.iReg );
 				}
@@ -2529,7 +2529,7 @@ OperLoop:
 		if( ExprRes.Type.Type != TYPE_Bool || ExprRes.Type.ArrayDim != 1 )
 			Error( L"Bool type expected in '?' operator" );
 
-		Word DstExpr2, DstOut;
+		UInt16 DstExpr2, DstOut;
 
 		emit( CODE_JumpZero );
 		DstExpr2		= Emitter.Tell();
@@ -2545,10 +2545,10 @@ OperLoop:
 		emit( GTempWord );
 
 		RequireSymbol( L":", L"ternary operator" );
-		*(Word*)&Bytecode->Code[DstExpr2]	= Emitter.Tell();
+		*(UInt16*)&Bytecode->Code[DstExpr2]	= Emitter.Tell();
 		TExprResult Second = CompileExpr( First.Type, true, false, 0 );
 
-		*(Word*)&Bytecode->Code[DstOut]	= Emitter.Tell();
+		*(UInt16*)&Bytecode->Code[DstOut]	= Emitter.Tell();
 
 		TExprResult Result;
 		Result.bLValue		= false;
@@ -2594,7 +2594,7 @@ OperLoop:
 		emit_ltor( ExprRes );
 		
 		// Try to apply implicit typecast.
-		Byte Cast = GetCast( ExprRes.Type.Type, ReqType.Type );
+		UInt8 Cast = GetCast( ExprRes.Type.Type, ReqType.Type );
 
 		if( Cast != 0x00 )
 		{
@@ -2656,7 +2656,7 @@ Bool CCompiler::CompileFuncCastExpr( const TToken& ToType, TExprResult& Result )
 	}
 
 	// Matrix of typecast.
-	Byte CastMatrix[TYPE_MAX/* SourceType */][TYPE_MAX/* DestinationType */] =
+	UInt8 CastMatrix[TYPE_MAX/* SourceType */][TYPE_MAX/* DestinationType */] =
 	{
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, // TYPE_None;
 		{0, 0, CAST_ByteToBool, CAST_ByteToInteger, CAST_ByteToFloat, 0, 0, CAST_ByteToString, 0, 0, 0, 0, 0, 0}, // TYPE_Byte;
@@ -2674,7 +2674,7 @@ Bool CCompiler::CompileFuncCastExpr( const TToken& ToType, TExprResult& Result )
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0} // TYPE_Struct;
 	};
 
-	Byte OpCode = CastMatrix[SourceValue.Type.Type][DestType.Type];
+	UInt8 OpCode = CastMatrix[SourceValue.Type.Type][DestType.Type];
 	if( OpCode == 0 )
 	{
 		Error( L"'%s' cannot be converted to '%s'", *SourceValue.Type.TypeName(), *DestType.TypeName() );
@@ -2708,8 +2708,8 @@ TExprResult CCompiler::CompileProtoExpr( FScript* Prototype )
 	if( Property = FindProperty( Prototype->Properties, T.Text ) )
 	{
 		// Instance buffer value.
-		Byte iSource	= 0xff;
-		Word Offset		= Property->Offset;
+		UInt8 iSource	= 0xff;
+		UInt16 Offset	= Property->Offset;
 
 		Result.bLValue	= true;
 		Result.iReg		= GetReg();
@@ -2728,8 +2728,8 @@ TExprResult CCompiler::CompileProtoExpr( FScript* Prototype )
 	else if( Property = Prototype->Base->GetClass()->FindProperty(*T.Text) )
 	{
 		// Base property.
-		Byte iSource	= 0xfe;
-		Word Offset		= Property->Offset;
+		UInt8 iSource	= 0xfe;
+		UInt16 Offset	= Property->Offset;
 
 		Result.bLValue	= true;
 		Result.iReg		= GetReg();
@@ -2749,7 +2749,7 @@ TExprResult CCompiler::CompileProtoExpr( FScript* Prototype )
 	{
 		// Component property.
 		FComponent* Component;
-		Byte iSource = 0xfe;
+		UInt8 iSource = 0xfe;
 		if( T.Text == L"$" )
 		{
 			// Extra component.
@@ -2772,7 +2772,7 @@ TExprResult CCompiler::CompileProtoExpr( FScript* Prototype )
 
 		if( Property = Class->FindProperty(*Field) )
 		{
-			Word Offset		= Property->Offset;
+			UInt16 Offset		= Property->Offset;
 
 			Result.bLValue	= true;
 			Result.iReg		= GetReg();
@@ -2833,7 +2833,7 @@ else\
 //	- iConReg: index of entity context register, if 'this' use 0xff.
 //	- Result: gotten result type, it also possible TYPE_None in functions.
 //
-Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, Byte iConReg, TExprResult& Result )
+Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, UInt8 iConReg, TExprResult& Result )
 {
 #if 0
 	// Does we have something to start with?
@@ -2861,7 +2861,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, B
 		{
 			// An base property from the entity context. 
 			// Kinda of symbiosis.
-			Word Offset		= Property->Offset;
+			UInt16 Offset		= Property->Offset;
 
 			Result.bLValue	= true;
 			Result.iReg		= GetReg();
@@ -2887,11 +2887,11 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, B
 		else if( Native = FBaseComponent::MetaClass->FindMethod(*T.Text) )
 		{
 			// Native method call from base component.
-			Word iNative = CClassDatabase::GFuncs.FindItem( Native );
-			TArray<Byte> ArgRegs;
+			UInt16 iNative = CClassDatabase::GFuncs.FindItem( Native );
+			TArray<UInt8> ArgRegs;
 
 			RequireSymbol( L"(", L"native method" );
-			for( Integer i=0; i<Native->NumParams; i++ )
+			for( Int32 i=0; i<Native->NumParams; i++ )
 			{
 				ArgRegs.Push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
 
@@ -2903,7 +2903,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, B
 			emit_context( InContext, iConReg );
 			emit( CODE_BaseMethod );
 			emit( iNative );
-			for( Integer i=0; i<ArgRegs.Num(); i++ )
+			for( Int32 i=0; i<ArgRegs.Num(); i++ )
 			{
 				emit( ArgRegs[i] );
 				FreeReg( ArgRegs[i] );
@@ -2938,7 +2938,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, B
 
 	// Grab a token to recognize and store code location
 	// for rollback in case of failure.
-	Word CodeStart = Emitter.Tell();
+	UInt16 CodeStart = Emitter.Tell();
 	TToken T;
 	GetToken( T, false, false );
 	/*
@@ -2972,7 +2972,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, B
 	CProperty* Property;
 	CFunction* Function;
 	CNativeFunction*	Native;
-	Integer	 iUnified;
+	Int32	 iUnified;
 
 	if( ConScript && (Property = FindProperty( ConScript->Properties, T.Text )) )
 	{
@@ -2983,7 +2983,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, B
 
 		emit_context( InContext, iConReg );
 
-		Word Offset	= Property->Offset;
+		UInt16 Offset	= Property->Offset;
 		emit( CODE_EntityProperty );
 		emit( Result.iReg );
 		emit( Offset );
@@ -2994,7 +2994,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, B
 	{
 		// An base property from the entity context. 
 		// Kinda of symbiosis.
-		Word Offset		= Property->Offset;
+		UInt16 Offset		= Property->Offset;
 
 		Result.bLValue	= true;
 		Result.iReg		= GetReg();
@@ -3021,11 +3021,11 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, B
 	{
 		// An script function, doesn't matter it regular or unified cause
 		// we know actual script!
-		Byte			iFunc = ConScript->Methods.FindItem(Function);
-		TArray<Byte>	ArgRegs;
+		UInt8			iFunc = ConScript->Methods.FindItem(Function);
+		TArray<UInt8>	ArgRegs;
 
 		RequireSymbol( L"(", L"method call" );
-		for( Integer i=0; i<Function->ParmsCount; i++ )
+		for( Int32 i=0; i<Function->ParmsCount; i++ )
 		{
 			CProperty* Param = Function->Locals[i];
 
@@ -3052,7 +3052,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, B
 		emit( CODE_CallMethod );
 		emit( iFunc );
 
-		for( Integer i=0; i<ArgRegs.Num(); i++ )
+		for( Int32 i=0; i<ArgRegs.Num(); i++ )
 		{
 			emit( ArgRegs[i] );
 			FreeReg( ArgRegs[i] );
@@ -3080,11 +3080,11 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, B
 	else if( ConScript && (Native = ConScript->Base->GetClass()->FindMethod(*T.Text)) )
 	{
 		// Native method call from base component.
-		Word iNative = CClassDatabase::GFuncs.FindItem( Native );
-		TArray<Byte> ArgRegs;
+		UInt16 iNative = CClassDatabase::GFuncs.FindItem( Native );
+		TArray<UInt8> ArgRegs;
 
 		RequireSymbol( L"(", L"native method" );
-		for( Integer i=0; i<Native->NumParams; i++ )
+		for( Int32 i=0; i<Native->NumParams; i++ )
 		{
 			ArgRegs.Push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
 
@@ -3096,7 +3096,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, B
 		emit_context( InContext, iConReg );
 		emit( CODE_BaseMethod );
 		emit( iNative );
-		for( Integer i=0; i<ArgRegs.Num(); i++ )
+		for( Int32 i=0; i<ArgRegs.Num(); i++ )
 		{
 			emit( ArgRegs[i] );
 			FreeReg( ArgRegs[i] );
@@ -3125,11 +3125,11 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, B
 	{
 		// VF function call.
 		CFunction*		Proto = ConFamily->Proto[iUnified];
-		Byte			Index = iUnified;
-		TArray<Byte>	ArgRegs;
+		UInt8			Index = iUnified;
+		TArray<UInt8>	ArgRegs;
 
 		RequireSymbol( L"(", L"method call" );
-		for( Integer i=0; i<Proto->ParmsCount; i++ )
+		for( Int32 i=0; i<Proto->ParmsCount; i++ )
 		{
 			ArgRegs.Push( CompileExpr( *Proto->Locals[i], true, false, 0 ).iReg );
 
@@ -3142,7 +3142,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, B
 		emit( CODE_CallVF );
 		emit( Index );
 
-		for( Integer i=0; i<ArgRegs.Num(); i++ )
+		for( Int32 i=0; i<ArgRegs.Num(); i++ )
 		{
 			emit( ArgRegs[i] );
 			FreeReg( ArgRegs[i] );
@@ -3171,7 +3171,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, B
 	{
 		// Component property or method call.
 		FComponent* Component;
-		Byte iCompon = 0xff;
+		UInt8 iCompon = 0xff;
 		if( T.Text == L"$" )
 		{
 			// Extra component.
@@ -3197,7 +3197,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, B
 		if( Property = Class->FindProperty(*Field) )
 		{
 			// Component property.
-			Word Offset		= Property->Offset;
+			UInt16 Offset		= Property->Offset;
 
 			Result.bLValue	= true;
 			Result.iReg		= GetReg();
@@ -3229,11 +3229,11 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, B
 		else if( Native = Class->FindMethod(*Field) )
 		{
 			// Native function call.
-			Word iNative = CClassDatabase::GFuncs.FindItem( Native );
-			TArray<Byte> ArgRegs;
+			UInt16 iNative = CClassDatabase::GFuncs.FindItem( Native );
+			TArray<UInt8> ArgRegs;
 
 			RequireSymbol( L"(", L"native method" );
-			for( Integer i=0; i<Native->NumParams; i++ )
+			for( Int32 i=0; i<Native->NumParams; i++ )
 			{
 				ArgRegs.Push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg  );
 				if( i < Native->NumParams-1 )
@@ -3254,7 +3254,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, B
 				emit( iCompon );
 			}
 
-			for( Integer i=0; i<ArgRegs.Num(); i++ )
+			for( Int32 i=0; i<ArgRegs.Num(); i++ )
 			{
 				emit( ArgRegs[i] );
 				FreeReg( ArgRegs[i] );
@@ -3296,7 +3296,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, B
 // Get implicit cast code, if types are matched or no cast return
 // 0x00, otherwise return code of cast.
 //
-Byte CCompiler::GetCast( EPropType Src, EPropType Dst )
+UInt8 CCompiler::GetCast( EPropType Src, EPropType Dst )
 {
 	if( Src == TYPE_Byte	&& Dst == TYPE_Integer )
 			return CAST_ByteToInteger;
@@ -3395,7 +3395,7 @@ void CCompiler::CompileStatement()
 
 			CThreadCode* Thread = (CThreadCode*)Bytecode;
 			String Name	= GetIdentifier( L"thread label" );
-			Integer iLabel;
+			Int32 iLabel;
 
 			if( (iLabel = Thread->GetLabelId(*Name)) == -1 )
 				Error( L"Label '%s' not found", *Name );
@@ -3442,13 +3442,13 @@ void CCompiler::CompileIf()
 	assert(MatchIdentifier(KW_if));
 	PushNest(NEST_If);
 
-	Word DstElse;
+	UInt16 DstElse;
 
 	// Logical condition.
 	RequireSymbol( L"(", L"if" );
 	{
 		ResetRegs();
-		Byte iReg = CompileExpr( TYPE_Bool, true, false, 0 ).iReg;
+		UInt8 iReg = CompileExpr( TYPE_Bool, true, false, 0 ).iReg;
 
 		// Emit header.
 		emit( CODE_JumpZero );
@@ -3466,17 +3466,17 @@ void CCompiler::CompileIf()
 	{
 		// With 'else'.
 		emit( CODE_Jump );
-		Word DstEnd	= Emitter.Tell();
+		UInt16 DstEnd	= Emitter.Tell();
 		emit( GTempWord );
 
-		*(Word*)&Bytecode->Code[DstElse]	= Emitter.Tell();
+		*(UInt16*)&Bytecode->Code[DstElse]	= Emitter.Tell();
 		CompileStatement();
-		*(Word*)&Bytecode->Code[DstEnd]		= Emitter.Tell();
+		*(UInt16*)&Bytecode->Code[DstEnd]		= Emitter.Tell();
 	}
 	else
 	{
 		// Without 'else'.
-		*(Word*)&Bytecode->Code[DstElse]	= Emitter.Tell();
+		*(UInt16*)&Bytecode->Code[DstElse]	= Emitter.Tell();
 	}
 
 	PopNest();
@@ -3491,7 +3491,7 @@ void CCompiler::CompileWhile()
 	assert(MatchIdentifier(KW_while));
 	PushNest(NEST_While);
 
-	Word AddrStart, DstEnd;
+	UInt16 AddrStart, DstEnd;
 
 	// Logical condition.
 	RequireSymbol( L"(", L"while" );
@@ -3499,7 +3499,7 @@ void CCompiler::CompileWhile()
 		AddrStart	= Emitter.Tell();
 
 		ResetRegs();
-		Byte iReg = CompileExpr( TYPE_Bool, true, false, 0 ).iReg;
+		UInt8 iReg = CompileExpr( TYPE_Bool, true, false, 0 ).iReg;
 
 		// Emit header.
 		emit( CODE_JumpZero );
@@ -3515,7 +3515,7 @@ void CCompiler::CompileWhile()
 	// Post statement stuff.
 	emit( CODE_Jump );
 	emit( AddrStart );
-	*(Word*)&Bytecode->Code[DstEnd]	= Emitter.Tell();
+	*(UInt16*)&Bytecode->Code[DstEnd]	= Emitter.Tell();
 
 	// Fix & pop nest.
 	ReplNest( REPL_Break, Emitter.Tell() );
@@ -3532,7 +3532,7 @@ void CCompiler::CompileDo()
 	assert(MatchIdentifier(KW_do));
 	PushNest(NEST_Do);
 
-	Word AddrStart, AddrCond, DstEnd;
+	UInt16 AddrStart, AddrCond, DstEnd;
 	AddrStart	= Emitter.Tell();
 
 	// Statement.
@@ -3544,7 +3544,7 @@ void CCompiler::CompileDo()
 		AddrCond	= Emitter.Tell();
 
 		ResetRegs();
-		Byte iReg = CompileExpr( TYPE_Bool, true, false, 0 ).iReg;
+		UInt8 iReg = CompileExpr( TYPE_Bool, true, false, 0 ).iReg;
 
 		// Emit footer.
 		emit( CODE_JumpZero );
@@ -3557,7 +3557,7 @@ void CCompiler::CompileDo()
 	// Post statement stuff.
 	emit( CODE_Jump );
 	emit( AddrStart );
-	*(Word*)&Bytecode->Code[DstEnd]	= Emitter.Tell();
+	*(UInt16*)&Bytecode->Code[DstEnd]	= Emitter.Tell();
 
 	// Fix & pop nest.
 	ReplNest( REPL_Break, Emitter.Tell() );
@@ -3574,7 +3574,7 @@ void CCompiler::CompileFor()
 	assert(MatchIdentifier(KW_for));
 	PushNest(NEST_For);
 
-	Word AddrBegin, AddrContinue, DstEnd = 0xffff;
+	UInt16 AddrBegin, AddrContinue, DstEnd = 0xffff;
 
 	// Init expression.
 	RequireSymbol( L"(", L"for statement" );
@@ -3590,7 +3590,7 @@ void CCompiler::CompileFor()
 	if( !MatchSymbol(L";") )
 	{
 		ResetRegs();
-		Byte iReg = CompileExpr( TYPE_Bool, true, false, 0 ).iReg;
+		UInt8 iReg = CompileExpr( TYPE_Bool, true, false, 0 ).iReg;
 
 		// Emit header.
 		emit( CODE_JumpZero );
@@ -3606,7 +3606,7 @@ void CCompiler::CompileFor()
 	GetToken( LoopExprTok, false, false );
 	GotoToken( LoopExprTok );
 	{
-		Integer NumBrk = 1;
+		Int32 NumBrk = 1;
 		TToken T;
 		while( NumBrk > 0 )
 		{
@@ -3638,7 +3638,7 @@ void CCompiler::CompileFor()
 	emit( AddrBegin );
 
 	if( DstEnd != 0xffff )
-		*(Word*)&Bytecode->Code[DstEnd]	= Emitter.Tell();
+		*(UInt16*)&Bytecode->Code[DstEnd]	= Emitter.Tell();
 
 	// Fix break and pop nest.
 	ReplNest( REPL_Continue, AddrContinue );
@@ -3656,10 +3656,10 @@ void CCompiler::CompileSwitch()
 	PushNest(NEST_Switch);
 
 	TExprResult Expr;
-	Word DstJmpTab, DstDefaultAddr, DstOut;
-	TArray<Integer>	Labels;
-	TArray<Word>	Addrs;
-	Byte			Size;
+	UInt16 DstJmpTab, DstDefaultAddr, DstOut;
+	TArray<Int32>	Labels;
+	TArray<UInt16>	Addrs;
+	UInt8			Size;
 	Bool			bDefaultFound = false;
 
 	// Switch expression.
@@ -3704,7 +3704,7 @@ void CCompiler::CompileSwitch()
 				Error( L"Default label already appeared in this switch" );
 
 			bDefaultFound	= true;
-			*(Word*)&Bytecode->Code[DstDefaultAddr]	= Emitter.Tell();
+			*(UInt16*)&Bytecode->Code[DstDefaultAddr]	= Emitter.Tell();
 			RequireSymbol( L":", L"default" );
 		}
 		else if( MatchIdentifier( KW_case ) )
@@ -3714,7 +3714,7 @@ void CCompiler::CompileSwitch()
 				Error( L"Case label follows after default label" );
 
 			TToken T;
-			Integer Value;
+			Int32 Value;
 			GetToken( T, true, false );
 
 			if( T.Type == TOK_Const )
@@ -3759,25 +3759,25 @@ void CCompiler::CompileSwitch()
 	emit( GTempWord );
 
 	// Emit jump table.
-	*(Word*)&Bytecode->Code[DstJmpTab]	= Emitter.Tell();
+	*(UInt16*)&Bytecode->Code[DstJmpTab]	= Emitter.Tell();
 	assert(Labels.Num() == Addrs.Num());
-	Byte NumLabs = Labels.Num();
+	UInt8 NumLabs = Labels.Num();
 	emit( NumLabs );
-	for( Integer i=0; i<Labels.Num(); i++ )
+	for( Int32 i=0; i<Labels.Num(); i++ )
 	{
 		if( Expr.Type.Type == TYPE_Byte )
-			emit( *(Byte*)&Labels[i] )
+			emit( *(UInt8*)&Labels[i] )
 		else
-			emit( *(Integer*)&Labels[i] );
+			emit( *(Int32*)&Labels[i] );
 	
 		emit( Addrs[i] );
 	}
 
 	// Set out address.
-	*(Word*)&Bytecode->Code[DstOut]	= Emitter.Tell();
+	*(UInt16*)&Bytecode->Code[DstOut]	= Emitter.Tell();
 
 	if( !bDefaultFound )
-		*(Word*)&Bytecode->Code[DstDefaultAddr]	= Emitter.Tell();
+		*(UInt16*)&Bytecode->Code[DstDefaultAddr]	= Emitter.Tell();
 
 	// Fix & pop nest.
 	ReplNest( REPL_Break, Emitter.Tell() );
@@ -3813,7 +3813,7 @@ void CCompiler::CompileCommand()
 			Left.Type		= *Func->ResultVar;
 			Left.iReg		= GetReg();
 
-			Word Offset		= Func->ResultVar->Offset;
+			UInt16 Offset		= Func->ResultVar->Offset;
 			emit( CODE_LocalVar );
 			emit( Left.iReg );
 			emit( Offset );
@@ -3830,7 +3830,7 @@ void CCompiler::CompileCommand()
 	else if( MatchIdentifier( KW_break ) )
 	{
 		// Break, doesn't handle 'switch' statement.
-		Integer LoopNest = NestTop - 1;
+		Int32 LoopNest = NestTop - 1;
 		while(	( LoopNest > 0 )&&
 				( Nest[LoopNest].Type != NEST_Do )&&
 				( Nest[LoopNest].Type != NEST_For )&&
@@ -3850,7 +3850,7 @@ void CCompiler::CompileCommand()
 	else if( MatchIdentifier( KW_continue ) )
 	{
 		// Continue.
-		Integer LoopNest = NestTop - 1;
+		Int32 LoopNest = NestTop - 1;
 		while(	( LoopNest > 0 )&&
 				( Nest[LoopNest].Type != NEST_Do )&&
 				( Nest[LoopNest].Type != NEST_For )&&
@@ -3891,8 +3891,8 @@ void CCompiler::CompileCommand()
 			Error( L"'wait' is not allowed here" );
 
 		ResetRegs();
-		Word WaitExpr = Emitter.Tell();		
-		Byte iReg = CompileExpr( TYPE_Bool, true, false, 0 ).iReg;
+		UInt16 WaitExpr = Emitter.Tell();		
+		UInt8 iReg = CompileExpr( TYPE_Bool, true, false, 0 ).iReg;
 
 		emit( CODE_Wait );
 		emit( WaitExpr );
@@ -3908,7 +3908,7 @@ void CCompiler::CompileCommand()
 			Error( L"'sleep' is not allowed here" );
 
 		ResetRegs();
-		Byte iReg = CompileExpr( TYPE_Float, true, false, 0 ).iReg;
+		UInt8 iReg = CompileExpr( TYPE_Float, true, false, 0 ).iReg;
 		emit( CODE_Sleep );
 		emit( iReg );
 
@@ -3921,7 +3921,7 @@ void CCompiler::CompileCommand()
 			Error( L"Script has no thread" );
 
 		ResetRegs();
-		Byte iReg = CompileExpr( TYPE_Integer, true, false, 0 ).iReg;
+		UInt8 iReg = CompileExpr( TYPE_Integer, true, false, 0 ).iReg;
 		emit( CODE_Goto );
 		emit( iReg );
 
@@ -3944,7 +3944,7 @@ void CCompiler::CompileForeach()
 		Error( L"'foreach' is not allowed within static scripts" );
 
 	// Doesn't allowed nested foreach loops.
-	for( Integer i=0; i<NestTop; i++ )
+	for( Int32 i=0; i<NestTop; i++ )
 		if( Nest[i].Type == NEST_Foreach )
 			Error( L"Nested 'foreach' is not allowed" );
 
@@ -3955,8 +3955,8 @@ void CCompiler::CompileForeach()
 
 	PushNest(NEST_Foreach);
 	
-	Word AddrStart, DstEnd;
-	Word PropAddr;
+	UInt16 AddrStart, DstEnd;
+	UInt16 PropAddr;
 	FScript* PropScript;
 
 	// Foreach header.
@@ -3984,10 +3984,10 @@ void CCompiler::CompileForeach()
 			if( !(Iter->Flags & NFUN_Foreach) )
 				Error( L"'%s' is no an iteration function", *IterName );
 
-			TArray<Byte>	ArgRegs;
+			TArray<UInt8>	ArgRegs;
 			ResetRegs();
 			RequireSymbol( L"(", L"function call" );
-			for( Integer i=0; i<Iter->NumParams; i++ )
+			for( Int32 i=0; i<Iter->NumParams; i++ )
 			{
 				ArgRegs.Push( CompileExpr( Iter->Params[i].Type, true, false, 0 ).iReg );
 
@@ -3998,7 +3998,7 @@ void CCompiler::CompileForeach()
 
 			// Emit call.
 			emit_opcode( Iter->iOpCode );
-			for( Integer i=0; i<ArgRegs.Num(); i++ )
+			for( Int32 i=0; i<ArgRegs.Num(); i++ )
 			{
 				emit( ArgRegs[i] );
 				FreeReg( ArgRegs[i] );
@@ -4022,7 +4022,7 @@ void CCompiler::CompileForeach()
 	// Post statement stuff.
 	emit( CODE_Jump );
 	emit( AddrStart );
-	*(Word*)&Bytecode->Code[DstEnd]	= Emitter.Tell();
+	*(UInt16*)&Bytecode->Code[DstEnd]	= Emitter.Tell();
 
 	// Fix & pop nest.
 	ReplNest( REPL_Break, Emitter.Tell() );
@@ -4112,7 +4112,7 @@ CTypeInfo CCompiler::CompileVarType( Bool bSimpleOnly )
 	TToken TypeName;
 	CClass* ResClass;
 	CStruct* TestStruct;
-	Integer iDelegate;
+	Int32 iDelegate;
 	CTypeInfo TypeInfo;
 	GetToken( TypeName, false, false );
 
@@ -4328,7 +4328,7 @@ void CCompiler::CompileStructDecl()
 
 	// Dbg.
 	info(L"Struct \"%s\" size=%d", *Struct->Name, Struct->Size);
-	for( Integer i=0; i<Struct->Members.Num(); i++ )
+	for( Int32 i=0; i<Struct->Members.Num(); i++ )
 		info
 		(
 			L"Member namy=\"%s\"; type=\"%s\"; offset=%d", 
@@ -4383,7 +4383,7 @@ void CCompiler::CompileConstDecl()
 // Compile a property declaration. 
 // bDetectFunc - used in global scope, in case possible function declaration.
 //
-Bool CCompiler::CompileVarDecl( TArray<CProperty*>& Vars, SizeT& VarsSize, DWord InFlags, Bool bSimpleOnly, Bool bDetectFunc )
+Bool CCompiler::CompileVarDecl( TArray<CProperty*>& Vars, SizeT& VarsSize, UInt32 InFlags, Bool bSimpleOnly, Bool bDetectFunc )
 {
 	// Store source location, maybe its a function.
 	TToken SourceLoc;
@@ -4463,7 +4463,7 @@ Bool CCompiler::CompileVarDecl( TArray<CProperty*>& Vars, SizeT& VarsSize, DWord
 				TExprResult Right	= CompileExpr( *Property, true, false, 0 );
 
 				// Emit local variable.
-				Word Offset = Property->Offset;
+				UInt16 Offset = Property->Offset;
 				emit( CODE_LocalVar );
 				emit( Left.iReg );
 				emit( Offset );
@@ -4515,7 +4515,7 @@ void CCompiler::CompileThreadDecl()
 		Error( L"Thread body not defined" );
 
 	// Skip body.
-	Integer Level = 1;
+	Int32 Level = 1;
 	do 
 	{
 		GetToken( T );
@@ -4612,7 +4612,7 @@ void CCompiler::CompileFunctionDecl()
 		for( ; ; )
 		{
 			// Output modifier.
-			DWord ParmFlags = MatchIdentifier(KW_out) ? PROP_OutParm : 0;
+			UInt32 ParmFlags = MatchIdentifier(KW_out) ? PROP_OutParm : 0;
 
 			// Param type.
 			CTypeInfo ParamType = CompileVarType( true );
@@ -4650,7 +4650,7 @@ void CCompiler::CompileFunctionDecl()
 	// Test event name.
 	if( Function->Flags & FUNC_Event )
 	{
-		Integer iEvent = FindStaticEvent(Function->Name);
+		Int32 iEvent = FindStaticEvent(Function->Name);
 		if( iEvent == -1 )
 			Error( L"Native event '%s' is not defined", *Function->Name );	
 		if( !GEventLookup[iEvent].MatchSignature(Function) )
@@ -4666,7 +4666,7 @@ void CCompiler::CompileFunctionDecl()
 			Error( L"Unified function cannot be static" );
 
 		CFamily* Family = Families[Script->iFamily];
-		Integer iProto = Family->VFNames.FindItem(Function->Name);
+		Int32 iProto = Family->VFNames.FindItem(Function->Name);
 		if( iProto == -1 )
 		{
 			// Add a new function and it signature.
@@ -4699,7 +4699,7 @@ void CCompiler::CompileFunctionDecl()
 				Error( L"Signature '%s' result type missing", *Other->Name );
 
 			// Match parameters.
-			for( Integer i=0; i<Function->ParmsCount; i++ )
+			for( Int32 i=0; i<Function->ParmsCount; i++ )
 				if( !Function->Locals[i]->MatchWith(*Other->Locals[i]) )
 					Error
 						( 
@@ -4733,7 +4733,7 @@ void CCompiler::CompileFunctionDecl()
 		Error( L"Function body not defined" );
 
 	// Skip body.
-	Integer Level = 1;
+	Int32 Level = 1;
 	do 
 	{
 		GetToken( T );
@@ -4857,12 +4857,12 @@ void CCompiler::PopNest()
 //
 // Replace an addresses at the top nest level.
 //
-void CCompiler::ReplNest( EReplType Repl, Word DestAddr )
+void CCompiler::ReplNest( EReplType Repl, UInt16 DestAddr )
 {
 	TNest& N = Nest[NestTop-1];
 
-	for( Integer i=0; i<N.Addrs[Repl].Num(); i++ )
-		*(Word*)&Bytecode->Code[N.Addrs[Repl][i]]	= DestAddr;
+	for( Int32 i=0; i<N.Addrs[Repl].Num(); i++ )
+		*(UInt16*)&Bytecode->Code[N.Addrs[Repl][i]]	= DestAddr;
 }
 
 
@@ -4885,10 +4885,10 @@ void CCompiler::ResetRegs()
 // it's index, if registers are overflow,
 // it's stops compilation.
 //
-Byte CCompiler::GetReg()
+UInt8 CCompiler::GetReg()
 {
-	Integer iAvail = -1;
-	for( Integer i=0; i<arr_len(Regs); i++ )
+	Int32 iAvail = -1;
+	for( Int32 i=0; i<arr_len(Regs); i++ )
 		if( Regs[i] == false )
 		{
 			iAvail = i;
@@ -4907,7 +4907,7 @@ Byte CCompiler::GetReg()
 //
 // Release a register, mark it as unused.
 //
-void CCompiler::FreeReg( Byte iReg )
+void CCompiler::FreeReg( UInt8 iReg )
 {
 	assert(iReg>=0 && iReg<arr_len(Regs));
 	Regs[iReg] = false;
@@ -4926,13 +4926,13 @@ void CCompiler::FreeReg( Byte iReg )
 CEnum* CCompiler::FindEnum( FScript* Script, String Name, Bool bOwnOnly )
 {
 	// Searching in script.
-	for( Integer i=0; i<Script->Enums.Num(); i++ )
+	for( Int32 i=0; i<Script->Enums.Num(); i++ )
 		if( Name == Script->Enums[i]->Name )
 			return Script->Enums[i];
 
 	// Native database.
 	if( !bOwnOnly )
-		for( Integer i=0; i<CClassDatabase::GEnums.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GEnums.Num(); i++ )
 			if( Name == CClassDatabase::GEnums[i]->Name )
 				return CClassDatabase::GEnums[i];
 
@@ -4949,13 +4949,13 @@ CEnum* CCompiler::FindEnum( FScript* Script, String Name, Bool bOwnOnly )
 CStruct* CCompiler::FindStruct( FScript* Script, String Name, Bool bOwnOnly )
 {
 	// Searching in script.
-	for( Integer i=0; i<Script->Structs.Num(); i++ )
+	for( Int32 i=0; i<Script->Structs.Num(); i++ )
 		if( Name == Script->Structs[i]->Name )
 			return Script->Structs[i];
 
 	// Native database.
 	if( !bOwnOnly )
-		for( Integer i=0; i<CClassDatabase::GStructs.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GStructs.Num(); i++ )
 			if( Name == CClassDatabase::GStructs[i]->Name )
 				return CClassDatabase::GStructs[i];
 
@@ -4969,7 +4969,7 @@ CStruct* CCompiler::FindStruct( FScript* Script, String Name, Bool bOwnOnly )
 //
 FScript* CCompiler::FindScript( String Name )
 {
-	for( Integer i=0; i<AllScripts.Num(); i++ )
+	for( Int32 i=0; i<AllScripts.Num(); i++ )
 		if( Name == AllScripts[i]->GetName() )
 			return AllScripts[i];
 
@@ -4982,7 +4982,7 @@ FScript* CCompiler::FindScript( String Name )
 //
 CFamily* CCompiler::FindFamily( String Name )
 {
-	for( Integer i=0; i<Families.Num(); i++ )
+	for( Int32 i=0; i<Families.Num(); i++ )
 		if( Name == Families[i]->Name )
 			return Families[i];
 
@@ -4997,7 +4997,7 @@ CFamily* CCompiler::FindFamily( String Name )
 //
 TToken* CCompiler::FindConstant( String Name )
 {
-	for( Integer i=0; i<Constants.Num(); i++ )
+	for( Int32 i=0; i<Constants.Num(); i++ )
 		if( Constants[i].Text == Name )
 			return &Constants[i];
 
@@ -5009,9 +5009,9 @@ TToken* CCompiler::FindConstant( String Name )
 // Find delegate signature, if signature not found return -1.
 // All delegates are shared objects.
 //
-Integer CCompiler::FindDelegate( String Name )
+Int32 CCompiler::FindDelegate( String Name )
 {
-	for( Integer i=0; i<DelegatesInfo.Num(); i++ )
+	for( Int32 i=0; i<DelegatesInfo.Num(); i++ )
 		if( Name == DelegatesInfo[i].Name )
 			return i;
 
@@ -5024,7 +5024,7 @@ Integer CCompiler::FindDelegate( String Name )
 //
 CProperty* CCompiler::FindProperty( const TArray<CProperty*>& List, String Name )
 {
-	for( Integer i=0; i<List.Num(); i++ )
+	for( Int32 i=0; i<List.Num(); i++ )
 		if( Name == List[i]->Name )
 			return List[i];
 
@@ -5037,7 +5037,7 @@ CProperty* CCompiler::FindProperty( const TArray<CProperty*>& List, String Name 
 //
 CFunction* CCompiler::FindFunction( const TArray<CFunction*>& FuncList, String Name )
 {
-	for( Integer i=0; i<FuncList.Num(); i++ )
+	for( Int32 i=0; i<FuncList.Num(); i++ )
 		if( Name == FuncList[i]->Name )
 			return FuncList[i];
 
@@ -5056,7 +5056,7 @@ CNativeFunction* CCompiler::FindUnaryOp( String Name, const CTypeInfo& ArgType )
 	if( ArgType.Type == TYPE_None )
 	{
 		// Just figure it out.
-		for( Integer i=0; i<CClassDatabase::GFuncs.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GFuncs.Num(); i++ )
 		{
 			CNativeFunction* F = CClassDatabase::GFuncs[i];
 
@@ -5068,7 +5068,7 @@ CNativeFunction* CCompiler::FindUnaryOp( String Name, const CTypeInfo& ArgType )
 	else
 	{
 		// Try to find without typecast.
-		for( Integer i=0; i<CClassDatabase::GFuncs.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GFuncs.Num(); i++ )
 		{
 			CNativeFunction* F = CClassDatabase::GFuncs[i];
 
@@ -5079,7 +5079,7 @@ CNativeFunction* CCompiler::FindUnaryOp( String Name, const CTypeInfo& ArgType )
 		}
 
 		// Try to find with cast.
-		for( Integer i=0; i<CClassDatabase::GFuncs.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GFuncs.Num(); i++ )
 		{
 			CNativeFunction* F = CClassDatabase::GFuncs[i];
 
@@ -5106,7 +5106,7 @@ CNativeFunction* CCompiler::FindBinaryOp( String Name, const CTypeInfo& Arg1, co
 	if( Arg1.Type == TYPE_None || Arg2.Type == TYPE_None )
 	{
 		// Just figure out.
-		for( Integer i=0; i<CClassDatabase::GFuncs.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GFuncs.Num(); i++ )
 		{
 			CNativeFunction* F = CClassDatabase::GFuncs[i];
 
@@ -5118,7 +5118,7 @@ CNativeFunction* CCompiler::FindBinaryOp( String Name, const CTypeInfo& Arg1, co
 	else
 	{
 		// Try to find without typecast.
-		for( Integer i=0; i<CClassDatabase::GFuncs.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GFuncs.Num(); i++ )
 		{
 			CNativeFunction* F = CClassDatabase::GFuncs[i];
 
@@ -5130,7 +5130,7 @@ CNativeFunction* CCompiler::FindBinaryOp( String Name, const CTypeInfo& Arg1, co
 		}
 
 		// Try to find with cast.
-		for( Integer i=0; i<CClassDatabase::GFuncs.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GFuncs.Num(); i++ )
 		{
 			CNativeFunction* F = CClassDatabase::GFuncs[i];
 			if( !(F->Flags & NFUN_BinaryOp) || ( F->Name != Name ) )
@@ -5161,24 +5161,24 @@ CNativeFunction* CCompiler::FindBinaryOp( String Name, const CTypeInfo& Arg1, co
 // Find an enumeration element, search in own enums and
 // native. If element not found return 0xff.
 //
-Byte CCompiler::FindEnumElement( String Elem )
+UInt8 CCompiler::FindEnumElement( String Elem )
 {
 	// Searching in script.
-	for( Integer iEnum=0; iEnum<Script->Enums.Num(); iEnum++ )
+	for( Int32 iEnum=0; iEnum<Script->Enums.Num(); iEnum++ )
 	{
 		CEnum* Enum = Script->Enums[iEnum];
 
-		for( Integer i=0; i<Enum->Elements.Num(); i++ )
+		for( Int32 i=0; i<Enum->Elements.Num(); i++ )
 			if( Elem == Enum->Elements[i] )
 				return i;
 	}
 
 	// Native database.
-	for( Integer iEnum=0; iEnum<CClassDatabase::GEnums.Num(); iEnum++ )
+	for( Int32 iEnum=0; iEnum<CClassDatabase::GEnums.Num(); iEnum++ )
 	{
 		CEnum* Enum = CClassDatabase::GEnums[iEnum];
 
-		for( Integer i=0; i<Enum->Elements.Num(); i++ )
+		for( Int32 i=0; i<Enum->Elements.Num(); i++ )
 			if( Elem == Enum->Elements[i] )
 				return i;
 	}
@@ -5193,7 +5193,7 @@ Byte CCompiler::FindEnumElement( String Elem )
 //
 CNativeFunction* CCompiler::FindNative( String Name )
 {
-	for( Integer i=0; i<CClassDatabase::GFuncs.Num(); i++ )
+	for( Int32 i=0; i<CClassDatabase::GFuncs.Num(); i++ )
 	{
 		CNativeFunction* F = CClassDatabase::GFuncs[i];
 
@@ -5210,11 +5210,11 @@ CNativeFunction* CCompiler::FindNative( String Name )
 // Get an index of script event in global table.
 // If no event found, return -1.
 //
-Integer CCompiler::FindStaticEvent( String Name )
+Int32 CCompiler::FindStaticEvent( String Name )
 {
 	assert(GEventLookup.Num() == _EVENT_MAX);
 
-	for( Integer i=0; i<GEventLookup.Num(); i++ )
+	for( Int32 i=0; i<GEventLookup.Num(); i++ )
 		if( GEventLookup[i].Name == Name )
 			return i;
 	return -1;
@@ -5352,7 +5352,7 @@ void CCompiler::RequireSymbol( const Char* Name, const Char* Purpose )
 //
 // Read a literal integer constant.
 //
-Integer CCompiler::ReadInteger( const Char* Purpose )
+Int32 CCompiler::ReadInteger( const Char* Purpose )
 {
 	TToken T;
 	GetToken( T, true, true );
@@ -5643,7 +5643,7 @@ void CCompiler::GetToken( TToken& T, Bool bAllowNeg, Bool bAllowVect )
 //
 Char CCompiler::GetChar()
 {
-	Integer PL, PP;
+	Int32 PL, PP;
 	Char Result;
 
 Loop:
@@ -5806,7 +5806,7 @@ void CCompiler::Warn( const Char* Fmt, ... )
 void CCompiler::StoreAllScripts()
 {
 	// Walk through all scripts.
-	for( Integer i=0; i<Database->GObjects.Num(); i++ )
+	for( Int32 i=0; i<Database->GObjects.Num(); i++ )
 		if( Database->GObjects[i] && Database->GObjects[i]->IsA(FScript::MetaClass) )
 		{
 			FScript* S = (FScript*)Database->GObjects[i];
@@ -5831,7 +5831,7 @@ void CCompiler::StoreAllScripts()
 					Stored.Buffers.Push( S->InstanceBuffer );
 
 					// Collect instance buffers from the entities.
-					for( Integer i=0; i<Database->GObjects.Num(); i++ )
+					for( Int32 i=0; i<Database->GObjects.Num(); i++ )
 						if( Database->GObjects[i] && Database->GObjects[i]->IsA(FEntity::MetaClass) )
 						{
 							FEntity* Entity = (FEntity*)Database->GObjects[i];
@@ -5859,11 +5859,11 @@ void CCompiler::StoreAllScripts()
 				// Cleanup all script's objects.
 				freeandnil(S->Thread);
 				freeandnil(S->StaticsBuffer);
-				for( Integer f=0; f<S->Methods.Num(); f++ )
+				for( Int32 f=0; f<S->Methods.Num(); f++ )
 					freeandnil(S->Methods[f]);
-				for( Integer f=0; f<S->StaticFunctions.Num(); f++ )
+				for( Int32 f=0; f<S->StaticFunctions.Num(); f++ )
 					freeandnil(S->StaticFunctions[f]);
-				for( Integer p=0; p<S->Statics.Num(); p++ )
+				for( Int32 p=0; p<S->Statics.Num(); p++ )
 					freeandnil(S->Statics[p]);
 				S->Enums.Empty();
 				S->Structs.Empty();
@@ -5886,29 +5886,29 @@ void CCompiler::StoreAllScripts()
 //
 void CCompiler::RestoreAfterFailure()
 {
-	for( Integer i=0; i<Storage.Num(); i++ )
+	for( Int32 i=0; i<Storage.Num(); i++ )
 	{
 		TStoredScript&	Stored = Storage[i];
 		FScript*		S		= Stored.Script;
 
 		// Clean up all newly created script objects.
 		freeandnil(S->Thread);
-		for( Integer f=0; f<S->Methods.Num(); f++ )
+		for( Int32 f=0; f<S->Methods.Num(); f++ )
 			freeandnil( S->Methods[f] );
 
-		for( Integer f=0; f<S->StaticFunctions.Num(); f++ )
+		for( Int32 f=0; f<S->StaticFunctions.Num(); f++ )
 			freeandnil( S->StaticFunctions[f] );
 
-		for( Integer p=0; p<S->Statics.Num(); p++ )
+		for( Int32 p=0; p<S->Statics.Num(); p++ )
 			freeandnil( S->Statics[p] );
 
-		for( Integer p=0; p<S->Properties.Num(); p++ )
+		for( Int32 p=0; p<S->Properties.Num(); p++ )
 			freeandnil( S->Properties[p] );
 
-		for( Integer e=0; e<S->Enums.Num(); e++ )
+		for( Int32 e=0; e<S->Enums.Num(); e++ )
 			freeandnil( S->Enums[e] );
 
-		for( Integer s=0; s<S->Structs.Num(); s++ )
+		for( Int32 s=0; s<S->Structs.Num(); s++ )
 			freeandnil( S->Structs[s] );
 
 		S->Enums.Empty();
@@ -5945,7 +5945,7 @@ void CCompiler::RestoreAfterFailure()
 //
 void CCompiler::RestoreAfterSuccess()
 {
-	for( Integer iSlot=0; iSlot<Storage.Num(); iSlot++ )
+	for( Int32 iSlot=0; iSlot<Storage.Num(); iSlot++ )
 	{
 		TStoredScript& Stored = Storage[iSlot];
 		FScript* Script	= Stored.Script;
@@ -5955,16 +5955,16 @@ void CCompiler::RestoreAfterSuccess()
 
 		if( !Script->IsStatic() )
 		{
-			for( Integer iBuff=0; iBuff<Stored.Buffers.Num(); iBuff++ )
+			for( Int32 iBuff=0; iBuff<Stored.Buffers.Num(); iBuff++ )
 			{
 				CInstanceBuffer* Buffer = Stored.Buffers[iBuff];
-				TArray<Byte> NewData(Script->InstanceSize);
+				TArray<UInt8> NewData(Script->InstanceSize);
 
-				for( Integer iNew=0; iNew<Script->Properties.Num(); iNew++ )
+				for( Int32 iNew=0; iNew<Script->Properties.Num(); iNew++ )
 				{
 					CProperty* NewProp = Script->Properties[iNew];
 
-					for( Integer iOld=0; iOld<Stored.Properties.Num(); iOld++ )
+					for( Int32 iOld=0; iOld<Stored.Properties.Num(); iOld++ )
 					{
 						CProperty* OldProp = Stored.Properties[iOld];
 
@@ -5999,10 +5999,10 @@ void CCompiler::RestoreAfterSuccess()
 			assert(Script->StaticsSize > 0);
 
 		// Destroy old storage data.
-		for( Integer i=0; i<Stored.Properties.Num(); i++ )
+		for( Int32 i=0; i<Stored.Properties.Num(); i++ )
 			freeandnil(Stored.Properties[i]);
 
-		for( Integer i=0; i<Stored.Enums.Num(); i++ )
+		for( Int32 i=0; i<Stored.Enums.Num(); i++ )
 			freeandnil(Stored.Enums[i]);
 
 		Stored.Buffers.Empty();
@@ -6046,7 +6046,7 @@ Bool Compiler::DropAllScripts( CObjectDatabase* InDatabase )
 		return false;
 
 	// Walk through all objects.
-	for( Integer i=0; i<InDatabase->GObjects.Num(); i++ )
+	for( Int32 i=0; i<InDatabase->GObjects.Num(); i++ )
 	{
 		if( InDatabase->GObjects[i] && InDatabase->GObjects[i]->IsA(FScript::MetaClass) )
 		{
@@ -6058,7 +6058,7 @@ Bool Compiler::DropAllScripts( CObjectDatabase* InDatabase )
 
 			// Destroy bytecodes.
 			freeandnil(Script->Thread);
-			for( Integer iFunc=0; iFunc<Script->Methods.Num(); iFunc++ )
+			for( Int32 iFunc=0; iFunc<Script->Methods.Num(); iFunc++ )
 				freeandnil(Script->Methods[iFunc]);
 
 			// Clear tables.

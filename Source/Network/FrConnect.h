@@ -18,9 +18,9 @@ public:
 	~CUdpConnection();
 
 	// CUdpConnectionBase interface.
-	Bool BindToPort( Word Port ) override;
-	Bool SendData( const Byte* Buffer, SizeT Size, const TNetAddress& RemoteAddr ) override;
-	SizeT ReceiveData( Byte* Buffer, SizeT MaxSize, TNetAddress& RemoteAddr ) override;
+	Bool BindToPort( UInt16 Port ) override;
+	Bool SendData( const UInt8* Buffer, SizeT Size, const TNetAddress& RemoteAddr ) override;
+	SizeT ReceiveData( UInt8* Buffer, SizeT MaxSize, TNetAddress& RemoteAddr ) override;
 
 private:
 	// Internal.
@@ -43,15 +43,15 @@ public:
 	~CTcpConnection();
 
 	// CTcpConnectionBase interface.
-	Bool BindToPort( Word Port ) override;
+	Bool BindToPort( UInt16 Port ) override;
 	Bool Listen() override;
 	Bool ConnectTo( const TNetAddress& RemoteAddr ) override;
 	Bool Close() override;
-	Bool SendData( const Byte* Buffer, SizeT Size ) override;
-	SizeT ReceiveData( Byte* Buffer, SizeT MaxSize ) override;
+	Bool SendData( const UInt8* Buffer, SizeT Size ) override;
+	SizeT ReceiveData( UInt8* Buffer, SizeT MaxSize ) override;
 	Bool IsConnected() const override;
 	Bool IsListener() const override;
-	Integer AcceptConnections() override;
+	Int32 AcceptConnections() override;
 
 private:
 	// Internal.

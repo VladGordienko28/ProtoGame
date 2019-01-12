@@ -43,7 +43,7 @@ void InitHSLBitmaps()
 		HBitmap->Data.SetNum(256*sizeof(TColor));
 
 		TColor* Data = (TColor*)HBitmap->GetData();
-		for( Integer i=0; i<256; i++ )
+		for( Int32 i=0; i<256; i++ )
 			Data[i]	= TColor::HSLToRGB( i, 0xff, 0x80 );
 	}
 
@@ -279,7 +279,7 @@ void WColorChooser::OnPaint( CGUIRenderBase* Render )
 	TPoint Base	= ClientToWindow(TPoint::Zero);
 
 	// Decompose selected color.
-	Integer	H, S, L;
+	Int32	H, S, L;
 	H = HSpinner->GetIntValue();
 	S = SSpinner->GetIntValue();
 	L = LSpinner->GetIntValue();
@@ -394,14 +394,14 @@ void WColorChooser::OnPaint( CGUIRenderBase* Render )
 //
 // Process mouse movement over dialog.
 //
-void WColorChooser::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WColorChooser::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 { 
 	WForm::OnMouseMove( Button, X, Y ); 
 
 	if( bMoveH )
 	{
 		// Process Hue movement.
-		Integer	Hue	= Clamp( Y-30, 0x00, 0xff );
+		Int32	Hue	= Clamp( Y-30, 0x00, 0xff );
 
 		HSpinner->SetValue( Hue, false );
 		UpdateFromHSL( this );
@@ -409,7 +409,7 @@ void WColorChooser::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 	if( bMoveSL )
 	{
 		// Process Saturation/Lightness movement.
-		Integer	Saturation	= Clamp( X-10, 0x00, 0xff ),
+		Int32	Saturation	= Clamp( X-10, 0x00, 0xff ),
 				Lightness	= Clamp( Y-30, 0x00, 0xff );
 
 		SSpinner->SetValue( Saturation, false );
@@ -422,7 +422,7 @@ void WColorChooser::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 //
 // User just hold mouse button.
 //
-void WColorChooser::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WColorChooser::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 { 
 	WForm::OnMouseDown( Button, X, Y ); 
 
@@ -448,7 +448,7 @@ void WColorChooser::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 //
 // User just release mouse button.
 //
-void WColorChooser::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WColorChooser::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 { 
 	WForm::OnMouseUp( Button, X, Y ); 
 
@@ -462,7 +462,7 @@ void WColorChooser::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 //
 void WColorChooser::UpdateFromRGB( WWidget* Sender )
 {
-	Integer	R, G, B;
+	Int32	R, G, B;
 	R	= RSpinner->GetIntValue();
 	G	= GSpinner->GetIntValue();
 	B	= BSpinner->GetIntValue();
@@ -475,7 +475,7 @@ void WColorChooser::UpdateFromRGB( WWidget* Sender )
 		Selected.A
 	);
 
-	Byte H, S, L;
+	UInt8 H, S, L;
 	TColor::RGBToHSL( Selected, H, S, L );
 	HSpinner->SetValue( H, false );
 	SSpinner->SetValue( S, false );
@@ -490,13 +490,13 @@ void WColorChooser::UpdateFromRGB( WWidget* Sender )
 //
 void WColorChooser::UpdateFromHSL( WWidget* Sender )
 {
-	Integer H, S, L;
+	Int32 H, S, L;
 
 	H = HSpinner->GetIntValue();
 	S = SSpinner->GetIntValue();
 	L = LSpinner->GetIntValue();
 
-	Byte Alpha = Selected.A;
+	UInt8 Alpha = Selected.A;
 	Selected	= TColor::HSLToRGB
 	(
 		Clamp( H, 0x00, 0xff ),
@@ -530,10 +530,10 @@ void WColorChooser::RefreshSL()
 	TColor*	Data	= (TColor*)SLBitmap->GetData();
 
 	// Decompose selected color.
-	Integer	Hue;
+	Int32	Hue;
 	Hue = HSpinner->GetIntValue();
 
-	for( Integer L=0; L<256; L++ )
+	for( Int32 L=0; L<256; L++ )
 	{
 		TColor	Col1	= TColor( L, L, L, 0xff );
 		TColor	Col2	= TColor::HSLToRGB( Hue, 255, L );
@@ -541,14 +541,14 @@ void WColorChooser::RefreshSL()
 		TColor*	Line	= &Data[L*256];
 
 		// Use some fixed math 16:16 magic :3
-		Integer	RWalk	= Col1.R * 65536,
+		Int32	RWalk	= Col1.R * 65536,
 				GWalk	= Col1.G * 65536,
 				BWalk	= Col1.B * 65536,
 				RStep	= (Col2.R-Col1.R) * 65536 / 256,
 				GStep	= (Col2.G-Col1.G) * 65536 / 256,
 				BStep	= (Col2.B-Col1.B) * 65536 / 256;
 
-		for( Integer S=0; S<256; S++ )
+		for( Int32 S=0; S<256; S++ )
 		{
 			Line[S]	= TColor( RWalk>>16, GWalk>>16, BWalk>>16, 0xff );
 
@@ -566,7 +566,7 @@ void WColorChooser::RefreshSL()
 //
 // Update Alpha value of Checker texture.
 //
-void WColorChooser::SetAlphaBlend( Byte Alpha )
+void WColorChooser::SetAlphaBlend( UInt8 Alpha )
 {
 	assert(bUseAlpha);
 	TColor*	Data	= (TColor*)ABitmap->GetData();
@@ -575,7 +575,7 @@ void WColorChooser::SetAlphaBlend( Byte Alpha )
 	if( Alpha == Data[0].A )
 		return;
 
-	for( Integer i=0; i<ABitmap->USize*ABitmap->VSize; i++ )
+	for( Int32 i=0; i<ABitmap->USize*ABitmap->VSize; i++ )
 		Data[i].A = Alpha;
 
 	// Force to reload.

@@ -35,7 +35,7 @@ CUdpConnection::~CUdpConnection()
 //
 // Create and bind socket to specified socket.
 //
-Bool CUdpConnection::BindToPort( Word Port )
+Bool CUdpConnection::BindToPort( UInt16 Port )
 {
 	// Make sure WinSock initialized.
 	if( !Net::WSAInitialize() )
@@ -77,16 +77,16 @@ Bool CUdpConnection::BindToPort( Word Port )
 //
 // Poll datagram.
 //
-SizeT CUdpConnection::ReceiveData( Byte* Buffer, SizeT MaxSize, TNetAddress& RemoteAddr )
+SizeT CUdpConnection::ReceiveData( UInt8* Buffer, SizeT MaxSize, TNetAddress& RemoteAddr )
 {
 	if( Socket == INVALID_SOCKET )
 		return 0;
 
 	sockaddr_in Addr;
-	Integer SockAddrSize = sizeof(Addr);
+	Int32 SockAddrSize = sizeof(Addr);
 
 	// Ask it.
-	Integer BytesGot = recvfrom( Socket, (char*)Buffer, MaxSize, 0, (sockaddr*)&Addr, &SockAddrSize );
+	Int32 BytesGot = recvfrom( Socket, (char*)Buffer, MaxSize, 0, (sockaddr*)&Addr, &SockAddrSize );
 
 	if( BytesGot != SOCKET_ERROR )
 	{
@@ -106,7 +106,7 @@ SizeT CUdpConnection::ReceiveData( Byte* Buffer, SizeT MaxSize, TNetAddress& Rem
 //
 // Send data in a datagram packet.
 //
-Bool CUdpConnection::SendData( const Byte* Buffer, SizeT Size, const TNetAddress& RemoteAddr )
+Bool CUdpConnection::SendData( const UInt8* Buffer, SizeT Size, const TNetAddress& RemoteAddr )
 {
 	if( Socket == INVALID_SOCKET )
 		return false;
@@ -118,7 +118,7 @@ Bool CUdpConnection::SendData( const Byte* Buffer, SizeT Size, const TNetAddress
 	Addr.sin_port					= htons(RemoteAddr.Port);
 
 	// Send it.
-	Integer NumBytes = sendto( Socket, (char*)Buffer, Size, 0, (sockaddr*)&Addr, sizeof(Addr) );
+	Int32 NumBytes = sendto( Socket, (char*)Buffer, Size, 0, (sockaddr*)&Addr, sizeof(Addr) );
 	return NumBytes != 0;
 }
 
@@ -160,7 +160,7 @@ CTcpConnection::~CTcpConnection()
 //
 // Create and bind socket to specified port.
 //
-Bool CTcpConnection::BindToPort( Word Port )
+Bool CTcpConnection::BindToPort( UInt16 Port )
 {
 	// Make sure WinSock library initialized.
 	if( !Net::WSAInitialize() )
@@ -175,8 +175,8 @@ Bool CTcpConnection::BindToPort( Word Port )
 	if( Socket == INVALID_SOCKET )
 		return false;
 
-	Integer ReuseAddr = 1;
-	setsockopt( Socket, SOL_SOCKET, SO_REUSEADDR, (char*)&ReuseAddr, sizeof(Integer) );
+	Int32 ReuseAddr = 1;
+	setsockopt( Socket, SOL_SOCKET, SO_REUSEADDR, (char*)&ReuseAddr, sizeof(Int32) );
 
 	// Turn on linger.
 	LINGER Ling;
@@ -243,7 +243,7 @@ Bool CTcpConnection::ConnectTo( const TNetAddress& RemoteAddr )
 	ForeignHost.sin_addr.S_un.S_addr	= htonl(RemoteAddr.Address);
 
 	// Connect.
-	Integer Error = connect(Socket, (sockaddr*)&ForeignHost, sizeof(ForeignHost));
+	Int32 Error = connect(Socket, (sockaddr*)&ForeignHost, sizeof(ForeignHost));
 
 	if( Error == SOCKET_ERROR && Net::GetLastError() != WSAEWOULDBLOCK )
 		return false;
@@ -293,7 +293,7 @@ Bool CTcpConnection::IsConnected() const
 
 	FD_ZERO( &SocketSet );
 	FD_SET( *WorkingSocket, &SocketSet );
-	Integer Error = select( *WorkingSocket + 1, 0, &SocketSet, 0, &SelectTimeOut );
+	Int32 Error = select( *WorkingSocket + 1, 0, &SocketSet, 0, &SelectTimeOut );
 	return Error != SOCKET_ERROR && Error != 0;
 }
 
@@ -301,12 +301,12 @@ Bool CTcpConnection::IsConnected() const
 //
 // Send data through TCP connection.
 //
-Bool CTcpConnection::SendData( const Byte* Buffer, SizeT Size )
+Bool CTcpConnection::SendData( const UInt8* Buffer, SizeT Size )
 {
 	if( !WorkingSocket || *WorkingSocket == INVALID_SOCKET  )
 		return false;
 
-	Integer NumBytes = send( *WorkingSocket, (char*)Buffer, Size, 0 );
+	Int32 NumBytes = send( *WorkingSocket, (char*)Buffer, Size, 0 );
 	return NumBytes != 0;
 }
 
@@ -316,7 +316,7 @@ Bool CTcpConnection::SendData( const Byte* Buffer, SizeT Size )
 // return 0, if no connection waiting, otherwise return number of connection, 
 // but only 1 connections support.
 //
-Integer CTcpConnection::AcceptConnections()
+Int32 CTcpConnection::AcceptConnections()
 {
 	assert(bListener == true);
 
@@ -326,7 +326,7 @@ Integer CTcpConnection::AcceptConnections()
 	FD_ZERO(&SocketSet);
 	FD_SET(Socket, &SocketSet);
 
-	Integer Error = select( Socket+1, &SocketSet, 0, 0, &SelectTimeOut );
+	Int32 Error = select( Socket+1, &SocketSet, 0, 0, &SelectTimeOut );
 	
 	// Some problem happed.
 	if( Error == SOCKET_ERROR )
@@ -337,7 +337,7 @@ Integer CTcpConnection::AcceptConnections()
 		return 0;
 
 	// Accept connection.
-	Integer Size = sizeof(sockaddr);
+	Int32 Size = sizeof(sockaddr);
 	sockaddr_in OtherAddr;
 	RemoteSocket = accept( Socket, (sockaddr*)&OtherAddr, &Size );
 	
@@ -368,13 +368,13 @@ Bool CTcpConnection::IsListener() const
 //
 // Read streaming data.
 //
-SizeT CTcpConnection::ReceiveData( Byte* Buffer, SizeT MaxSize )
+SizeT CTcpConnection::ReceiveData( UInt8* Buffer, SizeT MaxSize )
 {
 	if( !WorkingSocket || *WorkingSocket == INVALID_SOCKET )
 		return 0;
 
 	// Read data.
-	Integer BytesGot = recv( *WorkingSocket, (char*)Buffer, MaxSize, 0 );
+	Int32 BytesGot = recv( *WorkingSocket, (char*)Buffer, MaxSize, 0 );
 }
 
 

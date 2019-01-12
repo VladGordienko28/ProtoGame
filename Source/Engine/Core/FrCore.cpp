@@ -12,7 +12,7 @@ CDebugOutputBase*	GOutput		= nullptr;
 Bool				GIsEditor	= false;
 CPlatformBase*		GPlat		= nullptr;
 String				GDirectory	= L"";
-DWord				GFrameStamp = 0;
+UInt32				GFrameStamp = 0;
 String				GCmdLine;
 
 
@@ -42,10 +42,10 @@ String String::Format( String Fmt, ... )
 // Search needle in haystack :), of string
 // of course. If needle not found return -1.
 //
-Integer String::Pos( String Needle, String HayStack, Integer iFrom )
+Int32 String::Pos( String Needle, String HayStack, Int32 iFrom )
 {
 	const Char* P = wcsstr( &((*HayStack)[iFrom]), *Needle );
-	return P ? (Integer)(((SizeT)P - (SizeT)*HayStack)/sizeof(Char)) : -1;
+	return P ? (Int32)(((SizeT)P - (SizeT)*HayStack)/sizeof(Char)) : -1;
 }
 
 
@@ -59,7 +59,7 @@ String String::UpperCase( String Str )
 
 	String N;
 	Initialize( N.Internal, Str.Len() );
-	for( Integer i=0; i<Str.Len(); i++ )
+	for( Int32 i=0; i<Str.Len(); i++ )
 	{
 		N.Internal->Data[i] = towupper(Str(i));
 	}
@@ -77,7 +77,7 @@ String String::LowerCase( String Str )
 
 	String N;
 	Initialize( N.Internal, Str.Len() );
-	for( Integer i=0; i<Str.Len(); i++ )
+	for( Int32 i=0; i<Str.Len(); i++ )
 	{
 		N.Internal->Data[i] = towlower(Str(i));
 	}
@@ -92,7 +92,7 @@ String String::LowerCase( String Str )
 //   = 0: Str1 = Str2.
 //	 > 0: Str1 > Str2.
 //
-Integer String::CompareText( String Str1, String Str2 )
+Int32 String::CompareText( String Str1, String Str2 )
 {
 	return _wcsicmp( *Str1, *Str2 );
 }
@@ -101,7 +101,7 @@ Integer String::CompareText( String Str1, String Str2 )
 //
 // String comparison.
 //
-Integer String::CompareStr( String Str1, String Str2 )
+Int32 String::CompareStr( String Str1, String Str2 )
 {
 	return wcscmp( *Str1, *Str2 );
 }
@@ -110,14 +110,14 @@ Integer String::CompareStr( String Str1, String Str2 )
 //
 // Return string filled with specified characters.
 //
-String String::OfChar( Char Repeat, Integer Count )
+String String::OfChar( Char Repeat, Int32 Count )
 {
 	if( Count == 0 )
 		return L"";
 
 	String N;
 	Initialize( N.Internal, Count );
-	for( Integer i=0; i<Count; i++ )
+	for( Int32 i=0; i<Count; i++ )
 		N.Internal->Data[i] = Repeat;
 	return N;
 }
@@ -126,7 +126,7 @@ String String::OfChar( Char Repeat, Integer Count )
 //
 // Convert integer value to string.
 //
-String String::FromInteger( Integer Value )
+String String::FromInteger( Int32 Value )
 {
 	return String::Format( L"%i", Value );
 }
@@ -144,10 +144,10 @@ String String::FromFloat( Float Value )
 //
 // Copy substring.
 //
-String String::Copy( String Source, Integer StartChar, Integer Count )
+String String::Copy( String Source, Int32 StartChar, Int32 Count )
 {
-	StartChar = Clamp<Integer>( StartChar, 0, Source.Len()-1 );
-	Count = Clamp<Integer>( Count, 0, Source.Len()-StartChar );
+	StartChar = Clamp<Int32>( StartChar, 0, Source.Len()-1 );
+	Count = Clamp<Int32>( Count, 0, Source.Len()-StartChar );
 	return Count ? String( &Source.Internal->Data[StartChar], Count ) : String();
 }
 
@@ -155,10 +155,10 @@ String String::Copy( String Source, Integer StartChar, Integer Count )
 //
 // Remove Count symbols from StartChar position. 
 //
-String String::Delete( String Str, Integer StartChar, Integer Count )
+String String::Delete( String Str, Int32 StartChar, Int32 Count )
 {
-	StartChar = Clamp<Integer>( StartChar, 0, Str.Len()-1 );
-	Count = Clamp<Integer>( Count, 0, Str.Len()-StartChar );
+	StartChar = Clamp<Int32>( StartChar, 0, Str.Len()-1 );
+	Count = Clamp<Int32>( Count, 0, Str.Len()-StartChar );
 	return Copy( Str, 0, StartChar ) + Copy( Str, StartChar+Count, Str.Len()-StartChar-Count );	
 }
 
@@ -168,12 +168,12 @@ String String::Delete( String Str, Integer StartChar, Integer Count )
 // converted successfully, otherwise return false and out value
 // will be set default.
 //
-Bool String::ToInteger( Integer& Value, Integer Default ) const
+Bool String::ToInteger( Int32& Value, Int32 Default ) const
 {
 	if (!Len())
 		return false;
 
-	Integer		iChar	= 0;
+	Int32		iChar	= 0;
 	Bool		bNeg	= false;
 	Value				= Default;
 
@@ -190,12 +190,12 @@ Bool String::ToInteger( Integer& Value, Integer Default ) const
 	}
 
 	// Parse digit by digit.
-	Integer Result = 0;
-	for (Integer i = iChar; i < Len(); i++)
+	Int32 Result = 0;
+	for (Int32 i = iChar; i < Len(); i++)
 	if (Internal->Data[i] >= L'0' && Internal->Data[i] <= L'9')
 	{
 		Result *= 10;
-		Result += (Integer)(Internal->Data[i] - L'0');
+		Result += (Int32)(Internal->Data[i] - L'0');
 	}
 	else
 		return false;
@@ -215,7 +215,7 @@ Bool String::ToFloat( Float& Value, Float Default ) const
 	if (!Len())
 		return false;
 
-	Integer		iChar	= 0;
+	Int32		iChar	= 0;
 	Bool		bNeg	= false;
 	Float		Frac = 0.f, Ceil = 0.f;
 	Value				= Default;
@@ -243,7 +243,7 @@ Bool String::ToFloat( Float& Value, Float Default ) const
 			for( ; iChar < Len(); iChar++ )
 				if( Internal->Data[iChar] >= L'0' && Internal->Data[iChar] <= L'9' )
 				{
-					Frac += (Integer)(Internal->Data[iChar] - L'0') * m;
+					Frac += (Int32)(Internal->Data[iChar] - L'0') * m;
 					m /= 10.f;
 				}
 				else
@@ -256,7 +256,7 @@ Bool String::ToFloat( Float& Value, Float Default ) const
 				if( Internal->Data[iChar] >= L'0' && Internal->Data[iChar] <= L'9' )
 				{
 					Ceil *= 10.f;
-					Ceil += (Integer)(Internal->Data[iChar] - L'0');
+					Ceil += (Int32)(Internal->Data[iChar] - L'0');
 				}
 				else if( Internal->Data[iChar] == L'.' )
 				{
@@ -284,7 +284,7 @@ void Serialize( CSerializer& S, String& V )
 	if( S.GetMode() == SM_Load )
 	{
 		// Load string with compression.
-		Integer Len;
+		Int32 Len;
 		Serialize( S, Len );
 
 		String::Deinitialize( V.Internal );
@@ -293,7 +293,7 @@ void Serialize( CSerializer& S, String& V )
 		{
 			// Load Ansi string.
 			String::Initialize( V.Internal, -Len );
-			for( Integer i=0; i<V.Len(); i++ )
+			for( Int32 i=0; i<V.Len(); i++ )
 			{
 				AnsiChar AC;
 				Serialize( S, AC );
@@ -310,13 +310,13 @@ void Serialize( CSerializer& S, String& V )
 	else if( S.GetMode() == SM_Save )
 	{
 		// Save string with compression.
-		Integer Len	= IsAnsiOnly(*V) ? -(Integer)V.Len() : (Integer)V.Len();
+		Int32 Len	= IsAnsiOnly(*V) ? -(Int32)V.Len() : (Int32)V.Len();
 		Serialize( S, Len );
 
 		if( Len < 0 )
 		{
 			// Save Ansi string.
-			for( Integer i=0; i<V.Len(); i++ )
+			for( Int32 i=0; i<V.Len(); i++ )
 			{
 				AnsiChar AC = (AnsiChar)V(i);
 				Serialize( S, AC );
@@ -331,7 +331,7 @@ void Serialize( CSerializer& S, String& V )
 	else
 	{
 		// Investigate string without compression.
-		Integer Len = V.Len();
+		Int32 Len = V.Len();
 		Serialize( S, Len );
 
 		if( Len > 0 )
@@ -343,16 +343,16 @@ void Serialize( CSerializer& S, String& V )
 //
 // Wrap text and put lines into array of string.
 //
-TArray<String> String::WrapText( String Text, Integer MaxColumnSize )
+TArray<String> String::WrapText( String Text, Int32 MaxColumnSize )
 {
 	TArray<String> Result;
 
-	Integer i=0;
+	Int32 i=0;
 	do
 	{
-		Integer iCleanWordEnd	= 0;
+		Int32 iCleanWordEnd	= 0;
 		Bool	bGotWord		= false;
-		Integer	iTestWord		= 0;
+		Int32	iTestWord		= 0;
 
 		while	( 
 					( i+iTestWord < Text.Len() )&&
@@ -393,19 +393,19 @@ TArray<String> String::WrapText( String Text, Integer MaxColumnSize )
 void String::Flush()
 {
 	// Counters for statistics.
-	Integer	SlotsUsed	= 0,
+	Int32	SlotsUsed	= 0,
 			MaxDepth	= 0,
 			TotalLen	= 0,
 			NumStrs		= 0;
 
 	// Dive to pool.
-	for( Integer i=0; i<DEAD_POOL_MAX; i++ )
+	for( Int32 i=0; i<DEAD_POOL_MAX; i++ )
 	{
 		TInternal* Item = DeadPool[i];
 
 		if( Item )
 		{
-			Integer Depth = 0;
+			Int32 Depth = 0;
 			DeadPool[i]	= nullptr;
 
 			while( Item )
@@ -440,7 +440,7 @@ void String::Flush()
 // Convert RGB color value to HSL value
 // where H(Hue), S(Saturation), L(Lightness).
 //
-void TColor::RGBToHSL( TColor Color, Byte& H, Byte& S, Byte& L )
+void TColor::RGBToHSL( TColor Color, UInt8& H, UInt8& S, UInt8& L )
 {
 	Float R	= Color.R / 256.f;
 	Float G	= Color.G / 256.f;
@@ -487,7 +487,7 @@ void TColor::RGBToHSL( TColor Color, Byte& H, Byte& S, Byte& L )
 // Convert HSL color value to RGB value
 // where H(Hue), S(Saturation), L(Lightness).
 //
-TColor TColor::HSLToRGB( Byte H, Byte S, Byte L )
+TColor TColor::HSLToRGB( UInt8 H, UInt8 S, UInt8 L )
 {
 	Float	FH	= H / 256.f;
 	Float	FS	= S / 256.f;
@@ -561,7 +561,7 @@ TColor TColor::HSLToRGB( Byte H, Byte S, Byte L )
 // this depend on array' inner size. Result is always power
 // of two.
 //
-static inline Integer ExtraSpace( SizeT InnerSize )
+static inline Int32 ExtraSpace( SizeT InnerSize )
 {
 	if( InnerSize <= 1 )
 		return 128;
@@ -578,7 +578,7 @@ static inline Integer ExtraSpace( SizeT InnerSize )
 // Main reallocation function, now it's allocate more items,
 // to make faster next allocations.
 //
-void TArrayBase::Reallocate( void*& Data, Integer& Count, Integer NewCount, SizeT InnerSize )
+void TArrayBase::Reallocate( void*& Data, Int32& Count, Int32 NewCount, SizeT InnerSize )
 {
 	// Don't reallocate.
 	if( Count == NewCount )
@@ -594,8 +594,8 @@ void TArrayBase::Reallocate( void*& Data, Integer& Count, Integer NewCount, Size
 	else if( Data == nullptr )
 	{
 		// Allocate new data.
-		Integer OverItems	= ExtraSpace( InnerSize );
-		Integer TrueNew		= align( NewCount, OverItems );
+		Int32 OverItems	= ExtraSpace( InnerSize );
+		Int32 TrueNew		= align( NewCount, OverItems );
 		Data				= MemAlloc( TrueNew * InnerSize );
 		Count				= NewCount;
 	}
@@ -605,16 +605,16 @@ void TArrayBase::Reallocate( void*& Data, Integer& Count, Integer NewCount, Size
 		if( NewCount > Count )
 		{
 			// Add new item.
-			Integer OverItems	= ExtraSpace( InnerSize );
-			Integer TrueOld		= align( Count, OverItems );
+			Int32 OverItems	= ExtraSpace( InnerSize );
+			Int32 TrueOld		= align( Count, OverItems );
 			if( NewCount >= TrueOld )
 			{
 				// Need extra items.
-				Integer TrueNew	= align( NewCount, OverItems );
+				Int32 TrueNew	= align( NewCount, OverItems );
 				Data	= MemRealloc( Data, TrueNew * InnerSize );
 				MemZero
 				( 
-					(Byte*)Data + Count * InnerSize,
+					(UInt8*)Data + Count * InnerSize,
 					(NewCount - Count) * InnerSize
 				);
 			}
@@ -623,7 +623,7 @@ void TArrayBase::Reallocate( void*& Data, Integer& Count, Integer NewCount, Size
 				// Memory enough, but need zero.
 				MemZero
 				( 
-					(Byte*)Data + Count * InnerSize,
+					(UInt8*)Data + Count * InnerSize,
 					(NewCount - Count) * InnerSize
 				);
 			}
@@ -633,9 +633,9 @@ void TArrayBase::Reallocate( void*& Data, Integer& Count, Integer NewCount, Size
 		else
 		{
 			// Remove some items.
-			Integer OverItems	= ExtraSpace( InnerSize );
-			Integer TrueNew		= align( NewCount, OverItems );
-			Integer TrueOld		= align( Count, OverItems );
+			Int32 OverItems	= ExtraSpace( InnerSize );
+			Int32 TrueNew		= align( NewCount, OverItems );
+			Int32 TrueOld		= align( Count, OverItems );
 
 			if( TrueOld != TrueNew )
 				Data = MemRealloc( Data, TrueNew * InnerSize );
@@ -692,7 +692,7 @@ TUrl::TUrl()
 TUrl::TUrl( String InUrl )
 {
 	// Parse protocol.
-	Integer iProtocolEnd = String::Pos(L"://", InUrl);
+	Int32 iProtocolEnd = String::Pos(L"://", InUrl);
 	if( iProtocolEnd != -1 )
 	{
 		Protocol = String::Copy( InUrl, 0, iProtocolEnd );
@@ -705,10 +705,10 @@ TUrl::TUrl( String InUrl )
 	}
 
 	// Login and password.
-	Integer iUserEnd = String::Pos(L"@", InUrl, iProtocolEnd);
+	Int32 iUserEnd = String::Pos(L"@", InUrl, iProtocolEnd);
 	if( iUserEnd != -1 )
 	{
-		Integer iPasswordBegin = String::Pos(L":", InUrl, iProtocolEnd);
+		Int32 iPasswordBegin = String::Pos(L":", InUrl, iProtocolEnd);
 		if( iPasswordBegin != -1 && iPasswordBegin < iUserEnd )
 		{
 			Login = String::Copy( InUrl, iProtocolEnd, iPasswordBegin-iProtocolEnd );
@@ -729,7 +729,7 @@ TUrl::TUrl( String InUrl )
 	}
 
 	// Fragment.
-	Integer iFragmentBegin = String::Pos( L"#", InUrl );
+	Int32 iFragmentBegin = String::Pos( L"#", InUrl );
 	if( iFragmentBegin != -1 )
 	{
 		Fragment = String::Copy( InUrl, iFragmentBegin+1, InUrl.Len()-iFragmentBegin-1 );
@@ -740,8 +740,8 @@ TUrl::TUrl( String InUrl )
 	}
 
 	// Port.
-	Integer iPortBegin = String::Pos( L":", InUrl, Max(iUserEnd, iProtocolEnd) );
-	Integer iPortEnd = iPortBegin+1;
+	Int32 iPortBegin = String::Pos( L":", InUrl, Max(iUserEnd, iProtocolEnd) );
+	Int32 iPortEnd = iPortBegin+1;
 	if( iPortBegin != -1 )
 	{
 		while(iPortEnd < InUrl.Len() && IsDigit(InUrl[iPortEnd]))
@@ -754,25 +754,25 @@ TUrl::TUrl( String InUrl )
 
 
 	// Host.
-	Integer iHostBegin = Max( iUserEnd+1, iProtocolEnd );
-	Integer iHostEnd = iPortBegin != -1 ? iPortBegin : String::Pos(L"/", InUrl, iHostBegin);
+	Int32 iHostBegin = Max( iUserEnd+1, iProtocolEnd );
+	Int32 iHostEnd = iPortBegin != -1 ? iPortBegin : String::Pos(L"/", InUrl, iHostBegin);
 	Host = String::Copy( InUrl, iHostBegin, iHostEnd-iHostBegin );
 
 	// Query.
-	Integer iQueryBegin = String::Pos(L"?", InUrl)+1;
+	Int32 iQueryBegin = String::Pos(L"?", InUrl)+1;
 	if( iQueryBegin != -1 )
 	{
-		Integer iPairBegin = iQueryBegin;
+		Int32 iPairBegin = iQueryBegin;
 		
 		do 
 		{
-			Integer iPairEnd = String::Pos(L"&", InUrl, iPairBegin);
+			Int32 iPairEnd = String::Pos(L"&", InUrl, iPairBegin);
 			if( iPairEnd == -1 )
 				iPairEnd = iFragmentBegin != -1 ? iFragmentBegin : InUrl.Len();
 			if( iPairEnd == -1 || iPairEnd > InUrl.Len() || iPairBegin >= iPairEnd )
 				break;
 
-			Integer iMiddle = String::Pos( L"=", InUrl, iPairBegin )+1;
+			Int32 iMiddle = String::Pos( L"=", InUrl, iPairBegin )+1;
 
 			String Key = String::Copy( InUrl, iPairBegin, iMiddle-iPairBegin-1 );
 			String Value = String::Copy( InUrl, iMiddle, iPairEnd-iMiddle );
@@ -783,8 +783,8 @@ TUrl::TUrl( String InUrl )
 	}
 
 	// Path.
-	Integer iPathBegin = Max(iHostEnd+1, iPortEnd+1);
-	Integer iPathEnd = iQueryBegin != -1 ? iQueryBegin-1 : iFragmentBegin != -1 ? iFragmentBegin : InUrl.Len();
+	Int32 iPathBegin = Max(iHostEnd+1, iPortEnd+1);
+	Int32 iPathEnd = iQueryBegin != -1 ? iQueryBegin-1 : iFragmentBegin != -1 ? iFragmentBegin : InUrl.Len();
 	Path = String::Copy( InUrl, iPathBegin, iPathEnd-iPathBegin );
 }
 
@@ -822,7 +822,7 @@ String TUrl::ToString() const
 	if( Query.Entries.Num() )
 	{
 		Result += L"?";
-		for( Integer i=0; i<Query.Entries.Num(); i++ )
+		for( Int32 i=0; i<Query.Entries.Num(); i++ )
 			Result += String::Format(L"%s%s=%s", i>0 ? L"&" : L"", *Query.Entries[i].Key, *Query.Entries[i].Value );
 	}
 
@@ -878,17 +878,17 @@ void Serialize( CSerializer& S, TUrl& V )
 //
 // Murmur2 hash function.
 //
-DWord MurmurHash( const Byte* Data, SizeT Size )
+UInt32 MurmurHash( const UInt8* Data, SizeT Size )
 {
-	const Byte*	Ptr	= Data;
+	const UInt8*	Ptr	= Data;
 
-	DWord	M		= 0x5bd1e995,
+	UInt32	M		= 0x5bd1e995,
 			R		= 24,
-			H		= 0 ^ (DWord)Size;
+			H		= 0 ^ (UInt32)Size;
 
 	while( Size >= 4 )
 	{
-		DWord k	= *(DWord*)Ptr;
+		UInt32 k	= *(UInt32*)Ptr;
 
 		k	*= M;
 		k	^= k >> R;
@@ -942,9 +942,9 @@ Bool CCmdLineParser::ParseBoolParam( String Line, String Name, Bool Default )
 //
 // Parse an integer parameter from the line.
 //
-Integer CCmdLineParser::ParseIntParam( String Line, String Name, Integer Default )
+Int32 CCmdLineParser::ParseIntParam( String Line, String Name, Int32 Default )
 {
-	Integer Result = 0;
+	Int32 Result = 0;
 	String Value = ParseStringParam( Line, Name );
 	Value.ToInteger( Result, Default );
 	return Result;
@@ -966,16 +966,16 @@ Float CCmdLineParser::ParseFloatParam( String Line, String Name, Float Default )
 //
 // Parse a controling word from the line.
 //
-String CCmdLineParser::ParseCommand( String Line, Integer iArgNum )
+String CCmdLineParser::ParseCommand( String Line, Int32 iArgNum )
 {
-	Integer iCommandBegin = 0;
+	Int32 iCommandBegin = 0;
 
 	for( ; ; )
 	{
 		while( iCommandBegin < Line.Len() && Line[iCommandBegin] == ' ' )
 			iCommandBegin++;
 
-		Integer iCommandEnd = iCommandBegin;
+		Int32 iCommandEnd = iCommandBegin;
 		while( iCommandEnd < Line.Len() && IsDigitLetter(Line[iCommandEnd]) )
 			iCommandEnd++;
 
@@ -1002,7 +1002,7 @@ String CCmdLineParser::ParseCommand( String Line, Integer iArgNum )
 //
 String CCmdLineParser::ParseStringParam( String Line, String Name, String Default )
 {
-	Integer iNameBegin = String::Pos
+	Int32 iNameBegin = String::Pos
 	(
 		String::LowerCase(Name),
 		String::LowerCase(Line)
@@ -1010,17 +1010,17 @@ String CCmdLineParser::ParseStringParam( String Line, String Name, String Defaul
 	if( iNameBegin == -1 )
 		return Default;
 	
-	Integer iNameEnd = iNameBegin + Name.Len();
+	Int32 iNameEnd = iNameBegin + Name.Len();
 	if( iNameEnd >= Line.Len() || Line[iNameEnd] != '=' )
 		return Default;
 
-	Integer iValueBegin = iNameEnd + 1;
+	Int32 iValueBegin = iNameEnd + 1;
 	if( iValueBegin >= Line.Len() || Line[iValueBegin] == ' ' )
 		return Default;
 
 	if( Line[iValueBegin] == '"' )
 	{
-		Integer iQuoteEnd = String::Pos( L"\"", Line, iValueBegin+1 );
+		Int32 iQuoteEnd = String::Pos( L"\"", Line, iValueBegin+1 );
 		if( iQuoteEnd != -1 )
 		{
 			return String::Copy( Line, iValueBegin+1, iQuoteEnd-iValueBegin-1 );
@@ -1030,7 +1030,7 @@ String CCmdLineParser::ParseStringParam( String Line, String Name, String Defaul
 	}
 	else if( IsDigitLetter(Line[iValueBegin]) )
 	{
-		Integer iValueEnd = iValueBegin;
+		Int32 iValueEnd = iValueBegin;
 		while( iValueEnd < Line.Len() && IsDigitLetter(Line[iValueEnd]) )
 			iValueEnd++;
 

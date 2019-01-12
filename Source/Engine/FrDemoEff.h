@@ -15,10 +15,10 @@ class FDemoBitmap: public FBitmap
 REGISTER_CLASS_H( FDemoBitmap );
 public:
 	// Variables.
-	Byte*			EffectPtr;
-	DWord			UMask;
-	DWord			VMask;
-	DWord			Phase;
+	UInt8*			EffectPtr;
+	UInt32			UMask;
+	UInt32			VMask;
+	UInt32			Phase;
 	FBitmap*		PaletteRef;
 
 	// FDemoBitmap interface.
@@ -26,7 +26,7 @@ public:
 	~FDemoBitmap();
 
 	// FBitmap interface.
-	void Init( Integer InU, Integer InV );
+	void Init( Int32 InU, Int32 InV );
 	void* GetData();
 	SizeT GetBlockSize();
 
@@ -59,10 +59,10 @@ public:
 	~FPlasmaBitmap();
 
 	// FBitmap interface.
-	void Init( Integer InU, Integer InV );
+	void Init( Int32 InU, Int32 InV );
 	void Erase();
-	void MouseClick( Integer Button, Integer X, Integer Y );
-	void MouseMove( Integer Button, Integer X, Integer Y );
+	void MouseClick( Int32 Button, Int32 X, Int32 Y );
+	void MouseMove( Int32 Button, Int32 X, Int32 Y );
 	void Redraw();
 
 	// FObject interface.
@@ -72,9 +72,9 @@ public:
 
 private:
 	// Plasma internal.
-	Integer		PaletteShift;
-	Byte		PlasmaTable[4][256];
-	Byte*		HeatBuffer;
+	Int32		PaletteShift;
+	UInt8		PlasmaTable[4][256];
+	UInt8*		HeatBuffer;
 
 	void SetPlasmaTable();
 	void CalculatePlasma();
@@ -125,14 +125,14 @@ public:
 	struct TSpark
 	{
 	public:
-		Byte		Type;
-		Byte		X;
-		Byte		Y;
-		Byte		Heat;
-		Byte		ParamA;
-		Byte		ParamB;
-		Byte		ParamC;
-		Byte		ParamD;
+		UInt8		Type;
+		UInt8		X;
+		UInt8		Y;
+		UInt8		Heat;
+		UInt8		ParamA;
+		UInt8		ParamB;
+		UInt8		ParamC;
+		UInt8		ParamD;
 	};
 
 	// Fire-draw params.
@@ -140,28 +140,28 @@ public:
 	{
 	public:
 		ESparkType	DrawType;
-		Byte		Heat;
-		Byte		Life;
-		Byte		Frequency;
-		Byte		Size;
-		Byte		Area;
-		Byte		Direction;
-		Byte		Speed;
+		UInt8		Heat;
+		UInt8		Life;
+		UInt8		Frequency;
+		UInt8		Size;
+		UInt8		Area;
+		UInt8		Direction;
+		UInt8		Speed;
 	};
 
 	// Variables.
 	Bool			bRising;
-	Byte			FireHeat;
+	UInt8			FireHeat;
 	TFireDrawParams	DrawParams;
 
 	// FFireBitmap interface.
 	FFireBitmap();
 
 	// FBitmap interface.
-	void Init( Integer InU, Integer InV );
+	void Init( Int32 InU, Int32 InV );
 	void Erase();
-	void MouseClick( Integer Button, Integer X, Integer Y );
-	void MouseMove( Integer Button, Integer X, Integer Y );
+	void MouseClick( Int32 Button, Int32 X, Int32 Y );
+	void MouseMove( Int32 Button, Int32 X, Int32 Y );
 	void Redraw();
 
 	// FObject interface.
@@ -173,18 +173,18 @@ public:
 
 private:
 	// Fire internal.
-	Byte		FireTable[512];
-	Integer		NumSparks;
+	UInt8		FireTable[512];
+	Int32		NumSparks;
 	TSpark		Sparks[MAX_FIRE_SPARKS];
 
 	// FFireBitmap interface.
-	void AddSpark( Integer X, Integer Y );
-	void DeleteSparks( Integer X, Integer Y, Integer Size );
+	void AddSpark( Int32 X, Int32 Y );
+	void DeleteSparks( Int32 X, Int32 Y, Int32 Size );
 	void RedrawSparks();
 	void RenderStillFire();		
 	void RenderRisingFire();
 	void SetFireTable();
-	void DrawLighting( Integer X1, Integer Y1, Integer X2, Integer Y2, Byte Heat1, Byte Heat2 );
+	void DrawLighting( Int32 X1, Int32 Y1, Int32 X2, Int32 Y2, UInt8 Heat1, UInt8 Heat2 );
 };
 
 
@@ -220,14 +220,14 @@ public:
 	struct TDrop
 	{
 	public:
-		Byte		Type;
-		Byte		X;
-		Byte		Y;
-		Byte		Depth;
-		Byte		ParamA;
-		Byte		ParamB;
-		Byte		ParamC;
-		Byte		ParamD;
+		UInt8		Type;
+		UInt8		X;
+		UInt8		Y;
+		UInt8		Depth;
+		UInt8		ParamA;
+		UInt8		ParamB;
+		UInt8		ParamC;
+		UInt8		ParamD;
 	};
 
 	// Water-draw params.
@@ -235,15 +235,15 @@ public:
 	{
 	public:
 		EDropType	DrawType;
-		Byte		Depth;
-		Byte		Amplitude;
-		Byte		Frequency;
-		Byte		Size;
-		Byte		Speed;
+		UInt8		Depth;
+		UInt8		Amplitude;
+		UInt8		Frequency;
+		UInt8		Size;
+		UInt8		Speed;
 	};
 
 	// Variables.
-	Byte				WaterAmpl;
+	UInt8				WaterAmpl;
 	FBitmap*			Image;
 	TWaterDrawParams	DrawParams;
 
@@ -252,10 +252,10 @@ public:
 	~FWaterBitmap();
 
 	// FBitmap interface.
-	void Init( Integer InU, Integer InV );
+	void Init( Int32 InU, Int32 InV );
 	void Erase();
-	void MouseClick( Integer Button, Integer X, Integer Y );
-	void MouseMove( Integer Button, Integer X, Integer Y );
+	void MouseClick( Int32 Button, Int32 X, Int32 Y );
+	void MouseMove( Int32 Button, Int32 X, Int32 Y );
 	void Redraw();
 
 	// FObject interface.
@@ -267,14 +267,14 @@ public:
 
 private:
 	// Water internal.
-	Byte		DistTable[1024];
-	Integer		NumDrops;
+	UInt8		DistTable[1024];
+	Int32		NumDrops;
 	TDrop		Drops[MAX_WATER_DROPS];
-	Byte*		ZBuffer;
+	UInt8*		ZBuffer;
 
 	// FWaterBitmap interface.
-	void AddDrop( Integer X, Integer Y );
-	void DeleteDrops( Integer X, Integer Y, Integer Size );
+	void AddDrop( Int32 X, Int32 Y );
+	void DeleteDrops( Int32 X, Int32 Y, Int32 Size );
 	void RedrawDrops();
 	void CalculateWater();
 	void RenderWater();
@@ -314,14 +314,14 @@ public:
 	// Panel type.
 	struct TPanel
 	{
-		Byte	Type;
-		Byte	X;
-		Byte	Y;
-		Byte	Depth;
-		Byte	ParamA;
-		Byte	ParamB;
-		Byte	ParamC;
-		Byte	ParamD;
+		UInt8	Type;
+		UInt8	X;
+		UInt8	Y;
+		UInt8	Depth;
+		UInt8	ParamA;
+		UInt8	ParamB;
+		UInt8	ParamC;
+		UInt8	ParamD;
 	};
 
 	// Tech-draw params.
@@ -329,14 +329,14 @@ public:
 	{
 	public:
 		EPanelType	DrawType;
-		Byte		Depth;
-		Byte		Size;
-		Byte		Time;
+		UInt8		Depth;
+		UInt8		Size;
+		UInt8		Time;
 	};
 
 	// Variables.
-	Byte			BumpMapLight;
-	Byte			BumpMapAngle;
+	UInt8			BumpMapLight;
+	UInt8			BumpMapAngle;
 	TTechDrawParams	DrawParams;
 
 	// FTechBitmap interface.
@@ -344,10 +344,10 @@ public:
 	~FTechBitmap();
 
 	// FBitmap interface.
-	void Init( Integer InU, Integer InV );
+	void Init( Int32 InU, Int32 InV );
 	void Erase();
-	void MouseClick( Integer Button, Integer X, Integer Y );
-	void MouseMove( Integer Button, Integer X, Integer Y );
+	void MouseClick( Int32 Button, Int32 X, Int32 Y );
+	void MouseMove( Int32 Button, Int32 X, Int32 Y );
 	void Redraw();
 
 	// FObject interface.
@@ -359,20 +359,20 @@ public:
 
 private:
 	// Tech internal.
-	Byte		LightTable[580];
-	Integer		NumPanels;
+	UInt8		LightTable[580];
+	Int32		NumPanels;
 	TPanel		Panels[MAX_TECH_PANELS];
-	Byte*		ZBuffer;
+	UInt8*		ZBuffer;
 
 	// FTechBitmap interface.
-	void AddPanel( Integer X, Integer Y );
-	void DeletePanels( Integer X, Integer Y, Integer Area );
+	void AddPanel( Int32 X, Int32 Y );
+	void DeletePanels( Int32 X, Int32 Y, Int32 Area );
 	void RedrawPanels();
 	void CalculateBumpMap();
 	void SetLigthTable();
 
-	void ApplyFilter1( Integer X, Integer Y, Integer Area );
-	void ApplyFilter2( Integer X, Integer Y, Integer Area );
+	void ApplyFilter1( Int32 X, Int32 Y, Int32 Area );
+	void ApplyFilter2( Int32 X, Int32 Y, Int32 Area );
 };
 
 
@@ -399,10 +399,10 @@ public:
 	~FGlassBitmap();
 
 	// FBitmap interface.
-	void Init( Integer InU, Integer InV );
+	void Init( Int32 InU, Int32 InV );
 	void Erase();
-	void MouseClick( Integer Button, Integer X, Integer Y );
-	void MouseMove( Integer Button, Integer X, Integer Y );
+	void MouseClick( Int32 Button, Int32 X, Int32 Y );
+	void MouseMove( Int32 Button, Int32 X, Int32 Y );
 	void Redraw();
 
 	// FObject interface.
@@ -413,8 +413,8 @@ public:
 
 private:
 	// Glass internal.
-	Byte			VOffset;
-	Byte			HOffset;
+	UInt8			VOffset;
+	UInt8			HOffset;
 
 	void RenderGlassI();
 	void RenderGlassII();
@@ -442,8 +442,8 @@ REGISTER_CLASS_H( FHarmonicBitmap );
 public:
 	// Variables.
 	EWaveDirection	Direction;
-	Byte			WaveAmpl;
-	Byte			WaveFreq;
+	UInt8			WaveAmpl;
+	UInt8			WaveFreq;
 	FBitmap*		Image;
 
 	// FHarmonicBitmap interface.
@@ -451,10 +451,10 @@ public:
 	~FHarmonicBitmap();
 
 	// FBitmap interface.
-	void Init( Integer InU, Integer InV );
+	void Init( Int32 InU, Int32 InV );
 	void Erase();
-	void MouseClick( Integer Button, Integer X, Integer Y );
-	void MouseMove( Integer Button, Integer X, Integer Y );
+	void MouseClick( Int32 Button, Int32 X, Int32 Y );
+	void MouseMove( Int32 Button, Int32 X, Int32 Y );
 	void Redraw();
 
 	// FObject interface.
@@ -465,8 +465,8 @@ public:
 
 private:
 	// Harmonic internal.
-	Byte			VOffset;
-	Byte			HOffset;
+	UInt8			VOffset;
+	UInt8			HOffset;
 
 	void RenderHarmonicH();
 	void RenderHarmonicV();

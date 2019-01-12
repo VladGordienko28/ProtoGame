@@ -18,7 +18,7 @@ WEdit::WEdit( WContainer* InOwner, WWindow* InRoot )
 		EditType( EDIT_String ),		
 		CaretBegin( 0 ),
 		CaretEnd( 0 ),
-		OldInteger( 0 ),
+		OldInt32( 0 ),
 		OldFloat( 0.f ),
 		ScrollX( 0 ),
 		bDrawSelection( true )
@@ -50,7 +50,7 @@ void WEdit::SetText( String NewText, Bool bNotify )
 //
 // Convert caret location to pixels.
 //
-Integer WEdit::CaretToPixel( Integer C )
+Int32 WEdit::CaretToPixel( Int32 C )
 {
 	return (C-ScrollX) * CharSize.Width;	
 }
@@ -60,7 +60,7 @@ Integer WEdit::CaretToPixel( Integer C )
 // Convert pixel value to caret, result
 // will be clamped to cover text.
 //
-Integer WEdit::PixelToCaret( Integer X )
+Int32 WEdit::PixelToCaret( Int32 X )
 {
 	return Clamp
 			( 
@@ -110,11 +110,11 @@ void WEdit::OnDeactivate()
 		// Fix numeric values, in case of bad input.
 		if( EditType == EDIT_Integer )
 		{
-			// Fix integer.
-			Integer V;
+			// Fix Int32.
+			Int32 V;
 			if( !Text.ToInteger( V ) )
 			{
-				Text = String::Format( L"%d", OldInteger );
+				Text = String::Format( L"%d", OldInt32 );
 				OnChange();
 			}
 		}
@@ -137,7 +137,7 @@ void WEdit::OnDeactivate()
 //
 // Mouse down edit.
 //
-void WEdit::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WEdit::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseDown( Button, X, Y );
 
@@ -149,7 +149,7 @@ void WEdit::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse button up.
 //
-void WEdit::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WEdit::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseUp( Button, X, Y );
 
@@ -162,7 +162,7 @@ void WEdit::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse move.
 //
-void WEdit::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WEdit::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseMove( Button, X, Y );
 
@@ -176,7 +176,7 @@ void WEdit::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 //
 // Edit double click.
 //
-void WEdit::OnDblClick( EMouseButton Button, Integer X, Integer Y )
+void WEdit::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnDblClick( Button, X, Y );
 
@@ -189,7 +189,7 @@ void WEdit::OnDblClick( EMouseButton Button, Integer X, Integer Y )
 //
 // User press button.
 //
-void WEdit::OnKeyDown( Integer Key )
+void WEdit::OnKeyDown( Int32 Key )
 {	
 	WWidget::OnKeyDown( Key );	
 
@@ -239,7 +239,7 @@ void WEdit::OnKeyDown( Integer Key )
 	else if( Root->bCtrl && (Key == L'X' || Key == L'C' ) )
 	{
 		// Copy or Cut.
-		Integer NumChars = CaretEnd - CaretBegin;
+		Int32 NumChars = CaretEnd - CaretBegin;
 		if( NumChars )
 		{
 			Char* TxtToCpy = new Char[NumChars+1]();
@@ -270,7 +270,7 @@ void WEdit::OnKeyDown( Integer Key )
 		Text	= String::Delete( Text, CaretBegin, Text.Len()-CaretBegin );
 
 		// Insert it.
-		for( Integer i=0; i<ClipTxt.Len(); i++ )
+		for( Int32 i=0; i<ClipTxt.Len(); i++ )
 		{
 			Char C[2] = { ClipTxt[i], 0 };
 
@@ -370,7 +370,7 @@ void WEdit::OnPaint( CGUIRenderBase* Render )
 	Cursor = bReadOnly ? CR_Arrow : CR_IBeam;
 
 	TPoint Base = ClientToWindow(TPoint(0, 0));
-	Integer TextY = Base.Y + (Size.Height - CharSize.Height) / 2;
+	Int32 TextY = Base.Y + (Size.Height - CharSize.Height) / 2;
 
 	Render->DrawRegion
 				( 
@@ -447,9 +447,9 @@ void WEdit::Store()
 {
 	if( EditType == EDIT_Integer )
 	{
-		Integer V;
+		Int32 V;
 		if( Text.ToInteger( V, 0 ) )
-			OldInteger	= V;
+			OldInt32	= V;
 	}
 	else if( EditType == EDIT_Float )
 	{
@@ -465,7 +465,7 @@ void WEdit::Store()
 //
 void WEdit::ScrollToCaret()
 {
-	Integer NumVis	= Size.Width / CharSize.Width;
+	Int32 NumVis	= Size.Width / CharSize.Width;
 
 	// Scroll from the current location.
 	while( CaretEnd < ScrollX )				ScrollX--;
@@ -490,7 +490,7 @@ WSpinner::WSpinner( WContainer* InOwner, WWindow* InRoot )
 //
 // Spinner mouse move.
 //
-void WSpinner::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WSpinner::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	// Call parent.
 	if( iSpinButton == 0 )
@@ -500,7 +500,7 @@ void WSpinner::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 	if( iSpinButton != 0 && Button == MB_Left )
 	{
 		// Hack for handle wrapping.
-		static Integer OldDirection = 0;
+		static Int32 OldDirection = 0;
 
 		Y	= Y/8;
 		if( LastCursorY != Y )
@@ -508,7 +508,7 @@ void WSpinner::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 			if( LastCursorY < Y )
 			{
 				// Decrement.
-				Integer Multiplier = 0;
+				Int32 Multiplier = 0;
 				while( OldDirection==-1 && LastCursorY++ < Y )
 					Multiplier++;
 
@@ -518,7 +518,7 @@ void WSpinner::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 			else
 			{
 				// Increment.
-				Integer Multiplier = 0;
+				Int32 Multiplier = 0;
 				while( OldDirection==1 && LastCursorY-- > Y )
 					Multiplier++;
 
@@ -536,7 +536,7 @@ void WSpinner::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 //
 // Spinner mouse down.
 //
-void WSpinner::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WSpinner::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	// Call parent.
 	if( X < Size.Width-12 )
@@ -630,9 +630,9 @@ void WSpinner::OnPaint( CGUIRenderBase* Render )
 
 
 //
-// Set integer spinner value.
+// Set Int32 spinner value.
 //
-void WSpinner::SetValue( Integer InValue, Bool bNotify )
+void WSpinner::SetValue( Int32 InValue, Bool bNotify )
 {
 	InValue = Clamp( InValue, IMin, IMax );
 	SetText( String::FromInteger(InValue), bNotify );
@@ -650,9 +650,9 @@ void WSpinner::SetValue( Float InValue, Bool bNotify )
 
 
 //
-// Set spinner integer range.
+// Set spinner Int32 range.
 //
-void WSpinner::SetRange( Integer InMin, Integer InMax, Integer InScale )
+void WSpinner::SetRange( Int32 InMin, Int32 InMax, Int32 InScale )
 {
 	EditType	= EDIT_Integer;
 	IMin		= InMin;
@@ -676,7 +676,7 @@ void WSpinner::SetRange( Float InMin, Float InMax, Float InScale )
 //
 // Spinner double click.
 //
-void WSpinner::OnDblClick( EMouseButton Button, Integer X, Integer Y )
+void WSpinner::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 {
 	if( X < Size.Width-12 )
 		WEdit::OnDblClick( Button, X, Y );
@@ -686,7 +686,7 @@ void WSpinner::OnDblClick( EMouseButton Button, Integer X, Integer Y )
 //
 // Spinner mouse button release.
 //
-void WSpinner::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WSpinner::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	if( X < Size.Width-12 )
 		WEdit::OnMouseUp( Button, X, Y );
@@ -703,7 +703,7 @@ void WSpinner::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 //
 // Increment spinner.
 //
-void WSpinner::Increment( bool bDown, Integer Multiplier )
+void WSpinner::Increment( bool bDown, Int32 Multiplier )
 {
 	if( Multiplier == 0 )
 		return;
@@ -721,11 +721,11 @@ void WSpinner::Increment( bool bDown, Integer Multiplier )
 	}
 	else
 	{
-		// Integer spinner.
-		Integer Inc = bDown ? -IScale : IScale;
-		Integer Value;
+		// Int32 spinner.
+		Int32 Inc = bDown ? -IScale : IScale;
+		Int32 Value;
 
-		Text.ToInteger( Value, OldInteger );
+		Text.ToInteger( Value, OldInt32 );
 		Value	= Clamp( Value+Inc*Multiplier, IMin, IMax );
 
 		SetText(String::FromInteger(Value));
@@ -760,10 +760,10 @@ void WSpinner::FixValue()
 	}
 	else
 	{
-		// Integer spinner.
-		Integer Value;
+		// Int32 spinner.
+		Int32 Value;
 
-		Text.ToInteger( Value, OldInteger );
+		Text.ToInteger( Value, OldInt32 );
 		Value	= Clamp( Value, IMin, IMax );
 
 		Text = String::FromInteger(Value);
@@ -788,10 +788,10 @@ void WSpinner::OnAccept()
 //
 // Getters.
 //
-Integer WSpinner::GetIntValue() const
+Int32 WSpinner::GetIntValue() const
 {
-	Integer i;
-	Text.ToInteger( i, OldInteger );
+	Int32 i;
+	Text.ToInteger( i, OldInt32 );
 	return Clamp( i, IMin, IMax );
 }
 Float WSpinner::GetFloatValue() const

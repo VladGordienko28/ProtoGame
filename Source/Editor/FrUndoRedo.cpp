@@ -31,7 +31,7 @@ CLevelTransactor::CLevelTransactor( FLevel* InLevel )
 CLevelTransactor::~CLevelTransactor()
 {
 	// Destroy transactions.
-	for( Integer i=0; i<Transactions.Num(); i++ )
+	for( Int32 i=0; i<Transactions.Num(); i++ )
 		delete Transactions[i];
 
 	Transactions.Empty();
@@ -49,7 +49,7 @@ void CLevelTransactor::Reset()
 	assert(!bLocked);
 
 	// Destroy transactions.
-	for( Integer i=0; i<Transactions.Num(); i++ )
+	for( Int32 i=0; i<Transactions.Num(); i++ )
 		delete Transactions[i];
 	Transactions.Empty();
 
@@ -133,7 +133,7 @@ void CLevelTransactor::TrackLeave()
 	bLocked	= false;
 
 	// Destroy transactions after top.
-	for( Integer i=TopTransaction+1; i<Transactions.Num(); i++ )	
+	for( Int32 i=TopTransaction+1; i<Transactions.Num(); i++ )	
 		freeandnil(Transactions[i]);
 
 	// Store current state.
@@ -166,14 +166,14 @@ void CLevelTransactor::TrackLeave()
 void CLevelTransactor::CountRefs( CSerializer& S )
 {
 	// Serialize everything.
-	for( Integer iTran=0; iTran<Transactions.Num(); iTran++ )
+	for( Int32 iTran=0; iTran<Transactions.Num(); iTran++ )
 	{
 		TTransaction* Tran = Transactions[iTran];
 		Serialize( S, Tran->Detached );
 		Serialize( S, Tran->Entities );
 
 		// Test if some script has been destroyed.
-		for( Integer i=0; i<Tran->Entities.Num(); i++ )
+		for( Int32 i=0; i<Tran->Entities.Num(); i++ )
 			if( Tran->Entities[i] == nullptr )
 				goto ResetAll;
 	}
@@ -183,7 +183,7 @@ void CLevelTransactor::CountRefs( CSerializer& S )
 
 ResetAll:
 	// Reset tracker.
-	for( Integer iTran=0; iTran<Transactions.Num(); iTran++ )
+	for( Int32 iTran=0; iTran<Transactions.Num(); iTran++ )
 		delete Transactions[iTran];
 	Transactions.Empty();
 	TopTransaction	= 0;
@@ -197,7 +197,7 @@ ResetAll:
 void CLevelTransactor::Debug()
 {
 	SizeT Mem = 0;
-	for( Integer i=0; i<Transactions.Num(); i++ )
+	for( Int32 i=0; i<Transactions.Num(); i++ )
 		Mem += Transactions[i]->CountMem();
 
 	// Output.
@@ -239,14 +239,14 @@ public:
 		if( Obj == nullptr )
 		{
 			// Null object.
-			Byte	b = 0;
+			UInt8	b = 0;
 			Serialize( *this, b );
 		}
 		else if( Obj->IsA(FEntity::MetaClass) )
 		{
 			// Pointer to entity.
-			Byte	b = 1;
-			Integer	i = Transaction->Level->GetEntityIndex((FEntity*)Obj);
+			UInt8	b = 1;
+			Int32	i = Transaction->Level->GetEntityIndex((FEntity*)Obj);
 			Serialize( *this, b );
 			Serialize( *this, i );
 		}
@@ -254,9 +254,9 @@ public:
 		{
 			// Pointer to component.
 			FComponent* Component = As<FComponent>(Obj);
-			Byte	b = 2;
-			Integer	i = Transaction->Level->GetEntityIndex(Component->Entity);
-			Integer j = Component == Component->Entity->Base ? 0xff : Component->Entity->Components.FindItem((FExtraComponent*)Component);
+			UInt8	b = 2;
+			Int32	i = Transaction->Level->GetEntityIndex(Component->Entity);
+			Int32 j = Component == Component->Entity->Base ? 0xff : Component->Entity->Components.FindItem((FExtraComponent*)Component);
 			assert(j != -1);
 			Serialize( *this, b );
 			Serialize( *this, i );
@@ -266,8 +266,8 @@ public:
 		{
 			// Resource.
 			assert(Obj->IsA(FResource::MetaClass));
-			Byte	b = 3;
-			Integer	i = Transaction->Detached.AddUnique(Obj);
+			UInt8	b = 3;
+			Int32	i = Transaction->Detached.AddUnique(Obj);
 			Serialize( *this, b );
 			Serialize( *this, i );
 		}
@@ -316,7 +316,7 @@ public:
 	}
 	void SerializeRef( FObject*& Obj )
 	{
-		Byte b;
+		UInt8 b;
 		Serialize( *this, b );
 		if( b == 0 )
 		{
@@ -326,14 +326,14 @@ public:
 		else if( b == 1 )
 		{
 			// Pointer to entity.
-			Integer iEntity;
+			Int32 iEntity;
 			Serialize( *this, iEntity );
 			Obj	= Transaction->Level->Entities[iEntity];
 		}
 		else if( b == 2 )
 		{
 			// Pointer to component.
-			Integer iEntity, iCom;
+			Int32 iEntity, iCom;
 			Serialize( *this, iEntity );
 			Serialize( *this, iCom );
 			FEntity* Entity = Transaction->Level->Entities[iEntity];
@@ -343,7 +343,7 @@ public:
 		{
 			// Pointer to resource.
 			assert(b==3);
-			Integer iObj;
+			Int32 iObj;
 			Serialize( *this, iObj );
 			Obj	= Transaction->Detached[iObj];
 		}
@@ -410,7 +410,7 @@ void TTransaction::Store()
 	// Store list of script being each entity.
 	Entities.SetNum(Level->Entities.Num());
 	Names.SetNum(Level->Entities.Num());
-	for( Integer i=0; i<Entities.Num(); i++ )
+	for( Int32 i=0; i<Entities.Num(); i++ )
 	{
 		Entities[i]	= Level->Entities[i]->Script;
 		Names[i]	= Level->Entities[i]->GetName();
@@ -421,13 +421,13 @@ void TTransaction::Store()
 		CTransactionWriter Writer(this);
 
 		// Serialize each entity.
-		for( Integer i=0; i<Level->Entities.Num(); i++ )
+		for( Int32 i=0; i<Level->Entities.Num(); i++ )
 		{
 			FEntity* Entity	= Level->Entities[i];
 
 			// Serialize only component's because they are refer.
 			Entity->Base->SerializeThis( Writer );
-			for( Integer e=0; e<Entity->Components.Num(); e++ )
+			for( Int32 e=0; e<Entity->Components.Num(); e++ )
 				Entity->Components[e]->SerializeThis( Writer );
 
 			// ..but also store the instance buffer.
@@ -481,7 +481,7 @@ void TTransaction::Restore()
 	freeandnil(Level->Navigator);
 
 	// Erase old level's objects.
-	for( Integer i=0; i<Level->Entities.Num(); i++ )
+	for( Int32 i=0; i<Level->Entities.Num(); i++ )
 		DestroyObject( Level->Entities[i], true );
 
 	Level->Entities.Empty();
@@ -519,7 +519,7 @@ void TTransaction::Restore()
 
 		// Allocate a list of entities and all it's 
 		// components.
-		for( Integer iEntity=0; iEntity<Entities.Num(); iEntity++ )
+		for( Int32 iEntity=0; iEntity<Entities.Num(); iEntity++ )
 		{
 			FEntity* Entity = NewObject<FEntity>( Names[iEntity], Level );
 
@@ -536,7 +536,7 @@ void TTransaction::Restore()
 			Base->InitForEntity( Entity );
 
 			// Extra components.
-			for( Integer i=0; i<Entity->Script->Components.Num(); i++ )
+			for( Int32 i=0; i<Entity->Script->Components.Num(); i++ )
 			{
 				FExtraComponent* Extra = Entity->Script->Components[i];
 				FExtraComponent* Com = NewObject<FExtraComponent>
@@ -560,13 +560,13 @@ void TTransaction::Restore()
 		}
 
 		// Serialize each entity.
-		for( Integer i=0; i<Level->Entities.Num(); i++ )
+		for( Int32 i=0; i<Level->Entities.Num(); i++ )
 		{
 			FEntity* Entity	= Level->Entities[i];
 
 			// Serialize only component's because they are refer.
 			Entity->Base->SerializeThis( Reader );
-			for( Integer e=0; e<Entity->Components.Num(); e++ )
+			for( Int32 e=0; e<Entity->Components.Num(); e++ )
 				Entity->Components[e]->SerializeThis( Reader );
 
 			// ..but also store the instance buffer.
@@ -588,13 +588,13 @@ void TTransaction::Restore()
 #endif
 
 	// Notify each object.
-	for( Integer iEntity=0; iEntity<Level->Entities.Num(); iEntity++ )
+	for( Int32 iEntity=0; iEntity<Level->Entities.Num(); iEntity++ )
 	{
 		FEntity* Entity	= Level->Entities[iEntity];
 
 		Entity->PostLoad();
 		Entity->Base->PostLoad();
-		for( Integer e=0; e<Entity->Components.Num(); e++ )
+		for( Int32 e=0; e<Entity->Components.Num(); e++ )
 			Entity->Components[e]->PostLoad();
 	}
 }
@@ -608,7 +608,7 @@ SizeT TTransaction::CountMem() const
 	return	Entities.Num() * sizeof(FScript*) +
 			Detached.Num() * sizeof(FObject*) +
 			Names.Num() * sizeof(String) +
-			Data.Num() * sizeof(Byte) +
+			Data.Num() * sizeof(UInt8) +
 			ComSourceSize;
 }
 

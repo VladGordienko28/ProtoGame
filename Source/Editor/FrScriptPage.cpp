@@ -71,7 +71,7 @@ public:
 	}
 
 	// WForm interface.
-	void Show( Integer X = 0, Integer Y = 0 )
+	void Show( Int32 X = 0, Int32 Y = 0 )
 	{
 		Location	= TPoint( X, Y );
 		bVisible	= true;
@@ -157,7 +157,7 @@ public:
 	}
 
 	// WForm interface.
-	void Show( Integer X = 0, Integer Y = 0 )
+	void Show( Int32 X = 0, Int32 Y = 0 )
 	{
 		WForm::Show( X, Y );
 
@@ -183,7 +183,7 @@ public:
 	}
 	void ButtonGoClick( WWidget* Sender )
 	{
-		Integer iLine = Clamp( LineSpinner->GetIntValue(), 1, CodeEditor->Lines.Num() )-1;
+		Int32 iLine = Clamp( LineSpinner->GetIntValue(), 1, CodeEditor->Lines.Num() )-1;
 		CodeEditor->ScrollToLine(iLine);
 		Hide();
 	}
@@ -232,7 +232,7 @@ public:
 		BaseCombo				= new WComboBox( this, InRoot );	
 		BaseCombo->Location		= TPoint( 145, 29 );
 		BaseCombo->SetSize( 160, 18 );
-		for( Integer i=0; i<CClassDatabase::GClasses.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GClasses.Num(); i++ )
 		{
 			CClass*	Class	= CClassDatabase::GClasses[i];
 			if( Class->IsA(FBaseComponent::MetaClass) && !(Class->Flags & CLASS_Abstract) )
@@ -250,7 +250,7 @@ public:
 		ExtraList				= new WListBox( ExtraPanel, InRoot );
 		ExtraList->Location		= TPoint( 10, 10 );
 		ExtraList->SetSize( 180, 200 );
-		for( Integer i=0; i<CClassDatabase::GClasses.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GClasses.Num(); i++ )
 		{
 			CClass*	Class	= CClassDatabase::GClasses[i];
 			if( Class->IsA(FExtraComponent::MetaClass) && !(Class->Flags & CLASS_Abstract) )
@@ -302,15 +302,15 @@ public:
 	}
 	void UpdateSingleCompFlags()
 	{
-		for( Integer i=0; i<ExtraList->Items.Num(); i++ )
+		for( Int32 i=0; i<ExtraList->Items.Num(); i++ )
 			ExtraList->Items[i].bEnabled = true;
 
-		for( Integer iUsed=0; iUsed<ExtraUsedList->Items.Num(); iUsed++ )
+		for( Int32 iUsed=0; iUsed<ExtraUsedList->Items.Num(); iUsed++ )
 		{
 			CClass* UsedClass = (CClass*)ExtraUsedList->Items[iUsed].Data;
 			if( UsedClass->Flags & CLASS_SingleComp )
 			{
-				for( Integer i=0; i<ExtraList->Items.Num(); i++ )
+				for( Int32 i=0; i<ExtraList->Items.Num(); i++ )
 					if( ExtraList->Items[i].Data == UsedClass )
 					{
 						ExtraList->Items[i].bEnabled = false;
@@ -329,12 +329,12 @@ public:
 		WForm::OnClose();
 		Hide();
 	}
-	void Show( Integer X = 0, Integer Y = 0 )
+	void Show( Int32 X = 0, Int32 Y = 0 )
 	{
 		WForm::Show( X, Y );
 
 		// Base.
-		for( Integer i=0; i<BaseCombo->Items.Num(); i++ )
+		for( Int32 i=0; i<BaseCombo->Items.Num(); i++ )
 			if( Page->Script->Base->GetClass() == BaseCombo->Items[i].Data )
 			{
 				BaseCombo->ItemIndex	= i;
@@ -343,7 +343,7 @@ public:
 
 		// Extra components.
 		ExtraUsedList->Empty();
-		for( Integer e=0; e<Page->Script->Components.Num(); e++ )
+		for( Int32 e=0; e<Page->Script->Components.Num(); e++ )
 			ExtraUsedList->AddItem
 			(
 				Page->Script->Components[e]->GetName(),
@@ -417,7 +417,7 @@ public:
 			Root->ShowMessage( L"Please specify the base component", L"Components Editor", true );
 			return;
 		}
-		for( Integer i=0; i<ExtraUsedList->Items.Num(); i++ )
+		for( Int32 i=0; i<ExtraUsedList->Items.Num(); i++ )
 		{
 			CClass* Class = (CClass*)ExtraUsedList->Items[i].Data;
 			String  Name  = ExtraUsedList->Items[i].Name;
@@ -433,7 +433,7 @@ public:
 				return;
 			}
 
-			for( Integer j=i+1; j<ExtraUsedList->Items.Num(); j++ )
+			for( Int32 j=i+1; j<ExtraUsedList->Items.Num(); j++ )
 				if( ExtraUsedList->Items[j].Name == Name )
 				{
 					Root->ShowMessage
@@ -447,8 +447,8 @@ public:
 		}
 
 		// Count entities being this script.
-		Integer NumEnts = 0;
-		for( Integer i=0; i<GProject->GObjects.Num(); i++ )
+		Int32 NumEnts = 0;
+		for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
 			if( GProject->GObjects[i] && GProject->GObjects[i]->IsA(FEntity::MetaClass) )
 			{
 				FEntity* Entity	= As<FEntity>(GProject->GObjects[i]);
@@ -473,7 +473,7 @@ public:
 		GEditor->DropAllScripts();
 
 		// Kill all entities.
-		for( Integer i=0; i<GProject->GObjects.Num(); i++ )
+		for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
 			if( GProject->GObjects[i] && GProject->GObjects[i]->IsA(FEntity::MetaClass) )
 			{
 				FEntity* Entity	= As<FEntity>(GProject->GObjects[i]);
@@ -494,11 +494,11 @@ public:
 		}
 
 		// Extra components.
-		for( Integer e=0; e<Page->Script->Components.Num(); e++ )
+		for( Int32 e=0; e<Page->Script->Components.Num(); e++ )
 		{
 			FExtraComponent* Com = Page->Script->Components[e];
 			Bool bFound = false;
-			for( Integer i=0; i<ExtraUsedList->Items.Num(); i++ )
+			for( Int32 i=0; i<ExtraUsedList->Items.Num(); i++ )
 				if( Com->GetName()==ExtraUsedList->Items[i].Name && Com->GetClass()==ExtraUsedList->Items[i].Data )
 				{
 					bFound	= true;
@@ -512,7 +512,7 @@ public:
 				e--;
 			}
 		}
-		for( Integer i=0; i<ExtraUsedList->Items.Num(); i++ )
+		for( Int32 i=0; i<ExtraUsedList->Items.Num(); i++ )
 		{
 			CClass*	ExtraClass	= (CClass*)ExtraUsedList->Items[i].Data;
 			String	ExtraName	= ExtraUsedList->Items[i].Name;
@@ -698,7 +698,7 @@ void WScriptPage::SaveScriptText( Bool bAsk )
 
 		// Save it.
 		Script->Text.Empty();
-		for( Integer i=0; i<CodeEditor->Lines.Num(); i++ )
+		for( Int32 i=0; i<CodeEditor->Lines.Num(); i++ )
 			Script->Text.Push(CodeEditor->Lines[i].Text);
 
 		// Mark as not dirty.
@@ -763,7 +763,7 @@ WScriptPage::~WScriptPage()
 // Highlight the error after script
 // compilation failure.
 //
-void WScriptPage::HighlightError( Integer iLine )
+void WScriptPage::HighlightError( Int32 iLine )
 {
 	CodeEditor->ScrollToLine( iLine );
 	CodeEditor->bFlashy	= true;
@@ -875,7 +875,7 @@ WCodeEditor::WCodeEditor( WScriptPage* InPage, WContainer* InOwner, WWindow* InR
 	if( Script->IsScriptable() )
 	{
 		// Script has an editable text.
-		for( Integer i=0; i<Script->Text.Num(); i++ )
+		for( Int32 i=0; i<Script->Text.Num(); i++ )
 		{
 			TLine Line;
 			Line.Text	= Script->Text[i];
@@ -907,7 +907,7 @@ WCodeEditor::~WCodeEditor()
 	Pool.PopAll();
 
 	// Destroy Undo/Redo stack.
-	for( Integer i=0; i<UndoStack.Num(); i++ )
+	for( Int32 i=0; i<UndoStack.Num(); i++ )
 		if( UndoStack[i] )
 			MemFree(UndoStack[i]);
 	UndoStack.Empty();
@@ -971,7 +971,7 @@ void WCodeEditor::OnResize()
 //
 // User unpress button.
 //
-void WCodeEditor::OnKeyUp( Integer Key )
+void WCodeEditor::OnKeyUp( Int32 Key )
 {
 	WContainer::OnKeyUp( Key );
 
@@ -996,7 +996,7 @@ void WCodeEditor::OnKeyUp( Integer Key )
 //
 // Mouse up.
 //
-void WCodeEditor::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WCodeEditor::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	// Call parent.
 	WContainer::OnMouseUp( Button, X, Y );
@@ -1035,13 +1035,13 @@ void WCodeEditor::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 				if( CaretYBegin == CaretYEnd )
 				{
 					// Copy piece of line.
-					Integer NumChars = CaretXEnd - CaretXBegin;
+					Int32 NumChars = CaretXEnd - CaretXBegin;
 					Buffer.Push(String::Copy( Lines[CaretYBegin].Text, CaretXBegin, NumChars ));
 				}
 				else
 				{
 					// Copy a few lines.
-					for( Integer Y=CaretYBegin; Y<=CaretYEnd; Y++ )
+					for( Int32 Y=CaretYBegin; Y<=CaretYEnd; Y++ )
 						if( Y == CaretYEnd )
 						{
 							// Last line.
@@ -1075,7 +1075,7 @@ void WCodeEditor::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 				CaretYBegin	= CaretYEnd	= DragY;
 
 				// Insert it.
-				for( Integer i=0; i<Buffer.Num(); i++ )
+				for( Int32 i=0; i<Buffer.Num(); i++ )
 				{
 					if( i == 0 )
 					{
@@ -1124,7 +1124,7 @@ void WCodeEditor::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse move code editor.
 //
-void WCodeEditor::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WCodeEditor::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WContainer::OnMouseMove( Button, X, Y );
 
@@ -1201,7 +1201,7 @@ void WCodeEditor::OnChange()
 //
 // Key has been down.
 //
-void WCodeEditor::OnKeyDown( Integer Key )
+void WCodeEditor::OnKeyDown( Int32 Key )
 {
 	WContainer::OnKeyDown( Key );
 
@@ -1421,7 +1421,7 @@ void WCodeEditor::OnKeyDown( Integer Key )
 		if( !AutoDialog )
 		{
 			String	Line	= Lines[CaretYBegin].Text;
-			Integer	iFrom	= CaretXBegin;
+			Int32	iFrom	= CaretXBegin;
 			while	( 
 						iFrom > 0 && 
 						(IsDigit(Line(iFrom-1)) || IsLetter(Line(iFrom-1))) 
@@ -1479,7 +1479,7 @@ void WCodeEditor::PopPasteClick( WWidget* Sender )
 			Lines[CaretYBegin].Text	= String::Delete( Lines[CaretYBegin].Text, CaretXBegin, Lines[CaretYBegin].Text.Len()-CaretXBegin );
 
 			// Insert it.
-			for( Integer i=0; i<ClipText.Len(); i++ )
+			for( Int32 i=0; i<ClipText.Len(); i++ )
 			{
 				Char C[2] = { ClipText(i), 0 };
 				if( *C == '\r' )	continue;  // Windows feature.
@@ -1545,7 +1545,7 @@ void WCodeEditor::PopCopyClick( WWidget* Sender )
 	if( CaretYBegin == CaretYEnd )
 	{
 		// Copy chunk of line, no \n symbols required.
-		Integer NumChars = CaretXEnd - CaretXBegin;
+		Int32 NumChars = CaretXEnd - CaretXBegin;
 		Char* Text = (Char*)MemAlloc( (NumChars+1)*sizeof(Char) );
 		MemCopy( Text, &Lines[CaretYBegin].Text[CaretXBegin], NumChars*sizeof(Char) );
 		GPlat->ClipboardCopy( Text );
@@ -1554,17 +1554,17 @@ void WCodeEditor::PopCopyClick( WWidget* Sender )
 	else
 	{
 		// Copy a few lines.
-		Integer NumChars = 0;
+		Int32 NumChars = 0;
 
 		// Count count, not exactly of course.
-		for( Integer Y=CaretYBegin; Y<=CaretYEnd; Y++ )
+		for( Int32 Y=CaretYBegin; Y<=CaretYEnd; Y++ )
 			NumChars += Lines[Y].Text.Len() + 4;
 
 		Char* Text = (Char*)MemAlloc( (NumChars+1)*sizeof(Char) );
 
 		// Copy text and insert /n symbol.
 		Char* Walk = Text;
-		for( Integer Y=CaretYBegin; Y<=CaretYEnd; Y++ )
+		for( Int32 Y=CaretYBegin; Y<=CaretYEnd; Y++ )
 			if( Y == CaretYEnd )
 			{
 				MemCopy( Walk, &Lines[Y].Text[0], CaretXEnd*sizeof(Char) );
@@ -1596,7 +1596,7 @@ void WCodeEditor::PopCopyClick( WWidget* Sender )
 //
 void WCodeEditor::ScrollToCaret()
 {
-	Integer NumVis	= Size.Height / CharSize.Height;
+	Int32 NumVis	= Size.Height / CharSize.Height;
 
 	// Scroll from the current location.
 	while( CaretYEnd < ScrollTop )				ScrollTop--;
@@ -1638,12 +1638,12 @@ void WCodeEditor::OnCharType( Char TypedChar )
 				else
 				{
 #if BACKSPACE_TAB
-					Integer Dest		= Max( 0, (4*(((CaretXBegin-1)/4)+1))-4 );
-					Integer NumEra		= CaretXBegin - Dest;
+					Int32 Dest		= Max( 0, (4*(((CaretXBegin-1)/4)+1))-4 );
+					Int32 NumEra		= CaretXBegin - Dest;
 
 					// Test for spaces only.
 					Bool	bSpacesOnly	= true;
-					for( Integer i=0; i<NumEra; i++ )
+					for( Int32 i=0; i<NumEra; i++ )
 						if( Lines[CaretYBegin].Text(CaretXBegin-i-1) != ' ' )
 						{
 							bSpacesOnly	= false;
@@ -1698,7 +1698,7 @@ void WCodeEditor::OnCharType( Char TypedChar )
 				Line.First	= nullptr;
 				Line.Text	= String::Copy( Lines[CaretYBegin].Text, CaretXBegin, Lines[CaretYBegin].Text.Len()-CaretXBegin );
 
-				Integer LastLen = Lines[CaretYBegin].Text.Len();
+				Int32 LastLen = Lines[CaretYBegin].Text.Len();
 				Lines[CaretYBegin].Text	= String::Delete( Lines[CaretYBegin].Text, CaretXBegin, Lines[CaretYBegin].Text.Len()-CaretXBegin );
 
 				Lines.Insert( CaretYBegin, 1 );
@@ -1706,12 +1706,12 @@ void WCodeEditor::OnCharType( Char TypedChar )
 
 #if NEW_LINE_WHITESPACE
 				CaretYBegin = CaretYEnd	= CaretYBegin + 1;
-				Integer PrevLineWhite = 0;
+				Int32 PrevLineWhite = 0;
 				for( PrevLineWhite=0; PrevLineWhite<Lines[CaretYBegin-1].Text.Len(); PrevLineWhite++ )
 					if( Lines[CaretYBegin-1].Text(PrevLineWhite) != L' ' )
 						break;
 
-				for( Integer i=0; i<PrevLineWhite; i++ )
+				for( Int32 i=0; i<PrevLineWhite; i++ )
 					Lines[CaretYBegin].Text += L" ";
 
 				if( CaretXEnd < LastLen )
@@ -1735,7 +1735,7 @@ void WCodeEditor::OnCharType( Char TypedChar )
 	{
 		// <Tab>.
 		ClearSelected();
-		Integer NumSpaces = (4*((CaretXBegin/4)+1))-CaretXBegin;
+		Int32 NumSpaces = (4*((CaretXBegin/4)+1))-CaretXBegin;
 		Char tmp[8] = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
 		tmp[NumSpaces]	= '\0';
 
@@ -1812,7 +1812,7 @@ void WCodeEditor::OnCharType( Char TypedChar )
 			// of other's entity.
 			String ThisLine	= Lines[CaretYBegin].Text;
 			Bool bDotDetected = false;
-			for( Integer i=CaretXBegin-2; i>=0; i-- )
+			for( Int32 i=CaretXBegin-2; i>=0; i-- )
 				if( ThisLine(i) != ' ' )
 				{
 					bDotDetected	= ThisLine(i) == '.';
@@ -1835,7 +1835,7 @@ void WCodeEditor::OnCharType( Char TypedChar )
 			String ThisLine	= Lines[CaretYBegin].Text;
 			Bool bDollarDetected = false;
 			Bool bDotDetected = false;
-			Integer i, iDollar;
+			Int32 i, iDollar;
 
 			for( i=CaretXBegin-2; i>=0; i-- )
 				if( !(IsLetter(ThisLine(i))||IsDigit(ThisLine(i))||(ThisLine(i)==' ')) )
@@ -1855,7 +1855,7 @@ void WCodeEditor::OnCharType( Char TypedChar )
 			if( bDollarDetected && !bDotDetected )
 			{
 				Char ComName[128] = {}, *Walk = ComName;
-				for( Integer j=iDollar+1; j<ThisLine.Len(); j++ )
+				for( Int32 j=iDollar+1; j<ThisLine.Len(); j++ )
 					if( IsLetter(ThisLine(j)) || IsDigit(ThisLine(j)) )
 					{
 						*Walk	= ThisLine(j);
@@ -1883,7 +1883,7 @@ void WCodeEditor::OnCharType( Char TypedChar )
 //
 // Mouse button down in the code editor.
 //
-void WCodeEditor::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WCodeEditor::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WContainer::OnMouseDown( Button, X, Y );
 
@@ -1911,9 +1911,9 @@ void WCodeEditor::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 // Return true, if point(in pixels) are inside
 // selection area.
 //
-Bool WCodeEditor::IsInSelection( Integer X, Integer Y )
+Bool WCodeEditor::IsInSelection( Int32 X, Int32 Y )
 {
-	Integer Y1, Y2, BeginX, EndX;
+	Int32 Y1, Y2, BeginX, EndX;
 
 	// Sort caret coords.
 	if( CaretYBegin <= CaretYEnd )
@@ -1932,12 +1932,12 @@ Bool WCodeEditor::IsInSelection( Integer X, Integer Y )
 	}
 
 	// Test line.
-	Integer Line = YToLine( Y );
+	Int32 Line = YToLine( Y );
 	if( Line < Y1 || Line > Y2 )
 		return false;
 
 	// XToColumn(..), without clamp.
-	Integer Column	= Round((Float)(X-15) / (Float)CharSize.Width);  
+	Int32 Column	= Round((Float)(X-15) / (Float)CharSize.Width);  
 
 	if( Line == Y1 )
 	{
@@ -1961,7 +1961,7 @@ Bool WCodeEditor::IsInSelection( Integer X, Integer Y )
 // Scroll text to show line iLine, used
 // for example in error highlight.
 //
-void WCodeEditor::ScrollToLine( Integer iLine )
+void WCodeEditor::ScrollToLine( Int32 iLine )
 { 
 	// Clamp it.
 	iLine	= Clamp( iLine, 0, Lines.Num()-1 );
@@ -2013,7 +2013,7 @@ void WCodeEditor::ClearSelected()
 													Lines[CaretYEnd].Text.Len()-CaretXEnd  
 												);
 
-		for( Integer i=CaretYBegin+1; i<=CaretYEnd; i++ )
+		for( Int32 i=CaretYBegin+1; i<=CaretYEnd; i++ )
 			Lines.RemoveShift( CaretYBegin+1 );
 
 		CaretXEnd	= CaretXBegin;
@@ -2027,7 +2027,7 @@ void WCodeEditor::ClearSelected()
 //
 // User just drop something.
 //
-void WCodeEditor::OnDragDrop( void* Data, Integer X, Integer Y )
+void WCodeEditor::OnDragDrop( void* Data, Int32 X, Int32 Y )
 {
 	BeginTransaction();
 	{
@@ -2070,7 +2070,7 @@ void WCodeEditor::OnDragDrop( void* Data, Integer X, Integer Y )
 //
 // User drag something above.
 //
-void WCodeEditor::OnDragOver( void* Data, Integer X, Integer Y, Bool& bAccept )
+void WCodeEditor::OnDragOver( void* Data, Int32 X, Int32 Y, Bool& bAccept )
 {
 	freeandnil(AutoDialog);
 	bAccept	= false;
@@ -2099,7 +2099,7 @@ void WCodeEditor::ScrollBarChange( WWidget* Sender )
 //
 // Mouse scroll over code editor.
 //
-void WCodeEditor::OnMouseScroll( Integer Delta )
+void WCodeEditor::OnMouseScroll( Int32 Delta )
 {
 	if( !AutoDialog )
 	{
@@ -2121,7 +2121,7 @@ void WCodeEditor::OnMouseScroll( Integer Delta )
 //
 // Double click on code editor.
 //
-void WCodeEditor::OnDblClick( EMouseButton Button, Integer X, Integer Y )
+void WCodeEditor::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WContainer::OnDblClick( Button, X, Y );
 
@@ -2176,7 +2176,7 @@ void WCodeEditor::OnDblClick( EMouseButton Button, Integer X, Integer Y )
 //
 // Convert column number to it X location.
 //
-Integer WCodeEditor::ColumnToX( Integer iColumn )
+Int32 WCodeEditor::ColumnToX( Int32 iColumn )
 {
 	return 15 + iColumn * CharSize.Width;
 }
@@ -2185,7 +2185,7 @@ Integer WCodeEditor::ColumnToX( Integer iColumn )
 //
 // Convert X location in line iLine to column number.
 //
-Integer WCodeEditor::XToColumn( Integer X, Integer iLine )
+Int32 WCodeEditor::XToColumn( Int32 X, Int32 iLine )
 {
 	return Clamp
 			( 
@@ -2199,7 +2199,7 @@ Integer WCodeEditor::XToColumn( Integer X, Integer iLine )
 //
 // Convert line number to it Y location.
 //
-Integer WCodeEditor::LineToY( Integer iLine )
+Int32 WCodeEditor::LineToY( Int32 iLine )
 {
 	return (iLine-ScrollTop) * CharSize.Height;
 }
@@ -2208,7 +2208,7 @@ Integer WCodeEditor::LineToY( Integer iLine )
 //
 // Convert Y location to line number.
 //
-Integer WCodeEditor::YToLine( Integer Y )
+Int32 WCodeEditor::YToLine( Int32 Y )
 {
 	return Clamp
 			(
@@ -2233,7 +2233,7 @@ void WCodeEditor::HighlightBrackets( Bool bUnmark )
 		return;
 
 	// See if caret is in text.
-	Integer X = CaretXBegin,
+	Int32 X = CaretXBegin,
 			Y = CaretYBegin;
 
 	if( !InRange(Y, 0, Lines.Num()-1) || !InRange(X, 0, Lines[Y].Text.Len()-1) )
@@ -2267,7 +2267,7 @@ void WCodeEditor::HighlightBrackets( Bool bUnmark )
 	if( wcschr(OpenBracks, C) )
 	{
 		// Look forward.
-		Integer NestLevel = 0;
+		Int32 NestLevel = 0;
 		for( Y; Y<Lines.Num(); Y++ )
 		{
 			for( X; X<Lines[Y].Text.Len(); X++ )
@@ -2290,7 +2290,7 @@ void WCodeEditor::HighlightBrackets( Bool bUnmark )
 	else
 	{
 		// Look backward.
-		Integer NestLevel = 0;
+		Int32 NestLevel = 0;
 		for( Y; Y>=0; Y-- )
 		{
 			for( X; X>=0; X-- )
@@ -2330,8 +2330,8 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 	Render->SetClipArea( Base, TSize( Size.Width, Size.Height ) );
 
 	// Visible lines bounds.
-	Integer iVisFirst	= ScrollTop;
-	Integer iVisLast	= Min( ScrollTop + Size.Height/CharSize.Height, Lines.Num()-1 );
+	Int32 iVisFirst	= ScrollTop;
+	Int32 iVisLast	= Min( ScrollTop + Size.Height/CharSize.Height, Lines.Num()-1 );
 	
 	// Draw background.
 	Render->DrawRegion
@@ -2368,7 +2368,7 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 		if( CaretYBegin >= iVisFirst && CaretYBegin <= iVisLast )
 		{
 			// Simple '|' caret and highlight the line.
-			Integer TextY	= Base.Y + LineToY(CaretYBegin);
+			Int32 TextY	= Base.Y + LineToY(CaretYBegin);
 
 			// Highlight the current line.
 			Render->DrawRegion
@@ -2380,7 +2380,7 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 								BPAT_Solid
 							);
 
-			if( IsFocused() && (((Integer)(GPlat->Now()*2.f) & 1) || (GPlat->Now()-LastTypeTime)<1.5f) )
+			if( IsFocused() && (((Int32)(GPlat->Now()*2.f) & 1) || (GPlat->Now()-LastTypeTime)<1.5f) )
 				Render->DrawText
 							( 
 								TPoint( Base.X + ColumnToX(CaretXBegin) - 2, TextY ), 
@@ -2394,7 +2394,7 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 	else
 	{
 		// Draw selection area.
-		Integer Y1, Y2, BeginX, EndX;
+		Int32 Y1, Y2, BeginX, EndX;
 		TColor	DrawColor	= IsFocused() ? 
 									TColor( 0x26, 0x4f, 0x78, 0xff ) : 
 									TColor( 0x34, 0x34, 0x34, 0xff );
@@ -2415,10 +2415,10 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 			EndX	= CaretXBegin;
 		}
 
-		for( Integer Y=Max(Y1, iVisFirst); Y<=Min(Y2, iVisLast); Y++ )  
+		for( Int32 Y=Max(Y1, iVisFirst); Y<=Min(Y2, iVisLast); Y++ )  
 		{
-			Integer X1 = Y==Y1 ? BeginX : 0;
-			Integer X2 = Y==Y2 ? EndX : Lines[Y].Text.Len();		
+			Int32 X1 = Y==Y1 ? BeginX : 0;
+			Int32 X2 = Y==Y2 ? EndX : Lines[Y].Text.Len();		
 
 			Render->DrawRegion
 							( 
@@ -2459,7 +2459,7 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 	{
 		const TColor BRACKET_COLOR = TColor( 0x0e, 0x3a, 0x6c, 0xff );
 		
-		for( Integer i=0; i<arr_len(EnclosingBrackets); i++ )
+		for( Int32 i=0; i<arr_len(EnclosingBrackets); i++ )
 			Render->DrawRegion
 			(
 				TPoint
@@ -2475,12 +2475,12 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 	}
 
 	// Draw highlighted text.
-	for( Integer iLine=iVisFirst; iLine<=iVisLast; iLine++ )	
+	for( Int32 iLine=iVisFirst; iLine<=iVisLast; iLine++ )	
 	{
 		// Prepare.
 		TLine& Line			= Lines[iLine];
-		Integer Len			= Line.Text.Len();
-		Integer RndChars	= 0;
+		Int32 Len			= Line.Text.Len();
+		Int32 RndChars	= 0;
 
 		// Walk through the chain of spans and render colored
 		// substrings.
@@ -2544,10 +2544,10 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 // iStart location, if text not found return -1,
 // otherwise return start position of text.
 //
-Integer FindInLine( const String& Needle, const String& HayStack, Integer iStart )
+Int32 FindInLine( const String& Needle, const String& HayStack, Int32 iStart )
 {
 	const Char* Gotten = wcsstr( &(*HayStack)[Clamp(iStart, 0, HayStack.Len())], *Needle );
-	return Gotten ? ((Integer)Gotten - (Integer)*HayStack)/sizeof(Char) : -1;
+	return Gotten ? ((Int32)Gotten - (Int32)*HayStack)/sizeof(Char) : -1;
 }
 
 
@@ -2562,9 +2562,9 @@ Bool WCodeEditor::FindText( String S, Bool bMatchCase )
 	CaretYBegin	= CaretYEnd;
 
 	// Iterate through all lines.
-	for( Integer i=0, iLine=CaretYEnd, X=CaretXBegin; i<=Lines.Num(); i++, iLine=(iLine+1)%Lines.Num(), X=0 )
+	for( Int32 i=0, iLine=CaretYEnd, X=CaretXBegin; i<=Lines.Num(); i++, iLine=(iLine+1)%Lines.Num(), X=0 )
 	{
-		Integer iFound = bMatchCase ? 
+		Int32 iFound = bMatchCase ? 
 							FindInLine( S, Lines[iLine].Text, X ) :
 							FindInLine( String::UpperCase(S), String::UpperCase(Lines[iLine].Text), X );
 
@@ -2650,7 +2650,7 @@ void WCodeEditor::EndTransaction()
 	bUndoLock	= false;
 
 	// Destroy transactions after top.
-	for( Integer i=UndoTop+1; i<UndoStack.Num(); i++ )
+	for( Int32 i=UndoTop+1; i<UndoStack.Num(); i++ )
 		if( UndoStack[i] )
 		{
 			MemFree( UndoStack[i] );
@@ -2683,7 +2683,7 @@ void WCodeEditor::EndTransaction()
 //
 // Store a text into iSlot transaction.
 //
-void WCodeEditor::SaveToUndoStack( Integer iSlot )
+void WCodeEditor::SaveToUndoStack( Int32 iSlot )
 {
 	// Release old data.
 	if( UndoStack[iSlot] )
@@ -2693,27 +2693,27 @@ void WCodeEditor::SaveToUndoStack( Integer iSlot )
 	}
 	
 	// Count how mush required memory.
-	DWord ReqMem = 32; // Stoke.
-	for( Integer iLine=0; iLine<Lines.Num(); iLine++ )
+	UInt32 ReqMem = 32; // Stoke.
+	for( Int32 iLine=0; iLine<Lines.Num(); iLine++ )
 		ReqMem	+= Lines[iLine].Text.Len() * sizeof(Char);
-	ReqMem	+= Lines.Num() * sizeof(Integer);
+	ReqMem	+= Lines.Num() * sizeof(Int32);
 
 	// Write all required data into buffer.
-	Byte*	Buffer	= (Byte*)MemAlloc(ReqMem);
-	Byte*	Walk	= Buffer;
+	UInt8*	Buffer	= (UInt8*)MemAlloc(ReqMem);
+	UInt8*	Walk	= Buffer;
 
 	// Write editor stuff.
-	*(Integer*)Walk	= Lines.Num();		Walk += sizeof(Integer);
-	*(Integer*)Walk	= ScrollTop;		Walk += sizeof(Integer);
-	*(Integer*)Walk	= CaretXBegin;		Walk += sizeof(Integer);
-	*(Integer*)Walk	= CaretYBegin;		Walk += sizeof(Integer);
+	*(Int32*)Walk	= Lines.Num();		Walk += sizeof(Int32);
+	*(Int32*)Walk	= ScrollTop;		Walk += sizeof(Int32);
+	*(Int32*)Walk	= CaretXBegin;		Walk += sizeof(Int32);
+	*(Int32*)Walk	= CaretYBegin;		Walk += sizeof(Int32);
 
 	// Write line by line.
-	for( Integer iLine=0; iLine<Lines.Num(); iLine++ )
+	for( Int32 iLine=0; iLine<Lines.Num(); iLine++ )
 	{
 		TLine& Line	= Lines[iLine];
 
-		*(Integer*)Walk	= Line.Text.Len();	Walk += sizeof(Integer);
+		*(Int32*)Walk	= Line.Text.Len();	Walk += sizeof(Int32);
 		MemCopy( Walk, *Line.Text, Line.Text.Len()*sizeof(Char) );
 		Walk	+= Line.Text.Len()*sizeof(Char);
 	}
@@ -2747,7 +2747,7 @@ void WCodeEditor::SaveToUndoStack( Integer iSlot )
 //
 // Restore an text from byte sequence.
 //
-void WCodeEditor::LoadFromUndoStack( Integer iSlot )
+void WCodeEditor::LoadFromUndoStack( Int32 iSlot )
 {
 	assert(UndoStack[iSlot]);
 
@@ -2774,20 +2774,20 @@ void WCodeEditor::LoadFromUndoStack( Integer iSlot )
 #endif
 
 	// Prepare for walking.
-	Byte*	Walk	= (Byte*)Data;
+	UInt8*	Walk	= (UInt8*)Data;
 
 	// Read editor stuff.
-	Lines.SetNum(*(Integer*)Walk);		Walk += sizeof(Integer);
-	ScrollTop	= *(Integer*)Walk;		Walk += sizeof(Integer);
-	CaretXBegin	= *(Integer*)Walk;		Walk += sizeof(Integer);
-	CaretYBegin	= *(Integer*)Walk;		Walk += sizeof(Integer);
+	Lines.SetNum(*(Int32*)Walk);		Walk += sizeof(Int32);
+	ScrollTop	= *(Int32*)Walk;		Walk += sizeof(Int32);
+	CaretXBegin	= *(Int32*)Walk;		Walk += sizeof(Int32);
+	CaretYBegin	= *(Int32*)Walk;		Walk += sizeof(Int32);
 
 	// Read line by line.
-	for( Integer iLine=0; iLine<Lines.Num(); iLine++ )
+	for( Int32 iLine=0; iLine<Lines.Num(); iLine++ )
 	{
 		TLine& Line	= Lines[iLine];
-		Integer Len	= *(Integer*)Walk;		
-		Walk += sizeof(Integer);
+		Int32 Len	= *(Int32*)Walk;		
+		Walk += sizeof(Int32);
 		Line.Text	= String( (Char*)Walk, Len );
 		Walk	+= Len * sizeof(Char);
 	}
@@ -2823,7 +2823,7 @@ public:
 			Next( nullptr )
 	{}
 } *GKeywordHash[256] = {};
-inline Byte HashKeyword( Char* InText )
+inline UInt8 HashKeyword( Char* InText )
 {
 	return 0xff & ( InText[0] ^ InText[1]*21 );
 }
@@ -2835,7 +2835,7 @@ void InitKeywordHash()
 #define KEYWORD( word )\
 { \
 	static TKeywordItem Key( L#word ); \
-	Integer iHash = HashKeyword(Key.Text); \
+	Int32 iHash = HashKeyword(Key.Text); \
 	Key.Next = GKeywordHash[iHash];\
 	GKeywordHash[iHash] = &Key;\
 }\
@@ -2862,22 +2862,22 @@ void WCodeEditor::HighlightAll()
 	Pool.PopAll();
 
 	// Cleanup old refs.
-	for( Integer iLine=0; iLine<Lines.Num(); iLine++ )
+	for( Int32 iLine=0; iLine<Lines.Num(); iLine++ )
 		Lines[iLine].First	= nullptr;
 
 	// For each line.
-	for( Integer iLine=0; iLine<Lines.Num(); iLine++ )
+	for( Int32 iLine=0; iLine<Lines.Num(); iLine++ )
 	{
 		TLine& Line = Lines[iLine];
 		Char ThisChar = 0, PrevChar = 0;
-		Byte Buffer[2048];
+		UInt8 Buffer[2048];
 
 		// Don't highlight too long line.
 		if( Line.Text.Len() > arr_len(Buffer) )
 			continue;
 
 		// For each symbol.
-		for( Integer i=0; i<Line.Text.Len();  )
+		for( Int32 i=0; i<Line.Text.Len();  )
 		{
 			ThisChar = Line.Text(i);
 
@@ -2953,7 +2953,7 @@ void WCodeEditor::HighlightAll()
 			{
 				// Parse the word, maybe its a keyword.
 				Char Word[64] = {};
-				Integer iLetter = 0;
+				Int32 iLetter = 0;
 
 				for( ; i<Line.Text.Len() && iLetter<arr_len(Word); i++ )
 				{
@@ -2966,7 +2966,7 @@ void WCodeEditor::HighlightAll()
 				}
 
 				// Try to find just parsed word in the hash.
-				Byte Type = HIGH_Text;
+				UInt8 Type = HIGH_Text;
 				for( TKeywordItem* K=GKeywordHash[HashKeyword(Word)]; K; K=K->Next )
 					if( wcscmp( Word, K->Text ) == 0 )
 					{
@@ -2975,7 +2975,7 @@ void WCodeEditor::HighlightAll()
 					}
 
 				// Set word type.
-				for( Integer j=0; j<iLetter; j++ )
+				for( Int32 j=0; j<iLetter; j++ )
 					Buffer[i-j-1] = Type;
 			}
 			else
@@ -2993,7 +2993,7 @@ void WCodeEditor::HighlightAll()
 		TSpan** Dest = &Line.First;
 		Line.First	= nullptr;
 
-		for( Integer i=0; i<Line.Text.Len();  )
+		for( Int32 i=0; i<Line.Text.Len();  )
 		{
 			// Maybe text too large to highlight.
 			if( !Pool.CanPush(sizeof(TSpan)) )
@@ -3090,7 +3090,7 @@ void WCodeEditor::WAutoComplete::Accept()
 	if( ItemIndex != -1 )
 	{
 		assert(Editor->CaretYBegin == Editor->CaretYEnd);
-		TEntry&	Entry		= Entries[(DWord)(Items[ItemIndex].Data)];
+		TEntry&	Entry		= Entries[(UInt32)(Items[ItemIndex].Data)];
 		String& ThisLine	= Editor->Lines[Editor->CaretYBegin].Text;
 
 		String Chunk		=	(Entry.Type!=AT_Method && Entry.Type!=AT_Function) ?
@@ -3136,7 +3136,7 @@ static Bool TestSubstring( String Needle, String HayStack )
 {
 	if( Needle.Len() > HayStack.Len() )
 		return false;
-	for( Integer i=0; i<Needle.Len(); i++ )
+	for( Int32 i=0; i<Needle.Len(); i++ )
 		if( toupper(Needle(i)) != toupper(HayStack(i)) )
 			return false;
 
@@ -3147,7 +3147,7 @@ static Bool TestSubstring( String Needle, String HayStack )
 //
 // Double click.
 //
-void WCodeEditor::WAutoComplete::OnDblClick( EMouseButton Button, Integer X, Integer Y )
+void WCodeEditor::WAutoComplete::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WListBox::OnDblClick( Button, X, Y );
 	Accept();
@@ -3157,7 +3157,7 @@ void WCodeEditor::WAutoComplete::OnDblClick( EMouseButton Button, Integer X, Int
 //
 // Key has been pressed on dialog.
 //
-void WCodeEditor::WAutoComplete::OnKeyDown( Integer Key )
+void WCodeEditor::WAutoComplete::OnKeyDown( Int32 Key )
 {
 	WListBox::OnKeyDown( Key );
 
@@ -3180,7 +3180,7 @@ void WCodeEditor::WAutoComplete::Filter()
 
 	// Refill database.
 	this->Empty();
-	for( Integer e=0; e<Entries.Num(); e++ )
+	for( Int32 e=0; e<Entries.Num(); e++ )
 	{
 		TEntry& Entry = Entries[e];
 
@@ -3230,10 +3230,10 @@ void WCodeEditor::WAutoComplete::OnPaint( CGUIRenderBase* Render )
 	// Draw items.
 	if( Items.Num() > 0 )
 	{
-		Integer TextY	= (ItemsHeight - Root->Font1->Height) / 2;
+		Int32 TextY	= (ItemsHeight - Root->Font1->Height) / 2;
 
 		// For each item.
-		for( Integer i = 0, iItem = YToIndex(0); 
+		for( Int32 i = 0, iItem = YToIndex(0); 
 			 i < Size.Height/ItemsHeight && iItem < Items.Num(); 
 			 i++, iItem++ )
 		{			
@@ -3282,7 +3282,7 @@ void WCodeEditor::WAutoComplete::OnPaint( CGUIRenderBase* Render )
 			};
 
 			TPoint	TextLoc = TPoint( Base.X + 3, Base.Y + i*ItemsHeight + 1 + TextY );		
-			TEntry&	Entry		= Entries[(DWord)Item.Data];
+			TEntry&	Entry		= Entries[(UInt32)Item.Data];
 
 			Render->DrawText
 			( 
@@ -3326,7 +3326,7 @@ void WCodeEditor::WAutoComplete::FillBy( TArray<FExtraComponent*>& InArr )
 	Items.Empty();
 	Entries.Empty();
 
-	for( Integer e=0; e<InArr.Num(); e++ )
+	for( Int32 e=0; e<InArr.Num(); e++ )
 		AddEntry
 		(
 			AT_Component,
@@ -3350,7 +3350,7 @@ void WCodeEditor::WAutoComplete::FillBy( CClass* Class )
 
 	while( Class )
 	{
-		for( Integer p=0; p<Class->Properties.Num(); p++ )
+		for( Int32 p=0; p<Class->Properties.Num(); p++ )
 		{
 			CProperty* Prop	= Class->Properties[p];
 			AddEntry
@@ -3360,7 +3360,7 @@ void WCodeEditor::WAutoComplete::FillBy( CClass* Class )
 				Prop->Name
 			);
 		}
-		for( Integer m=0; m<Class->Methods.Num(); m++ )
+		for( Int32 m=0; m<Class->Methods.Num(); m++ )
 		{
 			CNativeFunction* Func	= Class->Methods[m];
 			AddEntry
@@ -3388,7 +3388,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 	Entries.Empty();
 
 	// Native functions.
-	for( Integer f=0; f<CClassDatabase::GFuncs.Num(); f++ )
+	for( Int32 f=0; f<CClassDatabase::GFuncs.Num(); f++ )
 	{
 		CNativeFunction* Func	= CClassDatabase::GFuncs[f];
 		if( !(Func->Flags & (NFUN_UnaryOp|NFUN_BinaryOp|NFUN_SuffixOp|NFUN_AssignOp|NFUN_Method)) )
@@ -3406,7 +3406,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 		CClass*	Class	= Script->Base->GetClass();
 		while( Class )
 		{
-			for( Integer p=0; p<Class->Properties.Num(); p++ )
+			for( Int32 p=0; p<Class->Properties.Num(); p++ )
 			{
 				CProperty* Prop	= Class->Properties[p];
 				AddEntry
@@ -3416,7 +3416,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 					Prop->Name
 				);
 			}
-			for( Integer m=0; m<Class->Methods.Num(); m++ )
+			for( Int32 m=0; m<Class->Methods.Num(); m++ )
 			{
 				CNativeFunction* Func	= Class->Methods[m];
 				AddEntry
@@ -3433,7 +3433,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 
 	// Instance buffer.
 	if( Script->IsScriptable() && Script->InstanceBuffer )
-		for( Integer p=0; p<Script->Properties.Num(); p++ )
+		for( Int32 p=0; p<Script->Properties.Num(); p++ )
 		{
 			CProperty* Prop	= Script->Properties[p];
 			AddEntry
@@ -3445,7 +3445,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 		}
 
 	// Script functions.
-	for( Integer f=0; f<Script->Methods.Num(); f++ )
+	for( Int32 f=0; f<Script->Methods.Num(); f++ )
 	{
 		CFunction*	Func	= Script->Methods[f];
 		AddEntry
@@ -3457,7 +3457,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 	}
 
 	// Static properties.
-	for( Integer p=0; p<Script->Statics.Num(); p++ )
+	for( Int32 p=0; p<Script->Statics.Num(); p++ )
 	{
 		CProperty* Prop	= Script->Statics[p];
 		AddEntry
@@ -3469,7 +3469,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 	}
 
 	// Static functions.
-	for( Integer f=0; f<Script->StaticFunctions.Num(); f++ )
+	for( Int32 f=0; f<Script->StaticFunctions.Num(); f++ )
 	{
 		CFunction*	Func	= Script->StaticFunctions[f];
 		AddEntry
@@ -3481,7 +3481,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 	}
 
 	// Resource classes.
-	for( Integer c=0; c<CClassDatabase::GClasses.Num(); c++ )
+	for( Int32 c=0; c<CClassDatabase::GClasses.Num(); c++ )
 	{
 		CClass* C	= CClassDatabase::GClasses[c];
 		if( C->IsA(FResource::MetaClass) && !(C->Flags & CLASS_Abstract) )
@@ -3493,7 +3493,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 	}
 
 	// Scripts.
-	for( Integer i=0; i<GObjectDatabase->GObjects.Num(); i++ )
+	for( Int32 i=0; i<GObjectDatabase->GObjects.Num(); i++ )
 	{
 		FObject* Obj	= GObjectDatabase->GObjects[i];
 		if( Obj && Obj->IsA(FScript::MetaClass) )
@@ -3506,7 +3506,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 	}
 
 	// Available components.
-	for( Integer i=0; i<Script->Components.Num(); i++ )
+	for( Int32 i=0; i<Script->Components.Num(); i++ )
 	{
 		FComponent* C	= Script->Components[i];
 		AddEntry
@@ -3575,7 +3575,7 @@ void WCompilerOutput::Clear()
 //
 // Add a new record.
 //
-void WCompilerOutput::AddMessage( String InText, FScript* Script, Integer iLine, TColor InColor )
+void WCompilerOutput::AddMessage( String InText, FScript* Script, Int32 iLine, TColor InColor )
 {
 	TMessage Msg;
 	Msg.Script = Script;
@@ -3627,7 +3627,7 @@ void WCompilerOutput::OnPaint( CGUIRenderBase* Render )
 //
 // Follow the white rabbit.
 //
-void WCompilerOutput::GotoMessage( WWidget* Sender, Integer iMessage )
+void WCompilerOutput::GotoMessage( WWidget* Sender, Int32 iMessage )
 {
 	TMessage& Msg = Messages[iMessage];
 

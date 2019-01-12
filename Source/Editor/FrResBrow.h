@@ -36,9 +36,9 @@ public:
 	void Refresh();
 
 	// WWidget events.
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y ) override;
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y ) override;
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y ) override;
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y ) override;
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y ) override;
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y ) override;
 
 	// WList interface.
 	void OnDoubleClick() override;
@@ -74,11 +74,11 @@ public:
 
 	// WWidget events.
 	void OnPaint( CGUIRenderBase* Render ) override;
-	void OnMouseScroll( Integer Delta ) override;
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y ) override;
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y ) override;
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y ) override;
-	void OnDblClick( EMouseButton Button, Integer X, Integer Y ) override;    
+	void OnMouseScroll( Int32 Delta ) override;
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y ) override;
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y ) override;
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y ) override;
+	void OnDblClick( EMouseButton Button, Int32 X, Int32 Y ) override;    
 	void OnResize() override;
 
 private:

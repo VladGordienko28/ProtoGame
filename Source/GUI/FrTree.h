@@ -19,38 +19,38 @@ public:
 
 	// WTreeView interface.
 	WTreeView( WContainer* InOwner, WWindow* InRoot );
-	Integer AddNode( String InName, Integer IniParent=-1, void* InData=nullptr );
+	Int32 AddNode( String InName, Int32 IniParent=-1, void* InData=nullptr );
 	void Empty();
 	void SelectNext();
 	void SelectPrev();
 	void OnChange();
 	void OnDoubleClick();
-	Integer FindNode( String TestName, Integer iParent=-1 );
+	Int32 FindNode( String TestName, Int32 iParent=-1 );
 
 	// Utility.
 	void AlphabetSort();
 	void ExpandAll();
 	void CollapseAll();
-	void* DataOf( Integer iNode );
+	void* DataOf( Int32 iNode );
 
 	// WWidget interface.
-	void OnDblClick( EMouseButton Button, Integer X, Integer Y ) override;  
+	void OnDblClick( EMouseButton Button, Int32 X, Int32 Y ) override;  
 	void OnPaint( CGUIRenderBase* Render ) override;
 	void OnResize() override;
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y ) override;
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y ) override;
-	void OnKeyDown( Integer Key ) override;
-	void OnMouseScroll( Integer Delta ) override;
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y ) override;
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y ) override;
+	void OnKeyDown( Int32 Key ) override;
+	void OnMouseScroll( Int32 Delta ) override;
 
 	// Accessors.
-	inline void SetSelected( Integer i, Bool bNotify=true )
+	inline void SetSelected( Int32 i, Bool bNotify=true )
 	{
 		iSelected = i;
 		ScrollToNode( i );
 		if( bNotify )
 			OnChange();
 	};
-	inline Integer GetSelected() const
+	inline Int32 GetSelected() const
 	{
 		return iSelected;
 	}
@@ -61,14 +61,14 @@ public:
 	public:
 		// Variables.
 		String		Name;
-		Integer		Level;
-		Integer		iParent;
-		Integer		NumChildren;
+		Int32		Level;
+		Int32		iParent;
+		Int32		NumChildren;
 		void*		Data;
 		Bool		bExpanded;
 
 		// TNode interface.
-		TNode( String InName, Integer InLevel, Integer IniParent, void* InData )
+		TNode( String InName, Int32 InLevel, Int32 IniParent, void* InData )
 			:	Name( InName ), Level( InLevel ),
 				iParent( IniParent ), Data( InData ),
 				bExpanded( true ), NumChildren(0)
@@ -79,17 +79,17 @@ public:
 private:
 	// Tree internal.
 	WSlider*			ScrollBar;
-	TArray<Integer>		RenderOrder;
-	Integer				ScrollTop;
-	Integer				CharHeight;
-	Integer				iSelected;
+	TArray<Int32>		RenderOrder;
+	Int32				ScrollTop;
+	Int32				CharHeight;
+	Int32				iSelected;
 
 	void ScrollBarChange( WWidget* Sender );
-	void ScrollToNode( Integer iNode );
+	void ScrollToNode( Int32 iNode );
 	void ComputeOrder();
-	Integer XYToIndex( Integer X, Integer Y, Bool* AtSign=nullptr );
-	Bool IsParentNode( Integer iNode, Integer TestParent ) const;
-	Integer FindLastChildren( Integer iParent );
+	Int32 XYToIndex( Int32 X, Int32 Y, Bool* AtSign=nullptr );
+	Bool IsParentNode( Int32 iNode, Int32 TestParent ) const;
+	Int32 FindLastChildren( Int32 iParent );
 };
 
 

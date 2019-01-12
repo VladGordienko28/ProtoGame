@@ -471,7 +471,7 @@ WSkeletonPage::WSkeletonPage( FSkeleton* InSkeleton, WContainer* InOwner, WWindo
 }
 WSkeletonPage::~WSkeletonPage(){}
 
-void WSkeletonPage::OnKeyDown( Integer Key ){}
+void WSkeletonPage::OnKeyDown( Int32 Key ){}
 
 
 
@@ -544,7 +544,7 @@ static void DrawArrow( CCanvas* Canvas, const TVector& From, const TVector& To, 
 // Return world location of bone or other control center.
 // Warning, center is not a bone pivot!
 //
-TVector WSkeletonPage::GetBoneCenter( Integer iBone )
+TVector WSkeletonPage::GetBoneCenter( Int32 iBone )
 {
 	assert(iBone>=0 && iBone<Skeleton->Bones.Num());
 	TBonePose& Pose = GetCurrentPose().BonesPose[iBone];
@@ -559,7 +559,7 @@ TVector WSkeletonPage::GetBoneCenter( Integer iBone )
 //
 // Draw a link from the i'th bone to the j-th.
 //
-void WSkeletonPage::DrawLink( CCanvas* Canvas, Integer i, Integer j, TColor Color )
+void WSkeletonPage::DrawLink( CCanvas* Canvas, Int32 i, Int32 j, TColor Color )
 {
 	DrawArrow( Canvas, GetBoneCenter(i), GetBoneCenter(j), Color );
 }
@@ -570,7 +570,7 @@ void WSkeletonPage::DrawLink( CCanvas* Canvas, Integer i, Integer j, TColor Colo
 //
 void WSkeletonPage::UnselectAll()
 {
-	for( Integer i=0; i<Skeleton->Bones.Num(); i++ )
+	for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
 		Skeleton->Bones[i].Flags	&= ~BONE_Selected;
 }
 
@@ -597,13 +597,13 @@ TSkelPose& WSkeletonPage::GetCurrentPose()
 //
 // Return index of bone or control at specified location.
 //
-Integer WSkeletonPage::GetBoneAt( Integer X, Integer Y )
+Int32 WSkeletonPage::GetBoneAt( Int32 X, Int32 Y )
 {
 	TVector ScenePoint	= SceneView.Deproject( X, Y );
 	TSkelPose& Pose		= GetCurrentPose();
 
 	// Go through the bones.
-	for( Integer i=0; i<Skeleton->Bones.Num(); i++ )
+	for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
 	{
 		TBoneInfo& Bone = Skeleton->Bones[i];
 		TBonePose& Tran	= Pose.BonesPose[i];
@@ -645,7 +645,7 @@ Integer WSkeletonPage::GetBoneAt( Integer X, Integer Y )
 //
 // Open bone or control properties in ObjectInspector.
 //
-void WSkeletonPage::ShowBoneProperties( Integer iBone )
+void WSkeletonPage::ShowBoneProperties( Int32 iBone )
 {
 	assert(iBone>=-1 && iBone<Skeleton->Bones.Num());
 
@@ -709,7 +709,7 @@ void WSkeletonPage::BoneEditChange( WWidget* Sender )
 //
 String WSkeletonPage::MakeUniqueBoneName( String Prefix )
 {
-	Integer i = 0;
+	Int32 i = 0;
 	while( true )
 	{
 		String TestName = String::Format( L"%s%d", *Prefix, i++ );
@@ -759,7 +759,7 @@ void WSkeletonPage::ButtonLinkClick( WWidget* Sender )
 
 void WSkeletonPage::ButtonBreakLinksClick( WWidget* Sender )
 {
-	for( Integer i=0; i<Skeleton->Bones.Num(); i++ )
+	for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
 		if( Skeleton->Bones[i].Flags & BONE_Selected )
 			Skeleton->BreakLinks( i );
 
@@ -769,8 +769,8 @@ void WSkeletonPage::ButtonBreakLinksClick( WWidget* Sender )
 
 void WSkeletonPage::ButtonAddIKClick( WWidget* Sender )
 {
-	Integer iEndBone = -1;
-	for( Integer i=0; i<Skeleton->Bones.Num(); i++ )
+	Int32 iEndBone = -1;
+	for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
 	{
 		TBoneInfo& Bone = Skeleton->Bones[i];
 		if( Bone.Flags & BONE_Selected )
@@ -808,7 +808,7 @@ void WSkeletonPage::ButtonAddIKClick( WWidget* Sender )
 	Pivot.Snap(TranslationSnap);
 
 	// Create solver itself.
-	Integer iIK = Skeleton->Bones.Push(TBoneInfo
+	Int32 iIK = Skeleton->Bones.Push(TBoneInfo
 		( 
 			SC_IKSolver, 
 			MakeUniqueBoneName(L"IK"), 
@@ -849,7 +849,7 @@ static TPoint	RLastPos		= TPoint( 0, 0 );
 //
 // On mouse up on page.
 //
-void WSkeletonPage::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WSkeletonPage::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	if( (Button == MB_Left) && (bLeftPressed) )
 	{
@@ -879,7 +879,7 @@ void WSkeletonPage::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 //
 // On mouse press on page.
 //
-void WSkeletonPage::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WSkeletonPage::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	if( Button == MB_Left )
 	{
@@ -903,7 +903,7 @@ void WSkeletonPage::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 //
 // User scroll mouse wheel.
 //
-void WSkeletonPage::OnMouseScroll( Integer Delta )
+void WSkeletonPage::OnMouseScroll( Int32 Delta )
 {
 	if( Delta > 0 )
 	{
@@ -937,7 +937,7 @@ void WSkeletonPage::OnMouseScroll( Integer Delta )
 //
 // User click.
 //
-void WSkeletonPage::OnMouseClick( EMouseButton Button, Integer X, Integer Y )
+void WSkeletonPage::OnMouseClick( EMouseButton Button, Int32 X, Int32 Y )
 {
 	// Only left button works.
 	if( Button == MB_Left )
@@ -947,7 +947,7 @@ void WSkeletonPage::OnMouseClick( EMouseButton Button, Integer X, Integer Y )
 			UnselectAll();
 
 		// Pick bone.
-		Integer iBone = GetBoneAt( X, Y );
+		Int32 iBone = GetBoneAt( X, Y );
 		ShowBoneProperties(iBone);
 
 		if( iBone != -1 )
@@ -968,11 +968,11 @@ void WSkeletonPage::OnMouseClick( EMouseButton Button, Integer X, Integer Y )
 // Place and rotate gizmo according to selected skelecton 
 // bones.
 //
-void WSkeletonPage::UpdateGizmo( Integer iNewSele )
+void WSkeletonPage::UpdateGizmo( Int32 iNewSele )
 {
-	Integer iSelected = iNewSele;
+	Int32 iSelected = iNewSele;
 	if( iSelected == -1 )
-		for( Integer i=0; i<Skeleton->Bones.Num(); i++ )
+		for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
 			if( Skeleton->Bones[i].Flags & BONE_Selected )
 			{
 				iSelected	= i;
@@ -1011,7 +1011,7 @@ void WSkeletonPage::UpdateGizmo( Integer iNewSele )
 //
 // User double click on page.
 //
-void WSkeletonPage::OnDblClick( EMouseButton Button, Integer X, Integer Y )
+void WSkeletonPage::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WEditorPage::OnDblClick( Button, X, Y );
 }
@@ -1047,8 +1047,8 @@ public:
 	union
 	{
 		struct{ int dummy; };
-		struct{ Integer iNewBone; };			// SKDR_MakeBone.
-		struct{ Integer iFromBone; };			// SKDR_Linking.
+		struct{ Int32 iNewBone; };			// SKDR_MakeBone.
+		struct{ Int32 iFromBone; };			// SKDR_Linking.
 		// make bone type.
 	};
 
@@ -1061,7 +1061,7 @@ public:
 //
 // Process mouse dragging.
 //
-void WSkeletonPage::OnMouseDrag( EMouseButton Button, Integer X, Integer Y, Integer DeltaX, Integer DeltaY )
+void WSkeletonPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 DeltaX, Int32 DeltaY )
 {
 	// Transform widget delta to scene vector.
 	TVector Delta;
@@ -1088,7 +1088,7 @@ void WSkeletonPage::OnMouseDrag( EMouseButton Button, Integer X, Integer Y, Inte
 		{
 			// Translate selected bones.
 			TSkelPose& Pose = GetCurrentPose();
-			for( Integer i=0; i<Skeleton->Bones.Num(); i++ )
+			for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
 				if( Skeleton->Bones[i].Flags & BONE_Selected )
 				{
 					// Perform translation in parent's space.
@@ -1113,7 +1113,7 @@ void WSkeletonPage::OnMouseDrag( EMouseButton Button, Integer X, Integer Y, Inte
 			TAngle DeltaRot;
 			Gizmo.Perform( SceneView, TVector(X, Y), Delta, nullptr, &DeltaRot, nullptr );
 			TSkelPose& Pose = GetCurrentPose();
-			for( Integer i=0; i<Skeleton->Bones.Num(); i++ )
+			for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
 				if( Skeleton->Bones[i].Flags & BONE_Selected )
 				{
 					TAngle OldAngle	= VectorToAngle(Pose.BonesPose[i].Coords.XAxis);
@@ -1149,7 +1149,7 @@ void WSkeletonPage::OnMouseDrag( EMouseButton Button, Integer X, Integer Y, Inte
 //
 // Start mouse drag.
 //
-void WSkeletonPage::OnMouseBeginDrag( EMouseButton Button, Integer X, Integer Y )
+void WSkeletonPage::OnMouseBeginDrag( EMouseButton Button, Int32 X, Int32 Y )
 {
 	// Unhighlight gizmo.
 	Gizmo.SetAxis(GIAX_None);
@@ -1202,7 +1202,7 @@ void WSkeletonPage::OnMouseBeginDrag( EMouseButton Button, Integer X, Integer Y 
 		case SKT_Link:		// not any button, left only, other for observer.
 		{
 			// Linking.
-			Integer iFrom = GetBoneAt( X, Y );
+			Int32 iFrom = GetBoneAt( X, Y );
 			if( iFrom != -1 )
 			{
 				UnselectAll();
@@ -1217,7 +1217,7 @@ void WSkeletonPage::OnMouseBeginDrag( EMouseButton Button, Integer X, Integer Y 
 
 
 
-void WSkeletonPage::OnMouseEndDrag( EMouseButton Button, Integer X, Integer Y )
+void WSkeletonPage::OnMouseEndDrag( EMouseButton Button, Int32 X, Int32 Y )
 {
 	switch( DragInfo.DragType )
 	{
@@ -1239,7 +1239,7 @@ void WSkeletonPage::OnMouseEndDrag( EMouseButton Button, Integer X, Integer Y )
 		}
 		case SKDR_Linking:
 		{
-			Integer iTo = GetBoneAt( X, Y );
+			Int32 iTo = GetBoneAt( X, Y );
 			if( iTo != -1 && iTo != DragInfo.iFromBone )
 			{
 				// valid linking.
@@ -1257,7 +1257,7 @@ void WSkeletonPage::OnMouseEndDrag( EMouseButton Button, Integer X, Integer Y )
 		{
 			// Snap selected bones.
 			TSkelPose& Pose = GetCurrentPose();
-			for( Integer i=0; i<Skeleton->Bones.Num(); i++ )
+			for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
 				if( Skeleton->Bones[i].Flags & BONE_Selected )
 				{
 					Pose.BonesPose[i].Coords.Origin.Snap(TranslationSnap);
@@ -1272,7 +1272,7 @@ void WSkeletonPage::OnMouseEndDrag( EMouseButton Button, Integer X, Integer Y )
 		{
 			// Snap selected bones.
 			TSkelPose& Pose = GetCurrentPose();
-			for( Integer i=0; i<Skeleton->Bones.Num(); i++ )
+			for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
 				if( Skeleton->Bones[i].Flags & BONE_Selected )
 				{
 					TAngle Rotation = VectorToAngle(Pose.BonesPose[i].Coords.XAxis);
@@ -1298,7 +1298,7 @@ void WSkeletonPage::OnMouseEndDrag( EMouseButton Button, Integer X, Integer Y )
 //
 // On mouse move in page.
 //
-void WSkeletonPage::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WSkeletonPage::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	// Is moved with hold button.
 	if( bLeftPressed )
@@ -1325,7 +1325,7 @@ void WSkeletonPage::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 	// Hint bone name below cursor.
 	if( DragInfo.DragType != SKDR_Observer && DragInfo.DragType != SKDR_Rotate )
 	{
-		Integer iBone	= GetBoneAt( X, Y );
+		Int32 iBone	= GetBoneAt( X, Y );
 		BoneHint		= iBone != -1 ? Skeleton->Bones[iBone].Name : L"";
 		BoneHintFrom	= TPoint( X, Y );
 	}
@@ -1374,18 +1374,18 @@ void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 		Background.Rotation		= 0;
 		Canvas->DrawRect(Background);
 
-		Integer CMinX = Trunc(Max<Float>( Canvas->View.Bounds.Min.X, -SKEL_SCENE_SIZE_HALF ))*2;
-		Integer CMinY = Trunc(Max<Float>( Canvas->View.Bounds.Min.Y, -SKEL_SCENE_SIZE_HALF ))*2;
-		Integer CMaxX = Trunc(Min<Float>( Canvas->View.Bounds.Max.X, +SKEL_SCENE_SIZE_HALF ))*2;
-		Integer CMaxY = Trunc(Min<Float>( Canvas->View.Bounds.Max.Y, +SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMinX = Trunc(Max<Float>( Canvas->View.Bounds.Min.X, -SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMinY = Trunc(Max<Float>( Canvas->View.Bounds.Min.Y, -SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMaxX = Trunc(Min<Float>( Canvas->View.Bounds.Max.X, +SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMaxY = Trunc(Min<Float>( Canvas->View.Bounds.Max.Y, +SKEL_SCENE_SIZE_HALF ))*2;
 
-		for( Integer i=CMinX; i<=CMaxX; i++ )
+		for( Int32 i=CMinX; i<=CMaxX; i++ )
 		{
 			TVector V1( i/2.f, -SKEL_SCENE_SIZE_HALF );
 			TVector V2( i/2.f, +SKEL_SCENE_SIZE_HALF );
 			Canvas->DrawLine( V1, V2, SKEL_SCENE_GRID_COLOR, i & 1 );
 		}
-		for( Integer i=CMinY; i<=CMaxY; i++ )
+		for( Int32 i=CMinY; i<=CMaxY; i++ )
 		{
 			TVector V1( -SKEL_SCENE_SIZE_HALF, i/2.f );
 			TVector V2( +SKEL_SCENE_SIZE_HALF, i/2.f );
@@ -1440,7 +1440,7 @@ void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 		// Draw a links if need.
 		if( DrawLinksButton->bDown )
 		{
-			for( Integer i=0; i<Skeleton->Bones.Num(); i++ )
+			for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
 			{
 				TBoneInfo& Info = Skeleton->Bones[i];
 				TBonePose& Pose = GetCurrentPose().BonesPose[i];
@@ -1587,7 +1587,7 @@ WAnimationTrack::WAnimationTrack( WSkeletonPage* InPage, WWindow* InRoot )
 
 	// Hacky.
 	ActionsList->Empty();
-	for( Integer i=0; i<Skeleton->Actions.Num(); i++ )
+	for( Int32 i=0; i<Skeleton->Actions.Num(); i++ )
 		ActionsList->AddItem( Skeleton->Actions[i].Name, (void*)i );
 
 	ActionsList->ItemIndex = ActionsList->Items.Num()-1;
@@ -1677,13 +1677,13 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 		TSkeletonAction& Action = Skeleton->Actions[ActionsList->ItemIndex];
 
 		// Foreach track.
-		for( Integer i=0; i<Action.BoneTracks.Num(); i++ )
+		for( Int32 i=0; i<Action.BoneTracks.Num(); i++ )
 		{
 			TBoneTrack& Track = Action.BoneTracks[i];
 			String TrackName = Skeleton->Bones[Track.iBone].Name;
 
 			// Track name.
-			Integer TrackY = Base.Y + 64+i*13;
+			Int32 TrackY = Base.Y + 64+i*13;
 			Render->DrawText
 			(
 				TPoint( Base.X+8, TrackY ),
@@ -1693,7 +1693,7 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 			);
 
 			// Track line.
-			Integer TrackX1 =  12 + Root->Font1->TextWidth(*TrackName);
+			Int32 TrackX1 =  12 + Root->Font1->TextWidth(*TrackName);
 			Render->DrawRegion
 			(
 				TPoint( Base.X + TrackX1, TrackY+8 ),
@@ -1706,7 +1706,7 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 			// Draw keys.
 			///////////////////////////////////////////////////////
 
-			for( Integer i=0; i<Track.PosKeys.Samples.Num(); i++ )
+			for( Int32 i=0; i<Track.PosKeys.Samples.Num(); i++ )
 			{
 				Render->DrawRegion
 				(
@@ -1718,7 +1718,7 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 				);
 			}
 
-			for( Integer i=0; i<Track.RotKeys.Samples.Num(); i++ )
+			for( Int32 i=0; i<Track.RotKeys.Samples.Num(); i++ )
 			{
 				Render->DrawRegion
 				(
@@ -1737,7 +1737,7 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 
 
 
-void WAnimationTrack::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WAnimationTrack::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WContainer::OnMouseDown( Button, X, Y );
 
@@ -1752,12 +1752,12 @@ void WAnimationTrack::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 
 void WAnimationTrack::ButtonAddActionClick( WWidget* Sender )
 {
-	static Integer gCounter = 0;
+	static Int32 gCounter = 0;
 	Skeleton->Actions.Push(TSkeletonAction(String::Format(L"Action_%d", gCounter)));
 	gCounter++;
 
 	ActionsList->Empty();
-	for( Integer i=0; i<Skeleton->Actions.Num(); i++ )
+	for( Int32 i=0; i<Skeleton->Actions.Num(); i++ )
 		ActionsList->AddItem( Skeleton->Actions[i].Name, (void*)i );
 
 	ActionsList->ItemIndex = ActionsList->Items.Num()-1;
@@ -1772,7 +1772,7 @@ void WAnimationTrack::ButtonDeleteActionClick( WWidget* Sender )
 
 // We've got a message, that bone have moved or rotated.
 // It's place to add keys and so on.
-void WAnimationTrack::NoteMovement( Integer iBone, Bool bOnlyRotation )
+void WAnimationTrack::NoteMovement( Int32 iBone, Bool bOnlyRotation )
 {
 	assert(iBone != -1);
 
@@ -1787,8 +1787,8 @@ void WAnimationTrack::NoteMovement( Integer iBone, Bool bOnlyRotation )
 		return;
 
 	// Find appropriate bone track or create new one.
-	Integer iTrack = -1;
-	for( Integer i=0; i<Action.BoneTracks.Num(); i++ )
+	Int32 iTrack = -1;
+	for( Int32 i=0; i<Action.BoneTracks.Num(); i++ )
 		if( Action.BoneTracks[i].iBone == iBone )
 		{
 			iTrack = i;

@@ -68,7 +68,7 @@ public:
 		{
 			String RealFN	= GDirectory + L"\\" + Music->FileName;
 			Bool bExists	= GPlat->FileExists(RealFN);
-			DWord MusicSize	= 0;
+			UInt32 MusicSize	= 0;
 			String FN		= Music->FileName;
 			if( bExists )
 			{
@@ -100,7 +100,7 @@ public:
 	}
 
 	// WForm interface.
-	void Show( Integer X = 0, Integer Y = 0 )
+	void Show( Int32 X = 0, Int32 Y = 0 )
 	{
 		WForm::Show( X, Y );
 		SetMusic( nullptr );

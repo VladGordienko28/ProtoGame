@@ -18,23 +18,23 @@ public:
 	String();
 	String( const String& Other );
 	String( const Char* Other );
-	String( const Char* Other, Integer InLen );
+	String( const Char* Other, Int32 InLen );
 	
 	// Destructor.
 	~String();
 
 	// Methods.
-	Integer Len() const;
-	DWord RefsCount() const;
-	DWord HashCode() const;
+	Int32 Len() const;
+	UInt32 RefsCount() const;
+	UInt32 HashCode() const;
 
 	// Operators.
 	Char* operator*() const;
 	String& operator=( const String& Other );
 	String& operator=( const Char* Str );
-	Char operator()( Integer i ) const;
-	const Char& operator[]( Integer i ) const;
-	Char& operator[]( Integer i );
+	Char operator()( Int32 i ) const;
+	const Char& operator[]( Int32 i ) const;
+	Char& operator[]( Int32 i );
 	Bool operator==( const String& Other ) const;
 	Bool operator==( const Char* Str ) const;
 	Bool operator!=( const String& Other ) const;
@@ -50,22 +50,22 @@ public:
 	operator Bool() const;
 
 	// Functions.
-	Bool ToInteger( Integer& OutValue, Integer Default = 0 ) const;
+	Bool ToInteger( Int32& OutValue, Int32 Default = 0 ) const;
 	Bool ToFloat( Float& OutValue, Float Default = 0.f ) const;
 
 	// Static.
 	static String Format( String Fmt, ... );
-	static Integer Pos( String Needle, String HayStack, Integer iFrom = 0 );
+	static Int32 Pos( String Needle, String HayStack, Int32 iFrom = 0 );
 	static String UpperCase( String Str );
 	static String LowerCase( String Str );
-	static Integer CompareText( String Str1, String Str2 );
-	static Integer CompareStr( String Str1, String Str2 );
-	static String OfChar( Char Repeat, Integer Count );
-	static String FromInteger( Integer Value );
+	static Int32 CompareText( String Str1, String Str2 );
+	static Int32 CompareStr( String Str1, String Str2 );
+	static String OfChar( Char Repeat, Int32 Count );
+	static String FromInteger( Int32 Value );
 	static String FromFloat( Float Value );
-	static String Copy( String Source, Integer StartChar, Integer Count );
-	static String Delete( String Str, Integer StartChar, Integer Count );
-	static TArray<String> String::WrapText( String Text, Integer MaxColumnSize );
+	static String Copy( String Source, Int32 StartChar, Int32 Count );
+	static String Delete( String Str, Int32 StartChar, Int32 Count );
+	static TArray<String> String::WrapText( String Text, Int32 MaxColumnSize );
 
 	// Pool cleanup.
 	static void Flush();
@@ -79,7 +79,7 @@ private:
 	{
 		union
 		{
-			struct{ Integer Length; DWord RefsCount; };
+			struct{ Int32 Length; UInt32 RefsCount; };
 			struct{ TInternal* DeadNext; };
 		};
 		Char Data[0];
@@ -89,9 +89,9 @@ private:
 	static TInternal* DeadPool[DEAD_POOL_MAX];
 
 	// String memory managment.
-	static void Initialize( TInternal*& Internal, Integer InLen );
+	static void Initialize( TInternal*& Internal, Int32 InLen );
 	static void Deinitialize( TInternal*& Internal );
-	static void Reinitialize( TInternal*& Internal, Integer NewLen );
+	static void Reinitialize( TInternal*& Internal, Int32 NewLen );
 };
 
 
@@ -132,7 +132,7 @@ inline Bool IsDigitLetter( Char Ch )
 // Convert hex character to the
 // integer value.
 //
-inline Integer FromHex( Char Ch )
+inline Int32 FromHex( Char Ch )
 {
 	if( Ch >= '0' && Ch <= '9' )
 		return Ch-'0';
@@ -176,12 +176,12 @@ inline String::String( const Char* Other )
 {
 	if( Other && *Other )
 	{
-		Integer RealLen	= (Integer)wcslen(Other);
+		Int32 RealLen	= (Int32)wcslen(Other);
 		Initialize( Internal, RealLen );
 		MemCopy( Internal->Data, Other, RealLen*sizeof(Char) );
 	}
 }
-inline String::String( const Char* Other, Integer InLen )
+inline String::String( const Char* Other, Int32 InLen )
 	:	Internal(nullptr)
 {
 	if( Other && *Other && InLen )
@@ -204,17 +204,17 @@ inline String::~String()
 //
 // Methods.
 //
-inline Integer String::Len() const
+inline Int32 String::Len() const
 {
 	return Internal ? Internal->Length : 0;
 }
-inline DWord String::RefsCount() const
+inline UInt32 String::RefsCount() const
 {
 	return Internal ? Internal->RefsCount : 0;
 }
-inline DWord String::HashCode() const
+inline UInt32 String::HashCode() const
 {
-	DWord Hash = 2139062143;
+	UInt32 Hash = 2139062143;
 	if( Internal )
 		for( Char* C = Internal->Data; *C; C++ )
 			Hash = 37 * Hash + *C;
@@ -241,7 +241,7 @@ inline String& String::operator=( const String& Other )
 inline String& String::operator=( const Char* Str )
 {
 	Deinitialize(Internal);
-	Integer RealLen	= (Integer)wcslen(Str);
+	Int32 RealLen	= (Int32)wcslen(Str);
 	if( RealLen )
 	{
 		Initialize( Internal, RealLen );
@@ -249,15 +249,15 @@ inline String& String::operator=( const Char* Str )
 	}
 	return *this;
 }
-inline Char String::operator()( Integer i ) const
+inline Char String::operator()( Int32 i ) const
 {
 	return Internal ? Internal->Data[i] : L'\0';
 }
-inline const Char& String::operator[]( Integer i ) const
+inline const Char& String::operator[]( Int32 i ) const
 {
 	return Internal ? Internal->Data[i] : L'\0';
 }
-inline Char& String::operator[]( Integer i )
+inline Char& String::operator[]( Int32 i )
 {
 	if( Internal )
 	{
@@ -283,7 +283,7 @@ inline Bool String::operator==( const String& Other ) const
 	{
 		if( !Other.Internal ) return Internal == nullptr;
 		if( !Internal ) return Other.Internal == nullptr;
-		Integer L1 = Len(), L2 = Other.Len();
+		Int32 L1 = Len(), L2 = Other.Len();
 		if( L1 != L2 )
 			return false;
 		return wcscmp( Internal->Data, Other.Internal->Data ) == 0;
@@ -295,7 +295,7 @@ inline Bool String::operator==( const Char* Str ) const
 {
 	if( !Str || !*Str ) return Internal == nullptr;
 	if( !Internal ) return false;
-	Integer L1 = Len(), L2 = (Integer)wcslen(Str);
+	Int32 L1 = Len(), L2 = (Int32)wcslen(Str);
 	if( L1 != L2 )
 		return false;
 	return wcscmp( Internal->Data, Str ) == 0;
@@ -326,12 +326,12 @@ inline Bool String::operator<=( const String& Other ) const
 }
 inline String& String::operator+=( const Char* Str )
 {
-	Integer L2 = (Integer)wcslen(Str);
+	Int32 L2 = (Int32)wcslen(Str);
 	if( L2 )
 	{
 		if( Internal )
 		{
-			Integer L1 = Len(), LR = L1+L2;
+			Int32 L1 = Len(), LR = L1+L2;
 			Reinitialize( Internal, LR );
 			MemCopy( &Internal->Data[L1], Str, L2*sizeof(Char) );
 		}
@@ -346,7 +346,7 @@ inline String& String::operator+=( const String& Other )
 	{
 		if( Internal )
 		{
-			Integer L1 = Len(), L2 = Other.Len(), LR = L1+L2;
+			Int32 L1 = Len(), L2 = Other.Len(), LR = L1+L2;
 			Reinitialize( Internal, LR );
 			MemCopy( &Internal->Data[L1], Other.Internal->Data, L2*sizeof(Char) );
 		}
@@ -372,7 +372,7 @@ inline String::operator Bool() const
 //
 // String managment functions.
 //
-inline void String::Initialize( TInternal*& Internal, Integer InLen )
+inline void String::Initialize( TInternal*& Internal, Int32 InLen )
 {
 	if( Internal )
 		Deinitialize( Internal );
@@ -393,7 +393,7 @@ inline void String::Initialize( TInternal*& Internal, Integer InLen )
 }
 
 
-inline void String::Reinitialize( TInternal*& Internal, Integer NewLen )
+inline void String::Reinitialize( TInternal*& Internal, Int32 NewLen )
 {
 	if( NewLen > 0 )
 	{
@@ -401,7 +401,7 @@ inline void String::Reinitialize( TInternal*& Internal, Integer NewLen )
 		{
 			TInternal* New = nullptr;
 			Initialize( New, NewLen );
-			Integer MinLen = New->Length < Internal->Length ? New->Length : Internal->Length;
+			Int32 MinLen = New->Length < Internal->Length ? New->Length : Internal->Length;
 			MemCopy( New->Data, Internal->Data, MinLen*sizeof(Char) );
 			New->Data[MinLen] = L'\0';
 			Deinitialize( Internal );
@@ -423,7 +423,7 @@ inline void String::Deinitialize( TInternal*& Internal )
 		{
 			if( Internal->Length < DEAD_POOL_MAX )
 			{
-				Integer L			= Internal->Length;
+				Int32 L			= Internal->Length;
 				Internal->DeadNext	= DeadPool[L];
 				DeadPool[L]			= Internal;
 			}

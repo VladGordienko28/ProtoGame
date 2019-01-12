@@ -23,7 +23,7 @@ public:
 	// Edit variables.
 	FEntity*			Entity;
 	FKeyframeComponent*	Keyframe;
-	Integer				iFrame;
+	Int32				iFrame;
 
 	// WKeyframeEditor.
 	WKeyframeEditor( WContainer* InOwner, WWindow* InRoot )
@@ -89,7 +89,7 @@ public:
 			// Find valid keyframe.
 			Entity	= InEntity;
 			Keyframe = nullptr;
-			for( Integer i=0; i<InEntity->Components.Num(); i++ )
+			for( Int32 i=0; i<InEntity->Components.Num(); i++ )
 				if( InEntity->Components[i]->IsA(FKeyframeComponent::MetaClass) )
 				{
 					Keyframe	= (FKeyframeComponent*)InEntity->Components[i];
@@ -204,7 +204,7 @@ public:
 	}
 
 	// WForm interface.
-	void Show( Integer X = 0, Integer Y = 0 )
+	void Show( Int32 X = 0, Int32 Y = 0 )
 	{
 		WForm::Show( X, Y );
 		SetEntity( nullptr );

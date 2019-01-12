@@ -99,7 +99,7 @@ CApplication*	GApp	= nullptr;
 struct TGameFileInfo
 {
 public:
-	DWord			Control;
+	UInt32			Control;
 	String			EngineVer;
 
 	friend void Serialize( CSerializer& S, TGameFileInfo& V )
@@ -116,10 +116,10 @@ public:
 struct TObjectHeader
 {
 public:
-	Integer		Id;
+	Int32		Id;
 	String		Name;
-	Word		iClass;
-	Integer		iOwner;
+	UInt16		iClass;
+	Int32		iOwner;
 
 	friend void Serialize( CSerializer& S, TObjectHeader& V )
 	{
@@ -134,9 +134,9 @@ public:
 //
 // Return class index in ClassDatabase.
 //
-Integer GetClassIndex( CClass* Class )
+Int32 GetClassIndex( CClass* Class )
 {
-	for( Integer i=0; i<CClassDatabase::GClasses.Num(); i++ )
+	for( Int32 i=0; i<CClassDatabase::GClasses.Num(); i++ )
 		if( Class == CClassDatabase::GClasses[i] )
 			return i;
 
@@ -163,16 +163,16 @@ Bool CApplication::SaveGame( String Directory, String Name )
 	{
 		TGameFileInfo	Info;
 		Info.Control	= 2528;
-		Info.EngineVer	= FLU_VER;
+		Info.EngineVer	= FLU_VERSION;
 		Serialize( Saver, Info );
 	}
 
 	// Save remap table for each class.
 	{
-		Integer NumCls = CClassDatabase::GClasses.Num();
+		Int32 NumCls = CClassDatabase::GClasses.Num();
 		Serialize( Saver, NumCls );
 
-		for( Integer i=0; i<NumCls; i++ )
+		for( Int32 i=0; i<NumCls; i++ )
 		{
 			CClass*	Class = CClassDatabase::GClasses[i];
 			Serialize( Saver, Class->Name );
@@ -181,18 +181,18 @@ Bool CApplication::SaveGame( String Directory, String Name )
 
 	// Save global objects database info.
 	{
-		Integer DbSize = Project->GObjects.Num();
+		Int32 DbSize = Project->GObjects.Num();
 		Serialize( Saver, DbSize );
 
 		// Count how much non-null objects.
-		Integer DbRealSize = 0;
-		for( Integer i=0; i<Project->GObjects.Num(); i++ )
+		Int32 DbRealSize = 0;
+		for( Int32 i=0; i<Project->GObjects.Num(); i++ )
 			if( Project->GObjects[i] )
 				DbRealSize++;
 		Serialize( Saver, DbRealSize );
 
 		// List of non-null object headers.
-		for( Integer i=0; i<Project->GObjects.Num(); i++ )
+		for( Int32 i=0; i<Project->GObjects.Num(); i++ )
 			if( Project->GObjects[i] )
 			{
 				TObjectHeader Header;
@@ -207,12 +207,12 @@ Bool CApplication::SaveGame( String Directory, String Name )
 	}
 
 	// Save content of each script.
-	for( Integer i=0; i<Project->GObjects.Num(); i++ )
+	for( Int32 i=0; i<Project->GObjects.Num(); i++ )
 		if( Project->GObjects[i] && Project->GObjects[i]->IsA(FScript::MetaClass) )
 			Project->GObjects[i]->SerializeThis( Saver );
 
 	// Save content of each object, without scripts.
-	for( Integer i=0; i<Project->GObjects.Num(); i++ )
+	for( Int32 i=0; i<Project->GObjects.Num(); i++ )
 		if( Project->GObjects[i] && !Project->GObjects[i]->IsA(FScript::MetaClass) )
 			Project->GObjects[i]->SerializeThis( Saver );
 
@@ -259,19 +259,19 @@ Bool CApplication::LoadGame( String Directory, String Name )
 		if( Info.Control != 2528 )
 			error( L"File '%s' is not a Fluorine Game", *Loader.FileName );
 
-		if( Info.EngineVer != FLU_VER )
+		if( Info.EngineVer != FLU_VERSION )
 			error( L"Old Fluorine File" );
 	}
 	
 	// Load classes remap table.
 	TArray<CClass*>	Classes(CClassDatabase::GClasses.Num());
 	{
-		Integer NumCls;
+		Int32 NumCls;
 		Serialize( Loader, NumCls );
 		if( NumCls != CClassDatabase::GClasses.Num() )
 			error( L"Classes database is outdated" );
 
-		for( Integer i=0; i<NumCls; i++ )
+		for( Int32 i=0; i<NumCls; i++ )
 		{
 			String ClassName;
 			Serialize( Loader, ClassName );
@@ -286,7 +286,7 @@ Bool CApplication::LoadGame( String Directory, String Name )
 
 	// Load global objects database.
 	{
-		Integer DbSize, DbRealSize;
+		Int32 DbSize, DbRealSize;
 		Serialize( Loader, DbSize );
 		Serialize( Loader, DbRealSize );
 
@@ -295,7 +295,7 @@ Bool CApplication::LoadGame( String Directory, String Name )
 
 		// Load all headers and allocate objects, but don't initialize.
 		TArray<TObjectHeader>	Headers(DbRealSize);
-		for( Integer i=0; i<DbRealSize; i++ )
+		for( Int32 i=0; i<DbRealSize; i++ )
 		{
 			Serialize( Loader, Headers[i] );
 
@@ -307,7 +307,7 @@ Bool CApplication::LoadGame( String Directory, String Name )
 		}
 		
 		// Initialize general object's fields.
-		for( Integer i=0; i<DbRealSize; i++ )
+		for( Int32 i=0; i<DbRealSize; i++ )
 		{
 			TObjectHeader& H	= Headers[i]; 
 			FObject*	Object	= Project->GObjects[H.Id];
@@ -324,28 +324,28 @@ Bool CApplication::LoadGame( String Directory, String Name )
 
 		// Fill list of available slots.
 		Project->GAvailable.Empty();
-		for( Integer i=0; i<Project->GObjects.Num(); i++ )
+		for( Int32 i=0; i<Project->GObjects.Num(); i++ )
 			if( Project->GObjects[i] == nullptr )
 				Project->GAvailable.Push( i );
 	}
 	
 	// Load content of each script.
-	for( Integer i=0; i<Project->GObjects.Num(); i++ )
+	for( Int32 i=0; i<Project->GObjects.Num(); i++ )
 		if( Project->GObjects[i] && Project->GObjects[i]->IsA(FScript::MetaClass) )
 			Project->GObjects[i]->SerializeThis( Loader );
 	
 	// Load content of each object, without scripts.
-	for( Integer i=0; i<Project->GObjects.Num(); i++ )
+	for( Int32 i=0; i<Project->GObjects.Num(); i++ )
 		if( Project->GObjects[i] && !Project->GObjects[i]->IsA(FScript::MetaClass) )
 			Project->GObjects[i]->SerializeThis( Loader );
 	
 	// Refill database for each level.
-	for( Integer i=0; i<Project->GObjects.Num(); i++ )
+	for( Int32 i=0; i<Project->GObjects.Num(); i++ )
 		if( Project->GObjects[i] && Project->GObjects[i]->IsA(FLevel::MetaClass) )
 		{
 			FLevel* Level = (FLevel*)Project->GObjects[i];
 
-			for( Integer iEntity=0; iEntity<Level->Entities.Num(); iEntity++ )
+			for( Int32 iEntity=0; iEntity<Level->Entities.Num(); iEntity++ )
 			{
 				FEntity* Entity = Level->Entities[iEntity];
 
@@ -355,7 +355,7 @@ Bool CApplication::LoadGame( String Directory, String Name )
 
 				TArray<FExtraComponent*> Comps = Entity->Components;
 				Entity->Components.Empty();
-				for( Integer e=0; e<Comps.Num(); e++ )
+				for( Int32 e=0; e<Comps.Num(); e++ )
 					Comps[e]->InitForEntity( Entity );
 			}
 		}
@@ -379,7 +379,7 @@ Bool CApplication::LoadGame( String Directory, String Name )
 	}
 	
 	// Notify all objects about loading.
-	for( Integer i=0; i<Project->GObjects.Num(); i++ )
+	for( Int32 i=0; i<Project->GObjects.Num(); i++ )
 		if( Project->GObjects[i] )
 			Project->GObjects[i]->PostLoad();
 

@@ -21,11 +21,11 @@ public:
 
 	// WWidget interface.
 	void OnPaint( CGUIRenderBase* Render );
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
-	void OnDragOver( void* Data, Integer X, Integer Y, Bool& bAccept );
-	void OnDragDrop( void* Data, Integer X, Integer Y );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
+	void OnDragOver( void* Data, Int32 X, Int32 Y, Bool& bAccept );
+	void OnDragDrop( void* Data, Int32 X, Int32 Y );
 
 	// WTabPage interface.
 	Bool OnQueryClose();
@@ -62,7 +62,7 @@ private:
 	Bool				bPreview;
 	Float				Scale;
 	TPoint				Pan;
-	Integer				iFrame;
+	Int32				iFrame;
 
 	// MVC stuff.
 	void UpdateControls();

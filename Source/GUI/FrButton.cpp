@@ -66,7 +66,7 @@ WCheckBox::WCheckBox( WContainer* InOwner, WWindow* InRoot )
 //
 // Mouse press checkbox.
 //
-void WCheckBox::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WCheckBox::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseDown( Button, X, Y );
 
@@ -78,7 +78,7 @@ void WCheckBox::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse hover checkbox.
 //
-void WCheckBox::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WCheckBox::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {			
 	WWidget::OnMouseMove( Button, X, Y );
 
@@ -90,7 +90,7 @@ void WCheckBox::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse click checkbox.
 //
-void WCheckBox::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WCheckBox::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseUp( Button, X, Y );
 
@@ -198,7 +198,7 @@ WRadioButton::~WRadioButton()
 //
 // Mouse press radio button.
 //
-void WRadioButton::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WRadioButton::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseDown( Button, X, Y );
 
@@ -210,7 +210,7 @@ void WRadioButton::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse hover over radio button.
 //
-void WRadioButton::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WRadioButton::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseMove( Button, X, Y );
 
@@ -222,7 +222,7 @@ void WRadioButton::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse click checkbox.
 //
-void WRadioButton::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WRadioButton::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseUp( Button, X, Y );
 
@@ -243,7 +243,7 @@ void WRadioButton::OnPaint( CGUIRenderBase* Render )
 	TPoint Base	= ClientToWindow(TPoint::Zero);
 	TSize  TextSize = TSize( Root->Font1->TextWidth(*Caption), Root->Font1->Height );
 
-	Integer iState = bChecked ? 1 : bHold ? 2 : 0;
+	Int32 iState = bChecked ? 1 : bHold ? 2 : 0;
 
 	Render->DrawPicture
 	(
@@ -344,7 +344,7 @@ void WLinkLabel::OnPaint( CGUIRenderBase* Render )
 //
 // Mouse press link.
 //
-void WLinkLabel::OnMouseDown( EMouseButton Button, Integer X, Integer Y ) 
+void WLinkLabel::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y ) 
 { 
 	WWidget::OnMouseDown( Button, X, Y );
 
@@ -413,7 +413,7 @@ void WButton::OnPaint( CGUIRenderBase* Render )
 //
 // Mouse hover above button.
 //
-void WButton::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WButton::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {		
 	WWidget::OnMouseMove( Button, X, Y );
 
@@ -425,7 +425,7 @@ void WButton::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse press button.
 //
-void WButton::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WButton::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseDown( Button, X, Y );
 
@@ -437,7 +437,7 @@ void WButton::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse click button.
 //
-void WButton::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WButton::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseUp( Button, X, Y );
 
@@ -499,8 +499,8 @@ void WToolBar::OnPaint( CGUIRenderBase* Render )
 	Render->DrawRegion( Base, Size, GUI_COLOR_PANEL, GUI_COLOR_PANEL, BPAT_Solid );
 
 	// Set buttons locations & draw separators.
-	Integer XWalk = 2;
-	for( Integer i=0; i<Elements.Num(); i++ )
+	Int32 XWalk = 2;
+	for( Int32 i=0; i<Elements.Num(); i++ )
 	{
 		WWidget* W = Elements[i];
 

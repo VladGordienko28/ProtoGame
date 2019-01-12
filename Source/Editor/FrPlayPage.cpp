@@ -10,7 +10,7 @@
 -----------------------------------------------------------------------------*/
 
 // Whether debug AI code?
-#define AI_DEBUG_DRAW		1 && _DEBUG
+#define AI_DEBUG_DRAW		1 && FLU_DEBUG
 
 
 //
@@ -118,7 +118,7 @@ void WPlayPage::TickPage( Float Delta )
 static void DrawPathNetwork( CCanvas* Canvas, CNavigator* Navig )
 {
 	// Draw all nodes.
-	for( Integer iNode=0; iNode<Navig->Nodes.Num(); iNode++ )
+	for( Int32 iNode=0; iNode<Navig->Nodes.Num(); iNode++ )
 	{
 		TPathNode& Node = Navig->Nodes[iNode];
 
@@ -132,7 +132,7 @@ static void DrawPathNetwork( CCanvas* Canvas, CNavigator* Navig )
 
 	// Draw all edges.
 	TVector Bias( 0.f, (5.f*Canvas->View.FOV.Y*Canvas->View.Zoom)/(Canvas->View.Height) );
-	for( Integer iEdge=0; iEdge<Navig->Edges.Num(); iEdge++ )
+	for( Int32 iEdge=0; iEdge<Navig->Edges.Num(); iEdge++ )
 	{
 		TPathEdge& Edge = Navig->Edges[iEdge];
 
@@ -224,7 +224,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 
 
 	// Output all script errors.
-	for( Integer iMsg=0; iMsg<Messages.Num(); iMsg++ )
+	for( Int32 iMsg=0; iMsg<Messages.Num(); iMsg++ )
 	{
 		Canvas->DrawText
 					( 
@@ -313,7 +313,7 @@ void WPlayPage::OnOpen()
 //
 // User press keyboard button.
 //
-void WPlayPage::OnKeyDown( Integer Key )
+void WPlayPage::OnKeyDown( Int32 Key )
 {
 	// Close page, when <Esc> pressed.
 	if( Key == KEY_Escape )
@@ -324,7 +324,7 @@ void WPlayPage::OnKeyDown( Integer Key )
 //
 // User moves mouse over level.
 //
-void WPlayPage::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WPlayPage::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WEditorPage::OnMouseMove( Button, X, Y );
 
@@ -338,7 +338,7 @@ void WPlayPage::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 			lw	= Size.Width,
 			lh	= Size.Height*(CamFOV.Y/RealFOV.Y);
 
-	Integer	TestX	= X,
+	Int32	TestX	= X,
 			TestY	= Y-ly;
 
 	// Test bounds.
@@ -366,11 +366,11 @@ void WPlayPage::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 //
 // User has unpress mouse button.
 //
-void WPlayPage::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WPlayPage::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WEditorPage::OnMouseUp( Button, X, Y );
 
-	Integer	Key	=	Button == MB_Left	?	KEY_LButton :
+	Int32	Key	=	Button == MB_Left	?	KEY_LButton :
 					Button == MB_Right	?	KEY_RButton :
 											KEY_MButton;
 
@@ -381,11 +381,11 @@ void WPlayPage::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 //
 // User has press mouse button.
 //
-void WPlayPage::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WPlayPage::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WEditorPage::OnMouseDown( Button, X, Y );
 
-	Integer	Key	=	Button == MB_Left	?	KEY_LButton :
+	Int32	Key	=	Button == MB_Left	?	KEY_LButton :
 					Button == MB_Right	?	KEY_RButton :
 											KEY_MButton;
 
@@ -396,7 +396,7 @@ void WPlayPage::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 //
 // Double click.
 //
-void WPlayPage::OnDblClick( EMouseButton Button, Integer X, Integer Y )
+void WPlayPage::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WEditorPage::OnDblClick( Button, X, Y );
 	GEditor->GInput->OnKeyDown( KEY_DblClick );
@@ -407,15 +407,15 @@ void WPlayPage::OnDblClick( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse has been scrolled.
 //
-void WPlayPage::OnMouseScroll( Integer Delta )
+void WPlayPage::OnMouseScroll( Int32 Delta )
 {
 	WEditorPage::OnMouseScroll(Delta);
 
 	GEditor->GInput->WheelScroll	+= Delta;
-	Integer Times	= Clamp( Delta / 120, -5, 5 );
-	Integer	Key		= Times > 0 ? KEY_WheelUp : KEY_WheelDown;
+	Int32 Times	= Clamp( Delta / 120, -5, 5 );
+	Int32	Key	= Times > 0 ? KEY_WheelUp : KEY_WheelDown;
 
-	for( Integer i=0; i<Abs(Times); i++ )
+	for( Int32 i=0; i<Abs(Times); i++ )
 	{
 		GEditor->GInput->OnKeyDown( Key );
 		GEditor->GInput->OnKeyUp( Key );

@@ -153,20 +153,20 @@ FDiffuseLayer::~FDiffuseLayer()
 //
 // Apply layer transforms.
 //
-void FDiffuseLayer::ApplyTransform( const TViewInfo& View, const TVector* InCoords, TVector* OutCoords, Integer NumVerts )
+void FDiffuseLayer::ApplyTransform( const TViewInfo& View, const TVector* InCoords, TVector* OutCoords, Int32 NumVerts )
 {
 	Float Time = GPlat->TimeStamp();
 
 	if( bIgnoreMainBias )
 	{
 		// Untransfrom it.
-		for( Integer i=0; i<NumVerts; i++ )
+		for( Int32 i=0; i<NumVerts; i++ )
 			OutCoords[i] = InCoords[i] - InCoords[0];
 	}
 	else
 	{
 		// Transfrom with master.
-		for( Integer i=0; i<NumVerts; i++ )
+		for( Int32 i=0; i<NumVerts; i++ )
 			OutCoords[i] = InCoords[i];
 	}
 
@@ -175,7 +175,7 @@ void FDiffuseLayer::ApplyTransform( const TViewInfo& View, const TVector* InCoor
 	//
 	if( Scaler.Scale.X != 1.f || Scaler.Scale.Y != 1.f )
 	{
-		for( Integer i=0; i<NumVerts; i++ )
+		for( Int32 i=0; i<NumVerts; i++ )
 		{
 			OutCoords[i].X *= Scaler.Scale.X;
 			OutCoords[i].Y *= Scaler.Scale.Y;
@@ -189,7 +189,7 @@ void FDiffuseLayer::ApplyTransform( const TViewInfo& View, const TVector* InCoor
 	{
 		TAngle Angle = TAngle::FromRads(Rotator.Speed*Time);
 		TCoords Coords = TCoords( Rotator.Origin, Angle );
-		for( Integer i=0; i<NumVerts; i++ )
+		for( Int32 i=0; i<NumVerts; i++ )
 			OutCoords[i] = TransformPointBy(OutCoords[i], Coords);
 	}
 
@@ -199,12 +199,12 @@ void FDiffuseLayer::ApplyTransform( const TViewInfo& View, const TVector* InCoor
 	if( Panner.Speed != 0.f )
 	{
 		TVector PanVector = AngleToVector(Panner.Direction);
-		for( Integer i=0; i<NumVerts; i++ )
+		for( Int32 i=0; i<NumVerts; i++ )
 			OutCoords[i] += PanVector * Time * Panner.Speed;
 	}
 	if( Oscillator.Amplitude.X != 0.f || Oscillator.Amplitude.Y != 0.f )
 	{
-		for( Integer i=0; i<NumVerts; i++ )
+		for( Int32 i=0; i<NumVerts; i++ )
 		{
 			OutCoords[i].X += FastSinF(2.f*PI * Time*Oscillator.Frequency.X + 2.f*PI * Oscillator.Phase.X) * Oscillator.Amplitude.X;
 			OutCoords[i].Y += FastSinF(2.f*PI * Time*Oscillator.Frequency.Y + 2.f*PI * Oscillator.Phase.Y) * Oscillator.Amplitude.Y;
@@ -216,17 +216,17 @@ void FDiffuseLayer::ApplyTransform( const TViewInfo& View, const TVector* InCoor
 	//
 	if( bFlipH )
 	{
-		for( Integer i=0; i<NumVerts; i++ )
+		for( Int32 i=0; i<NumVerts; i++ )
 			OutCoords[i].X = -OutCoords[i].X;
 	}
 	if( bFlipV )
 	{
-		for( Integer i=0; i<NumVerts; i++ )
+		for( Int32 i=0; i<NumVerts; i++ )
 			OutCoords[i].Y = -OutCoords[i].Y;
 	}
 	if( bTurn90 )
 	{
-		for( Integer i=0; i<NumVerts; i++ )
+		for( Int32 i=0; i<NumVerts; i++ )
 			Exchange(OutCoords[i].X, OutCoords[i].Y);
 	}
 }

@@ -70,7 +70,7 @@ void CGFXManager::Tick( Float Delta )
 		Alpha	= Clamp( Alpha, 0.f, 1.f );
 
 		// Interpolate all.
-		for( Integer i=0; i<3; i++ )
+		for( Int32 i=0; i<3; i++ )
 		{
 			ResultEffect.Highlights[i]	= Lerp( OldEffect.Highlights[i],	NewEffect.Highlights[i],	Alpha );
 			ResultEffect.MidTones[i]	= Lerp( OldEffect.MidTones[i],		NewEffect.MidTones[i],		Alpha );

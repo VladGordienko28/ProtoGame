@@ -75,22 +75,22 @@ public:
 	void OnOpen();
 
 	// WWidget interface.
-	void OnDblClick( EMouseButton Button, Integer X, Integer Y );
+	void OnDblClick( EMouseButton Button, Int32 X, Int32 Y );
 	void OnPaint( CGUIRenderBase* Render );
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseScroll( Integer Delta );
-	void OnDragOver( void* Data, Integer X, Integer Y, Bool& bAccept );
-	void OnDragDrop( void* Data, Integer X, Integer Y );
-	void OnKeyDown( Integer Key );
-	void OnKeyUp( Integer Key );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseScroll( Int32 Delta );
+	void OnDragOver( void* Data, Int32 X, Int32 Y, Bool& bAccept );
+	void OnDragDrop( void* Data, Int32 X, Int32 Y );
+	void OnKeyDown( Int32 Key );
+	void OnKeyUp( Int32 Key );
 
 	// WLevelPage events.
-	virtual void OnMouseDrag( EMouseButton Button, Integer X, Integer Y, Integer DeltaX, Integer DeltaY );
-	virtual void OnMouseBeginDrag( EMouseButton Button, Integer X, Integer Y );
-	virtual void OnMouseEndDrag( EMouseButton Button, Integer X, Integer Y );
-	virtual void OnMouseClick( EMouseButton Button, Integer X, Integer Y );
+	virtual void OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 DeltaX, Int32 DeltaY );
+	virtual void OnMouseBeginDrag( EMouseButton Button, Int32 X, Int32 Y );
+	virtual void OnMouseEndDrag( EMouseButton Button, Int32 X, Int32 Y );
+	virtual void OnMouseClick( EMouseButton Button, Int32 X, Int32 Y );
 
 	// WEditorPage interface.
 	void RenderPageContent( CCanvas* Canvas );
@@ -146,7 +146,7 @@ private:
 	TRoller				Roller;
 	ELevelTool			Tool;
 	Float				TranslationSnap;
-	Integer				RotationSnap;
+	Int32				RotationSnap;
 
 	// Internal widgets.
 	WToolBar*			ToolBar;
@@ -193,25 +193,25 @@ private:
 	void ButtonDestroyPathsClick( WWidget* Sender );
 
 	// Helper functions.
-	TVector ScreenToWorld( Integer X, Integer Y );
+	TVector ScreenToWorld( Int32 X, Int32 Y );
 	void WorldToScreen( TVector V, Float& OutX, Float& OutY );
 	void UpdateInspector();
-	void PaintModelAt( FModelComponent* Model, Integer iLayer, Integer X, Integer Y );
-	FEntity* GetEntityAt( Integer X, Integer Y, Bool bFast = false );
-	Bool GetRollerAt( Integer X, Integer Y );
-	Integer GetVertexAt( Integer X, Integer Y, FBrushComponent*& OutBrush );
-	EStretchHandle GetStretchHandleAt( Integer X, Integer Y, FBaseComponent*& OutBase );
-	Integer GetSocketAt( Integer X, Integer Y, ELogicSocket& SType, FLogicComponent*& L );
-	FEntity* AddEntityTo( FScript* Script, Integer X, Integer Y );
+	void PaintModelAt( FModelComponent* Model, Int32 iLayer, Int32 X, Int32 Y );
+	FEntity* GetEntityAt( Int32 X, Int32 Y, Bool bFast = false );
+	Bool GetRollerAt( Int32 X, Int32 Y );
+	Int32 GetVertexAt( Int32 X, Int32 Y, FBrushComponent*& OutBrush );
+	EStretchHandle GetStretchHandleAt( Int32 X, Int32 Y, FBaseComponent*& OutBase );
+	Int32 GetSocketAt( Int32 X, Int32 Y, ELogicSocket& SType, FLogicComponent*& L );
+	FEntity* AddEntityTo( FScript* Script, Int32 X, Int32 Y );
 	void DrawKeyframe( CCanvas* Canvas, FEntity* Entity );
 	void DrawPathsNetwork( CCanvas* Canvas, CNavigator* Navigator );
 	void DrawLogicCircuit( CCanvas* Canvas );
 	void DrawScrollClamp( CCanvas* Canvas );
 
 	// Click notifications.
-	void ClickBackdrop( EMouseButton Button, Integer X, Integer Y );
-	void ClickEntity( FEntity* Entity, EMouseButton Button, Integer X, Integer Y );
-	void ClickVertex( FBrushComponent* Brush, Integer iVert, EMouseButton Button, Integer X, Integer Y );
+	void ClickBackdrop( EMouseButton Button, Int32 X, Int32 Y );
+	void ClickEntity( FEntity* Entity, EMouseButton Button, Int32 X, Int32 Y );
+	void ClickVertex( FBrushComponent* Brush, Int32 iVert, EMouseButton Button, Int32 X, Int32 Y );
 
 public:
 	// CRefsHolder interface.

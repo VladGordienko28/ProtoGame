@@ -33,7 +33,7 @@ CClass* CClassDatabase::StaticFindClass( const Char* InName )
 {
 	// Pretty sad, O(n), but used seldom,
 	// so, it's doesn't critical.
-	for( Integer i=0; i<GClasses.Num(); i++ )
+	for( Int32 i=0; i<GClasses.Num(); i++ )
 		if( GClasses[i]->Name == InName )
 			return GClasses[i];
 
@@ -49,7 +49,7 @@ CEnum* CClassDatabase::StaticFindEnum( const Char* InName )
 {
 	// Pretty sad, O(n), but used seldom,
 	// so, it's doesn't critical.
-	for( Integer i=0; i<GEnums.Num(); i++ )
+	for( Int32 i=0; i<GEnums.Num(); i++ )
 		if( GEnums[i]->Name == InName )
 			return GEnums[i];
 
@@ -65,7 +65,7 @@ CNativeFunction* CClassDatabase::StaticFindFunction( const Char* InName )
 {
 	// Pretty sad, O(n), but used seldom,
 	// so, it's doesn't critical.
-	for( Integer i=0; i<GFuncs.Num(); i++ )
+	for( Int32 i=0; i<GFuncs.Num(); i++ )
 		if( GFuncs[i]->Name == InName )
 			return GFuncs[i];
 
@@ -81,7 +81,7 @@ CStruct* CClassDatabase::StaticFindStruct( const Char* InName )
 {
 	// Pretty sad, O(n), but used seldom,
 	// so, it's doesn't critical.
-	for( Integer i=0; i<GStructs.Num(); i++ )
+	for( Int32 i=0; i<GStructs.Num(); i++ )
 		if( GStructs[i]->Name == InName )
 			return GStructs[i];
 
@@ -96,7 +96,7 @@ CStruct* CClassDatabase::StaticFindStruct( const Char* InName )
 //
 // Class constructor.
 //
-CClass::CClass( const Char* InName, TConstructor InCnstr, CClass* InSuper, DWord InFlags )
+CClass::CClass( const Char* InName, TConstructor InCnstr, CClass* InSuper, UInt32 InFlags )
 	:	Name( InName ),
 		Flags( InFlags ),
 		Super( InSuper ),
@@ -127,12 +127,12 @@ CClass::CClass( const Char* InName, TConstructor InCnstr, CClass* InSuper, DWord
 CClass::~CClass()
 {
 	// Kill properties.
-	for( Integer iProp=0; iProp<Properties.Num(); iProp++ )
+	for( Int32 iProp=0; iProp<Properties.Num(); iProp++ )
 		delete Properties[iProp];
 	Properties.Empty();
 
 	// Kill methods.
-	for( Integer iMeth=0; iMeth<Methods.Num(); iMeth++ )
+	for( Int32 iMeth=0; iMeth<Methods.Num(); iMeth++ )
 		delete Methods[iMeth];
 	Methods.Empty();
 }
@@ -164,7 +164,7 @@ void CClass::AddMethod( CNativeFunction* InMeth )
 //
 CProperty* CClass::FindProperty( const Char* InName ) const
 {
-	for( Integer iProp=0; iProp<Properties.Num(); iProp++ )
+	for( Int32 iProp=0; iProp<Properties.Num(); iProp++ )
 		if( Properties[iProp]->Name == InName )
 			return Properties[iProp];
 
@@ -179,7 +179,7 @@ CProperty* CClass::FindProperty( const Char* InName ) const
 //
 CNativeFunction* CClass::FindMethod( const Char* InName ) const
 {
-	for( Integer iMeth=0; iMeth<Methods.Num(); iMeth++ )
+	for( Int32 iMeth=0; iMeth<Methods.Num(); iMeth++ )
 		if( Methods[iMeth]->Name == InName )
 			return Methods[iMeth];
 
@@ -209,7 +209,7 @@ Bool CClass::IsA( CClass* SomeClass )
 //
 // Native function constructor.
 //
-CNativeFunction::CNativeFunction( const Char* InName, DWord InFlags, Integer InOpCode )
+CNativeFunction::CNativeFunction( const Char* InName, UInt32 InFlags, Int32 InOpCode )
 	:	Flags( InFlags ),
 		Name( InName ),
 		Class( nullptr ),
@@ -219,7 +219,7 @@ CNativeFunction::CNativeFunction( const Char* InName, DWord InFlags, Integer InO
 {
 	// Test for duplicates.
 	if( !(Flags & (NFUN_UnaryOp | NFUN_BinaryOp)) )
-		for( Integer i=0; i<CClassDatabase::GFuncs.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GFuncs.Num(); i++ )
 		{
 			CNativeFunction* Other = CClassDatabase::GFuncs[i];
 
@@ -232,7 +232,7 @@ CNativeFunction::CNativeFunction( const Char* InName, DWord InFlags, Integer InO
 //
 // Native function constructor.
 //
-CNativeFunction::CNativeFunction( const Char* InName, DWord InFlags, TNativeFunction InFunction )
+CNativeFunction::CNativeFunction( const Char* InName, UInt32 InFlags, TNativeFunction InFunction )
 	:	Flags( InFlags ),
 		Name( InName ),
 		Class( nullptr ),
@@ -242,7 +242,7 @@ CNativeFunction::CNativeFunction( const Char* InName, DWord InFlags, TNativeFunc
 {
 	assert(Flags & NFUN_Extended);
 
-	for( Integer i=0; i<CClassDatabase::GFuncs.Num(); i++ )
+	for( Int32 i=0; i<CClassDatabase::GFuncs.Num(); i++ )
 	{
 		CNativeFunction* Other = CClassDatabase::GFuncs[i];
 
@@ -277,7 +277,7 @@ CNativeFunction::CNativeFunction( const Char* InName, CClass* InClass, TNativeMe
 String CNativeFunction::GetSignature() const
 {
 	String Args;
-	for( Integer i=0; i<NumParams; i++ )
+	for( Int32 i=0; i<NumParams; i++ )
 	{
 		Args += Params[i].Type.TypeName() + L" " + Params[i].Name;
 		if( i != NumParams-1 )
@@ -306,13 +306,13 @@ void CNativeFunction::SetResultType( const CTypeInfo& InResultType )
 //
 // Add a new parameter to native function and return it index.
 //
-Integer CNativeFunction::AddParameter( const Char* ParamName, const CTypeInfo& ParamType )
+Int32 CNativeFunction::AddParameter( const Char* ParamName, const CTypeInfo& ParamType )
 {
 	if( NumParams >= MAX_PARAMETERS )
 		error(L"Too many parameters in function \"%s\"", *Name);
 
 	// Check for name duplication.
-	for( Integer i=0; i<NumParams; i++ )
+	for( Int32 i=0; i<NumParams; i++ )
 		if( Params[i].Name && Params[i].Name == ParamName )
 			error( L"Parameter \"%s\" duplicated in function \"%s\"", ParamName, *Name );
 
@@ -330,20 +330,20 @@ Integer CNativeFunction::AddParameter( const Char* ParamName, const CTypeInfo& P
 CVariant::CVariant()
 	:	Type( TYPE_None )
 {}
-CVariant::CVariant( Byte InByte )
+CVariant::CVariant( UInt8 InByte )
 	:	Type( TYPE_Byte )
 {
-	*((Byte*)(&Value[0])) = InByte;
+	*((UInt8*)(&Value[0])) = InByte;
 }
 CVariant::CVariant( Bool InBool )
 	:	Type( TYPE_Bool )
 {
 	*((Bool*)(&Value[0])) = InBool;
 }
-CVariant::CVariant( Integer InInteger )
+CVariant::CVariant( Int32 InInteger )
 	:	Type( TYPE_Integer )
 {
-	*((Integer*)(&Value[0])) = InInteger;
+	*((Int32*)(&Value[0])) = InInteger;
 }
 CVariant::CVariant( Float InFloat )
 	:	Type( TYPE_Float )
@@ -423,7 +423,7 @@ CStruct::CStruct( const Char* InName )
 //
 CStruct::~CStruct()
 {
-	for( Integer i=0; i<Members.Num(); i++ )
+	for( Int32 i=0; i<Members.Num(); i++ )
 		freeandnil(Members[i]);
 }
 
@@ -433,7 +433,7 @@ CStruct::~CStruct()
 //
 CProperty* CStruct::FindMember( const Char* InName ) const
 {
-	for( Integer i=0; i<Members.Num(); i++ )
+	for( Int32 i=0; i<Members.Num(); i++ )
 		if( Members[i]->Name == InName )
 			return Members[i];
 	return nullptr;
@@ -445,10 +445,10 @@ CProperty* CStruct::FindMember( const Char* InName ) const
 //
 void CStruct::CopyValues( void* Dst, const void* Src ) const
 {
-	for( Integer i=0; i<Members.Num(); i++ )
+	for( Int32 i=0; i<Members.Num(); i++ )
 	{
 		CProperty* P = Members[i];
-		P->CopyValue( (Byte*)Dst + P->Offset, (Byte*)Src + P->Offset );
+		P->CopyValue( (UInt8*)Dst + P->Offset, (UInt8*)Src + P->Offset );
 	}
 }
 
@@ -458,11 +458,11 @@ void CStruct::CopyValues( void* Dst, const void* Src ) const
 //
 void CStruct::DestroyValues( void* Addr ) const
 {
-	for( Integer i=0; i<Members.Num(); i++ )
+	for( Int32 i=0; i<Members.Num(); i++ )
 	{
 		CProperty* P = Members[i];
 		if( P->NeedDestruction() )
-			P->DestroyValue((Byte*)Addr + P->Offset);
+			P->DestroyValue((UInt8*)Addr + P->Offset);
 	}
 }
 
@@ -472,10 +472,10 @@ void CStruct::DestroyValues( void* Addr ) const
 //
 void CStruct::SerializeValues( void* Addr, CSerializer& S ) const
 {
-	for( Integer i=0; i<Members.Num(); i++ )
+	for( Int32 i=0; i<Members.Num(); i++ )
 	{
 		CProperty* P = Members[i];
-		P->SerializeValue( (Byte*)Addr + P->Offset, S );
+		P->SerializeValue( (UInt8*)Addr + P->Offset, S );
 	}
 }
 
@@ -485,10 +485,10 @@ void CStruct::SerializeValues( void* Addr, CSerializer& S ) const
 //
 void CStruct::ImportValues( void* Addr, CImporterBase& Im, String Prefix ) const
 {
-	for( Integer i=0; i<Members.Num(); i++ )
+	for( Int32 i=0; i<Members.Num(); i++ )
 	{
 		CProperty* P = Members[i];
-		P->ImportValue( (Byte*)Addr + P->Offset, Im, String::Format(L"%s.%s", *Prefix, *P->Name) );
+		P->ImportValue( (UInt8*)Addr + P->Offset, Im, String::Format(L"%s.%s", *Prefix, *P->Name) );
 	}
 }
 
@@ -498,10 +498,10 @@ void CStruct::ImportValues( void* Addr, CImporterBase& Im, String Prefix ) const
 //
 void CStruct::ExportValues( const void* Addr, CExporterBase& Ex, String Prefix ) const
 {
-	for( Integer i=0; i<Members.Num(); i++ )
+	for( Int32 i=0; i<Members.Num(); i++ )
 	{
 		CProperty* P = Members[i];
-		P->ExportValue( (Byte*)Addr + P->Offset, Ex, String::Format(L"%s.%s", *Prefix, *P->Name) );
+		P->ExportValue( (UInt8*)Addr + P->Offset, Ex, String::Format(L"%s.%s", *Prefix, *P->Name) );
 	}
 }
 
@@ -511,10 +511,10 @@ void CStruct::ExportValues( const void* Addr, CExporterBase& Ex, String Prefix )
 //
 Bool CStruct::CompareValues( const void* A, const void* B ) const
 {
-	for( Integer i=0; i<Members.Num(); i++ )
+	for( Int32 i=0; i<Members.Num(); i++ )
 	{
 		CProperty* P = Members[i];
-		if( !P->CompareValue( (Byte*)A + P->Offset, (Byte*)B + P->Offset ) )
+		if( !P->CompareValue( (UInt8*)A + P->Offset, (UInt8*)B + P->Offset ) )
 			return false;
 	}
 	return true;
@@ -526,7 +526,7 @@ Bool CStruct::CompareValues( const void* A, const void* B ) const
 //
 Bool CStruct::NeedDestruction() const
 {
-	for( Integer i=0; i<Members.Num(); i++ )
+	for( Int32 i=0; i<Members.Num(); i++ )
 		if( Members[i]->NeedDestruction() )
 			return true;
 
@@ -559,9 +559,9 @@ CProperty::CProperty
 	CClass* Class, 
 	const Char* InName, 
 	EPropType PropType, 
-	Integer InArrDim, 
+	Int32 InArrDim, 
 	void* InInner,
-	DWord InFlags,
+	UInt32 InFlags,
 	SizeT InOffset 
 )
 	:	CTypeInfo( PropType, InArrDim, InInner ),
@@ -575,7 +575,7 @@ CProperty::CProperty
 //
 // CProperty script or function constructor.
 //
-CProperty::CProperty( CTypeInfo InType, String InName, DWord InFlags, SizeT InOffset )
+CProperty::CProperty( CTypeInfo InType, String InName, UInt32 InFlags, SizeT InOffset )
 	:	CTypeInfo( InType ),
 		Name( InName ),
 		Flags( InFlags ),
@@ -611,7 +611,7 @@ String CProperty::GetAliasName() const
 		Char Buffer[64] = {}, *Walk = Buffer;
 		assert(Name.Len() < arr_len(Buffer));
 		Bool bBool = Name(0) == 'b';
-		Integer i = (Integer)bBool;
+		Int32 i = (Int32)bBool;
 		Char PrevChar = '\0';
 		while( i < Name.Len() )
 		{
@@ -654,7 +654,7 @@ CTypeInfo::CTypeInfo()
 //
 // Type info regular constructor.
 //
-CTypeInfo::CTypeInfo( EPropType InType, Integer InArrDim, void* InInner )
+CTypeInfo::CTypeInfo( EPropType InType, Int32 InArrDim, void* InInner )
 	:	Type( InType ),
 		ArrayDim( InArrDim ),
 		Inner( InInner ),
@@ -675,9 +675,9 @@ SizeT CTypeInfo::TypeSize( Bool bNoArray ) const
 		static const SizeT TypeSizes[TYPE_MAX] =
 		{
 			0,						//	TYPE_None
-			sizeof( Byte ),			//	TYPE_Byte
+			sizeof( UInt8 ),			//	TYPE_Byte
 			sizeof( Bool ),			//	TYPE_Bool
-			sizeof( Integer ),		//	TYPE_Integer
+			sizeof( Int32 ),		//	TYPE_Integer
 			sizeof( Float ),		//	TYPE_Float
 			sizeof( TAngle ),		//	TYPE_Angle
 			sizeof( TColor ),		//	TYPE_Color	
@@ -745,14 +745,14 @@ void CTypeInfo::DestroyValue( const void* Addr ) const
 		// Simple value.
 		if( Type == TYPE_String )
 		{
-			for( Integer i=0; i<ArrayDim; i++ )
+			for( Int32 i=0; i<ArrayDim; i++ )
 				(&((String*)Addr)[i])->~String();
 		}
 		else if( Type == TYPE_Struct )
 		{
 			assert(Struct);
-			for( Integer i=0; i<ArrayDim; i++ )
-				Struct->DestroyValues( (Byte*)Addr + Struct->Size*i );
+			for( Int32 i=0; i<ArrayDim; i++ )
+				Struct->DestroyValues( (UInt8*)Addr + Struct->Size*i );
 		}
 	}
 	else
@@ -780,16 +780,16 @@ void CTypeInfo::CopyValue( void* Dst, const void* Src ) const
 		// Copy simple value.
 		if( Type == TYPE_String )
 		{
-			for( Integer i=0; i<ArrayDim; i++ )
+			for( Int32 i=0; i<ArrayDim; i++ )
 				((String*)Dst)[i] = ((String*)Src)[i];
 		}
 		else if( Type == TYPE_Struct )
 		{
 			assert(Struct);
-			for( Integer i=0; i<ArrayDim; i++ )
+			for( Int32 i=0; i<ArrayDim; i++ )
 			{
 				SizeT Offset = i * Struct->Size;
-				Struct->CopyValues( (Byte*)Dst+Offset, (Byte*)Src+Offset );
+				Struct->CopyValues( (UInt8*)Dst+Offset, (UInt8*)Src+Offset );
 			}
 		}
 		else
@@ -835,7 +835,7 @@ Bool CTypeInfo::CompareValue( const void* A, const void* B ) const
 		// Simple value.
 		if( Type == TYPE_String )
 		{
-			for( Integer i=0; i<ArrayDim; i++ )
+			for( Int32 i=0; i<ArrayDim; i++ )
 				if( ((String*)A)[i] != ((String*)B)[i] )
 					return false;
 
@@ -843,10 +843,10 @@ Bool CTypeInfo::CompareValue( const void* A, const void* B ) const
 		}
 		else if( Type == TYPE_Struct )
 		{
-			for( Integer i=0; i<ArrayDim; i++ )
+			for( Int32 i=0; i<ArrayDim; i++ )
 			{
 				SizeT Offset = i * Struct->Size;
-				if( !Struct->CompareValues( (Byte*)A+Offset, (Byte*)B+Offset ) )
+				if( !Struct->CompareValues( (UInt8*)A+Offset, (UInt8*)B+Offset ) )
 					return false;
 			}
 			return true;
@@ -893,7 +893,7 @@ Bool CustomMatchStructs( const CStruct* A, const CStruct* B )
 		return false;
 
 	// Member by member matching.
-	for( Integer i=0; i<A->Members.Num(); i++ )
+	for( Int32 i=0; i<A->Members.Num(); i++ )
 	{
 		if( !A->Members[i]->MatchWith(*B->Members[i]) )
 			return false;
@@ -955,7 +955,7 @@ String CTypeInfo::ToString( const void* Addr ) const
 	{
 		case TYPE_Byte:
 		{
-			Byte Value = *(Byte*)Addr;
+			UInt8 Value = *(UInt8*)Addr;
 			if( Enum )
 				return Value < Enum->Elements.Num() ? *Enum->GetAliasOf(Value) : L"BAD_INDEX";
 			else
@@ -967,7 +967,7 @@ String CTypeInfo::ToString( const void* Addr ) const
 		}
 		case TYPE_Integer:
 		{
-			return String::FromInteger(*(Integer*)Addr);
+			return String::FromInteger(*(Int32*)Addr);
 		}
 		case TYPE_Float:
 		{
@@ -1038,7 +1038,7 @@ Bool CTypeInfo::NeedDestruction() const
 // Resize dynamic array. Takes care about reallocation and destroying
 // out-of-array elements.
 //
-void CTypeInfo::SetArrayLength( void* Addr, Integer NewLength ) const
+void CTypeInfo::SetArrayLength( void* Addr, Int32 NewLength ) const
 {
 	assert(NewLength >= 0);
 	assert(ArrayDim == -1);
@@ -1048,8 +1048,8 @@ void CTypeInfo::SetArrayLength( void* Addr, Integer NewLength ) const
 
 	if( Elem.NeedDestruction() )
 	{
-		for( Integer i=NewLength; i<Array->Count; i++ )
-			Elem.DestroyValue((Byte*)Array->Data + i*Elem.TypeSize(true));
+		for( Int32 i=NewLength; i<Array->Count; i++ )
+			Elem.DestroyValue((UInt8*)Array->Data + i*Elem.TypeSize(true));
 	}
 
 	// Resize.
@@ -1068,7 +1068,7 @@ void CTypeInfo::SerializeValue( void* Addr, CSerializer& S ) const
 		TArrayBase* Array = (TArrayBase*)Addr;
 		if( S.GetMode() == SM_Load )
 		{
-			Integer Length;
+			Int32 Length;
 			Serialize( S, Length );
 			SetArrayLength( Addr, Length );
 		}
@@ -1102,32 +1102,32 @@ void CTypeInfo::SerializeValue( void* Addr, CSerializer& S ) const
 
 		case TYPE_Delegate:
 			// List of delegates.
-			for( Integer i=0; i<ArrayDim; i++ )
+			for( Int32 i=0; i<ArrayDim; i++ )
 				Serialize( S, ((TDelegate*)Addr)[i] );
 			break;
 
 		case TYPE_String:
 			// List of strings.
-			for( Integer i=0; i<ArrayDim; i++ )
+			for( Int32 i=0; i<ArrayDim; i++ )
 				Serialize( S, ((String*)Addr)[i] );
 			break;
 
 		case TYPE_Entity:
 			// Entities.
-			for( Integer i=0; i<ArrayDim; i++ )
+			for( Int32 i=0; i<ArrayDim; i++ )
 				Serialize( S, ((FEntity**)Addr)[i] );
 			break;
 
 		case TYPE_Resource:
 			// Entities.
-			for( Integer i=0; i<ArrayDim; i++ )
+			for( Int32 i=0; i<ArrayDim; i++ )
 				Serialize( S, ((FResource**)Addr)[i] );
 			break;
 
 		case TYPE_Struct:
 			// Struct serialization.
-			for( Integer i=0; i<ArrayDim; i++ )
-				Struct->SerializeValues( (Byte*)Addr + Struct->Size*i, S );
+			for( Int32 i=0; i<ArrayDim; i++ )
+				Struct->SerializeValues( (UInt8*)Addr + Struct->Size*i, S );
 			break;
 
 		default:
@@ -1145,7 +1145,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 	if( ArrayDim == -1 )
 	{
 		TArrayBase* Array = (TArrayBase*)Addr;
-		Integer RealLen = Im.ImportInteger( *(Prefix+L".Num") );
+		Int32 RealLen = Im.ImportInteger( *(Prefix+L".Num") );
 		SetArrayLength( Addr, RealLen );
 
 		if( Array->Count > 0 )
@@ -1162,10 +1162,10 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 		case TYPE_Byte:
 			// Import byte.
 			if( ArrayDim == 1 )
-				*(Byte*)Addr = Im.ImportByte( *Prefix );
+				*(UInt8*)Addr = Im.ImportByte( *Prefix );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
-					((Byte*)Addr)[i] = Im.ImportByte( *String::Format( L"%s[%d]", *Prefix, i ) );
+				for( Int32 i=0; i<ArrayDim; i++ )
+					((UInt8*)Addr)[i] = Im.ImportByte( *String::Format( L"%s[%d]", *Prefix, i ) );
 			break;
 
 		case TYPE_Bool:
@@ -1173,17 +1173,17 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 			if( ArrayDim == 1 )
 				*(Bool*)Addr = Im.ImportBool( *Prefix );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
+				for( Int32 i=0; i<ArrayDim; i++ )
 					((Bool*)Addr)[i] = Im.ImportBool( *String::Format( L"%s[%d]", *Prefix, i ) );
 			break;
 
 		case TYPE_Integer:
 			// Import integer.
 			if( ArrayDim == 1 )
-				*(Integer*)Addr = Im.ImportInteger( *Prefix );
+				*(Int32*)Addr = Im.ImportInteger( *Prefix );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
-					((Integer*)Addr)[i] = Im.ImportInteger( *String::Format( L"%s[%d]", *Prefix, i ) );
+				for( Int32 i=0; i<ArrayDim; i++ )
+					((Int32*)Addr)[i] = Im.ImportInteger( *String::Format( L"%s[%d]", *Prefix, i ) );
 			break;
 
 		case TYPE_Float:
@@ -1191,7 +1191,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 			if( ArrayDim == 1 )
 				*(Float*)Addr = Im.ImportFloat( *Prefix );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
+				for( Int32 i=0; i<ArrayDim; i++ )
 					((Float*)Addr)[i] = Im.ImportFloat( *String::Format( L"%s[%d]", *Prefix, i ) );
 			break;
 
@@ -1200,7 +1200,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 			if( ArrayDim == 1 )
 				*(TAngle*)Addr = Im.ImportAngle( *Prefix );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
+				for( Int32 i=0; i<ArrayDim; i++ )
 					((TAngle*)Addr)[i] = Im.ImportAngle( *String::Format( L"%s[%d]", *Prefix, i ) );
 			break;
 
@@ -1209,7 +1209,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 			if( ArrayDim == 1 )
 				*(TColor*)Addr = Im.ImportColor( *Prefix );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
+				for( Int32 i=0; i<ArrayDim; i++ )
 					((TColor*)Addr)[i] = Im.ImportColor( *String::Format( L"%s[%d]", *Prefix, i ) );
 			break;
 
@@ -1218,7 +1218,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 			if( ArrayDim == 1 )
 				*(String*)Addr = Im.ImportString( *Prefix );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
+				for( Int32 i=0; i<ArrayDim; i++ )
 					((String*)Addr)[i] = Im.ImportString( *String::Format( L"%s[%d]", *Prefix, i ) );
 			break;
 
@@ -1227,7 +1227,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 			if( ArrayDim == 1 )
 				*(TVector*)Addr = Im.ImportVector( *Prefix );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
+				for( Int32 i=0; i<ArrayDim; i++ )
 					((TVector*)Addr)[i] = Im.ImportVector( *String::Format( L"%s[%d]", *Prefix, i ) );
 			break;
 
@@ -1236,7 +1236,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 			if( ArrayDim == 1 )
 				*(TRect*)Addr = Im.ImportAABB( *Prefix );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
+				for( Int32 i=0; i<ArrayDim; i++ )
 					((TRect*)Addr)[i] = Im.ImportAABB( *String::Format( L"%s[%d]", *Prefix, i ) );
 			break;
 
@@ -1246,7 +1246,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 			if( ArrayDim == 1 )
 				*(FObject**)Addr = Im.ImportObject( *Prefix );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
+				for( Int32 i=0; i<ArrayDim; i++ )
 					((FObject**)Addr)[i] = Im.ImportObject( *String::Format( L"%s[%d]", *Prefix, i ) );
 			break;
 
@@ -1260,10 +1260,10 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 			if( ArrayDim == 1 )
 				Struct->ImportValues( Addr, Im, Prefix );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
+				for( Int32 i=0; i<ArrayDim; i++ )
 					Struct->ImportValues
 					(
-						(Byte*)Addr + Struct->Size * i,
+						(UInt8*)Addr + Struct->Size * i,
 						Im,
 						String::Format( L"%s[%d]", *Prefix, i )
 					);
@@ -1299,10 +1299,10 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 		case TYPE_Byte:
 			// Export byte.
 			if( ArrayDim == 1 )
-				Ex.ExportByte( *Prefix, *(Byte*)Addr );
+				Ex.ExportByte( *Prefix, *(UInt8*)Addr );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
-					Ex.ExportByte( *String::Format( L"%s[%d]", *Prefix, i ), ((Byte*)Addr)[i] );
+				for( Int32 i=0; i<ArrayDim; i++ )
+					Ex.ExportByte( *String::Format( L"%s[%d]", *Prefix, i ), ((UInt8*)Addr)[i] );
 			break;
 
 		case TYPE_Bool:
@@ -1310,17 +1310,17 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 			if( ArrayDim == 1 )
 				Ex.ExportBool( *Prefix, *(Bool*)Addr );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
+				for( Int32 i=0; i<ArrayDim; i++ )
 					Ex.ExportBool( *String::Format( L"%s[%d]", *Prefix, i ), ((Bool*)Addr)[i] );
 			break;
 
 		case TYPE_Integer:
 			// Export integer.
 			if( ArrayDim == 1 )
-				Ex.ExportInteger( *Prefix, *(Integer*)Addr );
+				Ex.ExportInteger( *Prefix, *(Int32*)Addr );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
-					Ex.ExportInteger( *String::Format( L"%s[%d]", *Prefix, i ), ((Integer*)Addr)[i] );
+				for( Int32 i=0; i<ArrayDim; i++ )
+					Ex.ExportInteger( *String::Format( L"%s[%d]", *Prefix, i ), ((Int32*)Addr)[i] );
 			break;
 
 		case TYPE_Float:
@@ -1328,7 +1328,7 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 			if( ArrayDim == 1 )
 				Ex.ExportFloat( *Prefix, *(Float*)Addr );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
+				for( Int32 i=0; i<ArrayDim; i++ )
 					Ex.ExportFloat( *String::Format( L"%s[%d]", *Prefix, i ), ((Float*)Addr)[i] );
 			break;
 
@@ -1337,7 +1337,7 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 			if( ArrayDim == 1 )
 				Ex.ExportAngle( *Prefix, *(TAngle*)Addr );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
+				for( Int32 i=0; i<ArrayDim; i++ )
 					Ex.ExportAngle( *String::Format( L"%s[%d]", *Prefix, i ), ((TAngle*)Addr)[i] );
 			break;
 
@@ -1346,7 +1346,7 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 			if( ArrayDim == 1 )
 				Ex.ExportColor( *Prefix, *(TColor*)Addr );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
+				for( Int32 i=0; i<ArrayDim; i++ )
 					Ex.ExportColor( *String::Format( L"%s[%d]", *Prefix, i ), ((TColor*)Addr)[i] );
 			break;
 
@@ -1355,7 +1355,7 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 			if( ArrayDim == 1 )
 				Ex.ExportString( *Prefix, *(String*)Addr );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
+				for( Int32 i=0; i<ArrayDim; i++ )
 					Ex.ExportString( *String::Format( L"%s[%d]", *Prefix, i ), ((String*)Addr)[i] );
 			break;
 
@@ -1364,7 +1364,7 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 			if( ArrayDim == 1 )
 				Ex.ExportVector( *Prefix, *(TVector*)Addr );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
+				for( Int32 i=0; i<ArrayDim; i++ )
 					Ex.ExportVector( *String::Format( L"%s[%d]", *Prefix, i ), ((TVector*)Addr)[i] );
 			break;
 
@@ -1373,7 +1373,7 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 			if( ArrayDim == 1 )
 				Ex.ExportAABB( *Prefix, *(TRect*)Addr );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
+				for( Int32 i=0; i<ArrayDim; i++ )
 					Ex.ExportAABB( *String::Format( L"%s[%d]", *Prefix, i ), ((TRect*)Addr)[i] );
 			break;
 
@@ -1383,7 +1383,7 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 			if( ArrayDim == 1 )
 				Ex.ExportObject( *Prefix, *(FObject**)Addr );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
+				for( Int32 i=0; i<ArrayDim; i++ )
 					Ex.ExportObject( *String::Format( L"%s[%d]", *Prefix, i ), ((FObject**)Addr)[i] );
 			break;
 
@@ -1397,10 +1397,10 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 			if( ArrayDim == 1 )
 				Struct->ExportValues( Addr, Ex, Prefix );
 			else
-				for( Integer i=0; i<ArrayDim; i++ )
+				for( Int32 i=0; i<ArrayDim; i++ )
 					Struct->ExportValues
 					(
-						(Byte*)Addr + Struct->Size * i,
+						(UInt8*)Addr + Struct->Size * i,
 						Ex,
 						String::Format( L"%s[%d]", *Prefix, i )
 					);
@@ -1428,7 +1428,7 @@ Bool CTypeInfo::IsSimpleType() const
 //
 // Enumeration native constructor.
 //
-CEnum::CEnum( const Char* InName, DWord InFlags )
+CEnum::CEnum( const Char* InName, UInt32 InFlags )
 	:	Name( InName ),
 		Flags( InFlags ),
 		Elements()
@@ -1439,7 +1439,7 @@ CEnum::CEnum( const Char* InName, DWord InFlags )
 //
 // Enumeration script constructor.
 //
-CEnum::CEnum( const Char* InName, DWord InFlags, FScript* Script )
+CEnum::CEnum( const Char* InName, UInt32 InFlags, FScript* Script )
 	:	Name( InName ),
 		Flags( InFlags ),
 		Elements()
@@ -1459,7 +1459,7 @@ CEnum::~CEnum()
 //
 // Add new element to enumeration.
 //
-Integer CEnum::AddElement( String NewElem )
+Int32 CEnum::AddElement( String NewElem )
 {
 	assert(Elements.FindItem(NewElem)==-1);
 
@@ -1473,7 +1473,7 @@ Integer CEnum::AddElement( String NewElem )
 // Find element in the enum and return it index.
 // If element not found returns -1.
 //
-Integer CEnum::FindElem( String TestName )
+Int32 CEnum::FindElem( String TestName )
 {
 	return Elements.FindItem(TestName);
 }
@@ -1483,7 +1483,7 @@ Integer CEnum::FindElem( String TestName )
 // Return user-friendly
 // alias name of i'th element.
 //
-String CEnum::GetAliasOf( Integer i )
+String CEnum::GetAliasOf( Int32 i )
 {
 	assert(i>=0 && i<Elements.Num());
 
@@ -1493,7 +1493,7 @@ String CEnum::GetAliasOf( Integer i )
 	if( !(Flags & ENUM_NoAliases) && String::Pos( L"_", SourceName ) != -1 )
 	{
 		// Regular enum name.
-		Integer i = 0;
+		Int32 i = 0;
 		Char Buffer[64] = {}, *Walk = Buffer;
 		assert(SourceName.Len() < arr_len(Buffer));
 		while( SourceName(i) != '_' )

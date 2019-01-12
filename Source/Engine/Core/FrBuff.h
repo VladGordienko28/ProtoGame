@@ -14,7 +14,7 @@ class CBufferWriter: public CSerializer
 {
 public:
 	// CBufferWriter interface.
-	CBufferWriter( TArray<Byte>& InData )
+	CBufferWriter( TArray<UInt8>& InData )
 		:	Data(InData)
 	{
 		Mode = SM_Save;
@@ -23,13 +23,13 @@ public:
 	// CSerializer interface.
 	void SerializeData( void* Mem, SizeT Count )
 	{
-		Integer i = Data.Num();
+		Int32 i = Data.Num();
 		Data.SetNum(i + Count);
 		MemCopy( &Data[i], Mem, Count );
 	}
 	void SerializeRef( FObject*& Obj )
 	{
-		Integer iObj = Obj ? Obj->GetId() : -1;
+		Int32 iObj = Obj ? Obj->GetId() : -1;
 		Serialize( *this, iObj );
 	}
 	SizeT TotalSize()
@@ -46,7 +46,7 @@ public:
 	}
 
 private:
-	TArray<Byte>&	Data;
+	TArray<UInt8>&	Data;
 };
 
 
@@ -61,7 +61,7 @@ class CBufferReader: public CSerializer
 {
 public:
 	// CBufferReader interface.
-	CBufferReader( TArray<Byte>& InData )
+	CBufferReader( TArray<UInt8>& InData )
 		:	Data(InData),
 			Pos(0)
 	{
@@ -77,7 +77,7 @@ public:
 	}
 	void SerializeRef( FObject*& Obj )
 	{
-		Integer iObj;
+		Int32 iObj;
 		Serialize( *this, iObj );
 		Obj = iObj != -1 ? GObjectDatabase->GObjects[iObj] : nullptr;
 	}
@@ -96,7 +96,7 @@ public:
 	}
 
 private:
-	TArray<Byte>&	Data;
+	TArray<UInt8>&	Data;
 	SizeT	Pos;
 };
 

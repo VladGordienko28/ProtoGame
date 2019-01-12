@@ -2,8 +2,7 @@
     OpenGLRend.h: OpenGL general include file.
     Copyright Jun.2016 Vlad Gordienko.
 =============================================================================*/
-#ifndef _FLU_OPENGL_
-#define _FLU_OPENGL_
+#pragma once
 
 // C++ includes.
 #pragma comment (lib, "opengl32.lib")  
@@ -25,8 +24,6 @@ class COpenGLShader;
 #include "FrGLShader.h"
 #include "FrGLRender.h"
 
-
-#endif
 /*-----------------------------------------------------------------------------
     The End.
 -----------------------------------------------------------------------------*/

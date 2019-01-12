@@ -29,9 +29,9 @@ FAnimation::FAnimation()
 // Find animation sequence by it name. If no sequence
 // found return nullptr.
 //
-Integer FAnimation::FindSequence( String InName )
+Int32 FAnimation::FindSequence( String InName )
 {
-	for( Integer iSeq=0; iSeq<Sequences.Num(); iSeq++ )
+	for( Int32 iSeq=0; iSeq<Sequences.Num(); iSeq++ )
 		if( Sequences[iSeq].Name == InName )
 			return iSeq;
 
@@ -43,7 +43,7 @@ Integer FAnimation::FindSequence( String InName )
 // Return the texture coords for the frame iFrame.
 // If iFrame are invalid, return an identity rectangle.
 //
-TRect FAnimation::GetTexCoords( Integer iFrame )
+TRect FAnimation::GetTexCoords( Int32 iFrame )
 {
 	return iFrame>=0 && iFrame<Frames.Num() ? 
 				Frames[iFrame] : 
@@ -104,7 +104,7 @@ void FAnimation::Import( CImporterBase& Im )
 	FResource::Import( Im );
 	Sequences.SetNum(Im.ImportInteger(L"NumSeqs"));
 
-	for( Integer iSeq=0; iSeq<Sequences.Num(); iSeq++ )
+	for( Int32 iSeq=0; iSeq<Sequences.Num(); iSeq++ )
 	{
 		TAnimSequence& S = Sequences[iSeq];
 
@@ -123,7 +123,7 @@ void FAnimation::Export( CExporterBase& Ex )
 	FResource::Export( Ex );
 	Ex.ExportInteger( L"NumSeqs", Sequences.Num() );
 
-	for( Integer iSeq=0; iSeq<Sequences.Num(); iSeq++ )
+	for( Int32 iSeq=0; iSeq<Sequences.Num(); iSeq++ )
 	{
 		TAnimSequence& S = Sequences[iSeq];
 
@@ -145,16 +145,16 @@ void FAnimation::SetFramesTable()
 	if( !Sheet || FrameH*FrameW==0 )
 		return;
 
-	Integer XSize	= 1 << Sheet->UBits;
-	Integer YSize	= 1 << Sheet->VBits;
+	Int32 XSize	= 1 << Sheet->UBits;
+	Int32 YSize	= 1 << Sheet->VBits;
 
 	// Without horrible whitespace after frames, for 
 	// power-of-two size.
-	Integer FrmPerX	= Floor((Float)(XSize+SpaceX) / (Float)(FrameW+SpaceX));		
-	Integer FrmPerY	= Floor((Float)(YSize+SpaceY) / (Float)(FrameH+SpaceY));
+	Int32 FrmPerX	= Floor((Float)(XSize+SpaceX) / (Float)(FrameW+SpaceX));		
+	Int32 FrmPerY	= Floor((Float)(YSize+SpaceY) / (Float)(FrameH+SpaceY));
 
-	for( Integer Y=0; Y<FrmPerY; Y++ )
-	for( Integer X=0; X<FrmPerX; X++ )
+	for( Int32 Y=0; Y<FrmPerY; Y++ )
+	for( Int32 X=0; X<FrmPerX; X++ )
 	{
 		TRect R;
 

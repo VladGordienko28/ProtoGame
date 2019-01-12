@@ -12,9 +12,6 @@
     <ClInclude Include="Core\FrBase.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\FrBuild.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Core\FrClass.h">
       <Filter>Core</Filter>
     </ClInclude>

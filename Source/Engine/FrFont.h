@@ -18,11 +18,11 @@ struct TGlyph
 {
 public:
 	// Variables.
-	Integer	iBitmap;
-	Byte	X;
-	Byte	Y;
-	Byte	W;
-	Byte	H;
+	Int32	iBitmap;
+	UInt8	X;
+	UInt8	Y;
+	UInt8	W;
+	UInt8	H;
 };
 
 
@@ -35,14 +35,14 @@ REGISTER_CLASS_H(FFont);
 public:
 	// Variables.
 	TArray<FBitmap*>	Bitmaps;
-	Integer				Height;
+	Int32				Height;
 	TArray<TGlyph>		Glyphs;
-	TArray<Byte>		Remap;
+	TArray<UInt8>		Remap;
 
 	// FFont interface.
 	FFont();
 	~FFont();
-	Integer TextWidth( const Char* Text );
+	Int32 TextWidth( const Char* Text );
 
 	// FObject interface.
 	void SerializeThis( CSerializer& S );
@@ -54,7 +54,7 @@ public:
 	// given character.
 	inline TGlyph& GetGlyph( Char C )
 	{
-		Integer iGlyph = Remap[Min<Integer>( C, Remap.Num()-1 )];
+		Int32 iGlyph = Remap[Min<Int32>( C, Remap.Num()-1 )];
 		return Glyphs[Min( iGlyph, Glyphs.Num()-1 )];
 	}
 };

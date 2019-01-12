@@ -2,8 +2,7 @@
     Editor.h: Editor general include file.
     Copyright Jul.2016 Vlad Gordienko.
 =============================================================================*/
-#ifndef _FLU_EDITOR_
-#define _FLU_EDITOR_
+#pragma once
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -32,13 +31,14 @@
 #undef EVENT_MAX
 
 // Flu includes.
-#include "..\Engine\Engine.h"
-#include "..\GUI\GUI.h"
-#include "..\Window\Window.h"
-#include "..\OpenGL\OpenGLRend.h"
-#include "..\OpenAL\OpenALAud.h"
-#include "..\Compiler\Compiler.h"
-#include "..\Network\Network.h"
+#include "Core/Core.h"
+#include "Engine/Engine.h"
+#include "GUI/GUI.h"
+#include "Window/Window.h"
+#include "OpenGL/OpenGLRend.h"
+#include "OpenAL/OpenALAud.h"
+#include "Compiler/Compiler.h"
+#include "Network/Network.h"
 
 
 // Partial classes tree.
@@ -76,8 +76,6 @@ class WWatchListDialog;
 #include "FrEditor.h"
 #include "FrAbout.h"
 
-
-#endif
 /*-----------------------------------------------------------------------------
     The End.
 -----------------------------------------------------------------------------*/

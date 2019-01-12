@@ -35,12 +35,12 @@ public:
 
 	// General info.
 	TVector				Location;
-	Integer				iEdges[NUM_EDGES];
+	Int32				iEdges[NUM_EDGES];
 	FBaseComponent*		Marker;	
 
 	// Runtime info.
-	Integer				iParent;
-	Integer				Weight;
+	Int32				iParent;
+	Int32				Weight;
 	
 	// TPathNode interface.
 	TPathNode();
@@ -56,10 +56,10 @@ struct TPathEdge
 {
 public:
 	// General info.
-	Integer				iStart;
-	Integer				iFinish;
+	Int32				iStart;
+	Int32				iFinish;
 	EPathType			PathType;
-	Integer				Cost;
+	Int32				Cost;
 	Float				Height;
 	
 	// TPathEdge interface.
@@ -95,14 +95,14 @@ public:
 
 	// Path making.
 	Bool CanPassThrough( FPuppetComponent* Seeker, const TPathEdge& Edge );
-	Integer FindNearestNode( TVector P, Bool bTraceLine = false, Float Radius = 8.f );
+	Int32 FindNearestNode( TVector P, Bool bTraceLine = false, Float Radius = 8.f );
 	Bool MakePathTo( FPuppetComponent* Seeker, TVector Dest );
 	Bool MakeRandomPath( FPuppetComponent* Seeker );
 
 private:
 	// BFS algorithm.
 	void ClearPaths();
-	Integer BreadthFirstSearch( FPuppetComponent* Seeker, Integer iStart, Integer iFinish );
+	Int32 BreadthFirstSearch( FPuppetComponent* Seeker, Int32 iStart, Int32 iFinish );
 };
 
 

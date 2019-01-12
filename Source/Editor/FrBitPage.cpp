@@ -159,7 +159,7 @@ void WTexturePage::ButtonEraseClick( WWidget* Sender )
 //
 // User has down on bitmap page.
 //
-void WTexturePage::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WTexturePage::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WEditorPage::OnMouseDown( Button, X, Y );
 
@@ -211,7 +211,7 @@ void WTexturePage::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 //
 // User has release mouse button.
 //
-void WTexturePage::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WTexturePage::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WEditorPage::OnMouseUp( Button, X, Y );
 
@@ -245,7 +245,7 @@ void WTexturePage::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse move bitmap.
 //
-void WTexturePage::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WTexturePage::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WEditorPage::OnMouseMove( Button, X, Y );
 
@@ -352,10 +352,10 @@ void WTexturePage::OnPaint( CGUIRenderBase* Render )
 
 	// Draw bitmap.
 	{
-		Integer X = Base.X - Pan.X + ( Size.Width - Texture->USize * Scale ) / 2;
-		Integer Y = Base.Y - Pan.Y + ( Size.Height - Texture->VSize * Scale ) / 2;
-		Integer W = Texture->USize * Scale;
-		Integer H = Texture->VSize * Scale;
+		Int32 X = Base.X - Pan.X + ( Size.Width - Texture->USize * Scale ) / 2;
+		Int32 Y = Base.Y - Pan.Y + ( Size.Height - Texture->VSize * Scale ) / 2;
+		Int32 W = Texture->USize * Scale;
+		Int32 H = Texture->VSize * Scale;
 
 		// Draw border.
 		Render->DrawRegion
@@ -432,7 +432,7 @@ WDemoEffectPanel::WDemoEffectPanel( FDemoBitmap* InBitmap, WContainer* InOwner, 
 		CEnum*	Enum = CClassDatabase::StaticFindEnum( L"ESparkType" );
 		assert(Enum != nullptr);
 
-		for( Integer i=0; i<Enum->Elements.Num(); i++ )
+		for( Int32 i=0; i<Enum->Elements.Num(); i++ )
 			DrawType->AddItem( Enum->GetAliasOf(i), nullptr );
 
 		// Set default params.
@@ -454,7 +454,7 @@ WDemoEffectPanel::WDemoEffectPanel( FDemoBitmap* InBitmap, WContainer* InOwner, 
 		CEnum*	Enum = CClassDatabase::StaticFindEnum( L"EDropType" );
 		assert(Enum != nullptr);
 
-		for( Integer i=0; i<Enum->Elements.Num(); i++ )
+		for( Int32 i=0; i<Enum->Elements.Num(); i++ )
 			DrawType->AddItem( Enum->GetAliasOf(i), nullptr );
 
 		// Set default params.
@@ -474,7 +474,7 @@ WDemoEffectPanel::WDemoEffectPanel( FDemoBitmap* InBitmap, WContainer* InOwner, 
 		CEnum*	Enum = CClassDatabase::StaticFindEnum( L"EPanelType" );
 		assert(Enum != nullptr);
 
-		for( Integer i=0; i<Enum->Elements.Num(); i++ )
+		for( Int32 i=0; i<Enum->Elements.Num(); i++ )
 			DrawType->AddItem( Enum->GetAliasOf(i), nullptr );
 
 		// Set default params.
@@ -493,7 +493,7 @@ WDemoEffectPanel::WDemoEffectPanel( FDemoBitmap* InBitmap, WContainer* InOwner, 
 	}
 
 	// Allocate controls.
-	for( Integer i=0; i<MAX_EFFECT_PARAMS; i++ )
+	for( Int32 i=0; i<MAX_EFFECT_PARAMS; i++ )
 	{
 		// Label.
 		Labels[i] = new WLabel( this, Root );
@@ -529,7 +529,7 @@ WDemoEffectPanel::~WDemoEffectPanel()
 //
 void WDemoEffectPanel::AnySliderChange( WWidget* Sender )
 {
-	for( Integer i=0; i<MAX_EFFECT_PARAMS; i++ )
+	for( Int32 i=0; i<MAX_EFFECT_PARAMS; i++ )
 		if( Params[i].Address && Sliders[i] == Sender )
 		{
 			*Params[i].Address = Round(Sliders[i]->Value*255.f/100.f);
@@ -595,7 +595,7 @@ void WDemoEffectPanel::DrawTypeChange( WWidget* Sender )
 		};
 
 		FireParams->DrawType = (FFireBitmap::ESparkType)DrawType->ItemIndex;
-		for( Integer i=0; i<MAX_EFFECT_PARAMS; i++ )
+		for( Int32 i=0; i<MAX_EFFECT_PARAMS; i++ )
 			Params[i] = DefaultFireParams[DrawType->ItemIndex][i];
 	}
 	else if( Bitmap->IsA(FWaterBitmap::MetaClass) )
@@ -614,7 +614,7 @@ void WDemoEffectPanel::DrawTypeChange( WWidget* Sender )
 		};
 
 		WaterParams->DrawType = (FWaterBitmap::EDropType)DrawType->ItemIndex;
-		for( Integer i=0; i<MAX_EFFECT_PARAMS; i++ )
+		for( Int32 i=0; i<MAX_EFFECT_PARAMS; i++ )
 			Params[i] = DefaultWaterParams[DrawType->ItemIndex][i];
 	}
 	else if( Bitmap->IsA(FTechBitmap::MetaClass) )
@@ -632,11 +632,11 @@ void WDemoEffectPanel::DrawTypeChange( WWidget* Sender )
 		};
 		
 		TechParams->DrawType = (FTechBitmap::EPanelType)DrawType->ItemIndex;
-		for( Integer i=0; i<MAX_EFFECT_PARAMS; i++ )
+		for( Int32 i=0; i<MAX_EFFECT_PARAMS; i++ )
 			Params[i] = DefaultTechParams[DrawType->ItemIndex][i];
 	}
 	// Update widgets.
-	for( Integer i=0; i<MAX_EFFECT_PARAMS; i++ )
+	for( Int32 i=0; i<MAX_EFFECT_PARAMS; i++ )
 		if( Params[i].Address )
 		{
 			Sliders[i]->bVisible = true;
@@ -712,7 +712,7 @@ WMaterialPanel::WMaterialPanel( FMaterial* InMaterial, WContainer* InOwner, WWin
 
 	// PopUp menu with layers.
 	TypePopup			= new WPopupMenu( Root, Root );
-	for( Integer i=0; i<CClassDatabase::GClasses.Num(); i++ )
+	for( Int32 i=0; i<CClassDatabase::GClasses.Num(); i++ )
 	{
 		CClass* TestClass = CClassDatabase::GClasses[i];
 		if( TestClass->IsA(FMaterialLayer::MetaClass) && !(TestClass->Flags & CLASS_Abstract) )
@@ -737,13 +737,13 @@ WMaterialPanel::~WMaterialPanel()
 }
 
 
-void WMaterialPanel::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WMaterialPanel::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WPanel::OnMouseDown( Button, X, Y );
 
 	if( Button == MB_Left )
 	{
-			Integer NewY = Y - 42;
+			Int32 NewY = Y - 42;
 
 			iSelected = Clamp( NewY/52, -1, Material->Layers.Num()-1 );
 
@@ -834,10 +834,10 @@ void WMaterialPanel::OnPaint( CGUIRenderBase* Render )
 	);
 
 	// Render layers.
-	Integer StartY = 42;
-	Integer StartX = 3;
+	Int32 StartY = 42;
+	Int32 StartX = 3;
 
-	for( Integer i=0; i<Material->Layers.Num(); i++ )
+	for( Int32 i=0; i<Material->Layers.Num(); i++ )
 	{
 		FBitmap* RenderBitmap = nullptr;
 		FMaterialLayer* Layer = Material->Layers[i];
@@ -906,7 +906,7 @@ void WMaterialPanel::OnPaint( CGUIRenderBase* Render )
 //
 // Mark selected layer as main.
 //
-void WMaterialPanel::OnDblClick( EMouseButton Button, Integer X, Integer Y )
+void WMaterialPanel::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 {
 	if( Button == MB_Left && iSelected != -1 )
 	{

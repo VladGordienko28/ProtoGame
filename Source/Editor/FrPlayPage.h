@@ -35,12 +35,12 @@ public:
 	void OnOpen();
 
 	// WWidget interface.
-	void OnKeyDown( Integer Key );
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
-	void OnDblClick( EMouseButton Button, Integer X, Integer Y );   
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseScroll( Integer Delta );
+	void OnKeyDown( Int32 Key );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
+	void OnDblClick( EMouseButton Button, Int32 X, Int32 Y );   
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseScroll( Int32 Delta );
 
 	// WEditorPage interface.
 	void RenderPageContent( CCanvas* Canvas );
@@ -90,10 +90,10 @@ public:
 	// WWidget interface.
 	void OnResize();
 	void OnPaint( CGUIRenderBase* Render );
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseScroll( Integer Delta );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseScroll( Int32 Delta );
 
 	// WForm interface.
 	void OnClose()
@@ -130,7 +130,7 @@ private:
 	WSlider*			ScrollBar;
 	TArray<TWatch>		Watches;
 	FEntity*			Entity;
-	Integer				Divider;
+	Int32				Divider;
 
 	// Notifications.
 	void CheckPublicOnlyClick( WWidget* Sender );

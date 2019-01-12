@@ -41,7 +41,7 @@ class IResourceBlock
 {
 public:
 	// IResourceBlock interface.
-	virtual Bool AllocateBlock( SizeT NumBytes, DWord ExtraFlags = BLOCK_None ) = 0;
+	virtual Bool AllocateBlock( SizeT NumBytes, UInt32 ExtraFlags = BLOCK_None ) = 0;
 	virtual Bool ReleaseBlock() = 0;
 	virtual SizeT GetBlockSize() = 0;
 	virtual void* GetData() = 0;
@@ -64,7 +64,7 @@ public:
 	virtual ~CResourceBlock();
 
 	// IResourceBlock interface.
-	Bool AllocateBlock( SizeT NumBytes, DWord ExtraFlags = BLOCK_None );
+	Bool AllocateBlock( SizeT NumBytes, UInt32 ExtraFlags = BLOCK_None );
 	Bool ReleaseBlock();
 	SizeT GetBlockSize();
 	void* GetData();
@@ -75,7 +75,7 @@ public:
 
 protected:
 	// Block internal.
-	Integer iBlock;
+	Int32 iBlock;
 };
 
 

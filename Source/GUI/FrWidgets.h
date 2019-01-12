@@ -63,7 +63,7 @@ public:
 	public:
 		EStatusPanelSide	Side;
 		String				Text;
-		Integer				Width;
+		Int32				Width;
 	};
 
 	// Variables.
@@ -81,7 +81,7 @@ public:
 	}
 
 	// Add a new panel to the list.
-	Integer AddPanel( String InText, Integer InWidth = 100, EStatusPanelSide InSide = SPS_Left )
+	Int32 AddPanel( String InText, Int32 InWidth = 100, EStatusPanelSide InSide = SPS_Left )
 	{
 		TStatusPanel Panel;
 		Panel.Side	= InSide;
@@ -96,10 +96,10 @@ public:
 		WWidget::OnPaint( Render );
 
 		TPoint Base = ClientToWindow( TPoint( 0, 0 ) );
-		Integer MinX = 5, MaxX = Size.Width;
+		Int32 MinX = 5, MaxX = Size.Width;
 		Render->DrawRegion( Base, Size, Color, Color, BPAT_Solid );
 
-		for( Integer i=0; i<Panels.Num(); i++)
+		for( Int32 i=0; i<Panels.Num(); i++)
 		{
 			TStatusPanel& P	= Panels[i];
 			TSize  TextSize = TSize( Root->Font1->TextWidth(*P.Text), Root->Font1->Height );
@@ -154,7 +154,7 @@ public:
 	// Variables.
 	TNotifyEvent        EventChange;
 	ESliderOrientation	Orientation;
-	Integer				Value;
+	Int32				Value;
 
 	// WWidget interface.
 	WSlider( WContainer* InOwner, WWindow* InRoot )
@@ -164,7 +164,7 @@ public:
 	{
 		SetSize( 160, 12 );
 	}
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y ) 
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y ) 
 	{ 
 		WWidget::OnMouseDown( Button, X, Y );
 
@@ -175,7 +175,7 @@ public:
 			OnChange();
 		}
 	}
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y ) 
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y ) 
 	{ 
 		WWidget::OnMouseMove( Button, X, Y );
 
@@ -225,7 +225,7 @@ public:
 	{
 		Orientation = Or;
 	}
-	void SetValue( Integer NewValue )
+	void SetValue( Int32 NewValue )
 	{
 		Value = Clamp( NewValue, 0, 100 );
 		OnChange();
@@ -313,7 +313,7 @@ class WProgressBar: public WWidget
 {
 public:
 	// Variables.
-	Integer		Value;
+	Int32		Value;
 	TColor		Color;
 
 	// WProgressBar interface.
@@ -324,7 +324,7 @@ public:
 	{
 		SetSize( 300, 11 );
 	}
-	void SetValue( Integer NewValue )
+	void SetValue( Int32 NewValue )
 	{
 		Value	= Clamp( NewValue, 0, 100 );
 	}
@@ -390,7 +390,7 @@ public:
 	}
 
 	// WWidget interface. 
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 	{
 		if( Button==MB_Left && Y<=16 )
 			if( bExpanded )
@@ -401,9 +401,9 @@ public:
 	void OnPaint( CGUIRenderBase* Render )
 	{
 		TPoint	Base = ClientToWindow(TPoint::Zero);
-		Integer	TextWidth = WWindow::Font1->TextWidth(*Caption);
-		Integer	PanelOffet	= bExpanded ? 8 : 4;
-		Integer PanelSize	= bExpanded ? Size.Height : 12;
+		Int32	TextWidth = WWindow::Font1->TextWidth(*Caption);
+		Int32	PanelOffet	= bExpanded ? 8 : 4;
+		Int32 PanelSize	= bExpanded ? Size.Height : 12;
 
 		Render->DrawRegion
 		( 

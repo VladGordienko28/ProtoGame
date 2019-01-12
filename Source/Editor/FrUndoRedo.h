@@ -18,7 +18,7 @@ class TTransaction
 {
 public:
 	// General info.
-	TArray<Byte>		Data;
+	TArray<UInt8>		Data;
 	FLevel*				Level;
 	TArray<FScript*>	Entities;
 	TArray<String>		Names;
@@ -70,7 +70,7 @@ private:
 	// Variables.
 	Bool					bLocked;
 	TArray<TTransaction*>	Transactions;
-	Integer					TopTransaction;
+	Int32					TopTransaction;
 	FLevel*					Level;
 };
 

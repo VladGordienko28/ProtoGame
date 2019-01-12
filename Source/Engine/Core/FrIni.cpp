@@ -21,7 +21,7 @@ CConfigManager::CConfigManager( String WorkingDirectory )
 	TArray<String> FileList = GPlat->FindFiles( Directory, L"*.ini" );
 	info(L"ConfigMan: %d configuration files found", FileList.Num());
 
-	for( Integer iFile=0; iFile<FileList.Num(); iFile++ )
+	for( Int32 iFile=0; iFile<FileList.Num(); iFile++ )
 	{
 		CTextReader Reader(FileList[iFile]);
 		
@@ -104,19 +104,19 @@ CConfigManager::~CConfigManager()
 //
 void CConfigManager::Flush()
 {
-	for( Integer i=0; i<Files.Num(); i++ )
+	for( Int32 i=0; i<Files.Num(); i++ )
 	{
 		TIniFile& File = Files[i];
 		if( File.bDirty )
 		{
 			CTextWriter Writer(File.FileName);
 
-			for( Integer j=0; j<File.Sections.Num(); j++ )
+			for( Int32 j=0; j<File.Sections.Num(); j++ )
 			{
 				TSection& Section = File.Sections[j];
 				Writer.WriteString(String::Format(L"[%s]", *Section.Name));
 
-				for( Integer k=0; k<Section.Pairs.Entries.Num(); k++ )
+				for( Int32 k=0; k<Section.Pairs.Entries.Num(); k++ )
 				{
 					TMap<String, String>::TEntry& Entry = Section.Pairs.Entries[k];
 					Writer.WriteString(String::Format(L"%s=%s", *Entry.Key, *Entry.Value ));
@@ -140,7 +140,7 @@ void CConfigManager::WriteBool( const Char* File, const Char* Section, const Cha
 //
 // Write integer value to config.
 //
-void CConfigManager::WriteInteger( const Char* File, const Char* Section, const Char* Key, Integer Value )
+void CConfigManager::WriteInteger( const Char* File, const Char* Section, const Char* Key, Int32 Value )
 {
 	WriteString( File, Section, Key, String::FromInteger(Value) );
 }
@@ -207,7 +207,7 @@ Bool CConfigManager::ReadBool( const Char* File, const Char* Section, const Char
 {
 	String Value = ReadString( File, Section, Key, L"False" );
 	Bool Result = Default;
-	Integer TempInt;
+	Int32 TempInt;
 
 	if( Value == L"True" )
 	{
@@ -226,10 +226,10 @@ Bool CConfigManager::ReadBool( const Char* File, const Char* Section, const Char
 //
 // Read a integer value from config.
 //
-Integer CConfigManager::ReadInteger( const Char* File, const Char* Section, const Char* Key, Integer Default )
+Int32 CConfigManager::ReadInteger( const Char* File, const Char* Section, const Char* Key, Int32 Default )
 {
 	String Value = ReadString( File, Section, Key );
-	Integer Result;
+	Int32 Result;
 
 	Value.ToInteger( Result, Default );
 
@@ -280,7 +280,7 @@ CConfigManager::TSection* CConfigManager::FindSection( const Char* File, const C
 	if( !IniFile )
 		return nullptr;
 
-	for( Integer j=0; j<IniFile->Sections.Num(); j++ )
+	for( Int32 j=0; j<IniFile->Sections.Num(); j++ )
 		if( IniFile->Sections[j].Name == Section )
 			return &IniFile->Sections[j];
 
@@ -293,7 +293,7 @@ CConfigManager::TSection* CConfigManager::FindSection( const Char* File, const C
 //
 CConfigManager::TIniFile* CConfigManager::FindFile( const Char* File )
 {
-	for( Integer i=0; i<Files.Num(); i++ )
+	for( Int32 i=0; i<Files.Num(); i++ )
 		if( Files[i].Name == File )
 		{
 			return &Files[i];

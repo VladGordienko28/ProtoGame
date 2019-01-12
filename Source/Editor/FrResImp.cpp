@@ -14,7 +14,7 @@
 //
 String GetFileName( String FileName )
 {
-	Integer i, j;
+	Int32 i, j;
 
 	for( i=FileName.Len()-1; i>=0; i-- )
 		if( FileName[i] == L'\\' )
@@ -30,7 +30,7 @@ String GetFileName( String FileName )
 //
 String GetFileDir( String FileName )
 { 
-	Integer i;
+	Int32 i;
 	for( i=FileName.Len()-1; i>=0; i-- )
 		if( FileName[i] == L'\\' )
 			break;
@@ -77,19 +77,19 @@ FBitmap* ImportBMP( String Filename, String ResName )
 
 	TColor* TempData = new TColor[BmpInfo.biWidth * BmpInfo.biHeight];
 	TArray<TColor> Palette;
-	Integer UMask = BmpInfo.biWidth-1;
-	Integer UBits = IntLog2( BmpInfo.biWidth );
-	Integer VMask = (BmpInfo.biHeight-1) << UBits;
+	Int32 UMask = BmpInfo.biWidth-1;
+	Int32 UBits = IntLog2( BmpInfo.biWidth );
+	Int32 VMask = (BmpInfo.biHeight-1) << UBits;
 
 	// Load entire bmp data.
 	Loader.Seek( BmpHeader.bfOffBits );	
 	if( BmpInfo.biBitCount == 24 )
 	{
 		// 24 - bit.
-		for( Integer i=0; i<BmpInfo.biWidth*BmpInfo.biHeight; i++ )
+		for( Int32 i=0; i<BmpInfo.biWidth*BmpInfo.biHeight; i++ )
 		{
-			Byte RawPix[4];
-			Loader.SerializeData( RawPix, 3*sizeof(Byte) );
+			UInt8 RawPix[4];
+			Loader.SerializeData( RawPix, 3*sizeof(UInt8) );
 			TColor Source( RawPix[2], RawPix[1], RawPix[0], 0xff );
 			if( Source == MASK_COLOR )	Source.A = 0x00;
 			TempData[(VMask&~i)|(i&UMask)] = Source;		// Flip image here.
@@ -98,10 +98,10 @@ FBitmap* ImportBMP( String Filename, String ResName )
 	else if( BmpInfo.biBitCount == 32 )
 	{
 		// 32 - bit.
-		for( Integer i=0; i<BmpInfo.biWidth*BmpInfo.biHeight; i++ )
+		for( Int32 i=0; i<BmpInfo.biWidth*BmpInfo.biHeight; i++ )
 		{
-			Byte RawPix[4];
-			Loader.SerializeData( RawPix, 4*sizeof(Byte) );
+			UInt8 RawPix[4];
+			Loader.SerializeData( RawPix, 4*sizeof(UInt8) );
 			TColor Source( RawPix[2], RawPix[1], RawPix[0], 0xff );
 			if( Source == MASK_COLOR )	Source.A = 0x00;
 			TempData[(VMask&~i)|(i&UMask)] = Source;		// Flip image here.
@@ -110,9 +110,9 @@ FBitmap* ImportBMP( String Filename, String ResName )
 	else if( BmpInfo.biBitCount == 8 )
 	{
 		// 8 - bit.
-		for( Integer i=0; i<BmpInfo.biWidth*BmpInfo.biHeight; i++ )
+		for( Int32 i=0; i<BmpInfo.biWidth*BmpInfo.biHeight; i++ )
 		{
-			Byte iColor;
+			UInt8 iColor;
 			Serialize( Loader, iColor );
 			TColor Source( BmpPalette[iColor].rgbRed, BmpPalette[iColor].rgbGreen, BmpPalette[iColor].rgbBlue, 0xff );
 			if( Source == MASK_COLOR )	Source.A = 0x00;
@@ -139,7 +139,7 @@ FBitmap* ImportBMP( String Filename, String ResName )
 #endif
 
 	// Figure out it's a palette or not.
-	for( Integer i=0; i<BmpInfo.biWidth*BmpInfo.biHeight; i++ )
+	for( Int32 i=0; i<BmpInfo.biWidth*BmpInfo.biHeight; i++ )
 		if( Palette.AddUnique(TempData[i]) > 255 )
 			break;
 
@@ -159,12 +159,12 @@ FBitmap* ImportBMP( String Filename, String ResName )
 
 		Bitmap->Format	= BF_Palette8;
 		Bitmap->Palette.Allocate( Palette.Num() );
-		for( Integer i=0; i<Palette.Num(); i++ )
+		for( Int32 i=0; i<Palette.Num(); i++ )
 			Bitmap->Palette.Colors[i] = Palette[i];
 
-		Bitmap->AllocateBlock( sizeof(Byte)*Bitmap->USize*Bitmap->VSize );
-		Byte* BitDat = (Byte*)Bitmap->GetData();
-		for( Integer i=0; i < Bitmap->USize*Bitmap->VSize; i++ )
+		Bitmap->AllocateBlock( sizeof(UInt8)*Bitmap->USize*Bitmap->VSize );
+		UInt8* BitDat = (UInt8*)Bitmap->GetData();
+		for( Int32 i=0; i < Bitmap->USize*Bitmap->VSize; i++ )
 			BitDat[i]	= Palette.FindItem( TempData[i] );
 	}
 	else
@@ -188,16 +188,16 @@ FBitmap* ImportTGA( String Filename, String ResName )
 #pragma pack(push,1)
 	struct TGAHeader
 	{
-		Byte		FileType;
-		Byte		ColorMapType;
-		Byte		ImageType;
-		Byte		ColorMapSpec[5];
-		Byte		OrigX[2];
-		Byte		OrigY[2];
-		Byte		Width[2];
-		Byte		Height[2];
-		Byte		BPP;
-		Byte		ImageInfo;
+		UInt8		FileType;
+		UInt8		ColorMapType;
+		UInt8		ImageType;
+		UInt8		ColorMapSpec[5];
+		UInt8		OrigX[2];
+		UInt8		OrigY[2];
+		UInt8		Width[2];
+		UInt8		Height[2];
+		UInt8		BPP;
+		UInt8		ImageInfo;
 	};
 #pragma pack(pop)
 
@@ -220,10 +220,10 @@ FBitmap* ImportTGA( String Filename, String ResName )
 	}
 
 	// Figure out general properties.
-	Integer	Width		= TgaHeader.Width[0] + TgaHeader.Width[1]*256;
-	Integer	Height		= TgaHeader.Height[0] + TgaHeader.Height[1]*256;
-	Integer	ColorDepth	= TgaHeader.BPP;
-	Integer	ImageSize	= Width*Height*(ColorDepth/8);
+	Int32	Width		= TgaHeader.Width[0] + TgaHeader.Width[1]*256;
+	Int32	Height		= TgaHeader.Height[0] + TgaHeader.Height[1]*256;
+	Int32	ColorDepth	= TgaHeader.BPP;
+	Int32	ImageSize	= Width*Height*(ColorDepth/8);
 
 	if( !(((Width)&(Width-1)) == 0 && ((Height)&(Height-1)) == 0) )
 	{
@@ -241,7 +241,7 @@ FBitmap* ImportTGA( String Filename, String ResName )
 	if( TgaHeader.ImageType == 2 )
 	{
 		// Standard uncompressed tga.
-		Byte* TmpImage	= new Byte[ImageSize];
+		UInt8* TmpImage	= new UInt8[ImageSize];
 		Loader.SerializeData( TmpImage, ImageSize );
 
 		// Allocate bitmap and initialize it.
@@ -252,14 +252,14 @@ FBitmap* ImportTGA( String Filename, String ResName )
 		Bitmap->AllocateBlock( sizeof(TColor)*Bitmap->USize*Bitmap->VSize );
 		TColor* Dest		= (TColor*)Bitmap->GetData();
 
-		Integer UMask = Width-1;
-		Integer UBits = IntLog2( Width );
-		Integer VMask = (Height-1) << UBits;
+		Int32 UMask = Width-1;
+		Int32 UBits = IntLog2( Width );
+		Int32 VMask = (Height-1) << UBits;
 
 		if( TgaHeader.BPP == 24 )
 		{
 			// 24-bit uncompressed.
-			for( Integer i=0; i<Width*Height; i++ )
+			for( Int32 i=0; i<Width*Height; i++ )
 			{
 				TColor Source( TmpImage[i*3+2], TmpImage[i*3+1], TmpImage[i*3+0], 0xff );
 				if( Source == MASK_COLOR )	Source.A = 0x00;
@@ -269,7 +269,7 @@ FBitmap* ImportTGA( String Filename, String ResName )
 		else
 		{
 			// 32-bit uncompressed.
-			for( Integer i=0; i<Width*Height; i++ )
+			for( Int32 i=0; i<Width*Height; i++ )
 			{
 				TColor Source( TmpImage[i*4+2], TmpImage[i*4+1], TmpImage[i*4+0], TmpImage[i*4+3] );
 				Dest[(VMask&~i)|(i&UMask)]	= Source;
@@ -281,13 +281,13 @@ FBitmap* ImportTGA( String Filename, String ResName )
 	else if( TgaHeader.ImageType == 10 )
 	{
 		// 24 or 32 compressed.
-		Integer	Stride	= ColorDepth / 8;
-		Integer	WalkColor	= 0,
+		Int32	Stride	= ColorDepth / 8;
+		Int32	WalkColor	= 0,
 				WalkPixel	= 0,
 				WalkBuffer	= 0;
 
 		// Load remain of file to buffer.
-		Byte*	Compressed	= new Byte[Loader.TotalSize()-sizeof(TGAHeader)];
+		UInt8*	Compressed	= new UInt8[Loader.TotalSize()-sizeof(TGAHeader)];
 		Loader.SerializeData( Compressed, Loader.TotalSize()-sizeof(TGAHeader) );
 
 		// Allocate bitmap and initialize it.
@@ -298,17 +298,17 @@ FBitmap* ImportTGA( String Filename, String ResName )
 		Bitmap->AllocateBlock( sizeof(TColor)*Bitmap->USize*Bitmap->VSize );
 		TColor* Image		= (TColor*)Bitmap->GetData();
 
-		Integer UMask = Width-1;
-		Integer UBits = IntLog2( Width );
-		Integer VMask = (Height-1) << UBits;
+		Int32 UMask = Width-1;
+		Int32 UBits = IntLog2( Width );
+		Int32 VMask = (Height-1) << UBits;
 
 		// Extract pixel by pixel from compressed data.
 		do 
 		{
-			Byte Front	= Compressed[WalkBuffer++];
+			UInt8 Front	= Compressed[WalkBuffer++];
 			if( Front < 128 )
 			{
-				for( Integer i=0; i<=Front; i++ )
+				for( Int32 i=0; i<=Front; i++ )
 				{
 					Image[(VMask&~WalkColor)|(WalkColor&UMask)].R	= Compressed[WalkBuffer+i*Stride+2];
 					Image[(VMask&~WalkColor)|(WalkColor&UMask)].G	= Compressed[WalkBuffer+i*Stride+1];
@@ -323,7 +323,7 @@ FBitmap* ImportTGA( String Filename, String ResName )
 			}
 			else
 			{
-				for( Integer i=0; i<=Front-128; i++ )
+				for( Int32 i=0; i<=Front-128; i++ )
 				{
 					Image[(VMask&~WalkColor)|(WalkColor&UMask)].R	= Compressed[WalkBuffer+2];
 					Image[(VMask&~WalkColor)|(WalkColor&UMask)].G	= Compressed[WalkBuffer+1];
@@ -342,7 +342,7 @@ FBitmap* ImportTGA( String Filename, String ResName )
 
 		// Fix alpha-channel in 24-bits mode.
 		if( TgaHeader.BPP == 24 )
-			for( Integer i=0; i<Width*Height; i++ )
+			for( Int32 i=0; i<Width*Height; i++ )
 			{
 				Image[i].A	= 0xff;
 				if( Image[i] == MASK_COLOR )
@@ -381,9 +381,9 @@ FBitmap* ImportPNG( String Filename, String ResName )
 		return nullptr;
 	}
 
-	Integer UMask = PngWidth-1;
-	Integer UBits = IntLog2(PngWidth);
-	Integer VMask = (PngHeight-1) << UBits;
+	Int32 UMask = PngWidth-1;
+	Int32 UBits = IntLog2(PngWidth);
+	Int32 VMask = (PngHeight-1) << UBits;
 	TColor*	SourceData = (TColor*)PngImage;
 
 	// Allocate bitmap and initialize it.
@@ -393,7 +393,7 @@ FBitmap* ImportPNG( String Filename, String ResName )
 
 	// Figure out it's a palette or not.
 	TArray<TColor> Palette;
-	for( Integer i=0; i<PngWidth*PngHeight; i++ )
+	for( Int32 i=0; i<PngWidth*PngHeight; i++ )
 		if( Palette.AddUnique(SourceData[i]) > 255 )
 			break;
 
@@ -407,12 +407,12 @@ FBitmap* ImportPNG( String Filename, String ResName )
 		} );
 		Bitmap->Format	= BF_Palette8;
 		Bitmap->Palette.Allocate( Palette.Num() );
-		for( Integer i=0; i<Palette.Num(); i++ )
+		for( Int32 i=0; i<Palette.Num(); i++ )
 			Bitmap->Palette.Colors[i] = Palette[i];
 
-		Bitmap->AllocateBlock( sizeof(Byte)*Bitmap->USize*Bitmap->VSize );
-		Byte* Dest = (Byte*)Bitmap->GetData();
-		for( Integer i=0; i < Bitmap->USize*Bitmap->VSize; i++ )
+		Bitmap->AllocateBlock( sizeof(UInt8)*Bitmap->USize*Bitmap->VSize );
+		UInt8* Dest = (UInt8*)Bitmap->GetData();
+		for( Int32 i=0; i < Bitmap->USize*Bitmap->VSize; i++ )
 			Dest[i]	= Palette.FindItem( SourceData[i] );
 	}
 	else
@@ -426,7 +426,7 @@ FBitmap* ImportPNG( String Filename, String ResName )
 	// Turn on alpha or not?
 	Bool bMaskOnly = true;
 	Bitmap->BlendMode = BLEND_Regular;
-	for( Integer i=0; i<PngWidth*PngHeight; i++ )
+	for( Int32 i=0; i<PngWidth*PngHeight; i++ )
 		if( SourceData[i].A != 255 )
 			if( SourceData[i].A != 0 )
 			{
@@ -455,7 +455,7 @@ FSound* ImportWAV( String Filename, String ResName )
 {
 	CFileLoader Loader( Filename );
 	FSound*	Sound = NewObject<FSound>( ResName, nullptr );
-	DWord FileSize = Loader.TotalSize();
+	UInt32 FileSize = Loader.TotalSize();
 
 	Sound->AllocateBlock( FileSize );
 	Sound->FileName = GetFileName(Filename) + L".wav";
@@ -511,20 +511,20 @@ FFont* ImportFLF( String Filename, String ResName )
 	{
 		// First header line.
 		Char Name[64];
-		Integer Height, RealHeight=-1, NumPages=0;
+		Int32 Height, RealHeight=-1, NumPages=0;
 		fwscanf( File, L"%d %s\n", &Height, Name );
 
 		// Temporary tables.
-		TArray<Byte>	Remap(65536);
+		TArray<UInt8>	Remap(65536);
 		TArray<TGlyph>	Glyphs;
-		Integer			iMaxChar = 0;
-		MemSet( &Remap[0], Remap.Num()*sizeof(Byte), 0xff );
+		Int32			iMaxChar = 0;
+		MemSet( &Remap[0], Remap.Num()*sizeof(UInt8), 0xff );
 
 		// Read info about each glyph.
 		while( !feof(File) )
 		{
 			Char C[2];
-			Integer X, Y, W, H, iBitmap;
+			Int32 X, Y, W, H, iBitmap;
 			C[0] = *fgetws( C, 2, File );
 
 			fwscanf( File, L"%d %d %d %d %d\n", &iBitmap, &X, &Y, &W, &H );	
@@ -538,13 +538,13 @@ FFont* ImportFLF( String Filename, String ResName )
 			Glyph.H			= H;	
 
 			RealHeight		= Max( RealHeight, H );
-			iMaxChar		= Max<Integer>( C[0], iMaxChar );
-			Remap[(Word)C[0]] = Glyphs.Push(Glyph);
+			iMaxChar		= Max<Int32>( C[0], iMaxChar );
+			Remap[(UInt16)C[0]] = Glyphs.Push(Glyph);
 		}
 
 		// Test all pages, they are exists?
 		String Dir = GetFileDir( Filename );
-		for( Integer i=0; i<NumPages; i++ )
+		for( Int32 i=0; i<NumPages; i++ )
 			if( !GPlat->FileExists(Dir+String::Format(L"\\%s%d_%d.bmp", Name, Height, i)) )
 			{
 				warn( L"Font page %i not found", i );
@@ -559,7 +559,7 @@ FFont* ImportFLF( String Filename, String ResName )
 		Font->Remap.SetNum( iMaxChar+1 );
 		Font->FileName	= GetFileName(Filename) + L".flf";
 
-		for( Integer i=0; i<NumPages; i++ )
+		for( Int32 i=0; i<NumPages; i++ )
 		{
 			String		BitFile = Dir  + String::Format(L"\\%s%d_%d.bmp", Name, Height, i);
 			FBitmap*	Page	= ImportBMP( BitFile, GetFileName(BitFile) );
@@ -573,15 +573,15 @@ FFont* ImportFLF( String Filename, String ResName )
 	fclose(File);
 
 	// Convert palette from RGB to RGBA format with solid white color and alpha mask.
-	for( Integer iPage=0; iPage<Font->Bitmaps.Num(); iPage++ )
+	for( Int32 iPage=0; iPage<Font->Bitmaps.Num(); iPage++ )
 	{
 		FBitmap* Page = Font->Bitmaps[iPage];
 		assert(Page->Format == BF_Palette8);
 
-		for( Integer i=0; i<Page->Palette.Colors.Num(); i++ )
+		for( Int32 i=0; i<Page->Palette.Colors.Num(); i++ )
 		{
 			TColor Ent = Page->Palette.Colors[i];
-			Page->Palette.Colors[i] = TColor( 0xff, 0xff, 0xff, Integer(Ent.R + Ent.G + Ent.B)/3 );
+			Page->Palette.Colors[i] = TColor( 0xff, 0xff, 0xff, Int32(Ent.R + Ent.G + Ent.B)/3 );
 		}
 	
 		Page->BlendMode = BLEND_Alpha;

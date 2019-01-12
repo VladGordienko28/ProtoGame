@@ -18,7 +18,7 @@ struct TCSGPoly
 public:
 	// Variables.
 	TVector			Vertices[FBrushComponent::MAX_BRUSH_VERTS*2];
-	Integer			NumVerts;
+	Int32			NumVerts;
 
 	// TCSGPoly interface.
 	void FromBrush( FBrushComponent* Source );
@@ -41,7 +41,7 @@ void TCSGPoly::FromBrush( FBrushComponent* Source )
 	NumVerts	= Source->NumVerts;
 
 	// Copy and transform vertices.
-	for( Integer i=0; i<NumVerts; i++ )
+	for( Int32 i=0; i<NumVerts; i++ )
 		Vertices[i] = Source->Vertices[i] + Source->Location;
 
 }
@@ -64,7 +64,7 @@ inline Bool TestAxis( TVector Axis, TVector A, TVector B, const TCSGPoly& Poly )
 	Float MinP	= Poly.Vertices[0] * Axis;
 	Float MaxP	= MinP;
 
-	for( Integer i=1; i<Poly.NumVerts; i++ )
+	for( Int32 i=1; i<Poly.NumVerts; i++ )
 	{
 		Float T = Poly.Vertices[i] * Axis;
 
@@ -91,7 +91,7 @@ Bool TCSGPoly::TestSegment( TVector A, TVector B )
 
 	// Test all poly's axis.
 	TVector Axis, V1 = Vertices[NumVerts-1];
-	for( Integer i=0; i<NumVerts; i++ )
+	for( Int32 i=0; i<NumVerts; i++ )
 	{
 		TVector V2 = Vertices[i];
 		Axis = (V2 - V1).Cross();
@@ -130,7 +130,7 @@ void TCSGPoly::Split( TVector A, TVector B, TCSGPoly& Front, TCSGPoly& Back )
 	TVector V1 = Vertices[NumVerts-1];
 	Float PrevDist = PointLineDist( V1, SplitOrigin, SplitNormal );
 
-	for( Integer i=0; i<NumVerts; i++ )
+	for( Int32 i=0; i<NumVerts; i++ )
 	{
 		TVector V2 = Vertices[i];
 		Float Dist = PointLineDist( V2, SplitOrigin, SplitNormal );
@@ -184,14 +184,14 @@ TRect TCSGPoly::GetAABB()
 //
 void TCSGPoly::MergeOverlap()
 {
-	for( Integer v=0; v<NumVerts; v++ )
+	for( Int32 v=0; v<NumVerts; v++ )
 	{
 		TVector&	V1 = Vertices[v],
 					V2 = Vertices[(v+1) % NumVerts];
 
 		if( (V1-V2).SizeSquared() <= 0.25f )
 		{
-			for( Integer i=v; i<NumVerts-1; i++ )
+			for( Int32 i=v; i<NumVerts-1; i++ )
 				Vertices[i] = Vertices[i+1];
 
 			v--;
@@ -229,8 +229,8 @@ FBrushComponent* TCSGPoly::ToBrush( FLevel* Level, FBrushComponent* Sample )
 	B->Type			= Sample->Type;
 
 	// Copy vertices.
-	B->NumVerts		= Min<Integer>( NumVerts, FBrushComponent::MAX_BRUSH_VERTS );
-	for( Integer i=0; i<B->NumVerts; i++ )
+	B->NumVerts		= Min<Int32>( NumVerts, FBrushComponent::MAX_BRUSH_VERTS );
+	for( Int32 i=0; i<B->NumVerts; i++ )
 		B->Vertices[i] = Vertices[i] - B->Location;
 
 	return B;
@@ -274,7 +274,7 @@ void CSGIntersection( FBrushComponent* Brush, FLevel* Level )
 	trace( L"CSG: Intersection" );
 
 	// Prepare.
-	Integer NumEnts = Level->Entities.Num();
+	Int32 NumEnts = Level->Entities.Num();
 	TCSGPoly Poly, OtherPoly;
 	TRect Rect;
 	
@@ -282,7 +282,7 @@ void CSGIntersection( FBrushComponent* Brush, FLevel* Level )
 	Rect = Brush->GetAABB();
 
 	// Test with all Brushes in the level.
-	for( Integer i=0; i<NumEnts; i++ )
+	for( Int32 i=0; i<NumEnts; i++ )
 	{
 		// Simple tests to reject.
 		if( (Level->Entities[i]->Base == Brush) ||
@@ -301,7 +301,7 @@ void CSGIntersection( FBrushComponent* Brush, FLevel* Level )
 
 		// Here we split other poly and add chunks to world.
 		TVector V1 = Poly.Vertices[Poly.NumVerts-1];
-		for( Integer j=0; j<Poly.NumVerts; j++ )
+		for( Int32 j=0; j<Poly.NumVerts; j++ )
 		{
 			TVector V2 = Poly.Vertices[j];
 
@@ -322,8 +322,8 @@ void CSGIntersection( FBrushComponent* Brush, FLevel* Level )
 		// Check special case, all vertices are totally inside.
 		if( !bHasAffect )
 		{
-			Integer NumIns = 0;
-			for( Integer j=0; j<OtherPoly.NumVerts; j++ )
+			Int32 NumIns = 0;
+			for( Int32 j=0; j<OtherPoly.NumVerts; j++ )
 				if( IsPointInsidePoly( OtherPoly.Vertices[j], Poly.Vertices, Poly.NumVerts ) )
 					NumIns++;
 
@@ -356,7 +356,7 @@ void CSGDifference( FBrushComponent* Brush, FLevel* Level )
 	trace( L"CSG: Difference" );
 
 	// Prepare.
-	Integer NumEnts = Level->Entities.Num();
+	Int32 NumEnts = Level->Entities.Num();
 	TCSGPoly Poly, OtherPoly;
 	TRect Rect;
 	
@@ -364,7 +364,7 @@ void CSGDifference( FBrushComponent* Brush, FLevel* Level )
 	Rect = Brush->GetAABB();
 
 	// Test with all Brushes in the level.
-	for( Integer i=0; i<NumEnts; i++ )
+	for( Int32 i=0; i<NumEnts; i++ )
 	{
 		// Simple tests to reject.
 		if( (Level->Entities[i]->Base == Brush) ||
@@ -383,7 +383,7 @@ void CSGDifference( FBrushComponent* Brush, FLevel* Level )
 
 		// Here we split other poly and add chunks to world.
 		TVector V1 = Poly.Vertices[Poly.NumVerts-1];
-		for( Integer j=0; j<Poly.NumVerts; j++ )
+		for( Int32 j=0; j<Poly.NumVerts; j++ )
 		{
 			TVector V2 = Poly.Vertices[j];
 
@@ -407,8 +407,8 @@ void CSGDifference( FBrushComponent* Brush, FLevel* Level )
 		// Check special case, all vertices are totally inside.
 		if( !bHasAffect )
 		{
-			Integer NumIns = 0;
-			for( Integer j=0; j<OtherPoly.NumVerts; j++ )
+			Int32 NumIns = 0;
+			for( Int32 j=0; j<OtherPoly.NumVerts; j++ )
 				if( IsPointInsidePoly( OtherPoly.Vertices[j], Poly.Vertices, Poly.NumVerts ) )
 					NumIns++;
 

@@ -93,19 +93,19 @@ private:
 	// List of collide objects.
 	static FBaseComponent*	Other;
 	static FBaseComponent*	Others[MAX_COLL_LIST_OBJS];
-	static Integer			NumOthers;
+	static Int32			NumOthers;
 
 	// Polys.
 	static TVector			AVerts[16];
 	static TVector			ANorms[16];
 	static TVector			BVerts[16];
 	static TVector			BNorms[16];
-	static Integer			ANum;
-	static Integer			BNum;
+	static Int32			ANum;
+	static Int32			BNum;
 
 	// Contact info.
 	static TVector			Contacts[2];
-	static Integer			NumConts;
+	static Int32			NumConts;
 
 	// Friends.
 	friend FPhysicComponent;

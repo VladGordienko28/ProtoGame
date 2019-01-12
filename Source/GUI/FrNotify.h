@@ -52,7 +52,7 @@ struct TNotifyIndexEvent
 {
 public:
 	// Signature of event.
-	typedef void(WWidget::*TEvent)( WWidget* Sender, Integer Index );
+	typedef void(WWidget::*TEvent)( WWidget* Sender, Int32 Index );
 
 	// Variables.
 	WWidget*	Widget;
@@ -65,7 +65,7 @@ public:
 	{}
 
 	// Invoke operator.
-	void operator()( WWidget* Sender, Integer Index )
+	void operator()( WWidget* Sender, Int32 Index )
 	{
 		if( Widget )
 			(Widget->*Event)( Sender, Index );

@@ -8,7 +8,7 @@
 -----------------------------------------------------------------------------*/
 
 // Not specified network port.
-#define NETWORK_ANY_PORT	((Word)0)
+#define NETWORK_ANY_PORT	((UInt16)0)
 
 //
 // A network address.
@@ -18,15 +18,15 @@ struct TNetAddress
 public:
 	union
 	{
-		DWord	Address;
-		Byte	Numbers[4];
+		UInt32	Address;
+		UInt8	Numbers[4];
 	};
-	Word	Port;
+	UInt16	Port;
 
 	TNetAddress() 
 		:	Address(0), Port(NETWORK_ANY_PORT)
 	{}
-	TNetAddress( DWord InAddress, Word InPort = NETWORK_ANY_PORT )
+	TNetAddress( UInt32 InAddress, UInt16 InPort = NETWORK_ANY_PORT )
 		:	Address(InAddress), Port(InPort)
 	{}
 };
@@ -44,9 +44,9 @@ class CUdpConnectionBase
 public:
 	// CUdpConnectionBase interface.
 	virtual ~CUdpConnectionBase(){};
-	virtual Bool BindToPort( Word Port ) = 0;
-	virtual Bool SendData( const Byte* Buffer, SizeT Size, const TNetAddress& RemoteAddr ) = 0;
-	virtual SizeT ReceiveData( Byte* Buffer, SizeT MaxSize, TNetAddress& RemoteAddr  ) = 0;
+	virtual Bool BindToPort( UInt16 Port ) = 0;
+	virtual Bool SendData( const UInt8* Buffer, SizeT Size, const TNetAddress& RemoteAddr ) = 0;
+	virtual SizeT ReceiveData( UInt8* Buffer, SizeT MaxSize, TNetAddress& RemoteAddr  ) = 0;
 
 protected:
 	// Internal.
@@ -66,10 +66,10 @@ class CTcpConnectionBase
 public:
 	// CTcpConnectionBase interface.
 	virtual ~CTcpConnectionBase(){}
-	virtual Bool BindToPort( Word Port ) = 0;
+	virtual Bool BindToPort( UInt16 Port ) = 0;
 	virtual Bool Close() = 0;
-	virtual Bool SendData( const Byte* Buffer, SizeT Size ) = 0;
-	virtual SizeT ReceiveData( Byte* Buffer, SizeT MaxSize ) = 0;
+	virtual Bool SendData( const UInt8* Buffer, SizeT Size ) = 0;
+	virtual SizeT ReceiveData( UInt8* Buffer, SizeT MaxSize ) = 0;
 	virtual Bool IsConnected() const = 0;
 	virtual Bool IsListener() const = 0;
 
@@ -78,7 +78,7 @@ public:
 
 	// Server only functions.
 	virtual Bool Listen() = 0;
-	virtual Integer AcceptConnections() = 0;
+	virtual Int32 AcceptConnections() = 0;
 
 	// Accessors.
 	inline TNetAddress GetRemoteAddress() const

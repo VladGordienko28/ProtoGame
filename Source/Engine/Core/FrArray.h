@@ -17,10 +17,10 @@ struct TArrayBase
 public:
 	// Variables.
 	void*		Data;
-	Integer		Count;
+	Int32		Count;
 
 	// Functions.
-	static void Reallocate( void*& Data, Integer& Count, Integer NewCount, SizeT InnerSize );
+	static void Reallocate( void*& Data, Int32& Count, Int32 NewCount, SizeT InnerSize );
 };
 
 
@@ -32,33 +32,33 @@ template<class T> class TArray: private TArrayBase
 public:
 	// Constructors.
 	TArray();
-	TArray( Integer InitSize );
+	TArray( Int32 InitSize );
 	TArray( const TArray<T>& Other );
 
 	// Destructors.
 	~TArray();
 
 	// Functions.
-	Integer Num() const;
-	Integer AddUnique( const T& InItem );
+	Int32 Num() const;
+	Int32 AddUnique( const T& InItem );
 	void Empty();
-	Integer FindItem( const T& InItem ) const;
-	T& Last( Integer InvIndex=0 );
+	Int32 FindItem( const T& InItem ) const;
+	T& Last( Int32 InvIndex=0 );
 	T Pop();
 	T Shift();
-	Integer Push( const T& InItem );
-	Integer Unshift( const T& InItem );
-	void Remove( Integer Idx );
-	void RemoveShift( Integer Idx );
+	Int32 Push( const T& InItem );
+	Int32 Unshift( const T& InItem );
+	void Remove( Int32 Idx );
+	void RemoveShift( Int32 Idx );
 	void RemoveUnique( const T& InItem );
-	void Swap( Integer A, Integer B );
-	void Insert( Integer FromIndex, Integer InCount=1 );
+	void Swap( Int32 A, Int32 B );
+	void Insert( Int32 FromIndex, Int32 InCount=1 );
 	void Sort( Bool(*SortFunc)( const T&, const T& ) );
-	void SetNum( Integer NewNum );
+	void SetNum( Int32 NewNum );
 
 	// Operators.
-	T& operator[]( Integer i );
-	const T& operator[]( Integer i ) const;
+	T& operator[]( Int32 i );
+	const T& operator[]( Int32 i ) const;
 	Bool operator==( const TArray<T>& Other ) const;
 	Bool operator!=( const TArray<T>& Other ) const;
 	TArray<T>& operator=( const TArray<T>& Other );
@@ -68,23 +68,23 @@ public:
 	{
 		if( S.GetMode() == SM_Load )
 		{
-			Integer ArrLen;
+			Int32 ArrLen;
 			Serialize( S, ArrLen );
 			V.Empty();
 			V.SetNum( ArrLen );
 		}
 		else
 		{
-			Integer ArrLen = V.Num();
+			Int32 ArrLen = V.Num();
 			Serialize( S, ArrLen );
 		}
-		for( Integer i=0; i<V.Num(); i++ )
+		for( Int32 i=0; i<V.Num(); i++ )
 			Serialize( S, V[i] );
 	}
 
 private:
 	// Array internal.
-	void qSort( Integer Min, Integer Max, Bool(*SortFunc)( const T&, const T& ) );
+	void qSort( Int32 Min, Int32 Max, Bool(*SortFunc)( const T&, const T& ) );
 };
 
 
@@ -100,7 +100,7 @@ template<class T> inline TArray<T>::TArray()
 	Data	= nullptr;
 	Count	= 0;
 }
-template<class T> inline TArray<T>::TArray( Integer InitSize )
+template<class T> inline TArray<T>::TArray( Int32 InitSize )
 {
 	Data	= nullptr;
 	Count	= 0;
@@ -111,7 +111,7 @@ template<class T> inline TArray<T>::TArray( const TArray<T>& Other )
 	Data	= nullptr;
 	Count	= 0;
 	SetNum( Other.Num() );
-	for( Integer i=0; i<Other.Num(); i++ )
+	for( Int32 i=0; i<Other.Num(); i++ )
 		((T*)Data)[i]	= ((T*)Other.Data)[i];
 }
 
@@ -128,12 +128,12 @@ template<class T> inline TArray<T>::~TArray()
 //
 // Operators.
 //
-template<class T> inline T& TArray<T>::operator[]( Integer i )
+template<class T> inline T& TArray<T>::operator[]( Int32 i )
 {
 	assert(i>=0 && i<Count);
 	return ((T*)Data)[i];
 }
-template<class T> inline const T& TArray<T>::operator[]( Integer i ) const
+template<class T> inline const T& TArray<T>::operator[]( Int32 i ) const
 {
 	assert(i>=0 && i<Count);
 	return ((T*)Data)[i];
@@ -159,7 +159,7 @@ template<class T> inline Bool TArray<T>::operator!=( const TArray<T>& Other ) co
 template<class T> inline TArray<T>& TArray<T>::operator=( const TArray<T>& Other )
 {
 	SetNum( Other.Num() );
-	for( Integer i=0; i<Other.Num(); i++ )
+	for( Int32 i=0; i<Other.Num(); i++ )
 		((T*)Data)[i] = ((T*)Other.Data)[i];
 	return *this;
 }
@@ -167,7 +167,7 @@ template<class T> inline TArray<T>& TArray<T>::operator=( const TArray<T>& Other
 //
 // Returns array length.
 //
-template<class T> inline Integer TArray<T>::Num() const
+template<class T> inline Int32 TArray<T>::Num() const
 {
 	return Count;
 }
@@ -176,9 +176,9 @@ template<class T> inline Integer TArray<T>::Num() const
 //
 // Add an unique item to the array.
 //
-template<class T> inline Integer TArray<T>::AddUnique( const T& InItem )
+template<class T> inline Int32 TArray<T>::AddUnique( const T& InItem )
 {
-	Integer i = FindItem(InItem);
+	Int32 i = FindItem(InItem);
 	if( i == -1 )
 		i = Push(InItem);
 	return i;
@@ -197,9 +197,9 @@ template<class T> inline void TArray<T>::Empty()
 //
 // Find an item in the array, sad but O(n).
 //
-template<class T> inline Integer TArray<T>::FindItem( const T& InItem ) const
+template<class T> inline Int32 TArray<T>::FindItem( const T& InItem ) const
 {
-	for( Integer i=0; i<Num(); i++ )
+	for( Int32 i=0; i<Num(); i++ )
 		if( ((T*)Data)[i] == InItem )
 			return i;
 	return -1;
@@ -209,7 +209,7 @@ template<class T> inline Integer TArray<T>::FindItem( const T& InItem ) const
 //
 // Get a array item by inverse index.
 //
-template<class T> inline T& TArray<T>::Last( Integer InvIndex=0 )
+template<class T> inline T& TArray<T>::Last( Int32 InvIndex )
 {
 	assert(InvIndex>=0 && InvIndex<Count);
 	return ((T*)Data)[Count-InvIndex-1];
@@ -248,7 +248,7 @@ template<class T> inline T TArray<T>::Shift()
 // Push a new item to the array and return it
 // index.
 //
-template<class T> inline Integer TArray<T>::Push( const T& InItem )
+template<class T> inline Int32 TArray<T>::Push( const T& InItem )
 {
 	SetNum( Count+1 );
 	((T*)Data)[Count-1] = InItem;
@@ -260,7 +260,7 @@ template<class T> inline Integer TArray<T>::Push( const T& InItem )
 // Unshift a new item to the array and return new
 // array length.
 //
-template<class T> inline Integer TArray<T>::Unshift( const T& InItem )
+template<class T> inline Int32 TArray<T>::Unshift( const T& InItem )
 {
 	SetNum( Count+1 );
 
@@ -276,7 +276,7 @@ template<class T> inline Integer TArray<T>::Unshift( const T& InItem )
 // Remove item from the array fast, but this
 // routine shuffles array.
 //
-template<class T> inline void TArray<T>::Remove( Integer Idx )
+template<class T> inline void TArray<T>::Remove( Int32 Idx )
 {
 	assert(Idx>=0 && Idx<Count);
 	assert(Count > 0);
@@ -289,12 +289,12 @@ template<class T> inline void TArray<T>::Remove( Integer Idx )
 // Remove item from the array slowly, by shifting
 // all items to the released slot.
 //
-template<class T> inline void TArray<T>::RemoveShift( Integer Idx )
+template<class T> inline void TArray<T>::RemoveShift( Int32 Idx )
 {
 	assert(Idx>=0 && Idx<Count);
 	assert(Count>0);
 
-	for( Integer i=Idx; i<Count-1; i++ )
+	for( Int32 i=Idx; i<Count-1; i++ )
 		((T*)Data)[i] = ((T*)Data)[i+1];
 
 	SetNum(Count-1);
@@ -304,7 +304,7 @@ template<class T> inline void TArray<T>::RemoveShift( Integer Idx )
 //
 // Swap an array's items by its indexes.
 //
-template<class T> inline void TArray<T>::Swap( Integer A, Integer B )
+template<class T> inline void TArray<T>::Swap( Int32 A, Int32 B )
 {
 	assert(A>=0 && A<Count);
 	assert(B>=0 && B<Count);
@@ -322,7 +322,7 @@ template<class T> inline void TArray<T>::RemoveUnique( const T& InItem )
 {
 	for( ; ; )
 	{
-		Integer i = FindItem(InItem);
+		Int32 i = FindItem(InItem);
 		if( i == -1 ) break;
 		Remove(i);
 	}
@@ -333,16 +333,16 @@ template<class T> inline void TArray<T>::RemoveUnique( const T& InItem )
 // Insert item/s to the array starting from Index
 // InCount is a how mush items added.
 //
-template<class T> inline void TArray<T>::Insert( Integer Index, Integer InCount )
+template<class T> inline void TArray<T>::Insert( Int32 Index, Int32 InCount )
 {
 	assert(InCount >= 0);
 	assert(Count >= 0);
 	assert(Index>=0 && Index<=Count);
 
-	Integer OldCount = Count;
+	Int32 OldCount = Count;
 	SetNum( Count + InCount );
 
-	for( Integer i=Count-1; i>=Index+InCount; i-- )
+	for( Int32 i=Count-1; i>=Index+InCount; i-- )
 		((T*)Data)[i] = ((T*)Data)[i-InCount];
 }
 
@@ -360,12 +360,12 @@ template<class T> inline void TArray<T>::Sort( Bool(*SortFunc)( const T&, const 
 //
 // Reallocate array.
 //
-template<class T> inline void TArray<T>::SetNum( Integer NewNum )
+template<class T> inline void TArray<T>::SetNum( Int32 NewNum )
 {
 	if( NewNum == Count )
 		return;
 
-	for( Integer i=NewNum; i<Count; i++ )
+	for( Int32 i=NewNum; i<Count; i++ )
 		(&(((T*)Data)[Count-1]))->~T();
 
 	Reallocate( Data, Count, NewNum, sizeof(T) );
@@ -375,9 +375,9 @@ template<class T> inline void TArray<T>::SetNum( Integer NewNum )
 //
 // Internal array sorting.
 //
-template<class T> inline void TArray<T>::qSort( Integer Min, Integer Max, Bool(*SortFunc)( const T&, const T& ) )
+template<class T> inline void TArray<T>::qSort( Int32 Min, Int32 Max, Bool(*SortFunc)( const T&, const T& ) )
 {
-	Integer i = Min, j = Max;
+	Int32 i = Min, j = Max;
 	T Middle = ((T*)Data)[Max-(Max-Min)/2];
 	while( i < j )
 	{

@@ -35,7 +35,7 @@ WForm::WForm(  WContainer* InOwner, WWindow* InRoot  )
 //
 // User press button on form.
 //
-void WForm::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WForm::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WContainer::OnMouseDown( Button, X, Y );
 	TPoint RealPos = ClientToWindow(TPoint(X, Y));
@@ -71,7 +71,7 @@ void WForm::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 //
 // User release button.
 //
-void WForm::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WForm::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WContainer::OnMouseUp( Button, X, Y );
 
@@ -83,7 +83,7 @@ void WForm::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse move.
 //
-void WForm::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WForm::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WContainer::OnMouseMove( Button, X, Y );
 
@@ -96,7 +96,7 @@ void WForm::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 	{
 		TPoint RealPos	= ClientToWindow( TPoint( X, Y ) );
 
-		Integer NewWidth, NewHeight;
+		Int32 NewWidth, NewHeight;
 
 		NewWidth		= X + HoldOffset.X;
 		NewWidth		= Clamp( NewWidth, MinWindth, Owner->Size.Width );
@@ -200,7 +200,7 @@ void WForm::OnPaint( CGUIRenderBase* Render )
 //
 // Show the form.
 //
-void WForm::Show( Integer X, Integer Y )
+void WForm::Show( Int32 X, Int32 Y )
 {
 	Location	= TPoint( X, Y );
 	bVisible	= true;
@@ -398,7 +398,7 @@ void WMessageBox::OnPaint( CGUIRenderBase* Render )
 		BPAT_Solid
 	);
 
-	for( Integer iLine=0; iLine<Lines.Num(); iLine++ )
+	for( Int32 iLine=0; iLine<Lines.Num(); iLine++ )
 		Render->DrawText
 		(
 			TPoint( Base.X+20, Base.Y+30+iLine*13 ),

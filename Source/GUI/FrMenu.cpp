@@ -36,7 +36,7 @@ WMenu::~WMenu()
 	// Owner in WContainer::~WContainer!
 #if 0
 	// Kill own sub menus.
-	for( Integer i=0; i<Items.Num(); i++ )
+	for( Int32 i=0; i<Items.Num(); i++ )
 		if( Items[i].SubMenu  )
 			delete Items[i].SubMenu;
 #endif
@@ -58,7 +58,7 @@ void WMenu::SetParent( WMenu* Menu )
 //
 // Add a new item, with sub-menu.
 //
-Integer WMenu::AddSubMenu( String Title, WMenu* SubMenu )		
+Int32 WMenu::AddSubMenu( String Title, WMenu* SubMenu )		
 {
 	TMenuItem Item;
 	Item.Event		= TNotifyEvent();
@@ -83,7 +83,7 @@ Integer WMenu::AddSubMenu( String Title, WMenu* SubMenu )
 //
 // Add a new clickable item to this menu.
 //
-Integer WMenu::AddItem( String Title, TNotifyEvent InEvent, Bool InbToggle )
+Int32 WMenu::AddItem( String Title, TNotifyEvent InEvent, Bool InbToggle )
 {
 	TMenuItem Item;
 	Item.Event		= InEvent;
@@ -145,13 +145,13 @@ void WMenu::OnPaint( CGUIRenderBase* Render )
 	WWidget::OnPaint( Render );
 
 	TPoint Base = ClientToWindow(TPoint::Zero);
-	Integer  TextY = Base.Y +(MENU_ITEM_HEIGHT-Root->Font1->Height) / 2;	
+	Int32  TextY = Base.Y +(MENU_ITEM_HEIGHT-Root->Font1->Height) / 2;	
 
 	// Draw pad.
 	Render->DrawRegion( Base, Size, GUI_COLOR_MENU, GUI_COLOR_MENU_SELECTED, BPAT_Solid );
 
 	// Draw each item.
-	for( Integer i=0; i<Items.Num(); i++ )
+	for( Int32 i=0; i<Items.Num(); i++ )
 	{
 		TMenuItem& Item = Items[i];
 
@@ -213,11 +213,11 @@ void WMenu::OnPaint( CGUIRenderBase* Render )
 //
 // When click happened on a menu item.
 //
-void WMenu::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WMenu::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseUp( Button, X, Y );
 
-	Integer iItem =	YToIndex(Y);
+	Int32 iItem =	YToIndex(Y);
 
 	// Call event.
 	if( iItem != -1 && Items[iItem].bEnabled )
@@ -234,7 +234,7 @@ void WMenu::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 //
 // On Mouse hover above menu.
 //
-void WMenu::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WMenu::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseMove( Button, X, Y );
 
@@ -285,9 +285,9 @@ void WMenu::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 // Convert Y value to the index of item, if no
 // item found - return -1.
 //
-Integer WMenu::YToIndex( Integer InY )
+Int32 WMenu::YToIndex( Int32 InY )
 {
-	for( Integer i=0; i<Items.Num(); i++ )
+	for( Int32 i=0; i<Items.Num(); i++ )
 	{
 		TMenuItem& Item = Items[i];
 
@@ -323,7 +323,7 @@ WMainMenu::WMainMenu( WContainer* InOwner, WWindow* InRoot )
 //
 WMainMenu::~WMainMenu()
 {
-	for( Integer i=0; i<Items.Num(); i++ )
+	for( Int32 i=0; i<Items.Num(); i++ )
 		if( Items[i].SubMenu )
 			delete Items[i].SubMenu;
 }
@@ -332,7 +332,7 @@ WMainMenu::~WMainMenu()
 //
 // Add a new submenu to the menu.
 //
-Integer WMainMenu::AddSubMenu( String Title, WMenu* SubMenu )
+Int32 WMainMenu::AddSubMenu( String Title, WMenu* SubMenu )
 {
 	assert(SubMenu);
 
@@ -354,13 +354,13 @@ void WMainMenu::OnPaint( CGUIRenderBase* Render )
 	WWidget::OnPaint( Render );
 
 	TPoint Base = ClientToWindow( TPoint(0, 0) );
-	Integer TextY = Base.Y + (Size.Height-Root->Font1->Height) / 2;
+	Int32 TextY = Base.Y + (Size.Height-Root->Font1->Height) / 2;
 
 	// Draw pad.
 	Render->DrawRegion( Base, Size, GUI_COLOR_MENU_BAR, GUI_COLOR_MENU_BAR, BPAT_Solid );
 
 	// Draw each item.
-	for( Integer i=0; i<Items.Num(); i++ )
+	for( Int32 i=0; i<Items.Num(); i++ )
 	{
 		TMainMenuItem& Item = Items[i];
 
@@ -400,7 +400,7 @@ void WMainMenu::OnMouseLeave()
 //
 // Mouse press menu bar.
 //
-void WMainMenu::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WMainMenu::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseDown( Button, X, Y );
 		
@@ -439,7 +439,7 @@ void WMainMenu::OnDeactivate()
 //
 // Mouse hover on the menu bar.
 //
-void WMainMenu::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WMainMenu::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseMove( Button, X, Y );
 
@@ -473,9 +473,9 @@ void WMainMenu::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 // Convert X value to the index of item, if no
 // item found - return -1.
 //
-Integer WMainMenu::XToIndex( Integer InX )
+Int32 WMainMenu::XToIndex( Int32 InX )
 {
-	for( Integer i=0; i<Items.Num(); i++ )
+	for( Int32 i=0; i<Items.Num(); i++ )
 	{
 		TMainMenuItem& Item = Items[i];
 

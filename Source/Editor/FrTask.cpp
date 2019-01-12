@@ -131,7 +131,7 @@ void WTaskDialog::RedrawAll()
 //
 // Update task progress value.
 //
-void WTaskDialog::SetProgress( Integer Numerator, Integer Denominator )
+void WTaskDialog::SetProgress( Int32 Numerator, Int32 Denominator )
 {
 	assert(bInProgress);
 	assert(Denominator>0);

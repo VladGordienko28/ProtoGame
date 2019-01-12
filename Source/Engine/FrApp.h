@@ -22,7 +22,7 @@ public:
 	CProject*			Project;
 
 	// Misc.
-	Integer				FPS;
+	Int32				FPS;
 	CConfigManager*		Config;
 
 	// CApplication interface.

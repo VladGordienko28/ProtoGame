@@ -12,14 +12,14 @@
 //
 // Hash function tables.
 //
-static Integer HashXTab[COLL_HASH_SIZE];
-static Integer HashYTab[COLL_HASH_SIZE];
+static Int32 HashXTab[COLL_HASH_SIZE];
+static Int32 HashYTab[COLL_HASH_SIZE];
 
 
 //
 // Discretize world's coords to hash index.
 //
-void CCollisionHash::GetHashIndex( TVector V, Integer& iX, Integer& iY )
+void CCollisionHash::GetHashIndex( TVector V, Int32& iX, Int32& iY )
 {
 	// Check bounds.
 	if	( 
@@ -63,14 +63,14 @@ CCollisionHash::CCollisionHash( FLevel* InLevel )
 	static Bool bTabInit = false;
 	if( !bTabInit )
 	{
-		for( Integer i=0; i<COLL_HASH_SIZE; i++ )
+		for( Int32 i=0; i<COLL_HASH_SIZE; i++ )
 		{
 			HashXTab[i]	= i;
 			HashYTab[i]	= i;
 		}
 		
 		// Shuffle indexes, but keep all values.
-		for( Integer i=0; i<COLL_HASH_SIZE; i++ )
+		for( Int32 i=0; i<COLL_HASH_SIZE; i++ )
 		{
 			Exchange( HashXTab[i], HashXTab[Random(COLL_HASH_SIZE)] );
 			Exchange( HashYTab[i], HashYTab[Random(COLL_HASH_SIZE)] );
@@ -110,16 +110,16 @@ void CCollisionHash::AddToHash( FBaseComponent* Object )
 	Object->bHashed	= true;
 
 	// Get bounds.
-	Integer X1, X2, Y1, Y2;
+	Int32 X1, X2, Y1, Y2;
 	Object->HashAABB = Object->GetAABB();
 	GetHashIndex( Object->HashAABB.Min, X1, Y1 );
 	GetHashIndex( Object->HashAABB.Max, X2, Y2 );
 
-	for( Integer Y=Y1; Y<=Y2; Y++ )
-	for( Integer X=X1; X<=X2; X++ )
+	for( Int32 Y=Y1; Y<=Y2; Y++ )
+	for( Int32 X=X1; X<=X2; X++ )
 	{
 		THashItem* Item;
-		Integer iSlot = HashXTab[X] ^ HashYTab[Y];
+		Int32 iSlot = HashXTab[X] ^ HashYTab[Y];
 
 		if( FirstAvail )
 		{
@@ -163,7 +163,7 @@ void CCollisionHash::RemoveFromHash( FBaseComponent* Object )
 	Object->bHashed	= false;
 
 	// Get bounds.
-	Integer X1, X2, Y1, Y2;
+	Int32 X1, X2, Y1, Y2;
 	TRect R = Object->GetAABB();
 	if( R != Object->HashAABB )
 	{
@@ -173,10 +173,10 @@ void CCollisionHash::RemoveFromHash( FBaseComponent* Object )
 	GetHashIndex( R.Min, X1, Y1 );
 	GetHashIndex( R.Max, X2, Y2 );
 
-	for( Integer Y=Y1; Y<=Y2; Y++ )
-	for( Integer X=X1; X<=X2; X++ )
+	for( Int32 Y=Y1; Y<=Y2; Y++ )
+	for( Int32 X=X1; X<=X2; X++ )
 	{	
-		Integer iSlot = HashXTab[X] ^ HashYTab[Y];
+		Int32 iSlot = HashXTab[X] ^ HashYTab[Y];
 		THashItem** ItemPtr = &Hash[iSlot];
 
 		// Cleanup items.
@@ -209,10 +209,10 @@ void CCollisionHash::RemoveFromHash( FBaseComponent* Object )
 // Return any object inside the bounds.
 // Return first MAX_COLL_LIST_OBJS objects.
 //
-void CCollisionHash::GetOverlapped( TRect Bounds, Integer& OutNumObjs, FBaseComponent** OutList )
+void CCollisionHash::GetOverlapped( TRect Bounds, Int32& OutNumObjs, FBaseComponent** OutList )
 {
 	// Get bounds.
-	Integer X1, X2, Y1, Y2;
+	Int32 X1, X2, Y1, Y2;
 	GetHashIndex( Bounds.Min, X1, Y1 );
 	GetHashIndex( Bounds.Max, X2, Y2 );
 
@@ -220,10 +220,10 @@ void CCollisionHash::GetOverlapped( TRect Bounds, Integer& OutNumObjs, FBaseComp
 	OutNumObjs	= 0;
 	Mark++;
 
-	for( Integer Y=Y1; Y<=Y2; Y++ )
-	for( Integer X=X1; X<=X2; X++ )
+	for( Int32 Y=Y1; Y<=Y2; Y++ )
+	for( Int32 X=X1; X<=X2; X++ )
 	{
-		Integer iSlot = HashXTab[X] ^ HashYTab[Y];
+		Int32 iSlot = HashXTab[X] ^ HashYTab[Y];
 		THashItem* Item = Hash[iSlot];
 
 		while( Item )
@@ -257,10 +257,10 @@ Enough:;
 // Return any object inside the bounds of class 'Class' only.
 // Return first MAX_COLL_LIST_OBJS objects.
 //
-void CCollisionHash::GetOverlappedByClass( TRect Bounds, CClass* Class, Integer& OutNumObjs, FBaseComponent** OutList )
+void CCollisionHash::GetOverlappedByClass( TRect Bounds, CClass* Class, Int32& OutNumObjs, FBaseComponent** OutList )
 {
 	// Get bounds.
-	Integer X1, X2, Y1, Y2;
+	Int32 X1, X2, Y1, Y2;
 	GetHashIndex( Bounds.Min, X1, Y1 );
 	GetHashIndex( Bounds.Max, X2, Y2 );
 
@@ -268,10 +268,10 @@ void CCollisionHash::GetOverlappedByClass( TRect Bounds, CClass* Class, Integer&
 	OutNumObjs	= 0;
 	Mark++;
 
-	for( Integer Y=Y1; Y<=Y2; Y++ )
-	for( Integer X=X1; X<=X2; X++ )
+	for( Int32 Y=Y1; Y<=Y2; Y++ )
+	for( Int32 X=X1; X<=X2; X++ )
 	{
-		Integer iSlot = HashXTab[X] ^ HashYTab[Y];
+		Int32 iSlot = HashXTab[X] ^ HashYTab[Y];
 		THashItem* Item = Hash[iSlot];
 
 		while( Item )
@@ -306,10 +306,10 @@ Enough:;
 // Return any object inside the bounds of script 'Script' only.
 // Return first MAX_COLL_LIST_OBJS objects.
 //
-void CCollisionHash::GetOverlappedByScript( TRect Bounds, FScript* Script, Integer& OutNumObjs, FBaseComponent** OutList )
+void CCollisionHash::GetOverlappedByScript( TRect Bounds, FScript* Script, Int32& OutNumObjs, FBaseComponent** OutList )
 {
 	// Get bounds.
-	Integer X1, X2, Y1, Y2;
+	Int32 X1, X2, Y1, Y2;
 	GetHashIndex( Bounds.Min, X1, Y1 );
 	GetHashIndex( Bounds.Max, X2, Y2 );
 
@@ -317,10 +317,10 @@ void CCollisionHash::GetOverlappedByScript( TRect Bounds, FScript* Script, Integ
 	OutNumObjs	= 0;
 	Mark++;
 
-	for( Integer Y=Y1; Y<=Y2; Y++ )
-	for( Integer X=X1; X<=X2; X++ )
+	for( Int32 Y=Y1; Y<=Y2; Y++ )
+	for( Int32 X=X1; X<=X2; X++ )
 	{
-		Integer iSlot = HashXTab[X] ^ HashYTab[Y];
+		Int32 iSlot = HashXTab[X] ^ HashYTab[Y];
 		THashItem* Item = Hash[iSlot];
 
 		while( Item )

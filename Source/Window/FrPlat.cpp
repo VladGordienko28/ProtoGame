@@ -56,7 +56,7 @@ void CWinPlatform::SetNow( Double InNow )
 //
 // Return CPU cycles, used for benchmark.
 //
-DWord CWinPlatform::Cycles()
+UInt32 CWinPlatform::Cycles()
 {
 	LARGE_INTEGER Cyc;
 	QueryPerformanceCounter(&Cyc);
@@ -85,7 +85,7 @@ Bool CWinPlatform::FileExists( String FileName )
 //
 Bool CWinPlatform::DirectoryExists( String Dir )
 {
-	DWord Type	= GetFileAttributes(*Dir);
+	UInt32 Type	= GetFileAttributes(*Dir);
 	return	!(Type & INVALID_FILE_ATTRIBUTES) && 
 			(Type & FILE_ATTRIBUTE_DIRECTORY);
 }

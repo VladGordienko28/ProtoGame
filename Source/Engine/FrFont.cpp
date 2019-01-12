@@ -46,25 +46,25 @@ void FFont::Export( CExporterBase& Ex )
 	FResource::Export(Ex);
 
 	// General info.
-	Integer NumBitmaps = Bitmaps.Num();
+	Int32 NumBitmaps = Bitmaps.Num();
 	EXPORT_INTEGER( Height );
 	EXPORT_INTEGER( NumBitmaps );
-	for( Integer i=0; i<NumBitmaps; i++ )
+	for( Int32 i=0; i<NumBitmaps; i++ )
 		Ex.ExportObject( *String::Format(L"Bitmaps[%i]", i), Bitmaps[i] );
 
 	// Remap table.
-	Integer NumRemap = Remap.Num();
+	Int32 NumRemap = Remap.Num();
 	EXPORT_INTEGER( NumRemap );
-	for( Integer i=0; i<NumRemap; i++ )
+	for( Int32 i=0; i<NumRemap; i++ )
 		Ex.ExportByte( *String::Format(L"Remap[%i]", i), Remap[i] );
 
 	// All glyphs.
-	Integer NumGlyphs = Glyphs.Num();
+	Int32 NumGlyphs = Glyphs.Num();
 	EXPORT_INTEGER( NumGlyphs );
-	for( Integer i=0; i<NumGlyphs; i++ )
+	for( Int32 i=0; i<NumGlyphs; i++ )
 	{
-		Ex.ExportInteger( *String::Format( L"Glyphs[%d].A", i ), *(Integer*)(&Glyphs[i].iBitmap) );
-		Ex.ExportInteger( *String::Format( L"Glyphs[%d].B", i ), *(Integer*)(&Glyphs[i].X) );
+		Ex.ExportInteger( *String::Format( L"Glyphs[%d].A", i ), *(Int32*)(&Glyphs[i].iBitmap) );
+		Ex.ExportInteger( *String::Format( L"Glyphs[%d].B", i ), *(Int32*)(&Glyphs[i].X) );
 	}
 }	
 
@@ -77,28 +77,28 @@ void FFont::Import( CImporterBase& Im )
 	FResource::Import(Im);
 
 	// General info.
-	Integer NumBitmaps;
+	Int32 NumBitmaps;
 	IMPORT_INTEGER( NumBitmaps );
 	IMPORT_INTEGER( Height );
 	Bitmaps.SetNum( NumBitmaps );
-	for( Integer i=0; i<NumBitmaps; i++ )
+	for( Int32 i=0; i<NumBitmaps; i++ )
 		Bitmaps[i] = (FBitmap*)Im.ImportObject( *String::Format(L"Bitmaps[%i]", i) );
 
 	// Remap table.
-	Integer NumRemap;
+	Int32 NumRemap;
 	IMPORT_INTEGER( NumRemap );
 	Remap.SetNum( NumRemap );
-	for( Integer i=0; i<NumRemap; i++ )
+	for( Int32 i=0; i<NumRemap; i++ )
 		Remap[i] = Im.ImportByte( *String::Format(L"Remap[%i]", i) );
 
 	// All glyphs.
-	Integer NumGlyphs;
+	Int32 NumGlyphs;
 	IMPORT_INTEGER( NumGlyphs );
 	Glyphs.SetNum( NumGlyphs );
-	for( Integer i=0; i<NumGlyphs; i++ )
+	for( Int32 i=0; i<NumGlyphs; i++ )
 	{
-		*(Integer*)(&Glyphs[i].iBitmap)	=	Im.ImportInteger( *String::Format( L"Glyphs[%d].A", i ) );
-		*(Integer*)(&Glyphs[i].X)		=	Im.ImportInteger( *String::Format( L"Glyphs[%d].B", i ) );
+		*(Int32*)(&Glyphs[i].iBitmap)	=	Im.ImportInteger( *String::Format( L"Glyphs[%d].A", i ) );
+		*(Int32*)(&Glyphs[i].X)		=	Im.ImportInteger( *String::Format( L"Glyphs[%d].B", i ) );
 	}
 }
 
@@ -132,7 +132,7 @@ void FFont::SerializeThis( CSerializer& S )
 	if( S.GetMode() == SM_Load )
 	{
 		// Restore remap table.
-		Integer MapSize;
+		Int32 MapSize;
 		Serialize( S, MapSize );
 		Remap.SetNum( MapSize );
 
@@ -142,18 +142,18 @@ void FFont::SerializeThis( CSerializer& S )
 			MemSet
 				(
 					&Remap[0],
-					MapSize*sizeof(Byte),
+					MapSize*sizeof(UInt8),
 					0xff
 				);
 
-			Integer NumGlyphs;
+			Int32 NumGlyphs;
 			Serialize( S, NumGlyphs );
 
 			// Restore each index.
-			for( Integer i=0; i<NumGlyphs; i++ )
+			for( Int32 i=0; i<NumGlyphs; i++ )
 			{
-				Integer iSlot;
-				Byte b;
+				Int32 iSlot;
+				UInt8 b;
 				Serialize( S, iSlot );
 				Serialize( S, b );
 
@@ -164,12 +164,12 @@ void FFont::SerializeThis( CSerializer& S )
 	else if( S.GetMode() == SM_Save )
 	{
 		// Store remap table.
-		Integer MapSize	= Remap.Num();
+		Int32 MapSize	= Remap.Num();
 		Serialize( S, MapSize );
 
 		// How many glyphs.
-		Integer NumGlyphs = 0;
-		for( Integer i=0; i<MapSize; i++ )
+		Int32 NumGlyphs = 0;
+		for( Int32 i=0; i<MapSize; i++ )
 			if( Remap[i] != 0xff )
 				NumGlyphs++;
 
@@ -177,10 +177,10 @@ void FFont::SerializeThis( CSerializer& S )
 		Serialize( S, NumGlyphs );
 
 		// Store each used glyph.
-		for( Integer i=0; i<MapSize; i++ )
+		for( Int32 i=0; i<MapSize; i++ )
 			if( Remap[i] != 0xff )
 			{
-				Byte b = Remap[i];
+				UInt8 b = Remap[i];
 
 				// Store pair of value and it index.
 				Serialize( S, i );
@@ -194,9 +194,9 @@ void FFont::SerializeThis( CSerializer& S )
 // Return the width of given text in C-style, in
 // pixels of course.
 //
-Integer FFont::TextWidth( const Char* Text )
+Int32 FFont::TextWidth( const Char* Text )
 {
-	Integer Width = 0;
+	Int32 Width = 0;
 
 	for( const Char* C=Text; *C; C++ )
 	{
@@ -227,7 +227,7 @@ TStaticFont::TStaticFont()
 TStaticFont::~TStaticFont()
 {
 	// Kill manually all pages.
-	for( Integer i=0; i<Bitmaps.Num(); i++ )
+	for( Int32 i=0; i<Bitmaps.Num(); i++ )
 		delete Bitmaps[i];
 }
 

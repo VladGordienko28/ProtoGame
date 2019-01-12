@@ -37,7 +37,7 @@ public:
 	// CSerializer interface.
 	void SerializeData( void* Mem, SizeT Count )
 	{
-		MemCopy( Mem, (Byte*)Memory + Pos, Count );
+		MemCopy( Mem, (UInt8*)Memory + Pos, Count );
 		Pos	+= Count;
 	}
 	void SerializeRef( FObject*& Obj )
@@ -97,14 +97,14 @@ TStaticBitmap* LoadBitmapFromResource( HINSTANCE hInstance, LPCTSTR ResID )
 	Bitmap->AnimSpeed	= 0.f;
 	Bitmap->bDynamic	= false;
 	Bitmap->bRedrawn	= false;
-	Bitmap->Data.SetNum( Bitmap->USize*Bitmap->VSize*sizeof(Byte) );
+	Bitmap->Data.SetNum( Bitmap->USize*Bitmap->VSize*sizeof(UInt8) );
 
 	// Load palette.
 	RGBQUAD RawPalette[256];
 	Stream.SerializeData( RawPalette, sizeof(RGBQUAD)*Info.biClrUsed );
 
 	Bitmap->Palette.Allocate(Info.biClrUsed);
-	for( Integer i=0; i<Info.biClrUsed; i++ )
+	for( Int32 i=0; i<Info.biClrUsed; i++ )
 	{
 		TColor Col( RawPalette[i].rgbRed, RawPalette[i].rgbGreen, RawPalette[i].rgbBlue, 0xff );
 		if( Col == MASK_COLOR )	Col.A	= 0x00;
@@ -112,12 +112,12 @@ TStaticBitmap* LoadBitmapFromResource( HINSTANCE hInstance, LPCTSTR ResID )
 	}
 
 	// Load data, don't forget V-flip.
-	Byte* Data = (Byte*)Bitmap->GetData();
-	for( Integer V=0; V<Bitmap->VSize; V++ )
+	UInt8* Data = (UInt8*)Bitmap->GetData();
+	for( Int32 V=0; V<Bitmap->VSize; V++ )
 		Stream.SerializeData
 		(
 			&Data[(Bitmap->VSize-1-V) * Bitmap->USize],
-			Bitmap->USize * sizeof(Byte)
+			Bitmap->USize * sizeof(UInt8)
 		);
 
 	// Return it.
@@ -146,21 +146,21 @@ TStaticFont* LoadFontFromResource( HINSTANCE hInstance, LPCTSTR FontID, LPCTSTR 
 
 	// Main line.
 	AnsiChar Name[64];
-	Integer Height;
+	Int32 Height;
 	sscanf( Walk, "%d %s\n", &Height, Name );	
 	to_next;
 
 	// Read characters.
 	Font->Height = -1; 
-	Integer NumPages = 0;
+	Int32 NumPages = 0;
 	while( Walk < End )
 	{
 		Char C[2] = { 0, 0 };
-		Integer X, Y, W, H, iBitmap;
+		Int32 X, Y, W, H, iBitmap;
 		C[0] = *Walk++;
 
-		if( (Word)C[0]+1 > Font->Remap.Num() )
-			Font->Remap.SetNum( (Word)C[0]+1 );
+		if( (UInt16)C[0]+1 > Font->Remap.Num() )
+			Font->Remap.SetNum( (UInt16)C[0]+1 );
 
 		sscanf( Walk, "%d %d %d %d %d\n", &iBitmap, &X, &Y, &W, &H );
 		to_next;
@@ -175,7 +175,7 @@ TStaticFont* LoadFontFromResource( HINSTANCE hInstance, LPCTSTR FontID, LPCTSTR 
 		Glyph.H			= H;	
 
 		Font->Height			= Max( Font->Height, H );
-		Font->Remap[(Word)C[0]] = Font->Glyphs.Push(Glyph);
+		Font->Remap[(UInt16)C[0]] = Font->Glyphs.Push(Glyph);
 
 #if 0
 		log( L"Import Char: %s", C );
@@ -192,15 +192,15 @@ TStaticFont* LoadFontFromResource( HINSTANCE hInstance, LPCTSTR FontID, LPCTSTR 
 	#undef to_next
 
 	// Convert palette from RGB to RGBA format with solid white color and alpha mask.
-	for( Integer iPage=0; iPage<Font->Bitmaps.Num(); iPage++ )
+	for( Int32 iPage=0; iPage<Font->Bitmaps.Num(); iPage++ )
 	{
 		FBitmap* Page = Font->Bitmaps[iPage];
 		assert(Page->Format == BF_Palette8);
 
-		for( Integer i=0; i<Page->Palette.Colors.Num(); i++ )
+		for( Int32 i=0; i<Page->Palette.Colors.Num(); i++ )
 		{
 			TColor Ent = Page->Palette.Colors[i];
-			Page->Palette.Colors[i] = TColor( 0xff, 0xff, 0xff, Integer(Ent.R + Ent.G + Ent.B)/3 );
+			Page->Palette.Colors[i] = TColor( 0xff, 0xff, 0xff, Int32(Ent.R + Ent.G + Ent.B)/3 );
 		}
 	
 		Page->BlendMode = BLEND_Alpha;

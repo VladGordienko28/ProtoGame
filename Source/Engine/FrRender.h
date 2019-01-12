@@ -24,7 +24,7 @@
 struct TRenderRect
 {
 public:
-	DWord			Flags;
+	UInt32			Flags;
 	TRect			Bounds;
 	TAngle			Rotation;
 	FTexture*		Texture;
@@ -39,10 +39,10 @@ public:
 struct TRenderPoly
 {
 public:
-	DWord			Flags;
+	UInt32			Flags;
 	TVector			Vertices[16];
 	TVector			TexCoords[16];
-	Integer			NumVerts;
+	Int32			NumVerts;
 	FTexture*		Texture;
 	TColor			Color;
 };
@@ -54,17 +54,17 @@ public:
 struct TRenderList
 {
 public:
-	DWord			Flags;
+	UInt32			Flags;
 	FTexture*		Texture;
-	Integer			NumRects;
+	Int32			NumRects;
 	TVector*		Vertices;
 	TVector*		TexCoords;
 	TColor*			Colors;
 	TColor			DrawColor;
 
 	// TRenderList interface.
-	TRenderList( Integer InNumRcts );
-	TRenderList( Integer InNumRcts, TColor InColor );
+	TRenderList( Int32 InNumRcts );
+	TRenderList( Int32 InNumRcts, TColor InColor );
 	~TRenderList();
 };
 
@@ -106,11 +106,11 @@ public:
 struct TClipArea
 {
 public:
-	Integer X, Y, Width, Height;
+	Int32 X, Y, Width, Height;
 
 	TClipArea()
 	{}
-	TClipArea( Integer InX, Integer InY, Integer InWidth, Integer InHeight )
+	TClipArea( Int32 InX, Int32 InY, Int32 InWidth, Int32 InHeight )
 		:	X( InX ), 
 			Y( InY ), 
 			Width( InWidth ),
@@ -133,9 +133,9 @@ class CRenderBase
 {
 public:
 	// CRenderBase interface.
-	virtual void Resize( Integer NewWidth, Integer NewHeight ) = 0;
+	virtual void Resize( Int32 NewWidth, Int32 NewHeight ) = 0;
 	virtual void Flush() = 0;
-	virtual void RenderLevel( CCanvas* Canvas, FLevel* Level, Integer X, Integer Y, Integer W, Integer H ) = 0;
+	virtual void RenderLevel( CCanvas* Canvas, FLevel* Level, Int32 X, Int32 Y, Int32 W, Int32 H ) = 0;
 	virtual CCanvas* Lock() = 0;
 	virtual void Unlock() = 0;			
 };
@@ -183,7 +183,7 @@ public:
 		Float Radius,
 		TColor Color,
 		Bool bStipple,
-		Integer Detail = 32 
+		Int32 Detail = 32 
 	);
 
 	void DrawCoolPoint
@@ -199,7 +199,7 @@ public:
 		const TVector& B,
 		TColor Color,
 		Bool bStipple,
-		Integer Detail = 16 
+		Int32 Detail = 16 
 	);
 
 	void DrawLineStar
@@ -223,7 +223,7 @@ public:
 	void DrawText
 	(	
 		const Char* Text,
-		Integer Len,
+		Int32 Len,
 		FFont* Font, 
 		TColor Color,
 		const TVector& Start, 
@@ -246,7 +246,7 @@ protected:
 	// Canvas internal.
 	enum{ VIEW_STACK_SIZE = 8 };
 	TViewInfo	ViewStack[VIEW_STACK_SIZE];
-	Integer		StackTop;
+	Int32		StackTop;
 };
 
 

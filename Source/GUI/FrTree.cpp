@@ -41,12 +41,12 @@ WTreeView::WTreeView( WContainer* InOwner, WWindow* InRoot )
 //
 // Add a new node to the tree.
 //
-Integer WTreeView::AddNode( String InName, Integer IniParent, void* InData )
+Int32 WTreeView::AddNode( String InName, Int32 IniParent, void* InData )
 {
 	assert(IniParent==-1 || (IniParent>=0 && IniParent<Nodes.Num()));
 
-	Integer Level = IniParent != -1 ? Nodes[IniParent].Level+1 : 1;
-	Integer iThis = Nodes.Push(TNode( InName, Level, IniParent, InData ));
+	Int32 Level = IniParent != -1 ? Nodes[IniParent].Level+1 : 1;
+	Int32 iThis = Nodes.Push(TNode( InName, Level, IniParent, InData ));
 
 	// Sort items for rendering.
 	ComputeOrder();
@@ -63,7 +63,7 @@ void WTreeView::SelectNext()
 	if( RenderOrder.Num() == 0 )
 		return;
 	
-	Integer iOrdered = RenderOrder.FindItem(iSelected);
+	Int32 iOrdered = RenderOrder.FindItem(iSelected);
 	if( iOrdered == -1 )
 	{
 		iSelected = 0;
@@ -87,7 +87,7 @@ void WTreeView::SelectPrev()
 	if( RenderOrder.Num() == 0 )
 		return;
 
-	Integer iOrdered = RenderOrder.FindItem(iSelected);
+	Int32 iOrdered = RenderOrder.FindItem(iSelected);
 	if( iOrdered == -1 )
 	{
 		iSelected = RenderOrder.Last();
@@ -106,7 +106,7 @@ void WTreeView::SelectPrev()
 //
 // User click on treeview.
 //
-void WTreeView::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WTreeView::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 { 
 	WContainer::OnMouseDown( Button, X, Y );
 
@@ -115,7 +115,7 @@ void WTreeView::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 
 	// Hit something.
 	Bool bAtSign = false;
-	Integer iHit = XYToIndex( X, Y, &bAtSign );
+	Int32 iHit = XYToIndex( X, Y, &bAtSign );
 
 	if( iHit == -1 )
 		return;
@@ -137,9 +137,9 @@ void WTreeView::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 //
 // Find a node by name and parent.
 //
-Integer WTreeView::FindNode( String TestName, Integer iParent )
+Int32 WTreeView::FindNode( String TestName, Int32 iParent )
 {
-	for( Integer i=0; i<Nodes.Num(); i++ )
+	for( Int32 i=0; i<Nodes.Num(); i++ )
 		if( TestName == Nodes[i].Name )
 		{
 			if( iParent != -1 && !IsParentNode(i, iParent) )
@@ -166,7 +166,7 @@ void WTreeView::OnResize()
 //
 // When user release button.
 //
-void WTreeView::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WTreeView::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WContainer::OnMouseUp( Button, X, Y );
 }
@@ -175,16 +175,16 @@ void WTreeView::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 //
 // Scroll tree to show iNode.
 //
-void WTreeView::ScrollToNode( Integer iNode )
+void WTreeView::ScrollToNode( Int32 iNode )
 {
 	if( iNode == -1 )
 		return;
 
-	Integer iOrdered = RenderOrder.FindItem(iNode);
+	Int32 iOrdered = RenderOrder.FindItem(iNode);
 	if( iOrdered == -1 )
 		return;
 
-	Integer NumVis	= Size.Height / (CharHeight+TREEVIEW_NODES_INTERVAL);
+	Int32 NumVis	= Size.Height / (CharHeight+TREEVIEW_NODES_INTERVAL);
 
 	// Scroll from the current location.
 	while( iOrdered < ScrollTop )				ScrollTop--;
@@ -214,8 +214,8 @@ void WTreeView::OnPaint( CGUIRenderBase* Render )
 	);
 
 	// Visible lines bounds.
-	Integer iVisFirst	= ScrollTop;
-	Integer iVisLast	= Min( ScrollTop + Size.Height/(TREEVIEW_NODES_INTERVAL+CharHeight), RenderOrder.Num()-1 );
+	Int32 iVisFirst	= ScrollTop;
+	Int32 iVisLast	= Min( ScrollTop + Size.Height/(TREEVIEW_NODES_INTERVAL+CharHeight), RenderOrder.Num()-1 );
 
 	// Draw root line.
 	if( RenderOrder.Num() != 0 )
@@ -229,17 +229,17 @@ void WTreeView::OnPaint( CGUIRenderBase* Render )
 		);
 
 	// Draw all vertical lines.
-	for( Integer i=0; i<RenderOrder.Num(); i++ )
+	for( Int32 i=0; i<RenderOrder.Num(); i++ )
 	{
-		Integer iNode = RenderOrder[i];
+		Int32 iNode = RenderOrder[i];
 		TNode& Node = Nodes[iNode];
 
 		// Draw vertical line, if required.
 		if( Node.NumChildren != 0 && Node.bExpanded )
 		{
-			Integer LineX = Base.X + 20 * Node.Level;
-			Integer LineYBegin = (i-ScrollTop) * (TREEVIEW_NODES_INTERVAL + CharHeight) + TREEVIEW_NODES_INTERVAL;
-			Integer LineYEnd = (FindLastChildren(iNode)-ScrollTop)*(TREEVIEW_NODES_INTERVAL+CharHeight) - TREEVIEW_NODES_INTERVAL;
+			Int32 LineX = Base.X + 20 * Node.Level;
+			Int32 LineYBegin = (i-ScrollTop) * (TREEVIEW_NODES_INTERVAL + CharHeight) + TREEVIEW_NODES_INTERVAL;
+			Int32 LineYEnd = (FindLastChildren(iNode)-ScrollTop)*(TREEVIEW_NODES_INTERVAL+CharHeight) - TREEVIEW_NODES_INTERVAL;
 
 			LineYBegin = Clamp( LineYBegin, 1, Size.Height-1 );
 			LineYEnd = Clamp( LineYEnd, 1, Size.Height-1 );
@@ -260,19 +260,19 @@ void WTreeView::OnPaint( CGUIRenderBase* Render )
 	}
 
 	// Draw nodes.
-	Integer YWalk = TREEVIEW_NODES_INTERVAL;
+	Int32 YWalk = TREEVIEW_NODES_INTERVAL;
 
-	for( Integer i=iVisFirst; i<=iVisLast; i++ )
+	for( Int32 i=iVisFirst; i<=iVisLast; i++ )
 	{
-		Integer iNode = RenderOrder[i];
+		Int32 iNode = RenderOrder[i];
 		TNode& Node = Nodes[iNode];
-		Integer LabelX = Base.X + 20 * Node.Level;
-		Integer LabelY = Base.Y + YWalk;
+		Int32 LabelX = Base.X + 20 * Node.Level;
+		Int32 LabelY = Base.Y + YWalk;
 
 		// Selection mark, if required.
 		if( iNode == iSelected )
 		{
-			Integer TextWidth = Root->Font1->TextWidth(*Node.Name);
+			Int32 TextWidth = Root->Font1->TextWidth(*Node.Name);
 
 			Render->DrawRegion
 			(
@@ -323,20 +323,20 @@ void WTreeView::OnPaint( CGUIRenderBase* Render )
 //
 // Conver pixels point to index of node.
 //
-Integer WTreeView::XYToIndex( Integer X, Integer Y, Bool* AtSign )
+Int32 WTreeView::XYToIndex( Int32 X, Int32 Y, Bool* AtSign )
 {
-	Integer YWalk = TREEVIEW_NODES_INTERVAL;
+	Int32 YWalk = TREEVIEW_NODES_INTERVAL;
 
 	if( AtSign )
 		*AtSign = false;
 
-	for( Integer i=ScrollTop; i<RenderOrder.Num(); i++ )
+	for( Int32 i=ScrollTop; i<RenderOrder.Num(); i++ )
 	{
 		// Precompute.
-		Integer iNode = RenderOrder[i];
+		Int32 iNode = RenderOrder[i];
 		TNode& Node = Nodes[iNode];
-		Integer LabelX = 20 * Node.Level - 1;
-		Integer LabelY = YWalk;
+		Int32 LabelX = 20 * Node.Level - 1;
+		Int32 LabelY = YWalk;
 
 		// Advance Y.
 		YWalk += TREEVIEW_NODES_INTERVAL + CharHeight;
@@ -345,7 +345,7 @@ Integer WTreeView::XYToIndex( Integer X, Integer Y, Bool* AtSign )
 		if( InRange( Y, LabelY, YWalk ) )
 		{
 			// Test X.
-			Integer TextWidth = Root->Font1->TextWidth(*Node.Name) + 2;
+			Int32 TextWidth = Root->Font1->TextWidth(*Node.Name) + 2;
 
 			if( InRange( X, LabelX, LabelX+TextWidth ) )
 			{
@@ -395,7 +395,7 @@ void WTreeView::OnDoubleClick()
 //
 // Recursive minon of WTreeView::ComputeOrder.
 //
-void ComputeOrderMinion( Integer iParent, TArray<Integer>& RenderOrder, TArray<WTreeView::TNode>& Nodes )
+void ComputeOrderMinion( Int32 iParent, TArray<Int32>& RenderOrder, TArray<WTreeView::TNode>& Nodes )
 {
 	assert(iParent != -1);
 
@@ -403,7 +403,7 @@ void ComputeOrderMinion( Integer iParent, TArray<Integer>& RenderOrder, TArray<W
 	Nodes[iParent].NumChildren = 0;
 	Bool bExpanded = Nodes[iParent].bExpanded;
 
-	for( Integer i=0; i<Nodes.Num(); i++ )
+	for( Int32 i=0; i<Nodes.Num(); i++ )
 		if( Nodes[i].iParent == iParent )
 		{
 			if( bExpanded )
@@ -421,7 +421,7 @@ void WTreeView::ComputeOrder()
 {
 	RenderOrder.Empty();
 
-	for( Integer i=0; i<Nodes.Num(); i++ )
+	for( Int32 i=0; i<Nodes.Num(); i++ )
 		if( Nodes[i].iParent == -1 )
 			ComputeOrderMinion( i, RenderOrder, Nodes );
 }
@@ -430,7 +430,7 @@ void WTreeView::ComputeOrder()
 //
 // A keyboard button had been pressed.
 //
-void WTreeView::OnKeyDown( Integer Key )
+void WTreeView::OnKeyDown( Int32 Key )
 {
 	WContainer::OnKeyDown(Key);
 
@@ -444,7 +444,7 @@ void WTreeView::OnKeyDown( Integer Key )
 //
 // User double clicks on tree.
 //
-void WTreeView::OnDblClick( EMouseButton Button, Integer X, Integer Y )
+void WTreeView::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WContainer::OnDblClick( Button, X, Y );
 	OnDoubleClick();
@@ -464,7 +464,7 @@ void WTreeView::Empty()
 //
 // Return true if TestParent is parent node of iNode.
 //
-Bool WTreeView::IsParentNode( Integer iNode, Integer TestParent ) const
+Bool WTreeView::IsParentNode( Int32 iNode, Int32 TestParent ) const
 {
 	if( iNode == TestParent )
 		return false;
@@ -489,7 +489,7 @@ Bool WTreeView::IsParentNode( Integer iNode, Integer TestParent ) const
 //
 void WTreeView::ExpandAll()
 {
-	for( Integer i=0; i<Nodes.Num(); i++ )
+	for( Int32 i=0; i<Nodes.Num(); i++ )
 		Nodes[i].bExpanded = true;
 
 	ComputeOrder();
@@ -502,7 +502,7 @@ void WTreeView::ExpandAll()
 //
 void WTreeView::CollapseAll()
 {
-	for( Integer i=0; i<Nodes.Num(); i++ )
+	for( Int32 i=0; i<Nodes.Num(); i++ )
 		Nodes[i].bExpanded = false;
 
 	ComputeOrder();
@@ -535,7 +535,7 @@ void WTreeView::AlphabetSort()
 //
 // Scroll lines.
 //
-void WTreeView::OnMouseScroll( Integer Delta )
+void WTreeView::OnMouseScroll( Int32 Delta )
 {
 	WContainer::OnMouseScroll(Delta);
 
@@ -561,7 +561,7 @@ void WTreeView::ScrollBarChange( WWidget* Sender )
 //
 // Return data of i'th node.
 //
-void* WTreeView::DataOf( Integer iNode )
+void* WTreeView::DataOf( Int32 iNode )
 {
 	return iNode != -1 ? Nodes[iNode].Data : nullptr;
 }
@@ -570,9 +570,9 @@ void* WTreeView::DataOf( Integer iNode )
 //
 // Find a last render item with parent.
 //
-Integer WTreeView::FindLastChildren( Integer iParent )
+Int32 WTreeView::FindLastChildren( Int32 iParent )
 {
-	for( Integer i=RenderOrder.Num()-1; i>=0; i-- )
+	for( Int32 i=RenderOrder.Num()-1; i>=0; i-- )
 		if( Nodes[RenderOrder[i]].iParent == iParent )
 			return i;
 

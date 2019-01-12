@@ -25,7 +25,7 @@ TPalette::TPalette( const TPalette& Other )
 		    Other.Colors.Num() <= 256 );
 
 	Colors.SetNum( Other.Colors.Num() );
-	for( Integer i=0; i<Other.Colors.Num(); i++ )
+	for( Int32 i=0; i<Other.Colors.Num(); i++ )
 		Colors[i]	= Other.Colors[i];
 }
 
@@ -33,7 +33,7 @@ TPalette::TPalette( const TPalette& Other )
 //
 // Palette allocator.
 //
-void TPalette::Allocate( DWord NumCols )
+void TPalette::Allocate( UInt32 NumCols )
 {
 	assert( NumCols > 0 && NumCols <= 256 );
 	Colors.SetNum( NumCols );
@@ -53,20 +53,20 @@ void TPalette::Release()
 // Find the most close color from palette.
 // Don't compare alpha channel.
 //
-Byte TPalette::FindMatched( TColor InColor )
+UInt8 TPalette::FindMatched( TColor InColor )
 {
 #define R_FACTOR	30
 #define G_FACTOR	59
 #define B_FACTOR	11
 
-	Byte Best = 0;
-	Integer BestCost = 0x7fffffff, Cost;
+	UInt8 Best = 0;
+	Int32 BestCost = 0x7fffffff, Cost;
 
-	for( Integer i=0; i < Colors.Num(); i++ )
+	for( Int32 i=0; i < Colors.Num(); i++ )
 	{
-		Cost	= R_FACTOR * Sqr( (Integer)InColor.R - (Integer)Colors[i].R ) +
-			      G_FACTOR * Sqr( (Integer)InColor.G - (Integer)Colors[i].G ) +
-				  B_FACTOR * Sqr( (Integer)InColor.B - (Integer)Colors[i].B );
+		Cost	= R_FACTOR * Sqr( (Int32)InColor.R - (Int32)Colors[i].R ) +
+			      G_FACTOR * Sqr( (Int32)InColor.G - (Int32)Colors[i].G ) +
+				  B_FACTOR * Sqr( (Int32)InColor.B - (Int32)Colors[i].B );
 
 		if( Cost < BestCost )
 		{
@@ -141,7 +141,7 @@ void FBitmap::Erase()
 // Initialize bitmap, used to setup bitmap
 // use it only in editor.
 //
-void FBitmap::Init( Integer InU, Integer InV )
+void FBitmap::Init( Int32 InU, Int32 InV )
 {
 	// Resolution should be power of two.
     assert(((InU)&(InU-1)) == 0);
@@ -176,7 +176,7 @@ void FBitmap::Init( Integer InU, Integer InV )
 // Handle mouse click in subclasses. For
 // dynamic bitmaps.
 //
-void FBitmap::MouseClick( Integer Button, Integer X, Integer Y )
+void FBitmap::MouseClick( Int32 Button, Int32 X, Int32 Y )
 {
 }
 
@@ -185,7 +185,7 @@ void FBitmap::MouseClick( Integer Button, Integer X, Integer Y )
 // Handle mouse move in subclasses. For
 // dynamic bitmaps.
 //
-void FBitmap::MouseMove( Integer Button, Integer X, Integer Y )
+void FBitmap::MouseMove( Int32 Button, Int32 X, Int32 Y )
 {
 }
 
@@ -277,7 +277,7 @@ void FBitmap::Import( CImporterBase& Im )
 	{
 		Palette.Allocate( Im.ImportInteger( L"NumColors" ) );
 
-		for( Integer iColor=0; iColor<Palette.Colors.Num(); iColor++ )
+		for( Int32 iColor=0; iColor<Palette.Colors.Num(); iColor++ )
 			Palette.Colors[iColor]	= Im.ImportColor( *String::Format( L"Colors[%d]", iColor ) );
 	}
 }
@@ -299,7 +299,7 @@ void FBitmap::Export( CExporterBase& Ex )
 	if( Format == BF_Palette8 && this->IsA(FDemoBitmap::MetaClass) )
 	{
 		Ex.ExportInteger( L"NumColors", Palette.Colors.Num() );
-		for( Integer iColor=0; iColor<Palette.Colors.Num(); iColor++ )
+		for( Int32 iColor=0; iColor<Palette.Colors.Num(); iColor++ )
 			Ex.ExportColor( *String::Format( L"Colors[%d]", iColor ), Palette.Colors[iColor] );
 	}
 }
@@ -352,7 +352,7 @@ SizeT TStaticBitmap::GetBlockSize()
 //
 // Allocate static bitmap data.
 //
-Bool TStaticBitmap::AllocateBlock( SizeT NumBytes, DWord ExtraFlags )
+Bool TStaticBitmap::AllocateBlock( SizeT NumBytes, UInt32 ExtraFlags )
 {
 	assert(NumBytes > 0);
 	Data.SetNum( NumBytes );
@@ -413,8 +413,8 @@ public:
 		Class		= FBitmap::MetaClass;
 
 		// Plot cells.
-		for( Integer v=0; v<16; v++ )
-		for( Integer u=0; u<16; u++ )
+		for( Int32 v=0; v<16; v++ )
+		for( Int32 u=0; u<16; u++ )
 		{
 			ChessPattern[v][u].R	= (( u ^ v ) << 3) + 32;
 			ChessPattern[v][u].G	= (( u ^ v ) << 3) + 32;
@@ -430,7 +430,7 @@ public:
 	{
 		return ChessPattern;
 	}
-	Bool AllocateBlock( SizeT NumBytes, DWord ExtraFlags )
+	Bool AllocateBlock( SizeT NumBytes, UInt32 ExtraFlags )
 	{
 		return false;
 	}

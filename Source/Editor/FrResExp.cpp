@@ -50,15 +50,15 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 		if( Bitmap->Format == BF_Palette8 )
 		{
 			// Unpack to save as RGB.
-			Byte*	Data	= (Byte*)Bitmap->GetData();
-			for( Integer V=0; V<Bitmap->VSize; V++ )
+			UInt8*	Data	= (UInt8*)Bitmap->GetData();
+			for( Int32 V=0; V<Bitmap->VSize; V++ )
 			{
-				Byte* Line	= &Data[(Bitmap->VSize-V-1) << Bitmap->UBits];
+				UInt8* Line	= &Data[(Bitmap->VSize-V-1) << Bitmap->UBits];
 
-				for( Integer U=0; U<Bitmap->USize; U++ )
+				for( Int32 U=0; U<Bitmap->USize; U++ )
 				{
 					TColor	C			= Bitmap->Palette.Colors[Line[U]];
-					Byte	Buffer[3]	= { C.B, C.G, C.R };
+					UInt8	Buffer[3]	= { C.B, C.G, C.R };
 					Saver.SerializeData( Buffer, 3 );
 				}
 			}
@@ -67,13 +67,13 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 		{
 			// Save as RGB.
 			TColor* Data	= (TColor*)Bitmap->GetData();
-			for( Integer V=0; V<Bitmap->VSize; V++ )
+			for( Int32 V=0; V<Bitmap->VSize; V++ )
 			{
 				TColor* Line	= &Data[(Bitmap->VSize-V-1) << Bitmap->UBits];
 
-				for( Integer U=0; U<Bitmap->USize; U++ )
+				for( Int32 U=0; U<Bitmap->USize; U++ )
 				{
-					Byte Buffer[3] = { Line[U].B, Line[U].G, Line[U].R };
+					UInt8 Buffer[3] = { Line[U].B, Line[U].G, Line[U].R };
 					Saver.SerializeData( Buffer, 3 );
 				}
 			}
@@ -87,16 +87,16 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 #pragma pack(push,1)
 	struct TGAHeader
 	{
-		Byte		FileType;
-		Byte		ColorMapType;
-		Byte		ImageType;
-		Byte		ColorMapSpec[5];
-		Byte		OrigX[2];
-		Byte		OrigY[2];
-		Byte		Width[2];
-		Byte		Height[2];
-		Byte		BPP;
-		Byte		ImageInfo;
+		UInt8		FileType;
+		UInt8		ColorMapType;
+		UInt8		ImageType;
+		UInt8		ColorMapSpec[5];
+		UInt8		OrigX[2];
+		UInt8		OrigY[2];
+		UInt8		Width[2];
+		UInt8		Height[2];
+		UInt8		BPP;
+		UInt8		ImageInfo;
 	};
 #pragma pack(pop)
 		CFileSaver Saver(Directory+L"\\"+Bitmap->FileName);
@@ -120,13 +120,13 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 
 		// Save as RGBA.
 		TColor* Data	= (TColor*)Bitmap->GetData();
-		for( Integer V=0; V<Bitmap->VSize; V++ )
+		for( Int32 V=0; V<Bitmap->VSize; V++ )
 		{
 			TColor* Line	= &Data[(Bitmap->VSize-V-1) << Bitmap->UBits];
 
-			for( Integer U=0; U<Bitmap->USize; U++ )
+			for( Int32 U=0; U<Bitmap->USize; U++ )
 			{
-				Byte Buffer[4] = { Line[U].B, Line[U].G, Line[U].R, Line[U].A };
+				UInt8 Buffer[4] = { Line[U].B, Line[U].G, Line[U].R, Line[U].A };
 				Saver.SerializeData( Buffer, 4 );
 			}
 		}
@@ -143,8 +143,8 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 		if( Bitmap->Format == BF_Palette8 )
 		{
 			Depalettized = new TColor[Bitmap->USize * Bitmap->VSize];
-			Byte* Pixels = (Byte*)Bitmap->GetData();
-			for( Integer i=0; i<Bitmap->USize*Bitmap->VSize; i++ )
+			UInt8* Pixels = (UInt8*)Bitmap->GetData();
+			for( Int32 i=0; i<Bitmap->USize*Bitmap->VSize; i++ )
 				Depalettized[i] = Bitmap->Palette.Colors[Pixels[i]];
 		}
 
@@ -188,7 +188,7 @@ Bool ExportScript( FScript* Script, String Directory )
 	if( Script->IsScriptable() )
 	{
 		CTextWriter	TextFile(Directory+L"\\"+Script->FileName);
-		for( Integer iLine=0; iLine<Script->Text.Num(); iLine++ )
+		for( Int32 iLine=0; iLine<Script->Text.Num(); iLine++ )
 			TextFile.WriteString( Script->Text[iLine] );
 		return true;
 	}

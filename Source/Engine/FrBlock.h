@@ -27,7 +27,7 @@ class TDataBlock
 public:
 	// TDataBlock interface.
 	TDataBlock();
-	TDataBlock( Integer InSize );
+	TDataBlock( Int32 InSize );
 	~TDataBlock();	
 
 	// Friends.
@@ -46,10 +46,10 @@ public:
 private:
 	// Variables.
 	void*			Data;
-	DWord			Flags;
+	UInt32			Flags;
 	SizeT			Size;
 	Double			Cost;
-	DWord			FileRecord;
+	UInt32			FileRecord;
 };
 
 
@@ -67,18 +67,18 @@ public:
 	CBlockManager();
 	CBlockManager( String InFileName );
 	~CBlockManager();
-	void* GetBlock( Integer iBlock );
-	DWord GetBlockSize( Integer iBlock );
+	void* GetBlock( Int32 iBlock );
+	UInt32 GetBlockSize( Int32 iBlock );
 
 	// In-game routines.
 	void LoadMetadata();
 	void Flush();
-	void UploadBlock( Integer iBlock );
+	void UploadBlock( Int32 iBlock );
 	void Tick( Float Delta );
 
 	// In-editor routines.
-	Integer AllocateBlock( Integer BytesCount, DWord ExtraFlags = BLOCK_None );
-	void ReleaseBlock( Integer iBlock );
+	Int32 AllocateBlock( Int32 BytesCount, UInt32 ExtraFlags = BLOCK_None );
+	void ReleaseBlock( Int32 iBlock );
 	void LoadAllBlocks( String InFileName );
 	void SaveAllBlocks( String InFileName );
 

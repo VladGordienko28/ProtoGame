@@ -16,7 +16,7 @@ public:
 	// CShell public interface.
 	CShell();
 	~CShell();
-	Integer Run( Integer ArgC, Char* ArgV[] );
+	Int32 Run( Int32 ArgC, Char* ArgV[] );
 
 	// CApplication interface.
 	void SetCaption( String NewCaption ) override;

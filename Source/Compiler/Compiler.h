@@ -2,11 +2,10 @@
 	Compiler.h: Compiler general include file.
 	Copyright Jul.2016 Vlad Gordienko.
 =============================================================================*/
-#ifndef _FLU_COMPILER_
-#define _FLU_COMPILER_
+#pragma once
 
 // Flu includes.
-#include "..\Engine\Engine.h"
+#include "Engine\Engine.h"
 
 /*-----------------------------------------------------------------------------
 	Top level compiler functions.
@@ -23,8 +22,8 @@ namespace Compiler
 	public:
 		FScript*	Script;
 		String		Message;
-		Integer		ErrorPos;
-		Integer		ErrorLine;
+		Int32		ErrorPos;
+		Int32		ErrorLine;
 	};
 
 	//
@@ -40,8 +39,6 @@ namespace Compiler
 	extern Bool DropAllScripts( CObjectDatabase* InDatabase );
 };
 
-
-#endif
 /*-----------------------------------------------------------------------------
     The End.
 -----------------------------------------------------------------------------*/

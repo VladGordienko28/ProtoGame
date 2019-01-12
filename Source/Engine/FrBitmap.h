@@ -15,10 +15,10 @@ class FTexture: public FResource
 REGISTER_CLASS_H(FTexture);
 public:
 	// Variables.
-	Byte				UBits;		
-	Byte				VBits;
-	Integer				USize;
-	Integer				VSize;
+	UInt8				UBits;		
+	UInt8				VBits;
+	Int32				USize;
+	Int32				VSize;
 
 	// FTexture interface.
 	FTexture();
@@ -42,9 +42,9 @@ public:
 	// Functions.
 	TPalette();
 	TPalette( const TPalette& Other );
-	void Allocate( DWord NumCols );
+	void Allocate( UInt32 NumCols );
 	void Release();
-	Byte FindMatched( TColor InColor );
+	UInt8 FindMatched( TColor InColor );
 	friend void Serialize( CSerializer& S, TPalette& V );
 };
 
@@ -105,7 +105,7 @@ public:
 	// Render styles.
 	EBitmapFilter		Filter;
 	EBitmapBlend		BlendMode;
-	Integer				RenderInfo;
+	Int32				RenderInfo;
 
 	// Simple effects.
 	Float				PanUSpeed;
@@ -125,10 +125,10 @@ public:
 	FBitmap();
 	~FBitmap();
 	void Tick();
-	virtual void Init( Integer InU, Integer InV );
+	virtual void Init( Int32 InU, Int32 InV );
 	virtual void Erase();
-	virtual void MouseClick( Integer Button, Integer X, Integer Y );
-	virtual void MouseMove( Integer Button, Integer X, Integer Y );
+	virtual void MouseClick( Int32 Button, Int32 X, Int32 Y );
+	virtual void MouseMove( Int32 Button, Int32 X, Int32 Y );
 	virtual void Redraw();
 
 	// FObject interface.
@@ -151,14 +151,14 @@ class TStaticBitmap: public FBitmap
 {
 public:
 	// Variables.
-	TArray<Byte>		Data;
+	TArray<UInt8>		Data;
 
 	// TStaticBitmap interface.
 	TStaticBitmap();
 	~TStaticBitmap();
 
 	// FLargeResource interface.
-	Bool AllocateBlock( SizeT NumBytes, DWord ExtraFlags = BLOCK_None );
+	Bool AllocateBlock( SizeT NumBytes, UInt32 ExtraFlags = BLOCK_None );
 	Bool ReleaseBlock();
 	Bool IsValidBlock() const;
 	SizeT GetBlockSize();

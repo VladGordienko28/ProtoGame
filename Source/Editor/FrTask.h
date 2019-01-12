@@ -21,7 +21,7 @@ public:
 	void BeginTask( String TaskName ) override;
 	void EndTask() override;
 	void UpdateDetails( String Details ) override;
-	void SetProgress( Integer Numerator, Integer Denominator ) override;
+	void SetProgress( Int32 Numerator, Int32 Denominator ) override;
 
 	// WForm interface.
 	void Hide();

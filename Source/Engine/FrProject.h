@@ -77,8 +77,8 @@ public:
 	// Window relative.
 	Bool				bQuitByEsc;
 	EAppWindowType		WindowType;
-	Integer				DefaultWidth;
-	Integer				DefaultHeight;
+	Int32				DefaultWidth;
+	Int32				DefaultHeight;
 
 	// FProjectInfo interface.
 	FProjectInfo();

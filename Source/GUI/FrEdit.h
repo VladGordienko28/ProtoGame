@@ -37,11 +37,11 @@ public:
 
 	// WWidget interface.
 	void OnDeactivate();
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
-	void OnDblClick( EMouseButton Button, Integer X, Integer Y );
-	void OnKeyDown( Integer Key );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
+	void OnDblClick( EMouseButton Button, Int32 X, Int32 Y );
+	void OnKeyDown( Int32 Key );
 	void OnCharType( Char TypedChar );
 	void OnPaint( CGUIRenderBase* Render );
 
@@ -51,16 +51,16 @@ public:
 
 protected:
 	// Internal.
-	Integer		ScrollX;
-	Integer		CaretBegin;
-	Integer		CaretEnd;
+	Int32		ScrollX;
+	Int32		CaretBegin;
+	Int32		CaretEnd;
 	TSize		CharSize;
 	Float		OldFloat;
-	Integer		OldInteger;
+	Int32		OldInt32;
 	Bool		bDrawSelection;
 
-	Integer CaretToPixel( Integer C );
-	Integer PixelToCaret( Integer X );
+	Int32 CaretToPixel( Int32 C );
+	Int32 PixelToCaret( Int32 X );
 	void ScrollToCaret();
 	void SelectAll();
 	void ClearSelected();
@@ -82,24 +82,24 @@ public:
 	union
 	{
 		struct{ Float FMin; Float FMax; Float FScale; };
-		struct{ Integer IMin; Integer IMax; Integer IScale; };
+		struct{ Int32 IMin; Int32 IMax; Int32 IScale; };
 	};
 
 	// WSpinner interface.
 	WSpinner( WContainer* InOwner, WWindow* InRoot );
-	void SetRange( Integer InMin, Integer InMax, Integer InScale=1 );
+	void SetRange( Int32 InMin, Int32 InMax, Int32 InScale=1 );
 	void SetRange( Float InMin, Float InMax, Float InScale=1.f );
-	void SetValue( Integer InValue, Bool bNotify = true );
+	void SetValue( Int32 InValue, Bool bNotify = true );
 	void SetValue( Float InValue, Bool bNotify = true );
-	Integer GetIntValue() const;
+	Int32 GetIntValue() const;
 	Float GetFloatValue() const;
 
 	// WWidget interface.
 	void OnPaint( CGUIRenderBase* Render );
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
-	void OnDblClick( EMouseButton Button, Integer X, Integer Y );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
+	void OnDblClick( EMouseButton Button, Int32 X, Int32 Y );
 	void OnDeactivate();
 
 	// WEdit interface.
@@ -108,10 +108,10 @@ public:
 
 private:
 	// Spinner internal.
-	Integer			iSpinButton;
-	Integer			LastCursorY;
+	Int32			iSpinButton;
+	Int32			LastCursorY;
 
-	void Increment( bool bNegative, Integer Multiplier );
+	void Increment( bool bNegative, Int32 Multiplier );
 	void FixValue();
 };
 

@@ -70,7 +70,7 @@ REGISTER_CLASS_H(FLevel)
 public:
 	// Variables.
 	FLevel*					Original;
-	DWord					RndFlags;
+	UInt32					RndFlags;
 
 	// Database.
 	TArray<FEntity*>		Entities;
@@ -121,8 +121,8 @@ public:
 	FEntity* CreateEntity( FScript* InScript, String InName, TVector InLocation );
 	void DestroyEntity( FEntity* Entity );
 	FEntity* FindEntity( String InName );
-	Integer GetEntityIndex( FEntity* Entity );
-	void ReleaseEntity( Integer iEntity );
+	Int32 GetEntityIndex( FEntity* Entity );
+	void ReleaseEntity( Int32 iEntity );
 
 	// Collisions.
 	FBrushComponent* TestPointGeom( const TVector& P );

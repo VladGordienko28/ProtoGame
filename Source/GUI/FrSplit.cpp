@@ -33,7 +33,7 @@ WHSplitBox::WHSplitBox( WContainer* InOwner, WWindow* InRoot )
 //
 // Mouse move on splitter.
 //
-void WHSplitBox::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WHSplitBox::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WContainer::OnMouseMove( Button, X, Y );
 
@@ -48,7 +48,7 @@ void WHSplitBox::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse release button on splitter.
 //
-void WHSplitBox::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WHSplitBox::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WContainer::OnMouseUp( Button, X, Y );
 
@@ -63,7 +63,7 @@ void WHSplitBox::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse down on splitter.
 // 
-void WHSplitBox::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WHSplitBox::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WContainer::OnMouseDown( Button, X, Y );
 
@@ -190,7 +190,7 @@ WVSplitBox::WVSplitBox( WContainer* InOwner, WWindow* InRoot )
 //
 // Mouse move on splitter.
 //
-void WVSplitBox::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WVSplitBox::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WContainer::OnMouseMove( Button, X, Y );
 
@@ -205,7 +205,7 @@ void WVSplitBox::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse release button on splitter.
 //
-void WVSplitBox::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WVSplitBox::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WContainer::OnMouseUp( Button, X, Y );
 
@@ -220,7 +220,7 @@ void WVSplitBox::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse down on splitter.
 // 
-void WVSplitBox::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WVSplitBox::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WContainer::OnMouseDown( Button, X, Y );
 

@@ -36,7 +36,7 @@ FScript::~FScript()
 	if( !IsStatic() )
 	{
 		// Kill extra components.
-		for( Integer e=0; e<Components.Num(); e++ )
+		for( Int32 e=0; e<Components.Num(); e++ )
 			DestroyObject( Components[e], false );
 
 		// Kill the base.
@@ -67,17 +67,17 @@ FScript::~FScript()
 	}
 
 	// Script objects.
-	for( Integer i=0; i<StaticFunctions.Num(); i++ )
+	for( Int32 i=0; i<StaticFunctions.Num(); i++ )
 		delete StaticFunctions[i];
-	for( Integer i=0; i<Statics.Num(); i++ )
+	for( Int32 i=0; i<Statics.Num(); i++ )
 		delete Statics[i];
-	for( Integer i=0; i<Methods.Num(); i++ )
+	for( Int32 i=0; i<Methods.Num(); i++ )
 		delete Methods[i];
-	for( Integer i=0; i<Properties.Num(); i++ )
+	for( Int32 i=0; i<Properties.Num(); i++ )
 		delete Properties[i];
-	for( Integer i=0; i<Enums.Num(); i++ )
+	for( Int32 i=0; i<Enums.Num(); i++ )
 		delete Enums[i];
-	for( Integer i=0; i<Structs.Num(); i++ )
+	for( Int32 i=0; i<Structs.Num(); i++ )
 		delete Structs[i];
 
 	// kill the thread.
@@ -102,7 +102,7 @@ FScript::~FScript()
 //
 FComponent* FScript::FindComponent( String InName )
 {
-	for( Integer e=0; e<Components.Num(); e++ )
+	for( Int32 e=0; e<Components.Num(); e++ )
 		if( Components[e]->GetName() == InName )
 			return Components[e];
 
@@ -115,7 +115,7 @@ FComponent* FScript::FindComponent( String InName )
 //
 CFunction* FScript::FindMethod( String TestName )
 {
-	for( Integer i=0; i<Methods.Num(); i++ )
+	for( Int32 i=0; i<Methods.Num(); i++ )
 		if( TestName == Methods[i]->Name )
 			return Methods[i];
 
@@ -128,7 +128,7 @@ CFunction* FScript::FindMethod( String TestName )
 //
 CFunction* FScript::FindStaticFunction( String TestName )
 {
-	for( Integer i=0; i<StaticFunctions.Num(); i++ )
+	for( Int32 i=0; i<StaticFunctions.Num(); i++ )
 		if( TestName == StaticFunctions[i]->Name )
 			return StaticFunctions[i];
 
@@ -221,8 +221,8 @@ struct TEnumIndex
 {
 public:
 	// Variables.
-	Integer	iScript;
-	Integer	iEnum;
+	Int32	iScript;
+	Int32	iEnum;
 
 	// TEnumIndex interface.
 	TEnumIndex()
@@ -286,8 +286,8 @@ struct TStructIndex
 {
 public:
 	// Variables.
-	Integer	iScript;
-	Integer	iStruct;
+	Int32	iScript;
+	Int32	iStruct;
 
 	// TStructIndex interface.
 	TStructIndex()
@@ -385,14 +385,14 @@ void Serialize( CSerializer& S, CProperty*& V )
 	{
 		if( S.GetMode() == SM_Load )
 		{
-			Integer iClass;
+			Int32 iClass;
 			Serialize( S, iClass );
 			V->Class = CClassDatabase::GClasses[iClass];
 		}
 		else
 		{
 			assert(V->Class);
-			Integer iClass = CClassDatabase::GClasses.FindItem(V->Class);
+			Int32 iClass = CClassDatabase::GClasses.FindItem(V->Class);
 			assert(iClass != -1);
 			Serialize( S, iClass );
 		}
@@ -451,13 +451,13 @@ void Serialize( CSerializer& S, CFunction*& V )
 	{
 		if( S.GetMode() == SM_Load )
 		{
-			Integer Index;
+			Int32 Index;
 			Serialize( S, Index );
 			V->ResultVar	= (Index!=-1) ? V->Locals[Index] : nullptr;
 		}
 		else if( S.GetMode() == SM_Save )
 		{
-			Integer Index = V->ResultVar ? V->Locals.FindItem(V->ResultVar) : -1;
+			Int32 Index = V->ResultVar ? V->Locals.FindItem(V->ResultVar) : -1;
 			Serialize( S, Index );
 		}
 	}
@@ -573,7 +573,7 @@ void FScript::SerializeThis( CSerializer& S )
 			// Events and VF table.
 			if( S.GetMode() == SM_Load )
 			{
-				Integer NumEvents, NumVF;
+				Int32 NumEvents, NumVF;
 				Serialize( S, NumEvents );
 				Serialize( S, NumVF );
 				assert(_EVENT_MAX == NumEvents);
@@ -583,34 +583,34 @@ void FScript::SerializeThis( CSerializer& S )
 				VFTable.SetNum(NumVF);
 				Events.SetNum(NumEvents);
 
-				for( Integer i=0; i<NumEvents; i++ )
+				for( Int32 i=0; i<NumEvents; i++ )
 				{
-					Integer Tmp;
+					Int32 Tmp;
 					Serialize( S, Tmp );
 					Events[i]	= Tmp != -1 ? Methods[Tmp] : nullptr;
 				}
-				for( Integer i=0; i<NumVF; i++ )
+				for( Int32 i=0; i<NumVF; i++ )
 				{
-					Integer Tmp;
+					Int32 Tmp;
 					Serialize( S, Tmp );
 					VFTable[i]	= Tmp != -1 ? Methods[Tmp] : nullptr;
 				}
 			}
 			else if( S.GetMode() == SM_Save )
 			{
-				Integer NumEvents	= Events.Num(),
+				Int32 NumEvents	= Events.Num(),
 						NumVF		= VFTable.Num();
 				Serialize( S, NumEvents );
 				Serialize( S, NumVF );
 
-				for( Integer i=0; i<NumEvents; i++ )
+				for( Int32 i=0; i<NumEvents; i++ )
 				{
-					Integer Tmp	= Methods.FindItem(Events[i]);
+					Int32 Tmp	= Methods.FindItem(Events[i]);
 					Serialize( S, Tmp );
 				}
-				for( Integer i=0; i<NumVF; i++ )
+				for( Int32 i=0; i<NumVF; i++ )
 				{
-					Integer Tmp	= Methods.FindItem(VFTable[i]);
+					Int32 Tmp	= Methods.FindItem(VFTable[i]);
 					Serialize( S, Tmp );
 				}
 			}
@@ -682,9 +682,9 @@ CThreadCode::CThreadCode()
 // Find a label by it's name.
 // Returns label index, if not found return -1.
 //
-Integer CThreadCode::GetLabelId( const Char* InName )
+Int32 CThreadCode::GetLabelId( const Char* InName )
 {
-	for( Integer i=0; i<Labels.Num(); i++ )
+	for( Int32 i=0; i<Labels.Num(); i++ )
 		if( Labels[i].Name == InName )
 			return i;
 
@@ -696,7 +696,7 @@ Integer CThreadCode::GetLabelId( const Char* InName )
 // Add a new label. If label already exists
 // break the app. Return index of the new label.
 //
-Integer CThreadCode::AddLabel( const Char* InName, Word InAddr )
+Int32 CThreadCode::AddLabel( const Char* InName, UInt16 InAddr )
 {
 	assert(GetLabelId(InName) == -1);
 
@@ -727,7 +727,7 @@ CFunction::CFunction()
 CFunction::~CFunction()
 {
 	// Destroy local variables.
-	for( Integer i=0; i<Locals.Num(); i++ )
+	for( Int32 i=0; i<Locals.Num(); i++ )
 		delete Locals[i];
 
 	Locals.Empty();
@@ -740,7 +740,7 @@ CFunction::~CFunction()
 String CFunction::GetSignature() const
 {
 	String Args;
-	for( Integer i=0; i<ParmsCount; i++ )
+	for( Int32 i=0; i<ParmsCount; i++ )
 	{
 		Args += Locals[i]->TypeName() + L" " + Locals[i]->Name;
 		if( i != ParmsCount-1 )
@@ -786,7 +786,7 @@ CInstanceBuffer::~CInstanceBuffer()
 //
 void CInstanceBuffer::DestroyValues()
 {
-	for( Integer i=0; i<Properties.Num(); i++ )
+	for( Int32 i=0; i<Properties.Num(); i++ )
 	{
 		CProperty* P = Properties[i];
 		P->DestroyValue( &Data[P->Offset] );
@@ -801,10 +801,10 @@ void CInstanceBuffer::DestroyValues()
 //
 void CInstanceBuffer::CopyValues( void* Source )
 {
-	for( Integer i=0; i<Properties.Num(); i++ )
+	for( Int32 i=0; i<Properties.Num(); i++ )
 	{
 		CProperty* P = Properties[i];
-		P->CopyValue( &Data[P->Offset], &((Byte*)Source)[P->Offset] );
+		P->CopyValue( &Data[P->Offset], &((UInt8*)Source)[P->Offset] );
 	}
 }
 
@@ -814,7 +814,7 @@ void CInstanceBuffer::CopyValues( void* Source )
 //
 void CInstanceBuffer::ExportValues( CExporterBase& Ex )
 {
-	for( Integer i=0; i<Properties.Num(); i++ )
+	for( Int32 i=0; i<Properties.Num(); i++ )
 	{
 		CProperty* P = Properties[i];
 		P->Export( &Data[P->Offset], Ex );
@@ -827,7 +827,7 @@ void CInstanceBuffer::ExportValues( CExporterBase& Ex )
 //
 void CInstanceBuffer::ImportValues( CImporterBase& Im )
 {
-	for( Integer i=0; i<Properties.Num(); i++ )
+	for( Int32 i=0; i<Properties.Num(); i++ )
 	{
 		CProperty* P = Properties[i];
 		P->Import( &Data[P->Offset], Im );
@@ -840,7 +840,7 @@ void CInstanceBuffer::ImportValues( CImporterBase& Im )
 //
 void CInstanceBuffer::SerializeValues( CSerializer& S )
 {
-	for( Integer i=0; i<Properties.Num(); i++ )
+	for( Int32 i=0; i<Properties.Num(); i++ )
 	{
 		CProperty* P = Properties[i];
 		P->SerializeValue( &Data[P->Offset], S );
@@ -853,7 +853,7 @@ void CInstanceBuffer::SerializeValues( CSerializer& S )
 //
 Bool CInstanceBuffer::NeedDestruction() const
 {
-	for( Integer i=0; i<Properties.Num(); i++ )
+	for( Int32 i=0; i<Properties.Num(); i++ )
 		if( Properties[i]->NeedDestruction() )
 			return true;
 

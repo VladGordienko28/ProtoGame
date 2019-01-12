@@ -21,8 +21,8 @@ private:
 	// Splash internal.
 	HWND		hWnd;
 	HBITMAP		hBitmap;
-	Integer		XSize;
-	Integer		YSize;
+	Int32		XSize;
+	Int32		YSize;
 };
 
 
@@ -62,7 +62,7 @@ CSplash::CSplash( LPCTSTR BitmapID )
 		Info->bmiHeader.biYPelsPerMeter	= 2834;
 
 		// Flip palette RGBA -> BGR.
-		for( Integer i=0; i<Bitmap->Palette.Colors.Num(); i++ )
+		for( Int32 i=0; i<Bitmap->Palette.Colors.Num(); i++ )
 		{
 			TColor Col = Bitmap->Palette.Colors[i];
 			Info->bmiColors[i].rgbBlue		= Col.B;
@@ -76,9 +76,9 @@ CSplash::CSplash( LPCTSTR BitmapID )
 		YSize		= Bitmap->VSize;
 
 		// Flip image.
-		Byte*	Data	= (Byte*)Bitmap->GetData();
-		Byte	Buffer[1024];
-		for( Integer V=0; V<Bitmap->VSize/2; V++ )
+		UInt8*	Data	= (UInt8*)Bitmap->GetData();
+		UInt8	Buffer[1024];
+		for( Int32 V=0; V<Bitmap->VSize/2; V++ )
 		{
 			MemCopy( Buffer, &Data[V*Bitmap->USize], Bitmap->USize );
 			MemCopy( &Data[V*Bitmap->USize], &Data[(Bitmap->VSize-V-1)*Bitmap->USize], Bitmap->USize );

@@ -118,7 +118,7 @@ void WWidget::SetOwner( WContainer* InOwner )
 //
 // Set a new component size.
 //
-void WWidget::SetSize( Integer NewWidth, Integer NewHeight )
+void WWidget::SetSize( Int32 NewWidth, Int32 NewHeight )
 {
 	Size.Width = NewWidth;
 	Size.Height = NewHeight;
@@ -132,7 +132,7 @@ void WWidget::SetSize( Integer NewWidth, Integer NewHeight )
 //
 // Set a widget location.
 //
-void WWidget::SetLocation( Integer NewX, Integer NewY )
+void WWidget::SetLocation( Int32 NewX, Int32 NewY )
 {
 	Location.X	= NewX;
 	Location.Y	= NewY;
@@ -308,7 +308,7 @@ void WWidget::OnPaint( CGUIRenderBase* Render )
 //
 // Drag something.
 //
-void WWidget::OnDragOver( void* Data, Integer X, Integer Y, Bool& bAccept )
+void WWidget::OnDragOver( void* Data, Int32 X, Int32 Y, Bool& bAccept )
 {
 	bAccept	= false;
 }
@@ -327,23 +327,23 @@ void WWidget::OnMouseEnter()
 {}
 void WWidget::OnMouseLeave()
 {}
-void WWidget::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WWidget::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {}
-void WWidget::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WWidget::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {}
-void WWidget::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WWidget::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {}
-void WWidget::OnDblClick( EMouseButton Button, Integer X, Integer Y )
+void WWidget::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 {}
-void WWidget::OnKeyDown( Integer Key )
+void WWidget::OnKeyDown( Int32 Key )
 {}
-void WWidget::OnKeyUp( Integer Key )
+void WWidget::OnKeyUp( Int32 Key )
 {}
 void WWidget::OnCharType( Char TypedChar )
 {}
-void WWidget::OnMouseScroll( Integer Delta )
+void WWidget::OnMouseScroll( Int32 Delta )
 {}
-void WWidget::OnDragDrop( void* Data, Integer X, Integer Y )
+void WWidget::OnDragDrop( void* Data, Int32 X, Int32 Y )
 {}
 
 
@@ -379,7 +379,7 @@ WContainer::~WContainer()
 //
 WWidget* WContainer::GetWidgetAt( TPoint P ) const
 {
-	for( Integer i=Children.Num()-1; i >= 0; i-- )
+	for( Int32 i=Children.Num()-1; i >= 0; i-- )
 		if	( 
 				Children[i]->bEnabled && 
 				Children[i]->bVisible && 
@@ -410,7 +410,7 @@ void WContainer::WidgetProc( EWidgetProcEvent Event, TWidProcParms Parms )
 	{
 		case WPE_Paint:
 			WWidget::WidgetProc( Event, Parms );
-			for( Integer i=0; i<Children.Num(); i++ )
+			for( Int32 i=0; i<Children.Num(); i++ )
 				if( Children[i]->bVisible )
 					Children[i]->WidgetProc( Event, Parms );
 			break;
@@ -464,7 +464,7 @@ void WContainer::WidgetProc( EWidgetProcEvent Event, TWidProcParms Parms )
 
 		case WPE_Resize:
 			AlignChildren();
-			for( Integer i=0; i<Children.Num(); i++ )
+			for( Int32 i=0; i<Children.Num(); i++ )
 				Children[i]->WidgetProc( Event, Parms );
 
 			WWidget::WidgetProc( Event, Parms );
@@ -481,13 +481,13 @@ void WContainer::WidgetProc( EWidgetProcEvent Event, TWidProcParms Parms )
 //
 void WContainer::AlignChildren()
 {
-	Integer	MinX	= Padding.Left, 
+	Int32	MinX	= Padding.Left, 
 			MinY	= Padding.Top, 
 			MaxX	= Size.Width-Padding.Right, 
 			MaxY	= Size.Height-Padding.Bottom;
 
 	// Top widgets.
-	for( Integer i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.Num(); i++ )
 		if( Children[i]->Align == AL_Top )
 		{
 			WWidget* W	= Children[i];
@@ -502,7 +502,7 @@ void WContainer::AlignChildren()
 		}
 
 	// Bottom.
-	for( Integer i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.Num(); i++ )
 		if( Children[i]->Align == AL_Bottom )
 		{
 			WWidget* W	= Children[i];
@@ -518,7 +518,7 @@ void WContainer::AlignChildren()
 
 		
 	// Left widgets.
-	for( Integer i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.Num(); i++ )
 		if( Children[i]->Align == AL_Left )
 		{
 			WWidget* W	= Children[i];
@@ -533,7 +533,7 @@ void WContainer::AlignChildren()
 		}
 		
 	// Right widgets.
-	for( Integer i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.Num(); i++ )
 		if( Children[i]->Align == AL_Right )
 		{
 			WWidget* W	= Children[i];
@@ -548,7 +548,7 @@ void WContainer::AlignChildren()
 		}
 
 	// Client widget, just first one.
-	for( Integer i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.Num(); i++ )
 		if( Children[i]->Align == AL_Client )
 		{
 			WWidget* W	= Children[i];
@@ -565,7 +565,7 @@ void WContainer::AlignChildren()
 
 /*
 	// Notify all children.
-	for( Integer i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.Num(); i++ )
 		Children[i]->WidgetProc( WPE_Resize, TWidProcParms() );
 */
 }
@@ -580,11 +580,11 @@ void WContainer::ShuffleChildren()
 	TArray<WWidget*> Stored = Children;
 	Children.Empty();
 
-	for( Integer i=0; i<Stored.Num(); i++ )
+	for( Int32 i=0; i<Stored.Num(); i++ )
 		if( !Stored[i]->bStayOnTop )
 			Children.Push( Stored[i] );
 
-	for( Integer i=0; i<Stored.Num(); i++ )
+	for( Int32 i=0; i<Stored.Num(); i++ )
 		if( Stored[i]->bStayOnTop )
 			Children.Push( Stored[i] );
 
@@ -762,7 +762,7 @@ void WWindow::WidgetProc( EWidgetProcEvent Event, TWidProcParms Parms )
 		// Modal should be at top of the top.
 		if( Modal != Children.Last() )
 		{
-			Integer iModal = Children.FindItem(Modal);
+			Int32 iModal = Children.FindItem(Modal);
 			assert(iModal != -1);
 			while( iModal < Children.Num()-1 )
 			{
@@ -841,7 +841,7 @@ void WWindow::WidgetProc( EWidgetProcEvent Event, TWidProcParms Parms )
 				break;
 	
 			case WPE_Paint:
-				for( Integer i=0; i<Children.Num(); i++ )
+				for( Int32 i=0; i<Children.Num(); i++ )
 					if( Children[i]->bVisible )
 					{
 						Parms.Render->SetBrightness( Children[i] == Modal ? 1.f : 0.5f );
@@ -1046,14 +1046,14 @@ struct TBitmapFileHeader
 struct TBitmapInfoHeader
 {
 	DWord		biSize;
-	Integer		biWidth;
-	Integer		biHeight;
+	Int32		biWidth;
+	Int32		biHeight;
 	Word		biPlanes;
 	Word		biBitCount;
 	DWord		biCompression;
 	DWord		biSizeImage;
-	Integer		biXPelsPerMeter;
-	Integer		biYPelsPerMeter;
+	Int32		biXPelsPerMeter;
+	Int32		biYPelsPerMeter;
 	DWord		biClrUsed;
 	DWord		biClrImportant;
 };
@@ -1137,9 +1137,9 @@ TGUIBitmap* WWindow::LoadBitmap( String FileName )
 	{
 		// Regular 24/32 bit image.
 		// Warning! Bitmaps are V-flipped, so reverse should be here.
-		Integer iPix = 0;
-		for( Integer v=Bitmap->VSize-1; v>=0; v-- )
-		for( Integer u=0; u<Bitmap->USize; u++ )
+		Int32 iPix = 0;
+		for( Int32 v=Bitmap->VSize-1; v>=0; v-- )
+		for( Int32 u=0; u<Bitmap->USize; u++ )
 		{
 			// Load pixel.
 			Byte RawPix[4];
@@ -1180,7 +1180,7 @@ TGUIFont::TGUIFont()
 TGUIFont::~TGUIFont()
 {
 	// Kill manually all pages.
-	for( Integer i=0; i<Bitmaps.Num(); i++ )
+	for( Int32 i=0; i<Bitmaps.Num(); i++ )
 		delete Bitmaps[i];
 }
 
@@ -1199,16 +1199,16 @@ TGUIFont* WWindow::LoadFont( String FileName )
 
 	// Main line.
 	Char Name[64];
-	Integer Height;
+	Int32 Height;
 	fwscanf( File, L"%d %s\n", &Height, Name );
 	
 	// read characters.
 	Font->Height = -1; 
-	Integer NumPages = 0;
+	Int32 NumPages = 0;
 	while( !feof(File) )
 	{
 		Char C[2];
-		Integer X, Y, W, H, iBitmap;
+		Int32 X, Y, W, H, iBitmap;
 		C[0] = *fgetws( C, 2, File );
 		
 		if( (Word)C[0]+1 > Font->Remap.Num() )
@@ -1235,7 +1235,7 @@ TGUIFont* WWindow::LoadFont( String FileName )
 	// Parse directory from the filename.
 	String Directory;
 	{
-		Integer i;
+		Int32 i;
 		for( i=FileName.Len()-1; i>=0; i-- )
 			if( FileName[i] == L'\\' )
 				break;
@@ -1243,7 +1243,7 @@ TGUIFont* WWindow::LoadFont( String FileName )
 	}
 
 	// Load pages.
-	for( Integer i=0; i<NumPages; i++ )
+	for( Int32 i=0; i<NumPages; i++ )
 	{
 		// Set style.
 		FBitmap* B = LoadBitmap( String::Format( L"%s\\%s%d_%d.bmp", *Directory, Name, Height, i ) );

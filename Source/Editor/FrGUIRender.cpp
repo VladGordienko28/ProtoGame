@@ -63,7 +63,7 @@ void CGUIRender::EndPaint()
 void CGUIRender::DrawRegion( TPoint P, TSize S, TColor Color, TColor BorderColor, EBrushPattern Pattern )
 {		
 	// Pattern flag remap.
-	static const DWord PatternFlag[BPAT_MAX] =
+	static const UInt32 PatternFlag[BPAT_MAX] =
 	{
 		POLY_None,
 		POLY_None,
@@ -210,7 +210,7 @@ void CGUIRender::DrawPicture( TPoint P, TSize S, TPoint BP, TSize BS, FTexture* 
 //
 // Draw a GUI text.
 //
-void CGUIRender::DrawText( TPoint P, const Char* Text, Integer Len, TColor Color, FFont* Font )
+void CGUIRender::DrawText( TPoint P, const Char* Text, Int32 Len, TColor Color, FFont* Font )
 {
 	if( Brightness != 1.f )
 		Color *= Brightness;

@@ -110,22 +110,22 @@ union TWidProcParms
 {
 public:
 	// All possible events.
-	struct{ EMouseButton Button; Integer X; Integer Y; };
+	struct{ EMouseButton Button; Int32 X; Int32 Y; };
 	struct{ CGUIRenderBase* Render; };
-	struct{ Integer Key; };
+	struct{ Int32 Key; };
 	struct{ Char TypedChar; };
-	struct{ Integer Delta; };
+	struct{ Int32 Delta; };
 
 	// Constructors.
 	TWidProcParms()
 	{}
-	TWidProcParms( EMouseButton InButton, Integer InX, Integer InY )
+	TWidProcParms( EMouseButton InButton, Int32 InX, Int32 InY )
 		:	Button(InButton),
 			X(InX),
 			Y(InY)
 	{}
-	TWidProcParms( Integer InInteger )
-		:	Key(InInteger)
+	TWidProcParms( Int32 InInt32 )
+		:	Key(InInt32)
 	{}
 	TWidProcParms( CGUIRenderBase* InRender )
 		:	Render(InRender)
@@ -165,16 +165,16 @@ struct TArea
 {
 public:
 	// Variables.
-	Integer		Top;
-	Integer		Bottom;
-	Integer		Left;
-	Integer		Right;
+	Int32		Top;
+	Int32		Bottom;
+	Int32		Left;
+	Int32		Right;
 
 	// Constructors.
 	TArea()
 		:	Top(0), Bottom(0), Left(0), Right(0)
 	{}
-	TArea( Integer InTop, Integer InBottom, Integer InLeft, Integer InRight )
+	TArea( Int32 InTop, Int32 InBottom, Int32 InLeft, Int32 InRight )
 		:	Top(InTop), Bottom(InBottom), Left(InLeft), Right(InRight)
 	{}
 };
@@ -198,8 +198,8 @@ struct TPoint
 {
 public:
 	// Variables.
-	Integer X;
-	Integer Y;
+	Int32 X;
+	Int32 Y;
 
 	static const TPoint Zero;
 
@@ -207,7 +207,7 @@ public:
 	TPoint()
 		:	X(0), Y(0)
 	{}
-	TPoint( Integer InX, Integer InY )
+	TPoint( Int32 InX, Int32 InY )
 		:	X( InX ), Y( InY )
 	{}
 	TPoint operator+=( const TPoint& P )
@@ -252,18 +252,18 @@ struct TSize
 {
 public:
 	// Variables.
-	Integer		Width;
-	Integer		Height;
+	Int32		Width;
+	Int32		Height;
 
 	// TSize interface.
 	TSize()
 		:	Width(0),
 			Height(0)
 	{}
-	TSize( Integer InSide )
+	TSize( Int32 InSide )
 		:	Width( InSide ), Height( InSide ) 
 	{}
-	TSize( Integer InWidth, Integer InHeight )
+	TSize( Int32 InWidth, Int32 InHeight )
 		:	Width(InWidth),
 			Height(InHeight)
 	{}
@@ -305,7 +305,7 @@ public:
 	virtual void DrawRegion( TPoint P, TSize S, TColor Color, TColor BorderColor, EBrushPattern Pattern ) = 0;
 	virtual void SetClipArea( TPoint P, TSize S ) = 0;
 	virtual void DrawPicture( TPoint P, TSize S, TPoint BP, TSize BS, FTexture* Texture ) = 0;
-	virtual void DrawText( TPoint P, const Char* Text, Integer Len, TColor Color, FFont* Font ) = 0;
+	virtual void DrawText( TPoint P, const Char* Text, Int32 Len, TColor Color, FFont* Font ) = 0;
 	virtual void SetBrightness( Float Brig ) = 0;
 
 	// CGUIRenderBase utility.
@@ -349,28 +349,28 @@ public:
 	Bool IsFocused() const;
 	Bool IsChildFocused() const;
 	Bool IsChildOf( WWidget* TestOwner ) const;
-	void SetLocation( Integer NewX, Integer NewY );
-	void SetSize( Integer NewWidth, Integer NewHeight );
+	void SetLocation( Int32 NewX, Int32 NewY );
+	void SetSize( Int32 NewWidth, Int32 NewHeight );
 	void BeginDrag( void* Data );
 	virtual void WidgetProc( EWidgetProcEvent Event, TWidProcParms Parms );
 
 	// Own events.
 	virtual void OnActivate();
 	virtual void OnDeactivate();
-	virtual void OnDblClick( EMouseButton Button, Integer X, Integer Y );    
+	virtual void OnDblClick( EMouseButton Button, Int32 X, Int32 Y );    
 	virtual void OnPaint( CGUIRenderBase* Render );
 	virtual void OnResize();
 	virtual void OnMouseEnter();
 	virtual void OnMouseLeave();
-	virtual void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-	virtual void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
-	virtual void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
-	virtual void OnKeyDown( Integer Key );
-	virtual void OnKeyUp( Integer Key );
+	virtual void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	virtual void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
+	virtual void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
+	virtual void OnKeyDown( Int32 Key );
+	virtual void OnKeyUp( Int32 Key );
 	virtual void OnCharType( Char TypedChar );
-	virtual void OnMouseScroll( Integer Delta );
-	virtual void OnDragOver( void* Data, Integer X, Integer Y, Bool& bAccept );
-	virtual void OnDragDrop( void* Data, Integer X, Integer Y );
+	virtual void OnMouseScroll( Int32 Delta );
+	virtual void OnDragOver( void* Data, Int32 X, Int32 Y, Bool& bAccept );
+	virtual void OnDragDrop( void* Data, Int32 X, Int32 Y );
 
 private:
 	// Widget internal.

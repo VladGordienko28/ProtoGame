@@ -32,7 +32,7 @@ private:
 	struct TParam
 	{
 		String	Name;
-		Byte*	Address;
+		UInt8*	Address;
 	};
 
 	// Internal.
@@ -78,8 +78,8 @@ public:
 
 	// WWidget interface.
 	void OnPaint( CGUIRenderBase* Render );
-	void OnDblClick( EMouseButton Button, Integer X, Integer Y );   
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
+	void OnDblClick( EMouseButton Button, Int32 X, Int32 Y );   
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
 
 private:
 	// Internal.
@@ -91,7 +91,7 @@ private:
 	WPopupMenu*			TypePopup;
 
 	// Variables.
-	Integer			iSelected;
+	Int32			iSelected;
 
 	// Notifications.
 	void ButtonAddLayerClick( WWidget* Sender );
@@ -129,9 +129,9 @@ public:
 
 	// WWidget interface.
 	void OnPaint( CGUIRenderBase* Render );				// Render page content!!!!! better !!!!
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
 	void OnResize();
 
 	// WEditorPage interface.

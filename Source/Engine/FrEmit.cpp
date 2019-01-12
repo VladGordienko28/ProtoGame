@@ -72,11 +72,11 @@ void FEmitterComponent::EditChange()
 	FExtraComponent::EditChange();
 
 	// Clamp tiles count.
-	NumUTiles	= Clamp<Byte>( NumUTiles, 1, 4 );
-	NumVTiles	= Clamp<Byte>( NumVTiles, 1, 4 );
+	NumUTiles	= Clamp<UInt8>( NumUTiles, 1, 4 );
+	NumVTiles	= Clamp<UInt8>( NumVTiles, 1, 4 );
 
 	// Clamp particles limit.
-	MaxParticles	= Clamp<Integer>( MaxParticles, 1, MAX_PARTICLES );
+	MaxParticles	= Clamp<Int32>( MaxParticles, 1, MAX_PARTICLES );
 }
 
 
@@ -107,7 +107,7 @@ TRect FEmitterComponent::GetCloudRect()
 	Result.Min		= Base->Location;
 	Result.Max		= Base->Location;
 
-	for( Integer i=0; i<NumPrts; i++ )
+	for( Int32 i=0; i<NumPrts; i++ )
 	{
 		TParticle& P = Particles[i];
 
@@ -146,7 +146,7 @@ void FEmitterComponent::Tick( Float Delta )
 	// Reallocate list, if need.
 	if( MaxParticles != Particles.Num() )
 	{
-		MaxParticles	= Clamp<Integer>( MaxParticles, 1, MAX_PARTICLES );
+		MaxParticles	= Clamp<Int32>( MaxParticles, 1, MAX_PARTICLES );
 		NumPrts			= 0;
 		Particles.SetNum( MaxParticles );
 	}
@@ -212,13 +212,13 @@ void FEmitterComponent::SerializeThis( CSerializer& S )
 	{
 		// Really reduce particles count, it's can crash
 		// even CObjectDatabase!
-		Integer NumToSave = Min( 100, NumPrts );
+		Int32 NumToSave = Min( 100, NumPrts );
 		if( NumToSave )
 			S.SerializeData( &Particles[0], NumToSave*sizeof(TParticle) );
 	}
 	else if( S.GetMode() == SM_Load )
 	{
-		Integer NumToLoad = Min( 100, NumPrts );
+		Int32 NumToLoad = Min( 100, NumPrts );
 		Particles.SetNum(NumToLoad);
 		if( NumToLoad )
 			S.SerializeData( &Particles[0], NumToLoad*sizeof(TParticle) );
@@ -275,7 +275,7 @@ void FLissajousEmitterComponent::UpdateEmitter( Float DeltaTime )
 	Accumulator += DeltaTime;
 
 	// Spawn new particles.
-	Integer NewPrts = Trunc( Accumulator * EmitPerSec );
+	Int32 NewPrts = Trunc( Accumulator * EmitPerSec );
 	if( NewPrts > 0 )
 		Accumulator = 0.f;
 	while( NewPrts>0 && NumPrts<MaxParticles )
@@ -311,7 +311,7 @@ void FLissajousEmitterComponent::UpdateEmitter( Float DeltaTime )
 	}
 	
 	// Process Lissajous physics.
-	for( Integer i=0; i<NumPrts;  )
+	for( Int32 i=0; i<NumPrts;  )
 	{
 		TParticle& P = Particles[i];
 
@@ -404,7 +404,7 @@ void FWeatherEmitterComponent::UpdateEmitter( Float Delta )
 	Accumulator += Delta;
 
 	// Spawn new particles.
-	Integer NewPrts = Trunc( Accumulator * EmitPerSec );
+	Int32 NewPrts = Trunc( Accumulator * EmitPerSec );
 	if( NewPrts > 0 )
 		Accumulator = 0.f;
 	while( NewPrts>0 && NumPrts<MaxParticles )
@@ -452,7 +452,7 @@ void FWeatherEmitterComponent::UpdateEmitter( Float Delta )
 	}
 
 	// Process weather physics.
-	for( Integer i=0; i<NumPrts;  )
+	for( Int32 i=0; i<NumPrts;  )
 	{
 		TParticle& P = Particles[i];
 
@@ -523,7 +523,7 @@ void FPhysEmitterComponent::UpdateEmitter( Float Delta )
 	Accumulator += Delta;
 
 	// Spawn new particles.
-	Integer NewPrts = Trunc( Accumulator * EmitPerSec );
+	Int32 NewPrts = Trunc( Accumulator * EmitPerSec );
 	if( NewPrts > 0 )
 		Accumulator = 0.f;
 	while( NewPrts>0 && NumPrts<MaxParticles )
@@ -561,7 +561,7 @@ void FPhysEmitterComponent::UpdateEmitter( Float Delta )
 	}
 
 	// Process physics.
-	for( Integer i=0; i<NumPrts;  )
+	for( Int32 i=0; i<NumPrts;  )
 	{
 		TParticle& P = Particles[i];
 
@@ -600,13 +600,13 @@ void FPhysEmitterComponent::UpdateEmitter( Float Delta )
 // Keep calm, this take about 8 cycles for 256 palette!!
 // even table usage cost about 16 cycles.
 //
-inline TColor ColorLerp( TColor Color1, TColor Color2, Byte Alpha )
+inline TColor ColorLerp( TColor Color1, TColor Color2, UInt8 Alpha )
 {
 	TColor Result;
-	Result.R = (Integer)(Color1.R) + (((Integer)(Color2.R)-(Integer)(Color1.R))*Alpha >> 8); 
-	Result.G = (Integer)(Color1.G) + (((Integer)(Color2.G)-(Integer)(Color1.G))*Alpha >> 8); 
-	Result.B = (Integer)(Color1.B) + (((Integer)(Color2.B)-(Integer)(Color1.B))*Alpha >> 8); 
-	Result.A = (Integer)(Color1.A) + (((Integer)(Color2.A)-(Integer)(Color1.A))*Alpha >> 8); 
+	Result.R = (Int32)(Color1.R) + (((Int32)(Color2.R)-(Int32)(Color1.R))*Alpha >> 8); 
+	Result.G = (Int32)(Color1.G) + (((Int32)(Color2.G)-(Int32)(Color1.G))*Alpha >> 8); 
+	Result.B = (Int32)(Color1.B) + (((Int32)(Color2.B)-(Int32)(Color1.B))*Alpha >> 8); 
+	Result.A = (Int32)(Color1.A) + (((Int32)(Color2.A)-(Int32)(Color1.A))*Alpha >> 8); 
 	return Result;
 }
 
@@ -668,10 +668,10 @@ void FEmitterComponent::Render( CCanvas* Canvas )
 	// Compute texture coords for each tile, will
 	// be cool to cache it.
 	TVector CoordTable[16][4];
-	for( Integer V=0; V<NumVTiles; V++ )
-	for( Integer U=0; U<NumUTiles; U++ )
+	for( Int32 V=0; V<NumVTiles; V++ )
+	for( Int32 U=0; U<NumUTiles; U++ )
 	{
-		Integer iSlot	= V*NumUTiles+U;
+		Int32 iSlot	= V*NumUTiles+U;
 
 		Float	X1		= (Float)(U+0.f) / (Float)NumUTiles;
 		Float	X2		= (Float)(U+1.f) / (Float)NumUTiles;
@@ -691,7 +691,7 @@ void FEmitterComponent::Render( CCanvas* Canvas )
 	List.Flags			= POLY_Unlit*bUnlit | !(Level->RndFlags & RND_Lighting);
 
 	// Initialize list.
-	for( Integer i=0; i<NumPrts; i++ )
+	for( Int32 i=0; i<NumPrts; i++ )
 	{
 		TParticle&	P = Particles[i];
 		Float		Side = P.Size * 0.5f;
@@ -700,9 +700,9 @@ void FEmitterComponent::Render( CCanvas* Canvas )
 
 		// Interpolate color.
 		if( Alpha < 0.5f )
-			Color	= ColorLerp( Colors[0], Colors[1], (Byte)(Alpha*512) );
+			Color	= ColorLerp( Colors[0], Colors[1], (UInt8)(Alpha*512) );
 		else
-			Color	= ColorLerp( Colors[1], Colors[2], (Byte)((Alpha-0.5f)*512) );
+			Color	= ColorLerp( Colors[1], Colors[2], (UInt8)((Alpha-0.5f)*512) );
 
 		// Particle color.
 		List.Colors[i*4+0]	= Color;

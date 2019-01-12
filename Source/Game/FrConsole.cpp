@@ -147,7 +147,7 @@ void CConsole::Render( CCanvas* Canvas )
 		};
 
 		// History.
-		for( Integer i=0; i<HistTop; i++ )
+		for( Int32 i=0; i<HistTop; i++ )
 			Canvas->DrawText
 			(
 				History[i].Text,
@@ -184,7 +184,7 @@ void CConsole::AddToHistory( String S, ETextColor Color )
 	else
 	{
 		// No available slot, pop last one.
-		for( Integer i=1; i<MAX_CON_HISTORY; i++ )
+		for( Int32 i=1; i<MAX_CON_HISTORY; i++ )
 			History[i-1]	=	History[i];
 
 		History[HistTop-1].Text		= S;
@@ -210,7 +210,7 @@ Bool CConsole::ShowToggle()
 void CConsole::Clear()
 {
 	HistTop	= 0;
-	for( Integer i=0; i<MAX_CON_HISTORY; i++ )
+	for( Int32 i=0; i<MAX_CON_HISTORY; i++ )
 		History[i].Text	= L"";
 }
 

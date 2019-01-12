@@ -29,12 +29,12 @@ public:
 	FLevel*				Level;
 	TArray<FLevel*>		LevelList;
 	CConsole*			Console;
-	Integer				WinWidth;
-	Integer				WinHeight;
+	Int32				WinWidth;
+	Int32				WinHeight;
 
 	// CApplication interface.
 	void SetCaption( String NewCaption );
-	void SetSize( Integer NewWidth, Integer NewHeight, EAppWindowType NewType );
+	void SetSize( Int32 NewWidth, Int32 NewHeight, EAppWindowType NewType );
 	Bool LoadGame( String Directory, String Name );
 	void ConsoleExecute( String Cmd );
 

@@ -24,11 +24,11 @@ public:
 		// WWidget interface.
 		WTilesGrid( WWindow* InRoot, WTileEditor* InEditor );
 		void OnPaint( CGUIRenderBase* Render );
-		void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-		void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
-		void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
-		void OnDragOver( void* Data, Integer X, Integer Y, Bool& bAccept );
-		void OnDragDrop( void* Data, Integer X, Integer Y );
+		void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+		void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
+		void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
+		void OnDragOver( void* Data, Int32 X, Int32 Y, Bool& bAccept );
+		void OnDragDrop( void* Data, Int32 X, Int32 Y );
 	};
 
 	// Variables.
@@ -60,7 +60,7 @@ public:
 	void ButtonRemoveDownClick( WWidget* Sender );
 
 	// WForm interface.
-	void Show( Integer X = 0, Integer Y = 0 );
+	void Show( Int32 X = 0, Int32 Y = 0 );
 	void Hide();
 
 	// CRefsHolder interface.

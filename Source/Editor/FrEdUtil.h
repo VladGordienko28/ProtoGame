@@ -24,7 +24,7 @@ public:
 
 	// CGUIRenderBase interface.
 	void DrawRegion( TPoint P, TSize S, TColor Color, TColor BorderColor, EBrushPattern Pattern );
-	void DrawText( TPoint P, const Char* Text, Integer Len, TColor Color, FFont* Font );
+	void DrawText( TPoint P, const Char* Text, Int32 Len, TColor Color, FFont* Font );
 	void SetClipArea( TPoint P, TSize S );
 	void DrawPicture( TPoint P, TSize S, TPoint BP, TSize BS, FTexture* Texture );
 	void SetBrightness( Float Brig );

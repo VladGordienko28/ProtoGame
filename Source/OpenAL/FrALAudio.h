@@ -53,7 +53,7 @@ struct TAmbientEmitter
 public:
 	FObject*		Owner;
 	FSound*			Sound;
-	Integer			iSource;
+	Int32			iSource;
 	ALfloat			Gain;
 	ALfloat			Pitch;
 	Float			RadiusSq;
@@ -68,7 +68,7 @@ struct TALAmbientSource
 {
 public:
 	ALuint			iALId;
-	Integer			iEmitter;
+	Int32			iEmitter;
 };
 
 

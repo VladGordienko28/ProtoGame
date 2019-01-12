@@ -27,7 +27,7 @@ public:
 	TTimeOfDay()
 		:	DaySeconds(0.f)
 	{}
-	TTimeOfDay( Integer InHour, Integer InMinute=0, Integer InSecond=0 )
+	TTimeOfDay( Int32 InHour, Int32 InMinute=0, Int32 InSecond=0 )
 		:	DaySeconds(((InHour*60.f)+InMinute)*60.f+InSecond*1.f)
 	{}
 	void Tick( Float DeltaSecs )
@@ -48,9 +48,9 @@ public:
 	}
 	String ToString() const
 	{
-		Integer Hour	= Integer(DaySeconds)/60/60 % 12;
-		Integer Minute	= (Integer(DaySeconds) % 3600)/60;
-		Integer Second	= Integer(DaySeconds) % 60;
+		Int32 Hour	= Int32(DaySeconds)/60/60 % 12;
+		Int32 Minute	= (Int32(DaySeconds) % 3600)/60;
+		Int32 Second	= Int32(DaySeconds) % 60;
 		if( Hour == 0 && GetPeriod()==PERIOD_Pm )
 			Hour	= 12;
 		return String::Format( L"%02d:%02d:%02d %s", Hour, Minute, Second, GetPeriod()==PERIOD_Am?L"Am" : L"Pm" );
@@ -73,7 +73,7 @@ struct TDelegate
 {
 public:
 	// Variables.
-	Integer		iMethod;
+	Int32		iMethod;
 	FScript*	Script;
 	FEntity*	Context;
 
@@ -81,7 +81,7 @@ public:
 	TDelegate()
 		:	iMethod(-1), Script(nullptr), Context(nullptr)
 	{}
-	TDelegate( Integer InMethod, FScript* InScript, FEntity* InContext )
+	TDelegate( Int32 InMethod, FScript* InScript, FEntity* InContext )
 		:	iMethod(InMethod),
 			Script(InScript),
 			Context(InContext)
@@ -113,7 +113,7 @@ public:
 	String	Login;
 	String	Password;
 	String	Host;
-	Integer	Port;
+	Int32	Port;
 	String	Path;
 	String	Fragment;
 	TMap<String, String> Query;
@@ -136,7 +136,7 @@ public:
 //
 // Hash functions.
 //
-extern DWord MurmurHash( const Byte* Data, SizeT Size );
+extern UInt32 MurmurHash( const UInt8* Data, SizeT Size );
 
 
 /*-----------------------------------------------------------------------------
@@ -153,7 +153,7 @@ public:
 	virtual void BeginTask( String TaskName ) = 0;
 	virtual void EndTask() = 0;
 	virtual void UpdateDetails( String Details ) = 0;
-	virtual void SetProgress( Integer Numerator, Integer Denominator ) = 0;
+	virtual void SetProgress( Int32 Numerator, Int32 Denominator ) = 0;
 
 	struct THolder
 	{
@@ -176,7 +176,7 @@ public:
 			if( Indicator )
 				Indicator->UpdateDetails(Details);
 		}
-		void SetProgress( Integer Numerator, Integer Denominator )
+		void SetProgress( Int32 Numerator, Int32 Denominator )
 		{
 			if( Indicator )
 				Indicator->SetProgress( Numerator, Denominator );
@@ -197,7 +197,7 @@ class CCmdLineParser
 public:
 	// Parse the first word of the line.
 	// This is should be global command of the line.
-	static String ParseCommand( String Line, Integer iArgNum=0 );
+	static String ParseCommand( String Line, Int32 iArgNum=0 );
 
 	// Parse a flag-option from the line. 
 	// This routine recognize word/char option such as:
@@ -207,7 +207,7 @@ public:
 	// Parse a value param in form:
 	// Name="Bot0" or Mode=1
 	static Bool ParseBoolParam( String Line, String Name, Bool Default=false );
-	static Integer ParseIntParam( String Line, String Name, Integer Default=0 );
+	static Int32 ParseIntParam( String Line, String Name, Int32 Default=0 );
 	static Float ParseFloatParam( String Line, String Name, Float Default=0.f );
 	static String ParseStringParam( String Line, String Name, String Default=L"" );
 };

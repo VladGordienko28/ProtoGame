@@ -117,10 +117,10 @@ void WTabControl::OnPaint( CGUIRenderBase* Render )
 		
 	// Precompute.
 	TPoint Base		= ClientToWindow(TPoint::Zero);
-	Integer	TextY	= HeaderSide == ETH_Top ? 
+	Int32	TextY	= HeaderSide == ETH_Top ? 
 						Base.Y + (19-Root->Font1->Height) / 2 : 
 						Base.Y+Size.Height - Root->Font1->Height - (19-Root->Font1->Height) / 2;
-	Integer XWalk	= Base.X;
+	Int32 XWalk	= Base.X;
 
 	// Draw a master bar.
 	Render->DrawRegion
@@ -137,7 +137,7 @@ void WTabControl::OnPaint( CGUIRenderBase* Render )
 
 	// Draw headers.
 	TColor	ActiveColor;
-	Integer iPage;
+	Int32 iPage;
 	for( iPage=0; iPage<Pages.Num(); iPage++ )
 	{
 		WTabPage* Page = Pages[iPage];
@@ -271,9 +271,9 @@ WTabPage* WTabControl::GetActivePage()
 //
 // Add a new tab and activate it.
 //
-Integer WTabControl::AddTabPage( WTabPage* Page )
+Int32 WTabControl::AddTabPage( WTabPage* Page )
 {
-	Integer iNew		= Pages.Push(Page);
+	Int32 iNew		= Pages.Push(Page);
 	Page->TabControl	= this;
 	
 	ActivateTabPage( iNew );
@@ -285,7 +285,7 @@ Integer WTabControl::AddTabPage( WTabPage* Page )
 //
 // Close tab by its index.
 //
-void WTabControl::CloseTabPage( Integer iPage, Bool bForce )
+void WTabControl::CloseTabPage( Int32 iPage, Bool bForce )
 {
 	assert(iPage>=0 && iPage<Pages.Num());
 
@@ -326,7 +326,7 @@ void WTabControl::CloseTabPage( Integer iPage, Bool bForce )
 //
 // Mouse click on tabs bar.
 //
-void WTabControl::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WTabControl::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WContainer::OnMouseUp( Button, X, Y );
 
@@ -343,7 +343,7 @@ void WTabControl::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 	// Close tab via middle button.
 	if( Button == MB_Middle )
 	{
-		Integer iPage = XToIndex(X);
+		Int32 iPage = XToIndex(X);
 
 		if( iPage != -1 )
 			CloseTabPage(iPage);
@@ -358,7 +358,7 @@ void WTabControl::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 //
 // When mouse hover tabs bar.
 //
-void WTabControl::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WTabControl::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WContainer::OnMouseMove( Button, X, Y );
 
@@ -371,8 +371,8 @@ void WTabControl::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 	else
 	{
 		// Process tab drag.
-		Integer XWalk = 0;
-		for( Integer i=0; i<Pages.Num(); i++  )
+		Int32 XWalk = 0;
+		for( Int32 i=0; i<Pages.Num(); i++  )
 			if( Pages[i] != DragPage )
 				XWalk += Pages[i]->TabWidth;
 			else
@@ -380,14 +380,14 @@ void WTabControl::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 
 		while( X < XWalk )
 		{
-			Integer iDrag = Pages.FindItem( DragPage );
+			Int32 iDrag = Pages.FindItem( DragPage );
 			if( iDrag <= 0 ) break;
 			XWalk -= Pages[iDrag-1]->TabWidth;
 			Pages.Swap( iDrag, iDrag-1 );
 		}
 		while( X > XWalk+DragPage->TabWidth )
 		{
-			Integer iDrag = Pages.FindItem( DragPage );
+			Int32 iDrag = Pages.FindItem( DragPage );
 			if( iDrag >= Pages.Num()-1 ) break;
 			XWalk += Pages[iDrag+1]->TabWidth;
 			Pages.Swap( iDrag, iDrag+1 );
@@ -403,7 +403,7 @@ void WTabControl::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 //
 // When mouse press tabs bar.
 //
-void WTabControl::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WTabControl::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WContainer::OnMouseDown( Button, X, Y );
 
@@ -412,14 +412,14 @@ void WTabControl::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 	{
 		// Setup popup and show it.
 		Popup->Items.Empty();
-		for( Integer i=0; i<Pages.Num(); i++ )
+		for( Int32 i=0; i<Pages.Num(); i++ )
 			Popup->AddItem( Pages[i]->Caption, WIDGET_EVENT(WTabControl::PopupPageClick), true );
 
 		Popup->Show( TPoint( Size.Width, HeaderSide==ETH_Top ? 20 : Size.Height-20 ) );
 		return;
 	}
 
-	Integer iClicked	= XToIndex(X);
+	Int32 iClicked	= XToIndex(X);
 	iCross				= XYToCross( X, Y );
 
 	// Activate pressed.
@@ -442,12 +442,12 @@ void WTabControl::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 //
 // Activate an iPage.
 //
-void WTabControl::ActivateTabPage( Integer iPage )
+void WTabControl::ActivateTabPage( Int32 iPage )
 {
 	assert(iPage>=0 && iPage<Pages.Num());
 
 	// Hide all.
-	for( Integer i=0; i<Pages.Num(); i++ )
+	for( Int32 i=0; i<Pages.Num(); i++ )
 		Pages[i]->bVisible	= false;
 
 	// Show and activate.
@@ -470,7 +470,7 @@ void WTabControl::ActivateTabPage( Integer iPage )
 //
 void WTabControl::ActivateTabPage( WTabPage* Page )
 {
-	Integer iPage = Pages.FindItem( Page );
+	Int32 iPage = Pages.FindItem( Page );
 	assert(iPage != -1);
 	ActivateTabPage( iPage );
 }
@@ -493,11 +493,11 @@ void WTabControl::OnMouseLeave()
 // Convert mouse X to tab index, if mouse outside
 // any tabs return -1.
 //
-Integer WTabControl::XToIndex( Integer InX )
+Int32 WTabControl::XToIndex( Int32 InX )
 {
-	Integer XWalk = 0;
+	Int32 XWalk = 0;
 
-	for( Integer i=0; i<Pages.Num(); i++ )
+	for( Int32 i=0; i<Pages.Num(); i++ )
 	{
 		WTabPage* Page = Pages[i];
 			
@@ -519,9 +519,9 @@ Integer WTabControl::XToIndex( Integer InX )
 // Figure out index of close cross on tab.
 // It no cross around - return -1.
 //
-Integer WTabControl::XYToCross( Integer InX, Integer InY )
+Int32 WTabControl::XYToCross( Int32 InX, Int32 InY )
 {
-	Integer XWalk = 0;
+	Int32 XWalk = 0;
 
 	// Fast Y rejection.
 	if( HeaderSide == ETH_Top )
@@ -536,7 +536,7 @@ Integer WTabControl::XYToCross( Integer InX, Integer InY )
 	}
 
 	// Iterate through pages list.
-	for( Integer i=0; i<Pages.Num(); i++ )
+	for( Int32 i=0; i<Pages.Num(); i++ )
 	{
 		WTabPage* Page = Pages[i];
 			
@@ -564,7 +564,7 @@ void WTabControl::PopupPageClick( WWidget* Sender )
 {
 	// Figure out chosen page.
 	WTabPage* Chosen = nullptr;
-	for( Integer i=0; i<Popup->Items.Num(); i++ )
+	for( Int32 i=0; i<Popup->Items.Num(); i++ )
 		if( Popup->Items[i].bChecked )
 		{
 			Chosen	= Pages[i];
@@ -576,7 +576,7 @@ void WTabControl::PopupPageClick( WWidget* Sender )
 	while( Pages[0] != Chosen )
 	{
 		WTabPage* First = Pages[0];
-		for( Integer i=0; i<Pages.Num()-1; i++ )
+		for( Int32 i=0; i<Pages.Num()-1; i++ )
 			Pages[i] = Pages[i+1];
 		Pages[Pages.Num()-1]	= First;
 	}

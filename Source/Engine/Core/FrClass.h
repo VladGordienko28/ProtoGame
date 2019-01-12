@@ -24,16 +24,16 @@ class CEnum
 public:
 	// Variables.
 	String			Name;
-	DWord			Flags;
+	UInt32			Flags;
 	TArray<String>	Elements;
 
 	// CEnum interface.
-	CEnum( const Char* InName, DWord InFlags=ENUM_Native );
-	CEnum( const Char* InName, DWord InFlags, FScript* Script );
+	CEnum( const Char* InName, UInt32 InFlags=ENUM_Native );
+	CEnum( const Char* InName, UInt32 InFlags, FScript* Script );
 	~CEnum();
-	Integer AddElement( String NewElem );
-	Integer FindElem( String TestName );
-	String GetAliasOf( Integer i );
+	Int32 AddElement( String NewElem );
+	Int32 FindElem( String TestName );
+	String GetAliasOf( Int32 i );
 };
 
 
@@ -95,7 +95,7 @@ class CTypeInfo
 public:
 	// Variables.
 	EPropType	Type;
-	Integer		ArrayDim;
+	Int32		ArrayDim;
 
 	// Array dim indicates:
 	// -1 - Dynamic array property.
@@ -110,13 +110,13 @@ public:
 		struct{ CClass*		Class;				  };		// TYPE_Resource;
 		struct{ FScript*	Script; int iFamily;  };		// TYPE_Entity;
 		struct{ CStruct*	Struct;				  };		// TYPE_Struct;
-		struct{ Integer		iSignature;			  };		// TYPE_Delegate;
+		struct{ Int32		iSignature;			  };		// TYPE_Delegate;
 		struct{ void*		Inner;				  };		// Payload;
 	};
 
 	// Constructors.
 	CTypeInfo();
-	CTypeInfo( EPropType InType, Integer InArrDim = 1, void* InInner = nullptr );
+	CTypeInfo( EPropType InType, Int32 InArrDim = 1, void* InInner = nullptr );
 
 	// CTypeInfo interface.	
 	SizeT TypeSize( Bool bNoArray = false ) const;	
@@ -133,7 +133,7 @@ public:
 	Bool IsSimpleType() const;
 
 	// Dynamic array helpers.
-	void SetArrayLength( void* Addr, Integer NewLength ) const;
+	void SetArrayLength( void* Addr, Int32 NewLength ) const;
 };
 
 
@@ -145,7 +145,7 @@ class CProperty: public CTypeInfo
 public:
 	// Variables.
 	String		Name;
-	DWord		Flags;
+	UInt32		Flags;
 	SizeT		Offset;
 
 	// Constructors.
@@ -158,14 +158,14 @@ public:
 		CClass* Class, 
 		const Char* InName, 
 		EPropType PropType, 
-		Integer InArrDim, 
+		Int32 InArrDim, 
 		void* InInner,
-		DWord InFlags,
+		UInt32 InFlags,
 		SizeT Offset 
 	);
 
 	// FluScript constructor.
-	CProperty( CTypeInfo InType, String InName, DWord InFlags, SizeT InOffset );
+	CProperty( CTypeInfo InType, String InName, UInt32 InFlags, SizeT InOffset );
 
 	// CProperty interface.
 	void Export( const void* Addr, CExporterBase& Ex ) const
@@ -200,7 +200,7 @@ class CStruct
 public:
 	// Variables.
 	String				Name;
-	DWord				Flags;
+	UInt32				Flags;
 	TArray<CProperty*>	Members;
 	SizeT				Size;
 
@@ -240,15 +240,15 @@ public:
 	EPropType		Type;
 	struct  
 	{
-		Byte		Value[16];
+		UInt8		Value[16];
 		String		StringValue;
 	};
 
 	// CVariant interface.
 	CVariant();
-	CVariant( Byte InByte );
+	CVariant( UInt8 InByte );
 	CVariant( Bool InBool );
-	CVariant( Integer InInteger );
+	CVariant( Int32 InInteger );
 	CVariant( Float InFloat );
 	CVariant( TAngle InAngle );
 	CVariant( TColor InColor );
@@ -302,32 +302,32 @@ public:
 	enum{ MAX_PARAMETERS = 8 };
 
 	// Variables.
-	DWord			Flags;
+	UInt32			Flags;
 	String			Name;
 	CClass*			Class;		// Class this method being or null.
 	CTypeInfo		ResultType;
 	TParameter		Params[MAX_PARAMETERS];
-	Integer			NumParams;
-	DWord			Priority;
+	Int32			NumParams;
+	UInt32			Priority;
 
 	union
 	{
-		Integer			iOpCode;
+		Int32			iOpCode;
 		TNativeMethod	ptrMethod;
 		TNativeFunction	ptrFunction;
 	};
 
 	// Function constructor.
-	CNativeFunction( const Char* InName, DWord InFlags, Integer InOpCode );
+	CNativeFunction( const Char* InName, UInt32 InFlags, Int32 InOpCode );
 
 	// Method constructor.
 	CNativeFunction( const Char* InName, CClass* InClass, TNativeMethod InMethod );
 
 	// Extended function constructor.
-	CNativeFunction( const Char* InName, DWord InFlags, TNativeFunction InFunction );
+	CNativeFunction( const Char* InName, UInt32 InFlags, TNativeFunction InFunction );
 
 	// CNativeFunction interface.
-	Integer AddParameter( const Char* ParamName, const CTypeInfo& ParamType );
+	Int32 AddParameter( const Char* ParamName, const CTypeInfo& ParamType );
 	void SetResultType( const CTypeInfo& InResultType );
 
 	// Utils.
@@ -364,7 +364,7 @@ class CClass
 public:
 	// Variables.
 	String			Name;
-	DWord			Flags;
+	UInt32			Flags;
 	CClass*			Super;
 	TConstructor	Constructor;
 
@@ -373,7 +373,7 @@ public:
 	TArray<CNativeFunction*>	Methods;
 
 	// CClass interface.
-	CClass( const Char* InName, TConstructor InCnstr, CClass* InSuper, DWord InFlags );
+	CClass( const Char* InName, TConstructor InCnstr, CClass* InSuper, UInt32 InFlags );
 	~CClass();
 	void AddProperty( CProperty* InProp );
 	void AddMethod( CNativeFunction* InMeth );
@@ -424,7 +424,7 @@ public:
 //
 // Macro to figure out property offset.
 //
-#define PROPERTY_OFFSET(object, field) (SizeT)((Byte*)&((object*)nullptr)->field - (Byte*)nullptr) 
+#define PROPERTY_OFFSET(object, field) (SizeT)((UInt8*)&((object*)nullptr)->field - (UInt8*)nullptr) 
 
 
 //
@@ -464,15 +464,15 @@ public:
 //
 
 // [TYPE_Byte]
-inline CTypeInfo _Cpp2FluType( Byte* Value )
+inline CTypeInfo _Cpp2FluType( UInt8* Value )
 {
 	return CTypeInfo(TYPE_Byte, 1, nullptr);
 }
-template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( Byte(*Value)[ArrLen] )
+template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( UInt8(*Value)[ArrLen] )
 {
 	return CTypeInfo( TYPE_Byte, ArrLen, nullptr );
 }
-inline CTypeInfo _Cpp2FluType( TArray<Byte>* Value )
+inline CTypeInfo _Cpp2FluType( TArray<UInt8>* Value )
 {
 	return CTypeInfo( TYPE_Byte, -1, nullptr );
 }
@@ -492,15 +492,15 @@ inline CTypeInfo _Cpp2FluType( TArray<Bool>* Value )
 }
 
 // [TYPE_Integer]
-inline CTypeInfo _Cpp2FluType( Integer* Value )
+inline CTypeInfo _Cpp2FluType( Int32* Value )
 {
 	return CTypeInfo(TYPE_Integer, 1, nullptr);
 }
-template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( Integer(*Value)[ArrLen] )
+template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( Int32(*Value)[ArrLen] )
 {
 	return CTypeInfo( TYPE_Integer, ArrLen, nullptr );
 }
-inline CTypeInfo _Cpp2FluType( TArray<Integer>* Value )
+inline CTypeInfo _Cpp2FluType( TArray<Int32>* Value )
 {
 	return CTypeInfo( TYPE_Integer, -1, nullptr );
 }
@@ -655,7 +655,7 @@ template<class E> inline CTypeInfo _Cpp2FluType( E* Value )
 
 		// Freaky way to ignore namespace prefix.
 		if( !Struct )
-			for( Integer i=0; i<CClassDatabase::GStructs.Num(); i++ )
+			for( Int32 i=0; i<CClassDatabase::GStructs.Num(); i++ )
 				if( String::Pos(CClassDatabase::GStructs[i]->Name, StructName) != -1 )
 				{
 					Struct = CClassDatabase::GStructs[i];

@@ -184,7 +184,7 @@ void CGizmo::Perform
 //
 // Test hit with translation gizmo.
 //
-static EGizmoAxis HitTranslationGizmo( const TViewInfo& View, Float Size, Integer Cx, Integer Cy, const TCoords& ToLocal, const TVector& Scale )
+static EGizmoAxis HitTranslationGizmo( const TViewInfo& View, Float Size, Int32 Cx, Int32 Cy, const TCoords& ToLocal, const TVector& Scale )
 {
 	// Project to screen space.
 	TVector Center, XEnd, YEnd;
@@ -224,7 +224,7 @@ static EGizmoAxis HitTranslationGizmo( const TViewInfo& View, Float Size, Intege
 //
 // Test hit with rotation gizmo.
 //
-static EGizmoAxis HitRotationGizmo( const TViewInfo& View, Float Size, Integer Cx, Integer Cy, const TCoords& ToLocal, const TVector& Scale )
+static EGizmoAxis HitRotationGizmo( const TViewInfo& View, Float Size, Int32 Cx, Int32 Cy, const TCoords& ToLocal, const TVector& Scale )
 {
 	TVector Center, CirclePoint;
 	View.Project( ToLocal.Origin, Center.X, Center.Y );
@@ -241,7 +241,7 @@ static EGizmoAxis HitRotationGizmo( const TViewInfo& View, Float Size, Integer C
 //
 // Test hit with rotation gizmo.
 //
-static EGizmoAxis HitScaleGizmo( const TViewInfo& View, Float Size, Integer Cx, Integer Cy, const TCoords& ToLocal, const TVector& Scale )
+static EGizmoAxis HitScaleGizmo( const TViewInfo& View, Float Size, Int32 Cx, Int32 Cy, const TCoords& ToLocal, const TVector& Scale )
 {
 	TVector Center, XEnd, YEnd;
 	View.Project( ToLocal.Origin, Center.X, Center.Y );
@@ -277,9 +277,9 @@ static EGizmoAxis HitScaleGizmo( const TViewInfo& View, Float Size, Integer Cx, 
 //
 // Return gizmo's axis at specified cursor location.
 //
-EGizmoAxis CGizmo::AxisAt( const TViewInfo& ViewInfo, Integer Cx, Integer Cy )
+EGizmoAxis CGizmo::AxisAt( const TViewInfo& ViewInfo, Int32 Cx, Int32 Cy )
 {
-	static EGizmoAxis(*GizmoHitTable[GIZMO_MAX])( const TViewInfo&, Float, Integer, Integer, const TCoords&, const TVector& ) = 
+	static EGizmoAxis(*GizmoHitTable[GIZMO_MAX])( const TViewInfo&, Float, Int32, Int32, const TCoords&, const TVector& ) = 
 	{
 		HitTranslationGizmo,
 		HitRotationGizmo,

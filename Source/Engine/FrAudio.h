@@ -35,7 +35,7 @@ class FSound: public FResource, public CResourceBlock
 REGISTER_CLASS_H(FSound);
 public:
 	// Variables.
-	Integer			AudioInfo;
+	Int32			AudioInfo;
 
 	// FSound interface.
 	FSound();

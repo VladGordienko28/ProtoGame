@@ -27,8 +27,8 @@ public:
 protected:
 	// Variables.
 	SizeT		Size;
-	Byte*		Top;
-	Byte		*StartAdd, *EndAddr;
+	UInt8*		Top;
+	UInt8		*StartAdd, *EndAddr;
 
 	// No default constructor.
 	CStackPoolBase()
@@ -67,7 +67,7 @@ public:
 
 private:
 	// Variables.
-	Byte	Buffer[align(N, DEFAULT_ALIGNMENT)];
+	UInt8	Buffer[align(N, DEFAULT_ALIGNMENT)];
 };
 
 
@@ -85,7 +85,7 @@ public:
 	CDynamicPool( SizeT InSize )
 	{
 		Size	= InSize;
-		Top		= StartAdd = (Byte*)MemAlloc(align(Size, DEFAULT_ALIGNMENT));
+		Top		= StartAdd = (UInt8*)MemAlloc(align(Size, DEFAULT_ALIGNMENT));
 		EndAddr	= StartAdd + Size;
 	}
 	~CDynamicPool()
@@ -125,11 +125,11 @@ private:
 	// Variables.
 	struct TPage
 	{
-		Byte*	Data;
+		UInt8*	Data;
 		SizeT	NumUsed;
 	};
 	TArray<TPage>	Pages;
-	Integer AddPage();
+	Int32 AddPage();
 };
 
 
@@ -187,7 +187,7 @@ inline Bool CStackPoolBase::CanPush( SizeT NumBytes ) const
 //
 inline void CStackPoolBase::Pop( const void* NewTop )
 {
-	Top	= (Byte*)NewTop;
+	Top	= (UInt8*)NewTop;
 	assert(Top>=StartAdd && Top<EndAddr);
 }
 
@@ -256,7 +256,7 @@ template<SizeT PAGE_SIZE> inline void* CPagePool<PAGE_SIZE>::Alloc( SizeT NumByt
 //
 // Add a new page to pages list.
 //
-template<SizeT PAGE_SIZE> inline Integer CPagePool<PAGE_SIZE>::AddPage()
+template<SizeT PAGE_SIZE> inline Int32 CPagePool<PAGE_SIZE>::AddPage()
 {
 	f_guard;
 

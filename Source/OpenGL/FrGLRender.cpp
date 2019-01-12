@@ -22,7 +22,7 @@ COpenGLRender::COpenGLRender( HWND InhWnd )
 
 	// Initialize OpenGL.
 	PIXELFORMATDESCRIPTOR Pfd;
-	Integer nPixelFormat;
+	Int32 nPixelFormat;
 	MemZero( &Pfd, sizeof(PIXELFORMATDESCRIPTOR) );
 	Pfd.dwFlags		= PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
 	nPixelFormat	= ChoosePixelFormat( hDc, &Pfd );
@@ -44,7 +44,7 @@ COpenGLRender::COpenGLRender( HWND InhWnd )
 //
 // Change the viewport resolution.
 //
-void COpenGLRender::Resize( Integer NewWidth, Integer NewHeight )
+void COpenGLRender::Resize( Int32 NewWidth, Int32 NewHeight )
 {
 	// Clamp.
 	NewWidth	= Clamp( NewWidth,  1, MAX_X_RES );
@@ -95,7 +95,7 @@ void COpenGLRender::Flush()
 
 	// Kill all FBitmap's data.
 	if( GProject )
-		for( Integer i=0; i<GProject->GObjects.Num(); i++ )
+		for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
 			if( GProject->GObjects[i] && GProject->GObjects[i]->IsA(FBitmap::MetaClass) )
 			{
 				FBitmap* Bitmap	= As<FBitmap>(GProject->GObjects[i]);
@@ -368,7 +368,7 @@ void COpenGLCanvas::DrawRect( const TRenderRect& Rect )
 
 		glBegin( GL_POLYGON );
 		{
-			for( Integer i=0; i<4; i++ )
+			for( Int32 i=0; i<4; i++ )
 				glVertex2fv( (GLfloat*)&Verts[i] );
 		}
 		glEnd();
@@ -399,7 +399,7 @@ void COpenGLCanvas::DrawRect( const TRenderRect& Rect )
 			RawTexVerts[3]	= TVector( T2.X, T1.Y );
 
 			// Foreach material layer.
-			for( Integer iLayer=Material->Layers.Num()-1; iLayer>=0; iLayer-- )
+			for( Int32 iLayer=Material->Layers.Num()-1; iLayer>=0; iLayer-- )
 			{
 				FDiffuseLayer* Layer = As<FDiffuseLayer>(Material->Layers[iLayer]);
 				if( !Layer->Bitmap )
@@ -414,7 +414,7 @@ void COpenGLCanvas::DrawRect( const TRenderRect& Rect )
 
 				glBegin( GL_POLYGON );
 				{
-					for( Integer i=0; i<4; i++ )
+					for( Int32 i=0; i<4; i++ )
 					{
 						glTexCoord2fv( (GLfloat*)&FinalTexCoords[i] );
 						glVertex2fv( (GLfloat*)&Verts[i] );
@@ -446,7 +446,7 @@ void COpenGLCanvas::DrawRect( const TRenderRect& Rect )
 
 			glBegin( GL_POLYGON );
 			{
-				for( Integer i=0; i<4; i++ )
+				for( Int32 i=0; i<4; i++ )
 				{
 					glTexCoord2fv( (GLfloat*)&TexVerts[i] );
 					glVertex2fv( (GLfloat*)&Verts[i] );
@@ -505,7 +505,7 @@ void COpenGLCanvas::DrawList( const TRenderList& List )
 
 		// Apply panning if any.
 		if( BitmapPan.SizeSquared() > 0.1f )
-			for( Integer i=0; i<List.NumRects*4; i++ )
+			for( Int32 i=0; i<List.NumRects*4; i++ )
 				List.TexCoords[i]	+= BitmapPan;
 
 		// Render it.
@@ -536,7 +536,7 @@ void COpenGLCanvas::DrawPoly( const TRenderPoly& Poly )
 
 		glBegin( GL_POLYGON );
 		{
-			for( Integer i=0; i<Poly.NumVerts; i++ )
+			for( Int32 i=0; i<Poly.NumVerts; i++ )
 				glVertex2fv( (GLfloat*)&Poly.Vertices[i] );
 		}
 		glEnd();
@@ -558,7 +558,7 @@ void COpenGLCanvas::DrawPoly( const TRenderPoly& Poly )
 			}
 
 			// Foreach material layer.
-			for( Integer iLayer=Material->Layers.Num()-1; iLayer>=0; iLayer-- )
+			for( Int32 iLayer=Material->Layers.Num()-1; iLayer>=0; iLayer-- )
 			{
 				FDiffuseLayer* Layer = As<FDiffuseLayer>(Material->Layers[iLayer]);
 				if( !Layer->Bitmap )
@@ -573,7 +573,7 @@ void COpenGLCanvas::DrawPoly( const TRenderPoly& Poly )
 
 				glBegin( GL_POLYGON );
 				{
-					for( Integer i=0; i<Poly.NumVerts; i++ )
+					for( Int32 i=0; i<Poly.NumVerts; i++ )
 					{
 						glTexCoord2fv( (GLfloat*)&FinalTexCoords[i] );
 						glVertex2fv( (GLfloat*)&Poly.Vertices[i] );
@@ -596,7 +596,7 @@ void COpenGLCanvas::DrawPoly( const TRenderPoly& Poly )
 
 			glBegin( GL_POLYGON );
 			{
-				for( Integer i=0; i<Poly.NumVerts; i++ )
+				for( Int32 i=0; i<Poly.NumVerts; i++ )
 				{
 					TVector T = Poly.TexCoords[i] + BitmapPan;
 					glTexCoord2fv( (GLfloat*)&T );
@@ -616,10 +616,10 @@ void COpenGLCanvas::DrawPoly( const TRenderPoly& Poly )
 //
 // Convert a paletted image to 32-bit image.
 //
-static void* Palette8ToRGBA( Byte* SourceData, TColor* Palette, Integer USize, Integer VSize )
+static void* Palette8ToRGBA( UInt8* SourceData, TColor* Palette, Int32 USize, Int32 VSize )
 {
 	static TColor Buffer512[512*512];
-	Integer i, n;
+	Int32 i, n;
 
     // Doesn't allow palette image with dimension > 512.
 	if( USize*VSize > 512*512 )
@@ -692,7 +692,7 @@ void COpenGLCanvas::SetBitmap( FBitmap* Bitmap, Bool bUnlit )
 								GL_UNSIGNED_BYTE,
 								Palette8ToRGBA
 											( 
-												(Byte*)Bitmap->GetData(), 
+												(UInt8*)Bitmap->GetData(), 
 												&Bitmap->Palette.Colors[0], 
 												Bitmap->USize, 
 												Bitmap->VSize 
@@ -738,7 +738,7 @@ void COpenGLCanvas::SetBitmap( FBitmap* Bitmap, Bool bUnlit )
 									GL_UNSIGNED_BYTE,
 									Palette8ToRGBA
 												( 
-													(Byte*)Bitmap->GetData(), 
+													(UInt8*)Bitmap->GetData(), 
 													&Bitmap->Palette.Colors[0], 
 													Bitmap->USize, 
 													Bitmap->VSize 
@@ -903,7 +903,7 @@ void COpenGLCanvas::SetColor( TColor Color )
 //
 // Set a stipple pattern for poly render.
 //
-void COpenGLCanvas::SetStipple( DWord Stipple )
+void COpenGLCanvas::SetStipple( UInt32 Stipple )
 {
 	Stipple	&= POLY_StippleI | POLY_StippleII;
 
@@ -994,7 +994,7 @@ void COpenGLCanvas::SetClip( const TClipArea& Area )
 		glScissor
 			( 
 				Area.X,
-				(Integer)ScreenHeight - Area.Y - Area.Height,
+				(Int32)ScreenHeight - Area.Y - Area.Height,
 				Area.Width,
 				Area.Height
 			);
@@ -1080,7 +1080,7 @@ bool CGLFluShader::Init( String ShaderName )
 	idAmbientLight		= RegisterUniform( "AmbientLight" );
 
 	// Bind all lights.
-	for( Integer iLight=0; iLight<MAX_LIGHTS; iLight++ )
+	for( Int32 iLight=0; iLight<MAX_LIGHTS; iLight++ )
 	{
 		AnsiChar Buffer[64];
 
@@ -1216,7 +1216,7 @@ Bool CGLFluShader::AddLight( FLightComponent* Light, const TVector& Location, TA
 			break;
 	}
 
-	SetValue1i( idSource->Effect, (Integer)Light->LightType );
+	SetValue1i( idSource->Effect, (Int32)Light->LightType );
 	SetValue4f( idSource->Color, LightColor );
 	SetValue1f( idSource->Brightness, Light->Brightness * Scale );
 	SetValue1f( idSource->Radius, Light->Radius );
@@ -1266,17 +1266,17 @@ void CGLFluShader::SetModeLightmap()
 void drawGrid( COpenGLCanvas* Canvas )
 {
 	// Compute bounds.
-	Integer CMinX = Trunc(Max<Float>( Canvas->View.Bounds.Min.X, -WORLD_HALF ));
-	Integer CMinY = Trunc(Max<Float>( Canvas->View.Bounds.Min.Y, -WORLD_HALF ));
-	Integer CMaxX = Trunc(Min<Float>( Canvas->View.Bounds.Max.X, +WORLD_HALF ));
-	Integer CMaxY = Trunc(Min<Float>( Canvas->View.Bounds.Max.Y, +WORLD_HALF ));
+	Int32 CMinX = Trunc(Max<Float>( Canvas->View.Bounds.Min.X, -WORLD_HALF ));
+	Int32 CMinY = Trunc(Max<Float>( Canvas->View.Bounds.Min.Y, -WORLD_HALF ));
+	Int32 CMaxX = Trunc(Min<Float>( Canvas->View.Bounds.Max.X, +WORLD_HALF ));
+	Int32 CMaxY = Trunc(Min<Float>( Canvas->View.Bounds.Max.Y, +WORLD_HALF ));
 
 	// Pick colors.
 	TColor GridColor0 = TColor( 0x40, 0x40, 0x40, 0xff );
 	TColor GridColor1 = TColor( 0x80, 0x80, 0x80, 0xff );
 	
 	// Vertical lines.
-	for( Integer i=CMinX; i<=CMaxX; i++ )
+	for( Int32 i=CMinX; i<=CMaxX; i++ )
 	{
 		TVector V1( i, -WORLD_HALF );
 		TVector V2( i, +WORLD_HALF );
@@ -1290,7 +1290,7 @@ void drawGrid( COpenGLCanvas* Canvas )
 	}
 
 	// Horizontal lines.
-	for( Integer i=CMinY; i<=CMaxY; i++ )
+	for( Int32 i=CMinY; i<=CMaxY; i++ )
 	{
 		TVector V1( -WORLD_HALF, i );
 		TVector V2( +WORLD_HALF, i );
@@ -1472,7 +1472,7 @@ void drawSkyZone( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& Parent 
 	{
 		Canvas->PushTransform( WestView );
 		{
-			for( Integer i=0; i<Level->RenderObjects.Num(); i++ )
+			for( Int32 i=0; i<Level->RenderObjects.Num(); i++ )
 				Level->RenderObjects[i]->Render( Canvas );
 		}
 		Canvas->PopTransform();
@@ -1483,7 +1483,7 @@ void drawSkyZone( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& Parent 
 	{
 		Canvas->PushTransform( EastView );
 		{
-			for( Integer i=0; i<Level->RenderObjects.Num(); i++ )
+			for( Int32 i=0; i<Level->RenderObjects.Num(); i++ )
 				Level->RenderObjects[i]->Render( Canvas );
 		}
 		Canvas->PopTransform();
@@ -1492,7 +1492,7 @@ void drawSkyZone( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& Parent 
 	// Render central sky piece.
 	Canvas->PushTransform( SkyView );
 	{
-		for( Integer i=0; i<Level->RenderObjects.Num(); i++ )
+		for( Int32 i=0; i<Level->RenderObjects.Num(); i++ )
 			Level->RenderObjects[i]->Render( Canvas );
 
 		// Draw overlay lightmap, in sky coords!
@@ -1561,7 +1561,7 @@ void drawHalfPlaneMirror( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo&
 			*/
 
 			// Render level.
-			for( Integer i=0; i<Level->RenderObjects.Num(); i++ )			
+			for( Int32 i=0; i<Level->RenderObjects.Num(); i++ )			
 				Level->RenderObjects[i]->Render( Canvas );
 
 			// Render overlay lightmap.
@@ -1646,7 +1646,7 @@ void drawHalfPlaneWarp( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& P
 			*/
 
 			// Render level.
-			for( Integer i=0; i<Level->RenderObjects.Num(); i++ )			
+			for( Int32 i=0; i<Level->RenderObjects.Num(); i++ )			
 				Level->RenderObjects[i]->Render( Canvas );
 
 			// Render overlay lightmap.
@@ -1686,7 +1686,7 @@ void drawFullScreenRect()
 //
 // Render entire level!
 //
-void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Integer X, Integer Y, Integer W, Integer H )
+void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int32 Y, Int32 W, Int32 H )
 {
 	Canvas->MasterFBO->Bind( Canvas->ScreenWidth, Canvas->ScreenHeight );
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -1797,7 +1797,7 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Integer X, In
 			}
 
 		// Render all objects in master view.
-		for( Integer i=0; i<Level->RenderObjects.Num(); i++ )
+		for( Int32 i=0; i<Level->RenderObjects.Num(); i++ )
 			Level->RenderObjects[i]->Render( Canvas );
 
 		// Draw addition-lighting lightmap.
@@ -2020,7 +2020,7 @@ bool CGLShaderBase::Init( String ShaderName )
 //
 // Register a new uniform variable.
 //
-Integer CGLShaderBase::RegisterUniform( AnsiChar* Name )
+Int32 CGLShaderBase::RegisterUniform( AnsiChar* Name )
 {
 	assert(bEnabled);
 
@@ -2041,7 +2041,7 @@ Integer CGLShaderBase::RegisterUniform( AnsiChar* Name )
 //
 // Update Shader uniform variable.
 //
-void CGLShaderBase::SetValue( Integer iUniform, DWord Dimension, const void* Value )
+void CGLShaderBase::SetValue( Int32 iUniform, UInt32 Dimension, const void* Value )
 {
 	// Check if value changed.
 	if( Dimension != 0 )
@@ -2051,7 +2051,7 @@ void CGLShaderBase::SetValue( Integer iUniform, DWord Dimension, const void* Val
 	}
 	else
 	{
-		if( *(Integer*)Value == Uniforms[iUniform].IntValue[0] )
+		if( *(Int32*)Value == Uniforms[iUniform].IntValue[0] )
 			return;
 	}
 
@@ -2063,7 +2063,7 @@ void CGLShaderBase::SetValue( Integer iUniform, DWord Dimension, const void* Val
 		switch( Dimension )
 		{
 			case 0:
-				glUniform1i( Uniform.iUniform, *(Integer*)Value );
+				glUniform1i( Uniform.iUniform, *(Int32*)Value );
 				break;
 
 			case 1:
@@ -2087,14 +2087,14 @@ void CGLShaderBase::SetValue( Integer iUniform, DWord Dimension, const void* Val
 				break;
 		}
 
-		MemCopy( Uniform.FloatValue, Value, Dimension!=0 ? Dimension*sizeof(Float) : sizeof(Integer) );
+		MemCopy( Uniform.FloatValue, Value, Dimension!=0 ? Dimension*sizeof(Float) : sizeof(Int32) );
 	}
 	else
 	{
 		// Shader disabled, so wait for activation.
 		TUniform& Uniform = Uniforms[iUniform];
 
-		MemCopy( Uniform.FloatValue, Value, Dimension!=0 ? Dimension*sizeof(Float) : sizeof(Integer) );
+		MemCopy( Uniform.FloatValue, Value, Dimension!=0 ? Dimension*sizeof(Float) : sizeof(Int32) );
 		Uniform.Dimension = Dimension;
 
 		if( !Uniform.bDirty )
@@ -2115,7 +2115,7 @@ void CGLShaderBase::CommitValues()
 	assert(bEnabled);
 	assert(iglProgram != 0);
 
-	for( Integer i = iCommitFirst; i != -1; )
+	for( Int32 i = iCommitFirst; i != -1; )
 	{
 		TUniform& Uniform = Uniforms[i];
 

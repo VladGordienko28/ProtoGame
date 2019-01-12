@@ -27,27 +27,27 @@ public:
 	virtual bool Init( String ShaderName );
 
 	// Setters.
-	inline void SetValue1f( Integer iUniform, Float Value )
+	inline void SetValue1f( Int32 iUniform, Float Value )
 	{
 		SetValue( iUniform, 1, &Value );
 	}
-	inline void SetValue2f( Integer iUniform, const Float* Value )
+	inline void SetValue2f( Int32 iUniform, const Float* Value )
 	{
 		SetValue( iUniform, 2, Value );
 	}
-	inline void SetValue3f( Integer iUniform, const Float* Value )
+	inline void SetValue3f( Int32 iUniform, const Float* Value )
 	{
 		SetValue( iUniform, 3, Value );
 	}
-	inline void SetValue4f( Integer iUniform, const Float* Value )
+	inline void SetValue4f( Int32 iUniform, const Float* Value )
 	{
 		SetValue( iUniform, 4, Value );
 	}
-	inline void SetValue2f( Integer iUniform, const TVector& Value )
+	inline void SetValue2f( Int32 iUniform, const TVector& Value )
 	{
 		SetValue( iUniform, 2, &Value.X );
 	}
-	inline void SetValue1i( Integer iUniform, Integer Value )
+	inline void SetValue1i( Int32 iUniform, Int32 Value )
 	{
 		SetValue( iUniform, 0, &Value );
 	}
@@ -63,15 +63,15 @@ protected:
 	struct TUniform
 	{
 	public:
-		DWord		Dimension = 1;
+		UInt32		Dimension = 1;
 		GLint		iUniform = -1;
-		Integer		iCommitNext = -1;
+		Int32		iCommitNext = -1;
 		Bool		bDirty = false;
 
 		union
 		{
 			Float	FloatValue[4];
-			Integer	IntValue[4];
+			Int32	IntValue[4];
 		};
 	};
 
@@ -82,13 +82,13 @@ protected:
 
 	String				Name;
 	TArray<TUniform>	Uniforms;
-	Integer				iCommitFirst;
+	Int32				iCommitFirst;
 	Bool				bEnabled;
 
 	// CGLShaderBase interface.
-	Integer RegisterUniform( AnsiChar* Name );
+	Int32 RegisterUniform( AnsiChar* Name );
 	void CommitValues();
-	void SetValue( Integer iUniform, DWord Dimension, const void* Value );
+	void SetValue( Int32 iUniform, UInt32 Dimension, const void* Value );
 
 	// Friends.
 	friend class COpenGLCanvas;
@@ -129,28 +129,28 @@ private:
 	// In-shader structures.
 	struct TLightSource
 	{
-		Integer	Effect;
-		Integer	Color;
-		Integer	Brightness;
-		Integer Radius;
-		Integer Location;
-		Integer Rotation;
+		Int32	Effect;
+		Int32	Color;
+		Int32	Brightness;
+		Int32 Radius;
+		Int32 Location;
+		Int32 Rotation;
 	};
 
 	// Uniform variables.
-	Integer idUnlit;
-	Integer idRenderLightmap;
-	Integer idBitmap;
-	Integer idSaturation;
-	Integer idANum;
-	Integer idMNum;
-	Integer idGameTime;
-	Integer idAmbientLight;
+	Int32 idUnlit;
+	Int32 idRenderLightmap;
+	Int32 idBitmap;
+	Int32 idSaturation;
+	Int32 idANum;
+	Int32 idMNum;
+	Int32 idGameTime;
+	Int32 idAmbientLight;
 
 	TLightSource idALights[MAX_LIGHTS];
 	TLightSource idMLights[MAX_LIGHTS];
 
-	Integer	ANum, MNum;
+	Int32	ANum, MNum;
 
 	// Friends.
 	friend class COpenGLCanvas;
@@ -185,12 +185,12 @@ public:
 
 private:
 	// Uniform variables.
-	Integer idTexture;
+	Int32 idTexture;
 
-	Integer idHighlights;
-	Integer idMidTones;
-	Integer idShadows;
-	Integer idBWScale;
+	Int32 idHighlights;
+	Int32 idMidTones;
+	Int32 idShadows;
+	Int32 idBWScale;
 };
 
 
@@ -222,8 +222,8 @@ public:
 
 private:
 	// Uniform variables.
-	Integer idTexture;
-	Integer idTargetWidth;
+	Int32 idTexture;
+	Int32 idTargetWidth;
 };
 
 
@@ -252,8 +252,8 @@ public:
 
 private:
 	// Uniform variables.
-	Integer idTexture;
-	Integer idTargetHeight;
+	Int32 idTexture;
+	Int32 idTargetHeight;
 };
 #endif
 

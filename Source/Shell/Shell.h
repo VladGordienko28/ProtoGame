@@ -2,8 +2,7 @@
 	Shell.h: Shell general include file.
 	Copyright Apr.2018 Vlad Gordienko.
 =============================================================================*/
-#ifndef _FLU_SHELL_
-#define _FLU_SHELL_
+#pragma once
 
 // C++ includes.
 #include <io.h>
@@ -25,15 +24,13 @@
 #undef FindText
 
 // Flu includes.
-#include "..\Engine\Engine.h"
-#include "..\Compiler\Compiler.h"
-#include "..\Window\Window.h"
+#include "Engine\Engine.h"
+#include "Compiler\Compiler.h"
+#include "Window\Window.h"
 
 // Shell includes.
 #include "FrShell.h"
 
-
-#endif
 /*-----------------------------------------------------------------------------
 	The End.
 -----------------------------------------------------------------------------*/

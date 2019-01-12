@@ -35,7 +35,7 @@ void FSkeleton::Import( CImporterBase& Im )
 
 	// List of bones.
 	Bones.SetNum(Im.ImportInteger(L"Bones.Num"));
-	for( Integer i=0; i<Bones.Num(); i++ )
+	for( Int32 i=0; i<Bones.Num(); i++ )
 	{
 		TBoneInfo& B = Bones[i];
 		B.Type = (ESkelCntrl)Im.ImportByte(*String::Format(L"Bones[%i].Type", i));
@@ -59,7 +59,7 @@ void FSkeleton::Import( CImporterBase& Im )
 
 	// RefPose.
 	RefPose.BonesPose.SetNum(Bones.Num());
-	for( Integer i=0; i<RefPose.BonesPose.Num(); i++ )
+	for( Int32 i=0; i<RefPose.BonesPose.Num(); i++ )
 	{
 		TBonePose& P = RefPose.BonesPose[i];
 		P.Coords.Origin = Im.ImportVector(*String::Format(L"RefPose.BonesPose[%i].Location", i));
@@ -71,27 +71,27 @@ void FSkeleton::Import( CImporterBase& Im )
 
 	// Actions.
 	Actions.SetNum(Im.ImportInteger(L"Actions.Num"));
-	for( Integer i=0; i<Actions.Num(); i++ )
+	for( Int32 i=0; i<Actions.Num(); i++ )
 	{
 		TSkeletonAction& A = Actions[i];
 
 		A.Name = Im.ImportString(*String::Format(L"Actions[%i].Name", i));
 		A.BoneTracks.SetNum(Im.ImportInteger(*String::Format(L"Actions[%i].BoneTracks.Num", i)));
-		for( Integer j=0; j<A.BoneTracks.Num(); j++ )
+		for( Int32 j=0; j<A.BoneTracks.Num(); j++ )
 		{
 			TBoneTrack& T = A.BoneTracks[j];
 			T.iBone = Im.ImportInteger(*String::Format(L"Actions[%i].BoneTracks[%i].iBone", i, j));
 			T.PosKeys.Samples.SetNum(Im.ImportInteger(*String::Format(L"Actions[%i].BoneTracks[%i].PosKeys.Num", i, j)));
 			T.RotKeys.Samples.SetNum(Im.ImportInteger(*String::Format(L"Actions[%i].BoneTracks[%i].RotKeys.Num", i, j)));
 
-			for( Integer k=0; k<T.PosKeys.Samples.Num(); k++ )
+			for( Int32 k=0; k<T.PosKeys.Samples.Num(); k++ )
 			{
 				T.PosKeys.Samples[k].Type = (EInterpType)Im.ImportByte(*String::Format(L"Actions[%i].BoneTracks[%i].PosKeys[%i].Type", i, j, k));
 				T.PosKeys.Samples[k].Input = Im.ImportFloat(*String::Format(L"Actions[%i].BoneTracks[%i].PosKeys[%i].Input", i, j, k));
 				T.PosKeys.Samples[k].Output = Im.ImportVector(*String::Format(L"Actions[%i].BoneTracks[%i].PosKeys[%i].Output", i, j, k));
 			}
 
-			for( Integer k=0; k<T.RotKeys.Samples.Num(); k++ )
+			for( Int32 k=0; k<T.RotKeys.Samples.Num(); k++ )
 			{
 				T.RotKeys.Samples[k].Type = (EInterpType)Im.ImportByte(*String::Format(L"Actions[%i].BoneTracks[%i].RotKeys[%i].Type", i, j, k));
 				T.RotKeys.Samples[k].Input = Im.ImportFloat(*String::Format(L"Actions[%i].BoneTracks[%i].RotKeys[%i].Input", i, j, k));
@@ -111,7 +111,7 @@ void FSkeleton::Export( CExporterBase& Ex )
 
 	// List of bones.
 	Ex.ExportInteger( L"Bones.Num", Bones.Num() );
-	for( Integer i=0; i<Bones.Num(); i++ )
+	for( Int32 i=0; i<Bones.Num(); i++ )
 	{
 		TBoneInfo& B = Bones[i];
 		Ex.ExportByte( *String::Format(L"Bones[%i].Type", i), B.Type );
@@ -134,7 +134,7 @@ void FSkeleton::Export( CExporterBase& Ex )
 	}
 
 	// RefPose.
-	for( Integer i=0; i<RefPose.BonesPose.Num(); i++ )
+	for( Int32 i=0; i<RefPose.BonesPose.Num(); i++ )
 	{
 		TBonePose& P = RefPose.BonesPose[i];
 		Ex.ExportVector( *String::Format(L"RefPose.BonesPose[%i].Location", i), P.Coords.Origin );
@@ -143,27 +143,27 @@ void FSkeleton::Export( CExporterBase& Ex )
 
 	// Actions.
 	Ex.ExportInteger( L"Actions.Num", Actions.Num() );
-	for( Integer i=0; i<Actions.Num(); i++ )
+	for( Int32 i=0; i<Actions.Num(); i++ )
 	{
 		TSkeletonAction& A = Actions[i];
 
 		Ex.ExportString( *String::Format(L"Actions[%i].Name", i), A.Name );
 		Ex.ExportInteger( *String::Format(L"Actions[%i].BoneTracks.Num", i), A.BoneTracks.Num() );
-		for( Integer j=0; j<A.BoneTracks.Num(); j++ )
+		for( Int32 j=0; j<A.BoneTracks.Num(); j++ )
 		{
 			TBoneTrack& T = A.BoneTracks[j];
 			Ex.ExportInteger( *String::Format(L"Actions[%i].BoneTracks[%i].iBone", i, j), T.iBone );
 			Ex.ExportInteger( *String::Format(L"Actions[%i].BoneTracks[%i].PosKeys.Num", i, j), T.PosKeys.Samples.Num() );
 			Ex.ExportInteger( *String::Format(L"Actions[%i].BoneTracks[%i].RotKeys.Num", i, j), T.RotKeys.Samples.Num() );
 
-			for( Integer k=0; k<T.PosKeys.Samples.Num(); k++ )
+			for( Int32 k=0; k<T.PosKeys.Samples.Num(); k++ )
 			{
 				Ex.ExportByte( *String::Format(L"Actions[%i].BoneTracks[%i].PosKeys[%i].Type", i, j, k), T.PosKeys.Samples[k].Type );
 				Ex.ExportFloat( *String::Format(L"Actions[%i].BoneTracks[%i].PosKeys[%i].Input", i, j, k), T.PosKeys.Samples[k].Input );
 				Ex.ExportVector( *String::Format(L"Actions[%i].BoneTracks[%i].PosKeys[%i].Output", i, j, k), T.PosKeys.Samples[k].Output );
 			}
 
-			for( Integer k=0; k<T.RotKeys.Samples.Num(); k++ )
+			for( Int32 k=0; k<T.RotKeys.Samples.Num(); k++ )
 			{
 				Ex.ExportByte( *String::Format(L"Actions[%i].BoneTracks[%i].RotKeys[%i].Type", i, j, k), T.RotKeys.Samples[k].Type );
 				Ex.ExportFloat( *String::Format(L"Actions[%i].BoneTracks[%i].RotKeys[%i].Input", i, j, k), T.RotKeys.Samples[k].Input );
@@ -194,7 +194,7 @@ void FSkeleton::SerializeThis( CSerializer& S )
 //
 TBoneInfo* FSkeleton::FindBone( String InName )
 {
-	for( Integer i=0; i<Bones.Num(); i++ )
+	for( Int32 i=0; i<Bones.Num(); i++ )
 		if( String::CompareText( InName, Bones[i].Name ) == 0 )
 			return &Bones[i];
 	return nullptr;
@@ -204,9 +204,9 @@ TBoneInfo* FSkeleton::FindBone( String InName )
 //
 // Find skeleton action.
 //
-Integer FSkeleton::FindAction( String InName )
+Int32 FSkeleton::FindAction( String InName )
 {
-	for( Integer i=0; i<Actions.Num(); i++ )
+	for( Int32 i=0; i<Actions.Num(); i++ )
 		if( String::CompareText( InName, Actions[i].Name ) == 0 )
 			return i;
 	return -1;
@@ -262,7 +262,7 @@ static inline void DrawMaster( CCanvas* Canvas, const TVector& Origin, TAngle Ro
 	P.NumVerts		= 16;
 	
 	TAngle Walk = Rotation;
-	for( Integer i=0; i<16; i++ )
+	for( Int32 i=0; i<16; i++ )
 	{
 		P.Vertices[i] = Origin + TVector(Walk.GetCos(), Walk.GetSin()) * Size;
 		Walk += 65536/16;
@@ -271,7 +271,7 @@ static inline void DrawMaster( CCanvas* Canvas, const TVector& Origin, TAngle Ro
 	Canvas->DrawPoly(P);
 
 	TVector Prev = P.Vertices[15];
-	for( Integer i=0; i<16; i++ )
+	for( Int32 i=0; i<16; i++ )
 	{
 		TVector This = P.Vertices[i];
 
@@ -294,7 +294,7 @@ void FSkeleton::Render
 )
 {
 	assert(Pose.BonesPose.Num() == Bones.Num());
-	for( Integer i=0; i<Bones.Num(); i++ )
+	for( Int32 i=0; i<Bones.Num(); i++ )
 	{
 		TBoneInfo& Info = Bones[i];
 		const TBonePose& P = Pose.BonesPose[i];
@@ -358,7 +358,7 @@ void TSkelPose::ComputeRefTransform( FSkeleton* Skel )
 		GBones.SetNum(Skel->Bones.Num());
 
 	// Just copy bone-by-bone.
-	for( Integer i=0; i<BonesPose.Num(); i++ )
+	for( Int32 i=0; i<BonesPose.Num(); i++ )
 		GBones[i] = BonesPose[i].Coords;
 
 	// Solve equations.
@@ -376,11 +376,11 @@ void TSkelPose::CumputeAnimFrame( FSkeleton* Skel, TSkeletonAction& Action, Floa
 		GBones.SetNum(Skel->Bones.Num());
 
 	// Just copy bone-by-bone.
-	for( Integer i=0; i<BonesPose.Num(); i++ )
+	for( Int32 i=0; i<BonesPose.Num(); i++ )
 		GBones[i] = BonesPose[i].Coords;
 
 	// Apply animation transforms.
-	for( Integer i=0; i<Action.BoneTracks.Num(); i++ )
+	for( Int32 i=0; i<Action.BoneTracks.Num(); i++ )
 	{
 		TBoneTrack& Track = Action.BoneTracks[i];
 		GBones[Track.iBone].Origin = Track.PosKeys.SampleAt( Time, GBones[Track.iBone].Origin );
@@ -410,7 +410,7 @@ void TSkelPose::SolveSkeleton( FSkeleton* Skel )
 	assert(Skel->TransformTable.Num() == Skel->Bones.Num());
 	assert(GBones.Num() >= Skel->Bones.Num());
 
-	for( Integer iBone=0; iBone<Skel->Bones.Num(); iBone++ )
+	for( Int32 iBone=0; iBone<Skel->Bones.Num(); iBone++ )
 	{
 		TBoneInfo& ThisInfo = Skel->Bones[Skel->TransformTable[iBone]];
 		TBonePose& BoneResult = BonesPose[Skel->TransformTable[iBone]];
@@ -508,7 +508,7 @@ void TSkelPose::SolveSkeleton( FSkeleton* Skel )
 //
 // Link bone to parent. 
 //
-Bool FSkeleton::LinkTo( Integer iBone, Integer iParent )
+Bool FSkeleton::LinkTo( Int32 iBone, Int32 iParent )
 {
 	TBoneInfo& ThisInfo = Bones[iBone];
 	TBonePose& ThisPose = RefPose.BonesPose[iBone];
@@ -574,7 +574,7 @@ Bool FSkeleton::LinkControl( Integer iControl, Integer iParent )
 }
 */
 
-Bool FSkeleton::LinkLookAtTo( Integer iBone, Integer iParent )
+Bool FSkeleton::LinkLookAtTo( Int32 iBone, Int32 iParent )
 { 
 	// Unlink rotation from parent!!!
 
@@ -589,7 +589,7 @@ Bool FSkeleton::LinkLookAtTo( Integer iBone, Integer iParent )
 }
 
 
-Bool FSkeleton::LinkRotationTo( Integer iBone, Integer iParent )
+Bool FSkeleton::LinkRotationTo( Int32 iBone, Int32 iParent )
 {
 	TBoneInfo& ThisInfo = Bones[iBone];
 	TBonePose& ThisPose = RefPose.BonesPose[iBone];
@@ -611,7 +611,7 @@ Bool FSkeleton::LinkRotationTo( Integer iBone, Integer iParent )
 }
 
 
-Bool FSkeleton::LinkIKSolverTo( Integer iIKSolver, Integer iEndJoint )
+Bool FSkeleton::LinkIKSolverTo( Int32 iIKSolver, Int32 iEndJoint )
 { 
 	TBoneInfo& EndJoint		= Bones[iEndJoint];
 	TBoneInfo& StartJoint	= Bones[EndJoint.iPosCtrl];
@@ -652,7 +652,7 @@ Bool FSkeleton::SetIKSolver( Integer iIK, Integer iEndJoint )
 
 
 
-Bool FSkeleton::BreakRotLink( Integer iBone )
+Bool FSkeleton::BreakRotLink( Int32 iBone )
 {
 	TBoneInfo& Info = Bones[iBone];
 	TBonePose& Pose = RefPose.BonesPose[iBone];
@@ -681,7 +681,7 @@ Bool FSkeleton::BreakRotLink( Integer iBone )
 //
 // Break all position links from the iBone.
 //
-Bool FSkeleton::BreakPosLink( Integer iBone )
+Bool FSkeleton::BreakPosLink( Int32 iBone )
 {
 	TBoneInfo& Info = Bones[iBone];
 	TBonePose& Pose = RefPose.BonesPose[iBone];
@@ -699,7 +699,7 @@ Bool FSkeleton::BreakPosLink( Integer iBone )
 //
 // Break all links from the iBone.
 //
-Bool FSkeleton::BreakLinks( Integer iBone )
+Bool FSkeleton::BreakLinks( Int32 iBone )
 {
 	return BreakPosLink(iBone) && BreakRotLink(iBone);
 }
@@ -717,7 +717,7 @@ void FSkeleton::BuildTransformationTable()
 {
 #if 1
 	// Mark all bones as not processed.
-	for( Integer i=0; i<Bones.Num(); i++ )
+	for( Int32 i=0; i<Bones.Num(); i++ )
 		Bones[i].Flags &= ~(BONE_PosProcessed | BONE_RotProcessed);
 
 	Bool TryAgain = true;
@@ -728,7 +728,7 @@ void FSkeleton::BuildTransformationTable()
 	{
 		TryAgain = false;
 
-		for( Integer i=0; i<Bones.Num(); i++ )
+		for( Int32 i=0; i<Bones.Num(); i++ )
 		{
 			TBoneInfo& Bone = Bones[i];
 

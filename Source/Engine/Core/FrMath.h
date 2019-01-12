@@ -152,19 +152,19 @@ public:
 struct TAngle
 {
 public:
-	Integer	Angle;
+	Int32	Angle;
 
 	// Constructors.
 	TAngle()
 		:	Angle(0)
 	{}
-	TAngle( Integer InAngle )
+	TAngle( Int32 InAngle )
 		:	Angle(InAngle)
 	{}
 	TAngle( Float InAngle );
 
 	// Operators.
-    operator Integer() const
+    operator Int32() const
 	{
 		return Angle & 0xffff;
 	}
@@ -210,7 +210,7 @@ public:
 	}
 
 	// Functions.
-	void Snap( Integer Grid );
+	void Snap( Int32 Grid );
 	Float ToRads() const;
 	Float ToDegs() const;
 	Float GetCos() const;
@@ -256,7 +256,7 @@ public:
 		Min = TVector( InCenter.X - Half, InCenter.Y - Half );
 		Max = TVector( InCenter.X + Half, InCenter.Y + Half );
 	}
-	TRect( const TVector* Verts, Integer NumVerts );
+	TRect( const TVector* Verts, Int32 NumVerts );
 
 	// Operators.
 	Bool operator==( const TRect& R ) const
@@ -293,7 +293,7 @@ public:
 		return P.X >= Min.X && P.X <= Max.X &&
 			   P.Y >= Min.Y && P.Y <= Max.Y;
 	}
-	Float GetExtrema( Integer i ) const
+	Float GetExtrema( Int32 i ) const
 	{
 		return ((Float*)&Min)[i];
 	}
@@ -337,7 +337,7 @@ public:
 		:	Center( InCenter ),
 			Radius( InRadius )
 	{}
-	TCircle( const TVector* Verts, Integer NumVerts );
+	TCircle( const TVector* Verts, Int32 NumVerts );
 
 	// Operators.
 	Bool operator==( const TCircle& C ) const
@@ -510,7 +510,7 @@ public:
 
 	// TInterpCurve interface.
 	TInterpCurve();
-	Integer AddSample( Float Input, const T& Output );
+	Int32 AddSample( Float Input, const T& Output );
 	void Empty();
 
 	// Sample value at specified X(Input).
@@ -537,9 +537,9 @@ template<class T> inline TInterpCurve<T>::TInterpCurve()
 //
 // Add a new point to the curve.
 //
-template<class T> inline Integer TInterpCurve<T>::AddSample( Float Input, const T& Output )
+template<class T> inline Int32 TInterpCurve<T>::AddSample( Float Input, const T& Output )
 {		
-	Integer i;
+	Int32 i;
 	for( i=0; i<Samples.Num() && Samples[i].Input<Input; i++ );
 
 	Samples.Insert(i);
@@ -571,7 +571,7 @@ template<class T> inline T TInterpCurve<T>::SampleAt( Float Input, const T& Defa
 		return Samples[Samples.Num()-1].Output;
 
 	// Linear search.
-	for( Integer i=1; i<Samples.Num(); i++ )
+	for( Int32 i=1; i<Samples.Num(); i++ )
 	{
 		const TInterpPoint<T>& A = Samples[i-1];
 		const TInterpPoint<T>& B = Samples[i];
@@ -621,7 +621,7 @@ template<class T> inline T TInterpCurve<T>::SampleLinearAt( Float Input, const T
 	if( Input >= Samples[Samples.Num()-1].Input )
 		return Samples[Samples.Num()-1].Output;
 
-	for( Integer i=1; i<Samples.Num(); i++ )
+	for( Int32 i=1; i<Samples.Num(); i++ )
 	{
 		const TInterpPoint<T>& A = Samples[i-1];
 		const TInterpPoint<T>& B = Samples[i];
@@ -721,21 +721,21 @@ inline Float Pow( Float Base, Float P )
 {
 	return (Float)pow( Base, P );
 }
-inline Integer Floor( Float F )
+inline Int32 Floor( Float F )
 {
-	return (Integer)floorf(F);
+	return (Int32)floorf(F);
 }
-inline Integer Ceil( Float F )
+inline Int32 Ceil( Float F )
 {
-	return (Integer)ceilf(F);
+	return (Int32)ceilf(F);
 }
-inline Integer Round( Float F )
+inline Int32 Round( Float F )
 {
-	return (Integer)roundf(F);
+	return (Int32)roundf(F);
 }
-inline Integer Trunc( Float F )
+inline Int32 Trunc( Float F )
 {
-	return (Integer)truncf(F);
+	return (Int32)truncf(F);
 }
 inline Float Sqrt( Float F )
 {
@@ -769,7 +769,7 @@ inline Float FMod( Float X, Float Y )
 {
 	return fmodf( X, Y );
 }
-inline Float InvPow2( Integer A )
+inline Float InvPow2( Int32 A )
 {
 	static const Float GRescale[] =
 	{
@@ -789,7 +789,7 @@ inline Float InvPow2( Integer A )
 	};
 	return GRescale[A];
 }
-inline Bool IsPowerOfTwo( DWord i )
+inline Bool IsPowerOfTwo( UInt32 i )
 {
 	return ((i) & (i-1)) == 0;
 }
@@ -799,9 +799,9 @@ extern inline Float FastCosF( Float F );
 extern inline Float FastSqrt( Float F );
 extern inline Float FastArcTan( Float X );
 extern inline Float FastArcTan2( Float Y, Float X );
-extern inline Float Sin8192( Integer i );
+extern inline Float Sin8192( Int32 i );
 extern inline Float Wrap( Float V, Float Min, Float Max );
-extern inline DWord IntLog2( DWord A );
+extern inline UInt32 IntLog2( UInt32 A );
 extern TAngle AngleLerp( TAngle AFrom, TAngle ATo, Float Alpha, Bool bCCW );
 
 //
@@ -860,14 +860,14 @@ inline TVector LineSegmentInter
 //
 // Polygon functions.
 //
-extern inline Bool IsConvexPoly( const TVector* Verts, Integer NumVerts );
-extern inline Bool IsPointInsidePoly( const TVector& P, const TVector* Verts, Integer NumVerts );
+extern inline Bool IsConvexPoly( const TVector* Verts, Int32 NumVerts );
+extern inline Bool IsPointInsidePoly( const TVector& P, const TVector* Verts, Int32 NumVerts );
 extern Bool LineIntersectPoly
 ( 
 	const TVector& A, 
 	const TVector& B, 
 	const TVector* Verts, 
-	Integer NumVerts, 
+	Int32 NumVerts, 
 	TVector* V = nullptr, 
 	TVector* Normal = nullptr 
 );

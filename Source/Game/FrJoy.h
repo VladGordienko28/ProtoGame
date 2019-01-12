@@ -44,7 +44,7 @@ static void JoystickTick()
 		Keys[KEY_JoyZ-KEY_JOYSTICK_FIRST]		= Info.wButtons & JOY_BUTTON8;
 
 		// Notify input system.
-		for( Integer i=0; i<16; i++ )
+		for( Int32 i=0; i<16; i++ )
 		{
 			if( Keys[i] && !OldKeys[i] )
 				GApp->GInput->OnKeyDown(KEY_JOYSTICK_FIRST+i);

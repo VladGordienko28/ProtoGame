@@ -25,20 +25,20 @@ public:
 	Bool			bSizeableW;
 	Bool			bSizeableH;
 	Bool			bCanClose;
-	Integer			MinWindth;
-	Integer			MinHeight;
+	Int32			MinWindth;
+	Int32			MinHeight;
 
 	// WForm interface.
 	WForm(  WContainer* InOwner, WWindow* InRoot  );
 
 	// WWidget interface.
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
 	void OnPaint( CGUIRenderBase* Render );
 
 	// WForm interface.
-	virtual void Show( Integer X = 0, Integer Y = 0 );
+	virtual void Show( Int32 X = 0, Int32 Y = 0 );
 	virtual void Hide();
 
 	// New WForm events.

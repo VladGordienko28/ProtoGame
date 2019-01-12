@@ -70,7 +70,7 @@ private:
 	}					
 						History[MAX_CON_HISTORY];
 	Bool				bActive;
-	Integer				HistTop;
+	Int32				HistTop;
 	String				Command;
 
 	void Accept();

@@ -23,22 +23,22 @@ public:
 	virtual void OnChange();
 
 	// WWidget interface.
-	void OnDblClick( EMouseButton Button, Integer X, Integer Y );    
+	void OnDblClick( EMouseButton Button, Int32 X, Int32 Y );    
 	void OnPaint( CGUIRenderBase* Render );
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
 	void OnMouseLeave();
 
 private:
 	// Internal.
 	TInterpCurve<TColor>*	Curve;
 	TStaticBitmap*			Ribbon;
-	Integer					iSelected;
+	Int32					iSelected;
 
 	// Helper functions.
 	void UpdateRibbon();
-	Integer GetMarkerAt( Integer X, Integer Y );
+	Int32 GetMarkerAt( Int32 X, Int32 Y );
 	void ColorSelected( WWidget* Sender );
 };
 

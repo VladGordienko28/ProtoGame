@@ -48,12 +48,12 @@ struct TPin
 {
 public:
 	// Variables.
-	DWord				Flags;
+	UInt32				Flags;
 	TVector				Location;
 	TVector				Normal;
 	FBrushComponent*	Floor;
-	Integer				iEdges[TPathNode::NUM_EDGES];
-	Integer				iGroup;
+	Int32				iEdges[TPathNode::NUM_EDGES];
+	Int32				iGroup;
 
 	// Pin initialization.
 	TPin()
@@ -63,7 +63,7 @@ public:
 		Normal		= TVector( 0.f, 1.f );
 		Floor		= nullptr;
 		iGroup		= -1;
-		for( Integer i=0; i<TPathNode::NUM_EDGES; i++ )
+		for( Int32 i=0; i<TPathNode::NUM_EDGES; i++ )
 			iEdges[i]	= -1;
 	}
 
@@ -81,16 +81,16 @@ public:
 	// Return true, if we can link this node.
 	Bool CanAddEdge() const
 	{
-		for( Integer i=0; i<TPathNode::NUM_EDGES; i++ )
+		for( Int32 i=0; i<TPathNode::NUM_EDGES; i++ )
 			if( iEdges[i] == -1 )
 				return true;
 		return false;
 	}
 
 	// Add a new edge from the pin.
-	Bool AddEdge( Integer iEdge )
+	Bool AddEdge( Int32 iEdge )
 	{
-		for( Integer i=0; i<TPathNode::NUM_EDGES; i++ )
+		for( Int32 i=0; i<TPathNode::NUM_EDGES; i++ )
 			if( iEdges[i] == -1 )
 			{
 				iEdges[i]	= iEdge;
@@ -108,8 +108,8 @@ struct TPinGroup
 {
 public:
 	// Variables.
-	TArray<Integer>		iPins;
-	TArray<Integer>		iLinked;
+	TArray<Int32>		iPins;
+	TArray<Int32>		iLinked;
 	TRect				Bounds;
 	FBrushComponent*	Floor;
 
@@ -156,8 +156,8 @@ public:
 	void LinkWalkable();
 	void LinkJumpable();
 	void LinkSpecial();
-	Bool IsLinked1( Integer iGroup1, Integer iGroup2 );
-	Bool IsLinked2( Integer iGroup1, Integer iGroup2 );
+	Bool IsLinked1( Int32 iGroup1, Int32 iGroup2 );
+	Bool IsLinked2( Int32 iGroup1, Int32 iGroup2 );
 
 	// Exploration.
 	void ExplorePaths();
@@ -197,8 +197,8 @@ void CPathBuilder::LinkSpecial()
 void CPathBuilder::LinkWalkable()
 {
 	// Try to connect groups.
-	for( Integer g1=0; g1<Groups.Num(); g1++ )
-	for( Integer g2=g1+1; g2<Groups.Num(); g2++ )
+	for( Int32 g1=0; g1<Groups.Num(); g1++ )
+	for( Int32 g2=g1+1; g2<Groups.Num(); g2++ )
 	{
 		TPinGroup&	Group1	= Groups[g1];
 		TPinGroup&	Group2	= Groups[g2];
@@ -220,8 +220,8 @@ void CPathBuilder::LinkWalkable()
 			continue;
 
 		// Select 'best' pins to link them and their groups.
-		Integer	iBest1	= Group1.iPins[bOnLeft ? 0 : Group1.iPins.Num()-1];
-		Integer iBest2	= Group2.iPins[bOnLeft ? Group2.iPins.Num()-1 : 0];
+		Int32 iBest1	= Group1.iPins[bOnLeft ? 0 : Group1.iPins.Num()-1];
+		Int32 iBest2	= Group2.iPins[bOnLeft ? Group2.iPins.Num()-1 : 0];
 		TPin&	Best1	= Pins[iBest1];
 		TPin&	Best2	= Pins[iBest2];
 
@@ -243,11 +243,11 @@ void CPathBuilder::LinkWalkable()
 		// Walk along the path and check for floor.
 		FBrushComponent*	Floor;
 		TVector	PathDelta	= Best2.Location - Best1.Location;
-		Integer	NumSteps	= Max( 1, ::Floor(PathDelta.Size() / WALK_STEP) );
+		Int32	NumSteps	= Max( 1, ::Floor(PathDelta.Size() / WALK_STEP) );
 		TVector	Walk		= Best1.Location;
 		PathDelta			*= 1.f / NumSteps;
 
-		for( Integer k=0; k<NumSteps; k++ )
+		for( Int32 k=0; k<NumSteps; k++ )
 		{
 			Floor	= TestLine
 			(
@@ -305,8 +305,8 @@ Bool JumpLinksCmp( const TPathEdge& A, const TPathEdge& B )
 void CPathBuilder::LinkJumpable()
 {
 	// Try to connect groups.
-	for( Integer g1=0; g1<Groups.Num(); g1++ )
-	for( Integer g2=g1+1; g2<Groups.Num(); g2++ )
+	for( Int32 g1=0; g1<Groups.Num(); g1++ )
+	for( Int32 g2=g1+1; g2<Groups.Num(); g2++ )
 	{
 		TPinGroup&	Group1	= Groups[g1];
 		TPinGroup&	Group2	= Groups[g2];
@@ -320,10 +320,10 @@ void CPathBuilder::LinkJumpable()
 		TArray<TPathEdge>	Links[2];
 
 		// Try each pair from both groups.
-		for( Integer p1=0; p1<Group1.iPins.Num(); p1++ )
-		for( Integer p2=0; p2<Group2.iPins.Num(); p2++ )
+		for( Int32 p1=0; p1<Group1.iPins.Num(); p1++ )
+		for( Int32 p2=0; p2<Group2.iPins.Num(); p2++ )
 		{
-			Integer	iLower, iUpper;
+			Int32	iLower, iUpper;
 			TPin&	Pin1 = Pins[Group1.iPins[p1]];
 			TPin&	Pin2 = Pins[Group2.iPins[p2]];
 
@@ -389,7 +389,7 @@ void CPathBuilder::LinkJumpable()
 		}
 
 		// Add links to both directions.
-		for( Integer d=0; d<2; d++ )
+		for( Int32 d=0; d<2; d++ )
 			if( Links[d].Num() > 0 )
 			{
 				// Sort links by distance.
@@ -420,7 +420,7 @@ void CPathBuilder::LinkJumpable()
 //
 void CPathBuilder::ExplorePaths()
 {
-	for( Integer iEdge=0; iEdge<Navigator->Edges.Num(); iEdge++ )
+	for( Int32 iEdge=0; iEdge<Navigator->Edges.Num(); iEdge++ )
 	{
 		TPathEdge& Edge = Navigator->Edges[iEdge];
 
@@ -435,11 +435,11 @@ void CPathBuilder::ExplorePaths()
 				B			= Navigator->Nodes[Edge.iFinish].Location,
 				Delta		= B - A,
 				Walk		= A;
-		Integer	NumSteps	= Max( 1, Floor(Delta.Size()) );
+		Int32	NumSteps	= Max( 1, Floor(Delta.Size()) );
 
 		Delta	*= 1.f/NumSteps;
 
-		for( Integer i=0; i<NumSteps; i++ )
+		for( Int32 i=0; i<NumSteps; i++ )
 		{
 			TVector HitPoint, HitNormal;
 			if( TestLine
@@ -471,13 +471,13 @@ void CPathBuilder::ExplorePaths()
 //
 void CPathBuilder::CreateSurfacePins()
 {
-	for( Integer b=0; b<BrushList.Num(); b++ )
+	for( Int32 b=0; b<BrushList.Num(); b++ )
 	{
 		FBrushComponent* Brush = BrushList[b];
 
 		// Winding the brush.
 		TVector P2, P1 = Brush->Vertices[Brush->NumVerts-1];
-		for( Integer i=0; i<Brush->NumVerts; i++ )
+		for( Int32 i=0; i<Brush->NumVerts; i++ )
 		{
 			// Information about current edge.
 			P2	= Brush->Vertices[i];
@@ -525,9 +525,9 @@ void CPathBuilder::CreateSurfacePins()
 //
 void CPathBuilder::CreateFallPins()
 {
-	Integer NumSource = Pins.Num();
+	Int32 NumSource = Pins.Num();
 
-	for( Integer i=0; i<NumSource; i++ )
+	for( Int32 i=0; i<NumSource; i++ )
 	{
 		TPin&	Source	= Pins[i];
 		TVector	Tangent	= -Source.Normal.Cross();
@@ -582,8 +582,8 @@ void CPathBuilder::MergePins()
 	{
 		bAgain	= false;
 
-		for( Integer i=0; i<Pins.Num(); i++ )
-			for( Integer j=i+1; j<Pins.Num(); j++ )
+		for( Int32 i=0; i<Pins.Num(); i++ )
+			for( Int32 j=i+1; j<Pins.Num(); j++ )
 			{
 				TPin&	Pin1 = Pins[i];
 				TPin&	Pin2 = Pins[j];
@@ -609,7 +609,7 @@ void CPathBuilder::MergePins()
 // Little hack, but it local.
 //
 static CPathBuilder*	GBuilder;
-Bool PinXCmp( const Integer& A, const Integer& B )
+Bool PinXCmp( const Int32& A, const Int32& B )
 {
 	return GBuilder->Pins[A].Location.X < GBuilder->Pins[B].Location.X;
 }
@@ -629,13 +629,13 @@ Bool GroupXCmp( const TPinGroup& A, const TPinGroup& B )
 //
 void CPathBuilder::GroupPins()
 {
-	for( Integer b=0; b<BrushList.Num(); b++ )
+	for( Int32 b=0; b<BrushList.Num(); b++ )
 	{
 		FBrushComponent* Brush	= BrushList[b];
 
 		// Collect pins being this brush.
-		TArray<Integer>	List;
-		for( Integer i=0; i<Pins.Num(); i++ )
+		TArray<Int32>	List;
+		for( Int32 i=0; i<Pins.Num(); i++ )
 			if( Brush == Pins[i].Floor )
 				List.Push( i );
 
@@ -651,10 +651,10 @@ void CPathBuilder::GroupPins()
 		TPinGroup	Group;
 		Group.Floor		= Brush;
 		Group.iPins.Push(List[0]);
-		for( Integer i=1; i<List.Num(); i++ )
+		for( Int32 i=1; i<List.Num(); i++ )
 		{
 			TVector	UnusedHit, UnusedNormal;
-			Integer	iFrom	= List[i-1],
+			Int32	iFrom	= List[i-1],
 					iTo		= List[i];
 			TPin&	From	= Pins[iFrom];
 			TPin&	To		= Pins[iTo];
@@ -678,13 +678,13 @@ void CPathBuilder::GroupPins()
 	}
 
 	// Build AABB bounds for all groups.
-	for( Integer g=0; g<Groups.Num(); g++ )
+	for( Int32 g=0; g<Groups.Num(); g++ )
 	{
 		TPinGroup& Group = Groups[g];
 
 		Group.Bounds.Min	=
 		Group.Bounds.Max	= Pins[Group.iPins[0]].Location;
-		for( Integer i=1; i<Group.iPins.Num(); i++ )
+		for( Int32 i=1; i<Group.iPins.Num(); i++ )
 			Group.Bounds += Pins[Group.iPins[i]].Location;
 	}
 
@@ -693,20 +693,20 @@ void CPathBuilder::GroupPins()
 	Groups.Sort(GroupXCmp);
 
 	// Assign to each pin it Group.
-	for( Integer i=0; i<Groups.Num(); i++ )
+	for( Int32 i=0; i<Groups.Num(); i++ )
 	{
 		TPinGroup& Group = Groups[i];
-		for( Integer j=0; j<Group.iPins.Num(); j++ )
+		for( Int32 j=0; j<Group.iPins.Num(); j++ )
 			Pins[Group.iPins[j]].iGroup	= i;
 	}
 
 	// Add inner group links.
-	for( Integer g=0; g<Groups.Num(); g++ )
+	for( Int32 g=0; g<Groups.Num(); g++ )
 		if( Groups[g].iPins.Num() > 1 )
 		{
 			TPinGroup& Group = Groups[g];
 
-			for( Integer i=0; i<Group.iPins.Num()-1; i++ )
+			for( Int32 i=0; i<Group.iPins.Num()-1; i++ )
 			{
 				TPathEdge	Edge;
 				Edge.iStart		= Group.iPins[i];
@@ -742,7 +742,7 @@ CPathBuilder::CPathBuilder( FLevel* InLevel )
 	Navigator			= new CNavigator( Level );
 
 	// Collect list of brushes.
-	for( Integer i=0; i<Level->Entities.Num(); i++ )
+	for( Int32 i=0; i<Level->Entities.Num(); i++ )
 	{
 		FBaseComponent* Base = Level->Entities[i]->Base;
 
@@ -770,7 +770,7 @@ CPathBuilder::~CPathBuilder()
 void CPathBuilder::BuildNetwork( IProgressIndicator* Indicator )
 {
 	// Zero statistics.
-	Integer	PinsNoMerge		= 0,
+	Int32	PinsNoMerge		= 0,
 			NumEdges		= 0,
 			NumNodes		= 0,
 			NumGroups		= 0,
@@ -803,7 +803,7 @@ void CPathBuilder::BuildNetwork( IProgressIndicator* Indicator )
 			LinkJumpable();
 
 		// Turn pins into nodes.
-		for( Integer i=0; i<Pins.Num(); i++ )
+		for( Int32 i=0; i<Pins.Num(); i++ )
 			Navigator->Nodes.Push(Pins[i].ToPathNode());
 
 		// Explore just created paths.
@@ -820,7 +820,7 @@ void CPathBuilder::BuildNetwork( IProgressIndicator* Indicator )
 	NumNodes		= Navigator->Nodes.Num();
 	NumGroups		= Groups.Num();
 
-	for( Integer g=0; g<Groups.Num(); g++ )
+	for( Int32 g=0; g<Groups.Num(); g++ )
 		if( Groups[g].iLinked.Num() == 0 )
 			LonelyGroups++;
 
@@ -839,10 +839,10 @@ void CPathBuilder::BuildNetwork( IProgressIndicator* Indicator )
 //
 // Return true, if two groupes linked directyly.
 //
-Bool CPathBuilder::IsLinked1( Integer iGroup1, Integer iGroup2 )
+Bool CPathBuilder::IsLinked1( Int32 iGroup1, Int32 iGroup2 )
 {
 	TPinGroup& Group = Groups[iGroup1];
-	for( Integer i=0; i<Group.iLinked.Num(); i++ )
+	for( Int32 i=0; i<Group.iLinked.Num(); i++ )
 		if( Group.iLinked[i] == iGroup2 )
 			return true;
 
@@ -854,7 +854,7 @@ Bool CPathBuilder::IsLinked1( Integer iGroup1, Integer iGroup2 )
 // Return true, if two Groups linked directly, or via just one
 // shared neighbor group.
 //
-Bool CPathBuilder::IsLinked2( Integer iGroup1, Integer iGroup2 )
+Bool CPathBuilder::IsLinked2( Int32 iGroup1, Int32 iGroup2 )
 {
 	// Test directly.
 	if( IsLinked1( iGroup1, iGroup2 ) )
@@ -862,7 +862,7 @@ Bool CPathBuilder::IsLinked2( Integer iGroup1, Integer iGroup2 )
 
 	// Slow, slow, slow test..
 	TPinGroup& Group = Groups[iGroup1];
-	for( Integer i=0; i<Group.iLinked.Num(); i++ )
+	for( Int32 i=0; i<Group.iLinked.Num(); i++ )
 		if( IsLinked1( Group.iLinked[i], iGroup2 ) )
 			return true;
 
@@ -876,7 +876,7 @@ Bool CPathBuilder::IsLinked2( Integer iGroup1, Integer iGroup2 )
 //
 FBrushComponent* CPathBuilder::TestPoint( const TVector& P )
 {
-	for( Integer b=0; b<BrushList.Num(); b++ )
+	for( Int32 b=0; b<BrushList.Num(); b++ )
 		if( BrushList[b]->Type == BRUSH_Solid )
 		{
 			// Transform point to Brush's local coords system.
@@ -910,7 +910,7 @@ FBrushComponent* CPathBuilder::TestLine
 	FBrushComponent*	Result		= nullptr;
 	Float	TestDist, BestDist		= 1000000.f;
 
-	for( Integer b=0; b<BrushList.Num(); b++ )
+	for( Int32 b=0; b<BrushList.Num(); b++ )
 	{
 		FBrushComponent* Brush = BrushList[b];
 

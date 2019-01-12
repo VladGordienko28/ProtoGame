@@ -65,7 +65,7 @@ void WColorRibbon::SetCurve( TInterpCurve<TColor>* InCurve )
 //
 // User release mouse button.
 //
-void WColorRibbon::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WColorRibbon::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseUp( Button, X, Y );
 }
@@ -83,7 +83,7 @@ void WColorRibbon::OnMouseLeave()
 //
 // Mouse moves on ribbon.
 //
-void WColorRibbon::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WColorRibbon::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseMove( Button, X, Y );
 
@@ -108,7 +108,7 @@ void WColorRibbon::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 //
 // User click on ribbon.
 //
-void WColorRibbon::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WColorRibbon::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnMouseDown( Button, X, Y );
 
@@ -118,7 +118,7 @@ void WColorRibbon::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 	if( Button == MB_Left )
 	{
 		// Add or highlight the sample.
-		Integer iCandidate = GetMarkerAt( X, Y );
+		Int32 iCandidate = GetMarkerAt( X, Y );
 		if( iCandidate == -1 )
 		{
 			// Add a new sample.
@@ -136,7 +136,7 @@ void WColorRibbon::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 	else if( Button == MB_Right )
 	{
 		// Remove selected sample.
-		Integer iSample = GetMarkerAt( X, Y );
+		Int32 iSample = GetMarkerAt( X, Y );
 		if( iSample != -1 && Curve->Samples.Num() > 1 )
 		{
 			Curve->Samples.RemoveShift(iSample);
@@ -151,7 +151,7 @@ void WColorRibbon::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 //
 // User double click on ribbon.
 //
-void WColorRibbon::OnDblClick( EMouseButton Button, Integer X, Integer Y )
+void WColorRibbon::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WWidget::OnDblClick( Button, X, Y );
 
@@ -178,16 +178,16 @@ void WColorRibbon::ColorSelected( WWidget* Sender )
 //
 // Return marker index in specified location or -1 if no marker found.
 //
-Integer WColorRibbon::GetMarkerAt( Integer X, Integer Y )
+Int32 WColorRibbon::GetMarkerAt( Int32 X, Int32 Y )
 {
 	if( Curve )
 	{
 		if( Y < Size.Height-17 )
 			return -1;
 
-		for( Integer i=0; i<Curve->Samples.Num(); i++ )
+		for( Int32 i=0; i<Curve->Samples.Num(); i++ )
 		{
-			Integer MarkerX = Curve->Samples[i].Input * Size.Width + 5;
+			Int32 MarkerX = Curve->Samples[i].Input * Size.Width + 5;
 			if( Abs(X-MarkerX) <= 5 )
 				return i;
 		}
@@ -207,7 +207,7 @@ void WColorRibbon::UpdateRibbon()
 	{
 		// Very expensive calculations.
 		TColor* Dest = (TColor*)Ribbon->GetData();
-		for( Integer u=0; u<Ribbon->USize; u++ )
+		for( Int32 u=0; u<Ribbon->USize; u++ )
 			Dest[u] = Curve->SampleLinearAt( (Float)u / (Float)Ribbon->USize, COLOR_Black );
 	}
 	else
@@ -249,7 +249,7 @@ void WColorRibbon::OnPaint( CGUIRenderBase* Render )
 	// Render markers.
 	if( Curve )
 	{
-		for( Integer i=0; i<Curve->Samples.Num(); i++ )
+		for( Int32 i=0; i<Curve->Samples.Num(); i++ )
 		{
 			auto Sample = Curve->Samples[i];
 

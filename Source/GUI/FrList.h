@@ -64,15 +64,15 @@ public:
 	TNotifyEvent		EventChange;
 	TNotifyEvent		EventDblClick;
 	TArray<TListItem>	Items;
-	Integer				ItemIndex;
+	Int32				ItemIndex;
 
 	// WListWidget interface.
 	WList( WContainer* InOwner, WWindow* InRoot );
-	virtual Integer AddItem( String InName, void* InData );
-	virtual Integer AddPictureItem( String InName, FTexture* Picture, TPoint PicOffset, TSize PicSize, void* Data );
-	virtual void Remove( Integer iItem );
+	virtual Int32 AddItem( String InName, void* InData );
+	virtual Int32 AddPictureItem( String InName, FTexture* Picture, TPoint PicOffset, TSize PicSize, void* Data );
+	virtual void Remove( Int32 iItem );
 	virtual void Empty();
-	virtual void SetItemIndex( Integer NewIdx, Bool bNotify = true );
+	virtual void SetItemIndex( Int32 NewIdx, Bool bNotify = true );
 	virtual void SelectNext();
 	virtual void SelectPrev();
 	virtual void OnChange();
@@ -94,25 +94,25 @@ class WListBox: public WList
 {
 public:
 	// Variables.
-	Integer			ItemsHeight;
+	Int32			ItemsHeight;
 
 	// WWidget interface.
 	WListBox( WContainer* InOwner, WWindow* InRoot );
 	void OnResize();
 	void OnMouseLeave();
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y ) ;
-	void OnDblClick( EMouseButton Button, Integer X, Integer Y );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y ) ;
+	void OnDblClick( EMouseButton Button, Int32 X, Int32 Y );
 	void OnPaint( CGUIRenderBase* Render );
-	void OnKeyDown( Integer Key );
-	void OnMouseScroll( Integer Delta );
+	void OnKeyDown( Int32 Key );
+	void OnMouseScroll( Int32 Delta );
 
 protected:
 	// Internal.
 	WSlider*	Slider;
-	Integer		iHighlight;
+	Int32		iHighlight;
 
-	Integer YToIndex( Integer Y ) const;
+	Int32 YToIndex( Int32 Y ) const;
 };
 
 
@@ -132,8 +132,8 @@ public:
 
 	// WWidget interface.
 	void OnPaint( CGUIRenderBase* Render );
-	void OnDblClick( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
+	void OnDblClick( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
 	void OnMouseEnter();
 	void OnMouseLeave();
 	void OnDeactivate();
@@ -173,31 +173,31 @@ public:
 	TArray<TLine>		Lines;
 	TNotifyEvent		EventChange;
 	TNotifyIndexEvent	EventGoto;
-	Integer				iFirst, iLast;
+	Int32				iFirst, iLast;
 
 	// WLog interface.
 	WLog( WContainer* InOwner, WWindow* InRoot );
 	~WLog();
 	void Clear();
-	Integer AddLine( String InText, void* InData=nullptr, TColor InColor=COLOR_White );
-	void* DataOf( Integer i );
+	Int32 AddLine( String InText, void* InData=nullptr, TColor InColor=COLOR_White );
+	void* DataOf( Int32 i );
 	virtual void OnChange();
-	virtual void OnGoto( Integer i );
+	virtual void OnGoto( Int32 i );
 
 	// WWidget interface.
-	void OnDblClick( EMouseButton Button, Integer X, Integer Y );    
+	void OnDblClick( EMouseButton Button, Int32 X, Int32 Y );    
 	void OnPaint( CGUIRenderBase* Render );
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
-	void OnKeyDown( Integer Key );
-	void OnMouseScroll( Integer Delta );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
+	void OnKeyDown( Int32 Key );
+	void OnMouseScroll( Int32 Delta );
 
 private:
 	// Internal.
 	WSlider*	ScrollBar;
 	WPopupMenu*	PopUp;
-	Integer		ScrollTop;
+	Int32		ScrollTop;
 
 	// Internal events.
 	void PopCopyClick( WWidget* Sender );
@@ -210,7 +210,7 @@ private:
 	void ScrollToLast();
 
 	// Internal.
-	Integer YToIndex( Integer Y ) const;
+	Int32 YToIndex( Int32 Y ) const;
 };
 
 

@@ -40,7 +40,7 @@ Bool CEditor::CloseProject( Bool bAsk )
 	}
 
 	// Close all projects pages.
-	for( Integer i=0; i<EditorPages->Pages.Num();  )
+	for( Int32 i=0; i<EditorPages->Pages.Num();  )
 		if( ((WEditorPage*)EditorPages->Pages[i])->PageType != PAGE_Hello )
 		{
 			EditorPages->CloseTabPage( i, true );	
@@ -90,7 +90,7 @@ Bool CEditor::NewProject()
 	Project->ProjName		= L"Unnamed";
 
 	// Load default resources for every project.
-	for( Integer iDef=0; true; iDef++ )
+	for( Int32 iDef=0; true; iDef++ )
 	{
 		String ResName = Config->ReadString
 		( 
@@ -141,16 +141,16 @@ public:
 	{}
 
 	// Set nest level to save data as a tree.
-	void SetNestLevel( Integer InNestLevel )
+	void SetNestLevel( Int32 InNestLevel )
 	{
 		assert(InNestLevel*4 < 64);
 		MemZero( Whitespace, sizeof(Whitespace) );
-		for( Integer i=0; i<InNestLevel*4; i++ )
+		for( Int32 i=0; i<InNestLevel*4; i++ )
 			Whitespace[i] = L' ';
 	}
 
 	// Byte export.
-	void ExportByte( const Char* FieldName, Byte Value )
+	void ExportByte( const Char* FieldName, UInt8 Value )
 	{
 		if( Value )
 			Writer.WriteString(String::Format
@@ -163,7 +163,7 @@ public:
 	}
 
 	// Integer Export.
-	void ExportInteger( const Char* FieldName, Integer Value )
+	void ExportInteger( const Char* FieldName, Int32 Value )
 	{
 		if( Value )
 			Writer.WriteString(String::Format
@@ -307,7 +307,7 @@ void SaveResource( FResource* R, String Directory )
 			Level->Export(Exporter);
 
 			// Each entity.
-			for( Integer iEntity=0; iEntity<Level->Entities.Num(); iEntity++ )
+			for( Int32 iEntity=0; iEntity<Level->Entities.Num(); iEntity++ )
 			{
 				FEntity* Entity = Level->Entities[iEntity];
 				Writer.WriteString( String::Format
@@ -334,7 +334,7 @@ void SaveResource( FResource* R, String Directory )
 					Writer.WriteString( L"        END_COMPONENT" );
 
 					// Extra.
-					for( Integer iCom=0; iCom<Entity->Components.Num(); iCom++ )
+					for( Int32 iCom=0; iCom<Entity->Components.Num(); iCom++ )
 					{
 						FComponent* Component = Entity->Components[iCom];
 						Writer.WriteString( String::Format
@@ -386,7 +386,7 @@ void SaveResource( FResource* R, String Directory )
 					Writer.WriteString( L"    END_COMPONENT" );
 
 					// Extra.
-					for( Integer iCom=0; iCom<Script->Components.Num(); iCom++ )
+					for( Int32 iCom=0; iCom<Script->Components.Num(); iCom++ )
 					{
 						FComponent* Component = Script->Components[iCom];
 						Writer.WriteString( String::Format
@@ -424,7 +424,7 @@ void SaveResource( FResource* R, String Directory )
 
 			// Layers.
 			Exporter.SetNestLevel(3);
-			for( Integer iLayer=0; iLayer<Material->Layers.Num(); iLayer++ )
+			for( Int32 iLayer=0; iLayer<Material->Layers.Num(); iLayer++ )
 			{
 				FMaterialLayer* Layer = Material->Layers[iLayer];
 
@@ -495,7 +495,7 @@ Bool CEditor::SaveProject()
 		// Save all scripts.
 		Ind.UpdateDetails(L"Saving Scripts");
 		Ind.SetProgress( 1, 4 );
-		for( Integer i=0; i<Project->GObjects.Num(); i++ )
+		for( Int32 i=0; i<Project->GObjects.Num(); i++ )
 			if( Project->GObjects[i] )
 			{
 				FObject* Obj = Project->GObjects[i];
@@ -511,7 +511,7 @@ Bool CEditor::SaveProject()
 		// Save all bitmaps, due thier nesting.
 		Ind.UpdateDetails(L"Saving Bitmaps");
 		Ind.SetProgress( 2, 4 );
-		for( Integer i=0; i<Project->GObjects.Num(); i++ )
+		for( Int32 i=0; i<Project->GObjects.Num(); i++ )
 			if( Project->GObjects[i] )
 			{
 				FObject* Obj = Project->GObjects[i];
@@ -527,7 +527,7 @@ Bool CEditor::SaveProject()
 		// Save all resources, except scripts and bitmaps.
 		Ind.UpdateDetails(L"Saving Resources");
 		Ind.SetProgress( 3, 4 );
-		for( Integer i=0; i<Project->GObjects.Num(); i++ )
+		for( Int32 i=0; i<Project->GObjects.Num(); i++ )
 			if( Project->GObjects[i] )
 			{
 				FObject* Obj = Project->GObjects[i];
@@ -552,7 +552,7 @@ Bool CEditor::SaveProject()
 	Ind.SetProgress( 4, 4 );
 	ProjFile.WriteString( L"BEGIN_PAGES" );
 	{
-		for( Integer iPage=0; iPage<EditorPages->Pages.Num(); iPage++ )
+		for( Int32 iPage=0; iPage<EditorPages->Pages.Num(); iPage++ )
 		{
 			WEditorPage* Page	= (WEditorPage*)EditorPages->Pages[iPage];
 			FObject* Res = nullptr;
@@ -651,13 +651,13 @@ public:
 	//
 
 	// Parse byte value. 
-	Byte ToByte()
+	UInt8 ToByte()
 	{
 		return _wtoi(Value);
 	}
 
 	// Parse int value.
-	Integer ToInteger()
+	Int32 ToInteger()
 	{
 		return _wtoi(Value);
 	}
@@ -719,7 +719,7 @@ public:
 	// Parse color value.
 	TColor ToColor()
 	{
-		Byte R, G, B, A;
+		UInt8 R, G, B, A;
 		R = FromHex(Value[1])*16 + FromHex(Value[2]);
 		G = FromHex(Value[3])*16 + FromHex(Value[4]);
 		B = FromHex(Value[5])*16 + FromHex(Value[6]);
@@ -797,7 +797,7 @@ public:
 //
 // Parse word from the line, start from iFirst character.
 //
-String ParseWord( String Source, Integer& iFirst )
+String ParseWord( String Source, Int32& iFirst )
 {
 	while( Source[iFirst]==' ' && iFirst<Source.Len() )
 		++iFirst;
@@ -863,7 +863,7 @@ struct TLoadObject
 	// Load object destructor.
 	~TLoadObject()
 	{
-		for( Integer i=0; i<Nodes.Num(); i++ )
+		for( Int32 i=0; i<Nodes.Num(); i++ )
 			delete Nodes[i];
 		Props.Empty();
 		Nodes.Empty();
@@ -872,7 +872,7 @@ struct TLoadObject
 	// Find property by it name.
 	TLoadProperty* FindProperty( String PropName, Bool bMandatory=false )
 	{
-		for( Integer i=0; i<Props.Num(); i++ )
+		for( Int32 i=0; i<Props.Num(); i++ )
 			if( PropName == Props[i].Name )
 				return &Props[i];
 
@@ -888,7 +888,7 @@ struct TLoadObject
 	{
 		TLoadProperty Prop;
 		MemZero( &Prop, sizeof(TLoadProperty) );
-		Integer iPos = 0;
+		Int32 iPos = 0;
 		Char *NameWalk = Prop.Name, *ValueWalk = Prop.Value;
 
 		while( Line[iPos]==' ' && iPos<Line.Len() )
@@ -944,7 +944,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 	{
 		String Header = Reader.ReadLine();
 		String ObjName, ObjClass;
-		Integer iPos = 0;
+		Int32 iPos = 0;
 
 		if( ParseWord( Header, iPos ) != L"BEGIN_RESOURCE" )
 			throw String::Format( L"Bad resource file: '%s'", *FileName );
@@ -987,7 +987,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 		{
 			// Allocate new one.
 			FBitmap* Bitmap;
-			Integer UBits, VBits;
+			Int32 UBits, VBits;
 			UBits	= Resource->FindProperty( L"UBits", true )->ToInteger();
 			VBits	= Resource->FindProperty( L"VBits", true )->ToInteger();
 
@@ -1060,7 +1060,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 				{
 					String Header = Line;
 					String ObjName, ObjClass;
-					Integer iPos = 0;
+					Int32 iPos = 0;
 
 					if( ParseWord( Header, iPos ) != L"BEGIN_COMPONENT" )
 						throw String::Format( L"Bad resource file: '%s'", *FileName );
@@ -1146,7 +1146,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 		}
 
 		// Create components.
-		for( Integer iNode=0; iNode<Resource->Nodes.Num(); iNode++ )
+		for( Int32 iNode=0; iNode<Resource->Nodes.Num(); iNode++ )
 		{
 			TLoadObject* Node = Resource->Nodes[iNode];
 
@@ -1187,7 +1187,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 				{
 					String Header = Line;
 					String ObjName, ObjClass;
-					Integer iPos = 0;
+					Int32 iPos = 0;
 
 					if( ParseWord( Header, iPos ) != L"BEGIN_LAYER" )
 						throw String::Format( L"Bad resource file: '%s'", *FileName );
@@ -1231,7 +1231,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 		Resource->Object		= Material;
 
 		// Create layers.
-		for( Integer iNode=0; iNode<Resource->Nodes.Num(); iNode++ )
+		for( Int32 iNode=0; iNode<Resource->Nodes.Num(); iNode++ )
 		{
 			TLoadObject* Node = Resource->Nodes[iNode];
 
@@ -1265,7 +1265,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 				{
 					String Header = Line;
 					String ObjName, ObjScript;
-					Integer iPos = 0;
+					Int32 iPos = 0;
 
 					if( ParseWord( Header, iPos ) != L"BEGIN_ENTITY" )
 						throw String::Format( L"Bad resource file: '%s'", *FileName );
@@ -1300,7 +1300,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 						{
 							String Header = Line;
 							String ObjName, ObjClass;
-							Integer iPos = 0;
+							Int32 iPos = 0;
 
 							if( ParseWord( Header, iPos ) != L"BEGIN_COMPONENT" )
 								throw String::Format( L"Bad resource file: '%s'", *FileName );
@@ -1370,7 +1370,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 		Resource->Object	= Level;
 
 		// Create entities.
-		for( Integer iEntity=0; iEntity<Resource->Nodes.Num(); iEntity++ )
+		for( Int32 iEntity=0; iEntity<Resource->Nodes.Num(); iEntity++ )
 		{
 			TLoadObject* EntNode = Resource->Nodes[iEntity];
 			FEntity* Entity = NewObject<FEntity>( EntNode->Name, Level );
@@ -1380,7 +1380,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 			EntNode->Object	= Entity;
 
 			// Create components.
-			for( Integer iNode=0; iNode<EntNode->Nodes.Num(); iNode++ )
+			for( Int32 iNode=0; iNode<EntNode->Nodes.Num(); iNode++ )
 			{
 				TLoadObject* Node = EntNode->Nodes[iNode];	
 
@@ -1459,14 +1459,14 @@ public:
 	}
 
 	// Byte import.
-	Byte ImportByte( const Char* FieldName )
+	UInt8 ImportByte( const Char* FieldName )
 	{
 		TLoadProperty* Prop = Object->FindProperty( FieldName, false );
 		return Prop ? Prop->ToByte() : 0x00;
 	}
 
 	// Integer import.
-	Integer	ImportInteger( const Char* FieldName )
+	Int32	ImportInteger( const Char* FieldName )
 	{
 		TLoadProperty* Prop = Object->FindProperty( FieldName, false );
 		return Prop ? Prop->ToInteger() : 0;
@@ -1554,7 +1554,7 @@ void ImportFields( CImporter& Importer, TLoadObject* Object )
 	}
 
 	// Load sub-objects.
-	for( Integer i=0; i<Object->Nodes.Num(); i++ )
+	for( Int32 i=0; i<Object->Nodes.Num(); i++ )
 		ImportFields( Importer, Object->Nodes[i] );
 }
 
@@ -1610,7 +1610,7 @@ Bool CEditor::OpenProjectFrom( String FileName )
 		}
 
 		// Find project info.
-		for( Integer iRes=0; iRes<ResObjs.Num(); iRes++ )
+		for( Int32 iRes=0; iRes<ResObjs.Num(); iRes++ )
 			if( ResObjs[iRes]->Object->IsA(FProjectInfo::MetaClass) )
 			{
 				GProject->Info	= As<FProjectInfo>(ResObjs[iRes]->Object);
@@ -1629,7 +1629,7 @@ Bool CEditor::OpenProjectFrom( String FileName )
 		Ind.UpdateDetails(L"Properties Import");
 		Ind.SetProgress( 50, 100 );
 		CImporter Importer;
-		for( Integer iRes=0; iRes<ResObjs.Num(); iRes++ )
+		for( Int32 iRes=0; iRes<ResObjs.Num(); iRes++ )
 			ImportFields( Importer, ResObjs[iRes] );
 
 		Result	= true;
@@ -1650,14 +1650,14 @@ Bool CEditor::OpenProjectFrom( String FileName )
 	}
 
 	// Destroy temporal objects.
-	for( Integer i=0; i<ResObjs.Num(); i++ )
+	for( Int32 i=0; i<ResObjs.Num(); i++ )
 		delete ResObjs[i];
 	ResObjs.Empty();
 
 	// Notify all objects about loading.
 	Ind.UpdateDetails(L"Notification");
 	Ind.SetProgress( 75, 100 );
-	for( Integer iObj=0; GObjectDatabase && iObj<GObjectDatabase->GObjects.Num(); iObj++ )
+	for( Int32 iObj=0; GObjectDatabase && iObj<GObjectDatabase->GObjects.Num(); iObj++ )
 		if( GObjectDatabase->GObjects[iObj] )
 			GObjectDatabase->GObjects[iObj]->PostLoad();
 
@@ -1689,7 +1689,7 @@ Bool CEditor::OpenProjectFrom( String FileName )
 
 	// Update list of recent projects.
 	{
-		Integer i;
+		Int32 i;
 		for( i=0; i<5; i++ )
 			if(	String::UpperCase(Config->ReadString( L"Editor", L"Recent", *String::Format(L"Recent[%i]", i), L"" )) == 
 				String::UpperCase(FileName) )
@@ -1702,7 +1702,7 @@ Bool CEditor::OpenProjectFrom( String FileName )
 		{
 			// Project not found in list of recent.
 			// So shift list and add new one.
-			for( Integer j=4; j>0; j-- )
+			for( Int32 j=4; j>0; j-- )
 			{
 				String Prev	= Config->ReadString( L"Editor", L"Recent", *String::Format(L"Recent[%i]", j-1), L"" );
 				Config->WriteString( L"Editor", L"Recent", *String::Format(L"Recent[%i]", j), Prev );

@@ -24,7 +24,7 @@ CShell::CShell()
 	// Say hello to user.
 	log( L"========================="			);
 	log( L"=    Fluorine Engine    ="			);
-	log( L"=      %s        =",			FLU_VER	);
+	log( L"=      %s        =",			FLU_VERSION	);
 	log( L"========================="			);
 	log( L"" );
 
@@ -48,7 +48,7 @@ CShell::~CShell()
 //
 // Shell running.
 //
-Integer CShell::Run( Integer ArgC, Char* ArgV[] )
+Int32 CShell::Run( Int32 ArgC, Char* ArgV[] )
 {
 	//
 	// ToDo: Insert main shell work here.
@@ -81,19 +81,16 @@ public:
 	// Output constructor.
 	CShellDebugOutput()
 	{
-#if FDEBUG_LOG
 		// Open log file.
 		LogFile	= _wfopen( *(String(FLU_NAME)+L".log"), L"w" );
-#endif
+
 		ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	}
 
 	// Output destructor.
 	~CShellDebugOutput()
 	{
-#if FDEBUG_LOG
 		fclose( LogFile );
-#endif
 	}
 
 
@@ -132,9 +129,8 @@ public:
 		va_end( ArgPtr );
 
 		Print( Dest, FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_RED );
-#if FDEBUG_LOG
+
 		fflush( LogFile );
-#endif
 	}
 
 	// Raise fatal error.
@@ -148,9 +144,7 @@ public:
 
 		Print( Dest, FOREGROUND_INTENSITY | FOREGROUND_RED );
 
-#if FDEBUG_LOG
 		fflush( LogFile );
-#endif  
 
 		// Exit process or enter debug.
 		if( IsDebuggerPresent() )
@@ -194,16 +188,14 @@ public:
 		ScriptLogf( SVR_Debug, L"Error: %s", Dest );
 	}
 
-	void Print( Char* Text, Word Color )
+	void Print( Char* Text, UInt16 Color )
 	{
 		Char Dest[2048] = {};
 
 		wcscpy( Dest, Text );
 		wcscat_s( Dest, L"\n" );
 
-#if FDEBUG_LOG
 		fwprintf( LogFile, Dest );
-#endif
 
 		SetConsoleTextAttribute( ConsoleHandle, Color );
 
@@ -215,9 +207,7 @@ private:
 	// Output internal.
 	HANDLE	ConsoleHandle;
 
-#if FDEBUG_LOG
 	FILE* LogFile;
-#endif
 };
 
 

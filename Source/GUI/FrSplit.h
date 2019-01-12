@@ -27,10 +27,10 @@ class WHSplitBox: public WContainer
 {
 public:
 	// Variables.
-	Integer LeftMin;
-	Integer LeftMax;
-	Integer RightMin;
-	Integer RightMax;
+	Int32 LeftMin;
+	Int32 LeftMax;
+	Int32 RightMin;
+	Int32 RightMax;
 	EHSplitRatio RatioRule;
 
 	// WHSplitBox interface.
@@ -38,16 +38,16 @@ public:
 
 	// WWidget interface.
 	void OnPaint( CGUIRenderBase* Render ) override;
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y ) override;
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y ) override;
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y ) override;
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y ) override;
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y ) override;
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y ) override;
 	void OnResize() override;
 
 private:
 	// Internal.
-	Integer		Separator;
-	Integer		HoldOffset;
-	Integer		OldXSize;
+	Int32		Separator;
+	Int32		HoldOffset;
+	Int32		OldXSize;
 	Bool		bMoveSeparator;
 
 	Bool UpdateSubWidgets();
@@ -78,10 +78,10 @@ class WVSplitBox: public WContainer
 {
 public:
 	// Variables.
-	Integer TopMin;
-	Integer TopMax;
-	Integer BottomMin;
-	Integer BottomMax;
+	Int32 TopMin;
+	Int32 TopMax;
+	Int32 BottomMin;
+	Int32 BottomMax;
 	EVSplitRatio RatioRule;
 
 	// WVSplitBox interface.
@@ -89,16 +89,16 @@ public:
 
 	// WWidget interface.
 	void OnPaint( CGUIRenderBase* Render ) override;
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y ) override;
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y ) override;
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y ) override;
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y ) override;
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y ) override;
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y ) override;
 	void OnResize() override;
 
 private:
 	// Internal.
-	Integer		Separator;
-	Integer		HoldOffset;
-	Integer		OldYSize;
+	Int32		Separator;
+	Int32		HoldOffset;
+	Int32		OldYSize;
 	Bool		bMoveSeparator;
 
 	Bool UpdateSubWidgets();

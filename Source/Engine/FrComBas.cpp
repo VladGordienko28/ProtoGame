@@ -351,13 +351,13 @@ FComponent::~FComponent()
 {
 	if( bTickable && Level )
 	{
-		Integer i = Level->TickObjects.FindItem(this);
+		Int32 i = Level->TickObjects.FindItem(this);
 		if( i != -1 )
 			Level->TickObjects.Remove(i);
 	}
 	if( bRenderable && Level )
 	{
-		Integer i = Level->RenderObjects.FindItem(this);
+		Int32 i = Level->RenderObjects.FindItem(this);
 		if( i != -1 )
 			Level->RenderObjects.Remove(i);
 	}

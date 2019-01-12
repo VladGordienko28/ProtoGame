@@ -78,7 +78,7 @@ public:
 	}
 
 	// WForm interface.
-	void WRenameDialog::Show( Integer X, Integer Y ) override
+	void WRenameDialog::Show( Int32 X, Int32 Y ) override
 	{
 		WForm::Show( X, Y );
 		OldModal	= Root->Modal;

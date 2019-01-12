@@ -29,13 +29,13 @@ public:
 			(Owner->Size.Height-Size.Height)/2 
 		);
 
-		for( Integer i=Root->Children.FindItem(this); i<Root->Children.Num()-1; i++ )
+		for( Int32 i=Root->Children.FindItem(this); i<Root->Children.Num()-1; i++ )
 			Root->Children.Swap( i, i+1 );
 
 		Root->SetFocused( this );
 
 		Lines[0]	= String::Format( L"Fluorine Engine" );
-		Lines[1]	= String::Format( L"Version: %s", FLU_VER );
+		Lines[1]	= String::Format( L"Version: %s", FLU_VERSION );
 		Lines[2]	= String::Format( L"Build on: %s", WIDEN(__DATE__) );
 		Lines[3]	= String::Format( L"%s", FLU_COPYRIGHT );
 	}

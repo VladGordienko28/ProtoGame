@@ -15,9 +15,9 @@ class CBytecode
 {
 public:
 	// Variables.
-	TArray<Byte>	Code;
-	Integer			iLine;
-	Integer			iPos;
+	TArray<UInt8>	Code;
+	Int32			iLine;
+	Int32			iPos;
 
 	// CBytecode interface.
 	CBytecode();
@@ -35,7 +35,7 @@ public:
 	struct TLabel
 	{
 		String	Name;
-		Word	Address;
+		UInt16	Address;
 	};
 
 	// Variables.
@@ -43,8 +43,8 @@ public:
 
 	// CThreadCode interface.
 	CThreadCode();
-	Integer GetLabelId( const Char* InName );	
-	Integer AddLabel( const Char* InName, Word InAddr );
+	Int32 GetLabelId( const Char* InName );	
+	Int32 AddLabel( const Char* InName, UInt16 InAddr );
 };
 
 
@@ -68,10 +68,10 @@ class CFunction: public CBytecode
 public:
 	// Variables.
 	String				Name;
-	DWord				Flags;
+	UInt32				Flags;
 	TArray<CProperty*>	Locals;
 	SizeT				FrameSize;
-	Integer				ParmsCount;
+	Int32				ParmsCount;
 	CProperty*			ResultVar;
  
 	// CFunction interface.
@@ -93,7 +93,7 @@ class CInstanceBuffer
 public:
 	// Variables.
 	TArray<CProperty*>&	Properties;
-	TArray<Byte>		Data;
+	TArray<UInt8>		Data;
 
 	// CInstanceBuffer interface.
 	CInstanceBuffer( TArray<CProperty*>& InProperties );
@@ -132,8 +132,8 @@ class FScript: public FResource
 REGISTER_CLASS_H(FScript);
 public:
 	// Generic script information.
-	DWord			ScriptFlags;
-	Integer			iFamily;
+	UInt32			ScriptFlags;
+	Int32			iFamily;
 	TArray<String>	Text;
 
 	// Prototype components.

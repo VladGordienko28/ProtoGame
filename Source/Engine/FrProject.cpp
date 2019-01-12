@@ -138,7 +138,7 @@ FLevel* CProject::DuplicateLevel( FLevel* Source )
 	// it's important to store proper order, since refs will be
 	// changed using it's index in level's database.
 	// Warning should be works like FEntity::Init.
-	for( Integer iEntity=0; iEntity<Source->Entities.Num(); iEntity++ )
+	for( Int32 iEntity=0; iEntity<Source->Entities.Num(); iEntity++ )
 	{
 		FEntity* OldEntity = Source->Entities[iEntity];
 		FEntity* NewEntity = NewObject<FEntity>( OldEntity->GetName(), Result );
@@ -156,7 +156,7 @@ FLevel* CProject::DuplicateLevel( FLevel* Source )
 		BasCom->InitForEntity( NewEntity );
 
 		// Extra components.
-		for( Integer i=0; i<OldEntity->Components.Num(); i++ )
+		for( Int32 i=0; i<OldEntity->Components.Num(); i++ )
 		{
 			FExtraComponent* Extra = OldEntity->Components[i];
 			FExtraComponent* Com = (FExtraComponent*)GObjectDatabase->CopyObject
@@ -187,13 +187,13 @@ FLevel* CProject::DuplicateLevel( FLevel* Source )
 	// now, but still object's has references to the objects
 	// on the old level, here we fix them.
 	CLevelRefChanger RefChanger( Result, Source );
-	for( Integer iEntity=0; iEntity<Result->Entities.Num(); iEntity++ )
+	for( Int32 iEntity=0; iEntity<Result->Entities.Num(); iEntity++ )
 	{
 		FEntity* Entity	= Result->Entities[iEntity];
 
 		// Serialize only component's because they are refer.
 		Entity->Base->SerializeThis( RefChanger );
-		for( Integer e=0; e<Entity->Components.Num(); e++ )
+		for( Int32 e=0; e<Entity->Components.Num(); e++ )
 			Entity->Components[e]->SerializeThis( RefChanger );
 
 		// ..but also change references in the instance buffer.
@@ -204,13 +204,13 @@ FLevel* CProject::DuplicateLevel( FLevel* Source )
 	// Send after loading notification to the each
 	// entity and component to set up temporal stuff.
 	// This action is logically has sense.
-	for( Integer iEntity=0; iEntity<Result->Entities.Num(); iEntity++ )
+	for( Int32 iEntity=0; iEntity<Result->Entities.Num(); iEntity++ )
 	{
 		FEntity* Entity	= Result->Entities[iEntity];
 
 		Entity->PostLoad();
 		Entity->Base->PostLoad();
-		for( Integer e=0; e<Entity->Components.Num(); e++ )
+		for( Int32 e=0; e<Entity->Components.Num(); e++ )
 			Entity->Components[e]->PostLoad();
 	}
 

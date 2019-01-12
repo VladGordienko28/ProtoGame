@@ -15,16 +15,16 @@
 // Special macro to invoke function.
 //
 #define INVOKE( func )\
-	Integer Invoke_##func()\
+	Int32 Invoke_##func()\
 	{\
 		func();\
 		return 0;\
 	}\
-	static Integer var_##func = Invoke_##func();\
+	static Int32 var_##func = Invoke_##func();\
 
 
 // New string code testing.
-Integer tmp()
+Int32 tmp()
 {
 
 	

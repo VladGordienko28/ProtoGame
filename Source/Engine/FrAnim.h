@@ -15,8 +15,8 @@ struct TAnimSequence
 public:
 	// Variables.
 	String			Name;
-	Integer			Start;
-	Integer			Count;
+	Int32			Start;
+	Int32			Count;
 };
    
 
@@ -36,16 +36,16 @@ public:
 	TArray<TAnimSequence>	Sequences;
 
 	// Slicing.
-	Integer					FrameW;
-	Integer					FrameH;
-	Integer					SpaceX;
-	Integer					SpaceY;
+	Int32					FrameW;
+	Int32					FrameH;
+	Int32					SpaceX;
+	Int32					SpaceY;
 	TArray<TRect>			Frames;
 
 	// FAnimation interface.
 	FAnimation();
-	Integer FindSequence( String InName );
-	TRect GetTexCoords( Integer iFrame );
+	Int32 FindSequence( String InName );
+	TRect GetTexCoords( Int32 iFrame );
 
 	// FObject interface.
 	void SerializeThis( CSerializer& S );

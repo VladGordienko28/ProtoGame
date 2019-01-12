@@ -33,12 +33,12 @@ void CDebugDrawHelper::Reset()
 //
 void CDebugDrawHelper::Render( CCanvas* Canvas )
 {
-	for( Integer i=0; i<Points.Num(); i++ )
+	for( Int32 i=0; i<Points.Num(); i++ )
 	{
 		auto& P = Points[i];
 		Canvas->DrawPoint( P.Position, P.Size, P.Color );
 	}
-	for( Integer i=0; i<Lines.Num(); i++ )
+	for( Int32 i=0; i<Lines.Num(); i++ )
 	{
 		auto& L = Lines[i];
 		Canvas->DrawLine( L.PFrom, L.PTo, L.Color, false );
@@ -51,7 +51,7 @@ void CDebugDrawHelper::Render( CCanvas* Canvas )
 //
 void CDebugDrawHelper::Tick( Float Delta )
 {
-	for( Integer i=0; i<Points.Num(); )
+	for( Int32 i=0; i<Points.Num(); )
 	{
 		if( (Points[i].Life -= Delta) <= 0.f )
 		{
@@ -63,7 +63,7 @@ void CDebugDrawHelper::Tick( Float Delta )
 			i++;
 		}
 	}
-	for( Integer i=0; i<Lines.Num(); )
+	for( Int32 i=0; i<Lines.Num(); )
 	{
 		if( (Lines[i].Life -= Delta) <= 0.f )
 		{

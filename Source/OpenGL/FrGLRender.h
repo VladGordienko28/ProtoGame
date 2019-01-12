@@ -49,7 +49,7 @@ public:
 	void SetBlend( EBitmapBlend Blend );
 	void SetColor( TColor Color );
 	void SetBitmap( FBitmap* Bitmap, Bool bUnlit=true );
-	void SetStipple( DWord Stipple );
+	void SetStipple( UInt32 Stipple );
 	void RenderLightmap();
 
 	void EnableShader( CGLShaderBase* Shader );
@@ -64,7 +64,7 @@ private:
 	EBitmapBlend		OldBlend;
 	FBitmap*			OldBitmap;
 	TColor				OldColor;
-	DWord				OldStipple;
+	UInt32				OldStipple;
 	Float				LockTime;
 	CGLShaderBase*		ActiveShader;
 };
@@ -87,17 +87,17 @@ public:
 
 	// Render variables.
 	COpenGLCanvas*		Canvas;
-	Integer				WinWidth;
-	Integer				WinHeight;
+	Int32				WinWidth;
+	Int32				WinHeight;
 
 	// COpenGLRender interface.
 	COpenGLRender( HWND InhWnd );
 	~COpenGLRender();
 
 	// CRenderBase interface.
-	void Resize( Integer NewWidth, Integer NewHeight );
+	void Resize( Int32 NewWidth, Int32 NewHeight );
 	void Flush();
-	void RenderLevel( CCanvas* InCanvas, FLevel* Level, Integer X, Integer Y, Integer W, Integer H );
+	void RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int32 Y, Int32 W, Int32 H );
 	CCanvas* Lock();
 	void Unlock();	
 };

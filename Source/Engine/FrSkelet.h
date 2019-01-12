@@ -41,16 +41,16 @@ public:
 	ESkelCntrl		Type;
 	String			Name;
 	TColor			Color;
-	DWord			Flags;
-	Integer			iPosCtrl;
-	Integer			iRotCtrl;
+	UInt32			Flags;
+	Int32			iPosCtrl;
+	Int32			iRotCtrl;
 	Float			Scale;		
 
 	// Control type specific.
 	union
 	{
 		struct{ Bool	bLookAt; };							// SC_Bone.
-		struct{ Bool	bFlipIK;	Integer iEndJoint; };	// SC_IKSolver.
+		struct{ Bool	bFlipIK;	Int32 iEndJoint; };	// SC_IKSolver.
 	};
 
 	// Constructors.
@@ -128,14 +128,14 @@ class TBoneTrack
 {
 public:
 	// Variables.
-	Integer					iBone;
+	Int32					iBone;
 	TInterpCurve<TVector>	PosKeys;
 	TInterpCurve<TAngle>	RotKeys;
 
 	// TBoneTrack interface.
 	TBoneTrack()
 	{}
-	TBoneTrack( Integer iInBone )
+	TBoneTrack( Int32 iInBone )
 		:	iBone( iInBone )
 	{}
 
@@ -188,21 +188,21 @@ public:
 	TSkelPose			RefPose;
 
 	// Bones remap tables.
-	TArray<Integer>		TransformTable;		// Computed order for transformations.
-	TArray<Integer>		RenderTable;		// Based on Z-value....
+	TArray<Int32>		TransformTable;		// Computed order for transformations.
+	TArray<Int32>		RenderTable;		// Based on Z-value....
 
 	// Actions.
 	TArray<TSkeletonAction>	Actions;		// List of all animations.
 
 	// Placeholder -------------------------------
-	Integer		Placeholder;
+	Int32		Placeholder;
 
 
 	// FSkeleton interface.
 	FSkeleton();
 	~FSkeleton();
 	TBoneInfo* FindBone( String InName );
-	Integer FindAction( String InName );
+	Int32 FindAction( String InName );
 
 	// Skeleton rendering.
 	void Render
@@ -224,18 +224,18 @@ public:
 
 
 	// Skeleton hierarchy management.
-	Bool LinkTo( Integer iBone, Integer iParent );
-	Bool LinkRotationTo( Integer iBone, Integer iParent );
-	Bool LinkLookAtTo( Integer iBone, Integer iParent );
-	Bool LinkIKSolverTo( Integer iIKSolver, Integer iEndJoint );
-	Bool BreakPosLink( Integer iBone );
-	Bool BreakRotLink( Integer iBone );
-	Bool BreakLinks( Integer iBone );
+	Bool LinkTo( Int32 iBone, Int32 iParent );
+	Bool LinkRotationTo( Int32 iBone, Int32 iParent );
+	Bool LinkLookAtTo( Int32 iBone, Int32 iParent );
+	Bool LinkIKSolverTo( Int32 iIKSolver, Int32 iEndJoint );
+	Bool BreakPosLink( Int32 iBone );
+	Bool BreakRotLink( Int32 iBone );
+	Bool BreakLinks( Int32 iBone );
 
 	// Circular dependencies detector.
-	Bool TryLink( Integer iBone, Integer iParent );
-	Bool TryIKSolver( Integer iIK, Integer iEndJoint );		// ADD NAMES OF CONTROLLERS, USE CONST FLAG AND ADDRESS OF CHILDER NAME OR STATIC NONE STRING
-	Bool TryLookAt( Integer iBone, Integer iTarget );
+	Bool TryLink( Int32 iBone, Int32 iParent );
+	Bool TryIKSolver( Int32 iIK, Int32 iEndJoint );		// ADD NAMES OF CONTROLLERS, USE CONST FLAG AND ADDRESS OF CHILDER NAME OR STATIC NONE STRING
+	Bool TryLookAt( Int32 iBone, Int32 iTarget );
 };
 
 

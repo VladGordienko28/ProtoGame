@@ -25,8 +25,8 @@ public:
 		Bool			bEnabled;
 		Bool			bToggle;
 		Bool			bChecked;
-		Integer			Y;
-		Integer			Height;	
+		Int32			Y;
+		Int32			Height;	
 		WMenu*			SubMenu;
 		TNotifyEvent	Event;
 	};
@@ -38,21 +38,21 @@ public:
 	virtual void SetParent( WMenu* Menu );
 	virtual void Hide();
 	virtual void Show( TPoint P );
-	Integer AddSubMenu( String Title, WMenu* SubMenu );
-	Integer AddItem( String Title, TNotifyEvent InEvent = TNotifyEvent(), Bool InbToggle = false );
+	Int32 AddSubMenu( String Title, WMenu* SubMenu );
+	Int32 AddItem( String Title, TNotifyEvent InEvent = TNotifyEvent(), Bool InbToggle = false );
 
 	// WWidget interface.
 	void OnPaint( CGUIRenderBase* Render );
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
 
 private:
 	// Internal.
 	WMenu*		Parent;	
 	WMenu*		Popped;
-	Integer		iSelected;
+	Int32		iSelected;
 
-	Integer YToIndex( Integer InY );
+	Int32 YToIndex( Int32 InY );
 };
 
 
@@ -71,8 +71,8 @@ public:
 	{
 	public:
 		String	Text;
-		Integer	X;
-		Integer	Width;
+		Int32	X;
+		Int32	Width;
 		WMenu*	SubMenu;
 	};
 	TArray<TMainMenuItem>	Items;
@@ -80,22 +80,22 @@ public:
 	// WMainMenu interface.
 	WMainMenu( WContainer* InOwner, WWindow* InRoot );
 	~WMainMenu();
-	Integer AddSubMenu( String Title, WMenu* SubMenu );
+	Int32 AddSubMenu( String Title, WMenu* SubMenu );
 
 	// WWidget interface.
 	void OnPaint( CGUIRenderBase* Render );
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
 	void OnDeactivate();
 	void OnMouseLeave();
 
 private:	
 	// Internal.
 	Bool		bPopping;
-	Integer		iSelected;
+	Int32		iSelected;
 	WMenu*		Active;
 
-	Integer XToIndex( Integer InX );
+	Int32 XToIndex( Int32 InX );
 };
 
 

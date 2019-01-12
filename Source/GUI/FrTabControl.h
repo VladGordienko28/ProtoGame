@@ -15,7 +15,7 @@ class WTabPage: public WContainer
 public:
 	// Variables.
 	TColor			Color;
-	Integer			TabWidth;
+	Int32			TabWidth;
 	WTabControl*	TabControl;
 	Bool			bCanClose;
 
@@ -54,14 +54,14 @@ class WTabControl: public WContainer
 public:
 	// Variables.
 	TArray<WTabPage*>	Pages;
-	Integer				iActive;
+	Int32				iActive;
 
 	// WTabControl interface.	
 	WTabControl( WContainer* InOwner, WWindow* InRoot );
-	void ActivateTabPage( Integer iPage );
+	void ActivateTabPage( Int32 iPage );
 	void ActivateTabPage( WTabPage* Page );
-	void CloseTabPage( Integer iPage, Bool bForce = false );
-	Integer AddTabPage( WTabPage* Page );
+	void CloseTabPage( Int32 iPage, Bool bForce = false );
+	Int32 AddTabPage( WTabPage* Page );
 	WTabPage* GetActivePage();
 	void SetHeaderSide( ETabHeaderSide InSide );
 
@@ -69,22 +69,22 @@ public:
 	void OnActivate();
 	void OnPaint( CGUIRenderBase* Render );
 	void OnMouseLeave();
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
 
 private:
 	// Internal.
 	WPopupMenu*			Popup;
-	Integer				iHighlight;
-	Integer				iCross;
+	Int32				iHighlight;
+	Int32				iCross;
 	WTabPage*			DragPage;
 	Bool				bWasDrag;
 	Bool				bOverflow;
 	ETabHeaderSide		HeaderSide;
 
-	Integer XToIndex( Integer InX );
-	Integer XYToCross( Integer InX, Integer InY );
+	Int32 XToIndex( Int32 InX );
+	Int32 XYToCross( Int32 InX, Int32 InY );
 	void PopupPageClick( WWidget* Sender );
 };
 

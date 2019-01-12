@@ -57,7 +57,7 @@ public:
 private:
 	// Keyframe internal variables.
 	EKeyGlide			GlideType;
-	Byte				iTarget;
+	UInt8				iTarget;
 	Bool				bLooped;
 	Float				Speed;
 	Float				Progress;
@@ -82,7 +82,7 @@ struct TLogicConnector
 public:
 	// Variables.
 	FLogicComponent*	Target;
-	Integer				iJack;
+	Int32				iJack;
 
 	// TLogicConnector interface.
 	friend void Serialize( CSerializer& S, TLogicConnector& V );
@@ -105,8 +105,8 @@ public:
 	Bool		bEnabled;
 	String		PlugsName[MAX_LOGIC_PLUGS];
 	String		JacksName[MAX_LOGIC_JACKS];
-	Integer		NumPlugs;
-	Integer		NumJacks;
+	Int32		NumPlugs;
+	Int32		NumJacks;
 
 	// Internal.
 	FLogicComponent*	NextLogicElement;
@@ -117,10 +117,10 @@ public:
 	// FLogicComponent interface.
 	FLogicComponent();
 	~FLogicComponent();
-	TVector GetPlugPos( Integer iPlug );
-	TVector GetJackPos( Integer iJack );
-	void AddConnector( FLogicComponent* InTarget, Integer iPlug, Integer iJack );
-	void RemoveConnectors( Integer iPlug );
+	TVector GetPlugPos( Int32 iPlug );
+	TVector GetJackPos( Int32 iJack );
+	void AddConnector( FLogicComponent* InTarget, Int32 iPlug, Int32 iJack );
+	void RemoveConnectors( Int32 iPlug );
 	void CleanBadConnectors();
 
 	// FComponent interface.
@@ -182,7 +182,7 @@ private:
 
 	// Animation internal.
 	EAnimType			AnimType;
-	Byte				iSequence;
+	UInt8				iSequence;
 	Bool				bBackward;
 	Float				Rate;
 	Float				Frame;
@@ -228,7 +228,7 @@ public:
 	FTexture*			Texture;
 	EBrushType			Type;
 	TVector				Vertices[MAX_BRUSH_VERTS];
-	Integer				NumVerts;
+	Int32				NumVerts;
 	TCoords				TexCoords;
 	TVector				Scroll;
 
@@ -362,27 +362,27 @@ public:
 	FTexture*			Texture;
 
 	// Tilemap.
-	TArray<Word>		Map;
-	Integer				MapXSize;
-	Integer				MapYSize;
+	TArray<UInt16>		Map;
+	Int32				MapXSize;
+	Int32				MapYSize;
 	TVector				TileSize;
 
 	// Tileset information.
-	Byte				TilesPerU;
-	Byte				TilesPerV;
+	UInt8				TilesPerU;
+	UInt8				TilesPerV;
 
 	// Precomputed tables.
 	TRect				AtlasTable[256];
 
 	// Model edit tool.
-	Integer				PenIndex;
-	TArray<Byte>		Selected;
+	Int32				PenIndex;
+	TArray<UInt8>		Selected;
 
 	// FModelComponent interface.
 	FModelComponent();
 	void ReallocMap();
 	void SetAtlasTable();
-	Integer WorldToMapIndex( Float vX, Float vY );
+	Int32 WorldToMapIndex( Float vX, Float vY );
 
 	// FObject interface.
 	void SerializeThis( CSerializer& S );
@@ -609,7 +609,7 @@ public:
 	Float			Damping;
 	Float			Spring;
 	Float			Length;
-	Integer			NumSegs;
+	Int32			NumSegs;
 	FTexture*		Segment;
 	Float			Width;
 
@@ -811,7 +811,7 @@ public:
 	Float		Life;
 	Float		MaxLifeInv;
 	Float		Phase;
-	Byte		iTile;
+	UInt8		iTile;
 };
 
 
@@ -836,19 +836,19 @@ public:
 	enum{ MAX_PARTICLES	= 10000 };
 
 	// Variables.
-	Integer					MaxParticles;
+	Int32					MaxParticles;
 	Float					LifeRange[2];
 	TVector					SpawnArea;
 	TVector					SpawnOffset;
-	Integer					EmitPerSec;
+	Int32					EmitPerSec;
 	EParticleParam			SizeParam;
 	Float					SizeRange[2];
 	Bool					bUnlit;
 	TColor					Colors[3];
 	Float					SpinRange[2];
 	FTexture*				Texture;
-	Byte					NumUTiles;
-	Byte					NumVTiles;
+	UInt8					NumUTiles;
+	UInt8					NumVTiles;
 
 	// FEmitterComponent interface.
 	FEmitterComponent();
@@ -872,7 +872,7 @@ public:
 protected:
 	// Emitter internal.
 	TArray<TParticle>		Particles;
-	Integer					NumPrts;
+	Int32					NumPrts;
 	Float					Accumulator;
 };
 
@@ -1076,7 +1076,7 @@ public:
 private:
 	// Mover internal.
 	FPhysicComponent*	Riders[MAX_RIDERS];
-	Integer				NumRds;
+	Int32				NumRds;
 	TVector				OldLocation;
 };
 
@@ -1205,8 +1205,8 @@ class FPuppetComponent: public FExtraComponent
 REGISTER_CLASS_H(FPuppetComponent);
 public:
 	// General.
-	Integer				Health;
-	Integer				Clan;
+	Int32				Health;
+	Int32				Clan;
 	
 	// Movement.
 	Float				MoveSpeed;
@@ -1252,8 +1252,8 @@ private:
 	TVector					GoalStart;
 	Float					LookCounter;
 	FPuppetComponent*		LookList[MAX_WATCHED];
-	Integer					iHoldenNode;
-	Integer					iGoalNode;
+	Int32					iHoldenNode;
+	Int32					iGoalNode;
 
 	// Internal functions.
 	void LookAtPuppets();
@@ -1305,7 +1305,7 @@ private:
 	// Internal.
 	Float		Rate;
 	Float		Frame;
-	Integer		iAction;
+	Int32		iAction;
 
 	// Natives.
 	void nativePlayAnim( CFrame& Frame );

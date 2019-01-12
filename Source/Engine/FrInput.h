@@ -93,13 +93,13 @@ class CInput: public CRefsHolder
 public:
 	// Keys variables.
 	Bool		Keys[KEY_MAX];
-	Byte		SystemRemap[KEY_MAX];
-	Byte		ConfigRemap[KEY_MAX];
+	UInt8		SystemRemap[KEY_MAX];
+	UInt8		ConfigRemap[KEY_MAX];
 
 	// Cursor, wheel and/or touch variables.
-	Integer		MouseX;
-	Integer		MouseY;
-	Integer		WheelScroll;
+	Int32		MouseX;
+	Int32		MouseY;
+	Int32		WheelScroll;
 	TVector		WorldCursor;
 
 	// Current level.
@@ -110,11 +110,11 @@ public:
 	void RemapFromIni( CConfigManager* Config );
 	void SetLevel( FLevel* InLevel );
 	void Reset();
-	Bool KeyIsPressed( Integer iKey );
+	Bool KeyIsPressed( Int32 iKey );
 
 	// Events from the platform.
-	void OnKeyDown( Integer iKey );
-	void OnKeyUp( Integer iKey );
+	void OnKeyDown( Int32 iKey );
+	void OnKeyUp( Int32 iKey );
 	void OnCharType( Char TypedChar );
 
 	// Cursor variables, should be updated by platform

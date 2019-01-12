@@ -56,23 +56,23 @@ protected:
 //
 // Basic types serialization.
 //
-inline void Serialize( CSerializer& S, Byte& V )		{ S.SerializeData( &V, sizeof(Byte)		); }
-inline void Serialize( CSerializer& S, SByte& V )		{ S.SerializeData( &V, sizeof(SByte)	); }
+inline void Serialize( CSerializer& S, UInt8& V )		{ S.SerializeData( &V, sizeof(UInt8)	); }
+inline void Serialize( CSerializer& S, Int8& V )		{ S.SerializeData( &V, sizeof(Int8)		); }
 inline void Serialize( CSerializer& S, Bool& V )		{ S.SerializeData( &V, sizeof(Bool)		); }
 inline void Serialize( CSerializer& S, AnsiChar& V )	{ S.SerializeData( &V, sizeof(AnsiChar) ); }
 inline void Serialize( CSerializer& S, Char& V )		{ S.SerializeData( &V, sizeof(Char)		); }
-inline void Serialize( CSerializer& S, Word& V )		{ S.SerializeData( &V, sizeof(Word)		); }
-inline void Serialize( CSerializer& S, SWord& V )		{ S.SerializeData( &V, sizeof(SWord)	); }
-inline void Serialize( CSerializer& S, Integer& V )		{ S.SerializeData( &V, sizeof(Integer)	); }
-inline void Serialize( CSerializer& S, DWord& V )		{ S.SerializeData( &V, sizeof(DWord)	); }
+inline void Serialize( CSerializer& S, UInt16& V )		{ S.SerializeData( &V, sizeof(UInt16)	); }
+inline void Serialize( CSerializer& S, Int16& V )		{ S.SerializeData( &V, sizeof(Int16)	); }
+inline void Serialize( CSerializer& S, Int32& V )		{ S.SerializeData( &V, sizeof(Int32)	); }
+inline void Serialize( CSerializer& S, UInt32& V )		{ S.SerializeData( &V, sizeof(UInt32)	); }
 inline void Serialize( CSerializer& S, Float& V )		{ S.SerializeData( &V, sizeof(Float)	); }
-inline void Serialize( CSerializer& S, QWord& V )		{ S.SerializeData( &V, sizeof(QWord)	); }
+inline void Serialize( CSerializer& S, UInt64& V )		{ S.SerializeData( &V, sizeof(UInt64)	); }
 
 // Enumeration serialization.
 template<class T> inline void SerializeEnum( CSerializer& S, T& Enum )	
 { 
 	static_assert(std::is_enum<T>::value, "SerializeEnum accepts only enum types");
-	S.SerializeData( &Enum, sizeof(Byte) ); 
+	S.SerializeData( &Enum, sizeof(UInt8) ); 
 }
 
 //

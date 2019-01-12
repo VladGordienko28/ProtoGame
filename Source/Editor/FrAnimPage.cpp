@@ -23,10 +23,10 @@ class WAnimationPlayer: public WPanel
 public:
 	// Variables.
 	FAnimation*			Animation;
-	Integer*			FramePtr;
+	Int32*				FramePtr;
 
 	// WAnimationPlayer interface.
-	WAnimationPlayer( FAnimation* InAnimation, Integer* InFramePtr, WContainer* InOwner, WWindow* InRoot );
+	WAnimationPlayer( FAnimation* InAnimation, Int32* InFramePtr, WContainer* InOwner, WWindow* InRoot );
 	void OnPaint( CGUIRenderBase* Render );
 };
 
@@ -332,7 +332,7 @@ void WAnimationPage::ButtonNewClick( WWidget* Sender )
 {
 	// Generate unique name.
 	String SeqName = L"";
-	for( Integer i=0; ; i++ )
+	for( Int32 i=0; ; i++ )
 	{
 		String TestName = String::Format( L"Sequence_%d", i );
 		if( Animation->FindSequence(TestName) == -1 )
@@ -364,7 +364,7 @@ void WAnimationPage::ButtonNewClick( WWidget* Sender )
 void WAnimationPage::UpdateControls()
 {
 	SeqsList->Empty();
-	for( Integer i=0; i<Animation->Sequences.Num(); i++ )
+	for( Int32 i=0; i<Animation->Sequences.Num(); i++ )
 		SeqsList->AddItem( Animation->Sequences[i].Name, &Animation->Sequences[i] );
 
 	ListSequencesChange( this );
@@ -405,10 +405,10 @@ void WAnimationPage::OnPaint( CGUIRenderBase* Render )
 	if( Animation && Animation->Sheet )
 	{
 		FTexture* Texture	= Animation->Sheet;
-		Integer X = Base.X - Pan.X + ( Size.Width - Texture->USize * Scale ) / 2;
-		Integer Y = Base.Y - Pan.Y + ( Size.Height - Texture->VSize * Scale ) / 2;
-		Integer W = Texture->USize * Scale;
-		Integer H = Texture->VSize * Scale;
+		Int32 X = Base.X - Pan.X + ( Size.Width - Texture->USize * Scale ) / 2;
+		Int32 Y = Base.Y - Pan.Y + ( Size.Height - Texture->VSize * Scale ) / 2;
+		Int32 W = Texture->USize * Scale;
+		Int32 H = Texture->VSize * Scale;
 
 		// Draw border.
 		Render->DrawRegion
@@ -431,11 +431,11 @@ void WAnimationPage::OnPaint( CGUIRenderBase* Render )
 						);
 
 		// Draw cells.
-		Integer FrmPerX	= Floor((Float)(Animation->Sheet->USize+Animation->SpaceX) / (Float)(Animation->FrameW+Animation->SpaceX));		
-		Integer FrmPerY	= Floor((Float)(Animation->Sheet->VSize+Animation->SpaceY) / (Float)(Animation->FrameH+Animation->SpaceY));
+		Int32 FrmPerX	= Floor((Float)(Animation->Sheet->USize+Animation->SpaceX) / (Float)(Animation->FrameW+Animation->SpaceX));		
+		Int32 FrmPerY	= Floor((Float)(Animation->Sheet->VSize+Animation->SpaceY) / (Float)(Animation->FrameH+Animation->SpaceY));
 
 		// Vertical lines.
-		for( Integer iX=0; iX<=FrmPerX; iX++ )
+		for( Int32 iX=0; iX<=FrmPerX; iX++ )
 		{
 			TSize Size	= TSize( 1, H );
 			TPoint Pos	= TPoint
@@ -450,7 +450,7 @@ void WAnimationPage::OnPaint( CGUIRenderBase* Render )
 		}
 
 		// Horizontal lines.
-		for( Integer iY=0; iY<=FrmPerY; iY++ )
+		for( Int32 iY=0; iY<=FrmPerY; iY++ )
 		{
 			TSize Size	= TSize( W, 1 );
 			TPoint Pos	= TPoint
@@ -465,10 +465,10 @@ void WAnimationPage::OnPaint( CGUIRenderBase* Render )
 		}
 
 		// Number each tile.
-		for( Integer iY=0; iY<FrmPerY; iY++ )
-		for( Integer iX=0; iX<FrmPerX; iX++ )
+		for( Int32 iY=0; iY<FrmPerY; iY++ )
+		for( Int32 iX=0; iX<FrmPerX; iX++ )
 		{
-			Integer iTile	= iY*FrmPerX + iX;
+			Int32 iTile	= iY*FrmPerX + iX;
 			TPoint Pos	= TPoint
 							(
 								X + iX*(Animation->FrameW+Animation->SpaceX) * Scale + 3,  
@@ -493,7 +493,7 @@ void WAnimationPage::OnPaint( CGUIRenderBase* Render )
 //
 // When user drag something over animation panel.
 //
-void WAnimationPage::OnDragOver( void* Data, Integer X, Integer Y, Bool& bAccept )
+void WAnimationPage::OnDragOver( void* Data, Int32 X, Int32 Y, Bool& bAccept )
 {
 	FObject* Res = (FObject*)Data;
 	bAccept	= Res && Res->IsA(FTexture::MetaClass);
@@ -503,7 +503,7 @@ void WAnimationPage::OnDragOver( void* Data, Integer X, Integer Y, Bool& bAccept
 //
 // User has drop something on panel.
 //
-void WAnimationPage::OnDragDrop( void* Data, Integer X, Integer Y )
+void WAnimationPage::OnDragDrop( void* Data, Int32 X, Int32 Y )
 {
 	FObject* Res = (FObject*)Data;
 
@@ -558,7 +558,7 @@ Bool WAnimationPage::OnQueryClose()
 //
 // User has down on animation page.
 //
-void WAnimationPage::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WAnimationPage::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WEditorPage::OnMouseDown( Button, X, Y );
 }
@@ -567,7 +567,7 @@ void WAnimationPage::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 //
 // User has release mouse button.
 //
-void WAnimationPage::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WAnimationPage::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WEditorPage::OnMouseUp( Button, X, Y );
 }
@@ -576,7 +576,7 @@ void WAnimationPage::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse move animation sprite sheet.
 //
-void WAnimationPage::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WAnimationPage::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WEditorPage::OnMouseMove( Button, X, Y );
 	static TPoint OldPos = TPoint( 0, 0 ); 
@@ -601,7 +601,7 @@ void WAnimationPage::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 //
 // Animation preview player constructor.
 //
-WAnimationPlayer::WAnimationPlayer( FAnimation* InAnimation, Integer* InFramePtr, WContainer* InOwner, WWindow* InRoot )
+WAnimationPlayer::WAnimationPlayer( FAnimation* InAnimation, Int32* InFramePtr, WContainer* InOwner, WWindow* InRoot )
 	:	WPanel( InOwner, InRoot ),
 		Animation( InAnimation ),
 		FramePtr( InFramePtr )
@@ -622,7 +622,7 @@ void WAnimationPlayer::OnPaint( CGUIRenderBase* Render )
 		return;
 
 	// Check frame.
-	Integer Frame = *FramePtr;
+	Int32 Frame = *FramePtr;
 	if( Frame < 0 || Frame >= Animation->Frames.Num() )
 		return;
 
@@ -632,12 +632,12 @@ void WAnimationPlayer::OnPaint( CGUIRenderBase* Render )
 	TPoint Base = ClientToWindow(TPoint::Zero);
 	Render->SetClipArea( Base, Size );
 
-	Integer	X	= Floor( R.Min.X * Animation->Sheet->USize ),
+	Int32	X	= Floor( R.Min.X * Animation->Sheet->USize ),
 			Y	= Floor( R.Min.Y * Animation->Sheet->VSize ),
 			W	= Floor( (R.Max.X-R.Min.X) * Animation->Sheet->USize ),
 			H	= Floor( (R.Max.Y-R.Min.Y) * Animation->Sheet->VSize );
 
-	Integer DestX	= Base.X + (Size.Width - W) / 2,
+	Int32 DestX	= Base.X + (Size.Width - W) / 2,
 			DestY	= Base.Y + (Size.Height - H) / 2;
 
 	// Draw frame.

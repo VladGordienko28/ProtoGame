@@ -2,11 +2,10 @@
     GUI.h: GUI general include file.
     Copyright Jul.2016 Vlad Gordienko.
 =============================================================================*/
-#ifndef _FLU_GUI_
-#define _FLU_GUI_
+#pragma once
 
 // Flu includes.
-#include "..\Engine\Engine.h"
+#include "Engine\Engine.h"
 
 
 // Partial classes tree.
@@ -38,8 +37,6 @@ class CGUIRenderBase;
 #include "FrColRibb.h"
 #include "FrTree.h"
 
-
-#endif
 /*-----------------------------------------------------------------------------
     The End.
 -----------------------------------------------------------------------------*/

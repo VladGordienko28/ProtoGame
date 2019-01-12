@@ -52,12 +52,12 @@ public:
 	// nullptr.
 	V* Get( const K& Key )
 	{
-		Integer i = FindEntry(Key);
+		Int32 i = FindEntry(Key);
 		return i != -1 ? &Entries[i].Value : nullptr;
 	}
 	const V* Get( const K& Key ) const
 	{
-		Integer i = FindEntry(Key);
+		Int32 i = FindEntry(Key);
 		return i != -1 ? &Entries[i].Value : nullptr;
 	}
 
@@ -71,7 +71,7 @@ public:
 	// just override old.
 	void Put( const K& Key, const V& Value )
 	{
-		Integer i = FindEntry(Key);
+		Int32 i = FindEntry(Key);
 		if( i != -1 )
 			Entries[i].Value = Value;
 		else
@@ -107,7 +107,7 @@ public:
 	}
 
 	// Return map size.
-	Integer Size() const
+	Int32 Size() const
 	{
 		return Entries.Num();
 	}
@@ -157,12 +157,12 @@ public:
 
 	// Find an index of entry by the key, if
 	// no entry found return -1.
-	Integer FindEntry( const K& Key ) const
+	Int32 FindEntry( const K& Key ) const
 	{
-		Integer Low, High;
+		Int32 Low, High;
 		for( Low=0, High=Entries.Num(); Low<High; )
 		{
-			Integer Middle = Low + (High-Low) / 2;
+			Int32 Middle = Low + (High-Low) / 2;
 			if( Key <= Entries[Middle].Key )
 				High	= Middle;
 			else
@@ -175,7 +175,7 @@ public:
 	void Add( const K& Key, const V& Value )
 	{
 		Entries.SetNum(Size()+1);
-		Integer	i	= Size()-1;
+		Int32	i	= Size()-1;
 		while( ( i>0 )&&( Key<Entries[i-1].Key ) )
 		{
 			Entries[i]	= Entries[i-1];

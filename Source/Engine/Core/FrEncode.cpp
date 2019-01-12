@@ -12,14 +12,14 @@
 //
 // Bits walking variables.
 //
-static	Integer	GBitsNum	= 0;
+static	Int32	GBitsNum	= 0;
 static	SizeT	GBitsAccum	= 0;
 
 
 //
 // Write a NumBits to the array.
 //
-inline void WriteBits( Byte*& Arr, SizeT Bits, SizeT NumBits )
+inline void WriteBits( UInt8*& Arr, SizeT Bits, SizeT NumBits )
 {
 	GBitsAccum		|= Bits << (32-NumBits-GBitsNum);
 	GBitsNum		+= NumBits;
@@ -36,7 +36,7 @@ inline void WriteBits( Byte*& Arr, SizeT Bits, SizeT NumBits )
 //
 // Read a NumBits from the array.
 //
-inline SizeT ReadBits( Byte*& Arr, SizeT NumBits )
+inline SizeT ReadBits( UInt8*& Arr, SizeT NumBits )
 {
 	while( GBitsNum <= 24 )
 	{
@@ -72,17 +72,17 @@ inline SizeT ReadBits( Byte*& Arr, SizeT NumBits )
 static struct TLZWEntry
 {
 public:
-	Byte		Append;
+	UInt8		Append;
 	SizeT		Code;
 	SizeT		Prefix;
 } GLZWTable[LZW_TABLE_SIZE];
-static Byte GLZWStack[LZW_TABLE_SIZE]; 
+static UInt8 GLZWStack[LZW_TABLE_SIZE]; 
 
 
 //
 // Unpack the chunk of LZW data.
 //
-Byte* DecodeString( Byte* Buffer, SizeT Code )
+UInt8* DecodeString( UInt8* Buffer, SizeT Code )
 {
 	while( Code > 255 )
 	{
@@ -97,10 +97,10 @@ Byte* DecodeString( Byte* Buffer, SizeT Code )
 //
 // Find a lzw entry in global table.
 //
-Integer FindLZWEntry( Integer Prefix, SizeT Value )
+Int32 FindLZWEntry( Int32 Prefix, SizeT Value )
 {
-	Integer iEntry	= Prefix ^ (Value << LZW_HASH_BIAS);
-	Integer Bias	= iEntry == 0 ? 1 : LZW_TABLE_SIZE-iEntry;
+	Int32 iEntry	= Prefix ^ (Value << LZW_HASH_BIAS);
+	Int32 Bias	= iEntry == 0 ? 1 : LZW_TABLE_SIZE-iEntry;
 
 	for( ; ; )
 	{
@@ -138,9 +138,9 @@ void CLZWCompressor::Encode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 	OutBuffer	= MemAlloc(InSize+InSize*2+8);
 	OutSize		= 0;
 
-	Byte*	In		= (Byte*)InBuffer;	
-	Byte*	Out		= (Byte*)OutBuffer;
-	Byte*	Eof		= In + InSize;
+	UInt8*	In		= (UInt8*)InBuffer;	
+	UInt8*	Out		= (UInt8*)OutBuffer;
+	UInt8*	Eof		= In + InSize;
 
 	// Output length of source data.
 	*(SizeT*)Out	= InSize;
@@ -206,7 +206,7 @@ void CLZWCompressor::Encode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 void CLZWCompressor::Decode( const void* InBuffer, SizeT InSize, void*& OutBuffer, SizeT& OutSize )
 {
 	// Setup buffers.
-	Byte*		In		= (Byte*)InBuffer;
+	UInt8*		In		= (UInt8*)InBuffer;
 
 	// Out buffer size.
 	OutSize		= *(SizeT*)In;
@@ -214,7 +214,7 @@ void CLZWCompressor::Decode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 
 	// Allocate out buffer size.
 	OutBuffer		= MemAlloc(OutSize);
-	Byte*	Out		= (Byte*)OutBuffer;
+	UInt8*	Out		= (UInt8*)OutBuffer;
 
 	// Setup LZW table.
 	MemZero( GLZWStack, sizeof(GLZWStack) );
@@ -227,8 +227,8 @@ void CLZWCompressor::Decode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 
 	// Setup LZW.
 	SizeT	Value=0;
-	DWord	NextCode=0, NewCode=0, OldCode=0;
-	DWord	Count=0;
+	UInt32	NextCode=0, NewCode=0, OldCode=0;
+	UInt32	Count=0;
 
 	NextCode	= 256;
 	OldCode		= ReadBits( In, LZW_BITS );
@@ -241,10 +241,10 @@ void CLZWCompressor::Decode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 	while( (NewCode = ReadBits(In, LZW_BITS)) != LZW_MAX_VALUE )
 	{
 		// Check for some problems.
-		Byte*	Str;
+		UInt8*	Str;
 		if( NewCode >= NextCode )
 		{
-			GLZWStack[0]	= (Byte)Value;
+			GLZWStack[0]	= (UInt8)Value;
 			Str				= DecodeString( GLZWStack+1, OldCode );
 		}
 		else
@@ -273,8 +273,8 @@ void CLZWCompressor::Decode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 //
 SizeT CLZWCompressor::ForecastSize( const void* InBuffer, SizeT InSize )
 {
-	Byte*	In		= (Byte*)InBuffer;	
-	Byte*	Eof		= In + InSize;
+	UInt8*	In		= (UInt8*)InBuffer;	
+	UInt8*	Eof		= In + InSize;
 	SizeT	NumBits	= 0;
 
 	// Output length of source data.
@@ -403,8 +403,8 @@ void CRLECompressor::Encode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 	OutBuffer	= MemMalloc(InSize+InSize/2+4);
 	OutSize		= 0;
 
-	Byte*	In	= (Byte*)InBuffer;	
-	Byte*	Out	= (Byte*)OutBuffer;
+	UInt8*	In	= (UInt8*)InBuffer;	
+	UInt8*	Out	= (UInt8*)OutBuffer;
 
 	// Write source length.
 	*(SizeT*)Out	= InSize;
@@ -414,7 +414,7 @@ void CRLECompressor::Encode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 	for( SizeT iWalk=0; iWalk<InSize; )
 	{
 		SizeT Count = 0;
-		Byte C = In[iWalk];
+		UInt8 C = In[iWalk];
 
 		// Process run-length.
 		while( In[iWalk]==C && iWalk<InSize && Count<0xff )
@@ -428,7 +428,7 @@ void CRLECompressor::Encode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 			Out[OutSize++]	= C;
 		if( Count >= RLE_THRESH )
 		{
-			Byte Len = Count-RLE_THRESH;		
+			UInt8 Len = Count-RLE_THRESH;		
 			Out[OutSize++]	= Len;
 		}
 	}
@@ -444,21 +444,21 @@ void CRLECompressor::Encode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 void CRLECompressor::Decode( const void* InBuffer, SizeT InSize, void*& OutBuffer, SizeT& OutSize )
 {
 	// Setup.
-	Byte*	In		= (Byte*)InBuffer;
+	UInt8*	In		= (UInt8*)InBuffer;
 	SizeT	iWalk	= 0;
 
 	OutSize		= *(SizeT*)In;
 	iWalk		+= sizeof(SizeT);
 
 	OutBuffer	= MemMalloc(OutSize);
-	Byte*	Out		= (Byte*)OutBuffer;
+	UInt8*	Out		= (UInt8*)OutBuffer;
 	SizeT	oWalk	= 0;
 	
 	// Process data.
 	while( iWalk<InSize )
 	{
 		SizeT Count = 0;
-		Byte C = In[iWalk];
+		UInt8 C = In[iWalk];
 
 		// Process run-length.
 		while( In[iWalk]==C && iWalk<InSize && Count<RLE_THRESH )
@@ -472,7 +472,7 @@ void CRLECompressor::Decode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 			Out[oWalk++]	= C;   
 		if( Count == RLE_THRESH )
 		{
-			Byte Len = In[iWalk++];
+			UInt8 Len = In[iWalk++];
 			for( SizeT i=0; i<Len; i++ )
 				Out[oWalk++]	= C;
 		}
@@ -487,7 +487,7 @@ void CRLECompressor::Decode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 SizeT CRLECompressor::ForecastSize( const void* InBuffer, SizeT InSize )
 {
 	SizeT	TotalSize	= 0;
-	Byte*	In	= (Byte*)InBuffer;	
+	UInt8*	In	= (UInt8*)InBuffer;	
 
 	TotalSize	+= sizeof(SizeT);
 
@@ -495,7 +495,7 @@ SizeT CRLECompressor::ForecastSize( const void* InBuffer, SizeT InSize )
 	for( SizeT iWalk=0; iWalk<InSize; )
 	{
 		SizeT Count = 0;
-		Byte C = In[iWalk];
+		UInt8 C = In[iWalk];
 
 		// Process run-length.
 		while( In[iWalk]==C && iWalk<InSize && Count<0xff )

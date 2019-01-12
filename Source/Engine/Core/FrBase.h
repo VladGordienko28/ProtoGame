@@ -1,28 +1,3 @@
-/*=============================================================================
-    FrBase.h: Platform specific functions.
-    Copyright Jun.2016 Vlad Gordienko.
-=============================================================================*/
-
-/*-----------------------------------------------------------------------------
-    Types.
------------------------------------------------------------------------------*/
-
-//
-// Override standard C++ types.
-//
-typedef unsigned char		Byte;
-typedef signed char			SByte;
-typedef signed short		SWord;
-typedef unsigned short		Word;
-typedef float				Float;
-typedef double				Double;
-typedef int					Integer;
-typedef unsigned int		DWord;
-typedef bool				Bool;
-typedef wchar_t				Char;
-typedef char				AnsiChar;
-typedef unsigned long long	QWord;
-typedef size_t				SizeT;
 
 
 /*-----------------------------------------------------------------------------
@@ -93,7 +68,7 @@ inline void MemZero( void* Addr, SizeT Count )
 {
 	memset( Addr, 0, Count );
 }
-inline void MemSet( void* Addr, SizeT Count, Byte Value )
+inline void MemSet( void* Addr, SizeT Count, UInt8 Value )
 {
 	memset( Addr, Value, Count );
 }
@@ -107,7 +82,7 @@ inline void MemCopy( void* Dst, const void* Src, SizeT Count )
 }
 inline void MemSwap( void* A, void* B, SizeT Count )
 {
-	Byte Buffer[1024];
+	UInt8 Buffer[1024];
 	MemCopy( Buffer, A, Count );
 	MemCopy( A, B, Count );
 	MemCopy( B, Buffer, Count );
@@ -128,7 +103,7 @@ public:
 	virtual Double TimeStamp() = 0;
 	virtual Double Now() = 0;
 	virtual void SetNow( Double InNow ) = 0;
-	virtual DWord Cycles() = 0;
+	virtual UInt32 Cycles() = 0;
 	virtual Bool FileExists( String FileName ) = 0;
 	virtual Bool DirectoryExists( String Dir ) = 0;
 	virtual void ClipboardCopy( Char* Str ) = 0;
@@ -146,10 +121,5 @@ public:
 extern Bool				GIsEditor;
 extern CPlatformBase*	GPlat;
 extern String			GDirectory;
-extern DWord			GFrameStamp;
+extern UInt32			GFrameStamp;
 extern String			GCmdLine;
-
-
-/*-----------------------------------------------------------------------------
-    The End.
------------------------------------------------------------------------------*/

@@ -74,12 +74,12 @@ void FObject::Import( CImporterBase& Im )
 	CClass* WalkClass = GetClass();
 	while( WalkClass )
 	{
-		for( Integer iProp=0; iProp<WalkClass->Properties.Num(); iProp++ )
+		for( Int32 iProp=0; iProp<WalkClass->Properties.Num(); iProp++ )
 		{
 			CProperty* Prop = WalkClass->Properties[iProp];
 
 			if( !(Prop->Flags & PROP_NoImEx) )
-				Prop->Import( (Byte*)this + Prop->Offset, Im );
+				Prop->Import( (UInt8*)this + Prop->Offset, Im );
 		}
 
 		WalkClass = WalkClass->Super;
@@ -98,12 +98,12 @@ void FObject::Export( CExporterBase& Ex )
 	CClass* WalkClass = GetClass();
 	while( WalkClass )
 	{
-		for( Integer iProp=0; iProp<WalkClass->Properties.Num(); iProp++ )
+		for( Int32 iProp=0; iProp<WalkClass->Properties.Num(); iProp++ )
 		{
 			CProperty* Prop = WalkClass->Properties[iProp];
 
 			if( !(Prop->Flags & PROP_NoImEx) )
-				Prop->Export( (Byte*)this + Prop->Offset, Ex );
+				Prop->Export( (UInt8*)this + Prop->Offset, Ex );
 		}
 
 		WalkClass = WalkClass->Super;
@@ -238,17 +238,17 @@ void CObjectDatabase::DropDatabase()
 	// pointer to resources.
 
 	// Kill all entities.
-	for( Integer i=0; i<GObjects.Num(); i++ )
+	for( Int32 i=0; i<GObjects.Num(); i++ )
 		if( GObjects[i] && GObjects[i]->IsA(FEntity::MetaClass) )
 			DestroyObject( GObjects[i], true );
 
 	// Kill all resources.
-	for( Integer i=0; i<GObjects.Num(); i++ )
+	for( Int32 i=0; i<GObjects.Num(); i++ )
 		if( GObjects[i] && GObjects[i]->IsA(FResource::MetaClass) )
 			DestroyObject( GObjects[i], true );
 
 	// Kill all rest objects, just in case.
-	for( Integer i=0; i<GObjects.Num(); i++ )
+	for( Int32 i=0; i<GObjects.Num(); i++ )
 		if( GObjects[i] )
 		{
 			notice( L"Unreferenced object '%s'", *GObjects[i]->GetName() );
@@ -266,13 +266,13 @@ void CObjectDatabase::DropDatabase()
 //
 void CObjectDatabase::SerializeAll( CSerializer& S )
 {
-	for( Integer i=0; i<GObjects.Num(); i++ )
+	for( Int32 i=0; i<GObjects.Num(); i++ )
 		if( GObjects[i] )
 			GObjects[i]->SerializeThis( S );
 
 	// List of holders.
 	if( S.GetMode() == SM_Undefined )
-		for( Integer i=0; i<CRefsHolder::GHolders.Num(); i++ )
+		for( Int32 i=0; i<CRefsHolder::GHolders.Num(); i++ )
 			CRefsHolder::GHolders[i]->CountRefs( S );
 }
 
@@ -338,7 +338,7 @@ FObject* CObjectDatabase::CreateObject( CClass* InCls, String InName, FObject* I
 //
 void CObjectDatabase::HashObject( FObject* Obj )
 {
-	Integer iHash	= 2047 & Obj->GetName().HashCode();
+	Int32 iHash	= 2047 & Obj->GetName().HashCode();
 	Obj->HashNext	= GHash[iHash];
 	GHash[iHash]	= Obj;
 }
@@ -349,7 +349,7 @@ void CObjectDatabase::HashObject( FObject* Obj )
 //
 void CObjectDatabase::UnhashObject( FObject* Obj )
 {
-	Integer iHash	= 2047 & Obj->GetName().HashCode();
+	Int32 iHash	= 2047 & Obj->GetName().HashCode();
 	FObject** Link	= &GHash[iHash];
 	while( *Link )
 	{
@@ -395,7 +395,7 @@ FObject* CObjectDatabase::FindObject( String InName, CClass* InCls, FObject* InO
 	if( InOwner )
 	{
 		// Search in the InOwner scope.
-		Integer iHash = 2047 & InName.HashCode();
+		Int32 iHash = 2047 & InName.HashCode();
 		FObject* Obj = GHash[iHash];
 
 		while( Obj )
@@ -412,7 +412,7 @@ FObject* CObjectDatabase::FindObject( String InName, CClass* InCls, FObject* InO
 	else
 	{
 		// Search in the global scope.
-		Integer iHash = 2047 & InName.HashCode();
+		Int32 iHash = 2047 & InName.HashCode();
 		FObject* Obj = GHash[iHash];
 
 		while( Obj )
@@ -438,7 +438,7 @@ String CObjectDatabase::MakeName( CClass* InClass, FObject* InOwner )
 {
 	assert(InClass);
 
-	for( Integer iUniq = 0;; iUniq++ )
+	for( Int32 iUniq = 0;; iUniq++ )
 	{
 		String TestName = String::Format( L"%s%d", *InClass->GetAltName(), iUniq );
 		
@@ -515,13 +515,13 @@ void CObjectDatabase::DestroyObject( FObject* InObj, Bool bReleaseRefs )
 // The temporal buffer.
 // Pretty "dirty" solution, but its really fast,
 // critical for in game objects spawn.
-Byte	GBuffer[65536];
+UInt8	GBuffer[65536];
 
 // Serializer to store object data.
 class CObjectSaver: public CSerializer
 {
 public:
-	Integer		Offset;
+	Int32		Offset;
 
 	CObjectSaver()
 	{
@@ -536,7 +536,7 @@ public:
 	}
 	void SerializeRef( FObject*& Obj )
 	{
-		Integer Id = Obj ? Obj->GetId() : -1;
+		Int32 Id = Obj ? Obj->GetId() : -1;
 		Serialize( *this, Id );
 	}
 };
@@ -546,7 +546,7 @@ public:
 class CObjectLoader: public CSerializer
 {
 public:
-	Integer		Offset;
+	Int32		Offset;
 
 	CObjectLoader()
 	{
@@ -561,7 +561,7 @@ public:
 	}
 	void SerializeRef( FObject*& Obj )
 	{
-		Integer Id;
+		Int32 Id;
 		Serialize( *this, Id );
 		Obj = Id != -1 ? GObjectDatabase->GObjects[Id] : nullptr;
 	}
@@ -600,10 +600,10 @@ class CRefsCounter: public CSerializer
 {
 public:
 	FObject*	Target;
-	Integer&	Counter;
+	Int32&	Counter;
 
 	// CRefsCounter interface.
-	CRefsCounter( FObject* InTarget, Integer& InCounter )
+	CRefsCounter( FObject* InTarget, Int32& InCounter )
 		:	Target( InTarget ),
 			Counter( InCounter )
 	{
@@ -626,13 +626,13 @@ public:
 //
 // Count references to concrete object.
 //
-Integer CObjectDatabase::ReferenceCountTo( FObject* Obj )
+Int32 CObjectDatabase::ReferenceCountTo( FObject* Obj )
 {
 	if( !Obj )
 		return 0;
 
 	// Walk through entire database.
-	Integer Counter = 0;
+	Int32 Counter = 0;
 	CRefsCounter RCon( Obj, Counter );
 	SerializeAll( RCon );
 

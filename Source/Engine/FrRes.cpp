@@ -93,7 +93,7 @@ CResourceBlock::~CResourceBlock()
 // Initialize resource data block, return true if
 // block created successfully, otherwise return false.
 //
-Bool CResourceBlock::AllocateBlock( SizeT NumBytes, DWord ExtraFlags )
+Bool CResourceBlock::AllocateBlock( SizeT NumBytes, UInt32 ExtraFlags )
 {
 	// Maybe block already allocated.
 	if( IsValidBlock() )

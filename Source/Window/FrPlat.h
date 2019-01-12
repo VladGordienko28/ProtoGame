@@ -19,7 +19,7 @@ public:
 	// CPlatformBase interface.
 	Double TimeStamp();
 	Double Now();
-	DWord Cycles();
+	UInt32 Cycles();
 	Bool FileExists( String FileName );
 	Bool DirectoryExists( String Dir );
 	void ClipboardCopy( Char* Str );

@@ -28,7 +28,7 @@ WGameBuilderDialog::WGameBuilderDialog( WWindow* InRoot )
 	TargetLabel->SetLocation( 10, 30 );
 
 	TargetCombo					= new WComboBox( this, Root );
-#if _WIN64
+#if FLU_X64
 	TargetCombo->AddItem( L"Win64", nullptr );
 #else
 	TargetCombo->AddItem( L"Win32", nullptr );
@@ -93,7 +93,7 @@ WGameBuilderDialog::~WGameBuilderDialog()
 //
 // Show the dialog.
 //
-void WGameBuilderDialog::Show( Integer X, Integer Y )
+void WGameBuilderDialog::Show( Int32 X, Int32 Y )
 {
 	if( !bVisible )
 	{
@@ -191,7 +191,7 @@ void WGameBuilderDialog::BuildGame()
 		while( bAgain )
 		{
 			bAgain	= false;
-			for( Integer i=0; i<GEditor->EditorPages->Pages.Num(); i++ )
+			for( Int32 i=0; i<GEditor->EditorPages->Pages.Num(); i++ )
 			{
 				WEditorPage* EdPage = (WEditorPage*)GEditor->EditorPages->Pages[i];
 				if( EdPage->PageType == PAGE_Play )

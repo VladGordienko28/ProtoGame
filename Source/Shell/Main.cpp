@@ -9,7 +9,7 @@
 //
 // Application Entry Point.
 //
-Integer wmain( Integer ArgC, Char *ArgV[] )
+Int32 wmain( Int32 ArgC, Char *ArgV[] )
 {
 	RegisterAll();
 

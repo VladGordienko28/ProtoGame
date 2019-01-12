@@ -80,7 +80,7 @@ void FPuppetComponent::SerializeThis( CSerializer& S )
 
 	// Also serialize list of Watched for GC.
 	if( S.GetMode() == SM_Undefined )
-		for( Integer i=0; i<MAX_WATCHED; i++ )
+		for( Int32 i=0; i<MAX_WATCHED; i++ )
 			Serialize( S, LookList[i] );
 }
 
@@ -144,7 +144,7 @@ void FPuppetComponent::Tick( Float Delta )
 void FPuppetComponent::LookAtPuppets()
 {
 	// Prepare.
-	Integer	iLookee = 0;
+	Int32	iLookee = 0;
 	Float	Dist2	= LookRadius*LookRadius; 
 	MemZero( LookList, sizeof(LookList) );
 
@@ -390,7 +390,7 @@ void FPuppetComponent::nativeSuggestJumpSpeed( CFrame& Frame )
 //
 void FPuppetComponent::nativeSendOrder( CFrame& Frame )
 {
-	Integer	NumRecipients	= 0;
+	Int32	NumRecipients	= 0;
 	String	Order			= POP_STRING;
 	Float	Radius2			= Sqr(POP_FLOAT);
 
@@ -423,7 +423,7 @@ void FPuppetComponent::nativeIsVisible( CFrame& Frame )
 		return;
 	}
 
-	for( Integer i=0; i<MAX_WATCHED && LookList[i]; i++ )
+	for( Int32 i=0; i<MAX_WATCHED && LookList[i]; i++ )
 		if( LookList[i]->Entity == Other )
 		{
 			*POPA_BOOL	= true;

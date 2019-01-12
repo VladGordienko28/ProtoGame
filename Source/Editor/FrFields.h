@@ -36,22 +36,22 @@ public:
 	WObjectInspector*			Inspector;
 	TArray<CInspectorItemBase*>	Children;
 	TArray<FObject*>			Objects;			
-	DWord						Depth;
-	Integer						Top;
+	UInt32						Depth;
+	Int32						Top;
 
 	// CInspectorItemBase interface.
-	CInspectorItemBase( WObjectInspector* InInspector, DWord InDepth );
+	CInspectorItemBase( WObjectInspector* InInspector, UInt32 InDepth );
 	virtual ~CInspectorItemBase();
 	void CollapseAll();
 	void ExpandAll();
 
 	// Events from Object Inspector.
 	virtual void Paint( TPoint Base, CGUIRenderBase* Render );
-	virtual void MouseDown( EMouseButton Button, Integer X, Integer Y );
-	virtual void MouseUp( EMouseButton Button, Integer X, Integer Y );
-	virtual void MouseMove( EMouseButton Button, Integer X, Integer Y );
-	virtual void DragOver( void* Data, Integer X, Integer Y, Bool& bAccept );
-	virtual void DragDrop( void* Data, Integer X, Integer Y );
+	virtual void MouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	virtual void MouseUp( EMouseButton Button, Int32 X, Int32 Y );
+	virtual void MouseMove( EMouseButton Button, Int32 X, Int32 Y );
+	virtual void DragOver( void* Data, Int32 X, Int32 Y, Bool& bAccept );
+	virtual void DragDrop( void* Data, Int32 X, Int32 Y );
 	virtual void Unselect();
 };
 
@@ -68,7 +68,7 @@ class WObjectInspector: public WContainer, public CRefsHolder
 public:
 	// Controls.
 	WSlider*			ScrollBar;
-	Integer				Separator;
+	Int32				Separator;
 	Bool				bMoveSep;
 
 	// Items.
@@ -92,19 +92,19 @@ public:
 	void SetEditObjects( TArray<FObject*>& Objs );
 	void SetEditObject( FObject* Obj );
 	void UnselectAll();
-	CInspectorItemBase* GetItemAt( Integer ParentY, Integer& LocalY );
+	CInspectorItemBase* GetItemAt( Int32 ParentY, Int32& LocalY );
 	void UpdateChildren();
 	void Empty();
 
 	// WWidget interface.
 	void OnPaint( CGUIRenderBase* Render );
 	void OnResize();
-	void OnDragOver( void* Data, Integer X, Integer Y, Bool& bAccept );
-	void OnDragDrop( void* Data, Integer X, Integer Y );
-	void OnMouseDown( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseUp( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseMove( EMouseButton Button, Integer X, Integer Y );
-	void OnMouseScroll( Integer Delta );
+	void OnDragOver( void* Data, Int32 X, Int32 Y, Bool& bAccept );
+	void OnDragDrop( void* Data, Int32 X, Int32 Y );
+	void OnMouseDown( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseUp( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseMove( EMouseButton Button, Int32 X, Int32 Y );
+	void OnMouseScroll( Int32 Delta );
 
 	// Entity pick functions.
 	void BeginWaitForPick( CInspectorItemBase* Waiter );

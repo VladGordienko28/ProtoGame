@@ -24,11 +24,11 @@ public:
 	TMathTables()
 	{
 		// Setup sine table.
-		for( Integer i=0; i<8192; i++ )
+		for( Int32 i=0; i<8192; i++ )
 			SinTable[i] = Sin( 2.f * PI * i / 8192.f );
 
 		// Byte to float conversion.
-		for( Integer i=0; i<256; i++ )
+		for( Int32 i=0; i<256; i++ )
 			BToF[i]	=	i/256.f;
 	}
 } GMathTables;
@@ -42,9 +42,9 @@ public:
 // Return the power of size.
 // For example 256->8, 32->5...
 //
-DWord IntLog2( DWord A )
+UInt32 IntLog2( UInt32 A )
 {
-	for( Integer i=31; i>=0; i-- )
+	for( Int32 i=31; i>=0; i-- )
 		if( A & ( 1 << i ) )
 			return i;
 	return 0;
@@ -68,7 +68,7 @@ Float Wrap( Float V, Float Min, Float Max )
 //
 // Pure table sine.
 //
-Float Sin8192( Integer i )
+Float Sin8192( Int32 i )
 {
 	return GMathTables.SinTable[i & 8191];
 }
@@ -81,7 +81,7 @@ TAngle AngleLerp( TAngle AFrom, TAngle ATo, Float Alpha, Bool bCCW )
 	if( bCCW )
 	{
 		// Counter clockwise.
-		Integer Delta = ATo.Angle - AFrom.Angle;
+		Int32 Delta = ATo.Angle - AFrom.Angle;
 		if( Delta < 0 ) 
 			Delta += 65536;
 		return TAngle((AFrom.Angle+Trunc(Delta*Alpha)) & 0xffff);
@@ -89,7 +89,7 @@ TAngle AngleLerp( TAngle AFrom, TAngle ATo, Float Alpha, Bool bCCW )
 	else
 	{
 		// Clockwise.
-		Integer Delta = ATo.Angle - AFrom.Angle;
+		Int32 Delta = ATo.Angle - AFrom.Angle;
 		if( Delta > 0 ) 
 			Delta -= 65536;
 		return TAngle((AFrom.Angle+Trunc(Delta*Alpha)) & 0xffff);
@@ -107,9 +107,9 @@ TAngle AngleLerp( TAngle AFrom, TAngle ATo, Float Alpha, Bool bCCW )
 union TFloatInfo
 {
 	Float	F;
-	Integer I;
-	DWord	D;
-	Byte	B[sizeof(Float)];
+	Int32	I;
+	UInt32	D;
+	UInt8	B[sizeof(Float)];
 
 	TFloatInfo( Float InF )
 		: F(InF)
@@ -221,11 +221,11 @@ TVector TransformPointBy( const TVector& P, const TCoords& C )
 //
 // Rect constructor.
 //
-TRect::TRect( const TVector* Verts, Integer NumVerts )
+TRect::TRect( const TVector* Verts, Int32 NumVerts )
 {
 	Min = Max = Verts[0];
 
-	for( Integer i = 1; i < NumVerts; i++ )
+	for( Int32 i = 1; i < NumVerts; i++ )
 	{
 		Min.X = ::Min( Min.X, Verts[i].X );
 		Min.Y = ::Min( Min.Y, Verts[i].Y );
@@ -420,7 +420,7 @@ TRect TRect::operator+=( const TVector& V )
 //
 // Compute bounding circle from the set of vertices.
 //
-TCircle::TCircle( const TVector* Verts, Integer NumVerts )
+TCircle::TCircle( const TVector* Verts, Int32 NumVerts )
 	:	Center( 0.f, 0.f ),
 		Radius( 0.f )
 {
@@ -429,7 +429,7 @@ TCircle::TCircle( const TVector* Verts, Integer NumVerts )
 		TRect Rect( Verts, NumVerts );
 		Center = Rect.Center();
 		
-		for( Integer i=0; i<NumVerts; i++ )
+		for( Int32 i=0; i<NumVerts; i++ )
 		{
 			Float Dist = DistanceSq(Center, Verts[i]);
 			if( Dist > Radius )
@@ -573,7 +573,7 @@ TCoords TCoords::Transpose() const
 //
 TAngle::TAngle( Float InAngle )
 {
-	Angle = (Integer)( InAngle/(2.f*PI)*65536.f ) & 0xffff;
+	Angle = (Int32)( InAngle/(2.f*PI)*65536.f ) & 0xffff;
 }
 
 
@@ -582,14 +582,14 @@ TAngle::TAngle( Float InAngle )
 //
 TAngle TAngle::operator*( const Float F ) const
 {
-	return TAngle( (Integer)(Angle*F) & 0xffff );
+	return TAngle( (Int32)(Angle*F) & 0xffff );
 }
 
 
 //
 // Snap angle to grid.
 //
-void TAngle::Snap( Integer Grid )
+void TAngle::Snap( Int32 Grid )
 {
 	if( Grid )
 		Angle = (Round((Float)Angle/(Float)Grid)*Grid) & 0xffff;
@@ -671,7 +671,7 @@ void TVector::Snap( Float Grid )
 //
 // Return true, if poly is convex.
 //
-Bool IsConvexPoly( const TVector* Verts, Integer NumVerts )
+Bool IsConvexPoly( const TVector* Verts, Int32 NumVerts )
 {
 	TVector Edge1, Edge2;
 
@@ -681,7 +681,7 @@ Bool IsConvexPoly( const TVector* Verts, Integer NumVerts )
 	if( Edge1 / Edge2 < 0.0f )
 		return false;
 
-	for( Integer i=0; i<NumVerts-1; i++ )
+	for( Int32 i=0; i<NumVerts-1; i++ )
 	{
 		Edge2 = Verts[i+1] - Verts[i];
 
@@ -699,13 +699,13 @@ Bool IsConvexPoly( const TVector* Verts, Integer NumVerts )
 // Return true, if given point is inside convex poly,
 // otherwise return false.
 //
-Bool IsPointInsidePoly( const TVector& P, const TVector* Verts, Integer NumVerts )
+Bool IsPointInsidePoly( const TVector& P, const TVector* Verts, Int32 NumVerts )
 {
 	TVector V1, V2;
 
 	V1 = Verts[NumVerts-1];
 
-	for( Integer i=0; i<NumVerts; i++ )
+	for( Int32 i=0; i<NumVerts; i++ )
 	{
 		V2 = Verts[i];
 
@@ -762,7 +762,7 @@ Bool LineIntersectPoly
 	const TVector& A, 
 	const TVector& B, 
 	const TVector* Verts, 
-	Integer NumVerts, 
+	Int32 NumVerts, 
 	TVector* V, 
 	TVector* Normal 
 )
@@ -773,7 +773,7 @@ Bool LineIntersectPoly
 
 	TVector ResultPoint, ResultNormal;
 
-	for( Integer i=0; i<NumVerts; i++ )
+	for( Int32 i=0; i<NumVerts; i++ )
 	{
 		P2 = Verts[i];
 

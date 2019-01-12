@@ -61,7 +61,7 @@ TNetAddress GetLocalIP()
 //
 // Return last network error.
 //
-Integer GetLastError()
+Int32 GetLastError()
 {
 	return WSAGetLastError();
 }
@@ -77,7 +77,7 @@ Bool WSAInitialize( String* Error )
 
 	if( !GInitialized )
 	{
-		Integer WSAError = WSAStartup( 0x0202, &WSAData );
+		Int32 WSAError = WSAStartup( 0x0202, &WSAData );
 		if( WSAError )
 		{
 			if( Error )

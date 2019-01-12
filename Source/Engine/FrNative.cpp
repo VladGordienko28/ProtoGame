@@ -38,7 +38,7 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		}
 		case OP_KeyIsPressed:
 		{
-			Integer iKey	= POP_INTEGER;
+			Int32 iKey	= POP_INTEGER;
 			*POPA_BOOL		= GApp->GInput->KeyIsPressed(iKey);
 			break;
 		}
@@ -198,7 +198,7 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		}
 		case OP_Random:
 		{
-			Integer A = POP_INTEGER;
+			Int32 A = POP_INTEGER;
 			*POPA_INTEGER = Random( A );
 			break;
 		}
@@ -215,17 +215,17 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		}
 		case OP_RGBA:
 		{
-			Byte	R	= POP_BYTE;
-			Byte	G	= POP_BYTE;
-			Byte	B	= POP_BYTE;
-			Byte	A	= POP_BYTE;
+			UInt8	R	= POP_BYTE;
+			UInt8	G	= POP_BYTE;
+			UInt8	B	= POP_BYTE;
+			UInt8	A	= POP_BYTE;
 			*POPA_COLOR	= TColor( R, G, B, A );
 			break;
 		}
 		case OP_CharAt:
 		{
 			String	S = POP_STRING;
-			Integer i = Clamp( POP_INTEGER, 0, S.Len()-1 );
+			Int32 i = Clamp( POP_INTEGER, 0, S.Len()-1 );
 			Char Tmp[2] = { S[i], 0 };
 			*POPA_STRING	= String(Tmp);
 			break;
@@ -259,13 +259,13 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 			Foreach.Collection.Empty();
 			if( Script )
 			{
-				for( Integer i=0; i<Level->Entities.Num(); i++ )
+				for( Int32 i=0; i<Level->Entities.Num(); i++ )
 					if( Level->Entities[i]->Script == Script && !Level->Entities[i]->Base->bDestroyed )
 						Foreach.Collection.Push(Level->Entities[i]);
 			}
 			else
 			{
-				for( Integer i=0; i<Level->Entities.Num(); i++ )
+				for( Int32 i=0; i<Level->Entities.Num(); i++ )
 					if( !Level->Entities[i]->Base->bDestroyed )
 						Foreach.Collection.Push(Level->Entities[i]);
 			}
@@ -276,14 +276,14 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 			FScript*		Script		= As<FScript>(POP_RESOURCE);
 			TRect			Area		= POP_AABB;
 			FLevel*			Level		= This->Level;
-			Integer			NumBases	= 0;
+			Int32			NumBases	= 0;
 			FBaseComponent*	Bases[MAX_COLL_LIST_OBJS];
 			Foreach.Collection.Empty();		
 			if( Script )
 				Level->CollHash->GetOverlappedByScript( Area, Script, NumBases, Bases );
 			else
 				Level->CollHash->GetOverlapped( Area, NumBases, Bases );
-			for( Integer i=0; i<NumBases; i++ )
+			for( Int32 i=0; i<NumBases; i++ )
 				Foreach.Collection.Push(Bases[i]->Entity);
 			break;
 		}
@@ -293,7 +293,7 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 			if( This->Base->IsA(FPhysicComponent::MetaClass) )
 			{
 				FPhysicComponent* Phys = (FPhysicComponent*)This->Base;
-				for( Integer i=0; i<arr_len(FPhysicComponent::Touched); i++ )
+				for( Int32 i=0; i<arr_len(FPhysicComponent::Touched); i++ )
 					if( Phys->Touched[i] )
 						Foreach.Collection.Push(Phys->Touched[i]);
 			}
@@ -304,87 +304,87 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		//
 		// Simple binary operators.
 		//
-		#define CASE_BINARY( icode, op, a1, a2, r ) case icode:{ Byte iReg=ReadByte(); *(r*)(Regs[iReg].Value) = *(a1*)(Regs[iReg].Value) op *(a2*)(Regs[ReadByte()].Value); break;}
-		CASE_BINARY( BIN_Mult_Integer,		*,	Integer,	Integer,	Integer		)
+		#define CASE_BINARY( icode, op, a1, a2, r ) case icode:{ UInt8 iReg=ReadByte(); *(r*)(Regs[iReg].Value) = *(a1*)(Regs[iReg].Value) op *(a2*)(Regs[ReadByte()].Value); break;}
+		CASE_BINARY( BIN_Mult_Integer,		*,	Int32,		Int32,		Int32		)
 		CASE_BINARY( BIN_Mult_Float,		*,	Float,		Float,		Float		)
 		CASE_BINARY( BIN_Mult_Color,		*,	TColor,		TColor,		TColor		)
 		CASE_BINARY( BIN_Mult_Vector,		*,	TVector,	Float,		TVector		)
-		CASE_BINARY( BIN_Div_Integer,		/,	Integer,	Integer,	Integer		)
+		CASE_BINARY( BIN_Div_Integer,		/,	Int32,		Int32,		Int32		)
 		CASE_BINARY( BIN_Div_Float,			/,	Float,		Float,		Float		)
-		CASE_BINARY( BIN_Mod_Integer,		%,	Integer,	Integer,	Integer		)
-		CASE_BINARY( BIN_Add_Integer,		+,	Integer,	Integer,	Integer		)
+		CASE_BINARY( BIN_Mod_Integer,		%,	Int32,		Int32,		Int32		)
+		CASE_BINARY( BIN_Add_Integer,		+,	Int32,		Int32,		Int32		)
 		CASE_BINARY( BIN_Add_Float,			+,	Float,		Float,		Float		)
 		CASE_BINARY( BIN_Add_Color,			+,	TColor,		TColor,		TColor		)
 		CASE_BINARY( BIN_Add_Vector,		+,	TVector,	TVector,	TVector		)
-		CASE_BINARY( BIN_Sub_Integer,		-,	Integer,	Integer,	Integer		)
+		CASE_BINARY( BIN_Sub_Integer,		-,	Int32,		Int32,		Int32		)
 		CASE_BINARY( BIN_Sub_Float,			-,	Float,		Float,		Float		)
 		CASE_BINARY( BIN_Sub_Color,			-,	TColor,		TColor,		TColor		)
 		CASE_BINARY( BIN_Sub_Vector,		-,	TVector,	TVector,	TVector		)
-		CASE_BINARY( BIN_Shr_Integer,		>>,	Integer,	Integer,	Integer		)
-		CASE_BINARY( BIN_Shl_Integer,		<<,	Integer,	Integer,	Integer		)
-		CASE_BINARY( BIN_Less_Integer,		<,	Integer,	Integer,	Bool		)
+		CASE_BINARY( BIN_Shr_Integer,		>>,	Int32,		Int32,		Int32		)
+		CASE_BINARY( BIN_Shl_Integer,		<<,	Int32,		Int32,		Int32		)
+		CASE_BINARY( BIN_Less_Integer,		<,	Int32,		Int32,		Bool		)
 		CASE_BINARY( BIN_Less_Float,		<,	Float,		Float,		Bool		)
-		CASE_BINARY( BIN_LessEq_Integer,	<=,	Integer,	Integer,	Bool		)
+		CASE_BINARY( BIN_LessEq_Integer,	<=,	Int32,		Int32,		Bool		)
 		CASE_BINARY( BIN_LessEq_Float,		<=,	Float,		Float,		Bool		)
-		CASE_BINARY( BIN_Greater_Integer,	>,	Integer,	Integer,	Bool		)
+		CASE_BINARY( BIN_Greater_Integer,	>,	Int32,		Int32,		Bool		)
 		CASE_BINARY( BIN_Greater_Float,		>,	Float,		Float,		Bool		)
-		CASE_BINARY( BIN_GreaterEq_Integer,	>=,	Integer,	Integer,	Bool		)
+		CASE_BINARY( BIN_GreaterEq_Integer,	>=,	Int32,		Int32,		Bool		)
 		CASE_BINARY( BIN_GreaterEq_Float,	>=,	Float,		Float,		Bool		)
-		CASE_BINARY( BIN_And_Integer,		&,	Integer,	Integer,	Integer		)
-		CASE_BINARY( BIN_Xor_Integer,		^,	Integer,	Integer,	Integer		)
+		CASE_BINARY( BIN_And_Integer,		&,	Int32,		Int32,		Int32		)
+		CASE_BINARY( BIN_Xor_Integer,		^,	Int32,		Int32,		Int32		)
 		CASE_BINARY( BIN_Cross_Vector,		/,	TVector,	TVector,	Float		)
-		CASE_BINARY( BIN_Or_Integer,		|,	Integer,	Integer,	Integer		)
+		CASE_BINARY( BIN_Or_Integer,		|,	Int32,		Int32,		Int32		)
 		CASE_BINARY( BIN_Dot_Vector,		*,	TVector,	TVector,	Float		)
 		#undef CASE_BINARY
 
 		//
 		// Assignment binary operators.
 		//
-		#define CASE_ASSIGN( icode, op, a1, a2, r ) case icode: { Byte iReg=ReadByte(); *(r*)Regs[iReg].Addr op *(a2*)Regs[ReadByte()].Value; break;}
-		CASE_ASSIGN( BIN_AddEqual_Integer,	+=,		Integer,	Integer,	Integer )
+		#define CASE_ASSIGN( icode, op, a1, a2, r ) case icode: { UInt8 iReg=ReadByte(); *(r*)Regs[iReg].Addr op *(a2*)Regs[ReadByte()].Value; break;}
+		CASE_ASSIGN( BIN_AddEqual_Integer,	+=,		Int32,		Int32,		Int32 )
 		CASE_ASSIGN( BIN_AddEqual_Float,	+=,		Float,		Float,		Float )
 		CASE_ASSIGN( BIN_AddEqual_Vector,	+=,		TVector,	TVector,	TVector )
 		CASE_ASSIGN( BIN_AddEqual_Color,	+=,		TColor,		TColor,		TColor )
-		CASE_ASSIGN( BIN_SubEqual_Integer,	-=,		Integer,	Integer,	Integer )
+		CASE_ASSIGN( BIN_SubEqual_Integer,	-=,		Int32,		Int32,		Int32 )
 		CASE_ASSIGN( BIN_SubEqual_Float,	-=,		Float,		Float,		Float )
 		CASE_ASSIGN( BIN_SubEqual_Vector,	-=,		TVector,	TVector,	TVector )
 		CASE_ASSIGN( BIN_SubEqual_Color,	-=,		TColor,		TColor,		TColor )
-		CASE_ASSIGN( BIN_MulEqual_Integer,	*=,		Integer,	Integer,	Integer )
+		CASE_ASSIGN( BIN_MulEqual_Integer,	*=,		Int32,		Int32,		Int32 )
 		CASE_ASSIGN( BIN_MulEqual_Float,	*=,		Float,		Float,		Float )
 		CASE_ASSIGN( BIN_MulEqual_Color,	*=,		TColor,		TColor,		TColor )
-		CASE_ASSIGN( BIN_DivEqual_Integer,	/=,		Integer,	Integer,	Integer )
+		CASE_ASSIGN( BIN_DivEqual_Integer,	/=,		Int32,		Int32,		Int32 )
 		CASE_ASSIGN( BIN_DivEqual_Float,	/=,		Float,		Float,		Float )
-		CASE_ASSIGN( BIN_ModEqual_Integer,	%=,		Integer,	Integer,	Integer )
-		CASE_ASSIGN( BIN_ShlEqual_Integer,	<<=,	Integer,	Integer,	Integer )
-		CASE_ASSIGN( BIN_ShrEqual_Integer,	>>=,	Integer,	Integer,	Integer )
-		CASE_ASSIGN( BIN_AndEqual_Integer,	&=,		Integer,	Integer,	Integer )
-		CASE_ASSIGN( BIN_XorEqual_Integer,	^=,		Integer,	Integer,	Integer )
-		CASE_ASSIGN( BIN_OrEqual_Integer,	|=,		Integer,	Integer,	Integer )
+		CASE_ASSIGN( BIN_ModEqual_Integer,	%=,		Int32,		Int32,		Int32 )
+		CASE_ASSIGN( BIN_ShlEqual_Integer,	<<=,	Int32,		Int32,		Int32 )
+		CASE_ASSIGN( BIN_ShrEqual_Integer,	>>=,	Int32,		Int32,		Int32 )
+		CASE_ASSIGN( BIN_AndEqual_Integer,	&=,		Int32,		Int32,		Int32 )
+		CASE_ASSIGN( BIN_XorEqual_Integer,	^=,		Int32,		Int32,		Int32 )
+		CASE_ASSIGN( BIN_OrEqual_Integer,	|=,		Int32,		Int32,		Int32 )
 		#undef CASE_ASSIGN
 
 		//
 		// Simple unary operators.
 		//
-		#define CASE_UNARY( icode, op, type ) case icode:{Byte iReg=ReadByte(); *(type*)(Regs[iReg].Value) = op *(type*)(Regs[iReg].Value); break;}
-		CASE_UNARY( UN_Plus_Integer,		+,		Integer );
+		#define CASE_UNARY( icode, op, type ) case icode:{UInt8 iReg=ReadByte(); *(type*)(Regs[iReg].Value) = op *(type*)(Regs[iReg].Value); break;}
+		CASE_UNARY( UN_Plus_Integer,		+,		Int32 );
 		CASE_UNARY( UN_Plus_Float,			+,		Float );
 		CASE_UNARY( UN_Plus_Vector,			+,		TVector );
 		CASE_UNARY( UN_Plus_Color,			+,		TColor );
-		CASE_UNARY( UN_Minus_Integer,		-,		Integer );
+		CASE_UNARY( UN_Minus_Integer,		-,		Int32 );
 		CASE_UNARY( UN_Minus_Float,			-,		Float );
 		CASE_UNARY( UN_Minus_Vector,		-,		TVector );
 		CASE_UNARY( UN_Minus_Color,			-,		TColor );
 		CASE_UNARY( UN_Not_Bool,			!,		Bool );
-		CASE_UNARY( UN_Not_Integer,			~,		Integer );
+		CASE_UNARY( UN_Not_Integer,			~,		Int32 );
 		#undef CASE_UNARY
 
 		//
 		// Suffix / prefix operators.
 		//
 		#define CASE_PREFIX( icode, op, type ) case icode:{(*(type*)(Regs[ReadByte()].Addr))op; break;}
-		CASE_PREFIX( UN_Inc_Integer,		++,		Integer );
+		CASE_PREFIX( UN_Inc_Integer,		++,		Int32 );
 		CASE_PREFIX( UN_Inc_Float,			++,		Float );
-		CASE_PREFIX( UN_Dec_Integer,		--,		Integer );
+		CASE_PREFIX( UN_Dec_Integer,		--,		Int32 );
 		CASE_PREFIX( UN_Dec_Float,			--,		Float );
 		#undef CASE_PREFIX
 
@@ -393,13 +393,13 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		//
 		case BIN_AddEqual_String:
 		{
-			Byte iReg = ReadByte();
+			UInt8 iReg = ReadByte();
 			*(String*)Regs[iReg].Addr += Regs[ReadByte()].StrValue;
 			break;
 		}
 		case BIN_Add_String:
 		{
-			Byte iReg=ReadByte();
+			UInt8 iReg=ReadByte();
 			Regs[iReg].StrValue += Regs[ReadByte()].StrValue;
 			break;
 		}

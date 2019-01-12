@@ -370,7 +370,7 @@ void FKeyframeComponent::Import( CImporterBase& Im )
 	FExtraComponent::Import( Im );
 
 	Points.SetNum( Im.ImportInteger(L"NumPoints") );
-	for( Integer i=0; i<Points.Num(); i++ )
+	for( Int32 i=0; i<Points.Num(); i++ )
 	{
 		Points[i].Location	= Im.ImportVector( *String::Format( L"Points[%d].Location", i ) );
 		Points[i].Rotation	= Im.ImportAngle( *String::Format( L"Points[%d].Rotation", i ) );
@@ -387,7 +387,7 @@ void FKeyframeComponent::Export( CExporterBase& Ex )
 	FExtraComponent::Export( Ex );
 
 	Ex.ExportInteger( L"NumPoints", Points.Num() );
-	for( Integer i=0; i<Points.Num(); i++ )
+	for( Int32 i=0; i<Points.Num(); i++ )
 	{
 		Ex.ExportVector( *String::Format( L"Points[%d].Location", i ), Points[i].Location );
 		Ex.ExportAngle( *String::Format( L"Points[%d].Rotation", i ), Points[i].Rotation );
@@ -472,7 +472,7 @@ void FRigidBodyComponent::Tick( Float Delta )
 	if( !bCanSleep || !bSleeping )
 	{
 		// Process physics.
-		for( Integer i=0; i<NUM_PHYS_ITERS; i++ )
+		for( Int32 i=0; i<NUM_PHYS_ITERS; i++ )
 			CPhysics::PhysicComplex( this, Delta*(1.f/NUM_PHYS_ITERS) );
 
 		// Notify script.
@@ -618,7 +618,7 @@ void FPhysicComponent::SerializeThis( CSerializer& S )
 	Serialize( S, Floor );
 	Serialize( S, Zone );
 
-	for( Integer i=0; i<arr_len(Touched); i++ )
+	for( Int32 i=0; i<arr_len(Touched); i++ )
 		Serialize( S, Touched[i] );
 }
 
@@ -653,7 +653,7 @@ void FPhysicComponent::nativeIsTouching( CFrame& Frame )
 	Bool		Result	= false;
 
 	if( Other )
-		for( Integer i=0; i<arr_len(Touched); i++ )
+		for( Int32 i=0; i<arr_len(Touched); i++ )
 			if( Touched[i] == Other )
 			{
 				Result	= true;
@@ -734,7 +734,7 @@ void FMoverComponent::SerializeThis( CSerializer& S )
 	{
 		Serialize( S, OldLocation );
 		Serialize( S, NumRds );
-		for( Integer iRd=0; iRd<NumRds; iRd++ )
+		for( Int32 iRd=0; iRd<NumRds; iRd++ )
 			Serialize( S, Riders[iRd] );
 	}
 }
@@ -762,7 +762,7 @@ void FMoverComponent::PreTick( Float Delta )
 			// but works well.
 			Shift	-= TVector( 0.f, 4.f ) * Delta;
 #endif
-			for( Integer iRd=0; iRd<NumRds; iRd++ )
+			for( Int32 iRd=0; iRd<NumRds; iRd++ )
 			{
 				Level->CollHash->RemoveFromHash( Riders[iRd] );
 				{

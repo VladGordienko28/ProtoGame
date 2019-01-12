@@ -26,15 +26,15 @@ Float					CPhysics::OtherInvMass;
 Float					CPhysics::OtherInvIner;
 FBaseComponent*			CPhysics::Other;
 FBaseComponent*			CPhysics::Others[MAX_COLL_LIST_OBJS];
-Integer					CPhysics::NumOthers;
+Int32					CPhysics::NumOthers;
 TVector					CPhysics::AVerts[16];
 TVector					CPhysics::ANorms[16];
 TVector					CPhysics::BVerts[16];
 TVector					CPhysics::BNorms[16];
-Integer					CPhysics::ANum;
-Integer					CPhysics::BNum;
+Int32					CPhysics::ANum;
+Int32					CPhysics::BNum;
 TVector					CPhysics::Contacts[2];
-Integer					CPhysics::NumConts;
+Int32					CPhysics::NumConts;
 
 
 /*-----------------------------------------------------------------------------
@@ -144,7 +144,7 @@ inline Float GetInvInertia( FPhysicComponent* Body )
 //
 // Retrieve body's polygon vertices.
 //
-void BodyToPoly( FBaseComponent* Body, TVector* OutVerts, TVector* OutNorms, Integer& OutNum )
+void BodyToPoly( FBaseComponent* Body, TVector* OutVerts, TVector* OutNorms, Int32& OutNum )
 {
 	if( Body->IsA(FBrushComponent::MetaClass) )
 	{
@@ -154,12 +154,12 @@ void BodyToPoly( FBaseComponent* Body, TVector* OutVerts, TVector* OutNorms, Int
 		// Brushes don't support rotation, so
 		// simplify transformation.
 		OutNum	= Brush->NumVerts;
-		for( Integer i=0; i<OutNum; i++ )
+		for( Int32 i=0; i<OutNum; i++ )
 			OutVerts[i] = Brush->Vertices[i] + Brush->Location;
 
 		// Compute normals.
 		TVector P1=Brush->Vertices[OutNum-1], P2;
-		for( Integer i=0, j=OutNum-1; i<OutNum; j=i, i++ )
+		for( Int32 i=0, j=OutNum-1; i<OutNum; j=i, i++ )
 		{
 			P2			= Brush->Vertices[i];
 			TVector N	= P2 - P1;
@@ -223,11 +223,11 @@ inline Float MixFriction( Float AFric, Float BFric )
 //
 // Calculate body's mass.
 //
-Float CalculateMass( TVector* Verts, Integer NumVers, Float Density )
+Float CalculateMass( TVector* Verts, Int32 NumVers, Float Density )
 {
 	Float Mass	= 0.f;
 
-	for( Integer j=NumVers-1, i=0; i<NumVers; j=i, i++ )
+	for( Int32 j=NumVers-1, i=0; i<NumVers; j=i, i++ )
 	{
 		TVector	P0	= Verts[j];
 		TVector	P1	= Verts[i];
@@ -241,12 +241,12 @@ Float CalculateMass( TVector* Verts, Integer NumVers, Float Density )
 //
 // Calculate body's inertia.
 //
-Float CalculateInertia( TVector* Verts, Integer NumVers, Float Mass )
+Float CalculateInertia( TVector* Verts, Int32 NumVers, Float Mass )
 {
 	Float	Denom	= 0.f,
 			Numer	= 0.f;
 
-	for( Integer j=NumVers-1, i=0; i<NumVers; j=i, i++ )
+	for( Int32 j=NumVers-1, i=0; i<NumVers; j=i, i++ )
 	{
 		TVector	P0	= Verts[j];
 		TVector	P1	= Verts[i];
@@ -291,10 +291,10 @@ int MassCompare( const void* Arg1, const void* Arg2 )
 //
 // Project poly onto axis. Return bounds.
 //
-void ProjectPoly( const TVector& Axis, TVector* Verts, Integer Num, Float& OutMin, Float& OutMax )
+void ProjectPoly( const TVector& Axis, TVector* Verts, Int32 Num, Float& OutMin, Float& OutMax )
 {
 	OutMin	= OutMax	= Verts[0] * Axis;
-	for( Integer i=1; i<Num; i++ )
+	for( Int32 i=1; i<Num; i++ )
 	{
 		Float Test = Verts[i] * Axis;
 		OutMin	= Min( Test, OutMin );
@@ -307,7 +307,7 @@ void ProjectPoly( const TVector& Axis, TVector* Verts, Integer Num, Float& OutMi
 // Test an axis for SAT.
 // Return true if poly's projections are overlap.
 //
-Bool TestAxis( const TVector& Axis, TVector* AVerts, Integer ANum, TVector* BVerts, Integer BNum )
+Bool TestAxis( const TVector& Axis, TVector* AVerts, Int32 ANum, TVector* BVerts, Int32 BNum )
 {
 	Float MinA, MinB, MaxA, MaxB;
 	ProjectPoly( Axis, AVerts, ANum, MinA, MaxA );
@@ -323,13 +323,13 @@ Bool TestAxis( const TVector& Axis, TVector* AVerts, Integer ANum, TVector* BVer
 // Don't compute hit info, just return
 // logical value.
 //
-Bool PolysIsOverlap( TVector* AVerts, Integer ANum, TVector* BVerts, Integer BNum )
+Bool PolysIsOverlap( TVector* AVerts, Int32 ANum, TVector* BVerts, Int32 BNum )
 {
 	TVector P1, P2, Axis;
 
 	// Test edges of A poly.
 	P1	= AVerts[ANum-1];
-	for( Integer i=0; i<ANum; i++ )
+	for( Int32 i=0; i<ANum; i++ )
 	{
 		P2		= AVerts[i];
 		Axis	= (P2 - P1).Cross();
@@ -342,7 +342,7 @@ Bool PolysIsOverlap( TVector* AVerts, Integer ANum, TVector* BVerts, Integer BNu
 
 	// Test edges of B poly.
 	P1	= BVerts[BNum-1];
-	for( Integer i=0; i<BNum; i++ )
+	for( Int32 i=0; i<BNum; i++ )
 	{
 		P2		= BVerts[i];
 		Axis	= (P2 - P1).Cross();
@@ -365,12 +365,12 @@ Bool PolysIsOverlap( TVector* AVerts, Integer ANum, TVector* BVerts, Integer BNu
 //
 // Get the farthest point along dir vecctor.
 //
-TVector GetSupport( TVector Dir, TVector* Verts, Integer NumVerts )
+TVector GetSupport( TVector Dir, TVector* Verts, Int32 NumVerts )
 {
 	TVector	Result		= Verts[0];
 	Float	BestDist	= Verts[0] * Dir;
 
-	for( Integer i=1; i<NumVerts; i++ )
+	for( Int32 i=1; i<NumVerts; i++ )
 	{
 		Float	TestDist	= Verts[i] * Dir;
 
@@ -390,14 +390,14 @@ TVector GetSupport( TVector Dir, TVector* Verts, Integer NumVerts )
 //
 Float FindAxisLeastTime
 (
-	TVector* AVerts, TVector* ANorms, Integer ANum,
-	TVector* BVerts, TVector* BNorms, Integer BNum,
-	Integer& Index
+	TVector* AVerts, TVector* ANorms, Int32 ANum,
+	TVector* BVerts, TVector* BNorms, Int32 BNum,
+	Int32& Index
 )
 {
 	Float Result = -999999.0;
 
-	for( Integer i=0; i<ANum; i++ )
+	for( Int32 i=0; i<ANum; i++ )
 	{
 		// Normal for projection.
 		TVector Normal	= ANorms[i];
@@ -420,16 +420,16 @@ Float FindAxisLeastTime
 void FindIncidentFace
 (
 	TVector* V,
-	TVector* RefVerts, TVector* RefNorms, Integer NumRef,
-	TVector* IncVerts, TVector* IncNorms, Integer NumInc,
-	Integer RefIndex
+	TVector* RefVerts, TVector* RefNorms, Int32 NumRef,
+	TVector* IncVerts, TVector* IncNorms, Int32 NumInc,
+	Int32 RefIndex
 )
 {
 	TVector	RefNormal	= RefNorms[RefIndex];
-	Integer	IncFace		= 0;
+	Int32	IncFace		= 0;
 	Float	MinDot		= 999999.0;
 
-	for( Integer i=0; i<NumInc; i++ )
+	for( Int32 i=0; i<NumInc; i++ )
 	{
 		Float	Dot	= RefNormal * IncNorms[i];
 
@@ -446,9 +446,9 @@ void FindIncidentFace
 }
 
 
-Integer Clip( TVector N, Float C, TVector* Face )
+Int32 Clip( TVector N, Float C, TVector* Face )
 {
-	Integer	Result		= 0;
+	Int32	Result		= 0;
 	TVector	OutFace[2]	= { Face[0], Face[1] };
 
 	Float	D1	= N * Face[0] - C;
@@ -503,7 +503,7 @@ Bool CPhysics::DetectArcadeCollision( EAxis Axis, FPhysicComponent* Body, FBaseC
 		HitNormal						= TVector( 0.f, 0.f );
 
 		P1	= Brush->Vertices[Brush->NumVerts-1] + Brush->Location;
-		for( Integer i=0; i<Brush->NumVerts; i++ )
+		for( Int32 i=0; i<Brush->NumVerts; i++ )
 		{
 			P2				= Brush->Vertices[i] + Brush->Location;
 			TVector	Normal	= ( P2 - P1 ).Cross();
@@ -726,7 +726,7 @@ Bool CPhysics::DetectComplexCollision()
 	NumConts	= 0;
 	HitTime		= 0.f;
 
-	Integer FaceA, FaceB;
+	Int32 FaceA, FaceB;
 
 	// Check for SAP with A planes.
 	Float TimeA	= FindAxisLeastTime
@@ -751,7 +751,7 @@ Bool CPhysics::DetectComplexCollision()
 		return false;
 
 	Bool	bFlip;
-	Integer	RefInd;
+	Int32	RefInd;
 	if( TimeA > TimeB )
 	{
 		RefInd	= FaceA;
@@ -813,7 +813,7 @@ Bool CPhysics::DetectComplexCollision()
 	// Flip if any.
 	HitNormal	= bFlip ? -RefNormal : +RefNormal;
 
-	Integer Cp	= 0;
+	Int32 Cp	= 0;
 	Float	Sep	= (RefNormal * IncFace[0]) - RefC;
 	if( Sep <= 0.f )
 	{
@@ -898,7 +898,7 @@ void CPhysics::PhysicComplex( FPhysicComponent* Body, Float Delta )
 		BodyToPoly( Body, AVerts, ANorms, ANum );
 
 		// Test collision with all bodies.
-		for( Integer i=0; i<NumOthers; i++ )
+		for( Int32 i=0; i<NumOthers; i++ )
 		{
 			// Figure out is body still overlaps with
 			// Others[i] due position correction.
@@ -984,7 +984,7 @@ void CPhysics::PhysicComplex( FPhysicComponent* Body, Float Delta )
 				TVector	V1 = TVector( 0.f, 0.f ), 
 						V2 = TVector (0.f, 0.f );
 
-				for( Integer k=0; k<NumConts; k++ )
+				for( Int32 k=0; k<NumConts; k++ )
 				{
 					// Radii vectors.
 					TVector RadBody		= Contacts[k] - Body->Location;
@@ -1121,7 +1121,7 @@ void CPhysics::PhysicComplex( FPhysicComponent* Body, Float Delta )
 		//
 		{
 			BodyToPoly( Body, AVerts, ANorms, ANum );
-			for( Integer i=0; i<arr_len(Body->Touched); i++ )
+			for( Int32 i=0; i<arr_len(Body->Touched); i++ )
 				if( Body->Touched[i] )
 				{
 					Other	= Body->Touched[i]->Base;
@@ -1206,7 +1206,7 @@ void CPhysics::PhysicArcade( FPhysicComponent* Body, Float Delta )
 			Level->CollHash->GetOverlapped( BodyAABB, NumOthers, Others );
 
 			// Test collision with all actors.
-			for( Integer iOther=0; iOther<NumOthers; iOther++ )
+			for( Int32 iOther=0; iOther<NumOthers; iOther++ )
 			{
 				// Figure out is body still overlaps with
 				// Others[i] due position correction.
@@ -1280,7 +1280,7 @@ void CPhysics::PhysicArcade( FPhysicComponent* Body, Float Delta )
 			Level->CollHash->GetOverlapped( BodyAABB, NumOthers, Others );
 
 			// Test collision with all actors.
-			for( Integer iOther=0; iOther<NumOthers; iOther++ )
+			for( Int32 iOther=0; iOther<NumOthers; iOther++ )
 			{
 				// Figure out is body still overlaps with
 				// Others[i] due position correction.
@@ -1365,7 +1365,7 @@ void CPhysics::PhysicArcade( FPhysicComponent* Body, Float Delta )
 		{
 			TRect ThisRect = Body->GetAABB();
 
-			for( Integer i=0; i<arr_len(Body->Touched); i++ )
+			for( Int32 i=0; i<arr_len(Body->Touched); i++ )
 				if( Body->Touched[i]  )
 				{
 					FBaseComponent* Other = Body->Touched[i]->Base;
@@ -1436,8 +1436,8 @@ void CPhysics::PhysicKeyframe( FKeyframeComponent* Object, Float Delta )
 				if( Object->Speed > 0.f )
 				{
 					// Forward movement.
-					Integer iPrevKey	= Floor(Object->Progress);
-					Integer iDestKey	= iPrevKey + 1;
+					Int32 iPrevKey	= Floor(Object->Progress);
+					Int32 iDestKey	= iPrevKey + 1;
 
 					if( iDestKey < Object->Points.Num() )
 					{
@@ -1481,8 +1481,8 @@ void CPhysics::PhysicKeyframe( FKeyframeComponent* Object, Float Delta )
 				else
 				{
 					// Backward movement.
-					Integer iPrevKey	= Ceil(Object->Progress);
-					Integer iDestKey	= iPrevKey - 1;
+					Int32 iPrevKey	= Ceil(Object->Progress);
+					Int32 iDestKey	= iPrevKey - 1;
 
 					if( iDestKey >= 0 )
 					{
@@ -1528,7 +1528,7 @@ void CPhysics::PhysicKeyframe( FKeyframeComponent* Object, Float Delta )
 			case GLIDE_Target:
 			{
 				// Glide to the target key.
-				Integer iTarget		= Object->iTarget;
+				Int32 iTarget		= Object->iTarget;
 				TVector MoveFrom	= Object->StartLocation;
 				Float PathLen		= Max( Distance
 												( 
@@ -1712,7 +1712,7 @@ void CPhysics::HandlePortals( FPhysicComponent* Body, const TVector& OldLocation
 Bool CPhysics::IsTouch( FPhysicComponent* Body, FBaseComponent* Other )
 {
 	// Iterate through array.
-	for( Integer i=0; i<arr_len(Body->Touched); i++ )
+	for( Int32 i=0; i<arr_len(Body->Touched); i++ )
 		if( Body->Touched[i] == Other->Entity )
 			return true;
 
@@ -1728,14 +1728,14 @@ Bool CPhysics::IsTouch( FPhysicComponent* Body, FBaseComponent* Other )
 //
 Bool CPhysics::BeginTouch( FPhysicComponent* Body, FBaseComponent* Other )
 {
-	Integer iA = -1, iB = -1;
+	Int32 iA = -1, iB = -1;
 
 	// Maybe already touch.
 	if( IsTouch( Body, Other ) )
 		return false;
 
 	// Find avail slot in Object.
-	for( Integer i=0; i<arr_len(Body->Touched); i++ )
+	for( Int32 i=0; i<arr_len(Body->Touched); i++ )
 		if( Body->Touched[i] == nullptr )
 		{
 			iA	= i;
@@ -1745,7 +1745,7 @@ Bool CPhysics::BeginTouch( FPhysicComponent* Body, FBaseComponent* Other )
 	// Find avail slot in Other.
 	FPhysicComponent* Phys = As<FPhysicComponent>( Other );
 	if( Phys )
-		for( Integer i=0; i<arr_len(Phys->Touched); i++ )
+		for( Int32 i=0; i<arr_len(Phys->Touched); i++ )
 			if( Phys->Touched[i] == nullptr )
 			{
 				iB	= i;
@@ -1788,9 +1788,9 @@ Bool CPhysics::BeginTouch( FPhysicComponent* Body, FBaseComponent* Other )
 //
 Bool CPhysics::EndTouch( FPhysicComponent* Body, FBaseComponent* Other )
 {
-	Integer iA = -1, iB = -1;
+	Int32 iA = -1, iB = -1;
 
-	for( Integer i=0; i<arr_len(Body->Touched); i++ )
+	for( Int32 i=0; i<arr_len(Body->Touched); i++ )
 		if( Body->Touched[i] == Other->Entity )
 		{
 			iA	= i;
@@ -1799,7 +1799,7 @@ Bool CPhysics::EndTouch( FPhysicComponent* Body, FBaseComponent* Other )
 
 	FPhysicComponent* Phys = As<FPhysicComponent>( Other );
 	if( Phys )
-		for( Integer i=0; i<arr_len(Phys->Touched); i++ )
+		for( Int32 i=0; i<arr_len(Phys->Touched); i++ )
 			if( Phys->Touched[i] == Body->Entity )
 			{
 				iB	= i;

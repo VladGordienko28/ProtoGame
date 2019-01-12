@@ -111,7 +111,7 @@ public:
 	// FDiffuseLayer interface.
 	FDiffuseLayer();
 	~FDiffuseLayer();
-	void ApplyTransform( const TViewInfo& View, const TVector* InCoords, TVector* OutCoords, Integer NumVerts );
+	void ApplyTransform( const TViewInfo& View, const TVector* InCoords, TVector* OutCoords, Int32 NumVerts );
 
 	// FObject interface.
 	void SerializeThis( CSerializer& S );

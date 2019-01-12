@@ -20,12 +20,12 @@ CInput::CInput()
 	// Default system remap. In case of
 	// some weird platform, platform should
 	// change this table itself.
-	for( Integer iKey=0; iKey<KEY_MAX; iKey++ )
+	for( Int32 iKey=0; iKey<KEY_MAX; iKey++ )
 		SystemRemap[iKey]	= iKey;
 
 	// Default user's remap table. It should be
 	// changed via config file.
-	for( Integer iKey=0; iKey<KEY_MAX; iKey++ )
+	for( Int32 iKey=0; iKey<KEY_MAX; iKey++ )
 		ConfigRemap[iKey]	= iKey;
 
 	// Mouse variables.
@@ -77,19 +77,19 @@ void CInput::SetLevel( FLevel* InLevel )
 //
 // Some key has been pressed.
 //
-void CInput::OnKeyDown( Integer iKey )
+void CInput::OnKeyDown( Int32 iKey )
 {
 	iKey	= KEY_MAX & iKey;
 
 	// Notify inputs.
 	if( Level )
 	{
-		Integer Pressed = ConfigRemap[SystemRemap[iKey]];
+		Int32 Pressed = ConfigRemap[SystemRemap[iKey]];
 
 		// Add to history only Letters.
 		if( Pressed >= 'A' && Pressed <= 'Z' )
 		{
-			for( Integer i=1; i<MAX_COMBO_LENGTH; i++ )
+			for( Int32 i=1; i<MAX_COMBO_LENGTH; i++ )
 				KeysHistory[i-1] = KeysHistory[i];
 			KeysHistory[MAX_COMBO_LENGTH-1] = Pressed;
 		}
@@ -113,14 +113,14 @@ void CInput::OnKeyDown( Integer iKey )
 //
 // Some key has been unpressed.
 //
-void CInput::OnKeyUp( Integer iKey )
+void CInput::OnKeyUp( Int32 iKey )
 {
 	iKey	= KEY_MAX & iKey;
 
 	// Notify inputs.
 	if( Level )
 	{
-		Integer Pressed = ConfigRemap[SystemRemap[iKey]];
+		Int32 Pressed = ConfigRemap[SystemRemap[iKey]];
 		for( FInputComponent* I = Level->FirstInput; I; I = I->NextInput )
 			I->Entity->OnKeyUp(Pressed);
 	}
@@ -171,7 +171,7 @@ void CInput::RemapFromIni( CConfigManager* Config )
 	assert(InputKeys->Elements.Num()>=KEY_MAX);
 
 	// Let's torment ini.
-	for( Integer i=0; i<KEY_MAX; i++ )
+	for( Int32 i=0; i<KEY_MAX; i++ )
 		ConfigRemap[i]	= Config->ReadInteger( L"Prefs", L"Input", *InputKeys->GetAliasOf(i), i );
 
 }
@@ -180,7 +180,7 @@ void CInput::RemapFromIni( CConfigManager* Config )
 //
 // Return true, if given key are pressed.
 //
-Bool CInput::KeyIsPressed( Integer iKey )
+Bool CInput::KeyIsPressed( Int32 iKey )
 {
 	iKey	= KEY_MAX & iKey;
 	return Keys[ConfigRemap[SystemRemap[iKey]]];
@@ -209,7 +209,7 @@ Bool CInput::MatchKeyCombo( String TestCombo ) const
 	if( TestCombo.Len() >= MAX_COMBO_LENGTH )
 		return false;
 
-	for( Integer i=TestCombo.Len()-1, j=MAX_COMBO_LENGTH-1; i>=0; i--, j-- )
+	for( Int32 i=TestCombo.Len()-1, j=MAX_COMBO_LENGTH-1; i>=0; i--, j-- )
 		if( TestCombo[i] != KeysHistory[j] )
 			return false;
 

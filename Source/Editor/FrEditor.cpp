@@ -24,7 +24,7 @@
 //
 static LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam );
 static Char* StackTrace( LPEXCEPTION_POINTERS InException );
-static Integer HandleException( LPEXCEPTION_POINTERS InException );
+static Int32 HandleException( LPEXCEPTION_POINTERS InException );
 
 
 //
@@ -46,7 +46,7 @@ CEditor::CEditor()
 	// Say hello to user.
 	info( L"=========================" );
 	info( L"=    Fluorine Engine    =" );
-	info( L"=      %s        =", FLU_VER );
+	info( L"=      %s        =", FLU_VERSION );
 	info( L"=========================" );
 	info( L"" );
 
@@ -133,7 +133,7 @@ void CEditor::Init( HINSTANCE InhInstance )
 	// Create render & audio.
 	GRender		= new COpenGLRender( hWnd );
 
-#if _WIN64
+#if FLU_X64
 	GAudio		= new CNullAudio();
 #else
 	GAudio		= new COpenALAudio();
@@ -280,7 +280,7 @@ static Double	GOldTime;
 static Double	GStartupTime;
 static Double	GNowTime;
 static Double	GfpsTime;
-static Integer	GfpsCount;
+static Int32	GfpsCount;
 
 //
 // Exception handle variables.
@@ -306,7 +306,7 @@ void CEditor::MainLoop()
 	GfpsCount		= 0;
 
 	// Entry point.
-#ifndef _DEBUG
+#ifndef FLU_DEBUG
 	__try
 #endif
 	{
@@ -317,7 +317,7 @@ void CEditor::MainLoop()
 			if( FPS > 48 )
 			{
 				// Select according to page type.
-				static const DWord GPageLim[PAGE_MAX] =
+				static const UInt32 GPageLim[PAGE_MAX] =
 				{
 					1000 / 100,		// PAGE_None.
 					1000 / 100,		// PAGE_Hello.
@@ -385,7 +385,7 @@ void CEditor::MainLoop()
 		
 	ExitLoop:;
 	}
-#ifndef _DEBUG
+#ifndef FLU_DEBUG
 	__except( HandleException(GetExceptionInformation()) )
 	{
 		// GPF Error.
@@ -413,8 +413,8 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			//
 			// Mouse has been moved.
 			//
-			static Integer OldX, OldY;
-			Integer	X	= GET_X_LPARAM( LParam ), 
+			static Int32 OldX, OldY;
+			Int32	X	= GET_X_LPARAM( LParam ), 
 					Y	= GET_Y_LPARAM( LParam );
 
 			EMouseButton Button	=	WParam == MK_RBUTTON ? MB_Right : WParam == MK_LBUTTON ? MB_Left :
@@ -460,9 +460,9 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			// Handle cursor mode.
 			if( GEditor->GUIWindow->GetCursorMode() == CM_Wrap )
 			{
-				Integer ClientY = GEditor->GUIWindow->Size.Height;
+				Int32 ClientY = GEditor->GUIWindow->Size.Height;
 
-				Integer NewY=Y;
+				Int32 NewY=Y;
 				if( Y<=0 )			NewY = ClientY-1;
 				if( Y>=ClientY )	NewY = 1;
 
@@ -509,7 +509,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			//
 			// Some mouse button has been released.
 			//
-			Integer	X	= LOWORD( LParam ), 
+			Int32	X	= LOWORD( LParam ), 
 					Y	= HIWORD( LParam );
 			EMouseButton Button =	Message == WM_LBUTTONUP ? MB_Left : 
 									Message == WM_RBUTTONUP ? MB_Right : MB_Middle;
@@ -530,7 +530,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			//
 			// Some mouse button has been pressed.
 			//
-			Integer	X	= LOWORD( LParam ), 
+			Int32	X	= LOWORD( LParam ), 
 					Y	= HIWORD( LParam );
 			EMouseButton Button =	Message == WM_LBUTTONDOWN ? MB_Left : 
 									Message == WM_RBUTTONDOWN ? MB_Right : MB_Middle;
@@ -558,8 +558,8 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			//
 			// Key has been released.
 			//
-			GEditor->GUIWindow->WidgetProc( WPE_KeyUp, (Integer)WParam );
-			GEditor->GInput->OnKeyUp( (Integer)WParam );
+			GEditor->GUIWindow->WidgetProc( WPE_KeyUp, (Int32)WParam );
+			GEditor->GInput->OnKeyUp( (Int32)WParam );
 			break;
 		}
 		case WM_KEYDOWN:
@@ -568,8 +568,8 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			//
 			// Key has been pressed.
 			//
-			GEditor->GUIWindow->WidgetProc( WPE_KeyDown, (Integer)WParam );
-			GEditor->GInput->OnKeyDown( (Integer)WParam );
+			GEditor->GUIWindow->WidgetProc( WPE_KeyDown, (Int32)WParam );
+			GEditor->GInput->OnKeyDown( (Int32)WParam );
 			break;
 		}
 		case WM_CHAR:
@@ -586,7 +586,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			//
 			//  Window resizing.
 			//
-			Integer	NewX = LOWORD( LParam ), 
+			Int32	NewX = LOWORD( LParam ), 
 					NewY = HIWORD( LParam );
 
 			GEditor->GRender->Resize( NewX, NewY );
@@ -599,7 +599,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			//
 			// Left button double click.
 			//
-			Integer	X	= LOWORD(LParam), 
+			Int32	X	= LOWORD(LParam), 
 					Y	= HIWORD(LParam);
 	
 			GEditor->GUIWindow->WidgetProc( WPE_MouseDown,	TWidProcParms( MB_Left, X, Y ) );
@@ -611,7 +611,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			//
 			// Process mouse wheel event.
 			//
-			Integer SrlDlt = GET_WHEEL_DELTA_WPARAM( WParam );
+			Int32 SrlDlt = GET_WHEEL_DELTA_WPARAM( WParam );
 			GEditor->GUIWindow->WidgetProc( WPE_MouseScroll, SrlDlt );
 			break;
 		}
@@ -668,7 +668,7 @@ WEditorPage* CEditor::OpenPageWith( FResource* InRes )
 		// Level page.
 		//
 		WEditorPage* Page = nullptr;
-		for( Integer i=0; i<EditorPages->Pages.Num(); i++ )
+		for( Int32 i=0; i<EditorPages->Pages.Num(); i++ )
 		{
 			WEditorPage* Test = (WEditorPage*)EditorPages->Pages[i];			
 			if( Test->PageType==PAGE_Level && ((WLevelPage*)Test)->Level == InRes )	
@@ -692,7 +692,7 @@ WEditorPage* CEditor::OpenPageWith( FResource* InRes )
 		// Texture page.
 		//
 		WEditorPage* Page = nullptr;	
-		for( Integer i=0; i<EditorPages->Pages.Num(); i++ )
+		for( Int32 i=0; i<EditorPages->Pages.Num(); i++ )
 		{
 			WEditorPage* Test = (WEditorPage*)EditorPages->Pages[i];
 			if( Test->PageType==PAGE_Texture && ((WTexturePage*)Test)->Texture == InRes )
@@ -716,7 +716,7 @@ WEditorPage* CEditor::OpenPageWith( FResource* InRes )
 		// Script page.
 		//
 		WEditorPage* Page = nullptr;
-		for( Integer i=0; i<EditorPages->Pages.Num(); i++ )
+		for( Int32 i=0; i<EditorPages->Pages.Num(); i++ )
 		{
 			WEditorPage* Test = (WEditorPage*)EditorPages->Pages[i];
 			if( Test->PageType==PAGE_Script && ((WScriptPage*)Test)->Script == InRes )
@@ -740,7 +740,7 @@ WEditorPage* CEditor::OpenPageWith( FResource* InRes )
 		// Animation page.
 		//
 		WEditorPage* Page = nullptr;
-		for( Integer i=0; i<EditorPages->Pages.Num(); i++ )
+		for( Int32 i=0; i<EditorPages->Pages.Num(); i++ )
 		{
 			WEditorPage* Test = (WEditorPage*)EditorPages->Pages[i];
 			if( Test->PageType==PAGE_Animation && ((WAnimationPage*)Test)->Animation == InRes )
@@ -764,7 +764,7 @@ WEditorPage* CEditor::OpenPageWith( FResource* InRes )
 		// Skeleton page.
 		//
 		WEditorPage* Page = nullptr;
-		for( Integer i=0; i<EditorPages->Pages.Num(); i++ )
+		for( Int32 i=0; i<EditorPages->Pages.Num(); i++ )
 		{
 			WEditorPage* Test = (WEditorPage*)EditorPages->Pages[i];
 			if( Test->PageType==PAGE_Skeleton && ((WSkeletonPage*)Test)->Skeleton == InRes )
@@ -794,7 +794,7 @@ WPlayPage* CEditor::PlayLevel( FLevel* Original )
 	WPlayPage*	Played	= nullptr;
 
 	// Maybe page already loaded.
-	for( Integer iPage=0; iPage<EditorPages->Pages.Num(); iPage++ )
+	for( Int32 iPage=0; iPage<EditorPages->Pages.Num(); iPage++ )
 	{
 		WEditorPage* Test = (WEditorPage*)EditorPages->Pages[iPage];
 		if( Test->PageType == PAGE_Play )
@@ -892,7 +892,7 @@ static Char* StackTrace( LPEXCEPTION_POINTERS InException )
 	STACKFRAME64 StackFrame;
 	MemZero( &StackFrame, sizeof(STACKFRAME64) );
 	
-#if !_WIN64
+#if FLU_X32
 	if( InException )
 	{
 		StackFrame.AddrStack.Offset	= InException->ContextRecord->Esp;
@@ -961,7 +961,7 @@ static Char* StackTrace( LPEXCEPTION_POINTERS InException )
 //
 // __try..__except exception handler.
 //
-static Integer HandleException( LPEXCEPTION_POINTERS InException )
+static Int32 HandleException( LPEXCEPTION_POINTERS InException )
 {
 	GErrorText = StackTrace( InException );
 	return EXCEPTION_EXECUTE_HANDLER;
@@ -978,12 +978,10 @@ public:
 	CEditorDebugOutput()
 		:	bUseStdConsole(false)
 	{
-#if FDEBUG_LOG
 		// Open log file.
 		LogFile	= _wfopen( *(String(FLU_NAME)+L".log"), L"w" );
-#endif
 
-#if _DEBUG
+#if FLU_DEBUG
 		// Use Std console or VS Output?
 		bUseStdConsole	= !IsDebuggerPresent();
 		if( bUseStdConsole )
@@ -1003,9 +1001,8 @@ public:
 	{
 		if( bUseStdConsole )
 			FreeConsole();
-#if FDEBUG_LOG
+
 		fclose( LogFile );
-#endif
 	}
 
 	//
@@ -1015,20 +1012,18 @@ public:
 	// Output C++ log message.
 	void Logf( ESeverity Severity, Char* Text, ... )
 	{
-#if FDEBUG_LOG || _DEBUG
+#if FLU_DEBUG
 		Char Dest[2048] = {};
 		va_list ArgPtr;
 		va_start( ArgPtr, Text );
 		_vsnwprintf( Dest, arr_len(Dest), Text, ArgPtr );
 		va_end( ArgPtr );
 		wcscat_s( Dest, L"\n" );
-#endif
 
-#if FDEBUG_LOG
+
 		fwprintf( LogFile, Dest );
 #endif
-
-#if _DEBUG
+#if FLU_DEBUG
 		if( bUseStdConsole )
 		{
 			static WORD SeverityColors[SVR_MAX] = 
@@ -1058,9 +1053,9 @@ public:
 		va_end( ArgPtr );
 
 		debug( L"**WARNING: %s", Dest );
-#if FDEBUG_LOG
+
 		fflush( LogFile );
-#endif
+
 		MessageBox( 0, Dest, L"Warning", MB_OK | MB_ICONWARNING | MB_TASKMODAL );
 	}
 
@@ -1075,15 +1070,13 @@ public:
 
 		debug( L"**CRITICAL ERROR: %s", Dest );
 		String Stack = StackTrace(nullptr);
-		DWord Footprint = MurmurHash((Byte*)*Stack, Stack.Len()*sizeof(Char));
+		UInt32 Footprint = MurmurHash((UInt8*)*Stack, Stack.Len()*sizeof(Char));
 		String FullText = String::Format( L"%s\nStack Footprint: 0x%08x\n\nHistory: %s", Dest, Footprint, *Stack );
 
 		if( !IsDebuggerPresent() )
 			MessageBox( 0, *FullText, L"Critical Error", MB_OK | MB_ICONERROR | MB_TASKMODAL );
 
-#if FDEBUG_LOG
 		fflush( LogFile );
-#endif  
 
 		// Exit process or enter debug.
 		if( IsDebuggerPresent() )
@@ -1145,9 +1138,7 @@ private:
 	Bool	bUseStdConsole;
 	HANDLE	ConsoleHandle;
 
-#if FDEBUG_LOG
 	FILE*	LogFile;
-#endif
 };
 
 

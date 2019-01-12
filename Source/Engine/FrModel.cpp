@@ -41,12 +41,12 @@ FModelComponent::FModelComponent()
 void FModelComponent::SetAtlasTable()
 {
 	// Clamp parameters.
-	TilesPerU	= Clamp<Byte>( TilesPerU, 1, 200 );
-	TilesPerV	= Clamp<Byte>( TilesPerV, 1, 200 );
+	TilesPerU	= Clamp<UInt8>( TilesPerU, 1, 200 );
+	TilesPerV	= Clamp<UInt8>( TilesPerV, 1, 200 );
 
 	Float TileSizeU	= 1.f / TilesPerU;
 	Float TileSizeV	= 1.f / TilesPerV;
-	Integer iTile = 0, U, V;
+	Int32 iTile = 0, U, V;
 
 	for( V=0; V<TilesPerV; V++ )
 		for( U=0; U<TilesPerU; U++ )
@@ -99,13 +99,13 @@ void FModelComponent::EditChange()
 void FModelComponent::ReallocMap()
 {
 	// Clamp map size.
-	MapXSize	= Clamp<Integer>( MapXSize, 1, MAX_TILES_SIDE );
-	MapYSize	= Clamp<Integer>( MapYSize, 1, MAX_TILES_SIDE );
+	MapXSize	= Clamp<Int32>( MapXSize, 1, MAX_TILES_SIDE );
+	MapYSize	= Clamp<Int32>( MapYSize, 1, MAX_TILES_SIDE );
 
 	// Reallocate data, and zero map, since
 	// reallocation cause tiles shuffle.
 	Map.SetNum( MapXSize * MapYSize );
-	MemZero( &Map[0], MapXSize*MapYSize*sizeof(Word) );
+	MemZero( &Map[0], MapXSize*MapYSize*sizeof(UInt16) );
 }
 
 
@@ -113,7 +113,7 @@ void FModelComponent::ReallocMap()
 // Discretize world's location into index of tile of the
 // tile model. If given point is outside mode, return -1.
 //
-Integer FModelComponent::WorldToMapIndex( Float vX, Float vY )
+Int32 FModelComponent::WorldToMapIndex( Float vX, Float vY )
 {
 	// Transform to model local coords.
 	vX	-= Location.X;
@@ -124,8 +124,8 @@ Integer FModelComponent::WorldToMapIndex( Float vX, Float vY )
 	vY	/= TileSize.Y;
 
 	// Discretize.
-	Integer	X	= Floor( vX );
-	Integer	Y	= Floor( vY );
+	Int32	X	= Floor( vX );
+	Int32	Y	= Floor( vY );
 
 	// Check bounds.
 	if( ( X < 0 )||( Y < 0 )||( X >= MapXSize )||( Y >= MapYSize ) )
@@ -195,11 +195,11 @@ void FModelComponent::Render( CCanvas* Canvas )
 	}
 
 	// Compute screen bound indexes for drawing tiles.
-	Integer XMin = Max( Trunc((View.Min.X - Location.X) / TileSize.X), 0 );
-	Integer YMin = Max( Trunc((View.Min.Y - Location.Y) / TileSize.Y), 0 );
+	Int32 XMin = Max( Trunc((View.Min.X - Location.X) / TileSize.X), 0 );
+	Int32 YMin = Max( Trunc((View.Min.Y - Location.Y) / TileSize.Y), 0 );
 
-	Integer XMax = Min( Ceil((View.Max.X - Location.X) / TileSize.X), MapXSize );
-	Integer YMax = Min( Ceil((View.Max.Y - Location.Y) / TileSize.Y), MapYSize );
+	Int32 XMax = Min( Ceil((View.Max.X - Location.X) / TileSize.X), MapXSize );
+	Int32 YMax = Min( Ceil((View.Max.Y - Location.Y) / TileSize.Y), MapYSize );
 
 	// Setup shared tile info.
 #if 0
@@ -228,9 +228,9 @@ void FModelComponent::Render( CCanvas* Canvas )
 		}
 #else
 	// Count real visible tiles.
-	Integer NumVis = 0;
-	for( Integer Y=YMin; Y<YMax; Y++ )
-	for( Integer X=XMin; X<XMax; X++ )
+	Int32 NumVis = 0;
+	for( Int32 Y=YMin; Y<YMax; Y++ )
+	for( Int32 X=XMin; X<XMax; X++ )
 	{
 		if( Map[X + Y * MapXSize] & 0x00ff )
 			NumVis++;
@@ -239,17 +239,17 @@ void FModelComponent::Render( CCanvas* Canvas )
 	}
 
 	// Setup list.
-	Integer	NumTiles = 0;
+	Int32	NumTiles = 0;
 	TRenderList List( NumVis, Color );
 	List.Texture	= Texture;
 	List.DrawColor	= bFrozen ? Color*0.75f : Color;
 	List.Flags		= POLY_Unlit*bUnlit | !(Level->RndFlags & RND_Lighting);
 
 	// Collect all tiles.
-	for( Integer Y=YMin; Y<YMax; Y++ )
-	for( Integer X=XMin; X<XMax; X++ )
+	for( Int32 Y=YMin; Y<YMax; Y++ )
+	for( Int32 X=XMin; X<XMax; X++ )
 	{
-		Integer iTile		= Map[X + Y * MapXSize];
+		Int32 iTile		= Map[X + Y * MapXSize];
 
 		Float	MinX	= (X + 0.f)*TileSize.X + Location.X;
 		Float	MinY	= (Y + 0.f)*TileSize.Y + Location.Y;
@@ -292,7 +292,7 @@ void FModelComponent::Render( CCanvas* Canvas )
 		GridColor	= COLOR_Gray;
 
 	// Vertical lines.
-	for( Integer X=XMin; X<=XMax; X++ )
+	for( Int32 X=XMin; X<=XMax; X++ )
 	{
 		TVector V1 = TVector( Location.X + X*TileSize.X, Location.Y );
 		TVector V2 = TVector( Location.X + X*TileSize.X, Location.Y + MapYSize * TileSize.Y );
@@ -300,7 +300,7 @@ void FModelComponent::Render( CCanvas* Canvas )
 	}
 
 	// Horizontal lines.
-	for( Integer Y=YMin; Y<=YMax; Y++ )
+	for( Int32 Y=YMin; Y<=YMax; Y++ )
 	{
 		TVector V1 = TVector( Location.X, Location.Y + Y*TileSize.Y );
 		TVector V2 = TVector( Location.X + MapXSize*TileSize.X, Location.Y + Y*TileSize.Y );
@@ -314,8 +314,8 @@ void FModelComponent::Render( CCanvas* Canvas )
 		if( Selected.Num() == 1 && Selected[0] == 0 )
 		{
 			// Draw erase tile.
-			Integer X = PenIndex % MapXSize;
-			Integer Y = PenIndex / MapXSize;
+			Int32 X = PenIndex % MapXSize;
+			Int32 Y = PenIndex / MapXSize;
 
 			TRenderRect Tile;
 			Tile.Flags				= POLY_Unlit | POLY_FlatShade | POLY_Ghost;
@@ -333,11 +333,11 @@ void FModelComponent::Render( CCanvas* Canvas )
 		else if( Selected.Num() > 0 )
 		{
 			// Draw ghost tiles :3
-			Integer	BaseX	= Selected[0] % TilesPerU;
-			Integer BaseY	= Selected[0] / TilesPerU;
+			Int32	BaseX	= Selected[0] % TilesPerU;
+			Int32 BaseY	= Selected[0] / TilesPerU;
 
-			Integer PenX	= PenIndex % MapXSize;
-			Integer PenY	= PenIndex / MapXSize;
+			Int32 PenX	= PenIndex % MapXSize;
+			Int32 PenY	= PenIndex / MapXSize;
 
 			TRenderRect Tile;
 			Tile.Flags				= POLY_Unlit | POLY_Ghost;
@@ -345,15 +345,15 @@ void FModelComponent::Render( CCanvas* Canvas )
 			Tile.Texture			= Texture;
 			Tile.Color				= TColor( 0xa0, 0xa0, 0xa0, 0xff );
 
-			for( Integer i=0; i<Selected.Num(); i++ )
+			for( Int32 i=0; i<Selected.Num(); i++ )
 			{
-				Integer X = PenX + ((Selected[i] % TilesPerU) - BaseX);
-				Integer Y = PenY - ((Selected[i] / TilesPerU) - BaseY);
+				Int32 X = PenX + ((Selected[i] % TilesPerU) - BaseX);
+				Int32 Y = PenY - ((Selected[i] / TilesPerU) - BaseY);
 
 				// Test bounds.
 				if( ( X>=0 )&&( Y>=0 )&&( X<MapXSize )&&( Y<MapYSize ) )
 				{
-					Integer iTile = Selected[i];
+					Int32 iTile = Selected[i];
 
 					if( iTile )
 					{
@@ -379,7 +379,7 @@ void FModelComponent::Import( CImporterBase& Im )
 	FBaseComponent::Import(Im);
 
 	Map.SetNum( MapXSize*MapYSize );
-	for( Integer iTile=0; iTile<Map.Num(); iTile++ )
+	for( Int32 iTile=0; iTile<Map.Num(); iTile++ )
 		Map[iTile] = Im.ImportInteger( *String::Format( L"Map[%i]", iTile ) );
 }
 
@@ -393,7 +393,7 @@ void FModelComponent::Export( CExporterBase& Ex )
 
 	// Store all tiles, without blank(0 index),
 	// it's safe about 70% of memory.
-	for( Integer iTile=0; iTile<Map.Num(); iTile++ )
+	for( Int32 iTile=0; iTile<Map.Num(); iTile++ )
 		if( Map[iTile] )
 			Ex.ExportInteger( *String::Format( L"Map[%i]", iTile ), Map[iTile] );
 }
@@ -433,7 +433,7 @@ void FModelComponent::InitForEntity( FEntity* InEntity )
 //
 void FModelComponent::nativeGetTile( CFrame& Frame )
 {
-	Integer	X	= POP_INTEGER,
+	Int32	X	= POP_INTEGER,
 			Y	= POP_INTEGER;
 
 	if	( 
@@ -453,7 +453,7 @@ void FModelComponent::nativeGetTile( CFrame& Frame )
 //
 void FModelComponent::nativeSetTile( CFrame& Frame )
 {
-	Integer	X		= POP_INTEGER,
+	Int32	X		= POP_INTEGER,
 			Y		= POP_INTEGER,
 			iTile	= POP_INTEGER;
 

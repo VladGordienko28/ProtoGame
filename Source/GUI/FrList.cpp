@@ -23,7 +23,7 @@ WComboBox::WComboBox( WContainer* InOwner, WWindow* InRoot )
 
 	// Set drop list really on top, sort of hack, but
 	// works well. Because DropList should stay on the top of top!
-	for( Integer i=Root->Children.FindItem(DropList); i<Root->Children.Num()-1; i++ )
+	for( Int32 i=Root->Children.FindItem(DropList); i<Root->Children.Num()-1; i++ )
 		Root->Children.Swap( i, i+1 );
 
 	HideDropList();
@@ -96,7 +96,7 @@ void WComboBox::OnPaint( CGUIRenderBase* Render )
 //
 // Dbl clicked - increment index.
 //
-void WComboBox::OnDblClick( EMouseButton Button, Integer X, Integer Y )
+void WComboBox::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WList::OnDblClick( Button, X, Y );
 
@@ -111,7 +111,7 @@ void WComboBox::OnDblClick( EMouseButton Button, Integer X, Integer Y )
 //
 // Mouse press comboBox.
 //
-void WComboBox::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WComboBox::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WList::OnMouseDown( Button, X, Y );
 
@@ -153,7 +153,7 @@ void WComboBox::ShowDropList()
 {
 	// Update items list.
 	DropList->Empty();
-	for( Integer i=0; i<Items.Num();i++ )
+	for( Int32 i=0; i<Items.Num();i++ )
 		DropList->AddItem( Items[i].Name, Items[i].Data );
 
 	// Compute show location and size.
@@ -164,7 +164,7 @@ void WComboBox::ShowDropList()
 
 	// Fuck! Fucked Visual Studio crashes when debug step-by-step
 	// if without variable! Crap!
-	Integer MaxY = Root->Size.Height;
+	Int32 MaxY = Root->Size.Height;
 
 	// Show it upward or downward.
 	if( P.Y+Size.Height+DropList->Size.Height > MaxY )
@@ -179,7 +179,7 @@ void WComboBox::ShowDropList()
 
 	// Set drop list really on top, sort of hack, but
 	// works well. Because DropList should stay on the top of top!
-	for( Integer i=Root->Children.FindItem(DropList); i<Root->Children.Num()-1; i++ )
+	for( Int32 i=Root->Children.FindItem(DropList); i<Root->Children.Num()-1; i++ )
 		Root->Children.Swap( i, i+1 );
 }
 
@@ -267,7 +267,7 @@ void WListBox::OnMouseLeave()
 //
 // Mouse hover list box.
 //
-void WListBox::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WListBox::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WList::OnMouseMove( Button, X, Y );
 	iHighlight = YToIndex( Y );
@@ -280,7 +280,7 @@ void WListBox::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 //
 // On item click.
 //
-void WListBox::OnMouseDown( EMouseButton Button, Integer X, Integer Y ) 
+void WListBox::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y ) 
 {
 	WList::OnMouseDown( Button, X, Y );   
 	ItemIndex = YToIndex( Y );
@@ -296,7 +296,7 @@ void WListBox::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 //
 // Dbl click on item.
 //
-void WListBox::OnDblClick( EMouseButton Button, Integer X, Integer Y )
+void WListBox::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WList::OnDblClick( Button, X, Y );
 	OnDoubleClick();
@@ -306,7 +306,7 @@ void WListBox::OnDblClick( EMouseButton Button, Integer X, Integer Y )
 //
 // When user press some key.
 //
-void WListBox::OnKeyDown( Integer Key )
+void WListBox::OnKeyDown( Int32 Key )
 {
 	WList::OnKeyDown(Key);
 	if( Key == KEY_Up )		// <Up>
@@ -323,7 +323,7 @@ void WListBox::OnKeyDown( Integer Key )
 //
 // Mouse scroll over list box.
 //
-void WListBox::OnMouseScroll( Integer Delta )
+void WListBox::OnMouseScroll( Int32 Delta )
 {
 	WList::OnMouseScroll(Delta);
 	if( Slider->bVisible )
@@ -377,10 +377,10 @@ void WListBox::OnPaint( CGUIRenderBase* Render )
 	// Draw items.
 	if( Items.Num() > 0 )
 	{
-		Integer TextY	= (ItemsHeight - Root->Font1->Height) / 2;
+		Int32 TextY	= (ItemsHeight - Root->Font1->Height) / 2;
 
 		// For each item.
-		for( Integer i = 0, iItem = YToIndex(0); 
+		for( Int32 i = 0, iItem = YToIndex(0); 
 			 i < Size.Height/ItemsHeight && iItem < Items.Num(); 
 			 i++, iItem++ )
 		{			
@@ -407,7 +407,7 @@ void WListBox::OnPaint( CGUIRenderBase* Render )
 						);
 
 			// Draw picture if has.
-			Integer XOffset = 3;
+			Int32 XOffset = 3;
 			if( Item.Picture )
 			{
 				Render->DrawPicture
@@ -440,11 +440,11 @@ void WListBox::OnPaint( CGUIRenderBase* Render )
 // convert Y value to index, also handle
 // slider offset. If no item found return -1.
 //
-Integer WListBox::YToIndex( Integer Y ) const
+Int32 WListBox::YToIndex( Int32 Y ) const
 {
-	Integer NumVis = Size.Height / ItemsHeight;
-	Integer Offset = Round((Items.Num() - NumVis) * Slider->Value / 100.f);
-	Integer Index  = Offset + Y / ItemsHeight;
+	Int32 NumVis = Size.Height / ItemsHeight;
+	Int32 Offset = Round((Items.Num() - NumVis) * Slider->Value / 100.f);
+	Int32 Index  = Offset + Y / ItemsHeight;
 	return Index < 0 ? -1 : Index >= Items.Num() ? -1 : Index;
 }
 
@@ -467,7 +467,7 @@ WList::WList( WContainer* InOwner, WWindow* InRoot )
 //
 // Add a new item to the list.
 //
-Integer WList::AddItem( String InName, void* InData )			
+Int32 WList::AddItem( String InName, void* InData )			
 {
 	return Items.Push(TListItem( InName, InData ));
 }
@@ -476,7 +476,7 @@ Integer WList::AddItem( String InName, void* InData )
 //
 // Add a new picture item to the list.
 //
-Integer WList::AddPictureItem( String InName, FTexture* Picture, TPoint PicOffset, TSize PicSize, void* Data )
+Int32 WList::AddPictureItem( String InName, FTexture* Picture, TPoint PicOffset, TSize PicSize, void* Data )
 {
 	return Items.Push(TListItem( InName, Picture, PicOffset, PicSize, Data ));
 }
@@ -486,7 +486,7 @@ Integer WList::AddPictureItem( String InName, FTexture* Picture, TPoint PicOffse
 // Remove an item from list, if invalid index,
 // nothing will happened.
 //
-void WList::Remove( Integer iItem )	
+void WList::Remove( Int32 iItem )	
 {
 	if( iItem >= 0 && iItem < Items.Num() )
 	{
@@ -509,7 +509,7 @@ void WList::Empty()
 //
 // Update selected item.
 //
-void WList::SetItemIndex( Integer NewIdx, Bool bNotify )	
+void WList::SetItemIndex( Int32 NewIdx, Bool bNotify )	
 {
 	ItemIndex = Clamp( NewIdx, -1, Items.Num()-1 );
 
@@ -633,7 +633,7 @@ WLog::~WLog()
 //
 // User release cursor button.
 //
-void WLog::OnMouseUp( EMouseButton Button, Integer X, Integer Y )
+void WLog::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	if( Button == MB_Left )
 	{
@@ -665,12 +665,12 @@ void WLog::PopGotoClick( WWidget* Sender )
 //
 // User moves cursor on log.
 //
-void WLog::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
+void WLog::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 {
 	if( Button == MB_Left )
 	{
 		// Select group of items.
-		Integer iBelow = YToIndex(Y);
+		Int32 iBelow = YToIndex(Y);
 		if( iBelow != -1 )
 		{
 			iLast = iBelow;
@@ -687,7 +687,7 @@ void WLog::OnMouseMove( EMouseButton Button, Integer X, Integer Y )
 //
 // User pressed mouse button.
 //
-void WLog::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
+void WLog::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	if( Button == MB_Left )
 	{
@@ -697,7 +697,7 @@ void WLog::OnMouseDown( EMouseButton Button, Integer X, Integer Y )
 	else if( Button == MB_Right )
 	{
 		// Show popup menu.
-		Integer iBelow = YToIndex(Y);
+		Int32 iBelow = YToIndex(Y);
 		if( iBelow != -1 )
 		{
 			if( iBelow < iFirst || iBelow > iLast )
@@ -725,8 +725,8 @@ void WLog::OnPaint( CGUIRenderBase* Render )
 	Render->SetClipArea( Base, Size );
 
 	// Visible lines bounds.
-	Integer iVisFirst	= ScrollTop;
-	Integer iVisLast	= Min( ScrollTop + Size.Height/13, Lines.Num()-1 );
+	Int32 iVisFirst	= ScrollTop;
+	Int32 iVisLast	= Min( ScrollTop + Size.Height/13, Lines.Num()-1 );
 
 	// Draw frame.
 	Render->DrawRegion
@@ -741,12 +741,12 @@ void WLog::OnPaint( CGUIRenderBase* Render )
 	// Draw selection area.
 	if( iFirst != -1 && iLast != -1 )
 	{
-		Integer FirstLine = Min( iFirst-ScrollTop, iLast-ScrollTop );
-		Integer LastLine = Max( iFirst-ScrollTop, iLast-ScrollTop );
+		Int32 FirstLine = Min( iFirst-ScrollTop, iLast-ScrollTop );
+		Int32 LastLine = Max( iFirst-ScrollTop, iLast-ScrollTop );
 
 		// Test out of bound selection.
-		Integer Y1 = Max( 0, FirstLine*13 ) + 1;
-		Integer Y2 = Min( Size.Height-1, (LastLine+1)*13 );
+		Int32 Y1 = Max( 0, FirstLine*13 ) + 1;
+		Int32 Y2 = Min( Size.Height-1, (LastLine+1)*13 );
 
 		if( Y1 < Size.Height-1 && Y2 > 1 )
 			Render->DrawRegion
@@ -760,7 +760,7 @@ void WLog::OnPaint( CGUIRenderBase* Render )
 	}
 
 	// Draw items.
-	for( Integer iLine=iVisFirst; iLine<=iVisLast; iLine++ )
+	for( Int32 iLine=iVisFirst; iLine<=iVisLast; iLine++ )
 	{
 		TLine& Line = Lines[iLine];
 
@@ -778,7 +778,7 @@ void WLog::OnPaint( CGUIRenderBase* Render )
 //
 // Handle key down.
 //
-void WLog::OnKeyDown( Integer Key )
+void WLog::OnKeyDown( Int32 Key )
 {
 	if( iLast != -1 && iFirst != -1 )
 	{
@@ -830,7 +830,7 @@ void WLog::ScrollBarChange( WWidget* Sender )
 //
 // Scroll lines.
 //
-void WLog::OnMouseScroll( Integer Delta )
+void WLog::OnMouseScroll( Int32 Delta )
 {
 	// Scroll text in aspect 1:3.
 	ScrollTop	-= Delta / 40;
@@ -846,7 +846,7 @@ void WLog::OnMouseScroll( Integer Delta )
 //
 void WLog::ScrollToLast()
 {
-	Integer NumVis	= Size.Height / 13;
+	Int32 NumVis	= Size.Height / 13;
 
 	// Scroll from the current location.
 	while( iLast < ScrollTop )				ScrollTop--;
@@ -872,7 +872,7 @@ void WLog::Clear()
 //
 // Return i'th item data.
 //
-void* WLog::DataOf( Integer i )
+void* WLog::DataOf( Int32 i )
 {
 	assert(i>=0 && i<Lines.Num());
 	return Lines[i].Data;
@@ -882,7 +882,7 @@ void* WLog::DataOf( Integer i )
 //
 // Double click on lines.
 //
-void WLog::OnDblClick( EMouseButton Button, Integer X, Integer Y )
+void WLog::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 {
 	if( Button == MB_Left )
 	{
@@ -896,12 +896,12 @@ void WLog::OnDblClick( EMouseButton Button, Integer X, Integer Y )
 //
 // Convert Y location to line number.
 //
-Integer WLog::YToIndex( Integer Y ) const
+Int32 WLog::YToIndex( Int32 Y ) const
 { 
 	if( Lines.Num() == 0 )
 		return -1;
 
-	Integer i = Max( 0, ScrollTop + Y/13 );
+	Int32 i = Max( 0, ScrollTop + Y/13 );
 	return i >= Lines.Num() ? -1 : i;
 }
 
@@ -909,7 +909,7 @@ Integer WLog::YToIndex( Integer Y ) const
 //
 // Add a new item to log.
 //
-Integer WLog::AddLine( String InText, void* InData, TColor InColor )
+Int32 WLog::AddLine( String InText, void* InData, TColor InColor )
 {
 	TLine Line;
 
@@ -917,7 +917,7 @@ Integer WLog::AddLine( String InText, void* InData, TColor InColor )
 	Line.Color	= InColor;
 	Line.Data	= InData;
 
-	Integer iNew = Lines.Push(Line);
+	Int32 iNew = Lines.Push(Line);
 
 	// Auto-scroll if nothing selected.
 	if( iLast == -1 && iFirst == -1 )
@@ -946,7 +946,7 @@ void WLog::OnChange()
 //
 // When user wants to go to line.
 //
-void WLog::OnGoto( Integer i )
+void WLog::OnGoto( Int32 i )
 {
 	assert(i>=-1 && i<Lines.Num());
 	EventGoto( this, i );
@@ -959,14 +959,14 @@ void WLog::OnGoto( Integer i )
 void WLog::PopCopyClick( WWidget* Sender )
 {
 	assert(iFirst != -1 && iLast != -1);
-	Integer i1 = Min( iFirst, iLast );
-	Integer i2 = Max( iFirst, iLast );
+	Int32 i1 = Min( iFirst, iLast );
+	Int32 i2 = Max( iFirst, iLast );
 
 	if( i1 != i2 )
 	{
 		// Multi line.
 		String Text;
-		for( Integer i=i1; i<=i2; i++ )
+		for( Int32 i=i1; i<=i2; i++ )
 			Text += Lines[i].Text + L"\r\n";
 		GPlat->ClipboardCopy(*Text);
 	}
