@@ -1,0 +1,18 @@
+/**
+ * @AmbSound: Static ambient sound.
+ * @Author: Vlad Gordienko.
+ */
+script AmbSound
+{
+public:
+    Sound           Sound;
+    float           Radius;
+    float           Gain;
+    float           Pitch;
+    
+    event OnBeginPlay()
+    {
+        if( Sound != null )
+            PlayAmbient( Sound, Gain, Pitch, Radius );
+    } 
+}

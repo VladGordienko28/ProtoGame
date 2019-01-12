@@ -1,0 +1,51 @@
+/**
+ * @Book: A gliding wizard's book (weapon)
+ * @Author: Tough guys
+ */
+script Book
+{
+public:
+    Mage myMage;
+    
+    fn init( Mage mage )
+    {
+        myMage = mage;
+        $Sprite.PlayAnim( "Glide", 16.0, ANIM_Loop );
+        Layer = myMage.Layer + 0.01;
+    }
+    
+    fn shoot( float dir )
+    {
+        Fireball f = new Fireball;
+        f.launch( dir );
+    }
+
+    event OnPreTick( float Delta )    
+    {
+        float minDist = 0.5;
+        
+        
+        desiredY = myMage.Location.y;        
+        float bookDir = myMage.$Sprite.bFlipH ? -1.0 : 1.0;
+        float desiredX = myMage.Location.x + myMage.Size.x * 1.1 * bookDir;                      
+         
+        if( desiredX - Location.x > minDist )
+        {
+            Velocity.x = +11.0;
+        }
+        else if( desiredX - Location.x < -minDist )
+        {
+            Velocity.x = -11.0;
+        }
+        else
+            Velocity.x = 0.0;
+        
+        
+        SetLocation( [Location.x, desiredY + sin( now() * 1.0 ) * 1.5] );
+        $Sprite.bFlipH = Location.x < myMage.Location.x;
+    }
+
+private:
+    float desiredY;
+
+}

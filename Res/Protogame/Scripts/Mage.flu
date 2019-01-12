@@ -1,0 +1,122 @@
+/**
+ * @Mage: A cool wizard
+ * @Author: Tough guys!
+ */
+script Mage
+{
+private:
+    bool            bJumping;
+    bool            bCanJump;
+    Book            myBook;
+    
+    
+    event OnPreTick( float delta )
+    {
+        // setup x-movement
+        if( KeyIsPressed(KEY_Left) )
+        {
+            Velocity.X      = -11.0;
+            $Sprite.bFlipH  = true;
+        }
+        else if( KeyIsPressed(KEY_Right) )
+        {
+            Velocity.X      = +11.0;
+            $Sprite.bFlipH  = false;
+        }                           
+        else
+            Velocity.X      = 0.0; 
+            
+            
+        // setup jumps
+        if( KeyIsPressed(KEY_Up) && bCanJump )
+        {
+            if( Floor != undefined )
+            {
+                Velocity.Y  = 25.0;
+                bCanJump    = false;
+                bJumping    = true;
+                //PlaySoundFX( #SJump, 0.4, 1.0 );
+            }
+        }
+        else if( !KeyIsPressed(KEY_Up) && bJumping )
+        {
+            bJumping    = false;
+            bCanJump    = true;
+            if( Velocity.Y > 0.0 )
+                Velocity.Y = 0.0;
+        }
+        
+        // apply gravity
+        Velocity.Y  -= 65.0 * delta;
+        if( Velocity.Y < -40.0 )
+            Velocity.Y = -40.0;
+              
+        // which animation should we play?                        
+        if( Floor != undefined )
+        {
+            if( Velocity.X != 0.0 )
+                $Sprite.PlayAnim( "Walk", 9.6, ANIM_Loop );
+            else
+                $Sprite.PlayAnim( "Idle", 2.5, ANIM_Loop );
+        }
+        else
+            $Sprite.PlayAnim( "Jump", 10.0, ANIM_Loop ); 
+    }
+
+
+    event OnCollide( entity Other, EHitSide Side )
+    {
+        if( Other is #Brush )
+        {
+            Brush B = Brush(Other);
+            if( B.Type == BRUSH_Solid )
+                SolveSolid( true );
+            //else
+            //    SolveOneway( true );                       
+        }        
+    }
+    
+    
+    event OnBeginPlay()
+    {
+        //SetBlackEffect();
+        //$Painter.PushEffect(0.0);
+        //$Painter.PopEffect(1.5);
+
+        bCanJump                    = true;
+
+        Level level = Level;
+        level.Camera.Location       = Location;
+        level.Camera.Zoom           = 1.0;
+
+        
+        // ---
+        myBook = new Book;
+        myBook.init( this );
+    }
+ 
+    event OnTick( float Delta )
+    {       
+        float thresh = 3.0; 
+
+        Level level = Level;
+        if( level.Camera.Location.X < Location.X-thresh ) level.Camera.Location.X = Location.X - thresh;
+        if( level.Camera.Location.X > Location.X+thresh ) level.Camera.Location.X = Location.X + thresh;             
+        if( level.Camera.Location.Y < Location.Y-thresh ) level.Camera.Location.Y = Location.Y - thresh;
+        if( level.Camera.Location.Y > Location.Y+thresh ) level.Camera.Location.Y = Location.Y + thresh;   
+
+        //if( Location.Y+Size.Y < Level.ScrollClamp.Min.Y )
+        //    TakeDamage( this, "Fall", 999 );                                                               
+    }
+ 
+ 
+    event OnKeyDown( integer key )
+    {
+        if( key == KEY_K )
+        {
+            myBook.shoot( $Sprite.bFlipH ? -1.0 : 1.0 );
+          
+        }
+    }
+
+}

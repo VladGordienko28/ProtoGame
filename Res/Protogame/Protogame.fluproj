@@ -1,0 +1,30 @@
+BEGIN_INCLUDE
+    Brush.fr
+    Light.fr
+    Mirror.fr
+    Model.fr
+    Warp.fr
+    Note.fr
+    AmbSound.fr
+    Mage.fr
+    Sky.fr
+    Book.fr
+    Fireball.fr
+    BSystem.fr
+    BMage.fr
+    BSky.fr
+    BLevel1.fr
+    BBook.fr
+    BFireball.fr
+    ProjectInfo0.fr
+    Index.fr
+    AMage.fr
+    ABook.fr
+    AFireball.fr
+END_INCLUDE
+BEGIN_PAGES
+    Fireball
+    Mage
+    Book
+    Index
+END_PAGES

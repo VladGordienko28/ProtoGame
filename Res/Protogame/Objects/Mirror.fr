@@ -1,0 +1,9 @@
+BEGIN_RESOURCE FScript Mirror
+    Group = "System"
+    BEGIN_COMPONENT FMirrorComponent Base
+            Width = 16.0000
+            Layer = 0.7500
+            bFixedAngle = true
+            bFixedSize = true
+    END_COMPONENT
+END_RESOURCE

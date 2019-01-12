@@ -1,0 +1,333 @@
+BEGIN_RESOURCE FLevel Index
+    GameSpeed = 1.0000
+    Camera.Location = [20.9874; -9.6764]
+    Camera.FOV = [64.0000; 32.0000]
+    Camera.Zoom = 1.0000
+    Camera.ScrollBound = (-2048.0000; -2048.0000; 2048.0000; 2048.0000)
+    Effect[0] = 1.0000
+    Effect[1] = 1.0000
+    Effect[2] = 1.0000
+    Effect[3] = 1.0000
+    Effect[4] = 1.0000
+    Effect[5] = 1.0000
+    RndFlags = 7165
+    Sky = FSkyComponent::Index.Sky0.Base
+    BEGIN_ENTITY Model Model0
+        BEGIN_COMPONENT FModelComponent Base
+            MapXSize = 38
+            MapYSize = 10
+            TileSize = [4.0000; 4.0000]
+            TilesPerU = 8
+            TilesPerV = 8
+            bUnlit = true
+            Texture = FBitmap::BLevel1
+            Color = #ffffffff
+            Location = [-40.0000; -32.0000]
+            Layer = 0.6591
+            bFixedAngle = true
+            bFixedSize = true
+            bFrozen = true
+            Map[0] = 1
+            Map[1] = 1
+            Map[2] = 1
+            Map[3] = 1
+            Map[4] = 1
+            Map[5] = 1
+            Map[6] = 1
+            Map[7] = 1
+            Map[8] = 1
+            Map[9] = 1
+            Map[10] = 1
+            Map[11] = 1
+            Map[12] = 1
+            Map[13] = 1
+            Map[14] = 1
+            Map[15] = 1
+            Map[16] = 1
+            Map[17] = 1
+            Map[18] = 1
+            Map[19] = 1
+            Map[20] = 1
+            Map[21] = 1
+            Map[22] = 1
+            Map[23] = 1
+            Map[24] = 1
+            Map[25] = 1
+            Map[26] = 1
+            Map[27] = 1
+            Map[28] = 1
+            Map[29] = 1
+            Map[30] = 1
+            Map[31] = 1
+            Map[32] = 1
+            Map[33] = 1
+            Map[34] = 1
+            Map[35] = 1
+            Map[36] = 1
+            Map[37] = 1
+            Map[38] = 1
+            Map[39] = 1
+            Map[40] = 1
+            Map[41] = 1
+            Map[42] = 1
+            Map[43] = 1
+            Map[44] = 1
+            Map[45] = 1
+            Map[46] = 1
+            Map[47] = 1
+            Map[48] = 1
+            Map[49] = 1
+            Map[50] = 1
+            Map[51] = 1
+            Map[52] = 1
+            Map[53] = 1
+            Map[54] = 1
+            Map[55] = 1
+            Map[56] = 1
+            Map[57] = 1
+            Map[58] = 1
+            Map[59] = 1
+            Map[60] = 1
+            Map[61] = 1
+            Map[62] = 1
+            Map[63] = 1
+            Map[64] = 1
+            Map[65] = 1
+            Map[66] = 1
+            Map[67] = 1
+            Map[68] = 1
+            Map[69] = 1
+            Map[70] = 1
+            Map[71] = 1
+            Map[72] = 1
+            Map[73] = 1
+            Map[74] = 1
+            Map[75] = 1
+            Map[76] = 4097
+            Map[77] = 4097
+            Map[78] = 4097
+            Map[79] = 4097
+            Map[80] = 4097
+            Map[81] = 4097
+            Map[82] = 4097
+            Map[83] = 4097
+            Map[84] = 4097
+            Map[85] = 4097
+            Map[86] = 4097
+            Map[87] = 4097
+            Map[88] = 4097
+            Map[89] = 4097
+            Map[90] = 4097
+            Map[91] = 4097
+            Map[92] = 4097
+            Map[93] = 4097
+            Map[94] = 4097
+            Map[95] = 4097
+            Map[96] = 4097
+            Map[97] = 4097
+            Map[98] = 4097
+            Map[99] = 4097
+            Map[100] = 4097
+            Map[101] = 4097
+            Map[102] = 4097
+            Map[103] = 4097
+            Map[104] = 4097
+            Map[105] = 257
+            Map[106] = 257
+            Map[107] = 257
+            Map[108] = 4097
+            Map[109] = 4097
+            Map[110] = 4097
+            Map[111] = 4097
+            Map[112] = 4097
+            Map[113] = 4097
+            Map[114] = 8
+            Map[115] = 8
+            Map[116] = 8
+            Map[117] = 8
+            Map[118] = 8
+            Map[119] = 8
+            Map[120] = 8
+            Map[121] = 8
+            Map[122] = 8
+            Map[123] = 8
+            Map[124] = 8
+            Map[125] = 8
+            Map[126] = 1032
+            Map[127] = 1288
+            Map[128] = 1032
+            Map[129] = 8
+            Map[130] = 8
+            Map[131] = 8
+            Map[132] = 8
+            Map[133] = 2053
+            Map[134] = 2052
+            Map[135] = 2048
+            Map[136] = 2048
+            Map[137] = 2048
+            Map[138] = 2048
+            Map[139] = 2053
+            Map[140] = 2048
+            Map[141] = 2048
+            Map[142] = 2048
+            Map[143] = 5379
+            Map[144] = 257
+            Map[145] = 4610
+            Map[146] = 2048
+            Map[147] = 2048
+            Map[148] = 2048
+            Map[149] = 2052
+            Map[150] = 2052
+            Map[151] = 2052
+            Map[182] = 8
+            Map[285] = 3340
+            Map[286] = 2317
+            Map[287] = 2317
+            Map[288] = 2317
+            Map[289] = 2304
+            Map[290] = 2304
+            Map[291] = 2304
+            Map[292] = 2304
+            Map[293] = 2304
+            Map[294] = 2304
+            Map[295] = 2304
+            Map[296] = 2304
+            Map[297] = 2304
+            Map[298] = 2304
+            Map[299] = 2304
+            Map[300] = 2304
+            Map[301] = 2304
+            Map[302] = 2304
+            Map[303] = 2304
+            Map[323] = 256
+            Map[324] = 256
+            Map[325] = 256
+            Map[326] = 256
+            Map[327] = 256
+            Map[328] = 256
+            Map[329] = 256
+            Map[330] = 256
+            Map[331] = 256
+            Map[332] = 256
+            Map[333] = 256
+            Map[334] = 256
+            Map[335] = 256
+            Map[336] = 256
+            Map[337] = 256
+            Map[338] = 256
+            Map[339] = 256
+            Map[340] = 256
+            Map[341] = 256
+            Map[361] = 256
+            Map[362] = 256
+            Map[363] = 256
+            Map[364] = 256
+            Map[365] = 256
+            Map[366] = 256
+            Map[367] = 256
+            Map[368] = 256
+            Map[369] = 256
+            Map[370] = 256
+            Map[371] = 256
+            Map[372] = 256
+            Map[373] = 256
+            Map[374] = 256
+            Map[375] = 256
+            Map[376] = 256
+            Map[377] = 256
+            Map[378] = 256
+            Map[379] = 256
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Mage Mage0
+        BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Location = [-4.0000; -5.0000]
+            Size = [2.5000; 8.0000]
+            Layer = 0.4973
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            bUnlit = true
+            Animation = FAnimation::AMage
+            Scale = [8.0000; 8.0000]
+        END_COMPONENT
+        BEGIN_COMPONENT FInputComponent Input
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush2
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSky
+            NumVerts = 4
+            Vertices[0] = [-8.0000; -10.5000]
+            Vertices[1] = [-8.0000; 7.5000]
+            Vertices[2] = [16.0000; 5.5000]
+            Vertices[3] = [16.0000; -10.5000]
+            TexCoords.Origin = [-8.0000; 5.5000]
+            TexCoords.XAxis = [0.2143; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.0586]
+            Location = [-72.0000; 26.5000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.5558
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush1
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-22.0000; -9.5000]
+            Vertices[1] = [-22.0000; 2.5000]
+            Vertices[2] = [130.0000; 2.5000]
+            Vertices[3] = [130.0000; -9.5000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [-18.0000; -22.5000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.6623
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Sky Sky0
+        BEGIN_COMPONENT FSkyComponent Base
+            Parallax = [0.0500; 0.0500]
+            Extent = 8.0000
+            Location = [-68.0000; 24.0000]
+            Size = [24.0000; 16.0000]
+            Layer = 0.5069
+            bFixedAngle = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush0
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-5.0000; -2.0000]
+            Vertices[1] = [-1.5000; 2.0000]
+            Vertices[2] = [2.0000; 2.0000]
+            Vertices[3] = [5.0000; -2.0000]
+            TexCoords.XAxis = [0.2500; 0.0000]
+            TexCoords.YAxis = [0.0000; -0.2500]
+            Location = [82.0000; -18.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.7614
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+END_RESOURCE

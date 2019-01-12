@@ -1,0 +1,27 @@
+/**
+ * @Fireball: A mage's projectile
+ * @Author: Tough guys
+ */
+script Fireball
+{
+public:
+    event OnBeginPlay()
+    {
+    }
+
+    fn launch( float dir )
+    {
+        $Sprite.PlayAnim( "Process", 25.0, ANIM_Loop );
+        $Sprite.bFlipH = dir < 0.0;        
+        Velocity.x = 30.0 * dir;
+        Layer = 1.01;
+        
+        // add acceleration here!!!
+    }
+    
+    thread
+    {
+        sleep 3.0;
+        delete this;
+    }
+}

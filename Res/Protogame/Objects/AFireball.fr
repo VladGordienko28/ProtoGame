@@ -1,0 +1,8 @@
+BEGIN_RESOURCE FAnimation AFireball
+    Sheet = FBitmap::BFireball
+    FrameW = 16
+    FrameH = 16
+    NumSeqs = 1
+    Sequences[0].Name = "Process"
+    Sequences[0].Count = 6
+END_RESOURCE

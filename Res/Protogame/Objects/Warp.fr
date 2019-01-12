@@ -1,0 +1,8 @@
+BEGIN_RESOURCE FScript Warp
+    Group = "System"
+    BEGIN_COMPONENT FWarpComponent Base
+            Width = 16.0000
+            Layer = 0.7500
+            bFixedSize = true
+    END_COMPONENT
+END_RESOURCE

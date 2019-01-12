@@ -1,0 +1,8 @@
+BEGIN_RESOURCE FBitmap BBook
+    BlendMode = 1
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    FileName = "BBook.bmp"
+    UBits = 6
+    VBits = 5
+END_RESOURCE
