@@ -57,13 +57,17 @@ FBitmap* ImportBMP( String Filename, String ResName )
 
 	if( BmpHeader.bfType != 0x4d42 )
 	{
-		warn( L"\"%s\" is not BMP file.", *Filename );
+		MessageBox( 0, *String::Format( L"\"%s\" is not BMP file.", *Filename ), 
+			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
+
 		return nullptr;
 	}
 
 	if( !(((BmpInfo.biWidth)&(BmpInfo.biWidth-1)) == 0 && ((BmpInfo.biHeight)&(BmpInfo.biHeight-1)) == 0) )
 	{
-		warn( L"Bitmap size should be power of two" );
+		MessageBox( 0, *String::Format( L"Bitmap size should be power of two" ), 
+			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
+
 		return nullptr;
 	}
 
@@ -123,7 +127,10 @@ FBitmap* ImportBMP( String Filename, String ResName )
 	{
 		// Bad bitmap format.
 		delete[] TempData;
-		warn( L"Bad bit count %d", BmpInfo.biBitCount );
+
+		MessageBox( 0, *String::Format( L"Bad bit count %d", BmpInfo.biBitCount ), 
+			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
+
 		return nullptr;
 	}
 
@@ -208,14 +215,18 @@ FBitmap* ImportTGA( String Filename, String ResName )
 	// Only 24 and 32 bits supported.
 	if( TgaHeader.ImageType!=2 && TgaHeader.ImageType!=10 )
 	{
-		warn( L"Only 24 and 32 bit TGA supported" );
+		MessageBox( 0, *String::Format( L"Only 24 and 32 bit TGA supported" ), 
+			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
+
 		return nullptr;
 	}
 
 	// Doesn't allow color map.
 	if( TgaHeader.ColorMapType != 0 )
 	{
-		warn( L"Color-mapped TGA doesn't supported" );
+		MessageBox( 0, *String::Format( L"Color-mapped TGA doesn't supported" ), 
+			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
+
 		return nullptr;
 	}
 
@@ -227,12 +238,16 @@ FBitmap* ImportTGA( String Filename, String ResName )
 
 	if( !(((Width)&(Width-1)) == 0 && ((Height)&(Height-1)) == 0) )
 	{
-		warn( L"Image size should be power of two" );
+		MessageBox( 0, *String::Format( L"Image size should be power of two" ), 
+			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
+
 		return nullptr;
 	}
 	if( ColorDepth < 24 )
 	{
-		warn( L"Only 24 and 32 bit TGA supported" );
+		MessageBox( 0, *String::Format( L"Only 24 and 32 bit TGA supported" ), 
+			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
+
 		return nullptr;
 	}
 
@@ -370,13 +385,17 @@ FBitmap* ImportPNG( String Filename, String ResName )
 	PngError = lodepng_decode32_file( &PngImage, &PngWidth, &PngHeight, file_name );
 	if( PngError )
 	{
-		warn( L"Png: Failed error png. %u: %hs", PngError, lodepng_error_text(PngError) );
+		MessageBox( 0, *String::Format( L"Png: Failed error png. %u: %hs", PngError, lodepng_error_text(PngError) ), 
+			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
+
 		free(PngImage);
 		return nullptr;
 	}
 	if( !(IsPowerOfTwo(PngWidth) && IsPowerOfTwo(PngHeight)) )
 	{
-		warn( L"Png size should be power of two" );
+		MessageBox( 0, *String::Format( L"Png size should be power of two" ), 
+			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
+
 		free(PngImage);
 		return nullptr;
 	}
@@ -547,7 +566,9 @@ FFont* ImportFLF( String Filename, String ResName )
 		for( Int32 i=0; i<NumPages; i++ )
 			if( !GPlat->FileExists(Dir+String::Format(L"\\%s%d_%d.bmp", Name, Height, i)) )
 			{
-				warn( L"Font page %i not found", i );
+				MessageBox( 0, *String::Format( L"Font page %i not found", i ), 
+					L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
+
 				fclose(File);
 				return nullptr;
 			}
@@ -637,7 +658,9 @@ FResource* CEditor::ImportResource( String Filename, String ResName )
 	else
 	{
 		// Bad format.
-		warn( L"Failed load '%s'. Unsupported file format", *Filename );
+		MessageBox( 0, *String::Format( L"Failed load '%s'. Unsupported file format", *Filename ), 
+			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
+
 		return nullptr;
 	}
 }

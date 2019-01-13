@@ -7,16 +7,37 @@
     <ClInclude Include="Heap.h">
       <Filter>Heap</Filter>
     </ClInclude>
+    <ClInclude Include="LogCallback.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="LogManager.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="FrArray.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="FrSerial.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Heap.cpp">
       <Filter>Heap</Filter>
     </ClCompile>
+    <ClCompile Include="LogManager.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Heap">
       <UniqueIdentifier>{5b50bc07-a73d-4242-a65c-faf43d13eca0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{195a5c5d-4ca0-485a-a9c7-b9034fcd0f63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Legacy">
+      <UniqueIdentifier>{4f62d2f6-d359-45cd-96a4-cfa46bea2e71}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

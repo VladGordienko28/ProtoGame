@@ -8,7 +8,6 @@
 //
 // Globals.
 //
-CDebugOutputBase*	GOutput		= nullptr;
 Bool				GIsEditor	= false;
 CPlatformBase*		GPlat		= nullptr;
 String				GDirectory	= L"";

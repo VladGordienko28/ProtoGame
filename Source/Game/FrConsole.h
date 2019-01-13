@@ -34,7 +34,7 @@ enum ETextColor
 //
 // A game console.
 //
-class CConsole: public CRefsHolder
+class CConsole: public CRefsHolder, public ILogCallback
 {
 public:
 	// Constants.
@@ -49,7 +49,6 @@ public:
 	void Render( CCanvas* Canvas );
 	void CharType( Char C );
 	Bool ShowToggle();
-	void LogCallback( String Msg, ETextColor Color );
 	void Clear();
 
 	// Accessors.
@@ -60,6 +59,12 @@ public:
 
 	// CRefsHolder interface.
 	void CountRefs( CSerializer& S );
+
+	// ILogCallback interface
+	void handleMessage( ELogLevel level, const Char* message ) override;
+	void handleScriptMessage( ELogLevel level, const Char* message ) override;
+	void handleFatalMessage( const Char* message ) override;
+	void handleFatalScriptMessage( const Char* message ) override;
 
 private:
 	// Console internal.

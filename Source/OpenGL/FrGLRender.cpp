@@ -37,7 +37,7 @@ COpenGLRender::COpenGLRender( HWND InhWnd )
 	Canvas			= new COpenGLCanvas( this );
 
 	// Notify.
-	trace( L"OpenGL: OpenGL render initialized" );
+	info( L"OpenGL: OpenGL render initialized" );
 }
 
 
@@ -205,7 +205,7 @@ COpenGLCanvas::COpenGLCanvas( COpenGLRender* InRender )
 	MasterFBO = new CGLFbo;
 
 	// Notify.
-	trace( L"OpenGL: OpenGL canvas initialized" );
+	info( L"OpenGL: OpenGL canvas initialized" );
 }
 
 
@@ -878,7 +878,7 @@ void COpenGLCanvas::SetBlend( EBitmapBlend Blend )
 			break;
 
 		default:
-			notice( L"OpenGL: Bad blend type %d", Blend );
+			error( L"OpenGL: Bad blend type %d", Blend );
 			break;
 	}
 	OldBlend = Blend;
@@ -1118,7 +1118,7 @@ bool CGLFluShader::Init( String ShaderName )
 	bEnabled = false;
 
 	// Notify.
-	trace( L"Rend: GLFluShader initialized" );
+	info( L"Rend: GLFluShader initialized" );
 	return true;
 }
 
@@ -1965,7 +1965,7 @@ bool CompileShader( String FileName, GLenum ShaderType, GLuint& iShader )
 			cError
 		);
 
-		error( L"Failed compile shader '%s' with message: %hs", *FileName, cError );
+		fatal( L"Failed compile shader '%s' with message: %hs", *FileName, cError );
 		return false;
 	}
 
@@ -1984,9 +1984,9 @@ bool CGLShaderBase::Init( String ShaderName )
 
 	// Test files.
 	if( !GPlat->FileExists(VertShaderFile) )
-		error( L"Vertex shader '%s' not found", *VertShaderFile );
+		fatal( L"Vertex shader '%s' not found", *VertShaderFile );
 	if( !GPlat->FileExists(FragShaderFile) )
-		error( L"Fragment shader '%s' not found", *FragShaderFile );
+		fatal( L"Fragment shader '%s' not found", *FragShaderFile );
 
 	// Compile shaders.
 	if( !CompileShader( VertShaderFile, GL_VERTEX_SHADER, iglVertShader ) )
@@ -2000,7 +2000,7 @@ bool CGLShaderBase::Init( String ShaderName )
 	
 	if( iglProgram == 0 )
 	{
-		error( L"Failed link shader '%s'", *ShaderName );
+		fatal( L"Failed link shader '%s'", *ShaderName );
 		return false;
 	}
 
@@ -2011,7 +2011,7 @@ bool CGLShaderBase::Init( String ShaderName )
 
 	bEnabled = true;
 	Name = ShaderName;
-	trace( L"Shader '%s' successfully loaded", *ShaderName );
+	info( L"Shader '%s' successfully loaded", *ShaderName );
 
 	return true;
 }
@@ -2032,7 +2032,7 @@ Int32 CGLShaderBase::RegisterUniform( AnsiChar* Name )
 	Uniform.iUniform = glGetUniformLocation( iglProgram, Name );
 
 	if( Uniform.iUniform == -1 )
-		error( L"Uniform variable '%hs' not found in shader '%s'", Name, *this->Name );
+		fatal( L"Uniform variable '%hs' not found in shader '%s'", Name, *this->Name );
 	
 	return Uniforms.Push(Uniform);
 }
@@ -2083,7 +2083,7 @@ void CGLShaderBase::SetValue( Int32 iUniform, UInt32 Dimension, const void* Valu
 				break;
 
 			default:
-				error( L"Unexpected uniform variable dimension in shader '%s'", *Name );
+				fatal( L"Unexpected uniform variable dimension in shader '%s'", *Name );
 				break;
 		}
 
@@ -2142,7 +2142,7 @@ void CGLShaderBase::CommitValues()
 				break;
 
 			default:
-				error( L"Unexpected uniform variable dimension in shader '%s'", *Name );
+				fatal( L"Unexpected uniform variable dimension in shader '%s'", *Name );
 				break;
 		}
 
@@ -2197,7 +2197,7 @@ bool CGLFinalShader::Init( String ShaderName )
 	bEnabled = false;
 
 	// Notify.
-	trace( L"Rend: GLFluShader initialized" );
+	info( L"Rend: GLFluShader initialized" );
 	return true;
 }
 

@@ -251,7 +251,7 @@ void CObjectDatabase::DropDatabase()
 	for( Int32 i=0; i<GObjects.Num(); i++ )
 		if( GObjects[i] )
 		{
-			notice( L"Unreferenced object '%s'", *GObjects[i]->GetName() );
+			error( L"Unreferenced object '%s'", *GObjects[i]->GetName() );
 			DestroyObject( GObjects[i], true );
 		}
 
@@ -292,7 +292,7 @@ FObject* CObjectDatabase::CreateObject( CClass* InCls, String InName, FObject* I
 
 	// Test for abstractness.
 	if( InCls->Flags & CLASS_Abstract )
-		error( L"Attempt to create an abstract object '%s' of class '%s'", *InName, *InCls->GetAltName() );
+		fatal( L"Attempt to create an abstract object '%s' of class '%s'", *InName, *InCls->GetAltName() );
 
 	// Create instance.
 	FObject* Result = InCls->Constructor();

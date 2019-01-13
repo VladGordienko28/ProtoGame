@@ -775,12 +775,12 @@ void FSkeleton::BuildTransformationTable()
 						(Bone.iRotCtrl==-1 || TransformTable.FindItem(Bone.iRotCtrl)!=-1) )
 				{
 					TransformTable.Push(i);
-					log( L"%d", i );
+					info( L"%d", i );
 					TryAgain = true;
 				}
 			}
 		}
-		log(L"---");
+		info(L"---");
 	}
 
 

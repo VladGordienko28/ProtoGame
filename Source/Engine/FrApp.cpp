@@ -257,10 +257,10 @@ Bool CApplication::LoadGame( String Directory, String Name )
 		Serialize( Loader, Info );
 
 		if( Info.Control != 2528 )
-			error( L"File '%s' is not a Fluorine Game", *Loader.FileName );
+			fatal( L"File '%s' is not a Fluorine Game", *Loader.FileName );
 
 		if( Info.EngineVer != FLU_VERSION )
-			error( L"Old Fluorine File" );
+			fatal( L"Old Fluorine File" );
 	}
 	
 	// Load classes remap table.
@@ -269,7 +269,7 @@ Bool CApplication::LoadGame( String Directory, String Name )
 		Int32 NumCls;
 		Serialize( Loader, NumCls );
 		if( NumCls != CClassDatabase::GClasses.Num() )
-			error( L"Classes database is outdated" );
+			fatal( L"Classes database is outdated" );
 
 		for( Int32 i=0; i<NumCls; i++ )
 		{
@@ -277,7 +277,7 @@ Bool CApplication::LoadGame( String Directory, String Name )
 			Serialize( Loader, ClassName );
 			CClass* Class = CClassDatabase::StaticFindClass( *ClassName );
 			if( !Class )
-				error( L"Class '%s' not found in database", *ClassName );
+				fatal( L"Class '%s' not found in database", *ClassName );
 
 			// Add to remap table.
 			Classes[i]	= Class;

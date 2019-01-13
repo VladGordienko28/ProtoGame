@@ -161,7 +161,8 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 		);
 		if( PngError )
 		{
-			warn( L"Png: Failed save png. %u: %hs", PngError, lodepng_error_text(PngError) );
+			MessageBox( 0, *String::Format( L"Png: Failed save png. %u: %hs", PngError, lodepng_error_text(PngError) ), 
+				L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
 		}
 
 		if( Depalettized )
@@ -252,7 +253,9 @@ Bool CEditor::ExportResource( FResource* Res, String Directory, Bool bOverride )
 	else
 	{
 		// Unsupported type.
-		warn( L"Failed save '%s'. Unsupported resource type '%s'", *Res->GetName(), *Res->GetClass()->Name );
+		MessageBox( 0, *String::Format( L"Failed save '%s'. Unsupported resource type '%s'", *Res->GetName(), *Res->GetClass()->Name ), 
+			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
+
 		return false;
 	}
 }

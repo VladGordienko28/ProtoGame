@@ -10,7 +10,7 @@
 //
 // A game application class.
 //
-class CGame: public CApplication
+class CGame: public CApplication, public ILogCallback
 {
 public:
 	// CGame public interface.
@@ -42,6 +42,12 @@ public:
 	void Tick( Float Delta );
 	void RunLevel( FLevel* Source, Bool bCopy );
 	FLevel* FindLevel( String LevName );
+
+	// ILogCallback interface
+	void handleMessage( ELogLevel level, const Char* message ) override;
+	void handleScriptMessage( ELogLevel level, const Char* message ) override;
+	void handleFatalMessage( const Char* message ) override;
+	void handleFatalScriptMessage( const Char* message ) override;
 };
 
 

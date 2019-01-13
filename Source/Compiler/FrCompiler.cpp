@@ -620,7 +620,7 @@ static void Serialize( CCompiler* Compiler, CSerializer& S, FScript* Owner, TTok
 			break;
 
 		default:
-			error( L"Unsupported constant type %d", (UInt8)Const.TypeInfo.Type );
+			fatal( L"Unsupported constant type %d", (UInt8)Const.TypeInfo.Type );
 	}
 }
 
@@ -711,7 +711,7 @@ Bool CCompiler::CompileAll()
 		FatalError.Script		= nullptr;
 		CollectAllEvents();
 
-		trace( L"** COMPILATION BEGAN **" );
+		info( L"** COMPILATION BEGAN **" );
 
 		// Perform compilation step by step.
 		StoreAllScripts();
@@ -857,7 +857,7 @@ void CCompiler::ParseHeader( FScript* InScript )
 			MyFamily->Name		= FamilyName;
 			MyFamily->Scripts.Push(Script);
 			MyFamily->iFamily	= Families.Push( MyFamily );
-			trace( L"Compiler: Created new family '%s'", *MyFamily->Name );
+			debug( L"Compiler: Created new family '%s'", *MyFamily->Name );
 		}
 		else
 		{
@@ -1017,7 +1017,7 @@ void CCompiler::CompileCode( CBytecode* InCode )
 	emit( CODE_EOC );
 
     // Check code size.
-	if( Bytecode->Code.Num() >= 65535 )
+	if( Bytecode->Code.Num() >= MAX_UINT16 )
 		Error( L"Too large function >64kB of code" );
 
 #if 0
@@ -1179,11 +1179,10 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 		FreeReg( iReg );
 	}
 	else if(	
-				T.Text == KW_log ||
 				T.Text == KW_info ||
 				T.Text == KW_debug ||
-				T.Text == KW_notice ||
-				T.Text == KW_trace	
+				T.Text == KW_warn ||
+				T.Text == KW_error	
 		)
 	{
 		// Some kind of printf in C.
@@ -1257,15 +1256,14 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 
 		RequireSymbol( L")", L"log" );
 
-		ESeverity Severity = SVR_Log;
-		if( T.Text == KW_trace )	Severity = SVR_Trace; else
-		if( T.Text == KW_info )		Severity = SVR_Info; else
-		if( T.Text == KW_log )		Severity = SVR_Log; else
-		if( T.Text == KW_notice )	Severity = SVR_Notice; else
-		if( T.Text == KW_debug )	Severity = SVR_Debug;
+		ELogLevel LogLevel = ELogLevel::Debug;
+		if( T.Text == KW_info )		LogLevel = ELogLevel::Info; else
+		if( T.Text == KW_debug )	LogLevel = ELogLevel::Debug; else
+		if( T.Text == KW_warn )		LogLevel = ELogLevel::Warning; else
+		if( T.Text == KW_error )	LogLevel = ELogLevel::Error;
 
 		emit( CODE_Log );
-		SerializeEnum( Emitter, Severity );
+		SerializeEnum( Emitter, LogLevel );
 		emit( Fmt );
 		for( Int32 i=0; i<Args.Num(); i++ )
 		{

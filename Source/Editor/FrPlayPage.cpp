@@ -32,6 +32,8 @@ WPlayPage::WPlayPage( FLevel* InOrigianl, EPlayMode InPlayMode, WContainer* InOw
 	Color			= PAGE_COLOR_PLAY;
 	TabWidth		= Root->Font1->TextWidth( *Caption ) + 30;
 
+	LogManager::instance().addCallback( this );
+
 	// Run it!
 	RunLevel();
 
@@ -53,6 +55,8 @@ WPlayPage::~WPlayPage()
 		delete WatchList;
 
 	ShutdownLevel();
+
+	LogManager::instance().removeCallback( this );
 }
 
 
@@ -74,7 +78,7 @@ void WPlayPage::TickPage( Float Delta )
 	// travel, so just notify player about it.
 	if( GIncomingLevel )
 	{
-		GOutput->ScriptWarnf(*String::Format
+		LogManager::instance().handleScriptMessage( ELogLevel::Warning, *String::Format
 		(
 			L"An attempt to travel to level '%s'. Teleportee is '%s'", 
 			*GIncomingLevel.Destination->GetName(), 
@@ -250,9 +254,9 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 //
 // Add a new message to the errors.
 //
-void WPlayPage::AddScriptMessage( ESeverity Severity, String Message )
+void WPlayPage::AddScriptMessage( Bool bImportant, String Message )
 {
-	if( PlayMode == PLAY_Debug || Severity >= SVR_Log )
+	if( PlayMode == PLAY_Debug || bImportant )
 	{
 		Messages.Push( Message );
 		LastPushTime	= GPlat->Now();
@@ -285,7 +289,7 @@ void WPlayPage::RunLevel()
 
 	// Test some level's errors.
 	if( !PlayLevel->Navigator )
-		GOutput->ScriptErrorf(L"Level has no navigator");
+		AddScriptMessage( false, L"Level has no navigator" );
 }
 
 
@@ -432,6 +436,25 @@ void WPlayPage::OnMouseScroll( Int32 Delta )
 	}
 }
 
+
+void WPlayPage::handleMessage( ELogLevel level, const Char* message )
+{
+	AddScriptMessage( false, message );
+}
+
+void WPlayPage::handleScriptMessage( ELogLevel level, const Char* message )
+{
+	AddScriptMessage( level >= ELogLevel::Warning, message );
+}
+
+void WPlayPage::handleFatalMessage( const Char* message )
+{
+}
+
+void WPlayPage::handleFatalScriptMessage( const Char* message )
+{
+	AddScriptMessage( true, message );
+}
 
 /*-----------------------------------------------------------------------------
     The End.

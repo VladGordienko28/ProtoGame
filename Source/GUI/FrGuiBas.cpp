@@ -1107,7 +1107,7 @@ TGUIBitmap* WWindow::LoadBitmap( String FileName )
 
 	// Test for BMP.
 	if( BmpHeader.bfType != 0x4d42 )
-		error( L"\"%s\" is not BMP file.", *FileName );
+		fatal( L"\"%s\" is not BMP file.", *FileName );
 
     assert(((BmpInfo.biWidth)&(BmpInfo.biWidth-1)) == 0);
     assert(((BmpInfo.biHeight)&(BmpInfo.biHeight-1)) == 0);
@@ -1152,11 +1152,11 @@ TGUIBitmap* WWindow::LoadBitmap( String FileName )
 
 			// Check if palette overflow.
 			if( Bitmap->Palette.Colors.Num() > 256 )
-				error( L"\"%s\" consist more than 256 colors.", *FileName );
+				fatal( L"\"%s\" consist more than 256 colors.", *FileName );
 		}
 	}
 	else
-		error( L"Unsupported bmp format in \"%s\"", *FileName );
+		fatal( L"Unsupported bmp format in \"%s\"", *FileName );
 
 	return Bitmap;
 }
@@ -1193,7 +1193,7 @@ TGUIFont* WWindow::LoadFont( String FileName )
 {
 	FILE* File	= _wfopen( *FileName, L"r" );
 	if( !File )
-		error( L"Font \"%s\" not found.", *FileName );
+		fatal( L"Font \"%s\" not found.", *FileName );
 
 	TGUIFont* Font = new TGUIFont();
 

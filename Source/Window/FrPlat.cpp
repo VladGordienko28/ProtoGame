@@ -17,7 +17,7 @@ CWinPlatform::CWinPlatform()
 	// Timing.
 	LARGE_INTEGER LInt;
 	if( !QueryPerformanceFrequency(&LInt) )
-		error( L"'QueryPerformanceFrequency' failed." );
+		fatal( L"'QueryPerformanceFrequency' failed." );
 	SecsPerCycle = 1.0 / (Double)LInt.QuadPart;
 	NowTime = 0.0;
 }

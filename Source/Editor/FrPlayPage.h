@@ -20,7 +20,7 @@ enum EPlayMode
 //
 // Level play page.
 //
-class WPlayPage: public WEditorPage
+class WPlayPage: public WEditorPage, public ILogCallback
 {
 public:
 	// Variables.
@@ -29,7 +29,7 @@ public:
 	// WPlayPage interface.
 	WPlayPage( FLevel* InOrigianl, EPlayMode InPlayMode, WContainer* InOwner, WWindow* InRoot );
 	~WPlayPage();
-	void AddScriptMessage( ESeverity Severity, String Message );
+	void AddScriptMessage( Bool bImportant, String Message );
 
 	// WTabPage interface.
 	void OnOpen();
@@ -49,6 +49,12 @@ public:
 	{ 
 		return PlayLevel; 
 	}
+
+	// ILogCallback interface
+	void handleMessage( ELogLevel level, const Char* message ) override;
+	void handleScriptMessage( ELogLevel level, const Char* message ) override;
+	void handleFatalMessage( const Char* message ) override;
+	void handleFatalScriptMessage( const Char* message ) override;
 
 	// Friends.
 	friend CEditor;

@@ -197,7 +197,9 @@ Bool FPuppetComponent::MoveToGoal()
 {
 	if( !Body )
 	{
-		GOutput->ScriptErrorf( L"Puppet used without appropriate arcade body in '%s'", *Entity->Script->GetName() );
+		LogManager::instance().handleScriptMessage( 
+			ELogLevel::Error, L"Puppet used without appropriate arcade body in '%s'", *Entity->Script->GetName() );
+
 		return false;
 	}
 

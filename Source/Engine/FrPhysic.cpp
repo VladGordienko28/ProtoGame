@@ -716,7 +716,7 @@ Bool FMoverComponent::AddRider( FPhysicComponent* InRider )
 	}
 	else
 	{
-		notice( L"Phys: Mover '%s' exceeded %d riders", *GetFullName(), MAX_RIDERS );
+		warn( L"Phys: Mover '%s' exceeded %d riders", *GetFullName(), MAX_RIDERS );
 		return false;
 	}
 }

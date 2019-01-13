@@ -779,7 +779,7 @@ COpenALAudio::COpenALAudio()
 	Device		= alcOpenDevice(nullptr);
 	if( !Device )
 	{
-		error( L"No OpenAL device found" );
+		fatal( L"No OpenAL device found" );
 		return;
 	}
 
@@ -787,7 +787,7 @@ COpenALAudio::COpenALAudio()
 	Context		= alcCreateContext( Device, nullptr );
 	if( !Context )
 	{
-		error( L"Failed create audio context" );
+		fatal( L"Failed create audio context" );
 		return;
 	}
 	alcMakeContextCurrent( Context );
@@ -842,7 +842,7 @@ COpenALAudio::COpenALAudio()
 	alListenerfv( AL_ORIENTATION,	DefaultPos );
 
 	// Notify.
-	trace( L"OpenAL: OpenAL initialized" );
+	info( L"OpenAL: OpenAL initialized" );
 }
 
 

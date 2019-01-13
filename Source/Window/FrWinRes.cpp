@@ -42,7 +42,7 @@ public:
 	}
 	void SerializeRef( FObject*& Obj )
 	{
-		error(L"CResourceStream::SerializeRef");
+		fatal(L"CResourceStream::SerializeRef");
 	}
 	SizeT TotalSize()
 	{

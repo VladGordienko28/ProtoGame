@@ -110,7 +110,7 @@ CClass::CClass( const Char* InName, TConstructor InCnstr, CClass* InSuper, UInt3
 
 	// Notify about old class.
 	if( Flags & CLASS_Deprecated )
-		notice( L"Class \"%s\" is outdated", *Name );
+		warn( L"Class \"%s\" is outdated", *Name );
 
 	// Generate friendly class name.
 	assert(Name(0) == L'F');
@@ -224,7 +224,7 @@ CNativeFunction::CNativeFunction( const Char* InName, UInt32 InFlags, Int32 InOp
 			CNativeFunction* Other = CClassDatabase::GFuncs[i];
 
 			if( Class == Other->Class && Name == Other->Name )
-				error( L"Function \"%s\" redeclarated", *Name );
+				fatal( L"Function \"%s\" redeclarated", *Name );
 		}
 }
 
@@ -247,7 +247,7 @@ CNativeFunction::CNativeFunction( const Char* InName, UInt32 InFlags, TNativeFun
 		CNativeFunction* Other = CClassDatabase::GFuncs[i];
 
 		if( Class == Other->Class && Name == Other->Name )
-			error( L"Function \"%s\" redeclarated", *Name );
+			fatal( L"Function \"%s\" redeclarated", *Name );
 	}
 }
 
@@ -267,7 +267,7 @@ CNativeFunction::CNativeFunction( const Char* InName, CClass* InClass, TNativeMe
 	assert(Class);
 	assert(Class->IsA(FComponent::MetaClass) || Class->IsA(FResource::MetaClass));
 	if( Class->FindMethod(*Name) )
-		error( L"Method \"%s\" redeclarated in class \"%s\"", *Name, *Class->GetAltName() );
+		fatal( L"Method \"%s\" redeclarated in class \"%s\"", *Name, *Class->GetAltName() );
 }
 
 
@@ -309,12 +309,12 @@ void CNativeFunction::SetResultType( const CTypeInfo& InResultType )
 Int32 CNativeFunction::AddParameter( const Char* ParamName, const CTypeInfo& ParamType )
 {
 	if( NumParams >= MAX_PARAMETERS )
-		error(L"Too many parameters in function \"%s\"", *Name);
+		fatal(L"Too many parameters in function \"%s\"", *Name);
 
 	// Check for name duplication.
 	for( Int32 i=0; i<NumParams; i++ )
 		if( Params[i].Name && Params[i].Name == ParamName )
-			error( L"Parameter \"%s\" duplicated in function \"%s\"", ParamName, *Name );
+			fatal( L"Parameter \"%s\" duplicated in function \"%s\"", ParamName, *Name );
 
 	Params[NumParams].Name	= ParamName;
 	Params[NumParams].Type	= ParamType;

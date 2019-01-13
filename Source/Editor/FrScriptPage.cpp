@@ -705,7 +705,7 @@ void WScriptPage::SaveScriptText( Bool bAsk )
 		CodeEditor->SetDirty( false );
 
 		// Notify.
-		notice( L"Script: Script '%s' text is updated", *Script->GetName() );
+		debug( L"Script: Script '%s' text is updated", *Script->GetName() );
 	}
 }
 

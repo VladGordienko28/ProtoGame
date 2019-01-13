@@ -5,7 +5,8 @@
 #pragma once
 
 // Flu includes.
-#include "Engine\Engine.h"
+#include "Core/Core.h"
+#include "Engine/Engine.h"
 
 /*-----------------------------------------------------------------------------
 	Top level compiler functions.

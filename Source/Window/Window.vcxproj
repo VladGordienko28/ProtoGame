@@ -20,12 +20,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FrPlat.h" />
+    <ClInclude Include="LogCallbackConsole.h" />
+    <ClInclude Include="LogCallbackDebug.h" />
+    <ClInclude Include="LogCallbackFile.h" />
+    <ClInclude Include="StackTrace.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FrPlat.cpp" />
     <ClCompile Include="FrWinDlg.cpp" />
     <ClCompile Include="FrWinRes.cpp" />
+    <ClCompile Include="StackTrace.cpp" />
     <ClCompile Include="Window.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Window.h</PrecompiledHeaderFile>

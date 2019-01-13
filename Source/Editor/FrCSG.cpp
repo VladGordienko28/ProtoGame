@@ -252,7 +252,7 @@ void CSGUnion( FBrushComponent* Brush, FLevel* Level )
 	assert(Level);
 	assert(Brush);
 
-	trace( L"CSG: Union" );
+	debug( L"CSG: Union" );
 
 	//
 	// Not implemented. I think this CSG operation are
@@ -271,7 +271,7 @@ void CSGIntersection( FBrushComponent* Brush, FLevel* Level )
 	assert(Brush);
 	assert(Level);
 
-	trace( L"CSG: Intersection" );
+	debug( L"CSG: Intersection" );
 
 	// Prepare.
 	Int32 NumEnts = Level->Entities.Num();
@@ -353,7 +353,7 @@ void CSGDifference( FBrushComponent* Brush, FLevel* Level )
 	assert(Level);
 	assert(Brush);
 
-	trace( L"CSG: Difference" );
+	debug( L"CSG: Difference" );
 
 	// Prepare.
 	Int32 NumEnts = Level->Entities.Num();

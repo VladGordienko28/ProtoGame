@@ -1637,7 +1637,11 @@ Bool CEditor::OpenProjectFrom( String FileName )
 	catch( String Message )
 	{
 		// Failure with message.
-		warn( L"Failed load project '%s' with message: '%s'.", *ProjName, *Message );
+		warn( L"Failed load project '%s' with message: '%s'", *ProjName, *Message );
+
+		MessageBox( 0, *String::Format( L"Failed load project '%s' with message: '%s'", *ProjName, *Message ), 
+			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
+
 		CloseProject( false );
 		Result	= false;
 	}
@@ -1645,6 +1649,10 @@ Bool CEditor::OpenProjectFrom( String FileName )
 	{
 		// Unhandled failure.
 		warn( L"Failed load project '%s'.", *ProjName );
+
+		MessageBox( 0, *String::Format( L"Failed load project '%s'", *ProjName ), 
+			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
+
 		CloseProject( false );
 		Result	= false;
 	}
@@ -1774,7 +1782,7 @@ FResource* CEditor::PreloadResource( String Name )
 		FScript*	Script	= As<FScript>(Res);
 		if( Script && Script->IsScriptable() )
 			if( !CompileAllScripts(nullptr) )
-				error( L"Unable to load script '%s' with errors", *Name );
+				fatal( L"Unable to load script '%s' with errors", *Name );
 
 		// Import all fields.
 		CImporter Importer;
@@ -1785,7 +1793,7 @@ FResource* CEditor::PreloadResource( String Name )
 	}
 	catch( ... )
 	{
-		error( L"Unable to load resource '%s'", *Name );
+		fatal( L"Unable to load resource '%s'", *Name );
 	}
 
 	Res->PostLoad();

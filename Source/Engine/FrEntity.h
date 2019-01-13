@@ -97,7 +97,7 @@ public:
 		}\
 		catch( ... )\
 		{\
-			GOutput->ScriptErrorf( L"Script: Event \"" L#name "\" Runtime error" );\
+			LogManager::instance().handleFatalScriptMessage( L"Script: Event \"" L#name "\" Runtime error" );\
 		}\
 	}\
 

@@ -4,25 +4,6 @@
     Macroses.
 -----------------------------------------------------------------------------*/
 
-// Its upset me :(
-#define WIDEN2(x) L ## x 
-#define WIDEN(x) WIDEN2(x) 
-#define __WFILE__ WIDEN(__FILE__) 
-
-//
-// Output macro.
-//
-#define assert(expr) { if(!(expr)) error( L"Assertion failed: \"%s\" [File: %s][Line: %i]", L#expr, __WFILE__, __LINE__ ); }
-#define error	if( ::GOutput ) ::GOutput->Errorf
-#define warn	if( ::GOutput ) ::GOutput->Warnf
-
-#define trace(...)		if( ::GOutput ) ::GOutput->Logf( SVR_Trace, __VA_ARGS__ );
-#define info(...)		if( ::GOutput ) ::GOutput->Logf( SVR_Info, __VA_ARGS__ );
-#define log(...)		if( ::GOutput ) ::GOutput->Logf( SVR_Log, __VA_ARGS__ );
-#define notice(...)		if( ::GOutput ) ::GOutput->Logf( SVR_Notice, __VA_ARGS__ );
-#define debug(...)		if( ::GOutput ) ::GOutput->Logf( SVR_Debug, __VA_ARGS__ );
-
-
 //
 // Debug macro.
 //

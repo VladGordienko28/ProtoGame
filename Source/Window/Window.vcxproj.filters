@@ -3,11 +3,27 @@
   <ItemGroup>
     <ClInclude Include="Window.h" />
     <ClInclude Include="FrPlat.h" />
+    <ClInclude Include="LogCallbackFile.h">
+      <Filter>LogCallbacks</Filter>
+    </ClInclude>
+    <ClInclude Include="LogCallbackConsole.h">
+      <Filter>LogCallbacks</Filter>
+    </ClInclude>
+    <ClInclude Include="LogCallbackDebug.h">
+      <Filter>LogCallbacks</Filter>
+    </ClInclude>
+    <ClInclude Include="StackTrace.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="FrWinDlg.cpp" />
     <ClCompile Include="FrWinRes.cpp" />
     <ClCompile Include="FrPlat.cpp" />
+    <ClCompile Include="StackTrace.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="LogCallbacks">
+      <UniqueIdentifier>{844130a5-91ba-4fb0-85e0-9823cae27038}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

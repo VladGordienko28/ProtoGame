@@ -4,9 +4,35 @@
 =============================================================================*/
 #pragma once
 
+#include <string>
+
 #include "Build.h"
 #include "Types.h"
 #include "Heap.h"
+#include "LogCallback.h"
+#include "LogManager.h"
+
+// legacy include
+#include "FrSerial.h"
+#include "FrArray.h"
+
+namespace flu 
+{
+namespace cstr
+{
+	inline Char* cat( Char* dest, SizeT size, const Char* other )
+	{
+		wcscat_s( dest, size, other );
+		return dest;
+	}
+
+	inline WideChar* multiByteToWide( WideChar* buffer, SizeT bufferSize, const AnsiChar* source )
+	{
+		mbstowcs( buffer, source, bufferSize );
+		return buffer;
+	}
+}
+}
 
 /*-----------------------------------------------------------------------------
 	The End.

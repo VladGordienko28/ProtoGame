@@ -113,7 +113,7 @@ void CFrame::ScriptError( Char* Fmt, ... )
 	_vsnwprintf_s( Dest, 1024, Fmt, ArgPtr );
 	va_end( ArgPtr );
 
-	GOutput->ScriptErrorf
+	LogManager::instance().handleFatalScriptMessage
 		( 
 			L"Runtime error at %s(%s::%s). Message='%s'. History: %s.", 
 			*This->GetFullName(),
@@ -189,13 +189,7 @@ void FEntity::CallFunction( String FuncName, const CVariant& A1, const CVariant&
 			if( Parm->Type != Args[iArg]->Type )
 			{
 				// Mismatched.
-				debug
-				( 
-					L"Script: Exception in FEntity::CallFunction(\"%s\"), types are mismatched in %d argument", 
-					*FuncName, 
-					iArg 
-				);
-				GOutput->ScriptErrorf
+				LogManager::instance().handleFatalScriptMessage
 				(
 					L"Function call %s(%s::%s) from C++ failed. Argument %d types mismatched '%s' and '%s'",
 					*GetFullName(),
@@ -222,7 +216,7 @@ void FEntity::CallFunction( String FuncName, const CVariant& A1, const CVariant&
 	{
 		// Script crashes :(
 		// But abort only current frame.
-		GOutput->ScriptErrorf( L"CallFunction: Runtime error" );
+		LogManager::instance().handleFatalScriptMessage( L"CallFunction: Runtime error" );
 	}
 }
 
@@ -244,7 +238,7 @@ void FScript::CallStaticFunction( String FuncName, const CVariant& A1, const CVa
 	CFunction* Function = FindStaticFunction(FuncName);
 	if( !Function )
 	{
-		notice(L"FScript::CallStaticFunction: Function '%s' not found", *FuncName);
+		warn(L"FScript::CallStaticFunction: Function '%s' not found", *FuncName);
 		return;
 	}
 
@@ -268,13 +262,7 @@ void FScript::CallStaticFunction( String FuncName, const CVariant& A1, const CVa
 			if( Parm->Type != Args[iArg]->Type )
 			{
 				// Mismatched.
-				debug
-				( 
-					L"Script: Exception in FScript::CallStaticFunction(\"%s\"), types are mismatched in %d argument", 
-					*FuncName, 
-					iArg 
-				);
-				GOutput->ScriptErrorf
+				LogManager::instance().handleFatalScriptMessage
 				(
 					L"Static call %s::%s from C++ failed. Argument %d types mismatched '%s' and '%s'",
 					*GetName(),
@@ -300,7 +288,7 @@ void FScript::CallStaticFunction( String FuncName, const CVariant& A1, const CVa
 	{
 		// Script crashes :(
 		// But abort only current frame.
-		GOutput->ScriptErrorf( L"CallFunction: Runtime error" );
+		LogManager::instance().handleFatalScriptMessage( L"CallFunction: Runtime error" );
 	}
 }
 
@@ -710,7 +698,7 @@ void CFrame::ProcessCode( TRegister* Result )
 			case CODE_Log:
 			{
 				// C-style output function, its really SLOW!!
-				ESeverity Severity = (ESeverity)ReadByte();
+				ELogLevel LogLevel = static_cast<ELogLevel>( ReadByte() );
 				String Fmt = ReadString();
 				Char Out[256], *Str = Out;
 
@@ -733,7 +721,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				}
 
 				*Str = 0;
-				GOutput->ScriptLogf( Severity, Out );
+				LogManager::instance().handleScriptMessage( LogLevel, Out );
 				break;
 			}
 			case CODE_EntityCast:
@@ -1607,13 +1595,13 @@ void CThreadFrame::Tick( Float Delta )
 				break;
 			}
 			default:
-				error( L"Bad thread '%s' status '%d'", *Entity->GetFullName(), (UInt8)Status );
+				fatal( L"Bad thread '%s' status '%d'", *Entity->GetFullName(), (UInt8)Status );
 		}
 	}
 	catch( ... )
 	{
 		// Damn, something horrible happened.
-		GOutput->ScriptErrorf( L"Entity: Thread error in entity '%s'", *Entity->GetFullName() );
+		LogManager::instance().handleFatalScriptMessage( L"Entity: Thread error in entity '%s'", *Entity->GetFullName() );
 
 		// Stop this thread execution to prevent thread crash at next tick.
 		Status = THR_Stopped;

@@ -22,6 +22,7 @@ CConsole::CConsole()
 	:	bActive( false ),
 		HistTop( 0 ) 
 {
+	LogManager::instance().addCallback( this );
 }
 
 
@@ -30,6 +31,7 @@ CConsole::CConsole()
 //
 CConsole::~CConsole()
 {
+	LogManager::instance().removeCallback( this );
 }
 
 
@@ -54,18 +56,6 @@ void CConsole::Accept()
 		GGame->ConsoleExecute( Command );
 	Command	= L"";
 }
-
-
-//
-// Process the C++ log mechanism.
-// Just add a 'log' message directly to
-// the console.
-//
-void CConsole::LogCallback( String Msg, ETextColor Color )
-{
-	AddToHistory( Msg, Color );
-}
-
 
 //
 // Process a char type.
@@ -214,6 +204,41 @@ void CConsole::Clear()
 		History[i].Text	= L"";
 }
 
+void CConsole::handleMessage( ELogLevel level, const Char* message )
+{
+#if FLU_DEBUG
+	handleScriptMessage( level, message );
+#else
+	if( level >= ELogLevel::Warning )
+		handleScriptMessage( level, message );
+#endif
+}
+
+void CConsole::handleScriptMessage( ELogLevel level, const Char* message )
+{	
+	ETextColor color;
+
+	switch ( level )
+	{
+		case ELogLevel::Info:		color = TCR_Gray; break;
+		case ELogLevel::Debug:		color = TCR_Blue; break;
+		case ELogLevel::Warning:	color = TCR_Yellow; break;
+		case ELogLevel::Error:		color = TCR_Red; break;
+		default:					color = TCR_Cyan; break;
+	}
+
+	AddToHistory( message, color );
+}
+
+void CConsole::handleFatalMessage( const Char* message )
+{
+	handleMessage( ELogLevel::Error, message );
+}
+
+void CConsole::handleFatalScriptMessage( const Char* message )
+{
+	handleMessage( ELogLevel::Error, message );
+}
 
 /*-----------------------------------------------------------------------------
     The End.

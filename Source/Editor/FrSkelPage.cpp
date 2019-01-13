@@ -1231,7 +1231,7 @@ void WSkeletonPage::OnMouseEndDrag( EMouseButton Button, Int32 X, Int32 Y )
 				Skeleton->Bones.RemoveShift(DragInfo.iNewBone);
 				Skeleton->RefPose.BonesPose.RemoveShift(DragInfo.iNewBone);
 				Skeleton->BuildTransformationTable();
-				log( L"Skel: Too short bone eliminated" );
+				warn( L"Skel: Too short bone eliminated" );
 			}
 
 			DragInfo.iNewBone	= -1;

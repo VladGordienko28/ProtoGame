@@ -861,7 +861,7 @@ void CPropertyItem::OnSomethingChange( WWidget* Sender )
 			break;
 		}
 		default:
-			error( L"Unsupported property type %d", (UInt8)TypeInfo.Type );
+			fatal( L"Unsupported property type %d", (UInt8)TypeInfo.Type );
 	}
 
 	// Notify all objects.
@@ -1082,7 +1082,7 @@ void CPropertyItem::MouseDown( EMouseButton MouseButton, Int32 X, Int32 Y )
 				break;
 			}
 			default:
-				error( L"Unsupported property type %d", (UInt8)TypeInfo.Type );
+				fatal( L"Unsupported property type %d", (UInt8)TypeInfo.Type );
 		}
 	}
 }
@@ -1707,7 +1707,7 @@ void WObjectInspector::SetEditObjects( TArray<FObject*>& Objs )
 		else
 		{
 			// Something unsupported.
-			error( L"Unsupported class \"%s\" to edit.", Objs[0]->GetClass()->Name );
+			fatal( L"Unsupported class \"%s\" to edit.", Objs[0]->GetClass()->Name );
 		}
 	}
 	else

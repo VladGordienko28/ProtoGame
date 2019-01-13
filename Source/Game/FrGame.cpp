@@ -28,8 +28,7 @@
 // Forward declaration.
 //
 static LRESULT CALLBACK WndProc( HWND hWnd, UINT Message, WPARAM WParam, LPARAM LParam );
-static Char* StackTrace( LPEXCEPTION_POINTERS InException );
-static Int32 HandleException( LPEXCEPTION_POINTERS InException );
+static Int32 handleException( LPEXCEPTION_POINTERS exception );
 static String GetFileName( String FileName );
 static String GetFileDir( String FileName );
 
@@ -52,12 +51,26 @@ CGame::CGame()
 		Console( nullptr ),
 		Level( nullptr )
 {
+	// Initial logging
+	LogManager::instance().addCallback( new LogCallbackFile( L"Client.log" ) );
+
+#if FLU_DEBUG
+	LogManager::instance().addCallback( new LogCallbackDebug( true ) );
+
+	if( !IsDebuggerPresent() )
+	{
+		LogManager::instance().addCallback( new LogCallbackConsole() );
+	}
+#endif
+
+	LogManager::instance().addCallback( this );
+
 	// Say hello to user.
-	log( L"========================="			);
-	log( L"=    Fluorine Engine    ="			);
-	log( L"=      %s        =",			FLU_VERSION	);
-	log( L"========================="			);
-	log( L"" );
+	info( L"========================="			);
+	info( L"=    Fluorine Engine    ="			);
+	info( L"=      %s        =",	FLU_VERSION	);
+	info( L"========================="			);
+	info( L"" );
 
 	// Initialize global variables.
 	GIsEditor			= false;
@@ -81,6 +94,8 @@ CGame::CGame()
 //
 CGame::~CGame()
 {
+	LogManager::instance().removeCallback( this );
+
 	GGame	= nullptr;
 }
 
@@ -145,8 +160,8 @@ void CGame::Init( HINSTANCE InhInstance )
 	// Register window.
 	if( !RegisterClassEx(&wcex) )
 	{	
-		log( L"GetLastError %i", GetLastError() );
-		error( L"RegisterClassEx failure" );
+		debug( L"GetLastError %i", GetLastError() );
+		fatal( L"RegisterClassEx failure" );
 	}
 
 	// Create the window.
@@ -197,7 +212,7 @@ void CGame::Init( HINSTANCE InhInstance )
 	);
 
 	// Notify.
-	log( L"Game: Game initialized" );
+	info( L"Game: Game initialized" );
 
 	// Load game? What way we will use?
 	String ProjectFileName = CCmdLineParser::ParseStringParam( GCmdLine, L"project" );
@@ -208,10 +223,10 @@ void CGame::Init( HINSTANCE InhInstance )
 							ProjectFileName : 
 							GDirectory+L"\\"+ProjectFileName;
 
-		log( L"Game: Loading game from '%s'", *FileName );
+		info( L"Game: Loading game from '%s'", *FileName );
 
 		if( !GPlat->FileExists(FileName) )
-			error(L"Game file '%s' not found", *FileName);
+			fatal(L"Game file '%s' not found", *FileName);
 
 		String Directory	= GetFileDir(ProjectFileName);
 		String Name			= GetFileName(ProjectFileName);
@@ -225,7 +240,7 @@ void CGame::Init( HINSTANCE InhInstance )
 		if( LevelName )
 			Entry = FindLevel( LevelName );
 		else
-			log( L"Game: Entry level is not specified." );
+			info( L"Game: Entry level is not specified." );
 
 		if( !Entry && LevelList.Num() )
 			Entry = LevelList[0];
@@ -235,7 +250,7 @@ void CGame::Init( HINSTANCE InhInstance )
 			RunLevel( Entry, true );
 		}
 		else
-			log( L"Game: Entry level not found!" );
+			info( L"Game: Entry level not found!" );
 	}
 	else
 	{
@@ -244,10 +259,10 @@ void CGame::Init( HINSTANCE InhInstance )
 		GameFiles = GPlat->FindFiles(GDirectory, String::Format(L"*%s", PROJ_FILE_EXT));
 
 		if( GameFiles.Num() == 0 )
-			error(L"Game file not found");
+			fatal(L"Game file not found");
 
 		String FileName = GameFiles[0];
-		log( L"Game: Game file '%s' detected!", *FileName );
+		info( L"Game: Game file '%s' detected!", *FileName );
 
 		String Directory	= GetFileDir(FileName);
 		String Name			= GetFileName(FileName);
@@ -259,7 +274,7 @@ void CGame::Init( HINSTANCE InhInstance )
 		FLevel* Entry = FindLevel( L"Entry" );
 		if( !Entry )
 		{
-			log( L"Game: Entry level not found!" );
+			warn( L"Game: Entry level not found!" );
 			if( LevelList.Num() )
 				Entry	= LevelList[0];
 		}
@@ -268,7 +283,8 @@ void CGame::Init( HINSTANCE InhInstance )
 		if( Entry )
 			RunLevel( Entry, true );
 		else
-			log( L"No level's found in '%s'", *FileName );
+			MessageBox( 0, *String::Format( L"No level's found in '%s'", *FileName ), 
+				L"Client", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
 	}
 }
 
@@ -363,7 +379,7 @@ void CGame::Exit()
 	freeandnil(GRender);
 	freeandnil(Config);
 
-	log( L"Game: Application shutdown" ); 
+	info( L"Game: Application shutdown" ); 
 }
 
 
@@ -378,10 +394,8 @@ static Double		GOldTime;
 static Double		GfpsTime;
 static Int32		GfpsCount;
 
-//
-// Exception handle variables.
-//
-static Char*		GErrorText;
+// Exception handle variables
+static Char* g_exceptionStackTrace;
 
 
 //
@@ -451,7 +465,7 @@ void CGame::MainLoop()
 	__except( HandleException(GetExceptionInformation()) )
 	{
 		// GPF Error.
-		error( L"General protection fault in '%s'", GErrorText );
+		fatal( L"General protection fault in '%s'", GErrorText );
 	}
 #endif
 }
@@ -740,7 +754,7 @@ void CGame::RunLevel( FLevel* Source, Bool bCopy )
 	GInput->SetLevel( Level );
 
 	// Notify.
-	log( L"Game: Level '%s' running", *Level->GetName() );
+	info( L"Game: Level '%s' running", *Level->GetName() );
 }
 
 
@@ -830,7 +844,7 @@ void CGame::ConsoleExecute( String CmdLine )
 		if( Lev )
 			RunLevel( Lev, true );
 		else
-			log( L"Game: Level '%s' not found.", *LevName );
+			error( L"Game: Level '%s' not found.", *LevName );
 	}
 	else if( String::CompareText(Token, L"Restart") == 0 )
 	{
@@ -840,7 +854,7 @@ void CGame::ConsoleExecute( String CmdLine )
 			RunLevel( Level->Original, true );
 		}
 		else
-			log( L"Game: Current level is not restartable" );
+			error( L"Game: Current level is not restartable" );
 	}
 	else if( String::CompareText(Token, L"Hash") == 0 )
 	{
@@ -884,7 +898,7 @@ void CGame::ConsoleExecute( String CmdLine )
 		if( Level )
 		{
 			Level->bIsPause	^= 1;
-			Console->LogCallback( Level->bIsPause ? L"Pause On" : L"Pause Off", TCR_Yellow );
+			info( L"%s", Level->bIsPause ? L"Pause On" : L"Pause Off" );
 		}
 	}
 	else if( String::CompareText(Token, L"GPF") == 0 )
@@ -903,7 +917,7 @@ void CGame::ConsoleExecute( String CmdLine )
 	else
 	{
 		// Bad command.
-		log( L"Game: Unrecognized Command '%s'", *Token );
+		error( L"Game: Unrecognized Command '%s'", *Token );
 	}
 }
 
@@ -1026,294 +1040,38 @@ static	CPlatformBase*	_WinPlatPtr = GPlat = &WinPlat;
     CGameDebugOutput.
 -----------------------------------------------------------------------------*/
 
-#pragma optimize ( "", off )
-
-
-//
-// Calling stack trace.
-//
-static Char* StackTrace( LPEXCEPTION_POINTERS InException )	
-{
-	static Char Text[2048];
-	mem::zero( Text, sizeof(Text) );
-	DWORD64 Offset64 = 0;
-	DWORD Offset	 = 0;
-
-	// Prepare.
-	HANDLE	Process		= GetCurrentProcess();
-	HANDLE	Thread		= GetCurrentThread();
-
-	// Symbol info.
-	SYMBOL_INFO* Symbol	= (SYMBOL_INFO*)mem::alloc( sizeof(SYMBOL_INFO) + 1024 );
-	Symbol->SizeOfStruct	= sizeof(SYMBOL_INFO);
-	Symbol->MaxNameLen		= 1024;
-	DWORD SymOptions		= SymGetOptions();
-	SymOptions				|= SYMOPT_LOAD_LINES | SYMOPT_UNDNAME | SYMOPT_EXACT_SYMBOLS;
-	SymSetOptions( SymOptions );
-	SymInitialize( Process, ".", 1 );
-
-	// Line info.
-	IMAGEHLP_LINE64 Line;
-	mem::zero( &Line, sizeof(IMAGEHLP_LINE64) );
-	Line.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
-
-	// Setup frame info.
-	STACKFRAME64 StackFrame;
-	mem::zero( &StackFrame, sizeof(STACKFRAME64) );
-
-#if FLU_X32
-	if( InException )
-	{
-		StackFrame.AddrStack.Offset	= InException->ContextRecord->Esp;
-		StackFrame.AddrFrame.Offset	= InException->ContextRecord->Ebp;
-		StackFrame.AddrPC.Offset	= InException->ContextRecord->Eip;
-	}
-	else
-	{
-		__asm
-		{ 
-		Label: 
-			mov dword ptr [StackFrame.AddrStack.Offset], esp
-			mov dword ptr [StackFrame.AddrFrame.Offset], ebp
-			mov eax, [Label]
-			mov dword ptr [StackFrame.AddrPC.Offset], eax
-		}
-	}
-#endif
-
-	StackFrame.AddrPC.Mode		= AddrModeFlat;
-	StackFrame.AddrStack.Mode	= AddrModeFlat;
-	StackFrame.AddrFrame.Mode	= AddrModeFlat;
-	StackFrame.AddrBStore.Mode	= AddrModeFlat;
-	StackFrame.AddrReturn.Mode	= AddrModeFlat;
-		
-	// Walk the stack.
-	for( ; ; )
-	{
-		if( !StackWalk64
-					( 
-						IMAGE_FILE_MACHINE_I386, 
-						Process, 
-						Thread, 
-						&StackFrame, 
-						InException ? InException->ContextRecord : nullptr,
-						nullptr, 
-						SymFunctionTableAccess64, 
-						SymGetModuleBase64, 
-						nullptr ) 
-					)
-			break;
-
-		if( SymFromAddr( Process, StackFrame.AddrPC.Offset, &Offset64, Symbol ) && 
-			SymGetLineFromAddr64( Process, StackFrame.AddrPC.Offset, &Offset, &Line ) )
-		{
-			Char FileName[1024];
-			Char FuncName[256];
-			mbstowcs( FileName, Line.FileName, 1024 );
-			mbstowcs( FuncName, Symbol->Name, 256 );
-
-			// Add to history.
-			wcscat( Text, FuncName );
-			wcscat( Text, L" <- " );
-
-			// Output more detailed information into log.
-			log( L"%s [File: %s][Line: %d]", FuncName, FileName, Line.LineNumber );
-		}
-	}
-
-	mem::free( Symbol );
-	return Text;
-}
-#pragma optimize ( "", on )
-
-
-//
 // __try..__except exception handler.
-//
-static Int32 HandleException( LPEXCEPTION_POINTERS InException )
+static Int32 handleException( LPEXCEPTION_POINTERS exception )
 {
-	GErrorText = StackTrace( InException );
+	g_exceptionStackTrace = flu::win::stackTrace( exception );
 	return EXCEPTION_EXECUTE_HANDLER;
 }
 
-
-//
-// Game debug output.
-//
-class CGameDebugOutput: public CDebugOutputBase
+void CGame::handleMessage( ELogLevel level, const Char* message )
 {
-public:
-	// Output constructor.
-	CGameDebugOutput()
-		:	bUseStdConsole(false)
-	{
-		// Open log file.
-		LogFile	= _wfopen( *(String(FLU_NAME)+L".log"), L"w" );
+}
 
-#if FLU_DEBUG
-		// Use Std console or VS Output?
-		bUseStdConsole	= !IsDebuggerPresent();
-		if( bUseStdConsole )
-		{
-			// Create console.
-			_setmode( _fileno(stdout), _O_U16TEXT );
-			AllocConsole();
-			freopen( "CONOUT$", "w", stdout );
-			SetConsoleTitle( L"Fluorine Engine Output" );
-			ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-		}
-#endif
-	}
+void CGame::handleScriptMessage( ELogLevel level, const Char* message )
+{
+}
 
-	// Output destructor.
-	~CGameDebugOutput()
-	{
-		if( bUseStdConsole )
-			FreeConsole();
+void CGame::handleFatalMessage( const Char* message )
+{
+	Char buffer[4096] = {};
 
-		fclose( LogFile );
-	}
-
-	//
-	// All C++ outputs.
-	//
-
-	// Output C++ log message.
-	void Logf( ESeverity Severity, Char* Text, ... )
-	{
-#if FLU_DEBUG
-		Char Dest[2048] = {};
-		va_list ArgPtr;
-		va_start( ArgPtr, Text );
-		_vsnwprintf( Dest, arr_len(Dest), Text, ArgPtr );
-		va_end( ArgPtr );
-
-		if( GGame && GGame->Console )
-			GGame->Console->LogCallback( Dest, TCR_Gray );
-
-		wcscat_s( Dest, L"\n" );
+	cstr::cat( buffer, arr_len(buffer), L"Fatal Error: \"" );
+	cstr::cat( buffer, arr_len(buffer), message );
+	cstr::cat( buffer, arr_len(buffer), L"\" in " );
+	cstr::cat( buffer, arr_len(buffer), flu::win::stackTrace( nullptr ) );
 
 
-		fwprintf( LogFile, Dest );
-#endif
-#if FLU_DEBUG
-		if( bUseStdConsole )
-		{
-			static WORD SeverityColors[SVR_MAX] = 
-			{
-				FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED,			// SVR_Trace;
-				FOREGROUND_BLUE | FOREGROUND_GREEN,								// SVR_Info;
-				FOREGROUND_GREEN,												// SVR_Log;
-				FOREGROUND_GREEN | FOREGROUND_RED,								// SVR_Notice;
-				FOREGROUND_INTENSITY											// SVR_Debug;
-			};
+	MessageBox( 0, buffer, L"Critical Error", MB_OK | MB_ICONERROR | MB_TASKMODAL );
+	ExitProcess( 0 );
+}
 
-			SetConsoleTextAttribute( ConsoleHandle, SeverityColors[Severity] );
-			wprintf( Dest );
-		}
-
-		OutputDebugString(Dest);
-#endif
-	}
-
-
-	// Show warning message.
-	void Warnf( Char* Text, ... )
-	{
-		Char Dest[2048] = {};
-		va_list ArgPtr;
-		va_start( ArgPtr, Text );
-		_vsnwprintf( Dest, arr_len(Dest), Text, ArgPtr );
-		va_end( ArgPtr );
-
-		debug( L"**WARNING: %s", Dest );
-		fflush( LogFile );
-
-		MessageBox( 0, Dest, L"Warning", MB_OK | MB_ICONWARNING | MB_TASKMODAL );
-	}
-
-	// Raise fatal error.
-	void Errorf( Char* Text, ... )
-	{
-		Char Dest[2048] = {};
-		va_list ArgPtr;
-		va_start( ArgPtr, Text );
-		_vsnwprintf( Dest, arr_len(Dest), Text, ArgPtr );
-		va_end( ArgPtr );
-
-		debug( L"**CRITICAL ERROR: %s", Dest );
-		String Stack = StackTrace(nullptr);
-		UInt32 Footprint = MurmurHash((UInt8*)*Stack, Stack.Len()*sizeof(Char));
-		String FullText = String::Format( L"%s\nStack Footprint: 0x%08x\n\nHistory: %s", Dest, Footprint, *Stack );
-
-		if( !IsDebuggerPresent() )
-			MessageBox( 0, *FullText, L"Critical Error", MB_OK | MB_ICONERROR | MB_TASKMODAL );
-
-		fflush( LogFile );
-
-		// Exit process or enter debug.
-		if( IsDebuggerPresent() )
-			DebugBreak();
-		else
-			ExitProcess( 0 );
-	}
-
-	//
-	// All FluScript outputs.
-	//
-	void ScriptLogf( ESeverity Severity, Char* Text, ... )
-	{
-#if _RELEASE
-		// Don't show simple notification in release.
-		if( Severity < SVR_Log )
-			return;
-#endif
-
-		Char Dest[2048] = {};
-		va_list ArgPtr;
-		va_start( ArgPtr, Text );
-		_vsnwprintf( Dest, arr_len(Dest), Text, ArgPtr );
-		va_end( ArgPtr );
-
-		if( GGame && GGame->Console )
-			GGame->Console->LogCallback( Dest, TCR_Red );
-
-		Logf( SVR_Trace, Dest );
-	}
-	void ScriptWarnf( Char* Text, ... )
-	{
-		Char Dest[2048] = {};
-		va_list ArgPtr;
-		va_start( ArgPtr, Text );
-		_vsnwprintf( Dest, arr_len(Dest), Text, ArgPtr );
-		va_end( ArgPtr );
-
-		ScriptLogf( SVR_Debug, L"Warning: %s", Dest );
-	}
-	void ScriptErrorf( Char* Text, ... )
-	{
-		Char Dest[2048] = {};
-		va_list ArgPtr;
-		va_start( ArgPtr, Text );
-		_vsnwprintf( Dest, arr_len(Dest), Text, ArgPtr );
-		va_end( ArgPtr );
-
-		ScriptLogf( SVR_Debug, L"Error: %s", Dest );
-	}
-
-private:
-	// Output internal.
-	Bool	bUseStdConsole;
-	HANDLE	ConsoleHandle;
-
-	FILE*	LogFile;
-};
-
-
-// Initialize debug output.
-static	CGameDebugOutput	DebugOutput;
-static	CDebugOutputBase*	_DebugOutputPtr = GOutput = &DebugOutput;
-
+void CGame::handleFatalScriptMessage( const Char* message )
+{
+}
 
 /*-----------------------------------------------------------------------------
     The End.

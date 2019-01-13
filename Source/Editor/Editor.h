@@ -7,9 +7,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 // C++ includes.
-#include <io.h>
 #include <stdio.h>
-#include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <tchar.h>
@@ -17,10 +15,7 @@
 #include <windowsx.h>
 #include <shellapi.h>
 
-#pragma pack( push, 8 )
-#include <DbgHelp.h>
-#pragma comment(lib, "dbghelp.lib")
-#pragma pack( pop ) 
+
 
 // Third-party.
 #include "Png\lodepng.h"

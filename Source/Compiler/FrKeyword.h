@@ -5,13 +5,15 @@
 
 // It's messy a little. Store source macro.
 // Its here since some keywords are C++ macro also.
-#pragma push_macro("log")
-#pragma push_macro("trace")
-#pragma push_macro("notice")
 #pragma push_macro("info")
 #pragma push_macro("debug")
+#pragma push_macro("warn")
+#pragma push_macro("error")
 #pragma push_macro("assert")
-#undef log
+#undef info
+#undef debug
+#undef warn
+#undef error
 #undef assert
 
 // List of keywords.
@@ -53,11 +55,10 @@ KEYWORD(goto)
 KEYWORD(sleep)
 KEYWORD(wait)
 KEYWORD(this)
-KEYWORD(log)
-KEYWORD(trace)
 KEYWORD(info)
-KEYWORD(notice)
 KEYWORD(debug)
+KEYWORD(warn)
+KEYWORD(error)
 KEYWORD(assert)
 KEYWORD(else)
 KEYWORD(is)
@@ -84,12 +85,10 @@ KEYWORD(shell)
 
 // Restore source macro.
 #pragma pop_macro("assert")
-#pragma pop_macro("log")
-#pragma pop_macro("trace")
-#pragma pop_macro("notice")
-#pragma pop_macro("info")
+#pragma pop_macro("error")
+#pragma pop_macro("warn")
 #pragma pop_macro("debug")
-
+#pragma pop_macro("info")
 
 /*-----------------------------------------------------------------------------
     The End.

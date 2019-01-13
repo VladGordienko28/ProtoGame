@@ -92,7 +92,7 @@ Bool WSAInitialize( String* Error )
 			return false;
 		}
 
-		log
+		info
 		(
 			L"WinSock2: Version: %d.%d (MaxSocks=%d, MaxUdpSocks=%d)",
 			WSAData.wVersion / 256,

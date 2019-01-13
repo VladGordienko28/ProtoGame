@@ -38,7 +38,7 @@ CInput::CInput()
 	Level	= nullptr;
 
 	// Notify.
-	trace( L"In: Input subsystem initialized" );
+	info( L"In: Input subsystem initialized" );
 }
 
 

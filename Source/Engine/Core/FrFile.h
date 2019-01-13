@@ -23,7 +23,7 @@ public:
 		Mode	= SM_Load;
 		_wfopen_s( &File, *FileName, L"rb" );
 		if( !File )
-			error( L"File \"%s\" not found", *FileName );
+			fatal( L"File \"%s\" not found", *FileName );
 	}
 	~CFileLoader()
 	{
@@ -52,7 +52,7 @@ public:
 	void Seek( SizeT NewPos )
 	{
 		if( fseek( File, NewPos, SEEK_SET ) )
-			error( L"Seek failed %d in \"%s\"", NewPos, *FileName );
+			fatal( L"Seek failed %d in \"%s\"", NewPos, *FileName );
 	}
 	SizeT Tell()
 	{
@@ -81,7 +81,7 @@ public:
 		Mode	= SM_Save;
 		_wfopen_s( &File, *FileName, L"wb" );
 		if( !File )
-			error( L"File \"%s\" not found", *FileName );
+			fatal( L"File \"%s\" not found", *FileName );
 	}
 	~CFileSaver()
 	{
@@ -109,7 +109,7 @@ public:
 	void Seek( SizeT NewPos )
 	{
 		if( fseek( File, NewPos, SEEK_SET ) )
-			error( L"Seek failed %d in \"%s\"", NewPos, *FileName );
+			fatal( L"Seek failed %d in \"%s\"", NewPos, *FileName );
 	}
 	SizeT Tell()
 	{
@@ -137,7 +137,7 @@ public:
 	{
 		_wfopen_s( &File, *FileName, L"r" );
 		if( !File )
-			error( L"File \"%s\" not found", *FileName );
+			fatal( L"File \"%s\" not found", *FileName );
 	}
 	~CTextReader()
 	{
@@ -188,7 +188,7 @@ public:
 	{
 		_wfopen_s( &File, *FileName, L"w" );
 		if( !File )
-			error( L"File \"%s\" not found", *FileName );
+			fatal( L"File \"%s\" not found", *FileName );
 	}
 	~CTextWriter()
 	{

@@ -38,7 +38,7 @@ public:
 	}
 	void Seek( SizeT NewPos )
 	{
-		error(L"CBufferWriter::Seek");
+		fatal(L"CBufferWriter::Seek");
 	}
 	SizeT Tell()
 	{

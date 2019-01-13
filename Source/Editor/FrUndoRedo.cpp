@@ -21,7 +21,7 @@ CLevelTransactor::CLevelTransactor( FLevel* InLevel )
 	Level			= InLevel;
 
 	// Notify.
-	trace( L"Editor: Undo/Redo subsystem initialized for '%s'", *Level->GetFullName() );
+	info( L"Editor: Undo/Redo subsystem initialized for '%s'", *Level->GetFullName() );
 }
 
 
@@ -37,7 +37,7 @@ CLevelTransactor::~CLevelTransactor()
 	Transactions.Empty();
 
 	// Notify.
-	trace( L"Editor: Undo/Redo subsystem shutdown for '%s'", *Level->GetFullName() );
+	info( L"Editor: Undo/Redo subsystem shutdown for '%s'", *Level->GetFullName() );
 }
 
 
@@ -187,7 +187,7 @@ ResetAll:
 		delete Transactions[iTran];
 	Transactions.Empty();
 	TopTransaction	= 0;
-	notice( L"Undo/Redo subsystem reset" );
+	info( L"Undo/Redo subsystem reset" );
 }
 
 
@@ -464,7 +464,7 @@ void TTransaction::Store()
 	}
 	//log( L"Transaction compress: %d->%d", Data.Num(), ComSize );
 	if( ComSize > Data.Num() )
-		notice( L"Undo/Redo record failure. But don't worry, it's not fatal." );
+		error( L"Undo/Redo record failure. But don't worry, it's not fatal." );
 	Data.Empty();
 #endif
 }

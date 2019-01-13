@@ -37,7 +37,7 @@ CBlockManager::CBlockManager( String InFileName )
 {
 	// Allocate loader.
 	if( !GPlat->FileExists(InFileName) )
-		error( L"Resource file '%s' not found", *FileName );
+		fatal( L"Resource file '%s' not found", *FileName );
 
 	ResFile	= new CFileLoader( InFileName );
 }
@@ -482,7 +482,7 @@ void CBlockManager::UploadBlock( Int32 iBlock )
 	B->Cost			= (B->Flags & BLOCK_Longevity) ? BLOCK_BASE_COST*3.0 : BLOCK_BASE_COST;
 
 	// Dbg.
-	trace( L"ResMan: Block %i has been upload", iBlock );
+	info( L"ResMan: Block %i has been upload", iBlock );
 }
 
 
@@ -510,7 +510,7 @@ void CBlockManager::Tick( Float Delta )
 					B->Flags	&= ~BLOCK_Loaded;
 
 					// Dbg.
-					trace( L"ResMan: Block %i expired. Size=%i Kb", i, B->Size/1024 );
+					info( L"ResMan: Block %i expired. Size=%i Kb", i, B->Size/1024 );
 				}
 			}
 		}

@@ -6,9 +6,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core\FrArray.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Core\FrBase.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -30,9 +27,6 @@
     <ClInclude Include="Core\FrIni.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\FrLog.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Core\FrMap.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -43,9 +37,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\FrRand.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\FrSerial.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\FrString.h">

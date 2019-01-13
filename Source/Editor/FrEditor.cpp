@@ -23,8 +23,7 @@
 // Forward declaration.
 //
 static LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam );
-static Char* StackTrace( LPEXCEPTION_POINTERS InException );
-static Int32 HandleException( LPEXCEPTION_POINTERS InException );
+static Int32 handleException( LPEXCEPTION_POINTERS exception );
 
 
 //
@@ -42,7 +41,21 @@ CEditor*	GEditor	= nullptr;
 //
 CEditor::CEditor()
 	:	CApplication()
-{	
+{
+	// Initial logging
+	LogManager::instance().addCallback( new LogCallbackFile( L"Editor.log" ) );
+
+#if FLU_DEBUG
+	LogManager::instance().addCallback( new LogCallbackDebug( true ) );
+
+	if( !IsDebuggerPresent() )
+	{
+		LogManager::instance().addCallback( new LogCallbackConsole() );
+	}
+#endif
+
+	LogManager::instance().addCallback( this );
+
 	// Say hello to user.
 	info( L"=========================" );
 	info( L"=    Fluorine Engine    =" );
@@ -71,7 +84,9 @@ CEditor::CEditor()
 // Editor destructor.
 //
 CEditor::~CEditor()
-{ 
+{
+	LogManager::instance().removeCallback( this );
+
 	GEditor	= nullptr;
 }
 
@@ -109,7 +124,7 @@ void CEditor::Init( HINSTANCE InhInstance )
 	if( !RegisterClassEx(&wcex) )
 	{	
 		debug( L"GetLastError %i", GetLastError() );
-		error( L"RegisterClassEx failure" );
+		fatal( L"RegisterClassEx failure" );
 	}
 
 	// Create the window.
@@ -202,7 +217,7 @@ void CEditor::Init( HINSTANCE InhInstance )
 	UpdateWindow( hWnd );
 
 	// Notify.
-	trace( L"Ed: Editor initialized" );
+	info( L"Ed: Editor initialized" );
 
 
 	//Bool bMake = CCmdLineParser::ParseCommand( GCmdLine, 0 ) == L"make";
@@ -265,7 +280,7 @@ void CEditor::Exit()
 	freeandnil(GRender);
 	freeandnil(Config);
 
-	trace( L"Ed: Editor shutdown" ); 
+	info( L"Ed: Editor shutdown" ); 
 }
 
 
@@ -283,9 +298,9 @@ static Double	GfpsTime;
 static Int32	GfpsCount;
 
 //
-// Exception handle variables.
+// Exception stack trace
 //
-static Char* GErrorText;
+static Char* g_exceptionStackTrace;
 
 
 //
@@ -306,7 +321,7 @@ void CEditor::MainLoop()
 	GfpsCount		= 0;
 
 	// Entry point.
-#ifndef FLU_DEBUG
+#if !FLU_DEBUG
 	__try
 #endif
 	{
@@ -385,11 +400,11 @@ void CEditor::MainLoop()
 		
 	ExitLoop:;
 	}
-#ifndef FLU_DEBUG
-	__except( HandleException(GetExceptionInformation()) )
+#if !FLU_DEBUG
+	__except( handleException(GetExceptionInformation()) )
 	{
 		// GPF Error.
-		error( L"General protection fault in '%s'", GErrorText );
+		fatal( L"General protection fault in '%s'", g_exceptionStackTrace );
 	}
 #endif
 }
@@ -858,294 +873,38 @@ static	CPlatformBase*	_WinPlatPtr = GPlat = &WinPlat;
     CEditorDebugOutput implementation.
 -----------------------------------------------------------------------------*/
 
-#pragma optimize ( "", off )
-
-//
-// Calling stack trace.
-//
-static Char* StackTrace( LPEXCEPTION_POINTERS InException )	
-{
-	static Char Text[2048];
-	mem::zero( Text, sizeof(Text) );
-	DWORD64 Offset64 = 0;
-	DWORD Offset	 = 0;
-
-	// Prepare.
-	HANDLE	Process		= GetCurrentProcess();
-	HANDLE	Thread		= GetCurrentThread();
-
-	// Symbol info.
-	SYMBOL_INFO* Symbol	= (SYMBOL_INFO*)mem::alloc( sizeof(SYMBOL_INFO) + 1024 );
-	Symbol->SizeOfStruct	= sizeof(SYMBOL_INFO);
-	Symbol->MaxNameLen		= 1024;
-	DWORD SymOptions		= SymGetOptions();
-	SymOptions				|= SYMOPT_LOAD_LINES | SYMOPT_UNDNAME | SYMOPT_EXACT_SYMBOLS;
-	SymSetOptions( SymOptions );
-	SymInitialize( Process, ".", 1 );
-
-	// Line info.
-	IMAGEHLP_LINE64 Line;
-	mem::zero( &Line, sizeof(IMAGEHLP_LINE64) );
-	Line.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
-
-	// Setup frame info.
-	STACKFRAME64 StackFrame;
-	mem::zero( &StackFrame, sizeof(STACKFRAME64) );
-	
-#if FLU_X32
-	if( InException )
-	{
-		StackFrame.AddrStack.Offset	= InException->ContextRecord->Esp;
-		StackFrame.AddrFrame.Offset	= InException->ContextRecord->Ebp;
-		StackFrame.AddrPC.Offset	= InException->ContextRecord->Eip;
-	}
-	else
-	{
-		__asm
-		{ 
-		Label: 
-			mov dword ptr [StackFrame.AddrStack.Offset], esp
-			mov dword ptr [StackFrame.AddrFrame.Offset], ebp
-			mov eax, [Label]
-			mov dword ptr [StackFrame.AddrPC.Offset], eax
-		}
-	}
-#endif
-
-	StackFrame.AddrPC.Mode		= AddrModeFlat;
-	StackFrame.AddrStack.Mode	= AddrModeFlat;
-	StackFrame.AddrFrame.Mode	= AddrModeFlat;
-	StackFrame.AddrBStore.Mode	= AddrModeFlat;
-	StackFrame.AddrReturn.Mode	= AddrModeFlat;
-		
-	// Walk the stack.
-	for( ; ; )
-	{
-		if( !StackWalk64
-					( 
-						IMAGE_FILE_MACHINE_I386, 
-						Process, 
-						Thread, 
-						&StackFrame, 
-						InException ? InException->ContextRecord : nullptr,
-						nullptr, 
-						SymFunctionTableAccess64, 
-						SymGetModuleBase64, 
-						nullptr ) 
-					)
-			break;
-
-		if( SymFromAddr( Process, StackFrame.AddrPC.Offset, &Offset64, Symbol ) && 
-			SymGetLineFromAddr64( Process, StackFrame.AddrPC.Offset, &Offset, &Line ) )
-		{
-			Char FileName[1024];
-			Char FuncName[256];
-			mbstowcs( FileName, Line.FileName, 1024 );
-			mbstowcs( FuncName, Symbol->Name, 256 );
-
-			// Add to history.
-			wcscat( Text, FuncName );
-			wcscat( Text, L" <- " );
-
-			// Output more detailed information into log.
-			debug( L"%s [File: %s][Line: %d]", FuncName, FileName, Line.LineNumber );
-		}
-	}
-
-	mem::free( Symbol );
-	return Text;
-}
-#pragma optimize ( "", on )
-
-
-//
 // __try..__except exception handler.
-//
-static Int32 HandleException( LPEXCEPTION_POINTERS InException )
+static Int32 handleException( LPEXCEPTION_POINTERS exception )
 {
-	GErrorText = StackTrace( InException );
+	g_exceptionStackTrace = flu::win::stackTrace( exception );
 	return EXCEPTION_EXECUTE_HANDLER;
 }
 
-
-//
-// Editor debug output.
-//
-class CEditorDebugOutput: public CDebugOutputBase
+void CEditor::handleMessage( ELogLevel level, const Char* message )
 {
-public:
-	// Output constructor.
-	CEditorDebugOutput()
-		:	bUseStdConsole(false)
-	{
-		// Open log file.
-		LogFile	= _wfopen( *(String(FLU_NAME)+L".log"), L"w" );
+}
 
-#if FLU_DEBUG
-		// Use Std console or VS Output?
-		bUseStdConsole	= !IsDebuggerPresent();
-		if( bUseStdConsole )
-		{
-			// Create console.
-			_setmode( _fileno(stdout), _O_U16TEXT );
-			AllocConsole();
-			freopen( "CONOUT$", "w", stdout );
-			SetConsoleTitle( L"Fluorine Engine Output" );
-			ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-		}
-#endif
-	}
+void CEditor::handleScriptMessage( ELogLevel level, const Char* message )
+{
+}
 
-	// Output destructor.
-	~CEditorDebugOutput()
-	{
-		if( bUseStdConsole )
-			FreeConsole();
+void CEditor::handleFatalMessage( const Char* message )
+{
+	Char buffer[4096] = {};
 
-		fclose( LogFile );
-	}
-
-	//
-	// All C++ outputs.
-	//
-
-	// Output C++ log message.
-	void Logf( ESeverity Severity, Char* Text, ... )
-	{
-#if FLU_DEBUG
-		Char Dest[2048] = {};
-		va_list ArgPtr;
-		va_start( ArgPtr, Text );
-		_vsnwprintf( Dest, arr_len(Dest), Text, ArgPtr );
-		va_end( ArgPtr );
-		wcscat_s( Dest, L"\n" );
+	cstr::cat( buffer, arr_len(buffer), L"Fatal Error: \"" );
+	cstr::cat( buffer, arr_len(buffer), message );
+	cstr::cat( buffer, arr_len(buffer), L"\" in " );
+	cstr::cat( buffer, arr_len(buffer), flu::win::stackTrace( nullptr ) );
 
 
-		fwprintf( LogFile, Dest );
-#endif
-#if FLU_DEBUG
-		if( bUseStdConsole )
-		{
-			static WORD SeverityColors[SVR_MAX] = 
-			{
-				FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED,			// SVR_Trace;
-				FOREGROUND_BLUE | FOREGROUND_GREEN,								// SVR_Info;
-				FOREGROUND_GREEN,												// SVR_Log;
-				FOREGROUND_GREEN | FOREGROUND_RED,								// SVR_Notice;
-				FOREGROUND_INTENSITY											// SVR_Debug;
-			};
+	MessageBox( 0, buffer, L"Critical Error", MB_OK | MB_ICONERROR | MB_TASKMODAL );
+	ExitProcess( 0 );
+}
 
-			SetConsoleTextAttribute( ConsoleHandle, SeverityColors[Severity] );
-			wprintf( Dest );
-		}
-
-		OutputDebugString(Dest);
-#endif
-	}
-
-	// Show warning message.
-	void Warnf( Char* Text, ... )
-	{
-		Char Dest[2048] = {};
-		va_list ArgPtr;
-		va_start( ArgPtr, Text );
-		_vsnwprintf( Dest, arr_len(Dest), Text, ArgPtr );
-		va_end( ArgPtr );
-
-		debug( L"**WARNING: %s", Dest );
-
-		fflush( LogFile );
-
-		MessageBox( 0, Dest, L"Warning", MB_OK | MB_ICONWARNING | MB_TASKMODAL );
-	}
-
-	// Raise fatal error.
-	void Errorf( Char* Text, ... )
-	{
-		Char Dest[2048] = {};
-		va_list ArgPtr;
-		va_start( ArgPtr, Text );
-		_vsnwprintf( Dest, arr_len(Dest), Text, ArgPtr );
-		va_end( ArgPtr );
-
-		debug( L"**CRITICAL ERROR: %s", Dest );
-		String Stack = StackTrace(nullptr);
-		UInt32 Footprint = MurmurHash((UInt8*)*Stack, Stack.Len()*sizeof(Char));
-		String FullText = String::Format( L"%s\nStack Footprint: 0x%08x\n\nHistory: %s", Dest, Footprint, *Stack );
-
-		if( !IsDebuggerPresent() )
-			MessageBox( 0, *FullText, L"Critical Error", MB_OK | MB_ICONERROR | MB_TASKMODAL );
-
-		fflush( LogFile );
-
-		// Exit process or enter debug.
-		if( IsDebuggerPresent() )
-			DebugBreak();
-		else
-			ExitProcess( 0 );
-	}
-
-
-	//
-	// All FluScript outputs.
-	//
-	void ScriptLogf( ESeverity Severity, Char* Text, ... )
-	{
-#if _RELEASE
-		// Don't show simple notification in release.
-		if( Severity < SVR_Log )
-			return;
-#endif
-
-		Char Dest[2048] = {};
-		va_list ArgPtr;
-		va_start( ArgPtr, Text );
-		_vsnwprintf( Dest, arr_len(Dest), Text, ArgPtr );
-		va_end( ArgPtr );
-
-		WEditorPage* Page	= GEditor->GetActivePage();
-		if( Page && Page->PageType==PAGE_Play )
-		{
-			WPlayPage* Play = (WPlayPage*)Page;
-			Play->AddScriptMessage( Severity, Dest );
-		}
-
-		Logf( SVR_Trace, Dest );
-	}
-	void ScriptWarnf( Char* Text, ... )
-	{
-		Char Dest[2048] = {};
-		va_list ArgPtr;
-		va_start( ArgPtr, Text );
-		_vsnwprintf( Dest, arr_len(Dest), Text, ArgPtr );
-		va_end( ArgPtr );
-
-		ScriptLogf( SVR_Debug, L"Warning: %s", Dest );
-	}
-	void ScriptErrorf( Char* Text, ... )
-	{
-		Char Dest[2048] = {};
-		va_list ArgPtr;
-		va_start( ArgPtr, Text );
-		_vsnwprintf( Dest, arr_len(Dest), Text, ArgPtr );
-		va_end( ArgPtr );
-
-		ScriptLogf( SVR_Debug, L"Error: %s", Dest );
-	}
-
-private:
-	// Output internal.
-	Bool	bUseStdConsole;
-	HANDLE	ConsoleHandle;
-
-	FILE*	LogFile;
-};
-
-
-// Initialize debug output.
-static	CEditorDebugOutput	DebugOutput;
-static	CDebugOutputBase*	_DebugOutputPtr = GOutput = &DebugOutput;
-
+void CEditor::handleFatalScriptMessage( const Char* message )
+{
+}
 
 /*-----------------------------------------------------------------------------
     The End.

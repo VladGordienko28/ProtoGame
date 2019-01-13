@@ -10,7 +10,7 @@
 //
 // An editor application class.
 //
-class CEditor: public CApplication
+class CEditor: public CApplication, public ILogCallback
 {
 public:
 	// CEditor public interface.
@@ -19,6 +19,12 @@ public:
 	void Init( HINSTANCE InhInstance );
 	void MainLoop();
 	void Exit();
+
+	// ILogCallback interface
+	void handleMessage( ELogLevel level, const Char* message ) override;
+	void handleScriptMessage( ELogLevel level, const Char* message ) override;
+	void handleFatalMessage( const Char* message ) override;
+	void handleFatalScriptMessage( const Char* message ) override;
 
 public:
 	// OS relative variables.

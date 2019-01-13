@@ -643,7 +643,7 @@ template<class E> inline CTypeInfo _Cpp2FluType( E* Value )
 		String EnumName = String::Delete(TypeName, 0, 5);
 		CEnum* Enum = CClassDatabase::StaticFindEnum(*EnumName);
 		if( !Enum )
-			error( L"Enumeration \"%s\" is not registered", *EnumName );
+			fatal( L"Enumeration \"%s\" is not registered", *EnumName );
 
 		return CTypeInfo( TYPE_Byte, 1, Enum );
 	}
@@ -663,13 +663,13 @@ template<class E> inline CTypeInfo _Cpp2FluType( E* Value )
 				}
 
 		if( !Struct )
-			error( L"Struct \"%s\" is not registered", *StructName );
+			fatal( L"Struct \"%s\" is not registered", *StructName );
 
 		return CTypeInfo( TYPE_Struct, 1, Struct );
 	}
 	else
 	{
-		error(L"Unknown parameter name \"%s\"", TypeName);
+		fatal(L"Unknown parameter name \"%s\"", TypeName);
 		return TYPE_None;
 	}
 }

@@ -825,10 +825,10 @@ void CPathBuilder::BuildNetwork( IProgressIndicator* Indicator )
 			LonelyGroups++;
 
 	// Out info.
-	trace( L"Path building in '%s'", *Level->GetFullName() );
-	trace( L"Initially placed %d pins", PinsNoMerge );
-	trace( L"%d sectors found. %d is unlinked", NumGroups, LonelyGroups );
-	trace( L"Create %d nodes and %d edges", NumNodes, NumEdges );
+	debug( L"Path building in '%s'", *Level->GetFullName() );
+	debug( L"Initially placed %d pins", PinsNoMerge );
+	debug( L"%d sectors found. %d is unlinked", NumGroups, LonelyGroups );
+	debug( L"Create %d nodes and %d edges", NumNodes, NumEdges );
 }
 
 

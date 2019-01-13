@@ -230,7 +230,7 @@ FLevel* CProject::DuplicateLevel( FLevel* Source )
 	Result->AmbientLight	= Source->AmbientLight;
 	mem::copy( Result->Effect, Source->Effect, sizeof(FLevel::Effect) );
 
-	notice( L"World: Level \"%s\" duplicated", *Source->GetName() );
+	warn( L"World: Level \"%s\" duplicated", *Source->GetName() );
 	return Result;
 }
 
