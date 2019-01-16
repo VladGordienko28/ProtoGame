@@ -47,8 +47,8 @@ private:
 		Float Life;
 	};
 
-	TArray<TTempPoint> Points;
-	TArray<TTempLine> Lines;
+	Array<TTempPoint> Points;
+	Array<TTempLine> Lines;
 };
 
 

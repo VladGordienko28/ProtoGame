@@ -868,7 +868,7 @@ COpenALAudio::~COpenALAudio()
 
 	// Clean up all buffers being FSound's.
 	if( GObjectDatabase )
-		for( Int32 i=0; i<GObjectDatabase->GObjects.Num(); i++ )
+		for( Int32 i=0; i<GObjectDatabase->GObjects.size(); i++ )
 			if( GObjectDatabase->GObjects[i] && GObjectDatabase->GObjects[i]->IsA(FSound::MetaClass) )
 			{
 				FSound*	S = (FSound*)GObjectDatabase->GObjects[i];
@@ -904,7 +904,7 @@ void COpenALAudio::Tick( Float Delta, FLevel* Scene )
 		TCoords		Listener = TCoords( Camera.Location, Camera.Rotation );
 
 		// Turn on, or turn off ambient emitters.
-		for( Int32 i=0; i<Emitters.Num(); i++ )
+		for( Int32 i=0; i<Emitters.size(); i++ )
 		{
 			TAmbientEmitter& E	= Emitters[i];
 
@@ -966,7 +966,7 @@ void COpenALAudio::StopAmbient( FObject* Owner )
 		return;
 
 	// Find emitter by it owner.
-	for( Int32 i=0; i<Emitters.Num(); i++ )
+	for( Int32 i=0; i<Emitters.size(); i++ )
 	{
 		TAmbientEmitter& E = Emitters[i];
 
@@ -983,7 +983,7 @@ void COpenALAudio::StopAmbient( FObject* Owner )
 				E.iSource	= -1;
 			}
 
-			Emitters.Remove(i);
+			Emitters.removeFast(i);
 			break;
 		}
 	}
@@ -1015,7 +1015,7 @@ void COpenALAudio::PlayAmbient
 
 	// Don't add multiple times.
 	if( Owner )
-		for( Int32 i=0; i<Emitters.Num(); i++ )
+		for( Int32 i=0; i<Emitters.size(); i++ )
 			if( Owner == Emitters[i].Owner )
 				return;
 
@@ -1030,7 +1030,7 @@ void COpenALAudio::PlayAmbient
 	E.Sound			= Sound;
 
 	// Add it to list.
-	Emitters.Push( E );
+	Emitters.push( E );
 }
 
 
@@ -1041,7 +1041,7 @@ void COpenALAudio::PlayAmbient
 void COpenALAudio::CountRefs( CSerializer& S )
 {
 	// Check in Emitters.
-	for( Int32 i=0; i<Emitters.Num(); i++ )
+	for( Int32 i=0; i<Emitters.size(); i++ )
 	{
 		TAmbientEmitter& E = Emitters[i];
 
@@ -1060,7 +1060,7 @@ void COpenALAudio::CountRefs( CSerializer& S )
 				E.iSource	= -1;
 			}
 
-			Emitters.RemoveShift(i);
+			Emitters.removeShift(i);
 			i--;
 		}
 	}
@@ -1096,7 +1096,7 @@ void COpenALAudio::FlushAmbients()
 		alSourceStop( AmbientSources[i].iALId );
 		AmbientSources[i].iEmitter	= -1;
 	}
-	Emitters.Empty();
+	Emitters.empty();
 }
 
 
@@ -1125,11 +1125,11 @@ void COpenALAudio::Flush()
 		alSourceStop( AmbientSources[i].iALId );
 		AmbientSources[i].iEmitter	= -1;
 	}
-	Emitters.Empty();
+	Emitters.empty();
 
 	// Kill all FSound's buffers.
 	if( GProject )
-		for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
+		for( Int32 i=0; i<GProject->GObjects.size(); i++ )
 			if( GProject->GObjects[i] && GProject->GObjects[i]->IsA(FSound::MetaClass) )
 			{
 				FSound* Sample	= As<FSound>(GProject->GObjects[i]);

@@ -369,8 +369,8 @@ void FKeyframeComponent::Import( CImporterBase& Im )
 {
 	FExtraComponent::Import( Im );
 
-	Points.SetNum( Im.ImportInteger(L"NumPoints") );
-	for( Int32 i=0; i<Points.Num(); i++ )
+	Points.setSize( Im.ImportInteger(L"NumPoints") );
+	for( Int32 i=0; i<Points.size(); i++ )
 	{
 		Points[i].Location	= Im.ImportVector( *String::Format( L"Points[%d].Location", i ) );
 		Points[i].Rotation	= Im.ImportAngle( *String::Format( L"Points[%d].Rotation", i ) );
@@ -386,8 +386,8 @@ void FKeyframeComponent::Export( CExporterBase& Ex )
 {
 	FExtraComponent::Export( Ex );
 
-	Ex.ExportInteger( L"NumPoints", Points.Num() );
-	for( Int32 i=0; i<Points.Num(); i++ )
+	Ex.ExportInteger( L"NumPoints", Points.size() );
+	for( Int32 i=0; i<Points.size(); i++ )
 	{
 		Ex.ExportVector( *String::Format( L"Points[%d].Location", i ), Points[i].Location );
 		Ex.ExportAngle( *String::Format( L"Points[%d].Rotation", i ), Points[i].Rotation );
@@ -422,7 +422,7 @@ void FKeyframeComponent::nativeStop( CFrame& Frame )
 void FKeyframeComponent::nativeMoveTo( CFrame& Frame )
 {
 	Speed			= POP_FLOAT;
-	iTarget			= Clamp( POP_INTEGER, 0, Points.Num()-1 );
+	iTarget			= Clamp( POP_INTEGER, 0, Points.size()-1 );
 	StartLocation	= Base->Location;
 	GlideType		= GLIDE_Target;
 	Progress		= 0.f;

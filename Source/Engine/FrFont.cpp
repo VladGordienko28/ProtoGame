@@ -46,20 +46,20 @@ void FFont::Export( CExporterBase& Ex )
 	FResource::Export(Ex);
 
 	// General info.
-	Int32 NumBitmaps = Bitmaps.Num();
+	Int32 NumBitmaps = Bitmaps.size();
 	EXPORT_INTEGER( Height );
 	EXPORT_INTEGER( NumBitmaps );
 	for( Int32 i=0; i<NumBitmaps; i++ )
 		Ex.ExportObject( *String::Format(L"Bitmaps[%i]", i), Bitmaps[i] );
 
 	// Remap table.
-	Int32 NumRemap = Remap.Num();
+	Int32 NumRemap = Remap.size();
 	EXPORT_INTEGER( NumRemap );
 	for( Int32 i=0; i<NumRemap; i++ )
 		Ex.ExportByte( *String::Format(L"Remap[%i]", i), Remap[i] );
 
 	// All glyphs.
-	Int32 NumGlyphs = Glyphs.Num();
+	Int32 NumGlyphs = Glyphs.size();
 	EXPORT_INTEGER( NumGlyphs );
 	for( Int32 i=0; i<NumGlyphs; i++ )
 	{
@@ -80,21 +80,21 @@ void FFont::Import( CImporterBase& Im )
 	Int32 NumBitmaps;
 	IMPORT_INTEGER( NumBitmaps );
 	IMPORT_INTEGER( Height );
-	Bitmaps.SetNum( NumBitmaps );
+	Bitmaps.setSize( NumBitmaps );
 	for( Int32 i=0; i<NumBitmaps; i++ )
 		Bitmaps[i] = (FBitmap*)Im.ImportObject( *String::Format(L"Bitmaps[%i]", i) );
 
 	// Remap table.
 	Int32 NumRemap;
 	IMPORT_INTEGER( NumRemap );
-	Remap.SetNum( NumRemap );
+	Remap.setSize( NumRemap );
 	for( Int32 i=0; i<NumRemap; i++ )
 		Remap[i] = Im.ImportByte( *String::Format(L"Remap[%i]", i) );
 
 	// All glyphs.
 	Int32 NumGlyphs;
 	IMPORT_INTEGER( NumGlyphs );
-	Glyphs.SetNum( NumGlyphs );
+	Glyphs.setSize( NumGlyphs );
 	for( Int32 i=0; i<NumGlyphs; i++ )
 	{
 		*(Int32*)(&Glyphs[i].iBitmap)	=	Im.ImportInteger( *String::Format( L"Glyphs[%d].A", i ) );
@@ -134,7 +134,7 @@ void FFont::SerializeThis( CSerializer& S )
 		// Restore remap table.
 		Int32 MapSize;
 		Serialize( S, MapSize );
-		Remap.SetNum( MapSize );
+		Remap.setSize( MapSize );
 
 		if( MapSize > 0 )
 		{
@@ -164,7 +164,7 @@ void FFont::SerializeThis( CSerializer& S )
 	else if( S.GetMode() == SM_Save )
 	{
 		// Store remap table.
-		Int32 MapSize	= Remap.Num();
+		Int32 MapSize	= Remap.size();
 		Serialize( S, MapSize );
 
 		// How many glyphs.
@@ -173,7 +173,7 @@ void FFont::SerializeThis( CSerializer& S )
 			if( Remap[i] != 0xff )
 				NumGlyphs++;
 
-		assert(NumGlyphs <= Glyphs.Num());
+		assert(NumGlyphs <= Glyphs.size());
 		Serialize( S, NumGlyphs );
 
 		// Store each used glyph.
@@ -227,7 +227,7 @@ TStaticFont::TStaticFont()
 TStaticFont::~TStaticFont()
 {
 	// Kill manually all pages.
-	for( Int32 i=0; i<Bitmaps.Num(); i++ )
+	for( Int32 i=0; i<Bitmaps.size(); i++ )
 		delete Bitmaps[i];
 }
 

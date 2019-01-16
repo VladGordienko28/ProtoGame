@@ -13,12 +13,13 @@
     <ClInclude Include="LogManager.h">
       <Filter>Debug</Filter>
     </ClInclude>
-    <ClInclude Include="FrArray.h">
-      <Filter>Legacy</Filter>
-    </ClInclude>
     <ClInclude Include="FrSerial.h">
       <Filter>Legacy</Filter>
     </ClInclude>
+    <ClInclude Include="Array.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp" />
@@ -27,6 +28,9 @@
     </ClCompile>
     <ClCompile Include="LogManager.cpp">
       <Filter>Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Array.cpp">
+      <Filter>Containers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -38,6 +42,9 @@
     </Filter>
     <Filter Include="Legacy">
       <UniqueIdentifier>{4f62d2f6-d359-45cd-96a4-cfa46bea2e71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containers">
+      <UniqueIdentifier>{be39dcfe-f0e7-4628-8a53-8f7f435804af}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

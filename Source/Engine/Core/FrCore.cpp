@@ -342,9 +342,9 @@ void Serialize( CSerializer& S, String& V )
 //
 // Wrap text and put lines into array of string.
 //
-TArray<String> String::WrapText( String Text, Int32 MaxColumnSize )
+Array<String> String::WrapText( String Text, Int32 MaxColumnSize )
 {
-	TArray<String> Result;
+	Array<String> Result;
 
 	Int32 i=0;
 	do
@@ -373,7 +373,7 @@ TArray<String> String::WrapText( String Text, Int32 MaxColumnSize )
 			break;
 
 		// Add to array.
-		Result.Push(String::Copy( Text, i, iCleanWordEnd ));
+		Result.push(String::Copy( Text, i, iCleanWordEnd ));
 		i += iCleanWordEnd;
 
 		// Skip whitespace after word.
@@ -550,101 +550,6 @@ TColor TColor::HSLToRGB( UInt8 H, UInt8 S, UInt8 L )
 	}
 }
 
-
-/*-----------------------------------------------------------------------------
-    TArray implementation.
------------------------------------------------------------------------------*/
-
-//
-// Figure out how much extra items should alloc for array,
-// this depend on array' inner size. Result is always power
-// of two.
-//
-static inline Int32 ExtraSpace( SizeT InnerSize )
-{
-	if( InnerSize <= 1 )
-		return 128;
-	else if( InnerSize <= 4 )
-		return 64;
-	else if( InnerSize <= 8 )
-		return 32;
-	else 
-		return 16;
-}
-
-
-//
-// Main reallocation function, now it's allocate more items,
-// to make faster next allocations.
-//
-void TArrayBase::Reallocate( void*& Data, Int32& Count, Int32 NewCount, SizeT InnerSize )
-{
-	// Don't reallocate.
-	if( Count == NewCount )
-		return;
-
-	if( NewCount == 0 )
-	{
-		// Get rid data.
-		mem::free( Data );
-		Data	= nullptr;
-		Count	= 0;
-	} 
-	else if( Data == nullptr )
-	{
-		// Allocate new data.
-		Int32 OverItems	= ExtraSpace( InnerSize );
-		Int32 TrueNew		= align( NewCount, OverItems );
-		Data				= mem::alloc( TrueNew * InnerSize );
-		Count				= NewCount;
-	}
-	else
-	{
-		// Reallocate array.
-		if( NewCount > Count )
-		{
-			// Add new item.
-			Int32 OverItems	= ExtraSpace( InnerSize );
-			Int32 TrueOld		= align( Count, OverItems );
-			if( NewCount >= TrueOld )
-			{
-				// Need extra items.
-				Int32 TrueNew	= align( NewCount, OverItems );
-				Data	= mem::realloc( Data, TrueNew * InnerSize );
-				mem::zero
-				( 
-					(UInt8*)Data + Count * InnerSize,
-					(NewCount - Count) * InnerSize
-				);
-			}
-			else
-			{
-				// Memory enough, but need zero.
-				mem::zero
-				( 
-					(UInt8*)Data + Count * InnerSize,
-					(NewCount - Count) * InnerSize
-				);
-			}
-
-			Count	= NewCount;
-		}
-		else
-		{
-			// Remove some items.
-			Int32 OverItems	= ExtraSpace( InnerSize );
-			Int32 TrueNew		= align( NewCount, OverItems );
-			Int32 TrueOld		= align( Count, OverItems );
-
-			if( TrueOld != TrueNew )
-				Data = mem::realloc( Data, TrueNew * InnerSize );
-
-			Count	= NewCount;
-		}
-	}
-}
-
-
 /*-----------------------------------------------------------------------------
     TDelegate implementation.
 -----------------------------------------------------------------------------*/
@@ -818,10 +723,10 @@ String TUrl::ToString() const
 
 	Result += String(L"/") + Path;
 
-	if( Query.Entries.Num() )
+	if( Query.Entries.size() )
 	{
 		Result += L"?";
-		for( Int32 i=0; i<Query.Entries.Num(); i++ )
+		for( Int32 i=0; i<Query.Entries.size(); i++ )
 			Result += String::Format(L"%s%s=%s", i>0 ? L"&" : L"", *Query.Entries[i].Key, *Query.Entries[i].Value );
 	}
 

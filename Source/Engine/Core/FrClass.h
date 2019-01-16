@@ -25,7 +25,7 @@ public:
 	// Variables.
 	String			Name;
 	UInt32			Flags;
-	TArray<String>	Elements;
+	Array<String>	Elements;
 
 	// CEnum interface.
 	CEnum( const Char* InName, UInt32 InFlags=ENUM_Native );
@@ -201,7 +201,7 @@ public:
 	// Variables.
 	String				Name;
 	UInt32				Flags;
-	TArray<CProperty*>	Members;
+	Array<CProperty*>	Members;
 	SizeT				Size;
 
 	// Native constructor.
@@ -369,8 +369,8 @@ public:
 	TConstructor	Constructor;
 
 	// Fields.
-	TArray<CProperty*>			Properties;
-	TArray<CNativeFunction*>	Methods;
+	Array<CProperty*>		Properties;
+	Array<CNativeFunction*>	Methods;
 
 	// CClass interface.
 	CClass( const Char* InName, TConstructor InCnstr, CClass* InSuper, UInt32 InFlags );
@@ -404,10 +404,10 @@ class CClassDatabase
 {
 public:
 	// Static tables.
-	static TArray<CClass*>			GClasses;
-	static TArray<CEnum*>			GEnums;
-	static TArray<CNativeFunction*>	GFuncs;
-	static TArray<CStruct*>			GStructs;
+	static Array<CClass*>			GClasses;
+	static Array<CEnum*>			GEnums;
+	static Array<CNativeFunction*>	GFuncs;
+	static Array<CStruct*>			GStructs;
 
 	// Static functions.
 	static CClass* StaticFindClass( const Char* InName );
@@ -472,7 +472,7 @@ template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( UInt8(*Value)[ArrLen] )
 {
 	return CTypeInfo( TYPE_Byte, ArrLen, nullptr );
 }
-inline CTypeInfo _Cpp2FluType( TArray<UInt8>* Value )
+inline CTypeInfo _Cpp2FluType( Array<UInt8>* Value )
 {
 	return CTypeInfo( TYPE_Byte, -1, nullptr );
 }
@@ -486,7 +486,7 @@ template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( Bool(*Value)[ArrLen] )
 {
 	return CTypeInfo( TYPE_Bool, ArrLen, nullptr );
 }
-inline CTypeInfo _Cpp2FluType( TArray<Bool>* Value )
+inline CTypeInfo _Cpp2FluType( Array<Bool>* Value )
 {
 	return CTypeInfo( TYPE_Bool, -1, nullptr );
 }
@@ -500,7 +500,7 @@ template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( Int32(*Value)[ArrLen] )
 {
 	return CTypeInfo( TYPE_Integer, ArrLen, nullptr );
 }
-inline CTypeInfo _Cpp2FluType( TArray<Int32>* Value )
+inline CTypeInfo _Cpp2FluType( Array<Int32>* Value )
 {
 	return CTypeInfo( TYPE_Integer, -1, nullptr );
 }
@@ -514,7 +514,7 @@ template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( Float(*Value)[ArrLen] )
 {
 	return CTypeInfo( TYPE_Float, ArrLen, nullptr );
 }
-inline CTypeInfo _Cpp2FluType( TArray<Float>* Value )
+inline CTypeInfo _Cpp2FluType( Array<Float>* Value )
 {
 	return CTypeInfo( TYPE_Float, -1, nullptr );
 }
@@ -528,7 +528,7 @@ template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( TAngle(*Value)[ArrLen] )
 {
 	return CTypeInfo( TYPE_Angle, ArrLen, nullptr );
 }
-inline CTypeInfo _Cpp2FluType( TArray<TAngle>* Value )
+inline CTypeInfo _Cpp2FluType( Array<TAngle>* Value )
 {
 	return CTypeInfo( TYPE_Angle, -1, nullptr );
 }
@@ -542,7 +542,7 @@ template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( TColor(*Value)[ArrLen] )
 {
 	return CTypeInfo( TYPE_Color, ArrLen, nullptr );
 }
-inline CTypeInfo _Cpp2FluType( TArray<TColor>* Value )
+inline CTypeInfo _Cpp2FluType( Array<TColor>* Value )
 {
 	return CTypeInfo( TYPE_Color, -1, nullptr );
 }
@@ -556,7 +556,7 @@ template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( String(*Value)[ArrLen] )
 {
 	return CTypeInfo( TYPE_String, ArrLen, nullptr );
 }
-inline CTypeInfo _Cpp2FluType( TArray<String>* Value )
+inline CTypeInfo _Cpp2FluType( Array<String>* Value )
 {
 	return CTypeInfo( TYPE_String, -1, nullptr );
 }
@@ -570,7 +570,7 @@ template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( TVector(*Value)[ArrLen] )
 {
 	return CTypeInfo( TYPE_Vector, ArrLen, nullptr );
 }
-inline CTypeInfo _Cpp2FluType( TArray<TVector>* Value )
+inline CTypeInfo _Cpp2FluType( Array<TVector>* Value )
 {
 	return CTypeInfo( TYPE_Vector, -1, nullptr );
 }
@@ -584,7 +584,7 @@ template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( TRect(*Value)[ArrLen] )
 {
 	return CTypeInfo( TYPE_AABB, ArrLen, nullptr );
 }
-inline CTypeInfo _Cpp2FluType( TArray<TRect>* Value )
+inline CTypeInfo _Cpp2FluType( Array<TRect>* Value )
 {
 	return CTypeInfo( TYPE_AABB, -1, nullptr );
 }
@@ -598,7 +598,7 @@ template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( FEntity*(*Value)[ArrLen] )
 {
 	return CTypeInfo( TYPE_Entity, ArrLen, nullptr );
 }
-inline CTypeInfo _Cpp2FluType( TArray<FEntity*>* Value )
+inline CTypeInfo _Cpp2FluType( Array<FEntity*>* Value )
 {
 	return CTypeInfo( TYPE_Entity, -1, nullptr );
 }
@@ -612,7 +612,7 @@ template<class T, SizeT ArrLen> inline CTypeInfo _Cpp2FluType( T*(*Value)[ArrLen
 {
 	return CTypeInfo( TYPE_Resource, ArrLen, T::MetaClass );
 }
-template<class T> CTypeInfo _Cpp2FluType( TArray<T*>* Value )
+template<class T> CTypeInfo _Cpp2FluType( Array<T*>* Value )
 {
 	return CTypeInfo( TYPE_Resource, -1, T::MetaClass );
 }
@@ -626,7 +626,7 @@ template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( TDelegate(*Value)[ArrLen] 
 {
 	return CTypeInfo( TYPE_Delegate, ArrLen, nullptr );
 }
-inline CTypeInfo _Cpp2FluType( TArray<TDelegate>* Value )
+inline CTypeInfo _Cpp2FluType( Array<TDelegate>* Value )
 {
 	return CTypeInfo( TYPE_Delegate, -1, nullptr );
 }
@@ -655,7 +655,7 @@ template<class E> inline CTypeInfo _Cpp2FluType( E* Value )
 
 		// Freaky way to ignore namespace prefix.
 		if( !Struct )
-			for( Int32 i=0; i<CClassDatabase::GStructs.Num(); i++ )
+			for( Int32 i=0; i<CClassDatabase::GStructs.size(); i++ )
 				if( String::Pos(CClassDatabase::GStructs[i]->Name, StructName) != -1 )
 				{
 					Struct = CClassDatabase::GStructs[i];
@@ -708,7 +708,7 @@ void cls::AutoRegisterClass()\
 {\
 	static CClass This( L#cls, Cntor##cls, nullptr, flags );\
 	MetaClass = &This;\
-	CClassDatabase::GClasses.Push(MetaClass);\
+	CClassDatabase::GClasses.push(MetaClass);\
 }\
 void cls::AutoRegisterFields(){}\
 
@@ -727,7 +727,7 @@ void cls::AutoRegisterClass()\
 	assert(super::MetaClass);\
 	static CClass This( L#cls, Cntor##cls, super::MetaClass, flags );\
 	MetaClass = &This;\
-	CClassDatabase::GClasses.Push(MetaClass);\
+	CClassDatabase::GClasses.push(MetaClass);\
 }\
 void cls::AutoRegisterFields()\
 
@@ -744,7 +744,7 @@ void cls::AutoRegisterFields()\
 	{\
 		CEnum* Enum = &_G_##name;\
 		assert(!CClassDatabase::StaticFindEnum(*Enum->Name));	\
-		CClassDatabase::GEnums.Push(Enum);\
+		CClassDatabase::GEnums.push(Enum);\
 
 
 //
@@ -772,7 +772,7 @@ void cls::AutoRegisterFields()\
 		typedef name StructType;\
 		CStruct* Struct = &_G_##name;\
 		assert(!CClassDatabase::StaticFindStruct(*Struct->Name));\
-		CClassDatabase::GStructs.Push(Struct);\
+		CClassDatabase::GStructs.push(Struct);\
 	
 
 //
@@ -792,7 +792,7 @@ void cls::AutoRegisterFields()\
 			L#name, PROP_None, \
 			PROPERTY_OFFSET(StructType, name) \
 		);\
-		Struct->Members.Push(Member);\
+		Struct->Members.push(Member);\
 	}\
 
 
@@ -831,7 +831,7 @@ void cls::AutoRegisterFields()\
 	_HELPER_PARAM0_##__VA_ARGS__;	\
 	Func->SetResultType(resulttype);\
 	ClassType::MetaClass->AddMethod(Func);\
-	CClassDatabase::GFuncs.Push(Func);\
+	CClassDatabase::GFuncs.push(Func);\
 }\
 
 
@@ -843,7 +843,7 @@ void cls::AutoRegisterFields()\
 	CNativeFunction* Func = new CNativeFunction( L#name, NFUN_None, iopcode );	\
 	_HELPER_PARAM0_##__VA_ARGS__;	\
 	Func->SetResultType(resulttype);\
-	CClassDatabase::GFuncs.Push(Func);	\
+	CClassDatabase::GFuncs.push(Func);	\
 }	\
 
 
@@ -855,7 +855,7 @@ void cls::AutoRegisterFields()\
 	CNativeFunction* Func = new CNativeFunction( L#name, NFUN_None | NFUN_Extended, (TNativeFunction)(&flu##name) );	\
 	_HELPER_PARAM0_##__VA_ARGS__;	\
 	Func->SetResultType(resulttype);\
-	CClassDatabase::GFuncs.Push(Func);	\
+	CClassDatabase::GFuncs.push(Func);	\
 }	\
 
 
@@ -867,7 +867,7 @@ void cls::AutoRegisterFields()\
 	CNativeFunction* Func = new CNativeFunction( L#name, NFUN_Foreach, iopcode );	\
 	_HELPER_PARAM0_##__VA_ARGS__;	\
 	Func->SetResultType(resulttype);\
-	CClassDatabase::GFuncs.Push(Func);	\
+	CClassDatabase::GFuncs.push(Func);	\
 }	\
 
 
@@ -879,7 +879,7 @@ void cls::AutoRegisterFields()\
 	CNativeFunction* Func = new CNativeFunction( L#name, NFUN_UnaryOp, iopcode );	\
 	Func->AddParameter( L"a", arg1type ); \
 	Func->SetResultType(resulttype);\
-	CClassDatabase::GFuncs.Push(Func);\
+	CClassDatabase::GFuncs.push(Func);\
 }	\
 
 
@@ -891,7 +891,7 @@ void cls::AutoRegisterFields()\
 	CNativeFunction* Func = new CNativeFunction( L#name, NFUN_UnaryOp | NFUN_SuffixOp, iopcode );	\
 	Func->AddParameter( L"a", arg1type ); \
 	Func->SetResultType(resulttype);\
-	CClassDatabase::GFuncs.Push(Func);\
+	CClassDatabase::GFuncs.push(Func);\
 }\
 
 
@@ -905,7 +905,7 @@ void cls::AutoRegisterFields()\
 	Func->AddParameter( L"a", arg1type ); \
 	Func->AddParameter( L"b", arg2type ); \
 	Func->SetResultType(resulttype);\
-	CClassDatabase::GFuncs.Push(Func);	\
+	CClassDatabase::GFuncs.push(Func);	\
 }	\
 
 
@@ -919,7 +919,7 @@ void cls::AutoRegisterFields()\
 	Func->AddParameter( L"a", arg1type ); \
 	Func->AddParameter( L"b", arg2type ); \
 	Func->SetResultType(resulttype);\
-	CClassDatabase::GFuncs.Push(Func);	\
+	CClassDatabase::GFuncs.push(Func);	\
 }	\
 
 

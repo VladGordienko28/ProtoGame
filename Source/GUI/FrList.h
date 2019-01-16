@@ -63,7 +63,7 @@ public:
 	// Variables.
 	TNotifyEvent		EventChange;
 	TNotifyEvent		EventDblClick;
-	TArray<TListItem>	Items;
+	Array<TListItem>	Items;
 	Int32				ItemIndex;
 
 	// WListWidget interface.
@@ -170,7 +170,7 @@ public:
 	};
 
 	// Variables.
-	TArray<TLine>		Lines;
+	Array<TLine>		Lines;
 	TNotifyEvent		EventChange;
 	TNotifyIndexEvent	EventGoto;
 	Int32				iFirst, iLast;

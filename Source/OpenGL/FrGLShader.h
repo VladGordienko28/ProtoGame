@@ -81,7 +81,7 @@ protected:
 	GLuint				iglFragShader;
 
 	String				Name;
-	TArray<TUniform>	Uniforms;
+	Array<TUniform>		Uniforms;
 	Int32				iCommitFirst;
 	Bool				bEnabled;
 

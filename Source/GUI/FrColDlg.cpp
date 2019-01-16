@@ -40,7 +40,7 @@ void InitHSLBitmaps()
 		HBitmap->AnimSpeed		= 0.f;
 		HBitmap->bDynamic		= false;
 		HBitmap->bRedrawn		= false;
-		HBitmap->Data.SetNum(256*sizeof(TColor));
+		HBitmap->Data.setSize(256*sizeof(TColor));
 
 		TColor* Data = (TColor*)HBitmap->GetData();
 		for( Int32 i=0; i<256; i++ )
@@ -65,7 +65,7 @@ void InitHSLBitmaps()
 		ABitmap->AnimSpeed		= 0.f;
 		ABitmap->bDynamic		= true;
 		ABitmap->bRedrawn		= false;
-		ABitmap->Data.SetNum(4*4*sizeof(TColor));
+		ABitmap->Data.setSize(4*4*sizeof(TColor));
 
 		TColor* Data = (TColor*)ABitmap->GetData();
 		mem::set( Data, 4*4*sizeof(TColor), 0xff );
@@ -91,7 +91,7 @@ void InitHSLBitmaps()
 		SLBitmap->AnimSpeed		= 0.f;
 		SLBitmap->bDynamic		= true;
 		SLBitmap->bRedrawn		= true;
-		SLBitmap->Data.SetNum(256*256*sizeof(TColor));
+		SLBitmap->Data.setSize(256*256*sizeof(TColor));
 	}
 }
 

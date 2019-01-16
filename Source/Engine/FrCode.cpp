@@ -137,7 +137,7 @@ CFrame::~CFrame()
 	{
 		CFunction* Func = (CFunction*)Bytecode;
 
-		for( Int32 i=0; i<Func->Locals.Num(); i++ )
+		for( Int32 i=0; i<Func->Locals.size(); i++ )
 		{
 			CProperty* L = Func->Locals[i];
 			L->DestroyValue( Locals + L->Offset );
@@ -158,7 +158,7 @@ CFrame::~CFrame()
 void FEntity::CallFunction( String FuncName, const CVariant& A1, const CVariant& A2, const CVariant& A3, const CVariant& A4 )
 {
 	// Don't call if no text.
-	if( !Script->IsScriptable() || Script->Methods.Num()==0 )
+	if( !Script->IsScriptable() || Script->Methods.size()==0 )
 		return;
 
 	// Try to find event.
@@ -231,7 +231,7 @@ void FEntity::CallFunction( String FuncName, const CVariant& A1, const CVariant&
 void FScript::CallStaticFunction( String FuncName, const CVariant& A1, const CVariant& A2, const CVariant& A3, const CVariant& A4 )
 {
 	// Don't call if no text.
-	if( !IsScriptable() || StaticFunctions.Num()==0 )
+	if( !IsScriptable() || StaticFunctions.size()==0 )
 		return;
 
 	// Try to find event.
@@ -456,11 +456,11 @@ void CFrame::ProcessCode( TRegister* Result )
 				UInt8 iReg = ReadByte();
 				Int32 Index = *(Int32*)Regs[ReadByte()].Value;
 
-				TArrayBase* Array = (TArrayBase*)Regs[iReg].Addr;
-				if( Index < 0 || Index >= Array->Count )
-					ScriptError( L"Dynamic array violates bounds %i/%i", Index, Array->Count );
+				ArrayPOD* Array = (ArrayPOD*)Regs[iReg].Addr;
+				if( Index < 0 || Index >= Array->size )
+					ScriptError( L"Dynamic array violates bounds %i/%i", Index, Array->size );
 
-				Regs[iReg].Addr = (UInt8*)Array->Data + Index * ReadByte();
+				Regs[iReg].Addr = (UInt8*)Array->data + Index * ReadByte();
 				break;
 			}
 			case CODE_LMember:
@@ -483,24 +483,24 @@ void CFrame::ProcessCode( TRegister* Result )
 				// Pops last dynamic array item.
 				UInt8 iReg = ReadByte();
 				UInt8 InnerSize = ReadByte();
-				TArrayBase* Array = (TArrayBase*)Regs[iReg].Addr;
+				ArrayPOD* Array = (ArrayPOD*)Regs[iReg].Addr;
 
-				if( Array->Count <= 0 )
+				if( Array->size <= 0 )
 					ScriptError( L"Dynamic array underflow" );
 
-				Int32 Index = Array->Count - 1;
+				Int32 Index = Array->size - 1;
 
 				if( InnerSize != 0 )
 				{
-					mem::copy( Regs[iReg].Value, (UInt8*)Array->Data + Index*InnerSize, InnerSize );
-					TArrayBase::Reallocate( Array->Data, Array->Count, Array->Count-1, InnerSize );
+					mem::copy( Regs[iReg].Value, (UInt8*)Array->data + Index*InnerSize, InnerSize );
+					array::reallocate( Array->data, Array->size, Array->size-1, InnerSize );
 				}
 				else
 				{
-					String* StrPtr = (String*)((UInt8*)Array->Data + Index*sizeof(String));
+					String* StrPtr = (String*)((UInt8*)Array->data + Index*sizeof(String));
 					Regs[iReg].StrValue = *StrPtr;
 					StrPtr->~String();
-					TArrayBase::Reallocate( Array->Data, Array->Count, Array->Count-1, sizeof(String) );
+					array::reallocate( Array->data, Array->size, Array->size-1, sizeof(String) );
 				}
 				break;
 			}
@@ -510,21 +510,21 @@ void CFrame::ProcessCode( TRegister* Result )
 				UInt8 iReg = ReadByte();
 				UInt8 iElem = ReadByte();
 				UInt8 InnerSize = ReadByte();
-				TArrayBase* Array = (TArrayBase*)Regs[iReg].Addr;
-				Int32 Index = Array->Count;
+				ArrayPOD* Array = (ArrayPOD*)Regs[iReg].Addr;
+				Int32 Index = Array->size;
 
 				if( Index >= DYNAMIC_ARRAY_MAX )
 					ScriptError( L"Dynamic array overflow" );
 
 				if( InnerSize != 0 )
 				{
-					TArrayBase::Reallocate( Array->Data, Array->Count, Index+1, InnerSize );
-					mem::copy( (UInt8*)Array->Data + Index*InnerSize, Regs[iElem].Value, InnerSize );
+					array::reallocate( Array->data, Array->size, Index+1, InnerSize );
+					mem::copy( (UInt8*)Array->data + Index*InnerSize, Regs[iElem].Value, InnerSize );
 				}
 				else
 				{
-					TArrayBase::Reallocate( Array->Data, Array->Count, Index+1, sizeof(String) );
-					*(String*)((UInt8*)Array->Data + Index*sizeof(String)) = Regs[iElem].StrValue;
+					array::reallocate( Array->data, Array->size, Index+1, sizeof(String) );
+					*(String*)((UInt8*)Array->data + Index*sizeof(String)) = Regs[iElem].StrValue;
 				}
 
 				*(Int32*)(Regs[iReg].Value) = Index;
@@ -533,40 +533,40 @@ void CFrame::ProcessCode( TRegister* Result )
 			case CODE_DynRemove:
 			{
 				// Dynamic array remove item.
-				TArrayBase* Array = (TArrayBase*)Regs[ReadByte()].Addr;
+				ArrayPOD* Array = (ArrayPOD*)Regs[ReadByte()].Addr;
 				Int32 Index = *(Int32*)(Regs[ReadByte()].Value);
 				UInt8 InnerSize = ReadByte();
 
-				if( Index < 0 || Index >= Array->Count )
-					ScriptError( L"Attempt to remove item out of dynamic array size %i/%i", Index, Array->Count );
+				if( Index < 0 || Index >= Array->size )
+					ScriptError( L"Attempt to remove item out of dynamic array size %i/%i", Index, Array->size );
 
 				if( InnerSize != 0 )
 				{
 					mem::swap
 					( 
-						(UInt8*)Array->Data + Index*InnerSize, 
-						(UInt8*)Array->Data + (Array->Count-1)*InnerSize, 
+						(UInt8*)Array->data + Index*InnerSize, 
+						(UInt8*)Array->data + (Array->size-1)*InnerSize, 
 						InnerSize 
 					);
-					TArrayBase::Reallocate( Array->Data, Array->Count, Array->Count-1, InnerSize );
+					array::reallocate( Array->data, Array->size, Array->size-1, InnerSize );
 				}
 				else
 				{
-					((String*)(UInt8*)Array->Data + Index*sizeof(String))->~String();
+					((String*)(UInt8*)Array->data + Index*sizeof(String))->~String();
 					mem::swap
 					( 
-						(UInt8*)Array->Data + Index*sizeof(String), 
-						(UInt8*)Array->Data + (Array->Count-1)*sizeof(String), 
+						(UInt8*)Array->data + Index*sizeof(String), 
+						(UInt8*)Array->data + (Array->size-1)*sizeof(String), 
 						sizeof(String) 
 					);
-					TArrayBase::Reallocate( Array->Data, Array->Count, Array->Count-1, sizeof(String) );
+					array::reallocate( Array->data, Array->size, Array->size-1, sizeof(String) );
 				}
 				break;
 			}
 			case CODE_DynSetLength:
 			{
 				// Set dynamic array length.
-				TArrayBase* Array = (TArrayBase*)Regs[ReadByte()].Addr;
+				ArrayPOD* Array = (ArrayPOD*)Regs[ReadByte()].Addr;
 				Int32 NewLength = *(Int32*)(Regs[ReadByte()].Value);
 				UInt8 InnerSize = ReadByte();
 
@@ -575,14 +575,14 @@ void CFrame::ProcessCode( TRegister* Result )
 
 				if( InnerSize != 0 )
 				{
-					TArrayBase::Reallocate( Array->Data, Array->Count, NewLength, InnerSize );
+					array::reallocate( Array->data, Array->size, NewLength, InnerSize );
 				}
 				else
 				{
-					for( Int32 i=NewLength; i<Array->Count; i++ )
-						((String*)((UInt8*)Array->Data + i*sizeof(String)))->~String();
+					for( Int32 i=NewLength; i<Array->size; i++ )
+						((String*)((UInt8*)Array->data + i*sizeof(String)))->~String();
 
-					TArrayBase::Reallocate( Array->Data, Array->Count, NewLength, sizeof(String) );
+					array::reallocate( Array->data, Array->size, NewLength, sizeof(String) );
 				}
 				break;
 			}
@@ -590,8 +590,8 @@ void CFrame::ProcessCode( TRegister* Result )
 			{
 				// Get dynamic array length.
 				UInt8 iReg = ReadByte();
-				TArrayBase* Array = (TArrayBase*)Regs[iReg].Addr;
-				*(Int32*)(Regs[iReg].Value) = Array->Count;
+				ArrayPOD* Array = (ArrayPOD*)Regs[iReg].Addr;
+				*(Int32*)(Regs[iReg].Value) = Array->size;
 				break;
 			}
 			case CODE_This:
@@ -1185,7 +1185,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				FScript*	Type	= ReadScriptSafe();
 				UInt16		EndAddr	= ReadWord();
 
-				if( Foreach.i < Foreach.Collection.Num() )
+				if( Foreach.i < Foreach.Collection.size() )
 				{
 					*Value		= Foreach.Collection[Foreach.i];
 					Foreach.i++;
@@ -1198,7 +1198,7 @@ void CFrame::ProcessCode( TRegister* Result )
 					*Value		= nullptr;
 					Code		= &Bytecode->Code[EndAddr];
 					Foreach.i	= 0;
-					Foreach.Collection.Empty();
+					Foreach.Collection.empty();
 				}
 				break;
 			}
@@ -1474,7 +1474,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				// Goto label in thread.
 				Int32 iLabel = *(Int32*)(Regs[ReadByte()].Value);
 
-				if( iLabel >= 0 && iLabel < Script->Thread->Labels.Num() )
+				if( iLabel >= 0 && iLabel < Script->Thread->Labels.size() )
 				{
 					// Goto label and restart execution.
 					UInt16 LabAddr				= Script->Thread->Labels[iLabel].Address;
@@ -1605,7 +1605,7 @@ void CThreadFrame::Tick( Float Delta )
 
 		// Stop this thread execution to prevent thread crash at next tick.
 		Status = THR_Stopped;
-		Frame.Code = &Frame.Bytecode->Code.Last();
+		Frame.Code = &Frame.Bytecode->Code.last();
 	}
 }
 

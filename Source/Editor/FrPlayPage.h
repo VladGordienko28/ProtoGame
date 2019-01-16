@@ -69,7 +69,7 @@ private:
 
 	// Runtime script errors.
 	enum { MAX_SCRIPT_MSG_LIST = 8 };
-	TArray<String>	Messages;
+	Array<String>	Messages;
 	Double			LastPushTime;
 
 	// Internal.
@@ -134,7 +134,7 @@ private:
 	WComboBox*			EntityCombo;
 	WCheckBox*			PublicOnlyCheck;
 	WSlider*			ScrollBar;
-	TArray<TWatch>		Watches;
+	Array<TWatch>		Watches;
 	FEntity*			Entity;
 	Int32				Divider;
 

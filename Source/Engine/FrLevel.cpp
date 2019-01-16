@@ -54,7 +54,7 @@ FLevel::~FLevel()
 	freeandnil(Navigator);
 
 	// Destroy all my entities.
-	for( Int32 i=0; i<Entities.Num(); i++ )
+	for( Int32 i=0; i<Entities.size(); i++ )
 		if( Entities[i] )
 			DestroyObject( Entities[i], true );
 }
@@ -145,7 +145,7 @@ void FLevel::BeginPlay()
 	GFXManager	= new CGFXManager( this );
 
 	// Notify all entities and their components.
-	for( Int32 i=0; i<Entities.Num(); i++ )
+	for( Int32 i=0; i<Entities.size(); i++ )
 		Entities[i]->BeginPlay();
 
 	// Mark level as played.
@@ -157,7 +157,7 @@ void FLevel::BeginPlay()
 
 	// Notify all entities because everything are initialized
 	// for playing.
-	for( Int32 i=0; i<Entities.Num(); i++ )
+	for( Int32 i=0; i<Entities.size(); i++ )
 		if( Entities[i]->Script->IsScriptable() )
 			Entities[i]->OnBeginPlay();
 }
@@ -173,12 +173,12 @@ void FLevel::EndPlay()
 
 	// Call in script OnEndPlay, while all objects are
 	// valid.
-	for( Int32 i=0; i<Entities.Num(); i++ )
+	for( Int32 i=0; i<Entities.size(); i++ )
 		if( Entities[i]->Script->IsScriptable() )
 			Entities[i]->OnEndPlay();
 
 	// Notify all entities and their components.
-	for( Int32 i=0; i<Entities.Num(); i++ )
+	for( Int32 i=0; i<Entities.size(); i++ )
 		Entities[i]->EndPlay();
 
 	// Release the collision hash.
@@ -335,14 +335,14 @@ void FLevel::Tick( Float Delta )
 	if( bIsPlaying && !bIsPause )
 	{
 		// Normally play level.
-		for( Int32 i=0; i<Entities.Num(); i++ )
+		for( Int32 i=0; i<Entities.size(); i++ )
 			if( Entities[i]->Thread )
 				Entities[i]->Thread->Tick( Delta );
 
-		for( Int32 i=0; i<TickObjects.Num(); i++ )
+		for( Int32 i=0; i<TickObjects.size(); i++ )
 			TickObjects[i]->PreTick( Delta );
 
-		for( Int32 i=0; i<TickObjects.Num(); i++ )
+		for( Int32 i=0; i<TickObjects.size(); i++ )
 			TickObjects[i]->Tick( Delta );
 
 		// Update GFX interpolation.
@@ -351,12 +351,12 @@ void FLevel::Tick( Float Delta )
 	else
 	{
 		// We not play, just edit level or in pause.
-		for( Int32 i=0; i<TickObjects.Num(); i++ )
+		for( Int32 i=0; i<TickObjects.size(); i++ )
 			TickObjects[i]->TickNonPlay( Delta );
 	}
 
 	// Destroy all marked entities.
-	for( Int32 iEntity=0; iEntity<Entities.Num(); )
+	for( Int32 iEntity=0; iEntity<Entities.size(); )
 		if( Entities[iEntity]->Base->bDestroyed )
 		{
 			ReleaseEntity( iEntity );
@@ -405,7 +405,7 @@ FEntity* FLevel::CreateEntity( FScript* InScript, String InName, TVector InLocat
 
 	// Allocate new entity.
 	FEntity* Entity = NewObject<FEntity>( EntityName, this );
-	Entities.Push( Entity );
+	Entities.push( Entity );
 	Entity->Init( InScript, this );
 
 	// Initialize fields.
@@ -454,7 +454,7 @@ void FLevel::ReleaseEntity( Int32 iEntity )
 	}
 
 	// Let's CObjectDatabase handle it.
-	Entities.Remove(iEntity);
+	Entities.removeFast(iEntity);
 	DestroyObject( Entity, true );
 }
 
@@ -471,7 +471,7 @@ FEntity* FLevel::FindEntity( String InName )
 {
 	String UpperName = String::UpperCase(InName);
 
-	for( Int32 iEnt=0; iEnt<Entities.Num(); iEnt++ )
+	for( Int32 iEnt=0; iEnt<Entities.size(); iEnt++ )
 		if( UpperName == String::UpperCase(Entities[iEnt]->GetName()) )
 			return Entities[iEnt];
 
@@ -486,7 +486,7 @@ FEntity* FLevel::FindEntity( String InName )
 //
 Int32 FLevel::GetEntityIndex( FEntity* Entity )
 { 
-	for( Int32 i=0; i<Entities.Num(); i++ )
+	for( Int32 i=0; i<Entities.size(); i++ )
 		if( Entities[i] == Entity )
 			return i;
 
@@ -519,7 +519,7 @@ FEntity::~FEntity()
 {
 	assert(Thread == nullptr);
 
-	for( Int32 i=0; i<Components.Num(); i++ )
+	for( Int32 i=0; i<Components.size(); i++ )
 		DestroyObject( Components[i], true );
 
 	DestroyObject( Base, true );
@@ -549,7 +549,7 @@ void FEntity::Init( FScript* InScript, FLevel* InLevel )
 	BasCom->InitForEntity( this );
 
 	// Extra components.
-	for( Int32 i=0; i<Script->Components.Num(); i++ )
+	for( Int32 i=0; i<Script->Components.size(); i++ )
 	{
 		FExtraComponent* Source = Script->Components[i];
 		FExtraComponent* Com = (FExtraComponent*)GObjectDatabase->CopyObject
@@ -565,9 +565,9 @@ void FEntity::Init( FScript* InScript, FLevel* InLevel )
 	if( Script->InstanceBuffer )
 	{
 		InstanceBuffer = new CInstanceBuffer( Script->Properties );
-		InstanceBuffer->Data.SetNum( Script->InstanceSize );
+		InstanceBuffer->Data.setSize( Script->InstanceSize );
 
-		if( Script->Properties.Num() )
+		if( Script->Properties.size() )
 			InstanceBuffer->CopyValues( &Script->InstanceBuffer->Data[0] );
 	}
 }
@@ -591,7 +591,7 @@ void FEntity::SerializeThis( CSerializer& S )
 	{
 		freeandnil(InstanceBuffer);
 		InstanceBuffer	= new CInstanceBuffer( Script->Properties );
-		InstanceBuffer->Data.SetNum( Script->InstanceSize );
+		InstanceBuffer->Data.setSize( Script->InstanceSize );
 		InstanceBuffer->SerializeValues( S );	
 	}
 	else
@@ -647,7 +647,7 @@ void FEntity::BeginPlay()
 
 	// Notify all components.
 	Base->BeginPlay();
-	for( Int32 e=0; e<Components.Num(); e++ )
+	for( Int32 e=0; e<Components.size(); e++ )
 		Components[e]->BeginPlay();
 }
 
@@ -659,7 +659,7 @@ void FEntity::EndPlay()
 {
 	// Notify all components.
 	Base->EndPlay();
-	for( Int32 e=0; e<Components.Num(); e++ )
+	for( Int32 e=0; e<Components.size(); e++ )
 		Components[e]->EndPlay();
 
 	// Destroy thread if any.

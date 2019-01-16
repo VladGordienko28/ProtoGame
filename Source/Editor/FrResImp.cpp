@@ -80,7 +80,7 @@ FBitmap* ImportBMP( String Filename, String ResName )
 	}
 
 	TColor* TempData = new TColor[BmpInfo.biWidth * BmpInfo.biHeight];
-	TArray<TColor> Palette;
+	Array<TColor> Palette;
 	Int32 UMask = BmpInfo.biWidth-1;
 	Int32 UBits = IntLog2( BmpInfo.biWidth );
 	Int32 VMask = (BmpInfo.biHeight-1) << UBits;
@@ -147,7 +147,7 @@ FBitmap* ImportBMP( String Filename, String ResName )
 
 	// Figure out it's a palette or not.
 	for( Int32 i=0; i<BmpInfo.biWidth*BmpInfo.biHeight; i++ )
-		if( Palette.AddUnique(TempData[i]) > 255 )
+		if( Palette.addUnique(TempData[i]) > 255 )
 			break;
 
 	// Allocate bitmap and initialize it.
@@ -156,23 +156,23 @@ FBitmap* ImportBMP( String Filename, String ResName )
 	Bitmap->FileName	= GetFileName(Filename) + L".bmp";
 
 	// Load data into bitmap.
-	if( Palette.Num() <= 256 )
+	if( Palette.size() <= 256 )
 	{
 		// Palette.
-		Palette.Sort( []( const TColor& A, const TColor& B )->Bool
+		Palette.sort( []( const TColor& A, const TColor& B )->Bool
 		{
 			return A.D < B.D;
 		} );
 
 		Bitmap->Format	= BF_Palette8;
-		Bitmap->Palette.Allocate( Palette.Num() );
-		for( Int32 i=0; i<Palette.Num(); i++ )
+		Bitmap->Palette.Allocate( Palette.size() );
+		for( Int32 i=0; i<Palette.size(); i++ )
 			Bitmap->Palette.Colors[i] = Palette[i];
 
 		Bitmap->AllocateBlock( sizeof(UInt8)*Bitmap->USize*Bitmap->VSize );
 		UInt8* BitDat = (UInt8*)Bitmap->GetData();
 		for( Int32 i=0; i < Bitmap->USize*Bitmap->VSize; i++ )
-			BitDat[i]	= Palette.FindItem( TempData[i] );
+			BitDat[i]	= Palette.find( TempData[i] );
 	}
 	else
 	{
@@ -411,28 +411,28 @@ FBitmap* ImportPNG( String Filename, String ResName )
 	Bitmap->FileName = GetFileName(Filename) + L".png";
 
 	// Figure out it's a palette or not.
-	TArray<TColor> Palette;
+	Array<TColor> Palette;
 	for( Int32 i=0; i<PngWidth*PngHeight; i++ )
-		if( Palette.AddUnique(SourceData[i]) > 255 )
+		if( Palette.addUnique(SourceData[i]) > 255 )
 			break;
 
 	// Load data into bitmap.
-	if( Palette.Num() <= 256 )
+	if( Palette.size() <= 256 )
 	{
 		// Palette.
-		Palette.Sort( []( const TColor& A, const TColor& B )->Bool
+		Palette.sort( []( const TColor& A, const TColor& B )->Bool
 		{
 			return A.D < B.D;
 		} );
 		Bitmap->Format	= BF_Palette8;
-		Bitmap->Palette.Allocate( Palette.Num() );
-		for( Int32 i=0; i<Palette.Num(); i++ )
+		Bitmap->Palette.Allocate( Palette.size() );
+		for( Int32 i=0; i<Palette.size(); i++ )
 			Bitmap->Palette.Colors[i] = Palette[i];
 
 		Bitmap->AllocateBlock( sizeof(UInt8)*Bitmap->USize*Bitmap->VSize );
 		UInt8* Dest = (UInt8*)Bitmap->GetData();
 		for( Int32 i=0; i < Bitmap->USize*Bitmap->VSize; i++ )
-			Dest[i]	= Palette.FindItem( SourceData[i] );
+			Dest[i]	= Palette.find( SourceData[i] );
 	}
 	else
 	{
@@ -534,10 +534,10 @@ FFont* ImportFLF( String Filename, String ResName )
 		fwscanf( File, L"%d %s\n", &Height, Name );
 
 		// Temporary tables.
-		TArray<UInt8>	Remap(65536);
-		TArray<TGlyph>	Glyphs;
+		Array<UInt8>	Remap(65536);
+		Array<TGlyph>	Glyphs;
 		Int32			iMaxChar = 0;
-		mem::set( &Remap[0], Remap.Num()*sizeof(UInt8), 0xff );
+		mem::set( &Remap[0], Remap.size()*sizeof(UInt8), 0xff );
 
 		// Read info about each glyph.
 		while( !feof(File) )
@@ -558,7 +558,7 @@ FFont* ImportFLF( String Filename, String ResName )
 
 			RealHeight		= Max( RealHeight, H );
 			iMaxChar		= Max<Int32>( C[0], iMaxChar );
-			Remap[(UInt16)C[0]] = Glyphs.Push(Glyph);
+			Remap[(UInt16)C[0]] = Glyphs.push(Glyph);
 		}
 
 		// Test all pages, they are exists?
@@ -577,7 +577,7 @@ FFont* ImportFLF( String Filename, String ResName )
 		Font			= NewObject<FFont>( ResName, nullptr );
 		Font->Glyphs	= Glyphs;
 		Font->Remap		= Remap;
-		Font->Remap.SetNum( iMaxChar+1 );
+		Font->Remap.setSize( iMaxChar+1 );
 		Font->FileName	= GetFileName(Filename) + L".flf";
 
 		for( Int32 i=0; i<NumPages; i++ )
@@ -588,18 +588,18 @@ FFont* ImportFLF( String Filename, String ResName )
 			Page->Group			= L"";
 
 			Page->SetOwner( Font );
-			Font->Bitmaps.Push( Page );
+			Font->Bitmaps.push( Page );
 		}
 	}
 	fclose(File);
 
 	// Convert palette from RGB to RGBA format with solid white color and alpha mask.
-	for( Int32 iPage=0; iPage<Font->Bitmaps.Num(); iPage++ )
+	for( Int32 iPage=0; iPage<Font->Bitmaps.size(); iPage++ )
 	{
 		FBitmap* Page = Font->Bitmaps[iPage];
 		assert(Page->Format == BF_Palette8);
 
-		for( Int32 i=0; i<Page->Palette.Colors.Num(); i++ )
+		for( Int32 i=0; i<Page->Palette.Colors.size(); i++ )
 		{
 			TColor Ent = Page->Palette.Colors[i];
 			Page->Palette.Colors[i] = TColor( 0xff, 0xff, 0xff, Int32(Ent.R + Ent.G + Ent.B)/3 );

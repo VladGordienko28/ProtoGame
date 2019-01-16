@@ -189,7 +189,7 @@ Bool ExportScript( FScript* Script, String Directory )
 	if( Script->IsScriptable() )
 	{
 		CTextWriter	TextFile(Directory+L"\\"+Script->FileName);
-		for( Int32 iLine=0; iLine<Script->Text.Num(); iLine++ )
+		for( Int32 iLine=0; iLine<Script->Text.size(); iLine++ )
 			TextFile.WriteString( Script->Text[iLine] );
 		return true;
 	}

@@ -259,7 +259,7 @@ void CEditor::Init( HINSTANCE InhInstance )
 void CEditor::Exit()
 {
 	// Close all pages.
-	while( EditorPages->Pages.Num() > 0 )
+	while( EditorPages->Pages.size() > 0 )
 		EditorPages->CloseTabPage( 0, true );
 
 	// Shutdown project, if any.
@@ -683,7 +683,7 @@ WEditorPage* CEditor::OpenPageWith( FResource* InRes )
 		// Level page.
 		//
 		WEditorPage* Page = nullptr;
-		for( Int32 i=0; i<EditorPages->Pages.Num(); i++ )
+		for( Int32 i=0; i<EditorPages->Pages.size(); i++ )
 		{
 			WEditorPage* Test = (WEditorPage*)EditorPages->Pages[i];			
 			if( Test->PageType==PAGE_Level && ((WLevelPage*)Test)->Level == InRes )	
@@ -707,7 +707,7 @@ WEditorPage* CEditor::OpenPageWith( FResource* InRes )
 		// Texture page.
 		//
 		WEditorPage* Page = nullptr;	
-		for( Int32 i=0; i<EditorPages->Pages.Num(); i++ )
+		for( Int32 i=0; i<EditorPages->Pages.size(); i++ )
 		{
 			WEditorPage* Test = (WEditorPage*)EditorPages->Pages[i];
 			if( Test->PageType==PAGE_Texture && ((WTexturePage*)Test)->Texture == InRes )
@@ -731,7 +731,7 @@ WEditorPage* CEditor::OpenPageWith( FResource* InRes )
 		// Script page.
 		//
 		WEditorPage* Page = nullptr;
-		for( Int32 i=0; i<EditorPages->Pages.Num(); i++ )
+		for( Int32 i=0; i<EditorPages->Pages.size(); i++ )
 		{
 			WEditorPage* Test = (WEditorPage*)EditorPages->Pages[i];
 			if( Test->PageType==PAGE_Script && ((WScriptPage*)Test)->Script == InRes )
@@ -755,7 +755,7 @@ WEditorPage* CEditor::OpenPageWith( FResource* InRes )
 		// Animation page.
 		//
 		WEditorPage* Page = nullptr;
-		for( Int32 i=0; i<EditorPages->Pages.Num(); i++ )
+		for( Int32 i=0; i<EditorPages->Pages.size(); i++ )
 		{
 			WEditorPage* Test = (WEditorPage*)EditorPages->Pages[i];
 			if( Test->PageType==PAGE_Animation && ((WAnimationPage*)Test)->Animation == InRes )
@@ -779,7 +779,7 @@ WEditorPage* CEditor::OpenPageWith( FResource* InRes )
 		// Skeleton page.
 		//
 		WEditorPage* Page = nullptr;
-		for( Int32 i=0; i<EditorPages->Pages.Num(); i++ )
+		for( Int32 i=0; i<EditorPages->Pages.size(); i++ )
 		{
 			WEditorPage* Test = (WEditorPage*)EditorPages->Pages[i];
 			if( Test->PageType==PAGE_Skeleton && ((WSkeletonPage*)Test)->Skeleton == InRes )
@@ -809,7 +809,7 @@ WPlayPage* CEditor::PlayLevel( FLevel* Original )
 	WPlayPage*	Played	= nullptr;
 
 	// Maybe page already loaded.
-	for( Int32 iPage=0; iPage<EditorPages->Pages.Num(); iPage++ )
+	for( Int32 iPage=0; iPage<EditorPages->Pages.size(); iPage++ )
 	{
 		WEditorPage* Test = (WEditorPage*)EditorPages->Pages[iPage];
 		if( Test->PageType == PAGE_Play )

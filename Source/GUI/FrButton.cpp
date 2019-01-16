@@ -482,7 +482,7 @@ WToolBar::WToolBar( WContainer* InOwner, WWindow* InRoot )
 //
 void WToolBar::AddElement( WWidget* InElem )
 {
-	Elements.Push(InElem);
+	Elements.push(InElem);
 }
 
 
@@ -500,7 +500,7 @@ void WToolBar::OnPaint( CGUIRenderBase* Render )
 
 	// Set buttons locations & draw separators.
 	Int32 XWalk = 2;
-	for( Int32 i=0; i<Elements.Num(); i++ )
+	for( Int32 i=0; i<Elements.size(); i++ )
 	{
 		WWidget* W = Elements[i];
 

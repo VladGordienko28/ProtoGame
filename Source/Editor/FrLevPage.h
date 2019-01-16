@@ -30,8 +30,8 @@ class TSelector
 {
 public:
 	// Variables.
-	FLevel*				Level;	
-	TArray<FEntity*>	Selected;
+	FLevel*			Level;	
+	Array<FEntity*>	Selected;
 
 	// TSelector interface.
 	TSelector( FLevel* InLevel );

@@ -89,7 +89,7 @@ public:
 			// Find valid keyframe.
 			Entity	= InEntity;
 			Keyframe = nullptr;
-			for( Int32 i=0; i<InEntity->Components.Num(); i++ )
+			for( Int32 i=0; i<InEntity->Components.size(); i++ )
 				if( InEntity->Components[i]->IsA(FKeyframeComponent::MetaClass) )
 				{
 					Keyframe	= (FKeyframeComponent*)InEntity->Components[i];
@@ -122,7 +122,7 @@ public:
 										( 
 											L"%02d/%02d", 
 											iFrame+1, 
-											Keyframe->Points.Num() 
+											Keyframe->Points.size() 
 										);
 	}
 
@@ -132,13 +132,13 @@ public:
 		if( Keyframe )
 		{
 			// Add new key.
-			Keyframe->Points.SetNum(Keyframe->Points.Num()+1);
-			Keyframe->Points.Last().Location	= Entity->Base->Location;
-			Keyframe->Points.Last().Rotation	= Entity->Base->Rotation;
-			Keyframe->Points.Last().bCCW		= true;
+			Keyframe->Points.setSize(Keyframe->Points.size()+1);
+			Keyframe->Points.last().Location	= Entity->Base->Location;
+			Keyframe->Points.last().Rotation	= Entity->Base->Rotation;
+			Keyframe->Points.last().bCCW		= true;
 
 			// Goto new key.
-			iFrame	= Keyframe->Points.Num()-1;
+			iFrame	= Keyframe->Points.size()-1;
 			UpdateLabel();
 		}
 	}
@@ -146,7 +146,7 @@ public:
 	{
 		if( Keyframe )
 		{
-			if( iFrame >= Keyframe->Points.Num()-1 )
+			if( iFrame >= Keyframe->Points.size()-1 )
 				return;
 			iFrame++;
 			if( iFrame > -1 )
@@ -186,17 +186,17 @@ public:
 	{
 		if( Keyframe )
 		{
-			if( Keyframe->Points.Num() == 0 )
+			if( Keyframe->Points.size() == 0 )
 				return;
 			if( iFrame == -1 )
 			{
 				// Remove last frame.
-				Keyframe->Points.SetNum(Keyframe->Points.Num()-1);
+				Keyframe->Points.setSize(Keyframe->Points.size()-1);
 			}
 			else
 			{
 				// Remove selected key.
-				Keyframe->Points.RemoveShift(iFrame);
+				Keyframe->Points.removeShift(iFrame);
 			}
 			iFrame	= -1;
 			UpdateLabel();

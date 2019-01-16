@@ -33,14 +33,14 @@ REGISTER_CLASS_H(FAnimation);
 public:
 	// General.
 	FTexture*				Sheet;
-	TArray<TAnimSequence>	Sequences;
+	Array<TAnimSequence>	Sequences;
 
 	// Slicing.
 	Int32					FrameW;
 	Int32					FrameH;
 	Int32					SpaceX;
 	Int32					SpaceY;
-	TArray<TRect>			Frames;
+	Array<TRect>			Frames;
 
 	// FAnimation interface.
 	FAnimation();

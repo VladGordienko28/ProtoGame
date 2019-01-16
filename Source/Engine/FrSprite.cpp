@@ -298,7 +298,7 @@ FAnimatedSpriteComponent::FAnimatedSpriteComponent()
 void FAnimatedSpriteComponent::Tick( Float Delta )
 {
 	// Does we can play?
-	if( !Animation || iSequence >= Animation->Sequences.Num() )
+	if( !Animation || iSequence >= Animation->Sequences.size() )
 		return;
 
 	// Prepare.
@@ -395,7 +395,7 @@ void FAnimatedSpriteComponent::Render( CCanvas* Canvas )
 	Rect.Bounds			= Bounds;
 
 	// Is animation valid?
-	if( Animation && Animation->Sheet && iSequence < Animation->Sequences.Num() )
+	if( Animation && Animation->Sheet && iSequence < Animation->Sequences.size() )
 	{
 		// Draw animation.
 		TAnimSequence* Seq	= &Animation->Sequences[iSequence];
@@ -473,7 +473,7 @@ void FAnimatedSpriteComponent::nativePlayAnim( CFrame& Frame )
 		return;
 	}
 
-	if( iSequence<Animation->Sequences.Num() && iSeq == iSequence )
+	if( iSequence<Animation->Sequences.size() && iSeq == iSequence )
 	{
 		// Modify current play.
 		if( Rate != ARate )
@@ -499,7 +499,7 @@ void FAnimatedSpriteComponent::nativePlayAnim( CFrame& Frame )
 //
 void FAnimatedSpriteComponent::nativeGetAnimName( CFrame& Frame )
 {
-	if( Animation && Rate != 0.f && iSequence < Animation->Sequences.Num() )
+	if( Animation && Rate != 0.f && iSequence < Animation->Sequences.size() )
 	{
 		*POPA_STRING	= Animation->Sequences[iSequence].Name;
 	}

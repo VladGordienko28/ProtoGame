@@ -106,7 +106,7 @@ private:
 	// Variables.
 	TALFX					FXSources[AUDIO_MAX_FX];
 	CMusicStreamBase*		Stream;
-	TArray<TAmbientEmitter>	Emitters;
+	Array<TAmbientEmitter>	Emitters;
 	TALAmbientSource		AmbientSources[AUDIO_MAX_AMBIENT];
 
 	// COpenALAudio interface.

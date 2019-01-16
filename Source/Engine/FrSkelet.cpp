@@ -34,8 +34,8 @@ void FSkeleton::Import( CImporterBase& Im )
 	FResource::Import( Im );
 
 	// List of bones.
-	Bones.SetNum(Im.ImportInteger(L"Bones.Num"));
-	for( Int32 i=0; i<Bones.Num(); i++ )
+	Bones.setSize(Im.ImportInteger(L"Bones.Num"));
+	for( Int32 i=0; i<Bones.size(); i++ )
 	{
 		TBoneInfo& B = Bones[i];
 		B.Type = (ESkelCntrl)Im.ImportByte(*String::Format(L"Bones[%i].Type", i));
@@ -58,8 +58,8 @@ void FSkeleton::Import( CImporterBase& Im )
 	}
 
 	// RefPose.
-	RefPose.BonesPose.SetNum(Bones.Num());
-	for( Int32 i=0; i<RefPose.BonesPose.Num(); i++ )
+	RefPose.BonesPose.setSize(Bones.size());
+	for( Int32 i=0; i<RefPose.BonesPose.size(); i++ )
 	{
 		TBonePose& P = RefPose.BonesPose[i];
 		P.Coords.Origin = Im.ImportVector(*String::Format(L"RefPose.BonesPose[%i].Location", i));
@@ -70,28 +70,28 @@ void FSkeleton::Import( CImporterBase& Im )
 	}
 
 	// Actions.
-	Actions.SetNum(Im.ImportInteger(L"Actions.Num"));
-	for( Int32 i=0; i<Actions.Num(); i++ )
+	Actions.setSize(Im.ImportInteger(L"Actions.Num"));
+	for( Int32 i=0; i<Actions.size(); i++ )
 	{
 		TSkeletonAction& A = Actions[i];
 
 		A.Name = Im.ImportString(*String::Format(L"Actions[%i].Name", i));
-		A.BoneTracks.SetNum(Im.ImportInteger(*String::Format(L"Actions[%i].BoneTracks.Num", i)));
-		for( Int32 j=0; j<A.BoneTracks.Num(); j++ )
+		A.BoneTracks.setSize(Im.ImportInteger(*String::Format(L"Actions[%i].BoneTracks.Num", i)));
+		for( Int32 j=0; j<A.BoneTracks.size(); j++ )
 		{
 			TBoneTrack& T = A.BoneTracks[j];
 			T.iBone = Im.ImportInteger(*String::Format(L"Actions[%i].BoneTracks[%i].iBone", i, j));
-			T.PosKeys.Samples.SetNum(Im.ImportInteger(*String::Format(L"Actions[%i].BoneTracks[%i].PosKeys.Num", i, j)));
-			T.RotKeys.Samples.SetNum(Im.ImportInteger(*String::Format(L"Actions[%i].BoneTracks[%i].RotKeys.Num", i, j)));
+			T.PosKeys.Samples.setSize(Im.ImportInteger(*String::Format(L"Actions[%i].BoneTracks[%i].PosKeys.Num", i, j)));
+			T.RotKeys.Samples.setSize(Im.ImportInteger(*String::Format(L"Actions[%i].BoneTracks[%i].RotKeys.Num", i, j)));
 
-			for( Int32 k=0; k<T.PosKeys.Samples.Num(); k++ )
+			for( Int32 k=0; k<T.PosKeys.Samples.size(); k++ )
 			{
 				T.PosKeys.Samples[k].Type = (EInterpType)Im.ImportByte(*String::Format(L"Actions[%i].BoneTracks[%i].PosKeys[%i].Type", i, j, k));
 				T.PosKeys.Samples[k].Input = Im.ImportFloat(*String::Format(L"Actions[%i].BoneTracks[%i].PosKeys[%i].Input", i, j, k));
 				T.PosKeys.Samples[k].Output = Im.ImportVector(*String::Format(L"Actions[%i].BoneTracks[%i].PosKeys[%i].Output", i, j, k));
 			}
 
-			for( Int32 k=0; k<T.RotKeys.Samples.Num(); k++ )
+			for( Int32 k=0; k<T.RotKeys.Samples.size(); k++ )
 			{
 				T.RotKeys.Samples[k].Type = (EInterpType)Im.ImportByte(*String::Format(L"Actions[%i].BoneTracks[%i].RotKeys[%i].Type", i, j, k));
 				T.RotKeys.Samples[k].Input = Im.ImportFloat(*String::Format(L"Actions[%i].BoneTracks[%i].RotKeys[%i].Input", i, j, k));
@@ -110,8 +110,8 @@ void FSkeleton::Export( CExporterBase& Ex )
 	FResource::Export( Ex );
 
 	// List of bones.
-	Ex.ExportInteger( L"Bones.Num", Bones.Num() );
-	for( Int32 i=0; i<Bones.Num(); i++ )
+	Ex.ExportInteger( L"Bones.Num", Bones.size() );
+	for( Int32 i=0; i<Bones.size(); i++ )
 	{
 		TBoneInfo& B = Bones[i];
 		Ex.ExportByte( *String::Format(L"Bones[%i].Type", i), B.Type );
@@ -134,7 +134,7 @@ void FSkeleton::Export( CExporterBase& Ex )
 	}
 
 	// RefPose.
-	for( Int32 i=0; i<RefPose.BonesPose.Num(); i++ )
+	for( Int32 i=0; i<RefPose.BonesPose.size(); i++ )
 	{
 		TBonePose& P = RefPose.BonesPose[i];
 		Ex.ExportVector( *String::Format(L"RefPose.BonesPose[%i].Location", i), P.Coords.Origin );
@@ -142,28 +142,28 @@ void FSkeleton::Export( CExporterBase& Ex )
 	}
 
 	// Actions.
-	Ex.ExportInteger( L"Actions.Num", Actions.Num() );
-	for( Int32 i=0; i<Actions.Num(); i++ )
+	Ex.ExportInteger( L"Actions.Num", Actions.size() );
+	for( Int32 i=0; i<Actions.size(); i++ )
 	{
 		TSkeletonAction& A = Actions[i];
 
 		Ex.ExportString( *String::Format(L"Actions[%i].Name", i), A.Name );
-		Ex.ExportInteger( *String::Format(L"Actions[%i].BoneTracks.Num", i), A.BoneTracks.Num() );
-		for( Int32 j=0; j<A.BoneTracks.Num(); j++ )
+		Ex.ExportInteger( *String::Format(L"Actions[%i].BoneTracks.Num", i), A.BoneTracks.size() );
+		for( Int32 j=0; j<A.BoneTracks.size(); j++ )
 		{
 			TBoneTrack& T = A.BoneTracks[j];
 			Ex.ExportInteger( *String::Format(L"Actions[%i].BoneTracks[%i].iBone", i, j), T.iBone );
-			Ex.ExportInteger( *String::Format(L"Actions[%i].BoneTracks[%i].PosKeys.Num", i, j), T.PosKeys.Samples.Num() );
-			Ex.ExportInteger( *String::Format(L"Actions[%i].BoneTracks[%i].RotKeys.Num", i, j), T.RotKeys.Samples.Num() );
+			Ex.ExportInteger( *String::Format(L"Actions[%i].BoneTracks[%i].PosKeys.Num", i, j), T.PosKeys.Samples.size() );
+			Ex.ExportInteger( *String::Format(L"Actions[%i].BoneTracks[%i].RotKeys.Num", i, j), T.RotKeys.Samples.size() );
 
-			for( Int32 k=0; k<T.PosKeys.Samples.Num(); k++ )
+			for( Int32 k=0; k<T.PosKeys.Samples.size(); k++ )
 			{
 				Ex.ExportByte( *String::Format(L"Actions[%i].BoneTracks[%i].PosKeys[%i].Type", i, j, k), T.PosKeys.Samples[k].Type );
 				Ex.ExportFloat( *String::Format(L"Actions[%i].BoneTracks[%i].PosKeys[%i].Input", i, j, k), T.PosKeys.Samples[k].Input );
 				Ex.ExportVector( *String::Format(L"Actions[%i].BoneTracks[%i].PosKeys[%i].Output", i, j, k), T.PosKeys.Samples[k].Output );
 			}
 
-			for( Int32 k=0; k<T.RotKeys.Samples.Num(); k++ )
+			for( Int32 k=0; k<T.RotKeys.Samples.size(); k++ )
 			{
 				Ex.ExportByte( *String::Format(L"Actions[%i].BoneTracks[%i].RotKeys[%i].Type", i, j, k), T.RotKeys.Samples[k].Type );
 				Ex.ExportFloat( *String::Format(L"Actions[%i].BoneTracks[%i].RotKeys[%i].Input", i, j, k), T.RotKeys.Samples[k].Input );
@@ -194,7 +194,7 @@ void FSkeleton::SerializeThis( CSerializer& S )
 //
 TBoneInfo* FSkeleton::FindBone( String InName )
 {
-	for( Int32 i=0; i<Bones.Num(); i++ )
+	for( Int32 i=0; i<Bones.size(); i++ )
 		if( String::CompareText( InName, Bones[i].Name ) == 0 )
 			return &Bones[i];
 	return nullptr;
@@ -206,7 +206,7 @@ TBoneInfo* FSkeleton::FindBone( String InName )
 //
 Int32 FSkeleton::FindAction( String InName )
 {
-	for( Int32 i=0; i<Actions.Num(); i++ )
+	for( Int32 i=0; i<Actions.size(); i++ )
 		if( String::CompareText( InName, Actions[i].Name ) == 0 )
 			return i;
 	return -1;
@@ -293,8 +293,8 @@ void FSkeleton::Render
 	const TSkelPose& Pose 
 )
 {
-	assert(Pose.BonesPose.Num() == Bones.Num());
-	for( Int32 i=0; i<Bones.Num(); i++ )
+	assert(Pose.BonesPose.size() == Bones.size());
+	for( Int32 i=0; i<Bones.size(); i++ )
 	{
 		TBoneInfo& Info = Bones[i];
 		const TBonePose& P = Pose.BonesPose[i];
@@ -345,7 +345,7 @@ TSkelPose::TSkelPose()
 // Hacky table of Matrices being to each bone. This is not only
 // table of RefMarices but also animation computed.
 //
-static TArray<TCoords> GBones;
+static Array<TCoords> GBones;
 
 
 //
@@ -354,11 +354,11 @@ static TArray<TCoords> GBones;
 void TSkelPose::ComputeRefTransform( FSkeleton* Skel )
 {
 	// Make sure hack table size fits skeleton.
-	if( GBones.Num() < Skel->Bones.Num() )
-		GBones.SetNum(Skel->Bones.Num());
+	if( GBones.size() < Skel->Bones.size() )
+		GBones.setSize(Skel->Bones.size());
 
 	// Just copy bone-by-bone.
-	for( Int32 i=0; i<BonesPose.Num(); i++ )
+	for( Int32 i=0; i<BonesPose.size(); i++ )
 		GBones[i] = BonesPose[i].Coords;
 
 	// Solve equations.
@@ -372,15 +372,15 @@ void TSkelPose::ComputeRefTransform( FSkeleton* Skel )
 void TSkelPose::CumputeAnimFrame( FSkeleton* Skel, TSkeletonAction& Action, Float Time )
 {
 	// Make sure hack table size fits skeleton.
-	if( GBones.Num() < Skel->Bones.Num() )
-		GBones.SetNum(Skel->Bones.Num());
+	if( GBones.size() < Skel->Bones.size() )
+		GBones.setSize(Skel->Bones.size());
 
 	// Just copy bone-by-bone.
-	for( Int32 i=0; i<BonesPose.Num(); i++ )
+	for( Int32 i=0; i<BonesPose.size(); i++ )
 		GBones[i] = BonesPose[i].Coords;
 
 	// Apply animation transforms.
-	for( Int32 i=0; i<Action.BoneTracks.Num(); i++ )
+	for( Int32 i=0; i<Action.BoneTracks.size(); i++ )
 	{
 		TBoneTrack& Track = Action.BoneTracks[i];
 		GBones[Track.iBone].Origin = Track.PosKeys.SampleAt( Time, GBones[Track.iBone].Origin );
@@ -406,11 +406,11 @@ void TSkelPose::CumputeAnimFrame( FSkeleton* Skel, TSkeletonAction& Action, Floa
 void TSkelPose::SolveSkeleton( FSkeleton* Skel )
 {
 	assert(Skel);
-	assert(Skel->Bones.Num() == BonesPose.Num());
-	assert(Skel->TransformTable.Num() == Skel->Bones.Num());
-	assert(GBones.Num() >= Skel->Bones.Num());
+	assert(Skel->Bones.size() == BonesPose.size());
+	assert(Skel->TransformTable.size() == Skel->Bones.size());
+	assert(GBones.size() >= Skel->Bones.size());
 
-	for( Int32 iBone=0; iBone<Skel->Bones.Num(); iBone++ )
+	for( Int32 iBone=0; iBone<Skel->Bones.size(); iBone++ )
 	{
 		TBoneInfo& ThisInfo = Skel->Bones[Skel->TransformTable[iBone]];
 		TBonePose& BoneResult = BonesPose[Skel->TransformTable[iBone]];
@@ -717,22 +717,22 @@ void FSkeleton::BuildTransformationTable()
 {
 #if 1
 	// Mark all bones as not processed.
-	for( Int32 i=0; i<Bones.Num(); i++ )
+	for( Int32 i=0; i<Bones.size(); i++ )
 		Bones[i].Flags &= ~(BONE_PosProcessed | BONE_RotProcessed);
 
 	Bool TryAgain = true;
-	TransformTable.Empty();
+	TransformTable.empty();
 
 	// Go through bones tree.
-	while( TransformTable.Num() != Bones.Num() )
+	while( TransformTable.size() != Bones.size() )
 	{
 		TryAgain = false;
 
-		for( Int32 i=0; i<Bones.Num(); i++ )
+		for( Int32 i=0; i<Bones.size(); i++ )
 		{
 			TBoneInfo& Bone = Bones[i];
 
-			if( TransformTable.FindItem(i) == -1 )
+			if( TransformTable.find(i) == -1 )
 			{
 
 				// If bone has no position controller, so we can compute postion.
@@ -771,10 +771,10 @@ void FSkeleton::BuildTransformationTable()
 				// Add to processed if position and rotation can be solved and
 				// parent are already in list.
 				if(		(Bone.Flags & BONE_Processed) && 
-						(Bone.iPosCtrl==-1 || TransformTable.FindItem(Bone.iPosCtrl)!=-1) && 
-						(Bone.iRotCtrl==-1 || TransformTable.FindItem(Bone.iRotCtrl)!=-1) )
+						(Bone.iPosCtrl==-1 || TransformTable.find(Bone.iPosCtrl)!=-1) && 
+						(Bone.iRotCtrl==-1 || TransformTable.find(Bone.iRotCtrl)!=-1) )
 				{
-					TransformTable.Push(i);
+					TransformTable.push(i);
 					info( L"%d", i );
 					TryAgain = true;
 				}
@@ -818,7 +818,7 @@ void FSkeleton::BuildTransformationTable()
 	for( Integer i=0; i<TransformTable.Num(); i++ )
 		log( L"%d", TransformTable[i] );
 		*/
-	assert(TransformTable.Num() == Bones.Num());
+	assert(TransformTable.size() == Bones.size());
 }
 
 

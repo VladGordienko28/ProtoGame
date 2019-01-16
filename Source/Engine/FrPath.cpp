@@ -256,7 +256,7 @@ Bool CNavigator::MakeRandomPath( FPuppetComponent* Seeker )
 			for( Int32 i=0; i<NUM_RANDOM_SAMPLES; i++ )
 			{
 				Int32 iTestPath, iTestFinish;
-				iTestFinish	= Random(Nodes.Num());
+				iTestFinish	= Random(Nodes.size());
 				ClearPaths();
 				iTestPath	= BreadthFirstSearch( Seeker, iStart, iTestFinish );
 				if( iTestPath != -1 )
@@ -360,8 +360,8 @@ CNavigator::CNavigator( FLevel* InLevel )
 //
 CNavigator::~CNavigator()
 {
-	Edges.Empty();
-	Nodes.Empty();
+	Edges.empty();
+	Nodes.empty();
 }
 
 
@@ -410,7 +410,7 @@ void Serialize( CSerializer& S, CNavigator*& V )
 //
 void CNavigator::ClearPaths()
 {
-	for( Int32 iNode=0; iNode<Nodes.Num(); iNode++ )
+	for( Int32 iNode=0; iNode<Nodes.size(); iNode++ )
 	{
 		TPathNode& Node = Nodes[iNode];
 
@@ -531,7 +531,7 @@ Int32 CNavigator::FindNearestNode( TVector P, Bool bTraceLine, Float Radius )
 	Float	RadiusSq	= Radius * Radius;
 	Float	BestDist	= 100000.0f;
 
-	for( Int32 iNode=0; iNode<Nodes.Num(); iNode++ )
+	for( Int32 iNode=0; iNode<Nodes.size(); iNode++ )
 	{
 		TPathNode& Node		= Nodes[iNode];
 		Float	TestDist	= (Node.Location - P).SizeSquared();

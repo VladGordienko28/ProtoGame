@@ -22,7 +22,7 @@ public:
 
 	// Components.
 	FBaseComponent*				Base;
-	TArray<FExtraComponent*>	Components;
+	Array<FExtraComponent*>		Components;
 
 	// FEntity interface.
 	FEntity();
@@ -82,7 +82,7 @@ public:
 	#define SCRIPT_EVENT( name, ... )\
 	void name( _HELPER_PARMDECL0_##__VA_ARGS__ )\
 	{\
-		if( !Script->IsScriptable() || Script->Events.Num()==0 )\
+		if( !Script->IsScriptable() || Script->Events.size()==0 )\
 			return;\
 	\
 		CFunction* Event = Script->Events[EVENT_##name];\

@@ -53,7 +53,7 @@ CBlockManager::~CBlockManager()
 		freeandnil(ResFile);
 
 	// Destroy blocks.
-	for( Int32 i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.size(); i++ )
 		if( Blocks[i] )
 			freeandnil(Blocks[i]);
 }
@@ -65,7 +65,7 @@ CBlockManager::~CBlockManager()
 //
 void* CBlockManager::GetBlock( Int32 iBlock )
 {
-	assert(iBlock>=0 && iBlock<Blocks.Num());
+	assert(iBlock>=0 && iBlock<Blocks.size());
 	assert(Blocks[iBlock]);
 	TDataBlock*	Block = Blocks[iBlock];
 
@@ -87,7 +87,7 @@ void* CBlockManager::GetBlock( Int32 iBlock )
 //
 UInt32 CBlockManager::GetBlockSize( Int32 iBlock )
 {
-	assert(iBlock>=0 && iBlock<Blocks.Num());
+	assert(iBlock>=0 && iBlock<Blocks.size());
 	assert(Blocks[iBlock]);
 	
 	return Blocks[iBlock]->Size;
@@ -115,7 +115,7 @@ Int32 CBlockManager::AllocateBlock( Int32 BytesCount, UInt32 ExtraFlags )
 	Int32 iSlot = -1;
 
 	// Try find available slot.
-	for( Int32 i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.size(); i++ )
 		if( !Blocks[i] )
 		{
 			iSlot	= i;
@@ -130,7 +130,7 @@ Int32 CBlockManager::AllocateBlock( Int32 BytesCount, UInt32 ExtraFlags )
 	}
 	else
 	{
-		return Blocks.Push(B);
+		return Blocks.push(B);
 	}
 }
 
@@ -140,7 +140,7 @@ Int32 CBlockManager::AllocateBlock( Int32 BytesCount, UInt32 ExtraFlags )
 //
 void CBlockManager::ReleaseBlock( Int32 iBlock )
 {
-	assert(iBlock>=0 && iBlock<Blocks.Num());
+	assert(iBlock>=0 && iBlock<Blocks.size());
 
 	TDataBlock*	B	= Blocks[iBlock];
 	assert(B && B->Size>0 && B->Data);
@@ -164,7 +164,7 @@ void CBlockManager::SaveAllBlocks( String InFileName )
 	// Count resources info.
 	{
 		Int32 NumRes = 0, DbSize = 0;
-		for( Int32 i=0; i<Blocks.Num(); i++ )
+		for( Int32 i=0; i<Blocks.size(); i++ )
 			if( Blocks[i] )
 			{
 				NumRes++;
@@ -176,9 +176,9 @@ void CBlockManager::SaveAllBlocks( String InFileName )
 
 	// Save header of each resource, and store
 	// position of data offset in file.
-	TArray<Int32> OffsetMap(Blocks.Num());
+	Array<Int32> OffsetMap(Blocks.size());
 
-	for( Int32 i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.size(); i++ )
 		if( Blocks[i] )
 		{
 			// Valid block.
@@ -235,7 +235,7 @@ void CBlockManager::SaveAllBlocks( String InFileName )
 		}
 
 	// Save all block's data.
-	for( Int32 i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.size(); i++ )
 		if( Blocks[i] )
 		{
 			// Valid block.
@@ -294,7 +294,7 @@ void CBlockManager::LoadAllBlocks( String InFileName )
 	Serialize( Loader, NumRes );
 
 	// Allocate slots for blocks.
-	Blocks.SetNum( DbSize );
+	Blocks.setSize( DbSize );
 
 	// Load main information about each block.
 	for( Int32 i=0; i<NumRes; i++ )
@@ -313,7 +313,7 @@ void CBlockManager::LoadAllBlocks( String InFileName )
 	}
 
 	// Load all blocks data.
-	for( Int32 i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.size(); i++ )
 		if( Blocks[i] )
 		{
 			TDataBlock* B	= Blocks[i];
@@ -354,7 +354,7 @@ void CBlockManager::LoadAllBlocks( String InFileName )
 		}
 
 	// Mark each resource as loaded.
-	for( Int32 i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.size(); i++ )
 		if( Blocks[i] )
 			Blocks[i]->Flags	|= BLOCK_Loaded;
 }
@@ -372,7 +372,7 @@ void CBlockManager::Flush()
 {
 	assert(!GIsEditor);
 
-	for( Int32 i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.size(); i++ )
 		if( Blocks[i] )
 		{
 			TDataBlock* B	= Blocks[i];
@@ -401,7 +401,7 @@ void CBlockManager::LoadMetadata()
 	Serialize( *ResFile, NumRes );
 
 	// Allocate slots for blocks.
-	Blocks.SetNum( DbSize );
+	Blocks.setSize( DbSize );
 
 	// Load main information about each block.
 	for( Int32 i=0; i<NumRes; i++ )
@@ -420,12 +420,12 @@ void CBlockManager::LoadMetadata()
 	}
 
 	// Mark each resource as not loaded.
-	for( Int32 i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.size(); i++ )
 		if( Blocks[i] )
 			Blocks[i]->Flags	&= ~BLOCK_Loaded;
 
 	// Load all persistent blocks.
-	for( Int32 i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.size(); i++ )
 		if( Blocks[i] && (Blocks[i]->Flags & BLOCK_Persistent) )
 			UploadBlock( i );
 }
@@ -438,7 +438,7 @@ void CBlockManager::LoadMetadata()
 void CBlockManager::UploadBlock( Int32 iBlock )
 {  
 	assert(!GIsEditor);
-	assert(iBlock>=0 && iBlock<Blocks.Num());
+	assert(iBlock>=0 && iBlock<Blocks.size());
 	assert(Blocks[iBlock]);
 	assert(!(Blocks[iBlock]->Flags & BLOCK_Loaded));
 
@@ -493,7 +493,7 @@ void CBlockManager::Tick( Float Delta )
 {
 	assert(!GIsEditor);
 
-	for( Int32 i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.size(); i++ )
 		if( Blocks[i] )
 		{
 			TDataBlock* B	= Blocks[i];
@@ -531,7 +531,7 @@ void CBlockManager::DebugManager()
 			NumLoaded		= 0;
 
 	// Count statistic.
-	for( Int32 i=0; i<Blocks.Num(); i++ )
+	for( Int32 i=0; i<Blocks.size(); i++ )
 		if( Blocks[i] )
 		{
 			TDataBlock* B = Blocks[i];
@@ -547,7 +547,7 @@ void CBlockManager::DebugManager()
 
 	// Put to the console.
 	info( L"**DataBlock manage info:" );
-	info( L"   Total used %i slots",		Blocks.Num() );
+	info( L"   Total used %i slots",		Blocks.size() );
 	info( L"   Used %i kB",					NumBytes / 1024 );
 	info( L"   %i slots available",			NumAvailable );
 	info( L"   %i blocks are loaded",		NumLoaded );

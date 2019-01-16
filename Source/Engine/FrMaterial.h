@@ -15,7 +15,7 @@ class FMaterial: public FTexture
 REGISTER_CLASS_H(FMaterial);
 public:
 	// Variables.
-	TArray<FMaterialLayer*>	Layers;
+	Array<FMaterialLayer*>	Layers;
 	FMaterialLayer*	MainLayer;
 
 	// FMaterial interface.

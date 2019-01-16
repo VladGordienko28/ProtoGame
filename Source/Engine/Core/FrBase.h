@@ -47,7 +47,7 @@ public:
 	virtual String ClipboardPaste() = 0;
 	virtual void Launch( const Char* Target, const Char* Parms ) = 0;
 	virtual TTimeOfDay GetTimeOfDay() = 0;
-	virtual TArray<String> FindFiles( String Directory, String Wildcard ) = 0;
+	virtual Array<String> FindFiles( String Directory, String Wildcard ) = 0;
 };
 
 

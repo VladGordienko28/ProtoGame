@@ -26,7 +26,7 @@ namespace flu
 		void removeCallback( ILogCallback* callback ) override;
 
 	private:
-		TArray<ILogCallback*> m_callbacks;
+		Array<ILogCallback*> m_callbacks;
 	};
 
 	LogManagerImpl::LogManagerImpl()
@@ -35,15 +35,13 @@ namespace flu
 
 	LogManagerImpl::~LogManagerImpl()
 	{
-		for( Int32 i = 0; i < m_callbacks.Num(); i++ )
+		for( auto& it : m_callbacks )
 		{
-			ILogCallback*& callback = m_callbacks[i];
-
-			delete callback;
-			callback = nullptr;
+			delete it;
+			it = nullptr;
 		}
 
-		m_callbacks.Empty();
+		m_callbacks.empty();
 	}
 
 #define bufferize_vaargs	\
@@ -57,9 +55,9 @@ namespace flu
 	{
 		bufferize_vaargs;
 		
-		for( Int32 i = 0; i < m_callbacks.Num(); i++ )
+		for( auto it : m_callbacks )
 		{
-			m_callbacks[i]->handleMessage( level, buffer );
+			it->handleMessage( level, buffer );
 		}
 	}
 
@@ -67,9 +65,9 @@ namespace flu
 	{
 		bufferize_vaargs;
 		
-		for( Int32 i = 0; i < m_callbacks.Num(); i++ )
+		for( auto it : m_callbacks )
 		{
-			m_callbacks[i]->handleScriptMessage( level, buffer );
+			it->handleScriptMessage( level, buffer );
 		}
 	}
 
@@ -77,9 +75,9 @@ namespace flu
 	{
 		bufferize_vaargs;
 		
-		for( Int32 i = 0; i < m_callbacks.Num(); i++ )
+		for( auto it : m_callbacks )
 		{
-			m_callbacks[i]->handleFatalMessage( buffer );
+			it->handleFatalMessage( buffer );
 		}
 	}
 
@@ -87,9 +85,9 @@ namespace flu
 	{
 		bufferize_vaargs;
 		
-		for( Int32 i = 0; i < m_callbacks.Num(); i++ )
+		for( auto it : m_callbacks )
 		{
-			m_callbacks[i]->handleFatalScriptMessage( buffer );
+			it->handleFatalScriptMessage( buffer );
 		}
 	}
 
@@ -98,13 +96,13 @@ namespace flu
 	void LogManagerImpl::addCallback( ILogCallback* callback )
 	{
 		assert( callback );
-		m_callbacks.AddUnique( callback );
+		m_callbacks.addUnique( callback );
 	}
 
 	void LogManagerImpl::removeCallback( ILogCallback* callback )
 	{
 		assert( callback );
-		m_callbacks.RemoveUnique( callback );
+		m_callbacks.removeUnique( callback, true );
 	}
 
 	LogManager& LogManager::instance()

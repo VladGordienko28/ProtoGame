@@ -21,11 +21,11 @@ TPalette::TPalette()
 //
 TPalette::TPalette( const TPalette& Other )
 {
-	assert( Other.Colors.Num() > 0 && 
-		    Other.Colors.Num() <= 256 );
+	assert( Other.Colors.size() > 0 && 
+		    Other.Colors.size() <= 256 );
 
-	Colors.SetNum( Other.Colors.Num() );
-	for( Int32 i=0; i<Other.Colors.Num(); i++ )
+	Colors.setSize( Other.Colors.size() );
+	for( Int32 i=0; i<Other.Colors.size(); i++ )
 		Colors[i]	= Other.Colors[i];
 }
 
@@ -36,7 +36,7 @@ TPalette::TPalette( const TPalette& Other )
 void TPalette::Allocate( UInt32 NumCols )
 {
 	assert( NumCols > 0 && NumCols <= 256 );
-	Colors.SetNum( NumCols );
+	Colors.setSize( NumCols );
 }
 
 
@@ -45,7 +45,7 @@ void TPalette::Allocate( UInt32 NumCols )
 // 
 void TPalette::Release()
 {
-	Colors.Empty();
+	Colors.empty();
 }
 
 
@@ -62,7 +62,7 @@ UInt8 TPalette::FindMatched( TColor InColor )
 	UInt8 Best = 0;
 	Int32 BestCost = 0x7fffffff, Cost;
 
-	for( Int32 i=0; i < Colors.Num(); i++ )
+	for( Int32 i=0; i < Colors.size(); i++ )
 	{
 		Cost	= R_FACTOR * Sqr( (Int32)InColor.R - (Int32)Colors[i].R ) +
 			      G_FACTOR * Sqr( (Int32)InColor.G - (Int32)Colors[i].G ) +
@@ -277,7 +277,7 @@ void FBitmap::Import( CImporterBase& Im )
 	{
 		Palette.Allocate( Im.ImportInteger( L"NumColors" ) );
 
-		for( Int32 iColor=0; iColor<Palette.Colors.Num(); iColor++ )
+		for( Int32 iColor=0; iColor<Palette.Colors.size(); iColor++ )
 			Palette.Colors[iColor]	= Im.ImportColor( *String::Format( L"Colors[%d]", iColor ) );
 	}
 }
@@ -298,8 +298,8 @@ void FBitmap::Export( CExporterBase& Ex )
 	// bitmaps will be imported.
 	if( Format == BF_Palette8 && this->IsA(FDemoBitmap::MetaClass) )
 	{
-		Ex.ExportInteger( L"NumColors", Palette.Colors.Num() );
-		for( Int32 iColor=0; iColor<Palette.Colors.Num(); iColor++ )
+		Ex.ExportInteger( L"NumColors", Palette.Colors.size() );
+		for( Int32 iColor=0; iColor<Palette.Colors.size(); iColor++ )
 			Ex.ExportColor( *String::Format( L"Colors[%d]", iColor ), Palette.Colors[iColor] );
 	}
 }
@@ -327,7 +327,7 @@ TStaticBitmap::TStaticBitmap()
 // 
 TStaticBitmap::~TStaticBitmap()
 {
-	Data.Empty();
+	Data.empty();
 }
 
 
@@ -336,7 +336,7 @@ TStaticBitmap::~TStaticBitmap()
 //
 void* TStaticBitmap::GetData()
 {
-	return Data.Num() > 0 ? &Data[0] : nullptr;
+	return Data.size() > 0 ? &Data[0] : nullptr;
 }
 
 
@@ -345,7 +345,7 @@ void* TStaticBitmap::GetData()
 //
 SizeT TStaticBitmap::GetBlockSize()
 {
-	return Data.Num();
+	return Data.size();
 }
 
 
@@ -355,7 +355,7 @@ SizeT TStaticBitmap::GetBlockSize()
 Bool TStaticBitmap::AllocateBlock( SizeT NumBytes, UInt32 ExtraFlags )
 {
 	assert(NumBytes > 0);
-	Data.SetNum( NumBytes );
+	Data.setSize( NumBytes );
 	return true;
 }
 
@@ -365,7 +365,7 @@ Bool TStaticBitmap::AllocateBlock( SizeT NumBytes, UInt32 ExtraFlags )
 //
 Bool TStaticBitmap::ReleaseBlock()
 {
-	Data.Empty();
+	Data.empty();
 	return true;
 }
 

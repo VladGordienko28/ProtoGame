@@ -31,10 +31,10 @@ CLevelTransactor::CLevelTransactor( FLevel* InLevel )
 CLevelTransactor::~CLevelTransactor()
 {
 	// Destroy transactions.
-	for( Int32 i=0; i<Transactions.Num(); i++ )
+	for( Int32 i=0; i<Transactions.size(); i++ )
 		delete Transactions[i];
 
-	Transactions.Empty();
+	Transactions.empty();
 
 	// Notify.
 	info( L"Editor: Undo/Redo subsystem shutdown for '%s'", *Level->GetFullName() );
@@ -49,9 +49,9 @@ void CLevelTransactor::Reset()
 	assert(!bLocked);
 
 	// Destroy transactions.
-	for( Int32 i=0; i<Transactions.Num(); i++ )
+	for( Int32 i=0; i<Transactions.size(); i++ )
 		delete Transactions[i];
-	Transactions.Empty();
+	Transactions.empty();
 
 	// Pop transaction stack.
 	TopTransaction	= 0;
@@ -101,7 +101,7 @@ Bool CLevelTransactor::CanUndo() const
 //
 Bool CLevelTransactor::CanRedo() const
 {
-	return TopTransaction < (Transactions.Num()-1);
+	return TopTransaction < (Transactions.size()-1);
 }
 
 
@@ -116,7 +116,7 @@ void CLevelTransactor::TrackEnter()
 	// Store only first initial state.
 	if( TopTransaction == 0 )
 	{
-		Transactions.SetNum( 1 );
+		Transactions.setSize( 1 );
 		Transactions[0]			= new TTransaction(Level);
 		Transactions[0]->Store();
 		TopTransaction	= 0;
@@ -133,25 +133,25 @@ void CLevelTransactor::TrackLeave()
 	bLocked	= false;
 
 	// Destroy transactions after top.
-	for( Int32 i=TopTransaction+1; i<Transactions.Num(); i++ )	
+	for( Int32 i=TopTransaction+1; i<Transactions.size(); i++ )	
 		freeandnil(Transactions[i]);
 
 	// Store current state.
-	Transactions.SetNum(TopTransaction+2);
-	if( Transactions.Num() > HISTORY_LIMIT )
+	Transactions.setSize(TopTransaction+2);
+	if( Transactions.size() > HISTORY_LIMIT )
 	{
 		// Destroy first record and shift others.
-		Transactions.SetNum(HISTORY_LIMIT);
+		Transactions.setSize(HISTORY_LIMIT);
 		delete Transactions[0];
 
 		mem::copy
 		(
 			&Transactions[0],
 			&Transactions[1],
-			(Transactions.Num()-1)*sizeof(TTransaction*)
+			(Transactions.size()-1)*sizeof(TTransaction*)
 		);
 	}
-	TopTransaction	= Transactions.Num()-1;
+	TopTransaction	= Transactions.size()-1;
 
 	// Create new transaction.
 	Transactions[TopTransaction]	= new TTransaction(Level);
@@ -166,14 +166,14 @@ void CLevelTransactor::TrackLeave()
 void CLevelTransactor::CountRefs( CSerializer& S )
 {
 	// Serialize everything.
-	for( Int32 iTran=0; iTran<Transactions.Num(); iTran++ )
+	for( Int32 iTran=0; iTran<Transactions.size(); iTran++ )
 	{
 		TTransaction* Tran = Transactions[iTran];
 		Serialize( S, Tran->Detached );
 		Serialize( S, Tran->Entities );
 
 		// Test if some script has been destroyed.
-		for( Int32 i=0; i<Tran->Entities.Num(); i++ )
+		for( Int32 i=0; i<Tran->Entities.size(); i++ )
 			if( Tran->Entities[i] == nullptr )
 				goto ResetAll;
 	}
@@ -183,9 +183,9 @@ void CLevelTransactor::CountRefs( CSerializer& S )
 
 ResetAll:
 	// Reset tracker.
-	for( Int32 iTran=0; iTran<Transactions.Num(); iTran++ )
+	for( Int32 iTran=0; iTran<Transactions.size(); iTran++ )
 		delete Transactions[iTran];
-	Transactions.Empty();
+	Transactions.empty();
 	TopTransaction	= 0;
 	info( L"Undo/Redo subsystem reset" );
 }
@@ -197,13 +197,13 @@ ResetAll:
 void CLevelTransactor::Debug()
 {
 	SizeT Mem = 0;
-	for( Int32 i=0; i<Transactions.Num(); i++ )
+	for( Int32 i=0; i<Transactions.size(); i++ )
 		Mem += Transactions[i]->CountMem();
 
 	// Output.
 	debug( L"** UNDO/REDO for '%s' **", *Level->GetFullName() );
 	debug( L"Used %d kBs", Mem/1024 );
-	debug( L"TopTran=%d, Trans.Count=%d", TopTransaction, Transactions.Num() );
+	debug( L"TopTran=%d, Trans.Count=%d", TopTransaction, Transactions.size() );
 }
 
 
@@ -230,8 +230,8 @@ public:
 	// CSerializer interface.
 	void SerializeData( void* Mem, SizeT Count )
 	{
-		SizeT i	= Transaction->Data.Num();
-		Transaction->Data.SetNum(i+Count);
+		SizeT i	= Transaction->Data.size();
+		Transaction->Data.setSize(i+Count);
 		mem::copy( &Transaction->Data[i], Mem, Count );
 	}
 	void SerializeRef( FObject*& Obj )
@@ -256,7 +256,7 @@ public:
 			FComponent* Component = As<FComponent>(Obj);
 			UInt8	b = 2;
 			Int32	i = Transaction->Level->GetEntityIndex(Component->Entity);
-			Int32 j = Component == Component->Entity->Base ? 0xff : Component->Entity->Components.FindItem((FExtraComponent*)Component);
+			Int32 j = Component == Component->Entity->Base ? 0xff : Component->Entity->Components.find((FExtraComponent*)Component);
 			assert(j != -1);
 			Serialize( *this, b );
 			Serialize( *this, i );
@@ -267,18 +267,18 @@ public:
 			// Resource.
 			assert(Obj->IsA(FResource::MetaClass));
 			UInt8	b = 3;
-			Int32	i = Transaction->Detached.AddUnique(Obj);
+			Int32	i = Transaction->Detached.addUnique(Obj);
 			Serialize( *this, b );
 			Serialize( *this, i );
 		}
 	}
 	SizeT TotalSize()
 	{
-		return Transaction->Data.Num();
+		return Transaction->Data.size();
 	}
 	SizeT Tell()
 	{
-		return Transaction->Data.Num();
+		return Transaction->Data.size();
 	}
 	void Seek( SizeT NewPos )
 	{
@@ -350,7 +350,7 @@ public:
 	}
 	SizeT TotalSize()
 	{
-		return Transaction->Data.Num();
+		return Transaction->Data.size();
 	}
 	SizeT Tell()
 	{
@@ -384,10 +384,10 @@ TTransaction::TTransaction( FLevel* InLevel )
 //
 TTransaction::~TTransaction()
 {
-	Data.Empty();
-	Entities.Empty();
-	Detached.Empty();
-	Names.Empty();
+	Data.empty();
+	Entities.empty();
+	Detached.empty();
+	Names.empty();
 
 	if( ComData )
 		mem::free( ComData );
@@ -402,15 +402,15 @@ void TTransaction::Store()
 	assert(Level);
 
 	// Cleanup old data.
-	Entities.Empty();
-	Names.Empty();
-	Detached.Empty();
-	Data.Empty();
+	Entities.empty();
+	Names.empty();
+	Detached.empty();
+	Data.empty();
 
 	// Store list of script being each entity.
-	Entities.SetNum(Level->Entities.Num());
-	Names.SetNum(Level->Entities.Num());
-	for( Int32 i=0; i<Entities.Num(); i++ )
+	Entities.setSize(Level->Entities.size());
+	Names.setSize(Level->Entities.size());
+	for( Int32 i=0; i<Entities.size(); i++ )
 	{
 		Entities[i]	= Level->Entities[i]->Script;
 		Names[i]	= Level->Entities[i]->GetName();
@@ -421,13 +421,13 @@ void TTransaction::Store()
 		CTransactionWriter Writer(this);
 
 		// Serialize each entity.
-		for( Int32 i=0; i<Level->Entities.Num(); i++ )
+		for( Int32 i=0; i<Level->Entities.size(); i++ )
 		{
 			FEntity* Entity	= Level->Entities[i];
 
 			// Serialize only component's because they are refer.
 			Entity->Base->SerializeThis( Writer );
-			for( Int32 e=0; e<Entity->Components.Num(); e++ )
+			for( Int32 e=0; e<Entity->Components.size(); e++ )
 				Entity->Components[e]->SerializeThis( Writer );
 
 			// ..but also store the instance buffer.
@@ -445,13 +445,13 @@ void TTransaction::Store()
 
 #if TRAN_COMPRESS
 	// Compress the buffer.
-	ComSourceSize	= Data.Num();
+	ComSourceSize	= Data.size();
 	{
 		CLZWCompressor LZW;
 		LZW.Encode
 		(
 			&Data[0],
-			Data.Num(),
+			Data.size(),
 			ComData,
 			ComSize
 		);
@@ -463,9 +463,9 @@ void TTransaction::Store()
 #endif
 	}
 	//log( L"Transaction compress: %d->%d", Data.Num(), ComSize );
-	if( ComSize > Data.Num() )
+	if( ComSize > Data.size() )
 		error( L"Undo/Redo record failure. But don't worry, it's not fatal." );
-	Data.Empty();
+	Data.empty();
 #endif
 }
 
@@ -481,19 +481,19 @@ void TTransaction::Restore()
 	freeandnil(Level->Navigator);
 
 	// Erase old level's objects.
-	for( Int32 i=0; i<Level->Entities.Num(); i++ )
+	for( Int32 i=0; i<Level->Entities.size(); i++ )
 		DestroyObject( Level->Entities[i], true );
 
-	Level->Entities.Empty();
-	assert(Level->RenderObjects.Num()==0);
-	assert(Level->TickObjects.Num()==0);
+	Level->Entities.empty();
+	assert(Level->RenderObjects.size()==0);
+	assert(Level->TickObjects.size()==0);
 	assert(!Level->FirstPuppet);
 
 	Level->Sky		= nullptr;
 
 #if TRAN_COMPRESS
 	// Uncompress the buffer.
-	Data.SetNum( ComSourceSize );
+	Data.setSize( ComSourceSize );
 	{
 		void* DData;
 		SizeT DSize;
@@ -519,7 +519,7 @@ void TTransaction::Restore()
 
 		// Allocate a list of entities and all it's 
 		// components.
-		for( Int32 iEntity=0; iEntity<Entities.Num(); iEntity++ )
+		for( Int32 iEntity=0; iEntity<Entities.size(); iEntity++ )
 		{
 			FEntity* Entity = NewObject<FEntity>( Names[iEntity], Level );
 
@@ -536,7 +536,7 @@ void TTransaction::Restore()
 			Base->InitForEntity( Entity );
 
 			// Extra components.
-			for( Int32 i=0; i<Entity->Script->Components.Num(); i++ )
+			for( Int32 i=0; i<Entity->Script->Components.size(); i++ )
 			{
 				FExtraComponent* Extra = Entity->Script->Components[i];
 				FExtraComponent* Com = NewObject<FExtraComponent>
@@ -552,21 +552,21 @@ void TTransaction::Restore()
 			if( Entity->Script->InstanceBuffer )
 			{
 				Entity->InstanceBuffer = new CInstanceBuffer( Entity->Script->Properties );
-				Entity->InstanceBuffer->Data.SetNum( Entity->Script->InstanceSize );
+				Entity->InstanceBuffer->Data.setSize( Entity->Script->InstanceSize );
 			}
 
 			// Add entity to the level's db.
-			Level->Entities.Push( Entity );
+			Level->Entities.push( Entity );
 		}
 
 		// Serialize each entity.
-		for( Int32 i=0; i<Level->Entities.Num(); i++ )
+		for( Int32 i=0; i<Level->Entities.size(); i++ )
 		{
 			FEntity* Entity	= Level->Entities[i];
 
 			// Serialize only component's because they are refer.
 			Entity->Base->SerializeThis( Reader );
-			for( Int32 e=0; e<Entity->Components.Num(); e++ )
+			for( Int32 e=0; e<Entity->Components.size(); e++ )
 				Entity->Components[e]->SerializeThis( Reader );
 
 			// ..but also store the instance buffer.
@@ -584,17 +584,17 @@ void TTransaction::Restore()
 
 #if TRAN_COMPRESS
 	// Release decompressed data.
-	Data.Empty();
+	Data.empty();
 #endif
 
 	// Notify each object.
-	for( Int32 iEntity=0; iEntity<Level->Entities.Num(); iEntity++ )
+	for( Int32 iEntity=0; iEntity<Level->Entities.size(); iEntity++ )
 	{
 		FEntity* Entity	= Level->Entities[iEntity];
 
 		Entity->PostLoad();
 		Entity->Base->PostLoad();
-		for( Int32 e=0; e<Entity->Components.Num(); e++ )
+		for( Int32 e=0; e<Entity->Components.size(); e++ )
 			Entity->Components[e]->PostLoad();
 	}
 }
@@ -605,10 +605,10 @@ void TTransaction::Restore()
 //
 SizeT TTransaction::CountMem() const
 {
-	return	Entities.Num() * sizeof(FScript*) +
-			Detached.Num() * sizeof(FObject*) +
-			Names.Num() * sizeof(String) +
-			Data.Num() * sizeof(UInt8) +
+	return	Entities.size() * sizeof(FScript*) +
+			Detached.size() * sizeof(FObject*) +
+			Names.size() * sizeof(String) +
+			Data.size() * sizeof(UInt8) +
 			ComSourceSize;
 }
 

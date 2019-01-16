@@ -39,14 +39,14 @@ private:
 	};
 	struct TIniFile
 	{
-		Bool					bDirty;
-		TArray<TSection>		Sections;
-		String					FileName;
-		String					Name;
+		Bool				bDirty;
+		Array<TSection>		Sections;
+		String				FileName;
+		String				Name;
 	};
 
 	// Variables.
-	TArray<TIniFile> Files;
+	Array<TIniFile> Files;
 	String Directory;
 
 	// Helpers.

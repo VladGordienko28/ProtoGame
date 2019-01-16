@@ -111,12 +111,12 @@ Bool CGame::LoadGame( String Directory, String Name )
 
 	// Build list of all levels.
 	Level	= nullptr;
-	LevelList.Empty();
-	for( Int32 i=0; i<GObjectDatabase->GObjects.Num(); i++ )
+	LevelList.empty();
+	for( Int32 i=0; i<GObjectDatabase->GObjects.size(); i++ )
 	{
 		FObject* Object = GObjectDatabase->GObjects[i];
 		if( Object && Object->IsA(FLevel::MetaClass) )
-			LevelList.Push((FLevel*)Object);
+			LevelList.push((FLevel*)Object);
 	}
 
 	// Refresh window.
@@ -242,7 +242,7 @@ void CGame::Init( HINSTANCE InhInstance )
 		else
 			info( L"Game: Entry level is not specified." );
 
-		if( !Entry && LevelList.Num() )
+		if( !Entry && LevelList.size() )
 			Entry = LevelList[0];
 
 		if( Entry )
@@ -255,10 +255,10 @@ void CGame::Init( HINSTANCE InhInstance )
 	else
 	{
 		// Try to find some file in directory.
-		TArray<String> GameFiles;
+		Array<String> GameFiles;
 		GameFiles = GPlat->FindFiles(GDirectory, String::Format(L"*%s", PROJ_FILE_EXT));
 
-		if( GameFiles.Num() == 0 )
+		if( GameFiles.size() == 0 )
 			fatal(L"Game file not found");
 
 		String FileName = GameFiles[0];
@@ -275,7 +275,7 @@ void CGame::Init( HINSTANCE InhInstance )
 		if( !Entry )
 		{
 			warn( L"Game: Entry level not found!" );
-			if( LevelList.Num() )
+			if( LevelList.size() )
 				Entry	= LevelList[0];
 		}
 
@@ -764,7 +764,7 @@ void CGame::RunLevel( FLevel* Source, Bool bCopy )
 //
 FLevel* CGame::FindLevel( String LevName )
 {
-	for( Int32 i=0; i<LevelList.Num(); i++ )
+	for( Int32 i=0; i<LevelList.size(); i++ )
 		if(	String::UpperCase(LevelList[i]->GetName()) == 
 			String::UpperCase(LevName) )
 				return LevelList[i];
@@ -911,7 +911,7 @@ void CGame::ConsoleExecute( String CmdLine )
 		// Try to execute for entity.
 		String Arg = L"???";
 
-		for( Int32 iEntity=0; iEntity<Level->Entities.Num(); iEntity++ )
+		for( Int32 iEntity=0; iEntity<Level->Entities.size(); iEntity++ )
 			Level->Entities[iEntity]->OnProcess( Token, Arg );
 	}
 	else

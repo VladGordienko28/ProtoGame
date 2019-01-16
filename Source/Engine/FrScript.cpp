@@ -36,7 +36,7 @@ FScript::~FScript()
 	if( !IsStatic() )
 	{
 		// Kill extra components.
-		for( Int32 e=0; e<Components.Num(); e++ )
+		for( Int32 e=0; e<Components.size(); e++ )
 			DestroyObject( Components[e], false );
 
 		// Kill the base.
@@ -46,7 +46,7 @@ FScript::~FScript()
 	{
 		// No prototypes for static scripts.
 		assert(Base == nullptr);
-		assert(Components.Num() == 0);
+		assert(Components.size() == 0);
 	}
 
 	// Finalize the instance buffer.
@@ -67,32 +67,32 @@ FScript::~FScript()
 	}
 
 	// Script objects.
-	for( Int32 i=0; i<StaticFunctions.Num(); i++ )
+	for( Int32 i=0; i<StaticFunctions.size(); i++ )
 		delete StaticFunctions[i];
-	for( Int32 i=0; i<Statics.Num(); i++ )
+	for( Int32 i=0; i<Statics.size(); i++ )
 		delete Statics[i];
-	for( Int32 i=0; i<Methods.Num(); i++ )
+	for( Int32 i=0; i<Methods.size(); i++ )
 		delete Methods[i];
-	for( Int32 i=0; i<Properties.Num(); i++ )
+	for( Int32 i=0; i<Properties.size(); i++ )
 		delete Properties[i];
-	for( Int32 i=0; i<Enums.Num(); i++ )
+	for( Int32 i=0; i<Enums.size(); i++ )
 		delete Enums[i];
-	for( Int32 i=0; i<Structs.Num(); i++ )
+	for( Int32 i=0; i<Structs.size(); i++ )
 		delete Structs[i];
 
 	// kill the thread.
 	freeandnil(Thread);
 
 	// Release tables.
-	Text.Empty();
-	Enums.Empty();
-	Structs.Empty();
-	Properties.Empty();
-	Methods.Empty();
-	Events.Empty();
-	ResTable.Empty();
-	Statics.Empty();
-	StaticFunctions.Empty();
+	Text.empty();
+	Enums.empty();
+	Structs.empty();
+	Properties.empty();
+	Methods.empty();
+	Events.empty();
+	ResTable.empty();
+	Statics.empty();
+	StaticFunctions.empty();
 }
 
 
@@ -102,7 +102,7 @@ FScript::~FScript()
 //
 FComponent* FScript::FindComponent( String InName )
 {
-	for( Int32 e=0; e<Components.Num(); e++ )
+	for( Int32 e=0; e<Components.size(); e++ )
 		if( Components[e]->GetName() == InName )
 			return Components[e];
 
@@ -115,7 +115,7 @@ FComponent* FScript::FindComponent( String InName )
 //
 CFunction* FScript::FindMethod( String TestName )
 {
-	for( Int32 i=0; i<Methods.Num(); i++ )
+	for( Int32 i=0; i<Methods.size(); i++ )
 		if( TestName == Methods[i]->Name )
 			return Methods[i];
 
@@ -128,7 +128,7 @@ CFunction* FScript::FindMethod( String TestName )
 //
 CFunction* FScript::FindStaticFunction( String TestName )
 {
-	for( Int32 i=0; i<StaticFunctions.Num(); i++ )
+	for( Int32 i=0; i<StaticFunctions.size(); i++ )
 		if( TestName == StaticFunctions[i]->Name )
 			return StaticFunctions[i];
 
@@ -237,13 +237,13 @@ public:
 			if( Enum->Flags & ENUM_Native )
 			{
 				iScript = -1;
-				iEnum = CClassDatabase::GEnums.FindItem(Enum);
+				iEnum = CClassDatabase::GEnums.find(Enum);
 				assert(iEnum != -1);
 			}
 			else
 			{
 				iScript = GScript->GetId();
-				iEnum = GScript->Enums.FindItem(Enum);
+				iEnum = GScript->Enums.find(Enum);
 				assert(iScript != -1 && iEnum != -1);
 			}
 		}
@@ -301,13 +301,13 @@ public:
 		if( Struct->Flags & STRUCT_Native )
 		{
 			iScript = -1;
-			iStruct = CClassDatabase::GStructs.FindItem(Struct);
+			iStruct = CClassDatabase::GStructs.find(Struct);
 			assert(iStruct != -1);
 		}
 		else
 		{
 			iScript = GScript->GetId();
-			iStruct = GScript->Structs.FindItem(Struct);
+			iStruct = GScript->Structs.find(Struct);
 			assert(iScript != -1 && iStruct != -1);
 		}
 	}
@@ -392,7 +392,7 @@ void Serialize( CSerializer& S, CProperty*& V )
 		else
 		{
 			assert(V->Class);
-			Int32 iClass = CClassDatabase::GClasses.FindItem(V->Class);
+			Int32 iClass = CClassDatabase::GClasses.find(V->Class);
 			assert(iClass != -1);
 			Serialize( S, iClass );
 		}
@@ -457,7 +457,7 @@ void Serialize( CSerializer& S, CFunction*& V )
 		}
 		else if( S.GetMode() == SM_Save )
 		{
-			Int32 Index = V->ResultVar ? V->Locals.FindItem(V->ResultVar) : -1;
+			Int32 Index = V->ResultVar ? V->Locals.find(V->ResultVar) : -1;
 			Serialize( S, Index );
 		}
 	}
@@ -578,10 +578,10 @@ void FScript::SerializeThis( CSerializer& S )
 				Serialize( S, NumVF );
 				assert(_EVENT_MAX == NumEvents);
 
-				VFTable.Empty();
-				Events.Empty();
-				VFTable.SetNum(NumVF);
-				Events.SetNum(NumEvents);
+				VFTable.empty();
+				Events.empty();
+				VFTable.setSize(NumVF);
+				Events.setSize(NumEvents);
 
 				for( Int32 i=0; i<NumEvents; i++ )
 				{
@@ -598,19 +598,19 @@ void FScript::SerializeThis( CSerializer& S )
 			}
 			else if( S.GetMode() == SM_Save )
 			{
-				Int32 NumEvents	= Events.Num(),
-						NumVF		= VFTable.Num();
+				Int32 NumEvents	= Events.size(),
+						NumVF		= VFTable.size();
 				Serialize( S, NumEvents );
 				Serialize( S, NumVF );
 
 				for( Int32 i=0; i<NumEvents; i++ )
 				{
-					Int32 Tmp	= Methods.FindItem(Events[i]);
+					Int32 Tmp	= Methods.find(Events[i]);
 					Serialize( S, Tmp );
 				}
 				for( Int32 i=0; i<NumVF; i++ )
 				{
-					Int32 Tmp	= Methods.FindItem(VFTable[i]);
+					Int32 Tmp	= Methods.find(VFTable[i]);
 					Serialize( S, Tmp );
 				}
 			}
@@ -623,7 +623,7 @@ void FScript::SerializeThis( CSerializer& S )
 			{
 				freeandnil(InstanceBuffer);
 				InstanceBuffer	= new CInstanceBuffer( Properties );
-				InstanceBuffer->Data.SetNum( InstanceSize );
+				InstanceBuffer->Data.setSize( InstanceSize );
 			}
 			InstanceBuffer->SerializeValues( S );
 		}
@@ -637,7 +637,7 @@ void FScript::SerializeThis( CSerializer& S )
 		{
 			freeandnil(StaticsBuffer);
 			StaticsBuffer	= new CInstanceBuffer( Statics );
-			StaticsBuffer->Data.SetNum( StaticsSize );
+			StaticsBuffer->Data.setSize( StaticsSize );
 		}
 		if( StaticsBuffer )
 			StaticsBuffer->SerializeValues( S );
@@ -665,7 +665,7 @@ CBytecode::CBytecode()
 //
 CBytecode::~CBytecode()
 {
-	Code.Empty();
+	Code.empty();
 }
 
 
@@ -684,7 +684,7 @@ CThreadCode::CThreadCode()
 //
 Int32 CThreadCode::GetLabelId( const Char* InName )
 {
-	for( Int32 i=0; i<Labels.Num(); i++ )
+	for( Int32 i=0; i<Labels.size(); i++ )
 		if( Labels[i].Name == InName )
 			return i;
 
@@ -704,7 +704,7 @@ Int32 CThreadCode::AddLabel( const Char* InName, UInt16 InAddr )
 	Label.Address	= InAddr;
 	Label.Name		= InName;
 
-	return Labels.Push( Label );
+	return Labels.push( Label );
 }
 
 
@@ -727,10 +727,10 @@ CFunction::CFunction()
 CFunction::~CFunction()
 {
 	// Destroy local variables.
-	for( Int32 i=0; i<Locals.Num(); i++ )
+	for( Int32 i=0; i<Locals.size(); i++ )
 		delete Locals[i];
 
-	Locals.Empty();
+	Locals.empty();
 }
 
 
@@ -764,7 +764,7 @@ String CFunction::GetSignature() const
 //
 // Instance buffer constructor.
 //
-CInstanceBuffer::CInstanceBuffer( TArray<CProperty*>& InProperties )
+CInstanceBuffer::CInstanceBuffer( Array<CProperty*>& InProperties )
 	:	Properties(InProperties),
 		Data()
 {
@@ -786,7 +786,7 @@ CInstanceBuffer::~CInstanceBuffer()
 //
 void CInstanceBuffer::DestroyValues()
 {
-	for( Int32 i=0; i<Properties.Num(); i++ )
+	for( Int32 i=0; i<Properties.size(); i++ )
 	{
 		CProperty* P = Properties[i];
 		P->DestroyValue( &Data[P->Offset] );
@@ -801,7 +801,7 @@ void CInstanceBuffer::DestroyValues()
 //
 void CInstanceBuffer::CopyValues( void* Source )
 {
-	for( Int32 i=0; i<Properties.Num(); i++ )
+	for( Int32 i=0; i<Properties.size(); i++ )
 	{
 		CProperty* P = Properties[i];
 		P->CopyValue( &Data[P->Offset], &((UInt8*)Source)[P->Offset] );
@@ -814,7 +814,7 @@ void CInstanceBuffer::CopyValues( void* Source )
 //
 void CInstanceBuffer::ExportValues( CExporterBase& Ex )
 {
-	for( Int32 i=0; i<Properties.Num(); i++ )
+	for( Int32 i=0; i<Properties.size(); i++ )
 	{
 		CProperty* P = Properties[i];
 		P->Export( &Data[P->Offset], Ex );
@@ -827,7 +827,7 @@ void CInstanceBuffer::ExportValues( CExporterBase& Ex )
 //
 void CInstanceBuffer::ImportValues( CImporterBase& Im )
 {
-	for( Int32 i=0; i<Properties.Num(); i++ )
+	for( Int32 i=0; i<Properties.size(); i++ )
 	{
 		CProperty* P = Properties[i];
 		P->Import( &Data[P->Offset], Im );
@@ -840,7 +840,7 @@ void CInstanceBuffer::ImportValues( CImporterBase& Im )
 //
 void CInstanceBuffer::SerializeValues( CSerializer& S )
 {
-	for( Int32 i=0; i<Properties.Num(); i++ )
+	for( Int32 i=0; i<Properties.size(); i++ )
 	{
 		CProperty* P = Properties[i];
 		P->SerializeValue( &Data[P->Offset], S );
@@ -853,7 +853,7 @@ void CInstanceBuffer::SerializeValues( CSerializer& S )
 //
 Bool CInstanceBuffer::NeedDestruction() const
 {
-	for( Int32 i=0; i<Properties.Num(); i++ )
+	for( Int32 i=0; i<Properties.size(); i++ )
 		if( Properties[i]->NeedDestruction() )
 			return true;
 

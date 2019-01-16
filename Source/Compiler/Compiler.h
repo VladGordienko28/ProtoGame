@@ -33,7 +33,7 @@ namespace Compiler
 	extern Bool CompileAllScripts
 	( 
 		CObjectDatabase* InDatabase, 
-		TArray<String>& OutWarnings, 
+		Array<String>& OutWarnings, 
 		TError& OutFatalError 
 	);
 

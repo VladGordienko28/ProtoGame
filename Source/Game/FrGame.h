@@ -27,7 +27,7 @@ public:
 
 	// Game stuff.
 	FLevel*				Level;
-	TArray<FLevel*>		LevelList;
+	Array<FLevel*>		LevelList;
 	CConsole*			Console;
 	Int32				WinWidth;
 	Int32				WinHeight;

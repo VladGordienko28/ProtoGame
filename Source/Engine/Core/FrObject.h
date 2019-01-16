@@ -73,8 +73,8 @@ class CObjectDatabase: public CClassDatabase
 {
 public:
 	// Tables.
-	TArray<FObject*>	GObjects;
-	TArray<Int32>		GAvailable;
+	Array<FObject*>		GObjects;
+	Array<Int32>		GAvailable;
 	FObject*			GHash[2048];
 
 	// Constructor.
@@ -178,7 +178,7 @@ public:
 	virtual void CountRefs( CSerializer& S );
 
 	// List of refs holders.
-	static TArray<CRefsHolder*>	GHolders;
+	static Array<CRefsHolder*>	GHolders;
 };
 
 

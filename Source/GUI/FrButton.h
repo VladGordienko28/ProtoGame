@@ -169,7 +169,7 @@ public:
 
 private:
 	// Internal.
-	TArray<WWidget*>	Elements;
+	Array<WWidget*>	Elements;
 };
 
 

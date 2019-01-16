@@ -144,16 +144,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Array.h" />
     <ClInclude Include="Build.h" />
     <ClInclude Include="Core.h" />
-    <ClInclude Include="FrArray.h" />
     <ClInclude Include="FrSerial.h" />
     <ClInclude Include="Heap.h" />
     <ClInclude Include="LogCallback.h" />
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="Types.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Array.cpp" />
     <ClCompile Include="Core.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

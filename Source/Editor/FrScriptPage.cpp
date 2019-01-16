@@ -161,8 +161,8 @@ public:
 	{
 		WForm::Show( X, Y );
 
-		TopLabel->Caption = String::Format( L"Line Number (%i - %i):", 1, CodeEditor->Lines.Num() );
-		LineSpinner->SetRange( 1, CodeEditor->Lines.Num(), 1 );
+		TopLabel->Caption = String::Format( L"Line Number (%i - %i):", 1, CodeEditor->Lines.size() );
+		LineSpinner->SetRange( 1, CodeEditor->Lines.size(), 1 );
 		LineSpinner->SetValue( CodeEditor->CaretYBegin+1, false );
 	}
 	void Hide()
@@ -183,7 +183,7 @@ public:
 	}
 	void ButtonGoClick( WWidget* Sender )
 	{
-		Int32 iLine = Clamp( LineSpinner->GetIntValue(), 1, CodeEditor->Lines.Num() )-1;
+		Int32 iLine = Clamp( LineSpinner->GetIntValue(), 1, CodeEditor->Lines.size() )-1;
 		CodeEditor->ScrollToLine(iLine);
 		Hide();
 	}
@@ -232,7 +232,7 @@ public:
 		BaseCombo				= new WComboBox( this, InRoot );	
 		BaseCombo->Location		= TPoint( 145, 29 );
 		BaseCombo->SetSize( 160, 18 );
-		for( Int32 i=0; i<CClassDatabase::GClasses.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GClasses.size(); i++ )
 		{
 			CClass*	Class	= CClassDatabase::GClasses[i];
 			if( Class->IsA(FBaseComponent::MetaClass) && !(Class->Flags & CLASS_Abstract) )
@@ -250,7 +250,7 @@ public:
 		ExtraList				= new WListBox( ExtraPanel, InRoot );
 		ExtraList->Location		= TPoint( 10, 10 );
 		ExtraList->SetSize( 180, 200 );
-		for( Int32 i=0; i<CClassDatabase::GClasses.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GClasses.size(); i++ )
 		{
 			CClass*	Class	= CClassDatabase::GClasses[i];
 			if( Class->IsA(FExtraComponent::MetaClass) && !(Class->Flags & CLASS_Abstract) )
@@ -302,15 +302,15 @@ public:
 	}
 	void UpdateSingleCompFlags()
 	{
-		for( Int32 i=0; i<ExtraList->Items.Num(); i++ )
+		for( Int32 i=0; i<ExtraList->Items.size(); i++ )
 			ExtraList->Items[i].bEnabled = true;
 
-		for( Int32 iUsed=0; iUsed<ExtraUsedList->Items.Num(); iUsed++ )
+		for( Int32 iUsed=0; iUsed<ExtraUsedList->Items.size(); iUsed++ )
 		{
 			CClass* UsedClass = (CClass*)ExtraUsedList->Items[iUsed].Data;
 			if( UsedClass->Flags & CLASS_SingleComp )
 			{
-				for( Int32 i=0; i<ExtraList->Items.Num(); i++ )
+				for( Int32 i=0; i<ExtraList->Items.size(); i++ )
 					if( ExtraList->Items[i].Data == UsedClass )
 					{
 						ExtraList->Items[i].bEnabled = false;
@@ -334,7 +334,7 @@ public:
 		WForm::Show( X, Y );
 
 		// Base.
-		for( Int32 i=0; i<BaseCombo->Items.Num(); i++ )
+		for( Int32 i=0; i<BaseCombo->Items.size(); i++ )
 			if( Page->Script->Base->GetClass() == BaseCombo->Items[i].Data )
 			{
 				BaseCombo->ItemIndex	= i;
@@ -343,7 +343,7 @@ public:
 
 		// Extra components.
 		ExtraUsedList->Empty();
-		for( Int32 e=0; e<Page->Script->Components.Num(); e++ )
+		for( Int32 e=0; e<Page->Script->Components.size(); e++ )
 			ExtraUsedList->AddItem
 			(
 				Page->Script->Components[e]->GetName(),
@@ -417,7 +417,7 @@ public:
 			Root->ShowMessage( L"Please specify the base component", L"Components Editor", true );
 			return;
 		}
-		for( Int32 i=0; i<ExtraUsedList->Items.Num(); i++ )
+		for( Int32 i=0; i<ExtraUsedList->Items.size(); i++ )
 		{
 			CClass* Class = (CClass*)ExtraUsedList->Items[i].Data;
 			String  Name  = ExtraUsedList->Items[i].Name;
@@ -433,7 +433,7 @@ public:
 				return;
 			}
 
-			for( Int32 j=i+1; j<ExtraUsedList->Items.Num(); j++ )
+			for( Int32 j=i+1; j<ExtraUsedList->Items.size(); j++ )
 				if( ExtraUsedList->Items[j].Name == Name )
 				{
 					Root->ShowMessage
@@ -448,7 +448,7 @@ public:
 
 		// Count entities being this script.
 		Int32 NumEnts = 0;
-		for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
+		for( Int32 i=0; i<GProject->GObjects.size(); i++ )
 			if( GProject->GObjects[i] && GProject->GObjects[i]->IsA(FEntity::MetaClass) )
 			{
 				FEntity* Entity	= As<FEntity>(GProject->GObjects[i]);
@@ -473,13 +473,13 @@ public:
 		GEditor->DropAllScripts();
 
 		// Kill all entities.
-		for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
+		for( Int32 i=0; i<GProject->GObjects.size(); i++ )
 			if( GProject->GObjects[i] && GProject->GObjects[i]->IsA(FEntity::MetaClass) )
 			{
 				FEntity* Entity	= As<FEntity>(GProject->GObjects[i]);
 				if( Entity->Script == Page->Script )
 				{
-					Entity->Level->Entities.RemoveUnique( Entity );
+					Entity->Level->Entities.removeUnique( Entity );
 					DestroyObject( Entity, true );
 				}
 			}
@@ -494,11 +494,11 @@ public:
 		}
 
 		// Extra components.
-		for( Int32 e=0; e<Page->Script->Components.Num(); e++ )
+		for( Int32 e=0; e<Page->Script->Components.size(); e++ )
 		{
 			FExtraComponent* Com = Page->Script->Components[e];
 			Bool bFound = false;
-			for( Int32 i=0; i<ExtraUsedList->Items.Num(); i++ )
+			for( Int32 i=0; i<ExtraUsedList->Items.size(); i++ )
 				if( Com->GetName()==ExtraUsedList->Items[i].Name && Com->GetClass()==ExtraUsedList->Items[i].Data )
 				{
 					bFound	= true;
@@ -508,11 +508,11 @@ public:
 			if( !bFound )
 			{
 				DestroyObject( Page->Script->Components[e], true );
-				Page->Script->Components.RemoveUnique(nullptr);
+				Page->Script->Components.removeUnique(nullptr);
 				e--;
 			}
 		}
-		for( Int32 i=0; i<ExtraUsedList->Items.Num(); i++ )
+		for( Int32 i=0; i<ExtraUsedList->Items.size(); i++ )
 		{
 			CClass*	ExtraClass	= (CClass*)ExtraUsedList->Items[i].Data;
 			String	ExtraName	= ExtraUsedList->Items[i].Name;
@@ -697,9 +697,9 @@ void WScriptPage::SaveScriptText( Bool bAsk )
 				return;
 
 		// Save it.
-		Script->Text.Empty();
-		for( Int32 i=0; i<CodeEditor->Lines.Num(); i++ )
-			Script->Text.Push(CodeEditor->Lines[i].Text);
+		Script->Text.empty();
+		for( Int32 i=0; i<CodeEditor->Lines.size(); i++ )
+			Script->Text.push(CodeEditor->Lines[i].Text);
 
 		// Mark as not dirty.
 		CodeEditor->SetDirty( false );
@@ -875,12 +875,12 @@ WCodeEditor::WCodeEditor( WScriptPage* InPage, WContainer* InOwner, WWindow* InR
 	if( Script->IsScriptable() )
 	{
 		// Script has an editable text.
-		for( Int32 i=0; i<Script->Text.Num(); i++ )
+		for( Int32 i=0; i<Script->Text.size(); i++ )
 		{
 			TLine Line;
 			Line.Text	= Script->Text[i];
 			Line.First	= nullptr;
-			Lines.Push( Line );
+			Lines.push( Line );
 		}
 	}
 	else
@@ -889,7 +889,7 @@ WCodeEditor::WCodeEditor( WScriptPage* InPage, WContainer* InOwner, WWindow* InR
 		TLine Line;
 		Line.Text	= String::Format( L"// Script '%s' has no text.", *Script->GetName() );	
 		Line.First	= nullptr;
-		Lines.Push( Line );
+		Lines.push( Line );
 	}
 
 	// Highlight it!
@@ -903,14 +903,14 @@ WCodeEditor::WCodeEditor( WScriptPage* InPage, WContainer* InOwner, WWindow* InR
 //
 WCodeEditor::~WCodeEditor()
 {
-	Lines.Empty();
+	Lines.empty();
 	Pool.PopAll();
 
 	// Destroy Undo/Redo stack.
-	for( Int32 i=0; i<UndoStack.Num(); i++ )
+	for( Int32 i=0; i<UndoStack.size(); i++ )
 		if( UndoStack[i] )
 			mem::free(UndoStack[i]);
-	UndoStack.Empty();
+	UndoStack.empty();
 }
 
 
@@ -1030,13 +1030,13 @@ void WCodeEditor::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 			BeginTransaction();
 			{
 				// Copy selected text to the buffer.
-				TArray<String> Buffer;
+				Array<String> Buffer;
 
 				if( CaretYBegin == CaretYEnd )
 				{
 					// Copy piece of line.
 					Int32 NumChars = CaretXEnd - CaretXBegin;
-					Buffer.Push(String::Copy( Lines[CaretYBegin].Text, CaretXBegin, NumChars ));
+					Buffer.push(String::Copy( Lines[CaretYBegin].Text, CaretXBegin, NumChars ));
 				}
 				else
 				{
@@ -1045,17 +1045,17 @@ void WCodeEditor::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 						if( Y == CaretYEnd )
 						{
 							// Last line.
-							Buffer.Push(String::Copy( Lines[Y].Text, 0, CaretXEnd ));
+							Buffer.push(String::Copy( Lines[Y].Text, 0, CaretXEnd ));
 						}
 						else if( Y == CaretYBegin )
 						{
 							// First line.
-							Buffer.Push(String::Copy( Lines[Y].Text, CaretXBegin, Lines[Y].Text.Len()-CaretXBegin ));
+							Buffer.push(String::Copy( Lines[Y].Text, CaretXBegin, Lines[Y].Text.Len()-CaretXBegin ));
 						}
 						else
 						{
 							// Middle line.
-							Buffer.Push(Lines[Y].Text);
+							Buffer.push(Lines[Y].Text);
 						}
 				}
 
@@ -1075,7 +1075,7 @@ void WCodeEditor::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 				CaretYBegin	= CaretYEnd	= DragY;
 
 				// Insert it.
-				for( Int32 i=0; i<Buffer.Num(); i++ )
+				for( Int32 i=0; i<Buffer.size(); i++ )
 				{
 					if( i == 0 )
 					{
@@ -1086,7 +1086,7 @@ void WCodeEditor::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 						TLine Line;
 						Line.First	= nullptr;
 						Line.Text	= Buffer[i];
-						Lines.Insert( CaretYBegin, 1 );
+						Lines.insert( CaretYBegin, 1 );
 						CaretYBegin++;
 						Lines[CaretYBegin] = Line;
 					}
@@ -1161,8 +1161,8 @@ void WCodeEditor::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 
 		// Slowly scroll.
 		if( Y < 0 )				ScrollTop = Max( 0, ScrollTop-1 );
-		if( Y > Size.Height )	ScrollTop = Min( Lines.Num()-1, ScrollTop+1 );
-		ScrollBar->Value = 100*ScrollTop / Max( Lines.Num()-1, 1 );
+		if( Y > Size.Height )	ScrollTop = Min( Lines.size()-1, ScrollTop+1 );
+		ScrollBar->Value = 100*ScrollTop / Max( Lines.size()-1, 1 );
 	}
 
 	// Change cursor style.
@@ -1231,7 +1231,7 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 			// <Right> arrow.
 			if( ++CaretXEnd > Lines[CaretYEnd].Text.Len() )
 			{
-				if( CaretYEnd != Lines.Num()-1 )
+				if( CaretYEnd != Lines.size()-1 )
 				{
 					CaretYEnd++;
 					CaretXEnd	= 0;
@@ -1249,7 +1249,7 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 		else if( Key == 0x28 )
 		{
 			// <Down> arrow.
-			CaretYEnd	= Min( CaretYEnd+1, Lines.Num()-1 );
+			CaretYEnd	= Min( CaretYEnd+1, Lines.size()-1 );
 			CaretXEnd = Min( CaretXEnd, Lines[CaretYEnd].Text.Len() );
 		}
 
@@ -1298,7 +1298,7 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 			{
 				freeandnil(AutoDialog);
 
-				if( CaretYBegin != Lines.Num()-1 )
+				if( CaretYBegin != Lines.size()-1 )
 				{
 					CaretYBegin++;
 					CaretXBegin	= 0;
@@ -1339,7 +1339,7 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 		// <Down> button.
 		if( !AutoDialog )
 		{
-			CaretYBegin	= CaretYEnd	= Min( CaretYEnd+1, Lines.Num()-1 );
+			CaretYBegin	= CaretYEnd	= Min( CaretYEnd+1, Lines.size()-1 );
 			CaretXBegin	= CaretXEnd = Min( CaretXEnd, Lines[CaretYBegin].Text.Len() );
 		}
 		else
@@ -1356,10 +1356,10 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 			{
 				if( CaretXEnd == Lines[CaretYBegin].Text.Len() )
 				{
-					if( CaretYBegin != Lines.Num()-1 )
+					if( CaretYBegin != Lines.size()-1 )
 					{
 						Lines[CaretYBegin].Text += Lines[CaretYBegin+1].Text;
-						Lines.RemoveShift( CaretYBegin+1 );
+						Lines.removeShift( CaretYBegin+1 );
 					}
 					freeandnil(AutoDialog);
 				}
@@ -1451,7 +1451,7 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 void WCodeEditor::SelectAll()
 {
 	CaretYBegin	= 0;
-	CaretYEnd	= Lines.Num()-1;
+	CaretYEnd	= Lines.size()-1;
 	CaretXBegin	= 0;
 	CaretXEnd	= Lines[CaretYEnd].Text.Len();
 
@@ -1498,7 +1498,7 @@ void WCodeEditor::PopPasteClick( WWidget* Sender )
 					Line.First	= nullptr;
 					Line.Text = L"";
 
-					Lines.Insert( CaretYBegin, 1 );
+					Lines.insert( CaretYBegin, 1 );
 					CaretYBegin++;
 					Lines[CaretYBegin] = Line;
 				}
@@ -1603,7 +1603,7 @@ void WCodeEditor::ScrollToCaret()
 	while( CaretYEnd >= ScrollTop+NumVis )		ScrollTop++;
 
 	// Update scroll bar.
-	ScrollBar->Value	= 100*ScrollTop / Max( Lines.Num()-1, 1 );
+	ScrollBar->Value	= 100*ScrollTop / Max( Lines.size()-1, 1 );
 }
 
 
@@ -1632,7 +1632,7 @@ void WCodeEditor::OnCharType( Char TypedChar )
 						CaretYBegin--;
 						CaretXBegin	= Lines[CaretYBegin].Text.Len();
 						Lines[CaretYBegin].Text += Lines[CaretYBegin+1].Text;
-						Lines.RemoveShift( CaretYBegin+1 );
+						Lines.removeShift( CaretYBegin+1 );
 					}
 				}
 				else
@@ -1701,7 +1701,7 @@ void WCodeEditor::OnCharType( Char TypedChar )
 				Int32 LastLen = Lines[CaretYBegin].Text.Len();
 				Lines[CaretYBegin].Text	= String::Delete( Lines[CaretYBegin].Text, CaretXBegin, Lines[CaretYBegin].Text.Len()-CaretXBegin );
 
-				Lines.Insert( CaretYBegin, 1 );
+				Lines.insert( CaretYBegin, 1 );
 				Lines[CaretYBegin+1] = Line;
 
 #if NEW_LINE_WHITESPACE
@@ -1964,7 +1964,7 @@ Bool WCodeEditor::IsInSelection( Int32 X, Int32 Y )
 void WCodeEditor::ScrollToLine( Int32 iLine )
 { 
 	// Clamp it.
-	iLine	= Clamp( iLine, 0, Lines.Num()-1 );
+	iLine	= Clamp( iLine, 0, Lines.size()-1 );
 
 	// Set caret location.
 	CaretYBegin	= CaretYEnd	= iLine;
@@ -1974,7 +1974,7 @@ void WCodeEditor::ScrollToLine( Int32 iLine )
 	ScrollTop	= Max( 0, iLine-10 );	
 
 	// Update scroll bar.
-	ScrollBar->Value	= 100*ScrollTop / Max( Lines.Num()-1, 1 );
+	ScrollBar->Value	= 100*ScrollTop / Max( Lines.size()-1, 1 );
 }
 
 
@@ -2014,7 +2014,7 @@ void WCodeEditor::ClearSelected()
 												);
 
 		for( Int32 i=CaretYBegin+1; i<=CaretYEnd; i++ )
-			Lines.RemoveShift( CaretYBegin+1 );
+			Lines.removeShift( CaretYBegin+1 );
 
 		CaretXEnd	= CaretXBegin;
 		CaretYEnd	= CaretYBegin;
@@ -2091,8 +2091,8 @@ void WCodeEditor::OnDragOver( void* Data, Int32 X, Int32 Y, Bool& bAccept )
 //
 void WCodeEditor::ScrollBarChange( WWidget* Sender )
 {
-	ScrollTop	= ScrollBar->Value * (Lines.Num()-1) / 100;
-	ScrollTop	= Clamp( ScrollTop, 0, Lines.Num()-1 );
+	ScrollTop	= ScrollBar->Value * (Lines.size()-1) / 100;
+	ScrollTop	= Clamp( ScrollTop, 0, Lines.size()-1 );
 }
 
 
@@ -2105,10 +2105,10 @@ void WCodeEditor::OnMouseScroll( Int32 Delta )
 	{
 		// Scroll text in aspect 1:3.
 		ScrollTop	-= Delta / 40;
-		ScrollTop	= Clamp( ScrollTop, 0, Lines.Num()-1 );
+		ScrollTop	= Clamp( ScrollTop, 0, Lines.size()-1 );
 
 		// Update scroll bar.
-		ScrollBar->Value	= 100*ScrollTop / Max( Lines.Num()-1, 1 );
+		ScrollBar->Value	= 100*ScrollTop / Max( Lines.size()-1, 1 );
 	}
 	else
 	{
@@ -2214,7 +2214,7 @@ Int32 WCodeEditor::YToLine( Int32 Y )
 			(
 				ScrollTop + Y / CharSize.Height,
 				0,
-				Lines.Num()-1
+				Lines.size()-1
 			);
 }
 
@@ -2236,7 +2236,7 @@ void WCodeEditor::HighlightBrackets( Bool bUnmark )
 	Int32 X = CaretXBegin,
 			Y = CaretYBegin;
 
-	if( !InRange(Y, 0, Lines.Num()-1) || !InRange(X, 0, Lines[Y].Text.Len()-1) )
+	if( !InRange(Y, 0, Lines.size()-1) || !InRange(X, 0, Lines[Y].Text.Len()-1) )
 		return;
 
 	const Char OpenBracks[] = L"([{";
@@ -2268,7 +2268,7 @@ void WCodeEditor::HighlightBrackets( Bool bUnmark )
 	{
 		// Look forward.
 		Int32 NestLevel = 0;
-		for( Y; Y<Lines.Num(); Y++ )
+		for( Y; Y<Lines.size(); Y++ )
 		{
 			for( X; X<Lines[Y].Text.Len(); X++ )
 			{
@@ -2331,7 +2331,7 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 
 	// Visible lines bounds.
 	Int32 iVisFirst	= ScrollTop;
-	Int32 iVisLast	= Min( ScrollTop + Size.Height/CharSize.Height, Lines.Num()-1 );
+	Int32 iVisLast	= Min( ScrollTop + Size.Height/CharSize.Height, Lines.size()-1 );
 	
 	// Draw background.
 	Render->DrawRegion
@@ -2562,7 +2562,7 @@ Bool WCodeEditor::FindText( String S, Bool bMatchCase )
 	CaretYBegin	= CaretYEnd;
 
 	// Iterate through all lines.
-	for( Int32 i=0, iLine=CaretYEnd, X=CaretXBegin; i<=Lines.Num(); i++, iLine=(iLine+1)%Lines.Num(), X=0 )
+	for( Int32 i=0, iLine=CaretYEnd, X=CaretXBegin; i<=Lines.size(); i++, iLine=(iLine+1)%Lines.size(), X=0 )
 	{
 		Int32 iFound = bMatchCase ? 
 							FindInLine( S, Lines[iLine].Text, X ) :
@@ -2615,7 +2615,7 @@ void WCodeEditor::Undo()
 //
 void WCodeEditor::Redo()
 {
-	if( UndoTop < (UndoStack.Num()-1) )
+	if( UndoTop < (UndoStack.size()-1) )
 	{
 		UndoTop++;
 		LoadFromUndoStack(UndoTop);
@@ -2634,7 +2634,7 @@ void WCodeEditor::BeginTransaction()
 	// Store first initial state.
 	if( UndoTop == 0 )
 	{
-		UndoStack.SetNum(1);
+		UndoStack.setSize(1);
 		SaveToUndoStack(0);
 		UndoTop	= 0;
 	}
@@ -2650,7 +2650,7 @@ void WCodeEditor::EndTransaction()
 	bUndoLock	= false;
 
 	// Destroy transactions after top.
-	for( Int32 i=UndoTop+1; i<UndoStack.Num(); i++ )
+	for( Int32 i=UndoTop+1; i<UndoStack.size(); i++ )
 		if( UndoStack[i] )
 		{
 			mem::free( UndoStack[i] );
@@ -2658,21 +2658,21 @@ void WCodeEditor::EndTransaction()
 		}
 
 	// Store current state.
-	UndoStack.SetNum(UndoTop+2);
-	if( UndoStack.Num() > HISTORY_LIMIT )
+	UndoStack.setSize(UndoTop+2);
+	if( UndoStack.size() > HISTORY_LIMIT )
 	{
 		// Destroy first record and shift others.
-		UndoStack.SetNum(HISTORY_LIMIT);
+		UndoStack.setSize(HISTORY_LIMIT);
 		mem::free(UndoStack[0]);
 
 		mem::copy
 		(
 			&UndoStack[0],
 			&UndoStack[1],
-			(UndoStack.Num()-1)*sizeof(void*)
+			(UndoStack.size()-1)*sizeof(void*)
 		);
 	}
-	UndoTop	= UndoStack.Num() - 1;
+	UndoTop	= UndoStack.size() - 1;
 
 	// Create new one.
 	UndoStack[UndoTop]	= nullptr;
@@ -2694,22 +2694,22 @@ void WCodeEditor::SaveToUndoStack( Int32 iSlot )
 	
 	// Count how mush required memory.
 	UInt32 ReqMem = 32; // Stoke.
-	for( Int32 iLine=0; iLine<Lines.Num(); iLine++ )
+	for( Int32 iLine=0; iLine<Lines.size(); iLine++ )
 		ReqMem	+= Lines[iLine].Text.Len() * sizeof(Char);
-	ReqMem	+= Lines.Num() * sizeof(Int32);
+	ReqMem	+= Lines.size() * sizeof(Int32);
 
 	// Write all required data into buffer.
 	UInt8*	Buffer	= (UInt8*)mem::alloc(ReqMem);
 	UInt8*	Walk	= Buffer;
 
 	// Write editor stuff.
-	*(Int32*)Walk	= Lines.Num();		Walk += sizeof(Int32);
+	*(Int32*)Walk	= Lines.size();		Walk += sizeof(Int32);
 	*(Int32*)Walk	= ScrollTop;		Walk += sizeof(Int32);
 	*(Int32*)Walk	= CaretXBegin;		Walk += sizeof(Int32);
 	*(Int32*)Walk	= CaretYBegin;		Walk += sizeof(Int32);
 
 	// Write line by line.
-	for( Int32 iLine=0; iLine<Lines.Num(); iLine++ )
+	for( Int32 iLine=0; iLine<Lines.size(); iLine++ )
 	{
 		TLine& Line	= Lines[iLine];
 
@@ -2752,7 +2752,7 @@ void WCodeEditor::LoadFromUndoStack( Int32 iSlot )
 	assert(UndoStack[iSlot]);
 
 	// Destroy old data.
-	Lines.Empty();
+	Lines.empty();
 	Pool.PopAll();
 
 #if UNDO_TEXT_COMPRESS
@@ -2777,13 +2777,13 @@ void WCodeEditor::LoadFromUndoStack( Int32 iSlot )
 	UInt8*	Walk	= (UInt8*)Data;
 
 	// Read editor stuff.
-	Lines.SetNum(*(Int32*)Walk);		Walk += sizeof(Int32);
+	Lines.setSize(*(Int32*)Walk);		Walk += sizeof(Int32);
 	ScrollTop	= *(Int32*)Walk;		Walk += sizeof(Int32);
 	CaretXBegin	= *(Int32*)Walk;		Walk += sizeof(Int32);
 	CaretYBegin	= *(Int32*)Walk;		Walk += sizeof(Int32);
 
 	// Read line by line.
-	for( Int32 iLine=0; iLine<Lines.Num(); iLine++ )
+	for( Int32 iLine=0; iLine<Lines.size(); iLine++ )
 	{
 		TLine& Line	= Lines[iLine];
 		Int32 Len	= *(Int32*)Walk;		
@@ -2796,7 +2796,7 @@ void WCodeEditor::LoadFromUndoStack( Int32 iSlot )
 	HighlightAll();
 	CaretXEnd			= CaretXBegin;
 	CaretYEnd			= CaretYBegin;
-	ScrollBar->Value	= 100*ScrollTop / Max( Lines.Num()-1, 1 );
+	ScrollBar->Value	= 100*ScrollTop / Max( Lines.size()-1, 1 );
 
 #if UNDO_TEXT_COMPRESS
 	// Free.
@@ -2862,11 +2862,11 @@ void WCodeEditor::HighlightAll()
 	Pool.PopAll();
 
 	// Cleanup old refs.
-	for( Int32 iLine=0; iLine<Lines.Num(); iLine++ )
+	for( Int32 iLine=0; iLine<Lines.size(); iLine++ )
 		Lines[iLine].First	= nullptr;
 
 	// For each line.
-	for( Int32 iLine=0; iLine<Lines.Num(); iLine++ )
+	for( Int32 iLine=0; iLine<Lines.size(); iLine++ )
 	{
 		TLine& Line = Lines[iLine];
 		Char ThisChar = 0, PrevChar = 0;
@@ -3075,10 +3075,10 @@ void WCodeEditor::WAutoComplete::AddEntry( EAutoType InType, String InLabel, Str
 	E.Type	= InType;
 	E.Label	= InLabel;
 	E.Text	= InText;
-	Entries.Push(E);
+	Entries.push(E);
 
 	// Add to list of items.
-	this->AddItem( InText, (void*)(Entries.Num()-1) );
+	this->AddItem( InText, (void*)(Entries.size()-1) );
 }
 
 
@@ -3180,7 +3180,7 @@ void WCodeEditor::WAutoComplete::Filter()
 
 	// Refill database.
 	this->Empty();
-	for( Int32 e=0; e<Entries.Num(); e++ )
+	for( Int32 e=0; e<Entries.size(); e++ )
 	{
 		TEntry& Entry = Entries[e];
 
@@ -3196,12 +3196,12 @@ void WCodeEditor::WAutoComplete::Filter()
 //
 void WCodeEditor::WAutoComplete::OnPaint( CGUIRenderBase* Render )
 {
-	assert(Items.Num()<=Entries.Num());
+	assert(Items.size()<=Entries.size());
 	WList::OnPaint( Render );
 	TPoint Base = ClientToWindow(TPoint::Zero);
 
 	// Show or hide the slider.
-	if( Items.Num() * ItemsHeight > Size.Height   )
+	if( Items.size() * ItemsHeight > Size.Height   )
 	{
 		Slider->bVisible = true;
 	}
@@ -3228,13 +3228,13 @@ void WCodeEditor::WAutoComplete::OnPaint( CGUIRenderBase* Render )
 	);
 
 	// Draw items.
-	if( Items.Num() > 0 )
+	if( Items.size() > 0 )
 	{
 		Int32 TextY	= (ItemsHeight - Root->Font1->Height) / 2;
 
 		// For each item.
 		for( Int32 i = 0, iItem = YToIndex(0); 
-			 i < Size.Height/ItemsHeight && iItem < Items.Num(); 
+			 i < Size.Height/ItemsHeight && iItem < Items.size(); 
 			 i++, iItem++ )
 		{			
 			TListItem& Item = Items[iItem];
@@ -3320,13 +3320,13 @@ void WCodeEditor::WAutoComplete::MoveToCaret()
 //
 // Fill autocomplete panel with list of components.
 //
-void WCodeEditor::WAutoComplete::FillBy( TArray<FExtraComponent*>& InArr )
+void WCodeEditor::WAutoComplete::FillBy( Array<FExtraComponent*>& InArr )
 {
 	ItemIndex	= -1;
-	Items.Empty();
-	Entries.Empty();
+	Items.empty();
+	Entries.empty();
 
-	for( Int32 e=0; e<InArr.Num(); e++ )
+	for( Int32 e=0; e<InArr.size(); e++ )
 		AddEntry
 		(
 			AT_Component,
@@ -3345,12 +3345,12 @@ void WCodeEditor::WAutoComplete::FillBy( TArray<FExtraComponent*>& InArr )
 void WCodeEditor::WAutoComplete::FillBy( CClass* Class )
 {
 	ItemIndex	= -1;
-	Items.Empty();
-	Entries.Empty();
+	Items.empty();
+	Entries.empty();
 
 	while( Class )
 	{
-		for( Int32 p=0; p<Class->Properties.Num(); p++ )
+		for( Int32 p=0; p<Class->Properties.size(); p++ )
 		{
 			CProperty* Prop	= Class->Properties[p];
 			AddEntry
@@ -3360,7 +3360,7 @@ void WCodeEditor::WAutoComplete::FillBy( CClass* Class )
 				Prop->Name
 			);
 		}
-		for( Int32 m=0; m<Class->Methods.Num(); m++ )
+		for( Int32 m=0; m<Class->Methods.size(); m++ )
 		{
 			CNativeFunction* Func	= Class->Methods[m];
 			AddEntry
@@ -3384,11 +3384,11 @@ void WCodeEditor::WAutoComplete::FillBy( CClass* Class )
 void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 {
 	ItemIndex	= -1;
-	Items.Empty();
-	Entries.Empty();
+	Items.empty();
+	Entries.empty();
 
 	// Native functions.
-	for( Int32 f=0; f<CClassDatabase::GFuncs.Num(); f++ )
+	for( Int32 f=0; f<CClassDatabase::GFuncs.size(); f++ )
 	{
 		CNativeFunction* Func	= CClassDatabase::GFuncs[f];
 		if( !(Func->Flags & (NFUN_UnaryOp|NFUN_BinaryOp|NFUN_SuffixOp|NFUN_AssignOp|NFUN_Method)) )
@@ -3406,7 +3406,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 		CClass*	Class	= Script->Base->GetClass();
 		while( Class )
 		{
-			for( Int32 p=0; p<Class->Properties.Num(); p++ )
+			for( Int32 p=0; p<Class->Properties.size(); p++ )
 			{
 				CProperty* Prop	= Class->Properties[p];
 				AddEntry
@@ -3416,7 +3416,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 					Prop->Name
 				);
 			}
-			for( Int32 m=0; m<Class->Methods.Num(); m++ )
+			for( Int32 m=0; m<Class->Methods.size(); m++ )
 			{
 				CNativeFunction* Func	= Class->Methods[m];
 				AddEntry
@@ -3433,7 +3433,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 
 	// Instance buffer.
 	if( Script->IsScriptable() && Script->InstanceBuffer )
-		for( Int32 p=0; p<Script->Properties.Num(); p++ )
+		for( Int32 p=0; p<Script->Properties.size(); p++ )
 		{
 			CProperty* Prop	= Script->Properties[p];
 			AddEntry
@@ -3445,7 +3445,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 		}
 
 	// Script functions.
-	for( Int32 f=0; f<Script->Methods.Num(); f++ )
+	for( Int32 f=0; f<Script->Methods.size(); f++ )
 	{
 		CFunction*	Func	= Script->Methods[f];
 		AddEntry
@@ -3457,7 +3457,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 	}
 
 	// Static properties.
-	for( Int32 p=0; p<Script->Statics.Num(); p++ )
+	for( Int32 p=0; p<Script->Statics.size(); p++ )
 	{
 		CProperty* Prop	= Script->Statics[p];
 		AddEntry
@@ -3469,7 +3469,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 	}
 
 	// Static functions.
-	for( Int32 f=0; f<Script->StaticFunctions.Num(); f++ )
+	for( Int32 f=0; f<Script->StaticFunctions.size(); f++ )
 	{
 		CFunction*	Func	= Script->StaticFunctions[f];
 		AddEntry
@@ -3481,7 +3481,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 	}
 
 	// Resource classes.
-	for( Int32 c=0; c<CClassDatabase::GClasses.Num(); c++ )
+	for( Int32 c=0; c<CClassDatabase::GClasses.size(); c++ )
 	{
 		CClass* C	= CClassDatabase::GClasses[c];
 		if( C->IsA(FResource::MetaClass) && !(C->Flags & CLASS_Abstract) )
@@ -3493,7 +3493,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 	}
 
 	// Scripts.
-	for( Int32 i=0; i<GObjectDatabase->GObjects.Num(); i++ )
+	for( Int32 i=0; i<GObjectDatabase->GObjects.size(); i++ )
 	{
 		FObject* Obj	= GObjectDatabase->GObjects[i];
 		if( Obj && Obj->IsA(FScript::MetaClass) )
@@ -3506,7 +3506,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 	}
 
 	// Available components.
-	for( Int32 i=0; i<Script->Components.Num(); i++ )
+	for( Int32 i=0; i<Script->Components.size(); i++ )
 	{
 		FComponent* C	= Script->Components[i];
 		AddEntry
@@ -3556,7 +3556,7 @@ WCompilerOutput::WCompilerOutput( WContainer* InOwner, WWindow* InRoot )
 //
 WCompilerOutput::~WCompilerOutput()
 {
-	Messages.Empty();
+	Messages.empty();
 	// Scroll bar will be destroyed
 	// in WContainer::~WContainer()
 }
@@ -3567,7 +3567,7 @@ WCompilerOutput::~WCompilerOutput()
 //
 void WCompilerOutput::Clear()
 {
-	Messages.Empty();
+	Messages.empty();
 	Log->Clear();
 }
 
@@ -3582,8 +3582,8 @@ void WCompilerOutput::AddMessage( String InText, FScript* Script, Int32 iLine, T
 	Msg.iLine = iLine;
 
 	Log->AddLine( InText, nullptr, InColor );
-	Messages.Push(Msg);
-	assert(Messages.Num() == Log->Lines.Num());
+	Messages.push(Msg);
+	assert(Messages.size() == Log->Lines.size());
 }
 
 

@@ -92,10 +92,10 @@ void WPlayPage::TickPage( Float Delta )
 	}
 
 	// Update errors list.
-	if( Messages.Num()>0 && (GPlat->Now()-LastPushTime)>7.0 )
+	if( Messages.size()>0 && (GPlat->Now()-LastPushTime)>7.0 )
 	{
 		LastPushTime	= GPlat->Now();
-		Messages.RemoveShift( 0 );
+		Messages.removeShift( 0 );
 	}
 
 	// Output information into status bar.
@@ -122,7 +122,7 @@ void WPlayPage::TickPage( Float Delta )
 static void DrawPathNetwork( CCanvas* Canvas, CNavigator* Navig )
 {
 	// Draw all nodes.
-	for( Int32 iNode=0; iNode<Navig->Nodes.Num(); iNode++ )
+	for( Int32 iNode=0; iNode<Navig->Nodes.size(); iNode++ )
 	{
 		TPathNode& Node = Navig->Nodes[iNode];
 
@@ -136,7 +136,7 @@ static void DrawPathNetwork( CCanvas* Canvas, CNavigator* Navig )
 
 	// Draw all edges.
 	TVector Bias( 0.f, (5.f*Canvas->View.FOV.Y*Canvas->View.Zoom)/(Canvas->View.Height) );
-	for( Int32 iEdge=0; iEdge<Navig->Edges.Num(); iEdge++ )
+	for( Int32 iEdge=0; iEdge<Navig->Edges.size(); iEdge++ )
 	{
 		TPathEdge& Edge = Navig->Edges[iEdge];
 
@@ -238,7 +238,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 
 
 	// Output all script errors.
-	for( Int32 iMsg=0; iMsg<Messages.Num(); iMsg++ )
+	for( Int32 iMsg=0; iMsg<Messages.size(); iMsg++ )
 	{
 		Canvas->DrawText
 					( 
@@ -258,12 +258,12 @@ void WPlayPage::AddScriptMessage( Bool bImportant, String Message )
 {
 	if( PlayMode == PLAY_Debug || bImportant )
 	{
-		Messages.Push( Message );
+		Messages.push( Message );
 		LastPushTime	= GPlat->Now();
 
 		// Check for overflow.
-		if( Messages.Num() > MAX_SCRIPT_MSG_LIST )
-			Messages.RemoveShift( 0 );
+		if( Messages.size() > MAX_SCRIPT_MSG_LIST )
+			Messages.removeShift( 0 );
 	}
 }
 

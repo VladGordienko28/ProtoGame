@@ -206,7 +206,7 @@ void WAnimationPage::ButtonDeleteClick( WWidget* Sender )
 {
 	if( SeqsList->ItemIndex != -1 )
 	{
-		Animation->Sequences.RemoveShift( SeqsList->ItemIndex );
+		Animation->Sequences.removeShift( SeqsList->ItemIndex );
 		UpdateControls();
 	}
 }
@@ -347,14 +347,14 @@ void WAnimationPage::ButtonNewClick( WWidget* Sender )
 	NewSeq.Start	= 0;
 	NewSeq.Count	= 1;
 	NewSeq.Name		= SeqName;
-	Animation->Sequences.Push( NewSeq );
+	Animation->Sequences.push( NewSeq );
 
 	// Refresh list.
 	UpdateControls();
 
 	// Highlight new sequence.
-	if( Animation->Sequences.Num() > 0 )
-		SeqsList->SetItemIndex( SeqsList->Items.Num()-1, true );
+	if( Animation->Sequences.size() > 0 )
+		SeqsList->SetItemIndex( SeqsList->Items.size()-1, true );
 }
 
 
@@ -364,7 +364,7 @@ void WAnimationPage::ButtonNewClick( WWidget* Sender )
 void WAnimationPage::UpdateControls()
 {
 	SeqsList->Empty();
-	for( Int32 i=0; i<Animation->Sequences.Num(); i++ )
+	for( Int32 i=0; i<Animation->Sequences.size(); i++ )
 		SeqsList->AddItem( Animation->Sequences[i].Name, &Animation->Sequences[i] );
 
 	ListSequencesChange( this );
@@ -623,7 +623,7 @@ void WAnimationPlayer::OnPaint( CGUIRenderBase* Render )
 
 	// Check frame.
 	Int32 Frame = *FramePtr;
-	if( Frame < 0 || Frame >= Animation->Frames.Num() )
+	if( Frame < 0 || Frame >= Animation->Frames.size() )
 		return;
 
 	TRect R = Animation->GetTexCoords( Frame );

@@ -18,10 +18,10 @@ CConfigManager::CConfigManager( String WorkingDirectory )
 {
 	info(L"ConfigMan: Directory: '%s'", *Directory);
 
-	TArray<String> FileList = GPlat->FindFiles( Directory, L"*.ini" );
-	info(L"ConfigMan: %d configuration files found", FileList.Num());
+	Array<String> FileList = GPlat->FindFiles( Directory, L"*.ini" );
+	info(L"ConfigMan: %d configuration files found", FileList.size());
 
-	for( Int32 iFile=0; iFile<FileList.Num(); iFile++ )
+	for( Int32 iFile=0; iFile<FileList.size(); iFile++ )
 	{
 		CTextReader Reader(FileList[iFile]);
 		
@@ -57,8 +57,8 @@ CConfigManager::CConfigManager( String WorkingDirectory )
 				TSection NewSection;
 				NewSection.Name = Buffer;
 				
-				IniFile.Sections.Push(NewSection);
-				Section = &IniFile.Sections.Last();
+				IniFile.Sections.push(NewSection);
+				Section = &IniFile.Sections.last();
 			}
 			else if( *Walk != L';' && *Walk )
 			{
@@ -82,7 +82,7 @@ CConfigManager::CConfigManager( String WorkingDirectory )
 			}
 		}
 
-		Files.Push(IniFile);
+		Files.push(IniFile);
 	}
 
 	info(L"Configuration manager initialized");
@@ -104,19 +104,19 @@ CConfigManager::~CConfigManager()
 //
 void CConfigManager::Flush()
 {
-	for( Int32 i=0; i<Files.Num(); i++ )
+	for( Int32 i=0; i<Files.size(); i++ )
 	{
 		TIniFile& File = Files[i];
 		if( File.bDirty )
 		{
 			CTextWriter Writer(File.FileName);
 
-			for( Int32 j=0; j<File.Sections.Num(); j++ )
+			for( Int32 j=0; j<File.Sections.size(); j++ )
 			{
 				TSection& Section = File.Sections[j];
 				Writer.WriteString(String::Format(L"[%s]", *Section.Name));
 
-				for( Int32 k=0; k<Section.Pairs.Entries.Num(); k++ )
+				for( Int32 k=0; k<Section.Pairs.Entries.size(); k++ )
 				{
 					TMap<String, String>::TEntry& Entry = Section.Pairs.Entries[k];
 					Writer.WriteString(String::Format(L"%s=%s", *Entry.Key, *Entry.Value ));
@@ -177,7 +177,7 @@ void CConfigManager::WriteString( const Char* File, const Char* Section, const C
 			NewSection.Name = Section;
 			NewSection.Pairs.Add( Key, Value );
 
-			IniFile->Sections.Push(NewSection);
+			IniFile->Sections.push(NewSection);
 		}
 
 		IniFile->bDirty = true;
@@ -193,9 +193,9 @@ void CConfigManager::WriteString( const Char* File, const Char* Section, const C
 		NewFile.bDirty = true;
 		NewFile.Name = File;
 		NewFile.FileName = String::Format(L"%s\\%s.ini", *Directory, File);
-		NewFile.Sections.Push(NewSection);
+		NewFile.Sections.push(NewSection);
 
-		Files.Push(NewFile);
+		Files.push(NewFile);
 	}
 }
 
@@ -280,7 +280,7 @@ CConfigManager::TSection* CConfigManager::FindSection( const Char* File, const C
 	if( !IniFile )
 		return nullptr;
 
-	for( Int32 j=0; j<IniFile->Sections.Num(); j++ )
+	for( Int32 j=0; j<IniFile->Sections.size(); j++ )
 		if( IniFile->Sections[j].Name == Section )
 			return &IniFile->Sections[j];
 
@@ -293,7 +293,7 @@ CConfigManager::TSection* CConfigManager::FindSection( const Char* File, const C
 //
 CConfigManager::TIniFile* CConfigManager::FindFile( const Char* File )
 {
-	for( Int32 i=0; i<Files.Num(); i++ )
+	for( Int32 i=0; i<Files.size(); i++ )
 		if( Files[i].Name == File )
 		{
 			return &Files[i];

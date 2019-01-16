@@ -14,7 +14,7 @@ class CBufferWriter: public CSerializer
 {
 public:
 	// CBufferWriter interface.
-	CBufferWriter( TArray<UInt8>& InData )
+	CBufferWriter( Array<UInt8>& InData )
 		:	Data(InData)
 	{
 		Mode = SM_Save;
@@ -23,8 +23,8 @@ public:
 	// CSerializer interface.
 	void SerializeData( void* Mem, SizeT Count )
 	{
-		Int32 i = Data.Num();
-		Data.SetNum(i + Count);
+		Int32 i = Data.size();
+		Data.setSize(i + Count);
 		mem::copy( &Data[i], Mem, Count );
 	}
 	void SerializeRef( FObject*& Obj )
@@ -34,7 +34,7 @@ public:
 	}
 	SizeT TotalSize()
 	{
-		return Data.Num();
+		return Data.size();
 	}
 	void Seek( SizeT NewPos )
 	{
@@ -42,11 +42,11 @@ public:
 	}
 	SizeT Tell()
 	{
-		return Data.Num();
+		return Data.size();
 	}
 
 private:
-	TArray<UInt8>&	Data;
+	Array<UInt8>&	Data;
 };
 
 
@@ -61,7 +61,7 @@ class CBufferReader: public CSerializer
 {
 public:
 	// CBufferReader interface.
-	CBufferReader( TArray<UInt8>& InData )
+	CBufferReader( Array<UInt8>& InData )
 		:	Data(InData),
 			Pos(0)
 	{
@@ -71,7 +71,7 @@ public:
 	// CSerializer interface.
 	void SerializeData( void* Mem, SizeT Count )
 	{
-		assert(Pos+Count <= Data.Num());
+		assert(Pos+Count <= Data.size());
 		mem::copy( Mem, &Data[Pos], Count );
 		Pos += Count;
 	}
@@ -83,11 +83,11 @@ public:
 	}
 	SizeT TotalSize()
 	{
-		return Data.Num();
+		return Data.size();
 	}
 	void Seek( SizeT NewPos )
 	{
-		assert(NewPos>=0 && NewPos<Data.Num());
+		assert(NewPos>=0 && NewPos<Data.size());
 		Pos = NewPos;
 	}
 	SizeT Tell()
@@ -96,7 +96,7 @@ public:
 	}
 
 private:
-	TArray<UInt8>&	Data;
+	Array<UInt8>&	Data;
 	SizeT	Pos;
 };
 

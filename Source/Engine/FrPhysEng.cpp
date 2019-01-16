@@ -1439,7 +1439,7 @@ void CPhysics::PhysicKeyframe( FKeyframeComponent* Object, Float Delta )
 					Int32 iPrevKey	= Floor(Object->Progress);
 					Int32 iDestKey	= iPrevKey + 1;
 
-					if( iDestKey < Object->Points.Num() )
+					if( iDestKey < Object->Points.size() )
 					{
 						// Continue gliding.
 						Float PathLen = Max( Distance( Object->Points[iPrevKey].Location, Object->Points[iDestKey].Location ), 0.01f );
@@ -1467,7 +1467,7 @@ void CPhysics::PhysicKeyframe( FKeyframeComponent* Object, Float Delta )
 						{
 							// Reloop.
 							Object->Speed		= -Object->Speed;
-							Object->Progress	= Object->Points.Num() - 1.f;
+							Object->Progress	= Object->Points.size() - 1.f;
 						}
 						else
 						{

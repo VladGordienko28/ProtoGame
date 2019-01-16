@@ -274,7 +274,7 @@ void CSGIntersection( FBrushComponent* Brush, FLevel* Level )
 	debug( L"CSG: Intersection" );
 
 	// Prepare.
-	Int32 NumEnts = Level->Entities.Num();
+	Int32 NumEnts = Level->Entities.size();
 	TCSGPoly Poly, OtherPoly;
 	TRect Rect;
 	
@@ -356,7 +356,7 @@ void CSGDifference( FBrushComponent* Brush, FLevel* Level )
 	debug( L"CSG: Difference" );
 
 	// Prepare.
-	Int32 NumEnts = Level->Entities.Num();
+	Int32 NumEnts = Level->Entities.size();
 	TCSGPoly Poly, OtherPoly;
 	TRect Rect;
 	

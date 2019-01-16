@@ -64,7 +64,7 @@ Int32 WMenu::AddSubMenu( String Title, WMenu* SubMenu )
 	Item.Event		= TNotifyEvent();
 	Item.SubMenu	= SubMenu;
 	Item.Text		= Title;
-	Item.Y			= Items.Num() ? Items.Last().Y+Items.Last().Height : 1;
+	Item.Y			= Items.size() ? Items.last().Y+Items.last().Height : 1;
 	Item.Height		= Title.Len() ? MENU_ITEM_HEIGHT : 3;
 	Item.bEnabled	= true;
 	Item.bToggle	= false;
@@ -76,7 +76,7 @@ Int32 WMenu::AddSubMenu( String Title, WMenu* SubMenu )
 				Item.Y + Item.Height + 1 
 			);
 
-	return Items.Push( Item );
+	return Items.push( Item );
 }
 
 
@@ -89,7 +89,7 @@ Int32 WMenu::AddItem( String Title, TNotifyEvent InEvent, Bool InbToggle )
 	Item.Event		= InEvent;
 	Item.SubMenu	= nullptr;
 	Item.Text		= Title;
-	Item.Y			= Items.Num() ? Items.Last().Y+Items.Last().Height : 1;
+	Item.Y			= Items.size() ? Items.last().Y+Items.last().Height : 1;
 	Item.Height		= Title.Len() ? MENU_ITEM_HEIGHT : 3;
 	Item.bEnabled	= true;
 	Item.bToggle	= InbToggle;
@@ -101,7 +101,7 @@ Int32 WMenu::AddItem( String Title, TNotifyEvent InEvent, Bool InbToggle )
 				Item.Y + Item.Height + 1 
 			);
 
-	return Items.Push( Item );
+	return Items.push( Item );
 }
 
 
@@ -151,7 +151,7 @@ void WMenu::OnPaint( CGUIRenderBase* Render )
 	Render->DrawRegion( Base, Size, GUI_COLOR_MENU, GUI_COLOR_MENU_SELECTED, BPAT_Solid );
 
 	// Draw each item.
-	for( Int32 i=0; i<Items.Num(); i++ )
+	for( Int32 i=0; i<Items.size(); i++ )
 	{
 		TMenuItem& Item = Items[i];
 
@@ -287,7 +287,7 @@ void WMenu::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 //
 Int32 WMenu::YToIndex( Int32 InY )
 {
-	for( Int32 i=0; i<Items.Num(); i++ )
+	for( Int32 i=0; i<Items.size(); i++ )
 	{
 		TMenuItem& Item = Items[i];
 
@@ -323,7 +323,7 @@ WMainMenu::WMainMenu( WContainer* InOwner, WWindow* InRoot )
 //
 WMainMenu::~WMainMenu()
 {
-	for( Int32 i=0; i<Items.Num(); i++ )
+	for( Int32 i=0; i<Items.size(); i++ )
 		if( Items[i].SubMenu )
 			delete Items[i].SubMenu;
 }
@@ -340,9 +340,9 @@ Int32 WMainMenu::AddSubMenu( String Title, WMenu* SubMenu )
 	Item.SubMenu	= SubMenu;
 	Item.Text		= Title;
 	Item.Width		= Root->Font1->TextWidth( *Title ) + 10;
-	Item.X			= Items.Num() ? Items.Last().X + Items.Last().Width : 4;
+	Item.X			= Items.size() ? Items.last().X + Items.last().Width : 4;
 
-	return Items.Push(Item);
+	return Items.push(Item);
 }
 
 
@@ -360,7 +360,7 @@ void WMainMenu::OnPaint( CGUIRenderBase* Render )
 	Render->DrawRegion( Base, Size, GUI_COLOR_MENU_BAR, GUI_COLOR_MENU_BAR, BPAT_Solid );
 
 	// Draw each item.
-	for( Int32 i=0; i<Items.Num(); i++ )
+	for( Int32 i=0; i<Items.size(); i++ )
 	{
 		TMainMenuItem& Item = Items[i];
 
@@ -448,7 +448,7 @@ void WMainMenu::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 
 	// Clamp selection.
 	if( bPopping && iSelected == -1 )
-		iSelected	=  X < 10 ? 0 : Items.Num()-1;
+		iSelected	=  X < 10 ? 0 : Items.size()-1;
 
 	if( bPopping )
 	{
@@ -475,7 +475,7 @@ void WMainMenu::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 //
 Int32 WMainMenu::XToIndex( Int32 InX )
 {
-	for( Int32 i=0; i<Items.Num(); i++ )
+	for( Int32 i=0; i<Items.size(); i++ )
 	{
 		TMainMenuItem& Item = Items[i];
 

@@ -27,7 +27,7 @@ public:
 	void Launch( const Char* Target, const Char* Parms );
 	TTimeOfDay GetTimeOfDay();
 	void SetNow( Double InNow );
-	TArray<String> FindFiles( String Directory, String Wildcard );
+	Array<String> FindFiles( String Directory, String Wildcard );
 
 private:
 	// Internal variables.

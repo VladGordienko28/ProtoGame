@@ -37,7 +37,7 @@ struct TPalette
 {
 public:
 	// Variable.
-	TArray<TColor>		Colors;
+	Array<TColor>		Colors;
 
 	// Functions.
 	TPalette();
@@ -151,7 +151,7 @@ class TStaticBitmap: public FBitmap
 {
 public:
 	// Variables.
-	TArray<UInt8>		Data;
+	Array<UInt8>		Data;
 
 	// TStaticBitmap interface.
 	TStaticBitmap();

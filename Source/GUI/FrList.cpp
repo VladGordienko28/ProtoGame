@@ -23,8 +23,8 @@ WComboBox::WComboBox( WContainer* InOwner, WWindow* InRoot )
 
 	// Set drop list really on top, sort of hack, but
 	// works well. Because DropList should stay on the top of top!
-	for( Int32 i=Root->Children.FindItem(DropList); i<Root->Children.Num()-1; i++ )
-		Root->Children.Swap( i, i+1 );
+	for( Int32 i=Root->Children.find(DropList); i<Root->Children.size()-1; i++ )
+		Root->Children.swap( i, i+1 );
 
 	HideDropList();
 	SetSize( 150, 18 );
@@ -37,7 +37,7 @@ WComboBox::WComboBox( WContainer* InOwner, WWindow* InRoot )
 WComboBox::~WComboBox()
 {
 	// Figure out, is DropList still valid?
-	if( DropList && (Root->Children.FindItem(DropList) != -1) )
+	if( DropList && (Root->Children.find(DropList) != -1) )
 		delete DropList;
 }
 
@@ -100,9 +100,9 @@ void WComboBox::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WList::OnDblClick( Button, X, Y );
 
-	if( Items.Num() && X < Size.Width-18 )
+	if( Items.size() && X < Size.Width-18 )
 	{
-		ItemIndex = ( ItemIndex + 1 ) % Items.Num();	  
+		ItemIndex = ( ItemIndex + 1 ) % Items.size();	  
 		OnChange();
 	}
 }
@@ -153,14 +153,14 @@ void WComboBox::ShowDropList()
 {
 	// Update items list.
 	DropList->Empty();
-	for( Int32 i=0; i<Items.Num();i++ )
+	for( Int32 i=0; i<Items.size();i++ )
 		DropList->AddItem( Items[i].Name, Items[i].Data );
 
 	// Compute show location and size.
 	TPoint P = ClientToWindow(TPoint::Zero);
 	//DropList->SetSize( Size.Width, DropList->ItemsHeight*Items.Num()+3 );
 	DropList->Size.Width	= Size.Width;
-	DropList->Size.Height	= DropList->ItemsHeight*Items.Num()+3;
+	DropList->Size.Height	= DropList->ItemsHeight*Items.size()+3;
 
 	// Fuck! Fucked Visual Studio crashes when debug step-by-step
 	// if without variable! Crap!
@@ -179,8 +179,8 @@ void WComboBox::ShowDropList()
 
 	// Set drop list really on top, sort of hack, but
 	// works well. Because DropList should stay on the top of top!
-	for( Int32 i=Root->Children.FindItem(DropList); i<Root->Children.Num()-1; i++ )
-		Root->Children.Swap( i, i+1 );
+	for( Int32 i=Root->Children.find(DropList); i<Root->Children.size()-1; i++ )
+		Root->Children.swap( i, i+1 );
 }
 
 
@@ -315,8 +315,8 @@ void WListBox::OnKeyDown( Int32 Key )
 		SelectNext();
 
 	// Scroll to show selected.
-	if( Slider->bVisible && Items.Num()>1 )
-		Slider->Value	= Clamp( ItemIndex*100/(Items.Num()-1), 0, 100 );
+	if( Slider->bVisible && Items.size()>1 )
+		Slider->Value	= Clamp( ItemIndex*100/(Items.size()-1), 0, 100 );
 }
 
 
@@ -347,7 +347,7 @@ void WListBox::OnPaint( CGUIRenderBase* Render )
 	TPoint Base = ClientToWindow(TPoint::Zero);
 	
 	// Show or hide the slider.
-	if( Items.Num() * ItemsHeight > Size.Height   )
+	if( Items.size() * ItemsHeight > Size.Height   )
 	{
 		Slider->bVisible = true;
 	}
@@ -375,13 +375,13 @@ void WListBox::OnPaint( CGUIRenderBase* Render )
 					);
 
 	// Draw items.
-	if( Items.Num() > 0 )
+	if( Items.size() > 0 )
 	{
 		Int32 TextY	= (ItemsHeight - Root->Font1->Height) / 2;
 
 		// For each item.
 		for( Int32 i = 0, iItem = YToIndex(0); 
-			 i < Size.Height/ItemsHeight && iItem < Items.Num(); 
+			 i < Size.Height/ItemsHeight && iItem < Items.size(); 
 			 i++, iItem++ )
 		{			
 			TListItem& Item = Items[iItem];
@@ -443,9 +443,9 @@ void WListBox::OnPaint( CGUIRenderBase* Render )
 Int32 WListBox::YToIndex( Int32 Y ) const
 {
 	Int32 NumVis = Size.Height / ItemsHeight;
-	Int32 Offset = Round((Items.Num() - NumVis) * Slider->Value / 100.f);
+	Int32 Offset = Round((Items.size() - NumVis) * Slider->Value / 100.f);
 	Int32 Index  = Offset + Y / ItemsHeight;
-	return Index < 0 ? -1 : Index >= Items.Num() ? -1 : Index;
+	return Index < 0 ? -1 : Index >= Items.size() ? -1 : Index;
 }
 
 
@@ -469,7 +469,7 @@ WList::WList( WContainer* InOwner, WWindow* InRoot )
 //
 Int32 WList::AddItem( String InName, void* InData )			
 {
-	return Items.Push(TListItem( InName, InData ));
+	return Items.push(TListItem( InName, InData ));
 }
 
 
@@ -478,7 +478,7 @@ Int32 WList::AddItem( String InName, void* InData )
 //
 Int32 WList::AddPictureItem( String InName, FTexture* Picture, TPoint PicOffset, TSize PicSize, void* Data )
 {
-	return Items.Push(TListItem( InName, Picture, PicOffset, PicSize, Data ));
+	return Items.push(TListItem( InName, Picture, PicOffset, PicSize, Data ));
 }
 
 
@@ -488,10 +488,10 @@ Int32 WList::AddPictureItem( String InName, FTexture* Picture, TPoint PicOffset,
 //
 void WList::Remove( Int32 iItem )	
 {
-	if( iItem >= 0 && iItem < Items.Num() )
+	if( iItem >= 0 && iItem < Items.size() )
 	{
-		Items.RemoveShift(iItem);
-		ItemIndex = Clamp( ItemIndex, -1, Items.Num()-1 );	
+		Items.removeShift(iItem);
+		ItemIndex = Clamp( ItemIndex, -1, Items.size()-1 );	
 	}
 }
 
@@ -501,7 +501,7 @@ void WList::Remove( Int32 iItem )
 //
 void WList::Empty()	
 {
-	Items.Empty();
+	Items.empty();
 	ItemIndex = -1;
 }
 
@@ -511,7 +511,7 @@ void WList::Empty()
 //
 void WList::SetItemIndex( Int32 NewIdx, Bool bNotify )	
 {
-	ItemIndex = Clamp( NewIdx, -1, Items.Num()-1 );
+	ItemIndex = Clamp( NewIdx, -1, Items.size()-1 );
 
 	if( bNotify )
 		OnChange();
@@ -541,7 +541,7 @@ void WList::OnDoubleClick()
 //
 void WList::AlphabetSort()
 {
-	Items.Sort([]( const TListItem& A, const TListItem& B )->Bool
+	Items.sort([]( const TListItem& A, const TListItem& B )->Bool
 		{
 			return String::CompareText( A.Name, B.Name ) < 0;
 		});
@@ -553,12 +553,12 @@ void WList::AlphabetSort()
 //
 void WList::SelectNext()
 {
-	if( ItemIndex < Items.Num()-1 )
+	if( ItemIndex < Items.size()-1 )
 	{
 		ItemIndex++;
-		while( ItemIndex <= Items.Num()-1 && !Items[ItemIndex].bEnabled )
+		while( ItemIndex <= Items.size()-1 && !Items[ItemIndex].bEnabled )
 			ItemIndex++;
-		if( ItemIndex >= Items.Num() )
+		if( ItemIndex >= Items.size() )
 			ItemIndex = -1;
 
 		OnChange();
@@ -677,8 +677,8 @@ void WLog::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 			
 			// Slowly scroll.
 			if( Y < 0 )				ScrollTop = Max( 0, ScrollTop-1 );
-			if( Y > Size.Height )	ScrollTop = Min( Lines.Num()-1, ScrollTop+1 );
-			ScrollBar->Value = 100*ScrollTop / Max( Lines.Num()-1, 1 );
+			if( Y > Size.Height )	ScrollTop = Min( Lines.size()-1, ScrollTop+1 );
+			ScrollBar->Value = 100*ScrollTop / Max( Lines.size()-1, 1 );
 		}
 	}
 }
@@ -704,7 +704,7 @@ void WLog::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 				iFirst = iLast = iBelow;
 
 			PopUp->Items[6].bEnabled = iFirst == iLast;
-			PopUp->Items[8].bEnabled = iFirst == iLast && iFirst < Lines.Num()-1;
+			PopUp->Items[8].bEnabled = iFirst == iLast && iFirst < Lines.size()-1;
 			PopUp->Items[9].bEnabled = iFirst == iLast && iFirst > 0;
 			PopUp->Show(ClientToWindow(TPoint(X, Y)));
 		}
@@ -726,7 +726,7 @@ void WLog::OnPaint( CGUIRenderBase* Render )
 
 	// Visible lines bounds.
 	Int32 iVisFirst	= ScrollTop;
-	Int32 iVisLast	= Min( ScrollTop + Size.Height/13, Lines.Num()-1 );
+	Int32 iVisLast	= Min( ScrollTop + Size.Height/13, Lines.size()-1 );
 
 	// Draw frame.
 	Render->DrawRegion
@@ -785,7 +785,7 @@ void WLog::OnKeyDown( Int32 Key )
 		if( Key == KEY_Up )
 		{
 			if( iLast == iFirst )
-				iLast = iFirst = Clamp( iFirst-1, 0, Lines.Num()-1 );
+				iLast = iFirst = Clamp( iFirst-1, 0, Lines.size()-1 );
 			else
 				iLast = iFirst;
 
@@ -794,7 +794,7 @@ void WLog::OnKeyDown( Int32 Key )
 		if( Key == KEY_Down )
 		{
 			if( iLast == iFirst )
-				iLast = iFirst = Clamp( iFirst+1, 0, Lines.Num()-1 );
+				iLast = iFirst = Clamp( iFirst+1, 0, Lines.size()-1 );
 			else
 				iFirst = iLast;
 
@@ -822,8 +822,8 @@ void WLog::OnKeyDown( Int32 Key )
 //
 void WLog::ScrollBarChange( WWidget* Sender )
 {
-	ScrollTop	= ScrollBar->Value * (Lines.Num()-1) / 100;
-	ScrollTop	= Clamp( ScrollTop, 0, Lines.Num()-1 );
+	ScrollTop	= ScrollBar->Value * (Lines.size()-1) / 100;
+	ScrollTop	= Clamp( ScrollTop, 0, Lines.size()-1 );
 }
 
 
@@ -834,10 +834,10 @@ void WLog::OnMouseScroll( Int32 Delta )
 {
 	// Scroll text in aspect 1:3.
 	ScrollTop	-= Delta / 40;
-	ScrollTop	= Clamp( ScrollTop, 0, Lines.Num()-1 );
+	ScrollTop	= Clamp( ScrollTop, 0, Lines.size()-1 );
 
 	// Update scroll bar.
-	ScrollBar->Value	= 100*ScrollTop / Max( Lines.Num()-1, 1 );
+	ScrollBar->Value	= 100*ScrollTop / Max( Lines.size()-1, 1 );
 }
 
 
@@ -853,7 +853,7 @@ void WLog::ScrollToLast()
 	while( iLast >= ScrollTop+NumVis )		ScrollTop++;
 
 	// Update scroll bar.
-	ScrollBar->Value	= 100*ScrollTop / Max( Lines.Num()-1, 1 );
+	ScrollBar->Value	= 100*ScrollTop / Max( Lines.size()-1, 1 );
 }
 
 
@@ -865,7 +865,7 @@ void WLog::Clear()
 	iLast = iFirst = -1;
 	ScrollTop = 0;
 	ScrollBar->Value = 0;
-	Lines.Empty();
+	Lines.empty();
 }
 
 
@@ -874,7 +874,7 @@ void WLog::Clear()
 //
 void* WLog::DataOf( Int32 i )
 {
-	assert(i>=0 && i<Lines.Num());
+	assert(i>=0 && i<Lines.size());
 	return Lines[i].Data;
 }
 
@@ -898,11 +898,11 @@ void WLog::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 //
 Int32 WLog::YToIndex( Int32 Y ) const
 { 
-	if( Lines.Num() == 0 )
+	if( Lines.size() == 0 )
 		return -1;
 
 	Int32 i = Max( 0, ScrollTop + Y/13 );
-	return i >= Lines.Num() ? -1 : i;
+	return i >= Lines.size() ? -1 : i;
 }
 
 
@@ -917,7 +917,7 @@ Int32 WLog::AddLine( String InText, void* InData, TColor InColor )
 	Line.Color	= InColor;
 	Line.Data	= InData;
 
-	Int32 iNew = Lines.Push(Line);
+	Int32 iNew = Lines.push(Line);
 
 	// Auto-scroll if nothing selected.
 	if( iLast == -1 && iFirst == -1 )
@@ -928,7 +928,7 @@ Int32 WLog::AddLine( String InText, void* InData, TColor InColor )
 	}
 
 	// Update scroll bar.
-	ScrollBar->Value	= 100*ScrollTop / Max( Lines.Num()-1, 1 );
+	ScrollBar->Value	= 100*ScrollTop / Max( Lines.size()-1, 1 );
 
 	return iNew;
 }
@@ -948,7 +948,7 @@ void WLog::OnChange()
 //
 void WLog::OnGoto( Int32 i )
 {
-	assert(i>=-1 && i<Lines.Num());
+	assert(i>=-1 && i<Lines.size());
 	EventGoto( this, i );
 }
 
@@ -973,7 +973,7 @@ void WLog::PopCopyClick( WWidget* Sender )
 	else
 	{
 		// Single line.
-		assert(i1>=0 && i1<Lines.Num());
+		assert(i1>=0 && i1<Lines.size());
 		GPlat->ClipboardCopy(*Lines[i1].Text);
 	}
 }
@@ -984,14 +984,14 @@ void WLog::PopCopyClick( WWidget* Sender )
 //
 void WLog::PopSelectAllClick( WWidget* Sender )
 {
-	if( Lines.Num() == 0 )
+	if( Lines.size() == 0 )
 	{
 		iLast = iFirst = -1;
 		return;
 	}
 
 	iFirst = 0;
-	iLast = Lines.Num() - 1;
+	iLast = Lines.size() - 1;
 	ScrollToLast();
 }
 

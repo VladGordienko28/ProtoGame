@@ -239,7 +239,7 @@ WMessageBox::WMessageBox( WWindow* InRoot, String InText, String InCaption, Bool
 	// Break text into lines and resize dialog to
 	// fit lines.
 	Lines				= String::WrapText( InText, 320/WWindow::Font1->TextWidth(L"a") );
-	SetSize( 340, 90+13*Lines.Num() );
+	SetSize( 340, 90+13*Lines.size() );
 	SetLocation( (Root->Size.Width-Size.Width)/2, (Root->Size.Height-Size.Height)/2 );
 
 	// Make form modal, if user wants it.
@@ -398,7 +398,7 @@ void WMessageBox::OnPaint( CGUIRenderBase* Render )
 		BPAT_Solid
 	);
 
-	for( Int32 iLine=0; iLine<Lines.Num(); iLine++ )
+	for( Int32 iLine=0; iLine<Lines.size(); iLine++ )
 		Render->DrawText
 		(
 			TPoint( Base.X+20, Base.Y+30+iLine*13 ),

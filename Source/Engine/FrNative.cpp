@@ -256,18 +256,18 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		{
 			FScript*	Script	= As<FScript>(POP_RESOURCE);
 			FLevel*		Level	= This->Level;
-			Foreach.Collection.Empty();
+			Foreach.Collection.empty();
 			if( Script )
 			{
-				for( Int32 i=0; i<Level->Entities.Num(); i++ )
+				for( Int32 i=0; i<Level->Entities.size(); i++ )
 					if( Level->Entities[i]->Script == Script && !Level->Entities[i]->Base->bDestroyed )
-						Foreach.Collection.Push(Level->Entities[i]);
+						Foreach.Collection.push(Level->Entities[i]);
 			}
 			else
 			{
-				for( Int32 i=0; i<Level->Entities.Num(); i++ )
+				for( Int32 i=0; i<Level->Entities.size(); i++ )
 					if( !Level->Entities[i]->Base->bDestroyed )
-						Foreach.Collection.Push(Level->Entities[i]);
+						Foreach.Collection.push(Level->Entities[i]);
 			}
 			break;
 		}
@@ -278,24 +278,24 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 			FLevel*			Level		= This->Level;
 			Int32			NumBases	= 0;
 			FBaseComponent*	Bases[MAX_COLL_LIST_OBJS];
-			Foreach.Collection.Empty();		
+			Foreach.Collection.empty();		
 			if( Script )
 				Level->CollHash->GetOverlappedByScript( Area, Script, NumBases, Bases );
 			else
 				Level->CollHash->GetOverlapped( Area, NumBases, Bases );
 			for( Int32 i=0; i<NumBases; i++ )
-				Foreach.Collection.Push(Bases[i]->Entity);
+				Foreach.Collection.push(Bases[i]->Entity);
 			break;
 		}
 		case IT_TouchedEntities:
 		{
-			Foreach.Collection.Empty();
+			Foreach.Collection.empty();
 			if( This->Base->IsA(FPhysicComponent::MetaClass) )
 			{
 				FPhysicComponent* Phys = (FPhysicComponent*)This->Base;
 				for( Int32 i=0; i<arr_len(FPhysicComponent::Touched); i++ )
 					if( Phys->Touched[i] )
-						Foreach.Collection.Push(Phys->Touched[i]);
+						Foreach.Collection.push(Phys->Touched[i]);
 			}
 			break;
 		}

@@ -506,7 +506,7 @@ template<class T> class TInterpCurve
 {
 public:
 	// Variables.
-	TArray<TInterpPoint<T>>	Samples;
+	Array<TInterpPoint<T>>	Samples;
 
 	// TInterpCurve interface.
 	TInterpCurve();
@@ -540,9 +540,9 @@ template<class T> inline TInterpCurve<T>::TInterpCurve()
 template<class T> inline Int32 TInterpCurve<T>::AddSample( Float Input, const T& Output )
 {		
 	Int32 i;
-	for( i=0; i<Samples.Num() && Samples[i].Input<Input; i++ );
+	for( i=0; i<Samples.size() && Samples[i].Input<Input; i++ );
 
-	Samples.Insert(i);
+	Samples.insert(i, 1);
 	Samples[i] = TInterpPoint<T>( EIT_Linear, Input, Output );
 	return i;
 }
@@ -563,15 +563,15 @@ template<class T> inline void TInterpCurve<T>::Empty()
 template<class T> inline T TInterpCurve<T>::SampleAt( Float Input, const T& Default ) const
 {
 	// Edge cases.
-	if( Samples.Num() == 0 )
+	if( Samples.size() == 0 )
 		return Default;
-	if( Samples.Num() < 2 || Input <= Samples[0].Input  )
+	if( Samples.size() < 2 || Input <= Samples[0].Input  )
 		return Samples[0].Output;
-	if( Input >= Samples[Samples.Num()-1].Input )
-		return Samples[Samples.Num()-1].Output;
+	if( Input >= Samples[Samples.size()-1].Input )
+		return Samples[Samples.size()-1].Output;
 
 	// Linear search.
-	for( Int32 i=1; i<Samples.Num(); i++ )
+	for( Int32 i=1; i<Samples.size(); i++ )
 	{
 		const TInterpPoint<T>& A = Samples[i-1];
 		const TInterpPoint<T>& B = Samples[i];
@@ -614,14 +614,14 @@ template<class T> inline T TInterpCurve<T>::SampleAt( Float Input, const T& Defa
 //
 template<class T> inline T TInterpCurve<T>::SampleLinearAt( Float Input, const T& Default ) const
 {
-	if( Samples.Num() == 0 )
+	if( Samples.size() == 0 )
 		return Default;
-	if( Samples.Num() < 2 || Input <= Samples[0].Input  )
+	if( Samples.size() < 2 || Input <= Samples[0].Input  )
 		return Samples[0].Output;
-	if( Input >= Samples[Samples.Num()-1].Input )
-		return Samples[Samples.Num()-1].Output;
+	if( Input >= Samples[Samples.size()-1].Input )
+		return Samples[Samples.size()-1].Output;
 
-	for( Int32 i=1; i<Samples.Num(); i++ )
+	for( Int32 i=1; i<Samples.size(); i++ )
 	{
 		const TInterpPoint<T>& A = Samples[i-1];
 		const TInterpPoint<T>& B = Samples[i];

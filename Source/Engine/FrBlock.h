@@ -87,7 +87,7 @@ public:
 
 private:
 	// Internal.
-	TArray<TDataBlock*>		Blocks;
+	Array<TDataBlock*>		Blocks;
 	String					FileName;
 	CSerializer*			ResFile;
 };

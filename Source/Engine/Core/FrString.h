@@ -65,7 +65,7 @@ public:
 	static String FromFloat( Float Value );
 	static String Copy( String Source, Int32 StartChar, Int32 Count );
 	static String Delete( String Str, Int32 StartChar, Int32 Count );
-	static TArray<String> String::WrapText( String Text, Int32 MaxColumnSize );
+	static Array<String> String::WrapText( String Text, Int32 MaxColumnSize );
 
 	// Pool cleanup.
 	static void Flush();

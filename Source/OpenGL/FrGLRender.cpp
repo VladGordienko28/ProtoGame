@@ -91,22 +91,22 @@ void COpenGLRender::Unlock()
 //
 void COpenGLRender::Flush()
 {
-	TArray<GLuint>	List;
+	Array<GLuint>	List;
 
 	// Kill all FBitmap's data.
 	if( GProject )
-		for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
+		for( Int32 i=0; i<GProject->GObjects.size(); i++ )
 			if( GProject->GObjects[i] && GProject->GObjects[i]->IsA(FBitmap::MetaClass) )
 			{
 				FBitmap* Bitmap	= As<FBitmap>(GProject->GObjects[i]);
 				if( Bitmap->RenderInfo != -1 )
-					List.Push(Bitmap->RenderInfo);
+					List.push(Bitmap->RenderInfo);
 
 				Bitmap->RenderInfo	= -1;
 			}
 
-	if( List.Num() > 0 )
-		glDeleteTextures( List.Num(), &List[0] );
+	if( List.size() > 0 )
+		glDeleteTextures( List.size(), &List[0] );
 }
 
 
@@ -382,7 +382,7 @@ void COpenGLCanvas::DrawRect( const TRenderRect& Rect )
 			//
 			// Render as material.
 			//
-			if( Material->Layers.Num() == 0 )
+			if( Material->Layers.size() == 0 )
 			{
 				// No render layers.
 				SetBitmap(FBitmap::NullBitmap(), true);
@@ -399,7 +399,7 @@ void COpenGLCanvas::DrawRect( const TRenderRect& Rect )
 			RawTexVerts[3]	= TVector( T2.X, T1.Y );
 
 			// Foreach material layer.
-			for( Int32 iLayer=Material->Layers.Num()-1; iLayer>=0; iLayer-- )
+			for( Int32 iLayer=Material->Layers.size()-1; iLayer>=0; iLayer-- )
 			{
 				FDiffuseLayer* Layer = As<FDiffuseLayer>(Material->Layers[iLayer]);
 				if( !Layer->Bitmap )
@@ -550,7 +550,7 @@ void COpenGLCanvas::DrawPoly( const TRenderPoly& Poly )
 			//
 			// Render as material.
 			//
-			if( Material->Layers.Num() == 0 )
+			if( Material->Layers.size() == 0 )
 			{
 				// No render layers.
 				SetBitmap(FBitmap::NullBitmap(), true);
@@ -558,7 +558,7 @@ void COpenGLCanvas::DrawPoly( const TRenderPoly& Poly )
 			}
 
 			// Foreach material layer.
-			for( Int32 iLayer=Material->Layers.Num()-1; iLayer>=0; iLayer-- )
+			for( Int32 iLayer=Material->Layers.size()-1; iLayer>=0; iLayer-- )
 			{
 				FDiffuseLayer* Layer = As<FDiffuseLayer>(Material->Layers[iLayer]);
 				if( !Layer->Bitmap )
@@ -1472,7 +1472,7 @@ void drawSkyZone( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& Parent 
 	{
 		Canvas->PushTransform( WestView );
 		{
-			for( Int32 i=0; i<Level->RenderObjects.Num(); i++ )
+			for( Int32 i=0; i<Level->RenderObjects.size(); i++ )
 				Level->RenderObjects[i]->Render( Canvas );
 		}
 		Canvas->PopTransform();
@@ -1483,7 +1483,7 @@ void drawSkyZone( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& Parent 
 	{
 		Canvas->PushTransform( EastView );
 		{
-			for( Int32 i=0; i<Level->RenderObjects.Num(); i++ )
+			for( Int32 i=0; i<Level->RenderObjects.size(); i++ )
 				Level->RenderObjects[i]->Render( Canvas );
 		}
 		Canvas->PopTransform();
@@ -1492,7 +1492,7 @@ void drawSkyZone( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& Parent 
 	// Render central sky piece.
 	Canvas->PushTransform( SkyView );
 	{
-		for( Int32 i=0; i<Level->RenderObjects.Num(); i++ )
+		for( Int32 i=0; i<Level->RenderObjects.size(); i++ )
 			Level->RenderObjects[i]->Render( Canvas );
 
 		// Draw overlay lightmap, in sky coords!
@@ -1561,7 +1561,7 @@ void drawHalfPlaneMirror( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo&
 			*/
 
 			// Render level.
-			for( Int32 i=0; i<Level->RenderObjects.Num(); i++ )			
+			for( Int32 i=0; i<Level->RenderObjects.size(); i++ )			
 				Level->RenderObjects[i]->Render( Canvas );
 
 			// Render overlay lightmap.
@@ -1646,7 +1646,7 @@ void drawHalfPlaneWarp( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& P
 			*/
 
 			// Render level.
-			for( Int32 i=0; i<Level->RenderObjects.Num(); i++ )			
+			for( Int32 i=0; i<Level->RenderObjects.size(); i++ )			
 				Level->RenderObjects[i]->Render( Canvas );
 
 			// Render overlay lightmap.
@@ -1697,7 +1697,7 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 
 	// Sort render objects according to it layer.
 	if( GFrameStamp & 31 )
-		Level->RenderObjects.Sort(RenderObjectCmp);
+		Level->RenderObjects.sort(RenderObjectCmp);
 	
 	// Update shader time.
 	Canvas->EnableShader( &Canvas->FluShader );
@@ -1797,7 +1797,7 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 			}
 
 		// Render all objects in master view.
-		for( Int32 i=0; i<Level->RenderObjects.Num(); i++ )
+		for( Int32 i=0; i<Level->RenderObjects.size(); i++ )
 			Level->RenderObjects[i]->Render( Canvas );
 
 		// Draw addition-lighting lightmap.
@@ -2034,7 +2034,7 @@ Int32 CGLShaderBase::RegisterUniform( AnsiChar* Name )
 	if( Uniform.iUniform == -1 )
 		fatal( L"Uniform variable '%hs' not found in shader '%s'", Name, *this->Name );
 	
-	return Uniforms.Push(Uniform);
+	return Uniforms.push(Uniform);
 }
 
 

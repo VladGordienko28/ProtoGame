@@ -19,10 +19,10 @@
 //
 // Global tables.
 //
-TArray<CClass*>				CClassDatabase::GClasses;
-TArray<CEnum*>				CClassDatabase::GEnums;
-TArray<CNativeFunction*>	CClassDatabase::GFuncs;
-TArray<CStruct*>			CClassDatabase::GStructs;
+Array<CClass*>				CClassDatabase::GClasses;
+Array<CEnum*>				CClassDatabase::GEnums;
+Array<CNativeFunction*>		CClassDatabase::GFuncs;
+Array<CStruct*>				CClassDatabase::GStructs;
 
 
 //
@@ -33,7 +33,7 @@ CClass* CClassDatabase::StaticFindClass( const Char* InName )
 {
 	// Pretty sad, O(n), but used seldom,
 	// so, it's doesn't critical.
-	for( Int32 i=0; i<GClasses.Num(); i++ )
+	for( Int32 i=0; i<GClasses.size(); i++ )
 		if( GClasses[i]->Name == InName )
 			return GClasses[i];
 
@@ -49,7 +49,7 @@ CEnum* CClassDatabase::StaticFindEnum( const Char* InName )
 {
 	// Pretty sad, O(n), but used seldom,
 	// so, it's doesn't critical.
-	for( Int32 i=0; i<GEnums.Num(); i++ )
+	for( Int32 i=0; i<GEnums.size(); i++ )
 		if( GEnums[i]->Name == InName )
 			return GEnums[i];
 
@@ -65,7 +65,7 @@ CNativeFunction* CClassDatabase::StaticFindFunction( const Char* InName )
 {
 	// Pretty sad, O(n), but used seldom,
 	// so, it's doesn't critical.
-	for( Int32 i=0; i<GFuncs.Num(); i++ )
+	for( Int32 i=0; i<GFuncs.size(); i++ )
 		if( GFuncs[i]->Name == InName )
 			return GFuncs[i];
 
@@ -81,7 +81,7 @@ CStruct* CClassDatabase::StaticFindStruct( const Char* InName )
 {
 	// Pretty sad, O(n), but used seldom,
 	// so, it's doesn't critical.
-	for( Int32 i=0; i<GStructs.Num(); i++ )
+	for( Int32 i=0; i<GStructs.size(); i++ )
 		if( GStructs[i]->Name == InName )
 			return GStructs[i];
 
@@ -127,14 +127,14 @@ CClass::CClass( const Char* InName, TConstructor InCnstr, CClass* InSuper, UInt3
 CClass::~CClass()
 {
 	// Kill properties.
-	for( Int32 iProp=0; iProp<Properties.Num(); iProp++ )
+	for( Int32 iProp=0; iProp<Properties.size(); iProp++ )
 		delete Properties[iProp];
-	Properties.Empty();
+	Properties.empty();
 
 	// Kill methods.
-	for( Int32 iMeth=0; iMeth<Methods.Num(); iMeth++ )
+	for( Int32 iMeth=0; iMeth<Methods.size(); iMeth++ )
 		delete Methods[iMeth];
-	Methods.Empty();
+	Methods.empty();
 }
 
 
@@ -144,7 +144,7 @@ CClass::~CClass()
 void CClass::AddProperty( CProperty* InProp )
 {
 	assert(FindProperty(*InProp->Name) == nullptr);
-	Properties.Push( InProp );
+	Properties.push( InProp );
 }
 
 
@@ -154,7 +154,7 @@ void CClass::AddProperty( CProperty* InProp )
 void CClass::AddMethod( CNativeFunction* InMeth )
 {
 	assert(FindMethod(*InMeth->Name) == nullptr);
-	Methods.Push( InMeth );
+	Methods.push( InMeth );
 }
 
 
@@ -164,7 +164,7 @@ void CClass::AddMethod( CNativeFunction* InMeth )
 //
 CProperty* CClass::FindProperty( const Char* InName ) const
 {
-	for( Int32 iProp=0; iProp<Properties.Num(); iProp++ )
+	for( Int32 iProp=0; iProp<Properties.size(); iProp++ )
 		if( Properties[iProp]->Name == InName )
 			return Properties[iProp];
 
@@ -179,7 +179,7 @@ CProperty* CClass::FindProperty( const Char* InName ) const
 //
 CNativeFunction* CClass::FindMethod( const Char* InName ) const
 {
-	for( Int32 iMeth=0; iMeth<Methods.Num(); iMeth++ )
+	for( Int32 iMeth=0; iMeth<Methods.size(); iMeth++ )
 		if( Methods[iMeth]->Name == InName )
 			return Methods[iMeth];
 
@@ -219,7 +219,7 @@ CNativeFunction::CNativeFunction( const Char* InName, UInt32 InFlags, Int32 InOp
 {
 	// Test for duplicates.
 	if( !(Flags & (NFUN_UnaryOp | NFUN_BinaryOp)) )
-		for( Int32 i=0; i<CClassDatabase::GFuncs.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GFuncs.size(); i++ )
 		{
 			CNativeFunction* Other = CClassDatabase::GFuncs[i];
 
@@ -242,7 +242,7 @@ CNativeFunction::CNativeFunction( const Char* InName, UInt32 InFlags, TNativeFun
 {
 	assert(Flags & NFUN_Extended);
 
-	for( Int32 i=0; i<CClassDatabase::GFuncs.Num(); i++ )
+	for( Int32 i=0; i<CClassDatabase::GFuncs.size(); i++ )
 	{
 		CNativeFunction* Other = CClassDatabase::GFuncs[i];
 
@@ -423,7 +423,7 @@ CStruct::CStruct( const Char* InName )
 //
 CStruct::~CStruct()
 {
-	for( Int32 i=0; i<Members.Num(); i++ )
+	for( Int32 i=0; i<Members.size(); i++ )
 		freeandnil(Members[i]);
 }
 
@@ -433,7 +433,7 @@ CStruct::~CStruct()
 //
 CProperty* CStruct::FindMember( const Char* InName ) const
 {
-	for( Int32 i=0; i<Members.Num(); i++ )
+	for( Int32 i=0; i<Members.size(); i++ )
 		if( Members[i]->Name == InName )
 			return Members[i];
 	return nullptr;
@@ -445,9 +445,8 @@ CProperty* CStruct::FindMember( const Char* InName ) const
 //
 void CStruct::CopyValues( void* Dst, const void* Src ) const
 {
-	for( Int32 i=0; i<Members.Num(); i++ )
+	for( auto& P : Members )
 	{
-		CProperty* P = Members[i];
 		P->CopyValue( (UInt8*)Dst + P->Offset, (UInt8*)Src + P->Offset );
 	}
 }
@@ -458,7 +457,7 @@ void CStruct::CopyValues( void* Dst, const void* Src ) const
 //
 void CStruct::DestroyValues( void* Addr ) const
 {
-	for( Int32 i=0; i<Members.Num(); i++ )
+	for( Int32 i=0; i<Members.size(); i++ )
 	{
 		CProperty* P = Members[i];
 		if( P->NeedDestruction() )
@@ -472,9 +471,8 @@ void CStruct::DestroyValues( void* Addr ) const
 //
 void CStruct::SerializeValues( void* Addr, CSerializer& S ) const
 {
-	for( Int32 i=0; i<Members.Num(); i++ )
+	for( auto& P : Members )
 	{
-		CProperty* P = Members[i];
 		P->SerializeValue( (UInt8*)Addr + P->Offset, S );
 	}
 }
@@ -485,9 +483,8 @@ void CStruct::SerializeValues( void* Addr, CSerializer& S ) const
 //
 void CStruct::ImportValues( void* Addr, CImporterBase& Im, String Prefix ) const
 {
-	for( Int32 i=0; i<Members.Num(); i++ )
+	for( auto& P : Members )
 	{
-		CProperty* P = Members[i];
 		P->ImportValue( (UInt8*)Addr + P->Offset, Im, String::Format(L"%s.%s", *Prefix, *P->Name) );
 	}
 }
@@ -498,9 +495,8 @@ void CStruct::ImportValues( void* Addr, CImporterBase& Im, String Prefix ) const
 //
 void CStruct::ExportValues( const void* Addr, CExporterBase& Ex, String Prefix ) const
 {
-	for( Int32 i=0; i<Members.Num(); i++ )
+	for( auto& P : Members )
 	{
-		CProperty* P = Members[i];
 		P->ExportValue( (UInt8*)Addr + P->Offset, Ex, String::Format(L"%s.%s", *Prefix, *P->Name) );
 	}
 }
@@ -511,9 +507,8 @@ void CStruct::ExportValues( const void* Addr, CExporterBase& Ex, String Prefix )
 //
 Bool CStruct::CompareValues( const void* A, const void* B ) const
 {
-	for( Int32 i=0; i<Members.Num(); i++ )
+	for( auto& P : Members )
 	{
-		CProperty* P = Members[i];
 		if( !P->CompareValue( (UInt8*)A + P->Offset, (UInt8*)B + P->Offset ) )
 			return false;
 	}
@@ -526,7 +521,7 @@ Bool CStruct::CompareValues( const void* A, const void* B ) const
 //
 Bool CStruct::NeedDestruction() const
 {
-	for( Int32 i=0; i<Members.Num(); i++ )
+	for( Int32 i=0; i<Members.size(); i++ )
 		if( Members[i]->NeedDestruction() )
 			return true;
 
@@ -696,7 +691,7 @@ SizeT CTypeInfo::TypeSize( Bool bNoArray ) const
 	else
 	{
 		// Dynamic array.
-		return sizeof(TArrayBase);
+		return sizeof(ArrayPOD);
 	}
 }
 
@@ -758,12 +753,12 @@ void CTypeInfo::DestroyValue( const void* Addr ) const
 	else
 	{
 		// Dynamic array.
-		TArrayBase* Array = (TArrayBase*)Addr;
-		if( Array->Count > 0 )
+		ArrayPOD* Array = (ArrayPOD*)Addr;
+		if( Array->size > 0 )
 		{
-			CTypeInfo Elems( Type, Array->Count, Inner );
-			Elems.DestroyValue( Array->Data );
-			TArrayBase::Reallocate( Array->Data, Array->Count, 0, Elems.TypeSize(false) );
+			CTypeInfo Elems( Type, Array->size, Inner );
+			Elems.DestroyValue( Array->data );
+			array::reallocate( Array->data, Array->size, 0, Elems.TypeSize(false) );
 		}
 	}
 }
@@ -800,24 +795,24 @@ void CTypeInfo::CopyValue( void* Dst, const void* Src ) const
 	else
 	{
 		// Copy dynamic array.
-		TArrayBase* DArray = (TArrayBase*)Dst;
-		TArrayBase* SArray = (TArrayBase*)Src;
+		ArrayPOD* DArray = (ArrayPOD*)Dst;
+		ArrayPOD* SArray = (ArrayPOD*)Src;
 
 		DestroyValue( Dst );
-		SetArrayLength( Dst, SArray->Count );
-		assert(DArray->Count == SArray->Count);
+		SetArrayLength( Dst, SArray->size );
+		assert(DArray->size == SArray->size);
 
 		CTypeInfo Elem( Type, 1, Inner );
-		if( SArray->Count > 0 )
+		if( SArray->size > 0 )
 		{
 			if( Elem.NeedDestruction() )
 			{
-				Elem.ArrayDim = SArray->Count;
-				Elem.CopyValue( DArray->Data, SArray->Data );
+				Elem.ArrayDim = SArray->size;
+				Elem.CopyValue( DArray->data, SArray->data );
 			}
 			else
 			{
-				mem::copy( DArray->Data, SArray->Data, Elem.TypeSize(true)*SArray->Count );
+				mem::copy( DArray->data, SArray->data, Elem.TypeSize(true)*SArray->size );
 			}
 		}
 	}
@@ -859,15 +854,15 @@ Bool CTypeInfo::CompareValue( const void* A, const void* B ) const
 	else
 	{
 		// Dynamic array.
-		TArrayBase* AArray = (TArrayBase*)A;
-		TArrayBase* BArray = (TArrayBase*)B;
-		if( AArray->Count != BArray->Count )
+		ArrayPOD* AArray = (ArrayPOD*)A;
+		ArrayPOD* BArray = (ArrayPOD*)B;
+		if( AArray->size != BArray->size )
 			return false;
 
-		if( AArray->Count > 0 )
+		if( AArray->size > 0 )
 		{
-			CTypeInfo Elems( Type, AArray->Count, Inner );
-			return Elems.CompareValue( AArray->Data, BArray->Data );
+			CTypeInfo Elems( Type, AArray->size, Inner );
+			return Elems.CompareValue( AArray->data, BArray->data );
 		}
 		return true;
 	}
@@ -889,11 +884,11 @@ Bool CustomMatchStructs( const CStruct* A, const CStruct* B )
 	// Simple rejection.
 	if( A->Size != B->Size )
 		return false;
-	if( A->Members.Num() != B->Members.Num() )
+	if( A->Members.size() != B->Members.size() )
 		return false;
 
 	// Member by member matching.
-	for( Int32 i=0; i<A->Members.Num(); i++ )
+	for( Int32 i=0; i<A->Members.size(); i++ )
 	{
 		if( !A->Members[i]->MatchWith(*B->Members[i]) )
 			return false;
@@ -957,7 +952,7 @@ String CTypeInfo::ToString( const void* Addr ) const
 		{
 			UInt8 Value = *(UInt8*)Addr;
 			if( Enum )
-				return Value < Enum->Elements.Num() ? *Enum->GetAliasOf(Value) : L"BAD_INDEX";
+				return Value < Enum->Elements.size() ? *Enum->GetAliasOf(Value) : L"BAD_INDEX";
 			else
 				return String::FromInteger(Value);
 		}
@@ -1043,17 +1038,17 @@ void CTypeInfo::SetArrayLength( void* Addr, Int32 NewLength ) const
 	assert(NewLength >= 0);
 	assert(ArrayDim == -1);
 
-	TArrayBase* Array = (TArrayBase*)Addr;
+	ArrayPOD* Array = (ArrayPOD*)Addr;
 	CTypeInfo Elem( Type, 1, Inner );
 
 	if( Elem.NeedDestruction() )
 	{
-		for( Int32 i=NewLength; i<Array->Count; i++ )
-			Elem.DestroyValue((UInt8*)Array->Data + i*Elem.TypeSize(true));
+		for( Int32 i=NewLength; i<Array->size; i++ )
+			Elem.DestroyValue((UInt8*)Array->data + i*Elem.TypeSize(true));
 	}
 
 	// Resize.
-	TArrayBase::Reallocate( Array->Data, Array->Count, NewLength, Elem.TypeSize(true) );
+	array::reallocate( Array->data, Array->size, NewLength, Elem.TypeSize(true) );
 }
 
 
@@ -1065,7 +1060,7 @@ void CTypeInfo::SerializeValue( void* Addr, CSerializer& S ) const
 	// Handle dynamic array serialization.
 	if( ArrayDim == -1 )
 	{
-		TArrayBase* Array = (TArrayBase*)Addr;
+		ArrayPOD* Array = (ArrayPOD*)Addr;
 		if( S.GetMode() == SM_Load )
 		{
 			Int32 Length;
@@ -1074,13 +1069,13 @@ void CTypeInfo::SerializeValue( void* Addr, CSerializer& S ) const
 		}
 		else
 		{
-			Serialize( S, Array->Count );
+			Serialize( S, Array->size );
 		}
 
-		if( Array->Count > 0 )
+		if( Array->size > 0 )
 		{
-			CTypeInfo Elems( Type, Array->Count, Inner );
-			Elems.SerializeValue( Array->Data, S );
+			CTypeInfo Elems( Type, Array->size, Inner );
+			Elems.SerializeValue( Array->data, S );
 		}
 		return;
 	}
@@ -1144,14 +1139,14 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 	// Handle dynamic array import.
 	if( ArrayDim == -1 )
 	{
-		TArrayBase* Array = (TArrayBase*)Addr;
+		ArrayPOD* Array = (ArrayPOD*)Addr;
 		Int32 RealLen = Im.ImportInteger( *(Prefix+L".Num") );
 		SetArrayLength( Addr, RealLen );
 
-		if( Array->Count > 0 )
+		if( Array->size > 0 )
 		{
-			CTypeInfo Elems( Type, Array->Count, Inner );
-			Elems.ImportValue( Array->Data, Im, Prefix );
+			CTypeInfo Elems( Type, Array->size, Inner );
+			Elems.ImportValue( Array->data, Im, Prefix );
 		}
 		return;
 	}
@@ -1282,13 +1277,13 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 	// Handle dynamic array export.
 	if( ArrayDim == -1 )
 	{
-		TArrayBase* Array = (TArrayBase*)Addr;
-		Ex.ExportInteger( *(Prefix+L".Num"), Array->Count );
+		ArrayPOD* Array = (ArrayPOD*)Addr;
+		Ex.ExportInteger( *(Prefix+L".Num"), Array->size );
 		
-		if( Array->Count > 0 )
+		if( Array->size > 0 )
 		{
-			CTypeInfo Elems( Type, Array->Count, Inner );
-			Elems.ExportValue( Array->Data, Ex, Prefix );
+			CTypeInfo Elems( Type, Array->size, Inner );
+			Elems.ExportValue( Array->data, Ex, Prefix );
 		}
 		return;
 	}
@@ -1452,7 +1447,7 @@ CEnum::CEnum( const Char* InName, UInt32 InFlags, FScript* Script )
 //
 CEnum::~CEnum()
 {
-	Elements.Empty();
+	Elements.empty();
 }
 
 
@@ -1461,11 +1456,11 @@ CEnum::~CEnum()
 //
 Int32 CEnum::AddElement( String NewElem )
 {
-	assert(Elements.FindItem(NewElem)==-1);
+	assert(Elements.find(NewElem)==-1);
 
 	// Add to list.
-	Elements.Push(NewElem);
-	return Elements.Num()-1;
+	Elements.push(NewElem);
+	return Elements.size()-1;
 }
 
 
@@ -1475,7 +1470,7 @@ Int32 CEnum::AddElement( String NewElem )
 //
 Int32 CEnum::FindElem( String TestName )
 {
-	return Elements.FindItem(TestName);
+	return Elements.find(TestName);
 }
 
 
@@ -1485,7 +1480,7 @@ Int32 CEnum::FindElem( String TestName )
 //
 String CEnum::GetAliasOf( Int32 i )
 {
-	assert(i>=0 && i<Elements.Num());
+	assert(i>=0 && i<Elements.size());
 
 #if USE_ALIASES
 	// Parse name.

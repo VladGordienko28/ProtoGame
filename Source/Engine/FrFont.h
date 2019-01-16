@@ -34,10 +34,10 @@ class FFont: public FResource
 REGISTER_CLASS_H(FFont);
 public:
 	// Variables.
-	TArray<FBitmap*>	Bitmaps;
+	Array<FBitmap*>	Bitmaps;
 	Int32				Height;
-	TArray<TGlyph>		Glyphs;
-	TArray<UInt8>		Remap;
+	Array<TGlyph>		Glyphs;
+	Array<UInt8>		Remap;
 
 	// FFont interface.
 	FFont();
@@ -54,8 +54,8 @@ public:
 	// given character.
 	inline TGlyph& GetGlyph( Char C )
 	{
-		Int32 iGlyph = Remap[Min<Int32>( C, Remap.Num()-1 )];
-		return Glyphs[Min( iGlyph, Glyphs.Num()-1 )];
+		Int32 iGlyph = Remap[Min<Int32>( C, Remap.size()-1 )];
+		return Glyphs[Min( iGlyph, Glyphs.size()-1 )];
 	}
 };
 

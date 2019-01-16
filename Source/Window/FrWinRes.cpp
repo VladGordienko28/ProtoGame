@@ -97,7 +97,7 @@ TStaticBitmap* LoadBitmapFromResource( HINSTANCE hInstance, LPCTSTR ResID )
 	Bitmap->AnimSpeed	= 0.f;
 	Bitmap->bDynamic	= false;
 	Bitmap->bRedrawn	= false;
-	Bitmap->Data.SetNum( Bitmap->USize*Bitmap->VSize*sizeof(UInt8) );
+	Bitmap->Data.setSize( Bitmap->USize*Bitmap->VSize*sizeof(UInt8) );
 
 	// Load palette.
 	RGBQUAD RawPalette[256];
@@ -159,8 +159,8 @@ TStaticFont* LoadFontFromResource( HINSTANCE hInstance, LPCTSTR FontID, LPCTSTR 
 		Int32 X, Y, W, H, iBitmap;
 		C[0] = *Walk++;
 
-		if( (UInt16)C[0]+1 > Font->Remap.Num() )
-			Font->Remap.SetNum( (UInt16)C[0]+1 );
+		if( (UInt16)C[0]+1 > Font->Remap.size() )
+			Font->Remap.setSize( (UInt16)C[0]+1 );
 
 		sscanf( Walk, "%d %d %d %d %d\n", &iBitmap, &X, &Y, &W, &H );
 		to_next;
@@ -175,7 +175,7 @@ TStaticFont* LoadFontFromResource( HINSTANCE hInstance, LPCTSTR FontID, LPCTSTR 
 		Glyph.H			= H;	
 
 		Font->Height			= Max( Font->Height, H );
-		Font->Remap[(UInt16)C[0]] = Font->Glyphs.Push(Glyph);
+		Font->Remap[(UInt16)C[0]] = Font->Glyphs.push(Glyph);
 
 #if 0
 		log( L"Import Char: %s", C );
@@ -186,18 +186,18 @@ TStaticFont* LoadFontFromResource( HINSTANCE hInstance, LPCTSTR FontID, LPCTSTR 
 	assert(NumPages == 1);
 	FBitmap* Page = LoadBitmapFromResource(hInstance, BitmapID);
 	Page->BlendMode = BLEND_Translucent;
-	Font->Bitmaps.Push( Page );
+	Font->Bitmaps.push( Page );
 
 	mem::free(Text);
 	#undef to_next
 
 	// Convert palette from RGB to RGBA format with solid white color and alpha mask.
-	for( Int32 iPage=0; iPage<Font->Bitmaps.Num(); iPage++ )
+	for( Int32 iPage=0; iPage<Font->Bitmaps.size(); iPage++ )
 	{
 		FBitmap* Page = Font->Bitmaps[iPage];
 		assert(Page->Format == BF_Palette8);
 
-		for( Int32 i=0; i<Page->Palette.Colors.Num(); i++ )
+		for( Int32 i=0; i<Page->Palette.Colors.size(); i++ )
 		{
 			TColor Ent = Page->Palette.Colors[i];
 			Page->Palette.Colors[i] = TColor( 0xff, 0xff, 0xff, Int32(Ent.R + Ent.G + Ent.B)/3 );

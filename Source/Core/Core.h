@@ -8,14 +8,18 @@
 
 #include "Build.h"
 #include "Types.h"
+#include "Utils.h"
 #include "Heap.h"
 #include "LogCallback.h"
 #include "LogManager.h"
 
 // legacy include
 #include "FrSerial.h"
-#include "FrArray.h"
 
+#include "Array.h"
+
+
+// remove this!
 namespace flu 
 {
 namespace cstr

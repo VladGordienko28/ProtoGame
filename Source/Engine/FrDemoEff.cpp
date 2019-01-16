@@ -1812,7 +1812,7 @@ void FWaterBitmap::EditChange()
 			( 
 				&Palette.Colors[0], 
 				&Image->Palette.Colors[0], 
-				sizeof(TColor)*Image->Palette.Colors.Num() 
+				sizeof(TColor)*Image->Palette.Colors.size() 
 			);
 
 	// Update the dispersion table.
@@ -2657,7 +2657,7 @@ void FGlassBitmap::EditChange()
 			( 
 				&Palette.Colors[0], 
 				&Image->Palette.Colors[0], 
-				sizeof(TColor)*Image->Palette.Colors.Num() 
+				sizeof(TColor)*Image->Palette.Colors.size() 
 			);
 }
 
@@ -2860,7 +2860,7 @@ void FHarmonicBitmap::EditChange()
 			( 
 				&Palette.Colors[0], 
 				&Image->Palette.Colors[0], 
-				sizeof(TColor)*Image->Palette.Colors.Num() 
+				sizeof(TColor)*Image->Palette.Colors.size() 
 			);
 }
 

@@ -140,7 +140,7 @@ Bool WHSplitBox::UpdateSubWidgets()
 		Size.Width - RightMin - HSPLIT_THICKNESS/2
 	);
 
-	if( Children.Num() < 2 )
+	if( Children.size() < 2 )
 		return false;
 
 	WWidget* Left = Children[0];
@@ -297,7 +297,7 @@ Bool WVSplitBox::UpdateSubWidgets()
 		Size.Height - BottomMin - VSPLIT_THICKNESS/2
 	);
 
-	if( Children.Num() < 2 )
+	if( Children.size() < 2 )
 		return false;
 
 	WWidget* Top = Children[0];

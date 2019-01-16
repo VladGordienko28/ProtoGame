@@ -56,7 +56,7 @@ void WTabPage::Close( Bool bForce )
 {
 	assert(TabControl != nullptr);
 	assert(bCanClose == true);
-	TabControl->CloseTabPage( TabControl->Pages.FindItem(this), bForce );
+	TabControl->CloseTabPage( TabControl->Pages.find(this), bForce );
 }
 
 
@@ -138,7 +138,7 @@ void WTabControl::OnPaint( CGUIRenderBase* Render )
 	// Draw headers.
 	TColor	ActiveColor;
 	Int32 iPage;
-	for( iPage=0; iPage<Pages.Num(); iPage++ )
+	for( iPage=0; iPage<Pages.size(); iPage++ )
 	{
 		WTabPage* Page = Pages[iPage];
 
@@ -213,7 +213,7 @@ void WTabControl::OnPaint( CGUIRenderBase* Render )
 	}
 
 	// Draw a little marker if list overflow.
-	if( bOverflow = iPage < Pages.Num() )
+	if( bOverflow = iPage < Pages.size() )
 	{
 		TPoint Cursor = Root->MousePos;
 		TPoint Start  = TPoint( Base.X+Size.Width-14, HeaderSide == ETH_Top ? Base.Y+3 : Base.Y+Size.Height-17 );
@@ -264,7 +264,7 @@ void WTabControl::OnPaint( CGUIRenderBase* Render )
 //
 WTabPage* WTabControl::GetActivePage()
 {
-	return iActive!=-1 && iActive<Pages.Num() ? Pages[iActive] : nullptr;
+	return iActive!=-1 && iActive<Pages.size() ? Pages[iActive] : nullptr;
 }
 
 
@@ -273,7 +273,7 @@ WTabPage* WTabControl::GetActivePage()
 //
 Int32 WTabControl::AddTabPage( WTabPage* Page )
 {
-	Int32 iNew		= Pages.Push(Page);
+	Int32 iNew		= Pages.push(Page);
 	Page->TabControl	= this;
 	
 	ActivateTabPage( iNew );
@@ -287,22 +287,22 @@ Int32 WTabControl::AddTabPage( WTabPage* Page )
 //
 void WTabControl::CloseTabPage( Int32 iPage, Bool bForce )
 {
-	assert(iPage>=0 && iPage<Pages.Num());
+	assert(iPage>=0 && iPage<Pages.size());
 
 	WTabPage* P = Pages[iPage];
 
 	// Is tab prepared for DIE?
 	if( P->bCanClose && (bForce || P->OnQueryClose()) )
 	{
-		Pages.RemoveShift(iPage);
+		Pages.removeShift(iPage);
 
-		if( Pages.Num() )
+		if( Pages.size() )
 		{
 			// Open new item or just close.
 			if( iActive == iPage )
 			{
 				// Open new one.
-				ActivateTabPage( Pages.Num()-1 );
+				ActivateTabPage( Pages.size()-1 );
 				iHighlight	= -1;
 			}
 			else
@@ -372,7 +372,7 @@ void WTabControl::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 	{
 		// Process tab drag.
 		Int32 XWalk = 0;
-		for( Int32 i=0; i<Pages.Num(); i++  )
+		for( Int32 i=0; i<Pages.size(); i++  )
 			if( Pages[i] != DragPage )
 				XWalk += Pages[i]->TabWidth;
 			else
@@ -380,21 +380,21 @@ void WTabControl::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 
 		while( X < XWalk )
 		{
-			Int32 iDrag = Pages.FindItem( DragPage );
+			Int32 iDrag = Pages.find( DragPage );
 			if( iDrag <= 0 ) break;
 			XWalk -= Pages[iDrag-1]->TabWidth;
-			Pages.Swap( iDrag, iDrag-1 );
+			Pages.swap( iDrag, iDrag-1 );
 		}
 		while( X > XWalk+DragPage->TabWidth )
 		{
-			Int32 iDrag = Pages.FindItem( DragPage );
-			if( iDrag >= Pages.Num()-1 ) break;
+			Int32 iDrag = Pages.find( DragPage );
+			if( iDrag >= Pages.size()-1 ) break;
 			XWalk += Pages[iDrag+1]->TabWidth;
-			Pages.Swap( iDrag, iDrag+1 );
+			Pages.swap( iDrag, iDrag+1 );
 		}
 
 		// Refresh highlight.
-		iActive		= iHighlight = Pages.FindItem( DragPage );
+		iActive		= iHighlight = Pages.find( DragPage );
 		bWasDrag	= true;
 	}
 }
@@ -411,8 +411,8 @@ void WTabControl::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 	if( bOverflow && Button==MB_Left && X > Size.Width-14 )
 	{
 		// Setup popup and show it.
-		Popup->Items.Empty();
-		for( Int32 i=0; i<Pages.Num(); i++ )
+		Popup->Items.empty();
+		for( Int32 i=0; i<Pages.size(); i++ )
 			Popup->AddItem( Pages[i]->Caption, WIDGET_EVENT(WTabControl::PopupPageClick), true );
 
 		Popup->Show( TPoint( Size.Width, HeaderSide==ETH_Top ? 20 : Size.Height-20 ) );
@@ -444,10 +444,10 @@ void WTabControl::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 //
 void WTabControl::ActivateTabPage( Int32 iPage )
 {
-	assert(iPage>=0 && iPage<Pages.Num());
+	assert(iPage>=0 && iPage<Pages.size());
 
 	// Hide all.
-	for( Int32 i=0; i<Pages.Num(); i++ )
+	for( Int32 i=0; i<Pages.size(); i++ )
 		Pages[i]->bVisible	= false;
 
 	// Show and activate.
@@ -470,7 +470,7 @@ void WTabControl::ActivateTabPage( Int32 iPage )
 //
 void WTabControl::ActivateTabPage( WTabPage* Page )
 {
-	Int32 iPage = Pages.FindItem( Page );
+	Int32 iPage = Pages.find( Page );
 	assert(iPage != -1);
 	ActivateTabPage( iPage );
 }
@@ -497,7 +497,7 @@ Int32 WTabControl::XToIndex( Int32 InX )
 {
 	Int32 XWalk = 0;
 
-	for( Int32 i=0; i<Pages.Num(); i++ )
+	for( Int32 i=0; i<Pages.size(); i++ )
 	{
 		WTabPage* Page = Pages[i];
 			
@@ -536,7 +536,7 @@ Int32 WTabControl::XYToCross( Int32 InX, Int32 InY )
 	}
 
 	// Iterate through pages list.
-	for( Int32 i=0; i<Pages.Num(); i++ )
+	for( Int32 i=0; i<Pages.size(); i++ )
 	{
 		WTabPage* Page = Pages[i];
 			
@@ -564,7 +564,7 @@ void WTabControl::PopupPageClick( WWidget* Sender )
 {
 	// Figure out chosen page.
 	WTabPage* Chosen = nullptr;
-	for( Int32 i=0; i<Popup->Items.Num(); i++ )
+	for( Int32 i=0; i<Popup->Items.size(); i++ )
 		if( Popup->Items[i].bChecked )
 		{
 			Chosen	= Pages[i];
@@ -576,9 +576,9 @@ void WTabControl::PopupPageClick( WWidget* Sender )
 	while( Pages[0] != Chosen )
 	{
 		WTabPage* First = Pages[0];
-		for( Int32 i=0; i<Pages.Num()-1; i++ )
+		for( Int32 i=0; i<Pages.size()-1; i++ )
 			Pages[i] = Pages[i+1];
-		Pages[Pages.Num()-1]	= First;
+		Pages[Pages.size()-1]	= First;
 	}
 
 	// Make first page active now.

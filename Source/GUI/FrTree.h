@@ -74,12 +74,12 @@ public:
 				bExpanded( true ), NumChildren(0)
 		{}
 	};
-	TArray<TNode>		Nodes;
+	Array<TNode>		Nodes;
 
 private:
 	// Tree internal.
 	WSlider*			ScrollBar;
-	TArray<Int32>		RenderOrder;
+	Array<Int32>		RenderOrder;
 	Int32				ScrollTop;
 	Int32				CharHeight;
 	Int32				iSelected;

@@ -162,7 +162,7 @@ void CCanvas::DrawText
 {
 	assert(Font);
 
-	if( Font->Bitmaps.Num() > 1 )
+	if( Font->Bitmaps.size() > 1 )
 	{
 		// Slow method, with atlases switching.
 
@@ -211,7 +211,7 @@ void CCanvas::DrawText
 
 		// Setup list.
 		TRenderList List( Len, Color );
-		List.Texture	= Font->Bitmaps.Num() ? Font->Bitmaps[0] : nullptr;
+		List.Texture	= Font->Bitmaps.size() ? Font->Bitmaps[0] : nullptr;
 		List.Flags		= POLY_Unlit;
 		List.DrawColor	= Color;
 

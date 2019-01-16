@@ -15,7 +15,7 @@ class CBytecode
 {
 public:
 	// Variables.
-	TArray<UInt8>	Code;
+	Array<UInt8>	Code;
 	Int32			iLine;
 	Int32			iPos;
 
@@ -39,7 +39,7 @@ public:
 	};
 
 	// Variables.
-	TArray<TLabel>		Labels;
+	Array<TLabel>		Labels;
 
 	// CThreadCode interface.
 	CThreadCode();
@@ -69,7 +69,7 @@ public:
 	// Variables.
 	String				Name;
 	UInt32				Flags;
-	TArray<CProperty*>	Locals;
+	Array<CProperty*>	Locals;
 	SizeT				FrameSize;
 	Int32				ParmsCount;
 	CProperty*			ResultVar;
@@ -92,11 +92,11 @@ class CInstanceBuffer
 {
 public:
 	// Variables.
-	TArray<CProperty*>&	Properties;
-	TArray<UInt8>		Data;
+	Array<CProperty*>&	Properties;
+	Array<UInt8>		Data;
 
 	// CInstanceBuffer interface.
-	CInstanceBuffer( TArray<CProperty*>& InProperties );
+	CInstanceBuffer( Array<CProperty*>& InProperties );
 	~CInstanceBuffer();
 	void DestroyValues();
 	void CopyValues( void* Source );
@@ -134,10 +134,10 @@ public:
 	// Generic script information.
 	UInt32			ScriptFlags;
 	Int32			iFamily;
-	TArray<String>	Text;
+	Array<String>	Text;
 
 	// Prototype components.
-	TArray<FExtraComponent*>	Components;
+	Array<FExtraComponent*>		Components;
 	FBaseComponent*				Base;
 
 	// Prototype and Static values.
@@ -147,18 +147,18 @@ public:
 	SizeT				StaticsSize;
 
 	// All script tables.
-	TArray<CEnum*>			Enums;
-	TArray<CStruct*>		Structs;
-	TArray<CProperty*>		Properties;
-	TArray<CProperty*>		Statics;
-	TArray<CFunction*>		Methods;
-	TArray<CFunction*>		Events;
-	TArray<CFunction*>		StaticFunctions;
-	TArray<CFunction*>		VFTable;
+	Array<CEnum*>			Enums;
+	Array<CStruct*>			Structs;
+	Array<CProperty*>		Properties;
+	Array<CProperty*>		Statics;
+	Array<CFunction*>		Methods;
+	Array<CFunction*>		Events;
+	Array<CFunction*>		StaticFunctions;
+	Array<CFunction*>		VFTable;
 	CThreadCode*			Thread;
 
 	// Table of resources uses in bytecode.
-	TArray<FResource*>			ResTable;
+	Array<FResource*>		ResTable;
 
 	// FScript interface.
 	FScript();

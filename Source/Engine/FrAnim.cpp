@@ -22,7 +22,9 @@ FAnimation::FAnimation()
 		SpaceX( 0 ),
 		SpaceY( 0 ),
 		Frames()
-{}
+{
+	SetFramesTable();
+}
 
 
 //
@@ -31,7 +33,7 @@ FAnimation::FAnimation()
 //
 Int32 FAnimation::FindSequence( String InName )
 {
-	for( Int32 iSeq=0; iSeq<Sequences.Num(); iSeq++ )
+	for( Int32 iSeq=0; iSeq<Sequences.size(); iSeq++ )
 		if( Sequences[iSeq].Name == InName )
 			return iSeq;
 
@@ -45,7 +47,7 @@ Int32 FAnimation::FindSequence( String InName )
 //
 TRect FAnimation::GetTexCoords( Int32 iFrame )
 {
-	return iFrame>=0 && iFrame<Frames.Num() ? 
+	return iFrame>=0 && iFrame<Frames.size() ? 
 				Frames[iFrame] : 
 				TRect( TVector(0.5f, 0.5f), 1.f );
 }
@@ -102,9 +104,9 @@ void FAnimation::PostLoad()
 void FAnimation::Import( CImporterBase& Im )
 {
 	FResource::Import( Im );
-	Sequences.SetNum(Im.ImportInteger(L"NumSeqs"));
+	Sequences.setSize(Im.ImportInteger(L"NumSeqs"));
 
-	for( Int32 iSeq=0; iSeq<Sequences.Num(); iSeq++ )
+	for( Int32 iSeq=0; iSeq<Sequences.size(); iSeq++ )
 	{
 		TAnimSequence& S = Sequences[iSeq];
 
@@ -121,9 +123,9 @@ void FAnimation::Import( CImporterBase& Im )
 void FAnimation::Export( CExporterBase& Ex )
 {
 	FResource::Export( Ex );
-	Ex.ExportInteger( L"NumSeqs", Sequences.Num() );
+	Ex.ExportInteger( L"NumSeqs", Sequences.size() );
 
-	for( Int32 iSeq=0; iSeq<Sequences.Num(); iSeq++ )
+	for( Int32 iSeq=0; iSeq<Sequences.size(); iSeq++ )
 	{
 		TAnimSequence& S = Sequences[iSeq];
 
@@ -140,7 +142,7 @@ void FAnimation::Export( CExporterBase& Ex )
 //
 void FAnimation::SetFramesTable()
 {
-	Frames.Empty();
+	Frames.empty();
 
 	if( !Sheet || FrameH*FrameW==0 )
 		return;
@@ -167,7 +169,7 @@ void FAnimation::SetFramesTable()
 		// Flip V.
 		Exchange( R.Min.Y, R.Max.Y );
 
-		Frames.Push( R );
+		Frames.push( R );
 	}
 }
 

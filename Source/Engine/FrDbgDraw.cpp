@@ -23,8 +23,8 @@ CDebugDrawHelper::CDebugDrawHelper()
 //
 void CDebugDrawHelper::Reset()
 {
-	Points.Empty();
-	Lines.Empty();
+	Points.empty();
+	Lines.empty();
 }
 
 
@@ -33,12 +33,12 @@ void CDebugDrawHelper::Reset()
 //
 void CDebugDrawHelper::Render( CCanvas* Canvas )
 {
-	for( Int32 i=0; i<Points.Num(); i++ )
+	for( Int32 i=0; i<Points.size(); i++ )
 	{
 		auto& P = Points[i];
 		Canvas->DrawPoint( P.Position, P.Size, P.Color );
 	}
-	for( Int32 i=0; i<Lines.Num(); i++ )
+	for( Int32 i=0; i<Lines.size(); i++ )
 	{
 		auto& L = Lines[i];
 		Canvas->DrawLine( L.PFrom, L.PTo, L.Color, false );
@@ -51,24 +51,24 @@ void CDebugDrawHelper::Render( CCanvas* Canvas )
 //
 void CDebugDrawHelper::Tick( Float Delta )
 {
-	for( Int32 i=0; i<Points.Num(); )
+	for( Int32 i=0; i<Points.size(); )
 	{
 		if( (Points[i].Life -= Delta) <= 0.f )
 		{
-			Points[i] = Points.Last();
-			Points.Pop();
+			Points[i] = Points.last();
+			Points.pop();
 		}
 		else
 		{
 			i++;
 		}
 	}
-	for( Int32 i=0; i<Lines.Num(); )
+	for( Int32 i=0; i<Lines.size(); )
 	{
 		if( (Lines[i].Life -= Delta) <= 0.f )
 		{
-			Lines[i] = Lines.Last();
-			Lines.Pop();
+			Lines[i] = Lines.last();
+			Lines.pop();
 		}
 		else
 		{
@@ -83,7 +83,7 @@ void CDebugDrawHelper::Tick( Float Delta )
 //
 Bool CDebugDrawHelper::DrawLine( const TVector& A, const TVector& B, TColor Color, Float LifeTime )
 {
-	if( Lines.Num() >= MAX_LINES )
+	if( Lines.size() >= MAX_LINES )
 		return false;
 
 	TTempLine Line;
@@ -92,7 +92,7 @@ Bool CDebugDrawHelper::DrawLine( const TVector& A, const TVector& B, TColor Colo
 	Line.Color = Color;
 	Line.Life = LifeTime;
 
-	Lines.Push(Line);
+	Lines.push(Line);
 	return true;
 }
 
@@ -102,7 +102,7 @@ Bool CDebugDrawHelper::DrawLine( const TVector& A, const TVector& B, TColor Colo
 //
 Bool CDebugDrawHelper::DrawPoint( const TVector& P, TColor Color, Float Size, Float LifeTime )
 {
-	if( Points.Num() >= MAX_POINTS )
+	if( Points.size() >= MAX_POINTS )
 		return false;
 
 	TTempPoint Point;
@@ -111,7 +111,7 @@ Bool CDebugDrawHelper::DrawPoint( const TVector& P, TColor Color, Float Size, Fl
 	Point.Color = Color;
 	Point.Life = LifeTime;
 
-	Points.Push(Point);
+	Points.push(Point);
 	return true;
 }
 

@@ -40,7 +40,7 @@ public:
 	friend					CPhysics;
 
 	// Variables.
-	TArray<TKeyframePoint>	Points;
+	Array<TKeyframePoint>	Points;
 
 	// FKeyframeComponent interface.
 	FKeyframeComponent();
@@ -112,7 +112,7 @@ public:
 	FLogicComponent*	NextLogicElement;
 
 	// List of logic connections.
-	TArray<TLogicConnector>	Plugs[MAX_LOGIC_PLUGS];
+	Array<TLogicConnector>	Plugs[MAX_LOGIC_PLUGS];
 	
 	// FLogicComponent interface.
 	FLogicComponent();
@@ -362,7 +362,7 @@ public:
 	FTexture*			Texture;
 
 	// Tilemap.
-	TArray<UInt16>		Map;
+	Array<UInt16>		Map;
 	Int32				MapXSize;
 	Int32				MapYSize;
 	TVector				TileSize;
@@ -376,7 +376,7 @@ public:
 
 	// Model edit tool.
 	Int32				PenIndex;
-	TArray<UInt8>		Selected;
+	Array<UInt8>		Selected;
 
 	// FModelComponent interface.
 	FModelComponent();
@@ -871,7 +871,7 @@ public:
 
 protected:
 	// Emitter internal.
-	TArray<TParticle>		Particles;
+	Array<TParticle>		Particles;
 	Int32					NumPrts;
 	Float					Accumulator;
 };

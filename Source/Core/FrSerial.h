@@ -78,7 +78,7 @@ template<class T> inline void SerializeEnum( CSerializer& S, T& Enum )
 //
 // Serialization utility.
 //
-#define CLEANUP_ARR_NULL(arr) arr.RemoveUnique(nullptr);
+#define CLEANUP_ARR_NULL(arr) arr.removeUnique(nullptr);
 
 
 /*-----------------------------------------------------------------------------

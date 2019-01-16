@@ -58,7 +58,6 @@ enum EEventName;
 class TTimeOfDay;
 struct TDelegate;
 struct TViewInfo;
-template<class T> class TArray;
 template<class K, class V> class TMap;
 
 // Flu includes.

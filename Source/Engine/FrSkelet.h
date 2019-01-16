@@ -98,7 +98,7 @@ struct TSkelPose
 {
 public:
 	// Variables.
-	TArray<TBonePose>	BonesPose;
+	Array<TBonePose>	BonesPose;
 
 	// TSkelPose interface.
 	TSkelPose();
@@ -157,7 +157,7 @@ class TSkeletonAction
 public:
 	// Variables.
 	String				Name;
-	TArray<TBoneTrack>	BoneTracks;
+	Array<TBoneTrack>	BoneTracks;
 
 	// TSkeletonAction interface.
 	TSkeletonAction();
@@ -184,15 +184,15 @@ class FSkeleton: public FResource
 REGISTER_CLASS_H(FSkeleton)
 public:
 	// Variables.
-	TArray<TBoneInfo>	Bones;
+	Array<TBoneInfo>	Bones;
 	TSkelPose			RefPose;
 
 	// Bones remap tables.
-	TArray<Int32>		TransformTable;		// Computed order for transformations.
-	TArray<Int32>		RenderTable;		// Based on Z-value....
+	Array<Int32>		TransformTable;		// Computed order for transformations.
+	Array<Int32>		RenderTable;		// Based on Z-value....
 
 	// Actions.
-	TArray<TSkeletonAction>	Actions;		// List of all animations.
+	Array<TSkeletonAction>	Actions;		// List of all animations.
 
 	// Placeholder -------------------------------
 	Int32		Placeholder;

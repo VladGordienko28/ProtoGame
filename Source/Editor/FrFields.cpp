@@ -59,8 +59,8 @@ CInspectorItemBase::~CInspectorItemBase()
 {
 	// Don't destroy children, they actually 
 	// owned by inspector.
-	Children.Empty();
-	Objects.Empty();
+	Children.empty();
+	Objects.empty();
 }
 
 
@@ -69,7 +69,7 @@ CInspectorItemBase::~CInspectorItemBase()
 //
 void CInspectorItemBase::CollapseAll()
 {
-	for( Int32 i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.size(); i++ )
 	{
 		Children[i]->CollapseAll();
 		Children[i]->bHidden	= true;
@@ -86,7 +86,7 @@ void CInspectorItemBase::CollapseAll()
 void CInspectorItemBase::ExpandAll()
 {
 	// Don't expand children of children.
-	for( Int32 i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.size(); i++ )
 		Children[i]->bHidden	= false;
 
 	bExpanded	= true;
@@ -195,7 +195,7 @@ public:
 	(	
 		WObjectInspector* InInspector, 
 		UInt32 InDepth, 
-		const TArray<FObject*>& InObjs, 
+		const Array<FObject*>& InObjs, 
 		String InCaption, 
 		const CTypeInfo& InType, 
 		SizeT InAddrOffset, 
@@ -262,7 +262,7 @@ CPropertyItem::CPropertyItem
 	Depth	= InDepth;
 
 	// Add to inspector.
-	Inspector->Children.Push(this);
+	Inspector->Children.push(this);
 
 	if( TypeInfo.ArrayDim > 1 )
 	{
@@ -272,7 +272,7 @@ CPropertyItem::CPropertyItem
 
 		// Add each time.
 		for( Int32 i=0; i<TypeInfo.ArrayDim; i++ )
-			Children.Push( new CPropertyItem
+			Children.push( new CPropertyItem
 										(
 											Inspector,
 											Depth + 1,
@@ -299,7 +299,7 @@ CPropertyItem::CPropertyItem
 			static const Char* MemNames[4] = { L"R", L"G", L"B", L"A" };
 
 			for( Int32 i=0; i<4; i++ )
-				Children.Push( new CPropertyItem
+				Children.push( new CPropertyItem
 											(
 												Inspector,
 												Depth + 1,
@@ -317,7 +317,7 @@ CPropertyItem::CPropertyItem
 			static const Char* MemNames[2] = { L"X", L"Y" };
 
 			for( Int32 i=0; i<2; i++ )
-				Children.Push( new CPropertyItem
+				Children.push( new CPropertyItem
 											(
 												Inspector,
 												Depth + 1,
@@ -335,7 +335,7 @@ CPropertyItem::CPropertyItem
 			static const Char* MemNames[2] = { L"Min", L"Max" };
 
 			for( Int32 i=0; i<2; i++ )
-				Children.Push( new CPropertyItem
+				Children.push( new CPropertyItem
 											(
 												Inspector,
 												Depth + 1,
@@ -353,8 +353,8 @@ CPropertyItem::CPropertyItem
 			CStruct* Struct = TypeInfo.Struct;
 			assert(Struct);
 
-			for( Int32 i=0; i<Struct->Members.Num(); i++ )
-				Children.Push( new CPropertyItem
+			for( Int32 i=0; i<Struct->Members.size(); i++ )
+				Children.push( new CPropertyItem
 				(
 					Inspector,
 					Depth + 1,
@@ -380,7 +380,7 @@ CPropertyItem::CPropertyItem
 (	
 	WObjectInspector* InInspector, 
 	UInt32 InDepth, 
-	const TArray<FObject*>& InObjs, 
+	const Array<FObject*>& InObjs, 
 	String InCaption, 
 	const CTypeInfo& InType, 
 	SizeT InAddrOffset, 
@@ -405,7 +405,7 @@ CPropertyItem::CPropertyItem
 	Depth	= InDepth;
 
 	// Add to inspector.
-	Inspector->Children.Push(this);
+	Inspector->Children.push(this);
 	Objects = InObjs;
 
 	if( TypeInfo.ArrayDim > 1 )
@@ -416,7 +416,7 @@ CPropertyItem::CPropertyItem
 
 		// Add each time.
 		for( Int32 i=0; i<TypeInfo.ArrayDim; i++ )
-			Children.Push( new CPropertyItem
+			Children.push( new CPropertyItem
 										(
 											Inspector,
 											Depth + 1,
@@ -432,7 +432,7 @@ CPropertyItem::CPropertyItem
 	else if( TypeInfo.ArrayDim == -1 )
 	{
 		// Item is a dynamic array property.
-		if( InObjs.Num() == 1 )
+		if( InObjs.size() == 1 )
 		{
 			bExpandable	= true;
 			RebuildDynamicArrayList();
@@ -447,7 +447,7 @@ CPropertyItem::CPropertyItem
 			static const Char* MemNames[4] = { L"R", L"G", L"B", L"A" };
 
 			for( Int32 i=0; i<4; i++ )
-				Children.Push( new CPropertyItem
+				Children.push( new CPropertyItem
 											(
 												Inspector,
 												Depth + 1,
@@ -466,7 +466,7 @@ CPropertyItem::CPropertyItem
 			static const Char* MemNames[2] = { L"X", L"Y" };
 
 			for( Int32 i=0; i<2; i++ )
-				Children.Push( new CPropertyItem
+				Children.push( new CPropertyItem
 											(
 												Inspector,
 												Depth + 1,
@@ -485,7 +485,7 @@ CPropertyItem::CPropertyItem
 			static const Char* MemNames[2] = { L"Min", L"Max" };
 
 			for( Int32 i=0; i<2; i++ )
-				Children.Push( new CPropertyItem
+				Children.push( new CPropertyItem
 											(
 												Inspector,
 												Depth + 1,
@@ -504,8 +504,8 @@ CPropertyItem::CPropertyItem
 			CStruct* Struct = TypeInfo.Struct;
 			assert(Struct);
 
-			for( Int32 i=0; i<Struct->Members.Num(); i++ )
-				Children.Push( new CPropertyItem
+			for( Int32 i=0; i<Struct->Members.size(); i++ )
+				Children.push( new CPropertyItem
 				(
 					Inspector,
 					Depth + 1,
@@ -550,28 +550,28 @@ void CPropertyItem::RebuildDynamicArrayList()
 
 	// Destroy own items. It is hacky way to manipulate inspector
 	// here, but it only way to do it.
-	for( Int32 i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.size(); i++ )
 	{
-		Inspector->Children.RemoveUnique(Children[i]);
+		Inspector->Children.removeUnique(Children[i]);
 		freeandnil(Children[i]);
 	}
-	Children.Empty();
+	Children.empty();
 	Inspector->UpdateChildren();
 
 	CTypeInfo InnerType( TypeInfo.Type, 1, TypeInfo.Inner );
-	iDynFirst = Inspector->Children.Num();
+	iDynFirst = Inspector->Children.size();
 
 	if( CustomAddr )
 	{
 		// Items being custom item.
-		TArrayBase* Array = (TArrayBase*)CustomAddr;
+		ArrayPOD* Array = (ArrayPOD*)CustomAddr;
 
-		for( Int32 i=0; i<Array->Count; i++ )
-			Children.Push( new CPropertyItem
+		for( Int32 i=0; i<Array->size; i++ )
+			Children.push( new CPropertyItem
 			(
 				Inspector,
 				Depth + 1,
-				(UInt8*)Array->Data + i*InnerType.TypeSize(),
+				(UInt8*)Array->data + i*InnerType.TypeSize(),
 				String::Format( L"[%d]", i ),
 				InnerType,
 				Flags
@@ -580,23 +580,23 @@ void CPropertyItem::RebuildDynamicArrayList()
 	else
 	{
 		// Items being object.
-		assert(Objects.Num() == 1);
-		TArrayBase* Array = (TArrayBase*)GetAddress(0);
+		assert(Objects.size() == 1);
+		ArrayPOD* Array = (ArrayPOD*)GetAddress(0);
 
 		// Add this items as custom. So no EditChange notification :(
-		for( Int32 i=0; i<Array->Count; i++ )
-			Children.Push( new CPropertyItem
+		for( Int32 i=0; i<Array->size; i++ )
+			Children.push( new CPropertyItem
 			(
 				Inspector,
 				Depth + 1,
-				(UInt8*)Array->Data + i*InnerType.TypeSize(),
+				(UInt8*)Array->data + i*InnerType.TypeSize(),
 				String::Format( L"[%d]", i ),
 				InnerType,
 				Flags
 			) );
 	}
 
-	iDynLast = Inspector->Children.Num()-1;
+	iDynLast = Inspector->Children.size()-1;
 
 	// fixme!
 /*
@@ -640,13 +640,13 @@ void CPropertyItem::DragDrop( void* Data, Int32 X, Int32 Y )
 	if( Inspector->LevelPage )	Inspector->LevelPage->Transactor->TrackEnter();
 	{
 		// Set value.
-		for( Int32 i=0; i<Objects.Num(); i++ )
+		for( Int32 i=0; i<Objects.size(); i++ )
 			*(FObject**)GetAddress(i) = Res;	
 
 		// Notify.
-		for( Int32 i=0; i<Objects.Num(); i++ )
+		for( Int32 i=0; i<Objects.size(); i++ )
 			Objects[i]->EditChange();
-		for( Int32 i=0; i<Inspector->CustomHandlers.Num(); i++ )
+		for( Int32 i=0; i<Inspector->CustomHandlers.size(); i++ )
 			Inspector->CustomHandlers[i]( Inspector );
 	}
 	if( Inspector->LevelPage )	Inspector->LevelPage->Transactor->TrackLeave();
@@ -672,7 +672,7 @@ void CPropertyItem::DragOver( void* Data, Int32 X, Int32 Y, Bool& bAccept )
 //
 inline void* CPropertyItem::GetAddress( Int32 iObject )
 {
-	assert((CustomAddr != nullptr) ^ (Objects.Num() != 0));
+	assert((CustomAddr != nullptr) ^ (Objects.size() != 0));
 
 	if( CustomAddr )
 	{
@@ -680,7 +680,7 @@ inline void* CPropertyItem::GetAddress( Int32 iObject )
 	}
 	else
 	{
-		assert( iObject>=0 && iObject<Objects.Num() );
+		assert( iObject>=0 && iObject<Objects.size() );
 
 		// Hack a little.
 		if( Objects[0]->IsA(FEntity::MetaClass) )
@@ -726,7 +726,7 @@ void CPropertyItem::OnSomethingChange( WWidget* Sender )
 				if( CustomAddr ) 
 					*(Bool*)CustomAddr = iFlag != 0;
 
-				for( Int32 i=0; i<Objects.Num(); i++ )
+				for( Int32 i=0; i<Objects.size(); i++ )
 					*(Bool*)GetAddress(i) = iFlag != 0;
 			}
 			if( Inspector->LevelPage )	Inspector->LevelPage->Transactor->TrackLeave();
@@ -743,7 +743,7 @@ void CPropertyItem::OnSomethingChange( WWidget* Sender )
 				if( CustomAddr ) 
 					*(Float*)CustomAddr = Value;
 
-				for( Int32 i=0; i<Objects.Num(); i++ )
+				for( Int32 i=0; i<Objects.size(); i++ )
 					*(Float*)GetAddress(i) = Value;
 			}
 			if( Inspector->LevelPage )	Inspector->LevelPage->Transactor->TrackLeave();
@@ -762,7 +762,7 @@ void CPropertyItem::OnSomethingChange( WWidget* Sender )
 				if( CustomAddr ) 
 					*(UInt8*)CustomAddr = Value;
 
-				for( Int32 i=0; i<Objects.Num(); i++ )
+				for( Int32 i=0; i<Objects.size(); i++ )
 					*(UInt8*)GetAddress(i) = Value;
 			}
 			if( Inspector->LevelPage )	Inspector->LevelPage->Transactor->TrackLeave();
@@ -777,7 +777,7 @@ void CPropertyItem::OnSomethingChange( WWidget* Sender )
 				if( CustomAddr ) 
 					*(String*)CustomAddr = Edit->Text;
 
-				for( Int32 i=0; i<Objects.Num(); i++ )
+				for( Int32 i=0; i<Objects.size(); i++ )
 					*(String*)GetAddress(i) = Edit->Text;
 			}
 			if( Inspector->LevelPage )	Inspector->LevelPage->Transactor->TrackLeave();
@@ -792,7 +792,7 @@ void CPropertyItem::OnSomethingChange( WWidget* Sender )
 				if( CustomAddr ) 
 					*(Int32*)CustomAddr = Value;
 
-				for( Int32 i=0; i<Objects.Num(); i++ )
+				for( Int32 i=0; i<Objects.size(); i++ )
 					*(Int32*)GetAddress(i) = Value;
 			}
 			if( Inspector->LevelPage )	Inspector->LevelPage->Transactor->TrackLeave();
@@ -808,7 +808,7 @@ void CPropertyItem::OnSomethingChange( WWidget* Sender )
 				if( CustomAddr ) 
 					*(TAngle*)CustomAddr = TAngle::FromDegs(Value);
 
-				for( Int32 i=0; i<Objects.Num(); i++ )
+				for( Int32 i=0; i<Objects.size(); i++ )
 					*(TAngle*)GetAddress(i) = TAngle::FromDegs(Value);
 			}
 			if( Inspector->LevelPage )	Inspector->LevelPage->Transactor->TrackLeave();
@@ -826,7 +826,7 @@ void CPropertyItem::OnSomethingChange( WWidget* Sender )
 				if( CustomAddr ) 
 					*(FResource**)CustomAddr = (FResource*)ResRef;
 
-				for( Int32 i=0; i<Objects.Num(); i++ )
+				for( Int32 i=0; i<Objects.size(); i++ )
 					*(FResource**)GetAddress(i) = (FResource*)ResRef;
 			}
 			if( Inspector->LevelPage )	Inspector->LevelPage->Transactor->TrackLeave();
@@ -853,7 +853,7 @@ void CPropertyItem::OnSomethingChange( WWidget* Sender )
 					if( CustomAddr ) 
 						*(FEntity**)CustomAddr = (FEntity*)Result;
 
-					for( Int32 i=0; i<Objects.Num(); i++ )
+					for( Int32 i=0; i<Objects.size(); i++ )
 						*(FEntity**)GetAddress(i) = (FEntity*)Result;
 				}
 				if( Inspector->LevelPage )	Inspector->LevelPage->Transactor->TrackLeave();
@@ -865,9 +865,9 @@ void CPropertyItem::OnSomethingChange( WWidget* Sender )
 	}
 
 	// Notify all objects.
-	for( Int32 i=0; i<Objects.Num(); i++ )
+	for( Int32 i=0; i<Objects.size(); i++ )
 		Objects[i]->EditChange();
-	for( Int32 i=0; i<Inspector->CustomHandlers.Num(); i++ )
+	for( Int32 i=0; i<Inspector->CustomHandlers.size(); i++ )
 		Inspector->CustomHandlers[i]( Inspector );
 }
 
@@ -943,7 +943,7 @@ void CPropertyItem::MouseDown( EMouseButton MouseButton, Int32 X, Int32 Y )
 
 		// Test value in all object,s they are total matched?
 		Bool bMatched = true;
-		for( Int32 i=1; i<Objects.Num(); i++ )
+		for( Int32 i=1; i<Objects.size(); i++ )
 			if( !TypeInfo.CompareValue( GetAddress(0), GetAddress(i) ) )
 			{
 				bMatched	= false;
@@ -978,7 +978,7 @@ void CPropertyItem::MouseDown( EMouseButton MouseButton, Int32 X, Int32 Y )
 					ComboBox->Location = TPoint( Inspector->Separator, Top );
 					ComboBox->EventChange = TNotifyEvent( Inspector, (TNotifyEvent::TEvent)&WObjectInspector::SomethingChange );
 
-					for( Int32 i=0; i<TypeInfo.Enum->Elements.Num(); i++ )
+					for( Int32 i=0; i<TypeInfo.Enum->Elements.size(); i++ )
 						ComboBox->AddItem( TypeInfo.Enum->GetAliasOf(i), nullptr );
 
 					ComboBox->SetItemIndex( bMatched ? *(UInt8*)GetAddress(0) : -1, false );
@@ -1170,7 +1170,7 @@ void CPropertyItem::Paint( TPoint Base, CGUIRenderBase* Render )
 			Value = TypeInfo.ToString( GetAddress(0) );
 
 			// Check with others, if mismatched, nothing to put.
-			for( Int32 i=1; i<Objects.Num(); i++ )
+			for( Int32 i=1; i<Objects.size(); i++ )
 				if( !TypeInfo.CompareValue( GetAddress(0), GetAddress(i) ) )
 				{
 					// Mismatched.
@@ -1229,8 +1229,8 @@ void CPropertyItem::OnButtonAddClick( WWidget* Sender )
 {
 	assert(TypeInfo.ArrayDim == -1);
 
-	TArrayBase* Array = (TArrayBase*)GetAddress(0);
-	Int32 i = Array->Count + 1;
+	ArrayPOD* Array = (ArrayPOD*)GetAddress(0);
+	Int32 i = Array->size + 1;
 	if( i >= DYNAMIC_ARRAY_MAX )
 	{
 		Inspector->Root->ShowMessage( L"Dynamic array length exceed maximum", L"Object Inspector" );
@@ -1249,14 +1249,14 @@ void CPropertyItem::OnButtonRemoveClick( WWidget* Sender )
 {
 	assert(TypeInfo.ArrayDim == -1);
 
-	TArrayBase* Array = (TArrayBase*)GetAddress(0);
-	if( Array->Count == 0 )
+	ArrayPOD* Array = (ArrayPOD*)GetAddress(0);
+	if( Array->size == 0 )
 	{
 		Inspector->Root->ShowMessage( L"Dynamic array is devastated", L"Object Inspector" );
 		return;
 	}
 	 
-	Int32 i = Array->Count - 1;
+	Int32 i = Array->size - 1;
 	TypeInfo.SetArrayLength( Array, i );
 	RebuildDynamicArrayList();
 }
@@ -1310,7 +1310,7 @@ class CComponentItem: public CInspectorItemBase
 {
 public:
 	// CComponentItem interface.
-	CComponentItem( WObjectInspector* InInspector, const TArray<FObject*>& InObjs );
+	CComponentItem( WObjectInspector* InInspector, const Array<FObject*>& InObjs );
 	~CComponentItem();
 	Bool IsAtSign( Int32 X ) const;
 
@@ -1323,28 +1323,28 @@ public:
 //
 // Component item constructor.
 //
-CComponentItem::CComponentItem( WObjectInspector* InInspector, const TArray<FObject*>& InObjs )
+CComponentItem::CComponentItem( WObjectInspector* InInspector, const Array<FObject*>& InObjs )
 	:	CInspectorItemBase( InInspector, 0 )
 {
 	// Add to inspector.
-	Inspector->Children.Push( this );
+	Inspector->Children.push( this );
 	Objects = InObjs;
 	Caption	= Objects[0]->GetName();
 
 	// Check for problems.
-	for( Int32 i=1; i<Objects.Num(); i++ )
+	for( Int32 i=1; i<Objects.size(); i++ )
 		assert(Objects[i]->GetClass() == Objects[0]->GetClass());
 
 	// Add all children.
 	Bool bScript = Inspector->Objects[0]->IsA(FScript::MetaClass);
 	for( CClass* C = Objects[0]->GetClass(); C; C = C->Super )
 	{
-		for( Int32 iProp=0; iProp<C->Properties.Num(); iProp++ )
+		for( Int32 iProp=0; iProp<C->Properties.size(); iProp++ )
 		{
 			CProperty* Prop = C->Properties[iProp];
 
 			if( Prop->Flags & PROP_Editable || bScript )
-				Children.Push( new CPropertyItem( Inspector, 1, Objects, bScript ? Prop->Name : Prop->GetAliasName(), *Prop, Prop->Offset, Prop->Flags ) );
+				Children.push( new CPropertyItem( Inspector, 1, Objects, bScript ? Prop->Name : Prop->GetAliasName(), *Prop, Prop->Offset, Prop->Flags ) );
 		}
 	}
 
@@ -1467,7 +1467,7 @@ WObjectInspector::~WObjectInspector()
 	// WContainer do this job.
 
 	// Destroy all children.
-	for( Int32 i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.size(); i++ )
 		delete Children[i];
 }
 
@@ -1481,23 +1481,23 @@ void WObjectInspector::Empty()
 	Selected			= nullptr;
 	WaitItem			= nullptr;
 	UnselectAll();
-	for( Int32 i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.size(); i++ )
 		delete Children[i];
-	Children.Empty();
-	Objects.Empty();
-	CustomHandlers.Empty();
+	Children.empty();
+	Objects.empty();
+	CustomHandlers.empty();
 }
 
 
 //
 // Set an objects list for edit.
 //
-void WObjectInspector::SetEditObjects( TArray<FObject*>& Objs )
+void WObjectInspector::SetEditObjects( Array<FObject*>& Objs )
 {
 	// Cleanup old stuff.
 	Empty();
 
-	if( Objs.Num() > 0 )
+	if( Objs.size() > 0 )
 	{
 		// Maybe current page is level edit and selected entity, so
 		// we should use transactor here.
@@ -1516,12 +1516,12 @@ void WObjectInspector::SetEditObjects( TArray<FObject*>& Objs )
 			// Its a list of entities.
 			FEntity*	First = (FEntity*)Objs[0];
 			FScript*	Script = First->Script;
-			TArray<FBaseComponent*>	Bases;
-			Bases.Push( First->Base );
+			Array<FBaseComponent*>	Bases;
+			Bases.push( First->Base );
 			TopClass	= First->Base->GetClass();
 
 			// Add similar objects to edit.
-			for( Int32 i=1; i<Objs.Num(); i++ )
+			for( Int32 i=1; i<Objs.size(); i++ )
 			{
 				assert(Objs[i]->IsA(FEntity::MetaClass));
 				FEntity* Other = (FEntity*)Objs[i];
@@ -1529,77 +1529,77 @@ void WObjectInspector::SetEditObjects( TArray<FObject*>& Objs )
 				if( Other->Script == Script )
 				{
 					assert(Other->Base->GetClass() == TopClass);
-					Bases.Push( Other->Base );
+					Bases.push( Other->Base );
 				}
 			}
 
 			// Store list of source objects, doesn't full copy,
 			// since some input objects are rejected due script.
-			for( Int32 i=0; i<Bases.Num(); i++ )
-				Objects.Push(Bases[i]->Entity);
+			for( Int32 i=0; i<Bases.size(); i++ )
+				Objects.push(Bases[i]->Entity);
 
 			// Own properties is owned by Base.
 			for( CClass* C = First->Base->GetClass(); C; C = C->Super )
 			{
-				for( Int32 iProp=0; iProp<C->Properties.Num(); iProp++ )
+				for( Int32 iProp=0; iProp<C->Properties.size(); iProp++ )
 				{
 					CProperty* Prop = C->Properties[iProp];
 
 					// Property item will add to list its self, also
 					// add children and hide them as default.
 					if( Prop->Flags & PROP_Editable )
-						new CPropertyItem( this, 0, *(TArray<FObject*>*)&Bases, Prop->GetAliasName(), *Prop, Prop->Offset, Prop->Flags );
+						new CPropertyItem( this, 0, *(Array<FObject*>*)&Bases, Prop->GetAliasName(), *Prop, Prop->Offset, Prop->Flags );
 				}
 			}
 
 			// InstanceBuffer properties.
-			for( Int32 i=0; i<First->Script->Properties.Num(); i++ )
+			for( Int32 i=0; i<First->Script->Properties.size(); i++ )
 			{
 				CProperty*Prop = First->Script->Properties[i];
 
 				if( Prop->Flags & PROP_Editable )
-					new CPropertyItem( this, 0, *(TArray<FObject*>*)&Objects, Prop->GetAliasName(), *Prop, Prop->Offset, Prop->Flags );
+					new CPropertyItem( this, 0, *(Array<FObject*>*)&Objects, Prop->GetAliasName(), *Prop, Prop->Offset, Prop->Flags );
 			}
 
 			// Add component items.
-			for( Int32 i=0; i<Bases[0]->Entity->Components.Num(); i++  )
+			for( Int32 i=0; i<Bases[0]->Entity->Components.size(); i++  )
 			{
-				TArray<FExtraComponent*> Comps;
+				Array<FExtraComponent*> Comps;
 
 				// Collect same components from different entities.
-				for( Int32 iOwner=0; iOwner<Bases.Num(); iOwner++ )
-					Comps.Push( Bases[iOwner]->Entity->Components[i] );
+				for( Int32 iOwner=0; iOwner<Bases.size(); iOwner++ )
+					Comps.push( Bases[iOwner]->Entity->Components[i] );
 
-				CComponentItem* Item =  new CComponentItem( this, *(TArray<FObject*>*)&Comps );
+				CComponentItem* Item =  new CComponentItem( this, *(Array<FObject*>*)&Comps );
 
 				// Don't add empty component item.
-				if( Item->Children.Num() == 0 )
+				if( Item->Children.size() == 0 )
 				{
-					Children.RemoveShift(Children.FindItem(Item));
+					Children.removeShift(Children.find(Item));
 					delete Item;
 				}
 			}
 
 			// Set caption.
-			Caption	= String::Format( L"Inspector [%s]", Objects.Num()==1 ? *Bases[0]->Entity->GetName() : *Bases[0]->Entity->Script->GetName() );
+			Caption	= String::Format( L"Inspector [%s]", Objects.size()==1 ? *Bases[0]->Entity->GetName() : *Bases[0]->Entity->Script->GetName() );
 		}
 		else if( Objs[0]->IsA(FScript::MetaClass) )
 		{
 			// Script resource.
-			assert(Objs.Num() == 1);
+			assert(Objs.size() == 1);
 			FScript* Script = (FScript*)Objs[0];
-			TArray<FComponent*> TmpArr;
-			TmpArr.SetNum( 1 );
+			Array<FComponent*> TmpArr;
+			TmpArr.setSize( 1 );
 
-			for( Int32 i=0; i<Objs.Num(); i++ )
-				Objects.Push(Objs[i]);
+			for( Int32 i=0; i<Objs.size(); i++ )
+				Objects.push(Objs[i]);
 
 			TopClass	= Objects[0]->GetClass();
 
 			// FScript properties.
 			for( CClass* C = TopClass; C; C = C->Super )
 			{
-				for( Int32 iProp=0; iProp<C->Properties.Num(); iProp++ )
+				for( Int32 iProp=0; iProp<C->Properties.size(); iProp++ )
 				{
 					CProperty* Prop = C->Properties[iProp];
 
@@ -1614,36 +1614,36 @@ void WObjectInspector::SetEditObjects( TArray<FObject*>& Objs )
 			{
 				for( CClass* C = Script->Base->GetClass(); C; C = C->Super )
 				{
-					for( Int32 iProp=0; iProp<C->Properties.Num(); iProp++ )
+					for( Int32 iProp=0; iProp<C->Properties.size(); iProp++ )
 					{
 						CProperty* Prop = C->Properties[iProp];
 
 						// Property item will add to list its self, also
 						// add children and hide them as default.
 						TmpArr[0] = Script->Base;
-						new CPropertyItem( this, 0, *(TArray<FObject*>*)&TmpArr, Prop->Name, *Prop, Prop->Offset, Prop->Flags );
+						new CPropertyItem( this, 0, *(Array<FObject*>*)&TmpArr, Prop->Name, *Prop, Prop->Offset, Prop->Flags );
 					}
 				}
 
 				// InstanceBuffer properties.
-				for( Int32 i=0; i<Script->Properties.Num(); i++ )
+				for( Int32 i=0; i<Script->Properties.size(); i++ )
 				{
 					CProperty* Prop = Script->Properties[i];
 
 					if( Prop->Flags & PROP_Editable )
-						new CPropertyItem( this, 0, *(TArray<FObject*>*)&Objects, Prop->Name, *Prop, Prop->Offset, Prop->Flags );
+						new CPropertyItem( this, 0, *(Array<FObject*>*)&Objects, Prop->Name, *Prop, Prop->Offset, Prop->Flags );
 				}
 
 				// Components.
-				for( Int32 i=0; i<Script->Components.Num(); i++ )
+				for( Int32 i=0; i<Script->Components.size(); i++ )
 				{
 					TmpArr[0] = Script->Components[i];
-					CComponentItem* Item = new CComponentItem( this, *(TArray<FObject*>*)&TmpArr );
+					CComponentItem* Item = new CComponentItem( this, *(Array<FObject*>*)&TmpArr );
 
 					// Don't add empty component item.
-					if( Item->Children.Num() == 0 )
+					if( Item->Children.size() == 0 )
 					{
-						Children.RemoveShift(Children.FindItem(Item));
+						Children.removeShift(Children.find(Item));
 						delete Item;
 					}
 				}
@@ -1655,17 +1655,17 @@ void WObjectInspector::SetEditObjects( TArray<FObject*>& Objs )
 		else if( Objs[0]->IsA(FResource::MetaClass) )
 		{
 			// Its a list of resources.
-			assert(Objs.Num() == 1);	
+			assert(Objs.size() == 1);	
 
-			for( Int32 i=0; i<Objs.Num(); i++ )
-				Objects.Push( Objs[i] );
+			for( Int32 i=0; i<Objs.size(); i++ )
+				Objects.push( Objs[i] );
 
 			TopClass	= Objects[0]->GetClass();
 
 			// Own properties.
 			for( CClass* C = TopClass; C; C = C->Super )
 			{
-				for( Int32 iProp=0; iProp<C->Properties.Num(); iProp++ )
+				for( Int32 iProp=0; iProp<C->Properties.size(); iProp++ )
 				{
 					CProperty* Prop = C->Properties[iProp];
 
@@ -1681,17 +1681,17 @@ void WObjectInspector::SetEditObjects( TArray<FObject*>& Objs )
 		else if( Objs[0]->IsA(FModifier::MetaClass) )
 		{
 			// Its a list of modifiers.
-			assert(Objs.Num() == 1);
+			assert(Objs.size() == 1);
 
-			for( Int32 i=0; i<Objs.Num(); i++ )
-				Objects.Push( Objs[i] );
+			for( Int32 i=0; i<Objs.size(); i++ )
+				Objects.push( Objs[i] );
 
 			TopClass	= Objects[0]->GetClass();
 
 			// Own properties.
 			for( CClass* C = TopClass; C; C = C->Super )
 			{
-				for( Int32 iProp=0; iProp<C->Properties.Num(); iProp++ )
+				for( Int32 iProp=0; iProp<C->Properties.size(); iProp++ )
 				{
 					CProperty* Prop = C->Properties[iProp];
 
@@ -1772,15 +1772,15 @@ void WObjectInspector::ObjectPicked( FEntity* Picked )
 	// Set value.
 	if( LevelPage )	LevelPage->Transactor->TrackEnter();
 	{
-		for( Int32 i=0; i<WaitItem->Objects.Num(); i++ )
+		for( Int32 i=0; i<WaitItem->Objects.size(); i++ )
 			*(FEntity**)((CPropertyItem*)WaitItem)->GetAddress(i) = Picked;
 	}
 	if( LevelPage )	LevelPage->Transactor->TrackLeave();
 
 	// Notify.
-	for( Int32 i=0; i<WaitItem->Objects.Num(); i++ )
+	for( Int32 i=0; i<WaitItem->Objects.size(); i++ )
 		WaitItem->Objects[i]->EditChange();
-	for( Int32 i=0; i<CustomHandlers.Num(); i++ )
+	for( Int32 i=0; i<CustomHandlers.size(); i++ )
 		CustomHandlers[i]( this );
 
 	// Reset it.
@@ -1820,7 +1820,7 @@ void WObjectInspector::UpdateChildren()
 {
 	// Count non hidden, required for scroll.
 	Int32 NonHidden = 0;
-	for( Int32 i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.size(); i++ )
 		if( !Children[i]->bHidden )
 			NonHidden++;
 
@@ -1831,7 +1831,7 @@ void WObjectInspector::UpdateChildren()
 
 	Int32 WalkY	= INSPECTOR_HEADER_SIZE + 1 - Scroll;
 
-	for( Int32 i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.size(); i++ )
 	{
 		CInspectorItemBase* Item	= Children[i];
 
@@ -1856,7 +1856,7 @@ void WObjectInspector::UpdateChildren()
 //
 CInspectorItemBase* WObjectInspector::GetItemAt( Int32 ParentY, Int32& LocalY )
 { 
-	for( Int32 i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.size(); i++ )
 	{
 		if( Children[i]->bHidden ) 
 			continue;
@@ -1979,7 +1979,7 @@ void WObjectInspector::OnPaint( CGUIRenderBase* Render )
 
 	// Draw items.
 	Render->SetClipArea( Base + TPoint( 0, Padding.Top+2 ), TSize( Size.Width-12, Size.Height-Padding.Top-3 ) );
-	for( Int32 i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.size(); i++ )
 	{
 		CInspectorItemBase* Item = Children[i];
 
@@ -2063,7 +2063,7 @@ void WObjectInspector::ColorSelected( WWidget* Sender )
 		if( Item->CustomAddr )
 			*(TColor*)Item->CustomAddr	= WColorChooser::SharedColor;
 
-		for( Int32 i=0; i<Item->Objects.Num(); i++ )
+		for( Int32 i=0; i<Item->Objects.size(); i++ )
 			*(TColor*)Item->GetAddress(i)	= WColorChooser::SharedColor;
 	}
 	if( LevelPage )	LevelPage->Transactor->TrackLeave();
@@ -2093,7 +2093,7 @@ void WObjectInspector::OnResize()
 //
 void WObjectInspector::UnselectAll()
 {
-	for( Int32 i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.size(); i++ )
 		Children[i]->Unselect();
 
 	Selected	= nullptr;
@@ -2125,8 +2125,8 @@ void WObjectInspector::AddCustomProperty( String PropName, const CTypeInfo& Type
 void WObjectInspector::SetEditObject( FObject* Obj )
 {
 	assert(Obj);
-	TArray<FObject*> Tmp;
-	Tmp.Push(Obj);
+	Array<FObject*> Tmp;
+	Tmp.push(Obj);
 	SetEditObjects( Tmp );
 }
 
@@ -2140,7 +2140,7 @@ void WObjectInspector::CountRefs( CSerializer& S )
 	CLEANUP_ARR_NULL(Objects);
 
 	// Also cleanup in children.
-	for( Int32 i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.size(); i++ )
 	{
 		CInspectorItemBase* Item = Children[i];
 
@@ -2149,9 +2149,9 @@ void WObjectInspector::CountRefs( CSerializer& S )
 	}
 
 	// Maybe cleanup all.
-	if( Objects.Num() == 0 )
+	if( Objects.size() == 0 )
 	{
-		TArray<FObject*> Tmp;
+		Array<FObject*> Tmp;
 		SetEditObjects( Tmp );
 	}
 }

@@ -32,7 +32,7 @@ Bool CEditor::CompileAllScripts( IProgressIndicator* Indicator )
 		while( bAgain )
 		{
 			bAgain	= false;
-			for( Int32 i=0; i<EditorPages->Pages.Num(); i++ )
+			for( Int32 i=0; i<EditorPages->Pages.size(); i++ )
 			{
 				WEditorPage* EdPage = (WEditorPage*)EditorPages->Pages[i];
 				if( EdPage->PageType == PAGE_Play )
@@ -47,7 +47,7 @@ Bool CEditor::CompileAllScripts( IProgressIndicator* Indicator )
 
 	// Reset Undo/Redo for each level, since hardcoded
 	// instance buffer.
-	for( Int32 i=0; i<EditorPages->Pages.Num(); i++ )
+	for( Int32 i=0; i<EditorPages->Pages.size(); i++ )
 	{
 		WEditorPage* EdPage = (WEditorPage*)EditorPages->Pages[i];
 		if( EdPage->PageType == PAGE_Level )
@@ -58,26 +58,26 @@ Bool CEditor::CompileAllScripts( IProgressIndicator* Indicator )
 	}
 
 	// Collect the script pages.
-	TArray<WScriptPage*>	Pages;
-	for( Int32 i=0; i<EditorPages->Pages.Num(); i++ )
+	Array<WScriptPage*>	Pages;
+	for( Int32 i=0; i<EditorPages->Pages.size(); i++ )
 	{
 		WEditorPage* EdPage = (WEditorPage*)EditorPages->Pages[i];
 		
 		if( EdPage->PageType == PAGE_Script )
-			Pages.Push( (WScriptPage*)EdPage );
+			Pages.push( (WScriptPage*)EdPage );
 	}
 
 	// Save text of each text.
-	for( Int32 i=0; i<Pages.Num(); i++ )
+	for( Int32 i=0; i<Pages.size(); i++ )
 		Pages[i]->SaveScriptText( false );
 
 	// Reset inspector since it refer CProperty.
-	TArray<FObject*> tmp;
+	Array<FObject*> tmp;
 	Inspector->SetEditObjects( tmp );
 
 	// Launch the compiler.
 	Bool Result;
-	TArray<String> Warns;
+	Array<String> Warns;
 	Compiler::TError Err;
 
 	Ind.UpdateDetails(L"Compiling...");
@@ -85,11 +85,11 @@ Bool CEditor::CompileAllScripts( IProgressIndicator* Indicator )
 	if( Result = Compiler::CompileAllScripts(GProject, Warns, Err) )		
 	{
 		// Compilation successfully.
-		for( Int32 i=0; i<Pages.Num(); i++ )
+		for( Int32 i=0; i<Pages.size(); i++ )
 		{
 			Pages[i]->Output->Clear();
 
-			for( Int32 w=0; w<Warns.Num(); w++ )
+			for( Int32 w=0; w<Warns.size(); w++ )
 				Pages[i]->Output->AddMessage( Warns[w], nullptr, -1, COLOR_Goldenrod );
 
 			Pages[i]->Output->AddMessage( L"Compilation successfully", nullptr, -1, COLOR_Green );
@@ -101,7 +101,7 @@ Bool CEditor::CompileAllScripts( IProgressIndicator* Indicator )
 
 		// Find and open the problem page.
 		WScriptPage* Problem = nullptr;
-		for( Int32 i=0; i<Pages.Num(); i++ )
+		for( Int32 i=0; i<Pages.size(); i++ )
 			if( Pages[i]->Script == Err.Script )
 			{
 				Problem	= Pages[i];
@@ -114,17 +114,17 @@ Bool CEditor::CompileAllScripts( IProgressIndicator* Indicator )
 
 		// Highlight the error.
 		Problem->HighlightError( Err.ErrorLine-1 );
-		Pages.Push( Problem );
+		Pages.push( Problem );
 
 		// Forced open problem page.
 		GEditor->EditorPages->ActivateTabPage(Problem);
 
 		// Output messages.
-		for( Int32 i=0; i<Pages.Num(); i++ )
+		for( Int32 i=0; i<Pages.size(); i++ )
 		{
 			Pages[i]->Output->Clear();
 
-			for( Int32 w=0; w<Warns.Num(); w++ )
+			for( Int32 w=0; w<Warns.size(); w++ )
 				Pages[i]->Output->AddMessage( Warns[w], nullptr, -1, COLOR_Goldenrod );
 
 			Pages[i]->Output->AddMessage( L"Compilation aborted", Err.Script, Err.ErrorLine, TColor( 0xf0, 0x30, 0x30, 0xff ) );
@@ -154,7 +154,7 @@ Bool CEditor::DropAllScripts()
 		while( bAgain )
 		{
 			bAgain	= false;
-			for( Int32 i=0; i<EditorPages->Pages.Num(); i++ )
+			for( Int32 i=0; i<EditorPages->Pages.size(); i++ )
 			{
 				WEditorPage* EdPage = (WEditorPage*)EditorPages->Pages[i];
 				if( EdPage->PageType == PAGE_Play )

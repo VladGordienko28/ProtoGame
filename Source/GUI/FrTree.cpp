@@ -43,10 +43,10 @@ WTreeView::WTreeView( WContainer* InOwner, WWindow* InRoot )
 //
 Int32 WTreeView::AddNode( String InName, Int32 IniParent, void* InData )
 {
-	assert(IniParent==-1 || (IniParent>=0 && IniParent<Nodes.Num()));
+	assert(IniParent==-1 || (IniParent>=0 && IniParent<Nodes.size()));
 
 	Int32 Level = IniParent != -1 ? Nodes[IniParent].Level+1 : 1;
-	Int32 iThis = Nodes.Push(TNode( InName, Level, IniParent, InData ));
+	Int32 iThis = Nodes.push(TNode( InName, Level, IniParent, InData ));
 
 	// Sort items for rendering.
 	ComputeOrder();
@@ -60,17 +60,17 @@ Int32 WTreeView::AddNode( String InName, Int32 IniParent, void* InData )
 //
 void WTreeView::SelectNext()
 {
-	if( RenderOrder.Num() == 0 )
+	if( RenderOrder.size() == 0 )
 		return;
 	
-	Int32 iOrdered = RenderOrder.FindItem(iSelected);
+	Int32 iOrdered = RenderOrder.find(iSelected);
 	if( iOrdered == -1 )
 	{
 		iSelected = 0;
 	}
 	else
 	{
-		if( iOrdered < RenderOrder.Num()-1 )
+		if( iOrdered < RenderOrder.size()-1 )
 			iSelected = RenderOrder[iOrdered+1];
 	}
 
@@ -84,13 +84,13 @@ void WTreeView::SelectNext()
 //
 void WTreeView::SelectPrev()
 {
-	if( RenderOrder.Num() == 0 )
+	if( RenderOrder.size() == 0 )
 		return;
 
-	Int32 iOrdered = RenderOrder.FindItem(iSelected);
+	Int32 iOrdered = RenderOrder.find(iSelected);
 	if( iOrdered == -1 )
 	{
-		iSelected = RenderOrder.Last();
+		iSelected = RenderOrder.last();
 	}
 	else
 	{
@@ -139,7 +139,7 @@ void WTreeView::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 //
 Int32 WTreeView::FindNode( String TestName, Int32 iParent )
 {
-	for( Int32 i=0; i<Nodes.Num(); i++ )
+	for( Int32 i=0; i<Nodes.size(); i++ )
 		if( TestName == Nodes[i].Name )
 		{
 			if( iParent != -1 && !IsParentNode(i, iParent) )
@@ -180,7 +180,7 @@ void WTreeView::ScrollToNode( Int32 iNode )
 	if( iNode == -1 )
 		return;
 
-	Int32 iOrdered = RenderOrder.FindItem(iNode);
+	Int32 iOrdered = RenderOrder.find(iNode);
 	if( iOrdered == -1 )
 		return;
 
@@ -191,7 +191,7 @@ void WTreeView::ScrollToNode( Int32 iNode )
 	while( iOrdered >= ScrollTop+NumVis )		ScrollTop++;
 
 	// Update scroll bar.
-	ScrollBar->Value	= 100*ScrollTop / Max( RenderOrder.Num()-1, 1 );
+	ScrollBar->Value	= 100*ScrollTop / Max( RenderOrder.size()-1, 1 );
 }
 
 
@@ -215,10 +215,10 @@ void WTreeView::OnPaint( CGUIRenderBase* Render )
 
 	// Visible lines bounds.
 	Int32 iVisFirst	= ScrollTop;
-	Int32 iVisLast	= Min( ScrollTop + Size.Height/(TREEVIEW_NODES_INTERVAL+CharHeight), RenderOrder.Num()-1 );
+	Int32 iVisLast	= Min( ScrollTop + Size.Height/(TREEVIEW_NODES_INTERVAL+CharHeight), RenderOrder.size()-1 );
 
 	// Draw root line.
-	if( RenderOrder.Num() != 0 )
+	if( RenderOrder.size() != 0 )
 		Render->DrawRegion
 		(
 			TPoint( Base.X + 8, Base.Y + 1 ),
@@ -229,7 +229,7 @@ void WTreeView::OnPaint( CGUIRenderBase* Render )
 		);
 
 	// Draw all vertical lines.
-	for( Int32 i=0; i<RenderOrder.Num(); i++ )
+	for( Int32 i=0; i<RenderOrder.size(); i++ )
 	{
 		Int32 iNode = RenderOrder[i];
 		TNode& Node = Nodes[iNode];
@@ -330,7 +330,7 @@ Int32 WTreeView::XYToIndex( Int32 X, Int32 Y, Bool* AtSign )
 	if( AtSign )
 		*AtSign = false;
 
-	for( Int32 i=ScrollTop; i<RenderOrder.Num(); i++ )
+	for( Int32 i=ScrollTop; i<RenderOrder.size(); i++ )
 	{
 		// Precompute.
 		Int32 iNode = RenderOrder[i];
@@ -395,15 +395,15 @@ void WTreeView::OnDoubleClick()
 //
 // Recursive minon of WTreeView::ComputeOrder.
 //
-void ComputeOrderMinion( Int32 iParent, TArray<Int32>& RenderOrder, TArray<WTreeView::TNode>& Nodes )
+void ComputeOrderMinion( Int32 iParent, Array<Int32>& RenderOrder, Array<WTreeView::TNode>& Nodes )
 {
 	assert(iParent != -1);
 
-	RenderOrder.Push(iParent);
+	RenderOrder.push(iParent);
 	Nodes[iParent].NumChildren = 0;
 	Bool bExpanded = Nodes[iParent].bExpanded;
 
-	for( Int32 i=0; i<Nodes.Num(); i++ )
+	for( Int32 i=0; i<Nodes.size(); i++ )
 		if( Nodes[i].iParent == iParent )
 		{
 			if( bExpanded )
@@ -419,9 +419,9 @@ void ComputeOrderMinion( Int32 iParent, TArray<Int32>& RenderOrder, TArray<WTree
 //
 void WTreeView::ComputeOrder()
 {
-	RenderOrder.Empty();
+	RenderOrder.empty();
 
-	for( Int32 i=0; i<Nodes.Num(); i++ )
+	for( Int32 i=0; i<Nodes.size(); i++ )
 		if( Nodes[i].iParent == -1 )
 			ComputeOrderMinion( i, RenderOrder, Nodes );
 }
@@ -456,7 +456,7 @@ void WTreeView::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 //
 void WTreeView::Empty()
 {
-	Nodes.Empty();
+	Nodes.empty();
 	ComputeOrder();
 }
 
@@ -489,7 +489,7 @@ Bool WTreeView::IsParentNode( Int32 iNode, Int32 TestParent ) const
 //
 void WTreeView::ExpandAll()
 {
-	for( Int32 i=0; i<Nodes.Num(); i++ )
+	for( Int32 i=0; i<Nodes.size(); i++ )
 		Nodes[i].bExpanded = true;
 
 	ComputeOrder();
@@ -502,7 +502,7 @@ void WTreeView::ExpandAll()
 //
 void WTreeView::CollapseAll()
 {
-	for( Int32 i=0; i<Nodes.Num(); i++ )
+	for( Int32 i=0; i<Nodes.size(); i++ )
 		Nodes[i].bExpanded = false;
 
 	ComputeOrder();
@@ -516,7 +516,7 @@ void WTreeView::CollapseAll()
 //
 void WTreeView::AlphabetSort()
 {
-	Nodes.Sort([]( const TNode& A, const TNode& B )->Bool
+	Nodes.sort([]( const TNode& A, const TNode& B )->Bool
 	{
 		if( A.iParent == B.iParent )
 		{
@@ -541,10 +541,10 @@ void WTreeView::OnMouseScroll( Int32 Delta )
 
 	// Scroll text in aspect 1:3.
 	ScrollTop	-= Delta / 40;
-	ScrollTop	= Clamp( ScrollTop, 0, RenderOrder.Num()-1 );
+	ScrollTop	= Clamp( ScrollTop, 0, RenderOrder.size()-1 );
 
 	// Update scroll bar.
-	ScrollBar->Value	= 100*ScrollTop / Max( RenderOrder.Num()-1, 1 );
+	ScrollBar->Value	= 100*ScrollTop / Max( RenderOrder.size()-1, 1 );
 }
 
 
@@ -553,8 +553,8 @@ void WTreeView::OnMouseScroll( Int32 Delta )
 //
 void WTreeView::ScrollBarChange( WWidget* Sender )
 {
-	ScrollTop	= ScrollBar->Value * (RenderOrder.Num()-1) / 100;
-	ScrollTop	= Clamp( ScrollTop, 0, RenderOrder.Num()-1 );
+	ScrollTop	= ScrollBar->Value * (RenderOrder.size()-1) / 100;
+	ScrollTop	= Clamp( ScrollTop, 0, RenderOrder.size()-1 );
 }
 
 
@@ -572,7 +572,7 @@ void* WTreeView::DataOf( Int32 iNode )
 //
 Int32 WTreeView::FindLastChildren( Int32 iParent )
 {
-	for( Int32 i=RenderOrder.Num()-1; i>=0; i-- )
+	for( Int32 i=RenderOrder.size()-1; i>=0; i-- )
 		if( Nodes[RenderOrder[i]].iParent == iParent )
 			return i;
 

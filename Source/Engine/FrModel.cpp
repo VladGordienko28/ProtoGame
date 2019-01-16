@@ -74,7 +74,7 @@ void FModelComponent::EditChange()
 
 	// If map size changed - realloc the map,
 	// honestly not really good check.
-	if( Map.Num() != MapXSize*MapYSize )
+	if( Map.size() != MapXSize*MapYSize )
 		ReallocMap();
 
 	// Anyway refresh atlas table.
@@ -104,7 +104,7 @@ void FModelComponent::ReallocMap()
 
 	// Reallocate data, and zero map, since
 	// reallocation cause tiles shuffle.
-	Map.SetNum( MapXSize * MapYSize );
+	Map.setSize( MapXSize * MapYSize );
 	mem::zero( &Map[0], MapXSize*MapYSize*sizeof(UInt16) );
 }
 
@@ -170,7 +170,7 @@ TRect FModelComponent::GetAABB()
 void FModelComponent::Render( CCanvas* Canvas )
 {
 	// Check for validness.
-	assert(Map.Num() == MapXSize*MapYSize);
+	assert(Map.size() == MapXSize*MapYSize);
 
 	if( !( Level->RndFlags & RND_Model ) )
 		return;
@@ -311,7 +311,7 @@ void FModelComponent::Render( CCanvas* Canvas )
 	// Editor only.
 	if( bSelected && PenIndex != -1 )
 	{
-		if( Selected.Num() == 1 && Selected[0] == 0 )
+		if( Selected.size() == 1 && Selected[0] == 0 )
 		{
 			// Draw erase tile.
 			Int32 X = PenIndex % MapXSize;
@@ -330,7 +330,7 @@ void FModelComponent::Render( CCanvas* Canvas )
 
 			Canvas->DrawRect( Tile );
 		}
-		else if( Selected.Num() > 0 )
+		else if( Selected.size() > 0 )
 		{
 			// Draw ghost tiles :3
 			Int32	BaseX	= Selected[0] % TilesPerU;
@@ -345,7 +345,7 @@ void FModelComponent::Render( CCanvas* Canvas )
 			Tile.Texture			= Texture;
 			Tile.Color				= TColor( 0xa0, 0xa0, 0xa0, 0xff );
 
-			for( Int32 i=0; i<Selected.Num(); i++ )
+			for( Int32 i=0; i<Selected.size(); i++ )
 			{
 				Int32 X = PenX + ((Selected[i] % TilesPerU) - BaseX);
 				Int32 Y = PenY - ((Selected[i] / TilesPerU) - BaseY);
@@ -378,8 +378,8 @@ void FModelComponent::Import( CImporterBase& Im )
 {
 	FBaseComponent::Import(Im);
 
-	Map.SetNum( MapXSize*MapYSize );
-	for( Int32 iTile=0; iTile<Map.Num(); iTile++ )
+	Map.setSize( MapXSize*MapYSize );
+	for( Int32 iTile=0; iTile<Map.size(); iTile++ )
 		Map[iTile] = Im.ImportInteger( *String::Format( L"Map[%i]", iTile ) );
 }
 
@@ -393,7 +393,7 @@ void FModelComponent::Export( CExporterBase& Ex )
 
 	// Store all tiles, without blank(0 index),
 	// it's safe about 70% of memory.
-	for( Int32 iTile=0; iTile<Map.Num(); iTile++ )
+	for( Int32 iTile=0; iTile<Map.size(); iTile++ )
 		if( Map[iTile] )
 			Ex.ExportInteger( *String::Format( L"Map[%i]", iTile ), Map[iTile] );
 }

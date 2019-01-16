@@ -51,9 +51,9 @@ void FLogicComponent::CleanBadConnectors()
 {
 	for( Int32 iPlug=0; iPlug<MAX_LOGIC_PLUGS; iPlug++ )
 	{
-		for( Int32 iConn = 0; iConn<Plugs[iPlug].Num(); )
+		for( Int32 iConn = 0; iConn<Plugs[iPlug].size(); )
 			if( Plugs[iPlug][iConn].Target == nullptr )
-				Plugs[iPlug].Remove( iConn );
+				Plugs[iPlug].removeFast( iConn );
 			else
 				iConn++;
 	}
@@ -93,7 +93,7 @@ void FLogicComponent::AddConnector( FLogicComponent* InTarget, Int32 iPlug, Int3
 	Connector.iJack		= iJack;
 
 	// Prevent duplicates also.
-	Plugs[iPlug].AddUnique( Connector );
+	Plugs[iPlug].addUnique( Connector );
 
 	// Sometimes cleanup unused refs.
 	CleanBadConnectors();
@@ -105,7 +105,7 @@ void FLogicComponent::AddConnector( FLogicComponent* InTarget, Int32 iPlug, Int3
 //
 void FLogicComponent::RemoveConnectors( Int32 iPlug )
 {
-	Plugs[iPlug].Empty();
+	Plugs[iPlug].empty();
 }
 
 
@@ -156,8 +156,8 @@ void FLogicComponent::Import( CImporterBase& Im )
 	for( Int32 i=0; i<MAX_LOGIC_PLUGS; i++ )
 		if( PlugsName[i] )
 		{
-			Plugs[i].SetNum(Im.ImportInteger(*String::Format( L"Plugs[%i].Num" , i )));
-			for( Int32 j=0; j<Plugs[i].Num(); j++ )
+			Plugs[i].setSize(Im.ImportInteger(*String::Format( L"Plugs[%i].Num" , i )));
+			for( Int32 j=0; j<Plugs[i].size(); j++ )
 			{
 				TLogicConnector& Conn = Plugs[i][j];
 
@@ -191,8 +191,8 @@ void FLogicComponent::Export( CExporterBase& Ex )
 	for( Int32 i=0; i<MAX_LOGIC_PLUGS; i++ )
 		if( PlugsName[i] )
 		{
-			Ex.ExportInteger( *String::Format( L"Plugs[%i].Num" , i ), Plugs[i].Num() );
-			for( Int32 j=0; j<Plugs[i].Num(); j++ )
+			Ex.ExportInteger( *String::Format( L"Plugs[%i].Num" , i ), Plugs[i].size() );
+			for( Int32 j=0; j<Plugs[i].size(); j++ )
 			{
 				TLogicConnector& Conn = Plugs[i][j];
 
@@ -273,7 +273,7 @@ void FLogicComponent::Render( CCanvas* Canvas )
 
 	// Draw connectors.
 	for( Int32 iPlug=0; iPlug<NumPlugs; iPlug++ )
-		for( Int32 iConn=0; iConn<Plugs[iPlug].Num(); iConn++ )
+		for( Int32 iConn=0; iConn<Plugs[iPlug].size(); iConn++ )
 		{
 			TLogicConnector& Conn = Plugs[iPlug][iConn];
 
@@ -318,7 +318,7 @@ void FLogicComponent::nativeInduceSignal( CFrame& Frame )
 	}
 
 	// Send the signal over the wires.
-	for( Int32 i=0; i<Plugs[iPlug].Num(); i++ )
+	for( Int32 i=0; i<Plugs[iPlug].size(); i++ )
 	{
 		TLogicConnector& Conn = Plugs[iPlug][i];
 

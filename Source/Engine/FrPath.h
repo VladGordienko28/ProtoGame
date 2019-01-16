@@ -81,8 +81,8 @@ class CNavigator
 public:
 	// Variables.
 	FLevel*				Level;
-	TArray<TPathNode>	Nodes;
-	TArray<TPathEdge>	Edges;
+	Array<TPathNode>	Nodes;
+	Array<TPathEdge>	Edges;
 
 	// Friends.
 	friend class FLevel;

@@ -112,7 +112,7 @@ void CLevelRefChanger::SerializeRef( FObject*& Obj )
 		FExtraComponent* Extra = (FExtraComponent*)Obj;
 		if( Extra->Entity->Level == OldLevel )
 		{
-			Obj = NewLevel->Entities[OldLevel->GetEntityIndex(Extra->Entity)]->Components[Extra->Entity->Components.FindItem(Extra)];
+			Obj = NewLevel->Entities[OldLevel->GetEntityIndex(Extra->Entity)]->Components[Extra->Entity->Components.find(Extra)];
 		}
 	}
 	// All others types of objects are shared, such
@@ -138,7 +138,7 @@ FLevel* CProject::DuplicateLevel( FLevel* Source )
 	// it's important to store proper order, since refs will be
 	// changed using it's index in level's database.
 	// Warning should be works like FEntity::Init.
-	for( Int32 iEntity=0; iEntity<Source->Entities.Num(); iEntity++ )
+	for( Int32 iEntity=0; iEntity<Source->Entities.size(); iEntity++ )
 	{
 		FEntity* OldEntity = Source->Entities[iEntity];
 		FEntity* NewEntity = NewObject<FEntity>( OldEntity->GetName(), Result );
@@ -156,7 +156,7 @@ FLevel* CProject::DuplicateLevel( FLevel* Source )
 		BasCom->InitForEntity( NewEntity );
 
 		// Extra components.
-		for( Int32 i=0; i<OldEntity->Components.Num(); i++ )
+		for( Int32 i=0; i<OldEntity->Components.size(); i++ )
 		{
 			FExtraComponent* Extra = OldEntity->Components[i];
 			FExtraComponent* Com = (FExtraComponent*)GObjectDatabase->CopyObject
@@ -172,28 +172,28 @@ FLevel* CProject::DuplicateLevel( FLevel* Source )
 		if( NewEntity->Script->InstanceBuffer )
 		{
 			NewEntity->InstanceBuffer = new CInstanceBuffer( NewEntity->Script->Properties );
-			NewEntity->InstanceBuffer->Data.SetNum( NewEntity->Script->InstanceSize );
+			NewEntity->InstanceBuffer->Data.setSize( NewEntity->Script->InstanceSize );
 
 			// Copy data from the source entity.
-			if( NewEntity->Script->Properties.Num() )
+			if( NewEntity->Script->Properties.size() )
 				NewEntity->InstanceBuffer->CopyValues( &OldEntity->InstanceBuffer->Data[0] );
 		}
 
 		// Add entity to the level's db.
-		Result->Entities.Push( NewEntity );
+		Result->Entities.push( NewEntity );
 	}
 
 	// Level's entities and their components are initialized
 	// now, but still object's has references to the objects
 	// on the old level, here we fix them.
 	CLevelRefChanger RefChanger( Result, Source );
-	for( Int32 iEntity=0; iEntity<Result->Entities.Num(); iEntity++ )
+	for( Int32 iEntity=0; iEntity<Result->Entities.size(); iEntity++ )
 	{
 		FEntity* Entity	= Result->Entities[iEntity];
 
 		// Serialize only component's because they are refer.
 		Entity->Base->SerializeThis( RefChanger );
-		for( Int32 e=0; e<Entity->Components.Num(); e++ )
+		for( Int32 e=0; e<Entity->Components.size(); e++ )
 			Entity->Components[e]->SerializeThis( RefChanger );
 
 		// ..but also change references in the instance buffer.
@@ -204,13 +204,13 @@ FLevel* CProject::DuplicateLevel( FLevel* Source )
 	// Send after loading notification to the each
 	// entity and component to set up temporal stuff.
 	// This action is logically has sense.
-	for( Int32 iEntity=0; iEntity<Result->Entities.Num(); iEntity++ )
+	for( Int32 iEntity=0; iEntity<Result->Entities.size(); iEntity++ )
 	{
 		FEntity* Entity	= Result->Entities[iEntity];
 
 		Entity->PostLoad();
 		Entity->Base->PostLoad();
-		for( Int32 e=0; e<Entity->Components.Num(); e++ )
+		for( Int32 e=0; e<Entity->Components.size(); e++ )
 			Entity->Components[e]->PostLoad();
 	}
 

@@ -546,7 +546,7 @@ static void DrawArrow( CCanvas* Canvas, const TVector& From, const TVector& To, 
 //
 TVector WSkeletonPage::GetBoneCenter( Int32 iBone )
 {
-	assert(iBone>=0 && iBone<Skeleton->Bones.Num());
+	assert(iBone>=0 && iBone<Skeleton->Bones.size());
 	TBonePose& Pose = GetCurrentPose().BonesPose[iBone];
 	TBoneInfo& Info = Skeleton->Bones[iBone];
 
@@ -570,7 +570,7 @@ void WSkeletonPage::DrawLink( CCanvas* Canvas, Int32 i, Int32 j, TColor Color )
 //
 void WSkeletonPage::UnselectAll()
 {
-	for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
+	for( Int32 i=0; i<Skeleton->Bones.size(); i++ )
 		Skeleton->Bones[i].Flags	&= ~BONE_Selected;
 }
 
@@ -603,7 +603,7 @@ Int32 WSkeletonPage::GetBoneAt( Int32 X, Int32 Y )
 	TSkelPose& Pose		= GetCurrentPose();
 
 	// Go through the bones.
-	for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
+	for( Int32 i=0; i<Skeleton->Bones.size(); i++ )
 	{
 		TBoneInfo& Bone = Skeleton->Bones[i];
 		TBonePose& Tran	= Pose.BonesPose[i];
@@ -647,7 +647,7 @@ Int32 WSkeletonPage::GetBoneAt( Int32 X, Int32 Y )
 //
 void WSkeletonPage::ShowBoneProperties( Int32 iBone )
 {
-	assert(iBone>=-1 && iBone<Skeleton->Bones.Num());
+	assert(iBone>=-1 && iBone<Skeleton->Bones.size());
 
 	WObjectInspector* Inspector = GEditor->Inspector;
 	Inspector->Empty();
@@ -691,7 +691,7 @@ void WSkeletonPage::ShowBoneProperties( Int32 iBone )
 	}
 
 	// Add inspector callback.
-	Inspector->CustomHandlers.AddUnique(WIDGET_EVENT(WSkeletonPage::BoneEditChange));
+	Inspector->CustomHandlers.addUnique(WIDGET_EVENT(WSkeletonPage::BoneEditChange));
 }
 
 
@@ -759,7 +759,7 @@ void WSkeletonPage::ButtonLinkClick( WWidget* Sender )
 
 void WSkeletonPage::ButtonBreakLinksClick( WWidget* Sender )
 {
-	for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
+	for( Int32 i=0; i<Skeleton->Bones.size(); i++ )
 		if( Skeleton->Bones[i].Flags & BONE_Selected )
 			Skeleton->BreakLinks( i );
 
@@ -770,7 +770,7 @@ void WSkeletonPage::ButtonBreakLinksClick( WWidget* Sender )
 void WSkeletonPage::ButtonAddIKClick( WWidget* Sender )
 {
 	Int32 iEndBone = -1;
-	for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
+	for( Int32 i=0; i<Skeleton->Bones.size(); i++ )
 	{
 		TBoneInfo& Bone = Skeleton->Bones[i];
 		if( Bone.Flags & BONE_Selected )
@@ -808,15 +808,15 @@ void WSkeletonPage::ButtonAddIKClick( WWidget* Sender )
 	Pivot.Snap(TranslationSnap);
 
 	// Create solver itself.
-	Int32 iIK = Skeleton->Bones.Push(TBoneInfo
+	Int32 iIK = Skeleton->Bones.push(TBoneInfo
 		( 
 			SC_IKSolver, 
 			MakeUniqueBoneName(L"IK"), 
 			DEFAULT_IK_COLOR 
 		));
 
-	Skeleton->RefPose.BonesPose.Push(TBonePose( Pivot, 0 ));
-	assert(Skeleton->Bones.Num()==Skeleton->RefPose.BonesPose.Num());
+	Skeleton->RefPose.BonesPose.push(TBonePose( Pivot, 0 ));
+	assert(Skeleton->Bones.size()==Skeleton->RefPose.BonesPose.size());
 
 	// Create links.
 	Skeleton->Bones[iIK].Scale					= 1.25f;
@@ -972,7 +972,7 @@ void WSkeletonPage::UpdateGizmo( Int32 iNewSele )
 {
 	Int32 iSelected = iNewSele;
 	if( iSelected == -1 )
-		for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
+		for( Int32 i=0; i<Skeleton->Bones.size(); i++ )
 			if( Skeleton->Bones[i].Flags & BONE_Selected )
 			{
 				iSelected	= i;
@@ -1088,7 +1088,7 @@ void WSkeletonPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 De
 		{
 			// Translate selected bones.
 			TSkelPose& Pose = GetCurrentPose();
-			for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
+			for( Int32 i=0; i<Skeleton->Bones.size(); i++ )
 				if( Skeleton->Bones[i].Flags & BONE_Selected )
 				{
 					// Perform translation in parent's space.
@@ -1113,7 +1113,7 @@ void WSkeletonPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 De
 			TAngle DeltaRot;
 			Gizmo.Perform( SceneView, TVector(X, Y), Delta, nullptr, &DeltaRot, nullptr );
 			TSkelPose& Pose = GetCurrentPose();
-			for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
+			for( Int32 i=0; i<Skeleton->Bones.size(); i++ )
 				if( Skeleton->Bones[i].Flags & BONE_Selected )
 				{
 					TAngle OldAngle	= VectorToAngle(Pose.BonesPose[i].Coords.XAxis);
@@ -1185,17 +1185,17 @@ void WSkeletonPage::OnMouseBeginDrag( EMouseButton Button, Int32 X, Int32 Y )
 			TVector Pivot = SceneView.Deproject( X, Y );
 			Pivot.Snap(TranslationSnap);
 
-			Skeleton->Bones.Push(TBoneInfo
+			Skeleton->Bones.push(TBoneInfo
 				( 
 					Tool==SKT_AddBone ? SC_Bone : SC_Master, 
 					MakeUniqueBoneName(Tool==SKT_AddBone ? L"Bone" : L"Master"), 
 					TColor(174, 186, 203, 255) 
 				));	// constants to define!
-			Skeleton->RefPose.BonesPose.Push(TBonePose( Pivot, 0 ));
+			Skeleton->RefPose.BonesPose.push(TBonePose( Pivot, 0 ));
 			Skeleton->BuildTransformationTable();
 
-			assert(Skeleton->Bones.Num()==Skeleton->RefPose.BonesPose.Num());
-			DragInfo.iNewBone	= Skeleton->Bones.Num() - 1;
+			assert(Skeleton->Bones.size()==Skeleton->RefPose.BonesPose.size());
+			DragInfo.iNewBone	= Skeleton->Bones.size() - 1;
 			DragInfo.DragType	= SKDR_MakeBone;
 			break;
 		}
@@ -1228,8 +1228,8 @@ void WSkeletonPage::OnMouseEndDrag( EMouseButton Button, Int32 X, Int32 Y )
 			TBoneInfo& Info	= Skeleton->Bones[DragInfo.iNewBone];
 			if( Info.Scale <= 0.1f )		// constant!!!!!
 			{
-				Skeleton->Bones.RemoveShift(DragInfo.iNewBone);
-				Skeleton->RefPose.BonesPose.RemoveShift(DragInfo.iNewBone);
+				Skeleton->Bones.removeShift(DragInfo.iNewBone);
+				Skeleton->RefPose.BonesPose.removeShift(DragInfo.iNewBone);
 				Skeleton->BuildTransformationTable();
 				warn( L"Skel: Too short bone eliminated" );
 			}
@@ -1257,7 +1257,7 @@ void WSkeletonPage::OnMouseEndDrag( EMouseButton Button, Int32 X, Int32 Y )
 		{
 			// Snap selected bones.
 			TSkelPose& Pose = GetCurrentPose();
-			for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
+			for( Int32 i=0; i<Skeleton->Bones.size(); i++ )
 				if( Skeleton->Bones[i].Flags & BONE_Selected )
 				{
 					Pose.BonesPose[i].Coords.Origin.Snap(TranslationSnap);
@@ -1272,7 +1272,7 @@ void WSkeletonPage::OnMouseEndDrag( EMouseButton Button, Int32 X, Int32 Y )
 		{
 			// Snap selected bones.
 			TSkelPose& Pose = GetCurrentPose();
-			for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
+			for( Int32 i=0; i<Skeleton->Bones.size(); i++ )
 				if( Skeleton->Bones[i].Flags & BONE_Selected )
 				{
 					TAngle Rotation = VectorToAngle(Pose.BonesPose[i].Coords.XAxis);
@@ -1440,7 +1440,7 @@ void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 		// Draw a links if need.
 		if( DrawLinksButton->bDown )
 		{
-			for( Int32 i=0; i<Skeleton->Bones.Num(); i++ )
+			for( Int32 i=0; i<Skeleton->Bones.size(); i++ )
 			{
 				TBoneInfo& Info = Skeleton->Bones[i];
 				TBonePose& Pose = GetCurrentPose().BonesPose[i];
@@ -1587,10 +1587,10 @@ WAnimationTrack::WAnimationTrack( WSkeletonPage* InPage, WWindow* InRoot )
 
 	// Hacky.
 	ActionsList->Empty();
-	for( Int32 i=0; i<Skeleton->Actions.Num(); i++ )
+	for( Int32 i=0; i<Skeleton->Actions.size(); i++ )
 		ActionsList->AddItem( Skeleton->Actions[i].Name, (void*)i );
 
-	ActionsList->ItemIndex = ActionsList->Items.Num()-1;
+	ActionsList->ItemIndex = ActionsList->Items.size()-1;
 
 }
 
@@ -1677,7 +1677,7 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 		TSkeletonAction& Action = Skeleton->Actions[ActionsList->ItemIndex];
 
 		// Foreach track.
-		for( Int32 i=0; i<Action.BoneTracks.Num(); i++ )
+		for( Int32 i=0; i<Action.BoneTracks.size(); i++ )
 		{
 			TBoneTrack& Track = Action.BoneTracks[i];
 			String TrackName = Skeleton->Bones[Track.iBone].Name;
@@ -1706,7 +1706,7 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 			// Draw keys.
 			///////////////////////////////////////////////////////
 
-			for( Int32 i=0; i<Track.PosKeys.Samples.Num(); i++ )
+			for( Int32 i=0; i<Track.PosKeys.Samples.size(); i++ )
 			{
 				Render->DrawRegion
 				(
@@ -1718,7 +1718,7 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 				);
 			}
 
-			for( Int32 i=0; i<Track.RotKeys.Samples.Num(); i++ )
+			for( Int32 i=0; i<Track.RotKeys.Samples.size(); i++ )
 			{
 				Render->DrawRegion
 				(
@@ -1753,14 +1753,14 @@ void WAnimationTrack::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 void WAnimationTrack::ButtonAddActionClick( WWidget* Sender )
 {
 	static Int32 gCounter = 0;
-	Skeleton->Actions.Push(TSkeletonAction(String::Format(L"Action_%d", gCounter)));
+	Skeleton->Actions.push(TSkeletonAction(String::Format(L"Action_%d", gCounter)));
 	gCounter++;
 
 	ActionsList->Empty();
-	for( Int32 i=0; i<Skeleton->Actions.Num(); i++ )
+	for( Int32 i=0; i<Skeleton->Actions.size(); i++ )
 		ActionsList->AddItem( Skeleton->Actions[i].Name, (void*)i );
 
-	ActionsList->ItemIndex = ActionsList->Items.Num()-1;
+	ActionsList->ItemIndex = ActionsList->Items.size()-1;
 
 
 
@@ -1788,7 +1788,7 @@ void WAnimationTrack::NoteMovement( Int32 iBone, Bool bOnlyRotation )
 
 	// Find appropriate bone track or create new one.
 	Int32 iTrack = -1;
-	for( Int32 i=0; i<Action.BoneTracks.Num(); i++ )
+	for( Int32 i=0; i<Action.BoneTracks.size(); i++ )
 		if( Action.BoneTracks[i].iBone == iBone )
 		{
 			iTrack = i;
@@ -1798,7 +1798,7 @@ void WAnimationTrack::NoteMovement( Int32 iBone, Bool bOnlyRotation )
 	// Track not found, so create new one.
 	if( iTrack == -1 )
 	{
-		iTrack = Action.BoneTracks.Push(TBoneTrack(iBone));
+		iTrack = Action.BoneTracks.push(TBoneTrack(iBone));
 	}
 
 	TBoneTrack& Track = Action.BoneTracks[iTrack];

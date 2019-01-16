@@ -144,11 +144,11 @@ void FEmitterComponent::TickNonPlay( Float Delta )
 void FEmitterComponent::Tick( Float Delta )
 {
 	// Reallocate list, if need.
-	if( MaxParticles != Particles.Num() )
+	if( MaxParticles != Particles.size() )
 	{
 		MaxParticles	= Clamp<Int32>( MaxParticles, 1, MAX_PARTICLES );
 		NumPrts			= 0;
-		Particles.SetNum( MaxParticles );
+		Particles.setSize( MaxParticles );
 	}
 
 	// Not really good way to determinate
@@ -219,7 +219,7 @@ void FEmitterComponent::SerializeThis( CSerializer& S )
 	else if( S.GetMode() == SM_Load )
 	{
 		Int32 NumToLoad = Min( 100, NumPrts );
-		Particles.SetNum(NumToLoad);
+		Particles.setSize(NumToLoad);
 		if( NumToLoad )
 			S.SerializeData( &Particles[0], NumToLoad*sizeof(TParticle) );
 	}

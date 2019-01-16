@@ -34,8 +34,8 @@ public:
 	Bool						bExpanded;
 	String						Caption;
 	WObjectInspector*			Inspector;
-	TArray<CInspectorItemBase*>	Children;
-	TArray<FObject*>			Objects;			
+	Array<CInspectorItemBase*>	Children;
+	Array<FObject*>				Objects;			
 	UInt32						Depth;
 	Int32						Top;
 
@@ -72,11 +72,11 @@ public:
 	Bool				bMoveSep;
 
 	// Items.
-	TArray<CInspectorItemBase*>	Children;
-	TArray<FObject*>			Objects;
+	Array<CInspectorItemBase*>	Children;
+	Array<FObject*>				Objects;
 	CInspectorItemBase*			Selected;
 	CClass*						TopClass;
-	TArray<TNotifyEvent>		CustomHandlers;
+	Array<TNotifyEvent>			CustomHandlers;
 
 	// Entity pick processing.
 	WLevelPage*				LevelPage;
@@ -89,7 +89,7 @@ public:
 	// WObjectInspector interface.
 	WObjectInspector( WContainer* InOwner, WWindow* InRoot );
 	~WObjectInspector();
-	void SetEditObjects( TArray<FObject*>& Objs );
+	void SetEditObjects( Array<FObject*>& Objs );
 	void SetEditObject( FObject* Obj );
 	void UnselectAll();
 	CInspectorItemBase* GetItemAt( Int32 ParentY, Int32& LocalY );

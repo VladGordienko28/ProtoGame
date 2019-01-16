@@ -27,7 +27,7 @@ void FExtraComponent::InitForEntity( FEntity* InEntity )
 	FComponent::InitForEntity(InEntity);
 
 	assert(Entity->Base);
-	Entity->Components.Push(this);
+	Entity->Components.push(this);
 	Base = Entity->Base;
 }
 
@@ -40,7 +40,7 @@ void FExtraComponent::InitForScript( FScript* InScript )
 	FComponent::InitForScript(InScript);
 
 	assert(Script->Base);
-	Script->Components.Push(this);
+	Script->Components.push(this);
 	Base = Script->Base;
 }
 
@@ -351,15 +351,15 @@ FComponent::~FComponent()
 {
 	if( bTickable && Level )
 	{
-		Int32 i = Level->TickObjects.FindItem(this);
+		Int32 i = Level->TickObjects.find(this);
 		if( i != -1 )
-			Level->TickObjects.Remove(i);
+			Level->TickObjects.removeFast(i);
 	}
 	if( bRenderable && Level )
 	{
-		Int32 i = Level->RenderObjects.FindItem(this);
+		Int32 i = Level->RenderObjects.find(this);
 		if( i != -1 )
-			Level->RenderObjects.Remove(i);
+			Level->RenderObjects.removeFast(i);
 	}
 }
 
@@ -386,10 +386,10 @@ void FComponent::InitForEntity( FEntity* InEntity )
 	Script	= nullptr;
 
 	if( bTickable )
-		Level->TickObjects.Push(this);
+		Level->TickObjects.push(this);
 
 	if( bRenderable )
-		Level->RenderObjects.Push(this);
+		Level->RenderObjects.push(this);
 }
 
 

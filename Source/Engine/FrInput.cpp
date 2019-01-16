@@ -168,7 +168,7 @@ void CInput::RemapFromIni( CConfigManager* Config )
 	// Get list of names.
 	CEnum* InputKeys	= CClassDatabase::StaticFindEnum(L"EInputKeys");
 	assert(InputKeys);
-	assert(InputKeys->Elements.Num()>=KEY_MAX);
+	assert(InputKeys->Elements.size()>=KEY_MAX);
 
 	// Let's torment ini.
 	for( Int32 i=0; i<KEY_MAX; i++ )

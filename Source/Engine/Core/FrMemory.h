@@ -128,7 +128,7 @@ private:
 		UInt8*	Data;
 		SizeT	NumUsed;
 	};
-	TArray<TPage>	Pages;
+	Array<TPage>	Pages;
 	Int32 AddPage();
 };
 

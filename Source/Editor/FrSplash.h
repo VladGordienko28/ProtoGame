@@ -46,12 +46,12 @@ CSplash::CSplash( LPCTSTR BitmapID )
 {
 	TStaticBitmap* Bitmap	= LoadBitmapFromResource(GEditor->hInstance, BitmapID);
 	{
-		BITMAPINFO*	Info	= (BITMAPINFO*)mem::alloc(sizeof(BITMAPINFO)+sizeof(RGBQUAD)*Bitmap->Palette.Colors.Num());
+		BITMAPINFO*	Info	= (BITMAPINFO*)mem::alloc(sizeof(BITMAPINFO)+sizeof(RGBQUAD)*Bitmap->Palette.Colors.size());
 		HDC			hDc		= GetDC(nullptr);
 
 		Info->bmiHeader.biBitCount		= 8;
 		Info->bmiHeader.biClrImportant	= 
-		Info->bmiHeader.biClrUsed		= Bitmap->Palette.Colors.Num();
+		Info->bmiHeader.biClrUsed		= Bitmap->Palette.Colors.size();
 		Info->bmiHeader.biCompression	= 0;
 		Info->bmiHeader.biHeight		= Bitmap->VSize;
 		Info->bmiHeader.biPlanes		= 1;
@@ -62,7 +62,7 @@ CSplash::CSplash( LPCTSTR BitmapID )
 		Info->bmiHeader.biYPelsPerMeter	= 2834;
 
 		// Flip palette RGBA -> BGR.
-		for( Int32 i=0; i<Bitmap->Palette.Colors.Num(); i++ )
+		for( Int32 i=0; i<Bitmap->Palette.Colors.size(); i++ )
 		{
 			TColor Col = Bitmap->Palette.Colors[i];
 			Info->bmiColors[i].rgbBlue		= Col.B;

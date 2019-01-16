@@ -389,8 +389,8 @@ class WContainer: public WWidget
 {
 public:
 	// Variables.
-	TArray<WWidget*>	Children;
-	TArea				Padding;
+	Array<WWidget*>	Children;
+	TArea			Padding;
 		
 	// WContainer interface.
 	WContainer( WContainer* InOwner, WWindow* InRoot );

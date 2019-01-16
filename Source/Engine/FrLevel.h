@@ -73,11 +73,11 @@ public:
 	UInt32					RndFlags;
 
 	// Database.
-	TArray<FEntity*>		Entities;
+	Array<FEntity*>			Entities;
 
 	// Fast access tables.
-	TArray<FComponent*>		RenderObjects;
-	TArray<FComponent*>		TickObjects;
+	Array<FComponent*>		RenderObjects;
+	Array<FComponent*>		TickObjects;
 
 	// Linked list of often used objects.
 	FInputComponent*		FirstInput;

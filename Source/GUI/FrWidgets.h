@@ -67,7 +67,7 @@ public:
 	};
 
 	// Variables.
-	TArray<TStatusPanel>	Panels;
+	Array<TStatusPanel>		Panels;
 	TColor					Color;
 
 	// WStatusBar interface.
@@ -87,7 +87,7 @@ public:
 		Panel.Side	= InSide;
 		Panel.Text	= InText;
 		Panel.Width	= InWidth;
-		return Panels.Push(Panel);
+		return Panels.push(Panel);
 	}
 
 	// WWidget interface.
@@ -99,7 +99,7 @@ public:
 		Int32 MinX = 5, MaxX = Size.Width;
 		Render->DrawRegion( Base, Size, Color, Color, BPAT_Solid );
 
-		for( Int32 i=0; i<Panels.Num(); i++)
+		for( Int32 i=0; i<Panels.size(); i++)
 		{
 			TStatusPanel& P	= Panels[i];
 			TSize  TextSize = TSize( Root->Font1->TextWidth(*P.Text), Root->Font1->Height );

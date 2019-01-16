@@ -30,7 +30,7 @@ public:
 		WMenu*			SubMenu;
 		TNotifyEvent	Event;
 	};
-	TArray<TMenuItem>		Items;
+	Array<TMenuItem>		Items;
 
 	// WMenu interface.
 	WMenu( WContainer* InOwner, WWindow* InRoot );
@@ -75,7 +75,7 @@ public:
 		Int32	Width;
 		WMenu*	SubMenu;
 	};
-	TArray<TMainMenuItem>	Items;
+	Array<TMainMenuItem>	Items;
 
 	// WMainMenu interface.
 	WMainMenu( WContainer* InOwner, WWindow* InRoot );

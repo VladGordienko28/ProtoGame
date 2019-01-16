@@ -43,7 +43,7 @@ private:
 	// Internal.
 	Bool			bNotification;
 	Bool			bModal;
-	TArray<String>	Lines;
+	Array<String>	Lines;
 	WForm*			OldModal;
 
 	// Notifications.

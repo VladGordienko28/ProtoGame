@@ -53,7 +53,7 @@ class WTabControl: public WContainer
 {
 public:
 	// Variables.
-	TArray<WTabPage*>	Pages;
+	Array<WTabPage*>	Pages;
 	Int32				iActive;
 
 	// WTabControl interface.	

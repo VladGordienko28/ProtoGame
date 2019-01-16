@@ -8,8 +8,8 @@
 //
 // Global access database.
 //
-CObjectDatabase*		GObjectDatabase	= nullptr;
-TArray<CRefsHolder*>	CRefsHolder::GHolders;
+CObjectDatabase*	GObjectDatabase	= nullptr;
+Array<CRefsHolder*>	CRefsHolder::GHolders;
 
 
 /*-----------------------------------------------------------------------------
@@ -74,10 +74,8 @@ void FObject::Import( CImporterBase& Im )
 	CClass* WalkClass = GetClass();
 	while( WalkClass )
 	{
-		for( Int32 iProp=0; iProp<WalkClass->Properties.Num(); iProp++ )
+		for( auto& Prop : WalkClass->Properties )
 		{
-			CProperty* Prop = WalkClass->Properties[iProp];
-
 			if( !(Prop->Flags & PROP_NoImEx) )
 				Prop->Import( (UInt8*)this + Prop->Offset, Im );
 		}
@@ -98,10 +96,8 @@ void FObject::Export( CExporterBase& Ex )
 	CClass* WalkClass = GetClass();
 	while( WalkClass )
 	{
-		for( Int32 iProp=0; iProp<WalkClass->Properties.Num(); iProp++ )
+		for( auto& Prop : WalkClass->Properties )
 		{
-			CProperty* Prop = WalkClass->Properties[iProp];
-
 			if( !(Prop->Flags & PROP_NoImEx) )
 				Prop->Export( (UInt8*)this + Prop->Offset, Ex );
 		}
@@ -167,7 +163,7 @@ void FObject::SetOwner( FObject* NewOwner )
 CRefsHolder::CRefsHolder()
 {
 	// Just register it.
-	GHolders.Push( this );
+	GHolders.push( this );
 }
 
 
@@ -177,8 +173,8 @@ CRefsHolder::CRefsHolder()
 CRefsHolder::~CRefsHolder()
 {
 	// Remove from list.
-	assert(GHolders.FindItem(this) != -1);
-	GHolders.RemoveUnique(this);
+	assert(GHolders.find(this) != -1);
+	GHolders.removeUnique(this);
 }
 
 
@@ -238,17 +234,17 @@ void CObjectDatabase::DropDatabase()
 	// pointer to resources.
 
 	// Kill all entities.
-	for( Int32 i=0; i<GObjects.Num(); i++ )
+	for( Int32 i=0; i<GObjects.size(); i++ )
 		if( GObjects[i] && GObjects[i]->IsA(FEntity::MetaClass) )
 			DestroyObject( GObjects[i], true );
 
 	// Kill all resources.
-	for( Int32 i=0; i<GObjects.Num(); i++ )
+	for( Int32 i=0; i<GObjects.size(); i++ )
 		if( GObjects[i] && GObjects[i]->IsA(FResource::MetaClass) )
 			DestroyObject( GObjects[i], true );
 
 	// Kill all rest objects, just in case.
-	for( Int32 i=0; i<GObjects.Num(); i++ )
+	for( Int32 i=0; i<GObjects.size(); i++ )
 		if( GObjects[i] )
 		{
 			error( L"Unreferenced object '%s'", *GObjects[i]->GetName() );
@@ -256,8 +252,8 @@ void CObjectDatabase::DropDatabase()
 		}
 
 	// Empty tables.
-	GAvailable.Empty();
-	GObjects.Empty();
+	GAvailable.empty();
+	GObjects.empty();
 }
 
 
@@ -266,13 +262,13 @@ void CObjectDatabase::DropDatabase()
 //
 void CObjectDatabase::SerializeAll( CSerializer& S )
 {
-	for( Int32 i=0; i<GObjects.Num(); i++ )
+	for( Int32 i=0; i<GObjects.size(); i++ )
 		if( GObjects[i] )
 			GObjects[i]->SerializeThis( S );
 
 	// List of holders.
 	if( S.GetMode() == SM_Undefined )
-		for( Int32 i=0; i<CRefsHolder::GHolders.Num(); i++ )
+		for( Int32 i=0; i<CRefsHolder::GHolders.size(); i++ )
 			CRefsHolder::GHolders[i]->CountRefs( S );
 }
 
@@ -304,16 +300,16 @@ FObject* CObjectDatabase::CreateObject( CClass* InCls, String InName, FObject* I
 	Result->Owner	= InOwner;
 
 	// Register object.
-	if( GAvailable.Num() > 0 )
+	if( GAvailable.size() > 0 )
 	{
 		// Put to the available slot.
-		Result->Id				= GAvailable.Pop();
+		Result->Id				= GAvailable.pop();
 		GObjects[Result->Id]	= Result;
 	}
 	else
 	{
 		// Allocate new one.
-		Result->Id	= GObjects.Push(Result);
+		Result->Id	= GObjects.push(Result);
 	}
 	
 	// Add to hash.
@@ -500,7 +496,7 @@ void CObjectDatabase::DestroyObject( FObject* InObj, Bool bReleaseRefs )
 
 	// Unregister.
 	UnhashObject( InObj );
-	GAvailable.Push(InObj->Id);
+	GAvailable.push(InObj->Id);
 	GObjects[InObj->Id] = nullptr;
 
 	// Lets C++ perform rest job.

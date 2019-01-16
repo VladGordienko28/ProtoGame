@@ -191,7 +191,7 @@ void WGameBuilderDialog::BuildGame()
 		while( bAgain )
 		{
 			bAgain	= false;
-			for( Int32 i=0; i<GEditor->EditorPages->Pages.Num(); i++ )
+			for( Int32 i=0; i<GEditor->EditorPages->Pages.size(); i++ )
 			{
 				WEditorPage* EdPage = (WEditorPage*)GEditor->EditorPages->Pages[i];
 				if( EdPage->PageType == PAGE_Play )

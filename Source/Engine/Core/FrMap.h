@@ -24,7 +24,7 @@ public:
 	// Destructor.
 	~TMap()
 	{
-		Entries.Empty();
+		Entries.empty();
 	}
 
 	// Clear map.
@@ -79,7 +79,7 @@ public:
 	}
 
 	// Return list of keys.
-	TArray<K> KeySet() const
+	Array<K> KeySet() const
 	{
 		TArray<K> Keys(Entries.Num());
 		for( Integer i=0; i<Entries.Num(); i++ )
@@ -88,7 +88,7 @@ public:
 	}
 
 	// Return list of values.
-	TArray<V> Values() const
+	Array<V> Values() const
 	{
 		TArray<V> Vals(Entries.Num());
 		for( Integer i=0; i<Entries.Num(); i++ )
@@ -109,7 +109,7 @@ public:
 	// Return map size.
 	Int32 Size() const
 	{
-		return Entries.Num();
+		return Entries.size();
 	}
 
 	// Serialization.
@@ -153,14 +153,14 @@ public:
 	};
 
 	// List of pairs.
-	TArray<TEntry>		Entries;
+	Array<TEntry>		Entries;
 
 	// Find an index of entry by the key, if
 	// no entry found return -1.
 	Int32 FindEntry( const K& Key ) const
 	{
 		Int32 Low, High;
-		for( Low=0, High=Entries.Num(); Low<High; )
+		for( Low=0, High=Entries.size(); Low<High; )
 		{
 			Int32 Middle = Low + (High-Low) / 2;
 			if( Key <= Entries[Middle].Key )
@@ -168,13 +168,13 @@ public:
 			else
 				Low		= Middle+1;
 		}
-		return High<Entries.Num() && Entries[High].Key==Key ? High : -1;
+		return High<Entries.size() && Entries[High].Key==Key ? High : -1;
 	}
 
 	// Add a new entry to map.
 	void Add( const K& Key, const V& Value )
 	{
-		Entries.SetNum(Size()+1);
+		Entries.setSize(Size()+1);
 		Int32	i	= Size()-1;
 		while( ( i>0 )&&( Key<Entries[i-1].Key ) )
 		{

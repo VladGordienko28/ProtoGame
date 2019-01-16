@@ -432,7 +432,7 @@ WDemoEffectPanel::WDemoEffectPanel( FDemoBitmap* InBitmap, WContainer* InOwner, 
 		CEnum*	Enum = CClassDatabase::StaticFindEnum( L"ESparkType" );
 		assert(Enum != nullptr);
 
-		for( Int32 i=0; i<Enum->Elements.Num(); i++ )
+		for( Int32 i=0; i<Enum->Elements.size(); i++ )
 			DrawType->AddItem( Enum->GetAliasOf(i), nullptr );
 
 		// Set default params.
@@ -454,7 +454,7 @@ WDemoEffectPanel::WDemoEffectPanel( FDemoBitmap* InBitmap, WContainer* InOwner, 
 		CEnum*	Enum = CClassDatabase::StaticFindEnum( L"EDropType" );
 		assert(Enum != nullptr);
 
-		for( Int32 i=0; i<Enum->Elements.Num(); i++ )
+		for( Int32 i=0; i<Enum->Elements.size(); i++ )
 			DrawType->AddItem( Enum->GetAliasOf(i), nullptr );
 
 		// Set default params.
@@ -474,7 +474,7 @@ WDemoEffectPanel::WDemoEffectPanel( FDemoBitmap* InBitmap, WContainer* InOwner, 
 		CEnum*	Enum = CClassDatabase::StaticFindEnum( L"EPanelType" );
 		assert(Enum != nullptr);
 
-		for( Int32 i=0; i<Enum->Elements.Num(); i++ )
+		for( Int32 i=0; i<Enum->Elements.size(); i++ )
 			DrawType->AddItem( Enum->GetAliasOf(i), nullptr );
 
 		// Set default params.
@@ -712,7 +712,7 @@ WMaterialPanel::WMaterialPanel( FMaterial* InMaterial, WContainer* InOwner, WWin
 
 	// PopUp menu with layers.
 	TypePopup			= new WPopupMenu( Root, Root );
-	for( Int32 i=0; i<CClassDatabase::GClasses.Num(); i++ )
+	for( Int32 i=0; i<CClassDatabase::GClasses.size(); i++ )
 	{
 		CClass* TestClass = CClassDatabase::GClasses[i];
 		if( TestClass->IsA(FMaterialLayer::MetaClass) && !(TestClass->Flags & CLASS_Abstract) )
@@ -745,7 +745,7 @@ void WMaterialPanel::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 	{
 			Int32 NewY = Y - 42;
 
-			iSelected = Clamp( NewY/52, -1, Material->Layers.Num()-1 );
+			iSelected = Clamp( NewY/52, -1, Material->Layers.size()-1 );
 
 		if( iSelected != -1 )
 		{
@@ -799,7 +799,7 @@ public:
 void WMaterialPanel::PopupTypeClick( WWidget* Sender )
 {
 	//@broken.
-	Material->Layers.Push
+	Material->Layers.push
 	(
 		NewObject<FDiffuseLayer>(L"", Material)
 	);
@@ -837,7 +837,7 @@ void WMaterialPanel::OnPaint( CGUIRenderBase* Render )
 	Int32 StartY = 42;
 	Int32 StartX = 3;
 
-	for( Int32 i=0; i<Material->Layers.Num(); i++ )
+	for( Int32 i=0; i<Material->Layers.size(); i++ )
 	{
 		FBitmap* RenderBitmap = nullptr;
 		FMaterialLayer* Layer = Material->Layers[i];
@@ -921,9 +921,9 @@ void WMaterialPanel::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 //
 void WMaterialPanel::ButtonToDownClick( WWidget* Sender )
 {
-	assert(iSelected>=0 && iSelected<Material->Layers.Num()-1);
+	assert(iSelected>=0 && iSelected<Material->Layers.size()-1);
 
-	Material->Layers.Swap( iSelected, iSelected+1 );
+	Material->Layers.swap( iSelected, iSelected+1 );
 	iSelected++;
 
 	UpdateButtons();
@@ -935,9 +935,9 @@ void WMaterialPanel::ButtonToDownClick( WWidget* Sender )
 //
 void WMaterialPanel::ButtonToUpClick( WWidget* Sender )
 {
-	assert(iSelected>0 && iSelected<Material->Layers.Num());
+	assert(iSelected>0 && iSelected<Material->Layers.size());
 
-	Material->Layers.Swap( iSelected, iSelected-1 );
+	Material->Layers.swap( iSelected, iSelected-1 );
 	iSelected--;
 
 	UpdateButtons();
@@ -958,10 +958,10 @@ void WMaterialPanel::ButtonAddLayerClick( WWidget* Sender )
 //
 void WMaterialPanel::UpdateButtons()
 {
-	AddLayerButton->bEnabled = Material->Layers.Num() < MAX_LAYERS;
-	RemoveLayerButton->bEnabled = iSelected >= 0 && iSelected < Material->Layers.Num();
+	AddLayerButton->bEnabled = Material->Layers.size() < MAX_LAYERS;
+	RemoveLayerButton->bEnabled = iSelected >= 0 && iSelected < Material->Layers.size();
 	ToUpButton->bEnabled = RemoveLayerButton->bEnabled && iSelected > 0;
-	ToDownButton->bEnabled = RemoveLayerButton->bEnabled && iSelected < Material->Layers.Num()-1;
+	ToDownButton->bEnabled = RemoveLayerButton->bEnabled && iSelected < Material->Layers.size()-1;
 }
 
 

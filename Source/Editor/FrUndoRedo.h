@@ -18,11 +18,11 @@ class TTransaction
 {
 public:
 	// General info.
-	TArray<UInt8>		Data;
+	Array<UInt8>		Data;
 	FLevel*				Level;
-	TArray<FScript*>	Entities;
-	TArray<String>		Names;
-	TArray<FObject*>	Detached;
+	Array<FScript*>		Entities;
+	Array<String>		Names;
+	Array<FObject*>		Detached;
 
 	// Compressed data.
 	SizeT				ComSourceSize;
@@ -69,7 +69,7 @@ public:
 private:
 	// Variables.
 	Bool					bLocked;
-	TArray<TTransaction*>	Transactions;
+	Array<TTransaction*>	Transactions;
 	Int32					TopTransaction;
 	FLevel*					Level;
 };

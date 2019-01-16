@@ -80,8 +80,8 @@ private:
 	{
 	public:
 		// Variables.
-		TArray<FEntity*>	Collection;
-		Int32				i;
+		Array<FEntity*>	Collection;
+		Int32			i;
 
 		// Constructor.
 		TForeach()

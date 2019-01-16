@@ -158,7 +158,7 @@ private:
 		};
 
 		WCodeEditor*		Editor;
-		TArray<TEntry>		Entries;
+		Array<TEntry>		Entries;
 		Int32				iX;
 
 		WAutoComplete( WCodeEditor* InCodeEditor, WWindow* InRoot );
@@ -171,12 +171,12 @@ private:
 		void OnDblClick( EMouseButton Button, Int32 X, Int32 Y );   
 		void OnKeyDown( Int32 Key );
 		void FillBy( CClass* Class );
-		void FillBy( TArray<FExtraComponent*>& InArr );
+		void FillBy( Array<FExtraComponent*>& InArr );
 		void FillBy( FScript* Script );
 	};
 
 	// Text variables.
-	TArray<TLine>			Lines;
+	Array<TLine>			Lines;
 	CDynamicPool			Pool;
 
 	// Internal variables.
@@ -224,7 +224,7 @@ private:
 
 	// Undo/Redo management.
 	enum{ HISTORY_LIMIT	= 20 };
-	TArray<void*>		UndoStack;
+	Array<void*>		UndoStack;
 	Int32				UndoTop;
 	Bool				bUndoLock;
 	void BeginTransaction();
@@ -270,8 +270,8 @@ private:
 		FScript* Script;
 		Int32 iLine;
 	};
-	TArray<TMessage>	Messages;
-	WLog*				Log;
+	Array<TMessage>	Messages;
+	WLog*			Log;
 
 	void GotoMessage( WWidget* Sender, Int32 iMessage );
 };

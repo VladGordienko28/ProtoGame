@@ -406,7 +406,7 @@ void WLevelsPage::Refresh()
 		return;
 
 	// Collect all levels.
-	for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
+	for( Int32 i=0; i<GProject->GObjects.size(); i++ )
 		if	(	
 				GProject->GObjects[i] && 
 				GProject->GObjects[i]->IsA(FLevel::MetaClass) 
@@ -426,7 +426,7 @@ void WLevelsPage::CountRefs( CSerializer& S )
 {
 	Bool bRefresh = false;
 
-	for( Int32 i=0; i<LevelsList->Items.Num(); i++ )
+	for( Int32 i=0; i<LevelsList->Items.size(); i++ )
 	{
 		FLevel* Level = (FLevel*)LevelsList->Items[i].Data;
 		Serialize( S, Level );
@@ -614,7 +614,7 @@ private:
 		if( GObjectDatabase && Script )
 		{
 			Int32 NumEntity = 0;
-			for( Int32 i=0; i < GObjectDatabase->GObjects.Num(); i++ )
+			for( Int32 i=0; i < GObjectDatabase->GObjects.size(); i++ )
 				if( GObjectDatabase->GObjects[i] )
 				{
 					FEntity* Entity = As<FEntity>(GObjectDatabase->GObjects[i]);
@@ -753,7 +753,7 @@ void WScriptsPage::Refresh()
 	ScriptsView->Empty();
 
 	// For each object in project.
-	for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
+	for( Int32 i=0; i<GProject->GObjects.size(); i++ )
 		if( GProject->GObjects[i] && GProject->GObjects[i]->IsA(FScript::MetaClass) )
 		{
 			FScript* Script = (FScript*)GProject->GObjects[i];
@@ -782,7 +782,7 @@ void WScriptsPage::CountRefs( CSerializer& S )
 {
 	Bool bRefresh = false;
 
-	for( Int32 i=0; i<ScriptsView->Nodes.Num(); i++ )
+	for( Int32 i=0; i<ScriptsView->Nodes.size(); i++ )
 	{
 		FScript* Script = (FScript*)ScriptsView->Nodes[i].Data;
 		Serialize( S, Script );
@@ -937,17 +937,17 @@ void WResourcePane::Refresh()
 	// No project.
 	if( !GProject )
 	{
-		Icons.Empty();
+		Icons.empty();
 		return;
 	}
 
 	// Precompute.
 	String	NameFil	= String::UpperCase( Page->NameFilter->Text );
-	Icons.Empty();
+	Icons.empty();
 
 
 	// For each object.
-	for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
+	for( Int32 i=0; i<GProject->GObjects.size(); i++ )
 		if( GProject->GObjects[i] && GProject->GObjects[i]->IsA(FResource::MetaClass) )
 		{
 			FResource*	Res = (FResource*)GProject->GObjects[i];
@@ -1014,7 +1014,7 @@ void WResourcePane::Refresh()
 				//
 				FAnimation* Anim	= As<FAnimation>(Res);
 				Icon.TypeName		= L"[Anim]";
-				if( Anim->Sheet && Anim->Frames.Num() && Anim->Sequences.Num() )
+				if( Anim->Sheet && Anim->Frames.size() && Anim->Sequences.size() )
 				{
 					// Valid animation frame.
 					TRect Frame = Anim->GetTexCoords(Anim->Sequences[0].Start);
@@ -1051,14 +1051,14 @@ void WResourcePane::Refresh()
 				Icon.Scale		= TSize( 32, 32 );
 
 				// Maybe draw as billboard.
-				for( Int32 e=0; e<Script->Components.Num(); e++ )
+				for( Int32 e=0; e<Script->Components.size(); e++ )
 				{
 					FExtraComponent* Com = Script->Components[e];
 					if( Com->IsA(FAnimatedSpriteComponent::MetaClass) )
 					{
 						// Draw as animation.
 						FAnimation* Anim	= As<FAnimatedSpriteComponent>(Com)->Animation;
-						if( Anim && Anim->Sheet && Anim->Frames.Num() && Anim->Sequences.Num() )
+						if( Anim && Anim->Sheet && Anim->Frames.size() && Anim->Sequences.size() )
 						{
 							TRect Frame = Anim->GetTexCoords(Anim->Sequences[0].Start);
 							Icon.Picture			= Anim->Sheet;
@@ -1179,11 +1179,11 @@ void WResourcePane::Refresh()
 				Icon.Scale		= TSize( RES_ICON_SIZE, RES_ICON_SIZE );
 			}
 
-			Icons.Push(Icon);	
+			Icons.push(Icon);	
 		}
 
 	// Alphabet sorting.
-	Icons.Sort([]( const TIcon& A, const TIcon& B )->Bool
+	Icons.sort([]( const TIcon& A, const TIcon& B )->Bool
 	{
 		return String::CompareText
 		( 
@@ -1212,7 +1212,7 @@ void WResourcePane::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 
 		// Get clicked resource.
 		FResource* Res = nullptr;
-		for( Int32 i=0; i<Icons.Num(); i++ )
+		for( Int32 i=0; i<Icons.size(); i++ )
 		{
 			TIcon& Icon = Icons[i];
 
@@ -1293,7 +1293,7 @@ void WResourcePane::ScrollChange( WWidget* Sender )
 
 	// Walk through all icons and compute initial location,
 	// without scroll yet.
-	for( Int32 i=0; i<Icons.Num(); i++ )
+	for( Int32 i=0; i<Icons.size(); i++ )
 	{
 		TIcon& Icon = Icons[i];
 
@@ -1311,7 +1311,7 @@ void WResourcePane::ScrollChange( WWidget* Sender )
 
 	// Apply scroll for each icon.
 	Int32 YScroll = Max( 0, YWalk-RES_ICON_SIZE-30 )*ScrollBar->Value / 100;
-	for( Int32 i=0; i<Icons.Num(); i++ )
+	for( Int32 i=0; i<Icons.size(); i++ )
 		Icons[i].Position.Y -= YScroll;
 }
 
@@ -1338,7 +1338,7 @@ void WResourcePane::CountRefs( CSerializer& S )
 {
 	// Detect whether changed some icon.
 	Bool bChanged = false;
-	for( Int32 i=0; i<Icons.Num(); i++ )
+	for( Int32 i=0; i<Icons.size(); i++ )
 	{
 		auto& Icon = Icons[i];
 		Serialize( S, Icon.Resource );
@@ -1384,7 +1384,7 @@ void WResourcePane::OnPaint( CGUIRenderBase* Render )
 	);
 
 	// Iterate through all icons.
-	for( Int32 i=0; i<Icons.Num(); i++ )
+	for( Int32 i=0; i<Icons.size(); i++ )
 	{
 		TIcon& Icon = Icons[i];
 		Bool bSelected = Icon.Resource == Page->Browser->GetSelected();
@@ -1626,7 +1626,7 @@ public:
 		ClassCombo				= new WComboBox( this, InRoot );	
 		ClassCombo->Location	= TPoint( 50, 29 );
 		ClassCombo->SetSize( 160, 18 );
-		for( Int32 i=0; i<CClassDatabase::GClasses.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GClasses.size(); i++ )
 		{
 			CClass*	Class	= CClassDatabase::GClasses[i];
 			if( Class->IsA(FDemoBitmap::MetaClass) && !(Class->Flags & CLASS_Abstract) )
@@ -1797,7 +1797,7 @@ public:
 		BaseCombo				= new WComboBox( this, InRoot );	
 		BaseCombo->Location		= TPoint( 145, 77 );
 		BaseCombo->SetSize( 160, 18 );
-		for( Int32 i=0; i<CClassDatabase::GClasses.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GClasses.size(); i++ )
 		{
 			CClass*	Class	= CClassDatabase::GClasses[i];
 			if( Class->IsA(FBaseComponent::MetaClass) && !(Class->Flags & CLASS_Abstract) )
@@ -1818,7 +1818,7 @@ public:
 		ExtraList				= new WListBox( ExtraPanel, InRoot );
 		ExtraList->Location		= TPoint( 10, 10 );
 		ExtraList->SetSize( 180, 200 );
-		for( Int32 i=0; i<CClassDatabase::GClasses.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GClasses.size(); i++ )
 		{
 			CClass*	Class	= CClassDatabase::GClasses[i];
 			if( Class->IsA(FExtraComponent::MetaClass) && !(Class->Flags & CLASS_Abstract) )
@@ -1883,15 +1883,15 @@ public:
 	}
 	void UpdateSingleCompFlags()
 	{
-		for( Int32 i=0; i<ExtraList->Items.Num(); i++ )
+		for( Int32 i=0; i<ExtraList->Items.size(); i++ )
 			ExtraList->Items[i].bEnabled = true;
 
-		for( Int32 iUsed=0; iUsed<ExtraUsedList->Items.Num(); iUsed++ )
+		for( Int32 iUsed=0; iUsed<ExtraUsedList->Items.size(); iUsed++ )
 		{
 			CClass* UsedClass = (CClass*)ExtraUsedList->Items[iUsed].Data;
 			if( UsedClass->Flags & CLASS_SingleComp )
 			{
-				for( Int32 i=0; i<ExtraList->Items.Num(); i++ )
+				for( Int32 i=0; i<ExtraList->Items.size(); i++ )
 					if( ExtraList->Items[i].Data == UsedClass )
 					{
 						ExtraList->Items[i].bEnabled = false;
@@ -2003,7 +2003,7 @@ public:
 		}
 		if( !StaticCheck->bChecked )
 		{
-			for( Int32 i=0; i<ExtraUsedList->Items.Num(); i++ )
+			for( Int32 i=0; i<ExtraUsedList->Items.size(); i++ )
 			{
 				CClass* Class = (CClass*)ExtraUsedList->Items[i].Data;
 				String  Name  = ExtraUsedList->Items[i].Name;
@@ -2019,7 +2019,7 @@ public:
 					return;
 				}
 
-				for( Int32 j=i+1; j<ExtraUsedList->Items.Num(); j++ )
+				for( Int32 j=i+1; j<ExtraUsedList->Items.size(); j++ )
 					if( ExtraUsedList->Items[j].Name == Name )
 					{
 						Root->ShowMessage
@@ -2054,7 +2054,7 @@ public:
 			Base->InitForScript( Script );
 
 			// Extras.
-			for( Int32 i=0; i<ExtraUsedList->Items.Num(); i++ )
+			for( Int32 i=0; i<ExtraUsedList->Items.size(); i++ )
 			{
 				CClass*	ExtraClass	= (CClass*)ExtraUsedList->Items[i].Data;
 				String	ExtraName	= ExtraUsedList->Items[i].Name;
@@ -2070,26 +2070,26 @@ public:
 			if( Script->IsStatic() )
 			{
 				// Default script for static script;
-				Script->Text.Push(String::Format( L"/**" ));
-				Script->Text.Push(String::Format( L" * static @%s: ...", *Script->GetName() ));
-				Script->Text.Push(String::Format( L" * @Author: ..." ));
-				Script->Text.Push(String::Format( L" */" ));
-				Script->Text.Push(String::Format( L"static script %s", *Script->GetName() ));
-				Script->Text.Push(String::Format( L"{" ));
-				Script->Text.Push(String::Format( L" " ));
-				Script->Text.Push(String::Format( L"}" ));
+				Script->Text.push(String::Format( L"/**" ));
+				Script->Text.push(String::Format( L" * static @%s: ...", *Script->GetName() ));
+				Script->Text.push(String::Format( L" * @Author: ..." ));
+				Script->Text.push(String::Format( L" */" ));
+				Script->Text.push(String::Format( L"static script %s", *Script->GetName() ));
+				Script->Text.push(String::Format( L"{" ));
+				Script->Text.push(String::Format( L" " ));
+				Script->Text.push(String::Format( L"}" ));
 			}
 			else
 			{
 				// Default script for regular script;
-				Script->Text.Push(String::Format( L"/**" ));
-				Script->Text.Push(String::Format( L" * @%s: ...", *Script->GetName() ));
-				Script->Text.Push(String::Format( L" * @Author: ..." ));
-				Script->Text.Push(String::Format( L" */" ));
-				Script->Text.Push(String::Format( L"script %s", *Script->GetName() ));
-				Script->Text.Push(String::Format( L"{" ));
-				Script->Text.Push(String::Format( L" " ));
-				Script->Text.Push(String::Format( L"}" ));
+				Script->Text.push(String::Format( L"/**" ));
+				Script->Text.push(String::Format( L" * @%s: ...", *Script->GetName() ));
+				Script->Text.push(String::Format( L" * @Author: ..." ));
+				Script->Text.push(String::Format( L" */" ));
+				Script->Text.push(String::Format( L"script %s", *Script->GetName() ));
+				Script->Text.push(String::Format( L"{" ));
+				Script->Text.push(String::Format( L" " ));
+				Script->Text.push(String::Format( L"}" ));
 			}
 		}
 
@@ -2610,7 +2610,7 @@ WAssetsPage::WAssetsPage( WResourceBrowser* InBrowser, WContainer* InOwner, WWin
 	ClassPopup	= new WPopupMenu( Root, Root );
 	ClassPopup->AddItem( L"All", WIDGET_EVENT(WAssetsPage::PopClassAllClick), true );
 	ClassPopup->AddItem( L"" );
-	for( Int32 i=0; i<CClassDatabase::GClasses.Num(); i++ )
+	for( Int32 i=0; i<CClassDatabase::GClasses.size(); i++ )
 	{
 		CClass* Class = CClassDatabase::GClasses[i];
 		if	(	
@@ -2624,7 +2624,7 @@ WAssetsPage::WAssetsPage( WResourceBrowser* InBrowser, WContainer* InOwner, WWin
 			ClassPopup->AddItem( Class->GetAltName(), WIDGET_EVENT(WAssetsPage::PopClassClick), true );
 		}
 	}
-	for( Int32 i=0; i<ClassPopup->Items.Num(); i++ )
+	for( Int32 i=0; i<ClassPopup->Items.size(); i++ )
 		ClassPopup->Items[i].bChecked	= true;
 
 	// Create dialogs.
@@ -2796,7 +2796,7 @@ void WAssetsPage::ButtonRemoveClick( WWidget* Sender )
 			FFont* Font = As<FFont>(Res);
 			if( Font )
 			{
-				for( Int32 i=0; i<Font->Bitmaps.Num(); i++ )
+				for( Int32 i=0; i<Font->Bitmaps.size(); i++ )
 					if( Font->Bitmaps[i] )
 						DestroyObject( Font->Bitmaps[i], true );
 			}
@@ -2805,7 +2805,7 @@ void WAssetsPage::ButtonRemoveClick( WWidget* Sender )
 			FMaterial* Material = As<FMaterial>(Res);
 			if( Material )
 			{
-				for( Int32 i=0; i<Material->Layers.Num(); i++ )
+				for( Int32 i=0; i<Material->Layers.size(); i++ )
 					DestroyObject( Material->Layers[i], true );
 			}
 
@@ -2821,7 +2821,7 @@ void WAssetsPage::ButtonRemoveClick( WWidget* Sender )
 
 		// Count entities being this script.
 		Int32 NumEnts = 0;
-		for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
+		for( Int32 i=0; i<GProject->GObjects.size(); i++ )
 			if( GProject->GObjects[i] && GProject->GObjects[i]->IsA(FEntity::MetaClass) )
 			{
 				FEntity* Entity	= As<FEntity>(GProject->GObjects[i]);
@@ -2843,13 +2843,13 @@ void WAssetsPage::ButtonRemoveClick( WWidget* Sender )
 			GEditor->DropAllScripts();
 
 			// Kill all entities.
-			for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
+			for( Int32 i=0; i<GProject->GObjects.size(); i++ )
 				if( GProject->GObjects[i] && GProject->GObjects[i]->IsA(FEntity::MetaClass) )
 				{
 					FEntity* Entity	= As<FEntity>(GProject->GObjects[i]);
 					if( Entity->Script == Script )
 					{
-						Entity->Level->Entities.RemoveUnique( Entity );
+						Entity->Level->Entities.removeUnique( Entity );
 						DestroyObject( Entity, true );
 					}
 				}
@@ -2964,15 +2964,15 @@ static Bool GUglyFilter[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 //
 void WAssetsPage::PopClassClick( WWidget* Sender )
 {
-	assert(arr_len(GUglyFilter) >= ClassPopup->Items.Num());
+	assert(arr_len(GUglyFilter) >= ClassPopup->Items.size());
 
 	// 'Not all are now'.
 	Int32 iChecked = 0;
-	for( iChecked=1; iChecked<ClassPopup->Items.Num(); iChecked++ )
+	for( iChecked=1; iChecked<ClassPopup->Items.size(); iChecked++ )
 		if( ClassPopup->Items[iChecked].bChecked != GUglyFilter[iChecked] )
 			break;
 
-	for( Int32 i=0; i<ClassPopup->Items.Num(); i++ )
+	for( Int32 i=0; i<ClassPopup->Items.size(); i++ )
 	{
 		ClassPopup->Items[i].bChecked	= false;
 		GUglyFilter[i]					= false;
@@ -2994,10 +2994,10 @@ void WAssetsPage::PopClassClick( WWidget* Sender )
 //
 void WAssetsPage::PopClassAllClick( WWidget* Sender )
 {
-	assert(arr_len(GUglyFilter) >= ClassPopup->Items.Num());
+	assert(arr_len(GUglyFilter) >= ClassPopup->Items.size());
 
 	// If 'all' selected, mark everything.
-	for( Int32 i=0; i<ClassPopup->Items.Num(); i++ )
+	for( Int32 i=0; i<ClassPopup->Items.size(); i++ )
 	{
 		ClassPopup->Items[i].bChecked	= true;
 		GUglyFilter[i]					= true;
@@ -3141,7 +3141,7 @@ void WResourceList::Refresh()
 	Empty();
 
 	// For each object in project.
-	for( Int32 i=0; i<GProject->GObjects.Num(); i++ )
+	for( Int32 i=0; i<GProject->GObjects.size(); i++ )
 		if( GProject->GObjects[i] && GProject->GObjects[i]->IsA(FResource::MetaClass) )
 		{
 			FResource*	Res = (FResource*)GProject->GObjects[i];

@@ -124,12 +124,12 @@ public:
 struct TStoredScript
 {
 public:
-	FScript*					Script;			// Source script.
-	SizeT						InstanceSize;	// Stored properties instance size.
-	TArray<CProperty*>			Properties;		// Old properties.
-	TArray<CEnum*>				Enums;			// Old enumeration, still referenced by properties above.
-	TArray<CStruct*>			Structs;		// Old structs, still referenced by properties.
-	TArray<CInstanceBuffer*>	Buffers;		// All instance buffers of this script from the entities and script.
+	FScript*				Script;			// Source script.
+	SizeT					InstanceSize;	// Stored properties instance size.
+	Array<CProperty*>		Properties;		// Old properties.
+	Array<CEnum*>			Enums;			// Old enumeration, still referenced by properties above.
+	Array<CStruct*>			Structs;		// Old structs, still referenced by properties.
+	Array<CInstanceBuffer*>	Buffers;		// All instance buffers of this script from the entities and script.
 };
 
 
@@ -224,7 +224,7 @@ struct TNest
 public:
 	// Variables.
 	ENestType		Type;
-	TArray<UInt16>	Addrs[REPL_MAX];
+	Array<UInt16>	Addrs[REPL_MAX];
 };
 
 
@@ -241,9 +241,9 @@ public:
 	// Variables.
 	String				Name;		// An family name.
 	Int32				iFamily;	// An unique family number.
-	TArray<FScript*>	Scripts;	// List of family members.
-	TArray<String>		VFNames;	// List of names of all virtual functions.
-	TArray<CFunction*>	Proto;		// Signature for each function to match, order same as in VFNames.
+	Array<FScript*>		Scripts;	// List of family members.
+	Array<String>		VFNames;	// List of names of all virtual functions.
+	Array<CFunction*>	Proto;		// Signature for each function to match, order same as in VFNames.
 };
 
 
@@ -275,7 +275,7 @@ public:
 
 	String				Name;
 	CTypeInfo			ResultType;
-	TArray<CParameter>	ParamsType;
+	Array<CParameter>	ParamsType;
 
 	// TDelegateInfo interface.
 	Bool MatchSignature( CFunction* Func ) const;
@@ -289,7 +289,7 @@ static struct TEventInfo
 {
 public:
 	String				Name;
-	TArray<CTypeInfo>	Params;
+	Array<CTypeInfo>	Params;
 
 	// TEventInfo interface.
 	TEventInfo( String InName )
@@ -299,10 +299,10 @@ public:
 	{
 		if( !(Other->Flags & FUNC_Event) )
 			return false;
-		if( Other->ParmsCount != Params.Num() )
+		if( Other->ParmsCount != Params.size() )
 			return false;
 
-		for( Int32 i=0; i<Params.Num(); i++ )
+		for( Int32 i=0; i<Params.size(); i++ )
 			if( !Params[i].MatchWith(*Other->Locals[i]) )
 				return false;
 
@@ -322,7 +322,7 @@ class CCompiler
 {
 public:
 	// CCompiler public interface.
-	CCompiler( CObjectDatabase* InDatabase, TArray<String>& OutWarnings, Compiler::TError& OutFatalError );
+	CCompiler( CObjectDatabase* InDatabase, Array<String>& OutWarnings, Compiler::TError& OutFatalError );
 	~CCompiler();
 	Bool CompileAll();
 
@@ -332,7 +332,7 @@ public:
 
 private:
 	// Errors.
-	TArray<String>&						Warnings;		
+	Array<String>&						Warnings;		
 	Compiler::TError&					FatalError;	
 
 	// Parsing.
@@ -342,15 +342,15 @@ private:
 	// General.
 	CObjectDatabase*					Database;
 	FScript*							Script;	
-	TArray<TStoredScript>				Storage;
-	TArray<FScript*>					AllScripts;
-	TArray<CFamily*>					Families;
-	TArray<TDelegateInfo>				DelegatesInfo;
-	TArray<TEventInfo>					GEventLookup;
+	Array<TStoredScript>				Storage;
+	Array<FScript*>						AllScripts;
+	Array<CFamily*>						Families;
+	Array<TDelegateInfo>				DelegatesInfo;
+	Array<TEventInfo>					GEventLookup;
 
 	// First pass variables.
 	EAccessModifier						Access;
-	TArray<TToken>						Constants;		
+	Array<TToken>						Constants;		
 
 	// Second pass variables.
 	CCodeEmitter						Emitter;
@@ -405,7 +405,7 @@ private:
 	void CompileStructDecl();
 	void CompileDelegateDecl();
 	void CompileConstDecl();
-	Bool CompileVarDecl( TArray<CProperty*>& Vars, SizeT& VarsSize, UInt32 InFlags, Bool bSimpleOnly = false, Bool bDetectFunc = true );
+	Bool CompileVarDecl( Array<CProperty*>& Vars, SizeT& VarsSize, UInt32 InFlags, Bool bSimpleOnly = false, Bool bDetectFunc = true );
 	void CompileFunctionDecl();
 	void CompileThreadDecl();
 	
@@ -429,8 +429,8 @@ private:
 	void UngetChar();
 	
 	// Searching.
-	CFunction* FindFunction( const TArray<CFunction*>& FuncList, String Name );
-	CProperty* FindProperty( const TArray<CProperty*>& List, String Name );
+	CFunction* FindFunction( const Array<CFunction*>& FuncList, String Name );
+	CProperty* FindProperty( const Array<CProperty*>& List, String Name );
 	TToken* FindConstant( String Name );
 	Int32 FindDelegate( String Name );
 	CEnum* FindEnum( FScript* Script, String Name, Bool bOwnOnly = false );
@@ -477,7 +477,7 @@ void CCodeEmitter::SetBytecode( CBytecode* InBytecode )
 //
 SizeT CCodeEmitter::Tell()
 {
-	return Bytecode->Code.Num();
+	return Bytecode->Code.size();
 }
 
 
@@ -486,7 +486,7 @@ SizeT CCodeEmitter::Tell()
 //
 SizeT CCodeEmitter::TotalSize()
 {
-	return Bytecode->Code.Num();
+	return Bytecode->Code.size();
 }
 
 
@@ -496,7 +496,7 @@ SizeT CCodeEmitter::TotalSize()
 void CCodeEmitter::SerializeData( void* Mem, SizeT Count )
 {
 	SizeT OldLoc = Tell();
-	Bytecode->Code.SetNum( Bytecode->Code.Num() + Count );
+	Bytecode->Code.setSize( Bytecode->Code.size() + Count );
 	mem::copy( &Bytecode->Code[OldLoc], Mem, Count );
 }
 
@@ -600,8 +600,8 @@ static void Serialize( CCompiler* Compiler, CSerializer& S, FScript* Owner, TTok
 			if( Const.cResource )
 			{
 				// Add to list.
-				UInt8 iRes = Owner->ResTable.AddUnique( Const.cResource );
-				assert(Owner->ResTable.Num() < 256);
+				UInt8 iRes = Owner->ResTable.addUnique( Const.cResource );
+				assert(Owner->ResTable.size() < 256);
 				Serialize( S, iRes );
 			}
 			else
@@ -636,7 +636,7 @@ Bool TDelegateInfo::MatchSignature( CFunction* Func ) const
 {
 	assert(Func);
 
-	if( Func->ParmsCount != ParamsType.Num() )
+	if( Func->ParmsCount != ParamsType.size() )
 		return false;
 
 	if( !Func->ResultVar && ResultType.Type != TYPE_None )
@@ -668,7 +668,7 @@ Bool TDelegateInfo::MatchSignature( CFunction* Func ) const
 //
 // Compiler constructor.
 //
-CCompiler::CCompiler( CObjectDatabase* InDatabase, TArray<String>& OutWarnings, Compiler::TError& OutFatalError )
+CCompiler::CCompiler( CObjectDatabase* InDatabase, Array<String>& OutWarnings, Compiler::TError& OutFatalError )
 	:	Database( InDatabase ),
 		Warnings( OutWarnings ),
 		FatalError( OutFatalError ),
@@ -687,9 +687,9 @@ CCompiler::CCompiler( CObjectDatabase* InDatabase, TArray<String>& OutWarnings, 
 CCompiler::~CCompiler()
 {
 	// Destroy temporal families list.
-	for( Int32 i=0; i<Families.Num(); i++ )
+	for( Int32 i=0; i<Families.size(); i++ )
 		delete Families[i];
-	Families.Empty();
+	Families.empty();
 }
 
 
@@ -704,7 +704,7 @@ Bool CCompiler::CompileAll()
 	try
 	{
 		// Prepare for compilation.
-		Warnings.Empty();
+		Warnings.empty();
 		FatalError.ErrorLine	= -1;
 		FatalError.ErrorPos		= -1;
 		FatalError.Message		= L"Everything is fine";
@@ -716,15 +716,15 @@ Bool CCompiler::CompileAll()
 		// Perform compilation step by step.
 		StoreAllScripts();
 
-		for( Int32 i=0; i<Storage.Num(); i++ )
+		for( Int32 i=0; i<Storage.size(); i++ )
 			ParseHeader( Storage[i].Script );
 
-		for( Int32 i=0; i<Storage.Num(); i++ )
+		for( Int32 i=0; i<Storage.size(); i++ )
 		{
 			CompileFirstPass( Storage[i].Script );
 		}
 
-		for( Int32 i=0; i<Storage.Num(); i++ )
+		for( Int32 i=0; i<Storage.size(); i++ )
 		{
 			CompileSecondPass( Storage[i].Script );
 		}
@@ -733,18 +733,18 @@ Bool CCompiler::CompileAll()
 
 		// Count lines.
 		Int32  NumLines = 0;
-		for( Int32 i=0; i<Storage.Num(); i++ )
-			NumLines += Storage[i].Script->Text.Num();
+		for( Int32 i=0; i<Storage.size(); i++ )
+			NumLines += Storage[i].Script->Text.size();
 
 		// Everything ok, so notify and return.
 		info( L"Compiler: COMPILATION SUCCESSFULLY" );
-		info( L"Compiler: %d scripts compiled", Storage.Num() );
+		info( L"Compiler: %d scripts compiled", Storage.size() );
 		info( L"Compiler: %d lines compiled", NumLines );
 
 		// Add to compilation log.
-		Warnings.Push( L"---" );
-		Warnings.Push(String::Format( L"%d scripts compiled", Storage.Num() ));
-		Warnings.Push(String::Format( L"%d lines compiled", NumLines ));
+		Warnings.push( L"---" );
+		Warnings.push(String::Format( L"%d scripts compiled", Storage.size() ));
+		Warnings.push(String::Format( L"%d lines compiled", NumLines ));
 
 		return true;
 	}
@@ -765,7 +765,7 @@ Bool CCompiler::CompileAll()
 //
 void CCompiler::CollectAllEvents()
 {
-	GEventLookup.Empty();
+	GEventLookup.empty();
 
 	#define _HELPER_PARMLOOK5_END
 	#define _HELPER_PARMLOOK4_END
@@ -774,18 +774,18 @@ void CCompiler::CollectAllEvents()
 	#define _HELPER_PARMLOOK1_END
 	#define _HELPER_PARMLOOK0_END
 
-	#define _HELPER_PARMLOOK5_ARG(name, type, ...) type* name=nullptr; Event.Params.Push(_Cpp2FluType(name));
-	#define _HELPER_PARMLOOK4_ARG(name, type, ...) type* name=nullptr; Event.Params.Push(_Cpp2FluType(name)); _HELPER_PARMLOOK5_##__VA_ARGS__
-	#define _HELPER_PARMLOOK3_ARG(name, type, ...) type* name=nullptr; Event.Params.Push(_Cpp2FluType(name)); _HELPER_PARMLOOK4_##__VA_ARGS__
-	#define _HELPER_PARMLOOK2_ARG(name, type, ...) type* name=nullptr; Event.Params.Push(_Cpp2FluType(name)); _HELPER_PARMLOOK3_##__VA_ARGS__
-	#define _HELPER_PARMLOOK1_ARG(name, type, ...) type* name=nullptr; Event.Params.Push(_Cpp2FluType(name)); _HELPER_PARMLOOK2_##__VA_ARGS__
-	#define _HELPER_PARMLOOK0_ARG(name, type, ...) type* name=nullptr; Event.Params.Push(_Cpp2FluType(name)); _HELPER_PARMLOOK1_##__VA_ARGS__
+	#define _HELPER_PARMLOOK5_ARG(name, type, ...) type* name=nullptr; Event.Params.push(_Cpp2FluType(name));
+	#define _HELPER_PARMLOOK4_ARG(name, type, ...) type* name=nullptr; Event.Params.push(_Cpp2FluType(name)); _HELPER_PARMLOOK5_##__VA_ARGS__
+	#define _HELPER_PARMLOOK3_ARG(name, type, ...) type* name=nullptr; Event.Params.push(_Cpp2FluType(name)); _HELPER_PARMLOOK4_##__VA_ARGS__
+	#define _HELPER_PARMLOOK2_ARG(name, type, ...) type* name=nullptr; Event.Params.push(_Cpp2FluType(name)); _HELPER_PARMLOOK3_##__VA_ARGS__
+	#define _HELPER_PARMLOOK1_ARG(name, type, ...) type* name=nullptr; Event.Params.push(_Cpp2FluType(name)); _HELPER_PARMLOOK2_##__VA_ARGS__
+	#define _HELPER_PARMLOOK0_ARG(name, type, ...) type* name=nullptr; Event.Params.push(_Cpp2FluType(name)); _HELPER_PARMLOOK1_##__VA_ARGS__
 
 	#define SCRIPT_EVENT( name, ... )\
 	{\
 		TEventInfo Event(L#name);\
 		_HELPER_PARMLOOK0_##__VA_ARGS__ \
-		GEventLookup.Push(Event);\
+		GEventLookup.push(Event);\
 	}\
 
 	#include "../Engine/FrEvent.h"
@@ -855,15 +855,15 @@ void CCompiler::ParseHeader( FScript* InScript )
 			// Create new one.
 			MyFamily			= new CFamily();
 			MyFamily->Name		= FamilyName;
-			MyFamily->Scripts.Push(Script);
-			MyFamily->iFamily	= Families.Push( MyFamily );
+			MyFamily->Scripts.push(Script);
+			MyFamily->iFamily	= Families.push( MyFamily );
 			debug( L"Compiler: Created new family '%s'", *MyFamily->Name );
 		}
 		else
 		{
 			// Add to exist.
-			assert(MyFamily->Scripts.FindItem(Script)==-1);
-			MyFamily->Scripts.Push(Script);
+			assert(MyFamily->Scripts.find(Script)==-1);
+			MyFamily->Scripts.push(Script);
 		}
 
 		Script->iFamily	= MyFamily->iFamily;
@@ -945,18 +945,18 @@ void CCompiler::CompileSecondPass( FScript* InScript )
 	CFamily* Family = Script->iFamily != -1 ? Families[Script->iFamily] : nullptr;
 	if( Family )
 	{
-		assert(Family->VFNames.Num()==Family->Proto.Num());
-		Script->VFTable.SetNum( Family->VFNames.Num() );
-		for( Int32 i=0; i<Script->VFTable.Num(); i++ )
+		assert(Family->VFNames.size()==Family->Proto.size());
+		Script->VFTable.setSize( Family->VFNames.size() );
+		for( Int32 i=0; i<Script->VFTable.size(); i++ )
 			Script->VFTable[i] = FindFunction( Script->Methods, Family->VFNames[i] );
 	}
 	else
-		Script->VFTable.Empty();
+		Script->VFTable.empty();
 
 	// Fill list of events.
-	Script->Events.Empty();
-	Script->Events.SetNum(_EVENT_MAX);
-	for( Int32 i=0; i<Script->Methods.Num(); i++ )
+	Script->Events.empty();
+	Script->Events.setSize(_EVENT_MAX);
+	for( Int32 i=0; i<Script->Methods.size(); i++ )
 		if( Script->Methods[i]->Flags & FUNC_Event )
 		{ 
 			CFunction*	Func	= Script->Methods[i];
@@ -967,9 +967,9 @@ void CCompiler::CompileSecondPass( FScript* InScript )
 
 	if( Script->IsStatic() )
 	{
-		assert(Script->Methods.Num() == 0);
+		assert(Script->Methods.size() == 0);
 		assert(Script->Thread == nullptr);
-		assert(Script->Properties.Num() == 0);
+		assert(Script->Properties.size() == 0);
 	}
 
 	// Compile actor thread if it specified. It's important to compile the thread
@@ -980,11 +980,11 @@ void CCompiler::CompileSecondPass( FScript* InScript )
 
 	// Compile all functions.
 	IsStaticScope = false;
-	for( Int32 i=0; i<Script->Methods.Num(); i++ )
+	for( Int32 i=0; i<Script->Methods.size(); i++ )
 		CompileCode( Script->Methods[i] );
 
 	IsStaticScope = true;
-	for( Int32 i=0; i<Script->StaticFunctions.Num(); i++ )
+	for( Int32 i=0; i<Script->StaticFunctions.size(); i++ )
 		CompileCode( Script->StaticFunctions[i] );
 }
 
@@ -1017,7 +1017,7 @@ void CCompiler::CompileCode( CBytecode* InCode )
 	emit( CODE_EOC );
 
     // Check code size.
-	if( Bytecode->Code.Num() >= MAX_UINT16 )
+	if( Bytecode->Code.size() >= MAX_UINT16 )
 		Error( L"Too large function >64kB of code" );
 
 #if 0
@@ -1187,7 +1187,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 	{
 		// Some kind of printf in C.
 		RequireSymbol( L"(", *T.Text );
-		TArray<TExprResult> Args;
+		Array<TExprResult> Args;
 
 		String Text = ReadString( L"format string" );
 		String Fmt = Text;
@@ -1250,7 +1250,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 			}
 
 			// Collect registers.
-			Args.Push( CompileExpr( ArgType, true, false, 0 ) );
+			Args.push( CompileExpr( ArgType, true, false, 0 ) );
 		}
 		while( true );
 
@@ -1265,7 +1265,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 		emit( CODE_Log );
 		SerializeEnum( Emitter, LogLevel );
 		emit( Fmt );
-		for( Int32 i=0; i<Args.Num(); i++ )
+		for( Int32 i=0; i<Args.size(); i++ )
 		{
 			emit( Args[i].Type.Type );
 			emit( Args[i].iReg );
@@ -1296,8 +1296,8 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 			ScriptExpr.Type.iFamily	= Known->iFamily;
 
 			emit( CODE_ConstResource );
-			UInt8 iRes = Script->ResTable.AddUnique( Known );
-			assert(Script->ResTable.Num() < 256);
+			UInt8 iRes = Script->ResTable.addUnique( Known );
+			assert(Script->ResTable.size() < 256);
 			emit( iRes );
 			emit( ScriptExpr.iReg );
 
@@ -1487,7 +1487,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 	else if( Native = FindNative(T.Text) )
 	{
 		// Native function call.
-		TArray<UInt8>	ArgRegs;
+		Array<UInt8>	ArgRegs;
 
 		if( Native->Flags & NFUN_Foreach )
 			Error( L"Iteration function '%s' is not allowed here", *Native->Name );
@@ -1495,7 +1495,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 		RequireSymbol( L"(", L"function call" );
 		for( Int32 i=0; i<Native->NumParams; i++ )
 		{
-			ArgRegs.Push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
+			ArgRegs.push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
 			if( i < Native->NumParams-1 )
 				RequireSymbol( L",", L"arguments" ); 
 		}
@@ -1504,7 +1504,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 		if (Native->Flags & NFUN_Extended)
 		{
 			// Emit as extended.
-			UInt16 iExtended = CClassDatabase::GFuncs.FindItem(Native);
+			UInt16 iExtended = CClassDatabase::GFuncs.find(Native);
 
 			emit_opcode(CODE_CallExtended);
 			emit(iExtended);
@@ -1515,7 +1515,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 			emit_opcode( Native->iOpCode );
 		}
 
-		for( Int32 i=0; i<ArgRegs.Num(); i++ )
+		for( Int32 i=0; i<ArgRegs.size(); i++ )
 		{
 			emit( ArgRegs[i] );
 			FreeReg( ArgRegs[i] );
@@ -1542,18 +1542,18 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 	else if( Function = FindFunction( Script->StaticFunctions, T.Text ) )
 	{
 		// An own static function call.
-		TArray<UInt8>	ArgRegs;
+		Array<UInt8>	ArgRegs;
 
 		RequireSymbol( L"(", L"function call" );
 		for( Int32 i=0; i<Function->ParmsCount; i++ )
 		{
-			ArgRegs.Push( CompileExpr( Function->Locals[i]->Type, true, false, 0 ).iReg );
+			ArgRegs.push( CompileExpr( Function->Locals[i]->Type, true, false, 0 ).iReg );
 			if( i < Function->ParmsCount-1 )
 				RequireSymbol( L",", L"arguments" ); 
 		}
 		RequireSymbol( L")", L"function call" );
 
-		Int32 iStatic = Script->StaticFunctions.FindItem(Function);
+		Int32 iStatic = Script->StaticFunctions.find(Function);
 		assert(iStatic != -1 && iStatic <= 255);
 		UInt8 Tmp = iStatic;
 
@@ -1561,7 +1561,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 		emit( Script );
 		emit( Tmp );
 
-		for( Int32 i=0; i<ArgRegs.Num(); i++ )
+		for( Int32 i=0; i<ArgRegs.size(); i++ )
 		{
 			emit( ArgRegs[i] );
 			FreeReg( ArgRegs[i] );
@@ -1620,18 +1620,18 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 				else if( Function = FindFunction( CastScript->StaticFunctions, StaticName ) )
 				{
 					// An own static function call.
-					TArray<UInt8>	ArgRegs;
+					Array<UInt8>	ArgRegs;
 
 					RequireSymbol( L"(", L"function call" );
 					for( Int32 i=0; i<Function->ParmsCount; i++ )
 					{
-						ArgRegs.Push( CompileExpr( Function->Locals[i]->Type, true, false, 0 ).iReg );
+						ArgRegs.push( CompileExpr( Function->Locals[i]->Type, true, false, 0 ).iReg );
 						if( i < Function->ParmsCount-1 )
 							RequireSymbol( L",", L"arguments" ); 
 					}
 					RequireSymbol( L")", L"function call" );
 
-					Int32 iStatic = CastScript->StaticFunctions.FindItem(Function);
+					Int32 iStatic = CastScript->StaticFunctions.find(Function);
 					assert(iStatic != -1 && iStatic <= 255);
 					UInt8 Tmp = iStatic;
 
@@ -1639,7 +1639,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 					emit( CastScript );
 					emit( Tmp );
 
-					for( Int32 i=0; i<ArgRegs.Num(); i++ )
+					for( Int32 i=0; i<ArgRegs.size(); i++ )
 					{
 						emit( ArgRegs[i] );
 						FreeReg( ArgRegs[i] );
@@ -1695,7 +1695,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 		ExprRes.iReg			= Ent.iReg;
 		ExprRes.Type			= CTypeInfo( TYPE_Entity, 1, Ent.Type.Script );
 		ExprRes.Type.iFamily	= CastFamily->iFamily;
-		assert(CastFamily->Scripts.Num()>0 && CastFamily->iFamily!=-1);
+		assert(CastFamily->Scripts.size()>0 && CastFamily->iFamily!=-1);
 
 		emit( CODE_FamilyCast );
 		emit( Ent.iReg );
@@ -2025,13 +2025,13 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 				else if( CNativeFunction* Native = ExprRes.Type.Class->FindMethod(*MemberName) )
 				{
 					// Resource method.
-					UInt16 iNative = CClassDatabase::GFuncs.FindItem( Native );
-					TArray<UInt8> ArgRegs;
+					UInt16 iNative = CClassDatabase::GFuncs.find( Native );
+					Array<UInt8> ArgRegs;
 
 					RequireSymbol( L"(", L"resource native method" );
 					for( Int32 i=0; i<Native->NumParams; i++ )
 					{
-						ArgRegs.Push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
+						ArgRegs.push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
 
 						if( i < Native->NumParams-1 )
 							RequireSymbol( L",", L"arguments" ); 
@@ -2042,7 +2042,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 					emit( CODE_ResourceMethod );
 					emit( ExprRes.iReg );
 					emit( iNative );
-					for( Int32 i=0; i<ArgRegs.Num(); i++ )
+					for( Int32 i=0; i<ArgRegs.size(); i++ )
 					{
 						emit( ArgRegs[i] );
 						FreeReg( ArgRegs[i] );
@@ -2149,7 +2149,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 					if( !Info.MatchSignature(Func) )
 						Error( L"Signatures of delegate and function are mismatched" );
 
-					Int32 iFunc = Script->Methods.FindItem(Func);
+					Int32 iFunc = Script->Methods.find(Func);
 					assert(iFunc != -1);
 					emit(CODE_DelegateCnstr);
 					emit(ExprRes.iReg);
@@ -2190,12 +2190,12 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 	if( ExprRes.Type.Type == TYPE_Delegate && MatchSymbol(L"(") )
 	{
 		emit_ltor(ExprRes);
-		TArray<UInt8>	ArgRegs;
+		Array<UInt8>	ArgRegs;
 
 		assert(ExprRes.Type.iSignature != -1);
 		TDelegateInfo& Info = DelegatesInfo[ExprRes.Type.iSignature];
 
-		for( Int32 i=0; i<Info.ParamsType.Num(); i++ )
+		for( Int32 i=0; i<Info.ParamsType.size(); i++ )
 		{
 			TDelegateInfo::CParameter& P = Info.ParamsType[i];
 
@@ -2205,15 +2205,15 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 				TExprResult Out = CompileExpr( P, false, false, 0 );
 				if( !Out.bLValue )
 					Error( L"The right-hand side of an assignment must be a variable" );
-				ArgRegs.Push( Out.iReg );
+				ArgRegs.push( Out.iReg );
 			}
 			else
 			{
 				// Regular property.
-				ArgRegs.Push( CompileExpr( P, true, false, 0 ).iReg );
+				ArgRegs.push( CompileExpr( P, true, false, 0 ).iReg );
 			}
 
-			if( i != Info.ParamsType.Num()-1 )
+			if( i != Info.ParamsType.size()-1 )
 				RequireSymbol( L",", L"delegate arguments" );
 		}
 		RequireSymbol( L")", L"delegate call" );
@@ -2221,7 +2221,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 		emit( CODE_CallDelegate );
 		emit( ExprRes.iReg );
 
-		for( Int32 i=0; i<ArgRegs.Num(); i++ )
+		for( Int32 i=0; i<ArgRegs.size(); i++ )
 		{
 			emit( ArgRegs[i] );
 			FreeReg( ArgRegs[i] );
@@ -2285,7 +2285,7 @@ OperLoop:
 		CFamily* Family = FindFamily( FamilyName );
 		if( !Family )
 			Error( L"Family '%s' not found", *FamilyName );
-		assert(Family->Scripts.Num()>0);
+		assert(Family->Scripts.size()>0);
 
 		emit_ltor( ExprRes );
 		emit( CODE_In );
@@ -2755,7 +2755,7 @@ TExprResult CCompiler::CompileProtoExpr( FScript* Prototype )
 			Component	= Prototype->FindComponent( Name );
 			if( !Component )
 				Error( L"Component '%s' not found in '%s'", *Name, *Prototype->GetName() );
-			iSource		= Prototype->Components.FindItem( (FExtraComponent*)Component );
+			iSource		= Prototype->Components.find( (FExtraComponent*)Component );
 		}
 		else
 		{
@@ -2885,13 +2885,13 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, U
 		else if( Native = FBaseComponent::MetaClass->FindMethod(*T.Text) )
 		{
 			// Native method call from base component.
-			UInt16 iNative = CClassDatabase::GFuncs.FindItem( Native );
-			TArray<UInt8> ArgRegs;
+			UInt16 iNative = CClassDatabase::GFuncs.find( Native );
+			Array<UInt8> ArgRegs;
 
 			RequireSymbol( L"(", L"native method" );
 			for( Int32 i=0; i<Native->NumParams; i++ )
 			{
-				ArgRegs.Push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
+				ArgRegs.push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
 
 				if( i < Native->NumParams-1 )
 					RequireSymbol( L",", L"arguments" ); 
@@ -2901,7 +2901,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, U
 			emit_context( InContext, iConReg );
 			emit( CODE_BaseMethod );
 			emit( iNative );
-			for( Int32 i=0; i<ArgRegs.Num(); i++ )
+			for( Int32 i=0; i<ArgRegs.size(); i++ )
 			{
 				emit( ArgRegs[i] );
 				FreeReg( ArgRegs[i] );
@@ -3019,8 +3019,8 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, U
 	{
 		// An script function, doesn't matter it regular or unified cause
 		// we know actual script!
-		UInt8			iFunc = ConScript->Methods.FindItem(Function);
-		TArray<UInt8>	ArgRegs;
+		UInt8			iFunc = ConScript->Methods.find(Function);
+		Array<UInt8>	ArgRegs;
 
 		RequireSymbol( L"(", L"method call" );
 		for( Int32 i=0; i<Function->ParmsCount; i++ )
@@ -3033,12 +3033,12 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, U
 				TExprResult Out = CompileExpr( *Param, false, false, 0 );
 				if( !Out.bLValue )
 					Error( L"The right-hand side of an assignment must be a variable" );
-				ArgRegs.Push( Out.iReg );
+				ArgRegs.push( Out.iReg );
 			}
 			else
 			{
 				// Regular property.
-				ArgRegs.Push( CompileExpr( *Param, true, false, 0 ).iReg );
+				ArgRegs.push( CompileExpr( *Param, true, false, 0 ).iReg );
 			}
 
 			if( i != Function->ParmsCount-1 )
@@ -3050,7 +3050,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, U
 		emit( CODE_CallMethod );
 		emit( iFunc );
 
-		for( Int32 i=0; i<ArgRegs.Num(); i++ )
+		for( Int32 i=0; i<ArgRegs.size(); i++ )
 		{
 			emit( ArgRegs[i] );
 			FreeReg( ArgRegs[i] );
@@ -3078,13 +3078,13 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, U
 	else if( ConScript && (Native = ConScript->Base->GetClass()->FindMethod(*T.Text)) )
 	{
 		// Native method call from base component.
-		UInt16 iNative = CClassDatabase::GFuncs.FindItem( Native );
-		TArray<UInt8> ArgRegs;
+		UInt16 iNative = CClassDatabase::GFuncs.find( Native );
+		Array<UInt8> ArgRegs;
 
 		RequireSymbol( L"(", L"native method" );
 		for( Int32 i=0; i<Native->NumParams; i++ )
 		{
-			ArgRegs.Push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
+			ArgRegs.push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
 
 			if( i < Native->NumParams-1 )
 				RequireSymbol( L",", L"arguments" ); 
@@ -3094,7 +3094,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, U
 		emit_context( InContext, iConReg );
 		emit( CODE_BaseMethod );
 		emit( iNative );
-		for( Int32 i=0; i<ArgRegs.Num(); i++ )
+		for( Int32 i=0; i<ArgRegs.size(); i++ )
 		{
 			emit( ArgRegs[i] );
 			FreeReg( ArgRegs[i] );
@@ -3119,17 +3119,17 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, U
 		bValidExpr	= true;
 		return true;
 	}
-	else if( ConFamily && (iUnified = ConFamily->VFNames.FindItem(T.Text)) != -1 )
+	else if( ConFamily && (iUnified = ConFamily->VFNames.find(T.Text)) != -1 )
 	{
 		// VF function call.
 		CFunction*		Proto = ConFamily->Proto[iUnified];
 		UInt8			Index = iUnified;
-		TArray<UInt8>	ArgRegs;
+		Array<UInt8>	ArgRegs;
 
 		RequireSymbol( L"(", L"method call" );
 		for( Int32 i=0; i<Proto->ParmsCount; i++ )
 		{
-			ArgRegs.Push( CompileExpr( *Proto->Locals[i], true, false, 0 ).iReg );
+			ArgRegs.push( CompileExpr( *Proto->Locals[i], true, false, 0 ).iReg );
 
 			if( i != Proto->ParmsCount-1 )
 				RequireSymbol( L",", L"method arguments" );
@@ -3140,7 +3140,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, U
 		emit( CODE_CallVF );
 		emit( Index );
 
-		for( Int32 i=0; i<ArgRegs.Num(); i++ )
+		for( Int32 i=0; i<ArgRegs.size(); i++ )
 		{
 			emit( ArgRegs[i] );
 			FreeReg( ArgRegs[i] );
@@ -3179,7 +3179,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, U
 			if( !Component )
 				Error( L"Component '%s' not found in '%s'", *Name, *ConScript->GetName() );
 
-			iCompon		= ConScript->Components.FindItem( (FExtraComponent*)Component );
+			iCompon		= ConScript->Components.find( (FExtraComponent*)Component );
 		}
 		else
 		{
@@ -3227,13 +3227,13 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, U
 		else if( Native = Class->FindMethod(*Field) )
 		{
 			// Native function call.
-			UInt16 iNative = CClassDatabase::GFuncs.FindItem( Native );
-			TArray<UInt8> ArgRegs;
+			UInt16 iNative = CClassDatabase::GFuncs.find( Native );
+			Array<UInt8> ArgRegs;
 
 			RequireSymbol( L"(", L"native method" );
 			for( Int32 i=0; i<Native->NumParams; i++ )
 			{
-				ArgRegs.Push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg  );
+				ArgRegs.push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg  );
 				if( i < Native->NumParams-1 )
 					RequireSymbol( L",", L"arguments" ); 
 			}
@@ -3252,7 +3252,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, U
 				emit( iCompon );
 			}
 
-			for( Int32 i=0; i<ArgRegs.Num(); i++ )
+			for( Int32 i=0; i<ArgRegs.size(); i++ )
 			{
 				emit( ArgRegs[i] );
 				FreeReg( ArgRegs[i] );
@@ -3284,7 +3284,7 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, U
 
 	// Failed parse entity subexpression, rollback
 	// and return false.
-	Emitter.Bytecode->Code.SetNum( CodeStart );
+	Emitter.Bytecode->Code.setSize( CodeStart );
 	GotoToken( T );
 	return false;
 }
@@ -3655,8 +3655,8 @@ void CCompiler::CompileSwitch()
 
 	TExprResult Expr;
 	UInt16 DstJmpTab, DstDefaultAddr, DstOut;
-	TArray<Int32>	Labels;
-	TArray<UInt16>	Addrs;
+	Array<Int32>	Labels;
+	Array<UInt16>	Addrs;
 	UInt8			Size;
 	Bool			bDefaultFound = false;
 
@@ -3735,12 +3735,12 @@ void CCompiler::CompileSwitch()
 			else 
 				Error( L"Missing label expression" );
 
-			if( Labels.FindItem(Value) != -1 )
+			if( Labels.find(Value) != -1 )
 				Error( L"Case label value already appeared in this switch" );
 
 			// Add to list.
-			Labels.Push( Value );
-			Addrs.Push( Emitter.Tell() );
+			Labels.push( Value );
+			Addrs.push( Emitter.Tell() );
 
 			RequireSymbol( L":", L"case label" );
 		}
@@ -3758,10 +3758,10 @@ void CCompiler::CompileSwitch()
 
 	// Emit jump table.
 	*(UInt16*)&Bytecode->Code[DstJmpTab]	= Emitter.Tell();
-	assert(Labels.Num() == Addrs.Num());
-	UInt8 NumLabs = Labels.Num();
+	assert(Labels.size() == Addrs.size());
+	UInt8 NumLabs = Labels.size();
 	emit( NumLabs );
-	for( Int32 i=0; i<Labels.Num(); i++ )
+	for( Int32 i=0; i<Labels.size(); i++ )
 	{
 		if( Expr.Type.Type == TYPE_Byte )
 			emit( *(UInt8*)&Labels[i] )
@@ -3822,7 +3822,7 @@ void CCompiler::CompileCommand()
 		}
 
 		emit( CODE_Jump );
-		Nest[0].Addrs[REPL_Return].Push( Emitter.Tell() );
+		Nest[0].Addrs[REPL_Return].push( Emitter.Tell() );
 		emit( GTempWord );
 	}
 	else if( MatchIdentifier( KW_break ) )
@@ -3841,7 +3841,7 @@ void CCompiler::CompileCommand()
 			Error( L"No enclosing loop out of which to break or continue" );
 
 		emit( CODE_Jump );
-		Nest[LoopNest].Addrs[REPL_Break].Push( Emitter.Tell() );
+		Nest[LoopNest].Addrs[REPL_Break].push( Emitter.Tell() );
 		emit( GTempWord );
 		RequireSymbol( L";", L"break or continue" );
 	}
@@ -3860,7 +3860,7 @@ void CCompiler::CompileCommand()
 			Error( L"No enclosing loop out of which to break or continue" );
 
 		emit( CODE_Jump );
-		Nest[LoopNest].Addrs[REPL_Continue].Push( Emitter.Tell() );
+		Nest[LoopNest].Addrs[REPL_Continue].push( Emitter.Tell() );
 		emit( GTempWord );
 		RequireSymbol( L";", L"break or continue" );
 	}
@@ -3982,12 +3982,12 @@ void CCompiler::CompileForeach()
 			if( !(Iter->Flags & NFUN_Foreach) )
 				Error( L"'%s' is no an iteration function", *IterName );
 
-			TArray<UInt8>	ArgRegs;
+			Array<UInt8>	ArgRegs;
 			ResetRegs();
 			RequireSymbol( L"(", L"function call" );
 			for( Int32 i=0; i<Iter->NumParams; i++ )
 			{
-				ArgRegs.Push( CompileExpr( Iter->Params[i].Type, true, false, 0 ).iReg );
+				ArgRegs.push( CompileExpr( Iter->Params[i].Type, true, false, 0 ).iReg );
 
 				if( i < Iter->NumParams-1 )
 					RequireSymbol( L",", L"arguments" ); 
@@ -3996,7 +3996,7 @@ void CCompiler::CompileForeach()
 
 			// Emit call.
 			emit_opcode( Iter->iOpCode );
-			for( Int32 i=0; i<ArgRegs.Num(); i++ )
+			for( Int32 i=0; i<ArgRegs.size(); i++ )
 			{
 				emit( ArgRegs[i] );
 				FreeReg( ArgRegs[i] );
@@ -4263,7 +4263,7 @@ void CCompiler::CompileEnumDecl()
 
 	// Allocate enumeration.
 	CEnum*	Enum	= new CEnum( *Name, ENUM_None, Script );
-	Script->Enums.Push(Enum);
+	Script->Enums.push(Enum);
 
 	// Parse elements.
 	do 
@@ -4271,7 +4271,7 @@ void CCompiler::CompileEnumDecl()
 		String Elem	= GetIdentifier( L"enumeration" );
 		//log( L"%s::%s", *Enum->Name, *Elem );
 
-		if( Enum->Elements.FindItem(Elem) != -1 )
+		if( Enum->Elements.find(Elem) != -1 )
 			Error( L"Enumeration element '%s' redeclarated", *Elem );
 
 		if( Enum->AddElement(Elem) > 255 )
@@ -4299,7 +4299,7 @@ void CCompiler::CompileStructDecl()
 
 	// Allocate structure.
 	CStruct*	Struct	= new CStruct( *Name );
-	Script->Structs.Push(Struct);
+	Script->Structs.push(Struct);
 
 	// Parse line by line.
 	do 
@@ -4318,7 +4318,7 @@ void CCompiler::CompileStructDecl()
 
 	} while( !MatchSymbol(L"}") );
 
-	if( Struct->Size == 0 || Struct->Members.Num() == 0 )
+	if( Struct->Size == 0 || Struct->Members.size() == 0 )
 		Error( L"Struct shouldn't be empty" );
 
 	if( Struct->Size >= 256 )
@@ -4326,7 +4326,7 @@ void CCompiler::CompileStructDecl()
 
 	// Dbg.
 	info(L"Struct \"%s\" size=%d", *Struct->Name, Struct->Size);
-	for( Int32 i=0; i<Struct->Members.Num(); i++ )
+	for( Int32 i=0; i<Struct->Members.size(); i++ )
 		info
 		(
 			L"Member namy=\"%s\"; type=\"%s\"; offset=%d", 
@@ -4370,7 +4370,7 @@ void CCompiler::CompileConstDecl()
 
 	// Complete constant and store.
 	Const.Text	= Name;
-	Constants.Push(Const);		
+	Constants.push(Const);		
 
 	// Close the line.
 	RequireSymbol( L";", L"constant" );
@@ -4381,7 +4381,7 @@ void CCompiler::CompileConstDecl()
 // Compile a property declaration. 
 // bDetectFunc - used in global scope, in case possible function declaration.
 //
-Bool CCompiler::CompileVarDecl( TArray<CProperty*>& Vars, SizeT& VarsSize, UInt32 InFlags, Bool bSimpleOnly, Bool bDetectFunc )
+Bool CCompiler::CompileVarDecl( Array<CProperty*>& Vars, SizeT& VarsSize, UInt32 InFlags, Bool bSimpleOnly, Bool bDetectFunc )
 {
 	// Store source location, maybe its a function.
 	TToken SourceLoc;
@@ -4436,7 +4436,7 @@ Bool CCompiler::CompileVarDecl( TArray<CProperty*>& Vars, SizeT& VarsSize, UInt3
 		);
 
 		// Add property to the list.
-		Vars.Push( Property );
+		Vars.push( Property );
 		VarsSize = align( VarsSize + TypeInfo.TypeSize(), SCRIPT_PROP_ALIGN );
 
 		// Not really good place for it, but its works well.
@@ -4540,7 +4540,7 @@ void CCompiler::CompileThreadDecl()
 				CThreadCode::TLabel Label;
 				Label.Address	= 0xffff;
 				Label.Name		= Name;
-				Thread->Labels.Push( Label );
+				Thread->Labels.push( Label );
 			}
 		}
 	} while( Level != 0 );
@@ -4561,8 +4561,8 @@ void CCompiler::CompileFunctionDecl()
 	CFunction* Function = new CFunction();
 	if( bStaticFunc ) Function->Flags |= FUNC_Static;
 
-	TArray<CFunction*>& FuncList = bStaticFunc ? Script->StaticFunctions : Script->Methods;
-	FuncList.Push( Function );
+	Array<CFunction*>& FuncList = bStaticFunc ? Script->StaticFunctions : Script->Methods;
+	FuncList.push( Function );
 
 	if( MatchIdentifier(KW_event) )
 	{
@@ -4574,7 +4574,7 @@ void CCompiler::CompileFunctionDecl()
 		Function->Flags		= FUNC_Event;
 
 		// Add to appropriate list.
-		Script->Events.Push(Function);
+		Script->Events.push(Function);
 	}
 	else if( MatchIdentifier(KW_fn) )
 	{
@@ -4615,7 +4615,7 @@ void CCompiler::CompileFunctionDecl()
 			// Param type.
 			CTypeInfo ParamType = CompileVarType( true );
 			if( ParamType.Type == TYPE_None )
-				Error( L"Unknown parameter %d type", Function->Locals.Num() );
+				Error( L"Unknown parameter %d type", Function->Locals.size() );
 
 			// Param name.
 			String ParamName = GetIdentifier( L"parameter name" );
@@ -4624,7 +4624,7 @@ void CCompiler::CompileFunctionDecl()
 
 			// Allocate parameter.
 			CProperty*	Property	= new CProperty( ParamType, ParamName, ParmFlags, Function->FrameSize );
-			Function->Locals.Push( Property );
+			Function->Locals.push( Property );
 			Function->FrameSize = align( Function->FrameSize + ParamType.TypeSize(), SCRIPT_PROP_ALIGN );
 			Function->ParmsCount++;
 
@@ -4643,7 +4643,7 @@ void CCompiler::CompileFunctionDecl()
 
 	// Insert result property after the parameters.
 	if( Function->ResultVar )
-		Function->Locals.Push( Function->ResultVar );
+		Function->Locals.push( Function->ResultVar );
 
 	// Test event name.
 	if( Function->Flags & FUNC_Event )
@@ -4664,13 +4664,13 @@ void CCompiler::CompileFunctionDecl()
 			Error( L"Unified function cannot be static" );
 
 		CFamily* Family = Families[Script->iFamily];
-		Int32 iProto = Family->VFNames.FindItem(Function->Name);
+		Int32 iProto = Family->VFNames.find(Function->Name);
 		if( iProto == -1 )
 		{
 			// Add a new function and it signature.
-			Family->VFNames.Push(Function->Name);
-			Family->Proto.Push(Function);
-			assert(Family->VFNames.Num() == Family->Proto.Num());
+			Family->VFNames.push(Function->Name);
+			Family->Proto.push(Function);
+			assert(Family->VFNames.size() == Family->Proto.size());
 		}
 		else
 		{
@@ -4788,13 +4788,13 @@ void CCompiler::CompileDelegateDecl()
 
 			CTypeInfo ParamType = CompileVarType( true );
 			if( ParamType.Type == TYPE_None )
-				Error( L"Unknown parameter %d type", Info.ParamsType.Num() );
+				Error( L"Unknown parameter %d type", Info.ParamsType.size() );
 
 			// Unused param name.
 			String ParamName = GetIdentifier( L"parameter name" );
 
 			TDelegateInfo::CParameter Param( ParamType, bOutParam );
-			Info.ParamsType.Push(Param);
+			Info.ParamsType.push(Param);
 
 			if( MatchSymbol( L"," ) )
 			{
@@ -4810,7 +4810,7 @@ void CCompiler::CompileDelegateDecl()
 	}
 
 	// Add to the list of delegates.
-	DelegatesInfo.Push( Info );
+	DelegatesInfo.push( Info );
 	RequireSymbol( L";", L"delegate" );
 }
 
@@ -4830,9 +4830,9 @@ void CCompiler::PushNest( ENestType InType )
 
 	// Reset the nest.
 	Nest[NestTop].Type	= InType;
-	Nest[NestTop].Addrs[REPL_Break].Empty();
-	Nest[NestTop].Addrs[REPL_Return].Empty();
-	Nest[NestTop].Addrs[REPL_Continue].Empty();
+	Nest[NestTop].Addrs[REPL_Break].empty();
+	Nest[NestTop].Addrs[REPL_Return].empty();
+	Nest[NestTop].Addrs[REPL_Continue].empty();
 
 	NestTop++;
 }
@@ -4846,9 +4846,9 @@ void CCompiler::PopNest()
 	NestTop--;
 	assert(NestTop >= 0);
 
-	Nest[NestTop].Addrs[REPL_Break].Empty();
-	Nest[NestTop].Addrs[REPL_Return].Empty();
-	Nest[NestTop].Addrs[REPL_Continue].Empty();
+	Nest[NestTop].Addrs[REPL_Break].empty();
+	Nest[NestTop].Addrs[REPL_Return].empty();
+	Nest[NestTop].Addrs[REPL_Continue].empty();
 }
 
 
@@ -4859,7 +4859,7 @@ void CCompiler::ReplNest( EReplType Repl, UInt16 DestAddr )
 {
 	TNest& N = Nest[NestTop-1];
 
-	for( Int32 i=0; i<N.Addrs[Repl].Num(); i++ )
+	for( Int32 i=0; i<N.Addrs[Repl].size(); i++ )
 		*(UInt16*)&Bytecode->Code[N.Addrs[Repl][i]]	= DestAddr;
 }
 
@@ -4924,13 +4924,13 @@ void CCompiler::FreeReg( UInt8 iReg )
 CEnum* CCompiler::FindEnum( FScript* Script, String Name, Bool bOwnOnly )
 {
 	// Searching in script.
-	for( Int32 i=0; i<Script->Enums.Num(); i++ )
+	for( Int32 i=0; i<Script->Enums.size(); i++ )
 		if( Name == Script->Enums[i]->Name )
 			return Script->Enums[i];
 
 	// Native database.
 	if( !bOwnOnly )
-		for( Int32 i=0; i<CClassDatabase::GEnums.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GEnums.size(); i++ )
 			if( Name == CClassDatabase::GEnums[i]->Name )
 				return CClassDatabase::GEnums[i];
 
@@ -4947,13 +4947,13 @@ CEnum* CCompiler::FindEnum( FScript* Script, String Name, Bool bOwnOnly )
 CStruct* CCompiler::FindStruct( FScript* Script, String Name, Bool bOwnOnly )
 {
 	// Searching in script.
-	for( Int32 i=0; i<Script->Structs.Num(); i++ )
+	for( Int32 i=0; i<Script->Structs.size(); i++ )
 		if( Name == Script->Structs[i]->Name )
 			return Script->Structs[i];
 
 	// Native database.
 	if( !bOwnOnly )
-		for( Int32 i=0; i<CClassDatabase::GStructs.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GStructs.size(); i++ )
 			if( Name == CClassDatabase::GStructs[i]->Name )
 				return CClassDatabase::GStructs[i];
 
@@ -4967,7 +4967,7 @@ CStruct* CCompiler::FindStruct( FScript* Script, String Name, Bool bOwnOnly )
 //
 FScript* CCompiler::FindScript( String Name )
 {
-	for( Int32 i=0; i<AllScripts.Num(); i++ )
+	for( Int32 i=0; i<AllScripts.size(); i++ )
 		if( Name == AllScripts[i]->GetName() )
 			return AllScripts[i];
 
@@ -4980,7 +4980,7 @@ FScript* CCompiler::FindScript( String Name )
 //
 CFamily* CCompiler::FindFamily( String Name )
 {
-	for( Int32 i=0; i<Families.Num(); i++ )
+	for( Int32 i=0; i<Families.size(); i++ )
 		if( Name == Families[i]->Name )
 			return Families[i];
 
@@ -4995,7 +4995,7 @@ CFamily* CCompiler::FindFamily( String Name )
 //
 TToken* CCompiler::FindConstant( String Name )
 {
-	for( Int32 i=0; i<Constants.Num(); i++ )
+	for( Int32 i=0; i<Constants.size(); i++ )
 		if( Constants[i].Text == Name )
 			return &Constants[i];
 
@@ -5009,7 +5009,7 @@ TToken* CCompiler::FindConstant( String Name )
 //
 Int32 CCompiler::FindDelegate( String Name )
 {
-	for( Int32 i=0; i<DelegatesInfo.Num(); i++ )
+	for( Int32 i=0; i<DelegatesInfo.size(); i++ )
 		if( Name == DelegatesInfo[i].Name )
 			return i;
 
@@ -5020,9 +5020,9 @@ Int32 CCompiler::FindDelegate( String Name )
 //
 // Find a property in the list, if not found return null.
 //
-CProperty* CCompiler::FindProperty( const TArray<CProperty*>& List, String Name )
+CProperty* CCompiler::FindProperty( const Array<CProperty*>& List, String Name )
 {
-	for( Int32 i=0; i<List.Num(); i++ )
+	for( Int32 i=0; i<List.size(); i++ )
 		if( Name == List[i]->Name )
 			return List[i];
 
@@ -5033,9 +5033,9 @@ CProperty* CCompiler::FindProperty( const TArray<CProperty*>& List, String Name 
 //
 // Find a function in the script.
 //
-CFunction* CCompiler::FindFunction( const TArray<CFunction*>& FuncList, String Name )
+CFunction* CCompiler::FindFunction( const Array<CFunction*>& FuncList, String Name )
 {
-	for( Int32 i=0; i<FuncList.Num(); i++ )
+	for( Int32 i=0; i<FuncList.size(); i++ )
 		if( Name == FuncList[i]->Name )
 			return FuncList[i];
 
@@ -5054,7 +5054,7 @@ CNativeFunction* CCompiler::FindUnaryOp( String Name, const CTypeInfo& ArgType )
 	if( ArgType.Type == TYPE_None )
 	{
 		// Just figure it out.
-		for( Int32 i=0; i<CClassDatabase::GFuncs.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GFuncs.size(); i++ )
 		{
 			CNativeFunction* F = CClassDatabase::GFuncs[i];
 
@@ -5066,7 +5066,7 @@ CNativeFunction* CCompiler::FindUnaryOp( String Name, const CTypeInfo& ArgType )
 	else
 	{
 		// Try to find without typecast.
-		for( Int32 i=0; i<CClassDatabase::GFuncs.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GFuncs.size(); i++ )
 		{
 			CNativeFunction* F = CClassDatabase::GFuncs[i];
 
@@ -5077,7 +5077,7 @@ CNativeFunction* CCompiler::FindUnaryOp( String Name, const CTypeInfo& ArgType )
 		}
 
 		// Try to find with cast.
-		for( Int32 i=0; i<CClassDatabase::GFuncs.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GFuncs.size(); i++ )
 		{
 			CNativeFunction* F = CClassDatabase::GFuncs[i];
 
@@ -5104,7 +5104,7 @@ CNativeFunction* CCompiler::FindBinaryOp( String Name, const CTypeInfo& Arg1, co
 	if( Arg1.Type == TYPE_None || Arg2.Type == TYPE_None )
 	{
 		// Just figure out.
-		for( Int32 i=0; i<CClassDatabase::GFuncs.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GFuncs.size(); i++ )
 		{
 			CNativeFunction* F = CClassDatabase::GFuncs[i];
 
@@ -5116,7 +5116,7 @@ CNativeFunction* CCompiler::FindBinaryOp( String Name, const CTypeInfo& Arg1, co
 	else
 	{
 		// Try to find without typecast.
-		for( Int32 i=0; i<CClassDatabase::GFuncs.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GFuncs.size(); i++ )
 		{
 			CNativeFunction* F = CClassDatabase::GFuncs[i];
 
@@ -5128,7 +5128,7 @@ CNativeFunction* CCompiler::FindBinaryOp( String Name, const CTypeInfo& Arg1, co
 		}
 
 		// Try to find with cast.
-		for( Int32 i=0; i<CClassDatabase::GFuncs.Num(); i++ )
+		for( Int32 i=0; i<CClassDatabase::GFuncs.size(); i++ )
 		{
 			CNativeFunction* F = CClassDatabase::GFuncs[i];
 			if( !(F->Flags & NFUN_BinaryOp) || ( F->Name != Name ) )
@@ -5162,21 +5162,21 @@ CNativeFunction* CCompiler::FindBinaryOp( String Name, const CTypeInfo& Arg1, co
 UInt8 CCompiler::FindEnumElement( String Elem )
 {
 	// Searching in script.
-	for( Int32 iEnum=0; iEnum<Script->Enums.Num(); iEnum++ )
+	for( Int32 iEnum=0; iEnum<Script->Enums.size(); iEnum++ )
 	{
 		CEnum* Enum = Script->Enums[iEnum];
 
-		for( Int32 i=0; i<Enum->Elements.Num(); i++ )
+		for( Int32 i=0; i<Enum->Elements.size(); i++ )
 			if( Elem == Enum->Elements[i] )
 				return i;
 	}
 
 	// Native database.
-	for( Int32 iEnum=0; iEnum<CClassDatabase::GEnums.Num(); iEnum++ )
+	for( Int32 iEnum=0; iEnum<CClassDatabase::GEnums.size(); iEnum++ )
 	{
 		CEnum* Enum = CClassDatabase::GEnums[iEnum];
 
-		for( Int32 i=0; i<Enum->Elements.Num(); i++ )
+		for( Int32 i=0; i<Enum->Elements.size(); i++ )
 			if( Elem == Enum->Elements[i] )
 				return i;
 	}
@@ -5191,7 +5191,7 @@ UInt8 CCompiler::FindEnumElement( String Elem )
 //
 CNativeFunction* CCompiler::FindNative( String Name )
 {
-	for( Int32 i=0; i<CClassDatabase::GFuncs.Num(); i++ )
+	for( Int32 i=0; i<CClassDatabase::GFuncs.size(); i++ )
 	{
 		CNativeFunction* F = CClassDatabase::GFuncs[i];
 
@@ -5210,9 +5210,9 @@ CNativeFunction* CCompiler::FindNative( String Name )
 //
 Int32 CCompiler::FindStaticEvent( String Name )
 {
-	assert(GEventLookup.Num() == _EVENT_MAX);
+	assert(GEventLookup.size() == _EVENT_MAX);
 
-	for( Int32 i=0; i<GEventLookup.Num(); i++ )
+	for( Int32 i=0; i<GEventLookup.size(); i++ )
 		if( GEventLookup[i].Name == Name )
 			return i;
 	return -1;
@@ -5721,7 +5721,7 @@ Char CCompiler::_GetChar()
 	PrevPos		= TextPos;
 
 	// If end of text - return \0 symbol.
-	if( TextLine >= Script->Text.Num() )
+	if( TextLine >= Script->Text.size() )
 		return L'\0';
 
 	// If end of line, goto next line and return
@@ -5782,7 +5782,7 @@ void CCompiler::Warn( const Char* Fmt, ... )
 	_vsnwprintf( Msg, arr_len(Msg), Fmt, ArgPtr );
 	va_end( ArgPtr );
 
-	Warnings.Push( String::Format
+	Warnings.push( String::Format
 	( 
 		L"[Warning] %s(%d): %s", 
 		*Script->GetName(), 
@@ -5804,13 +5804,13 @@ void CCompiler::Warn( const Char* Fmt, ... )
 void CCompiler::StoreAllScripts()
 {
 	// Walk through all scripts.
-	for( Int32 i=0; i<Database->GObjects.Num(); i++ )
+	for( Int32 i=0; i<Database->GObjects.size(); i++ )
 		if( Database->GObjects[i] && Database->GObjects[i]->IsA(FScript::MetaClass) )
 		{
 			FScript* S = (FScript*)Database->GObjects[i];
 
 			// Add any script to list, for searching.
-			AllScripts.Push(S);
+			AllScripts.push(S);
 
 			// Add only script with the text.
 			if( S->IsScriptable() )
@@ -5826,10 +5826,10 @@ void CCompiler::StoreAllScripts()
 
 					Stored.Properties	= S->Properties;
 					Stored.InstanceSize	= S->InstanceSize;
-					Stored.Buffers.Push( S->InstanceBuffer );
+					Stored.Buffers.push( S->InstanceBuffer );
 
 					// Collect instance buffers from the entities.
-					for( Int32 i=0; i<Database->GObjects.Num(); i++ )
+					for( Int32 i=0; i<Database->GObjects.size(); i++ )
 						if( Database->GObjects[i] && Database->GObjects[i]->IsA(FEntity::MetaClass) )
 						{
 							FEntity* Entity = (FEntity*)Database->GObjects[i];
@@ -5838,7 +5838,7 @@ void CCompiler::StoreAllScripts()
 							{
 								// Same as S.
 								assert(Entity->InstanceBuffer);
-								Stored.Buffers.Push( Entity->InstanceBuffer );
+								Stored.Buffers.push( Entity->InstanceBuffer );
 							}
 						}
 				}
@@ -5852,27 +5852,27 @@ void CCompiler::StoreAllScripts()
 				Stored.Structs		= S->Structs;
 
 				// Add to list.
-				Storage.Push(Stored);
+				Storage.push(Stored);
 
 				// Cleanup all script's objects.
 				freeandnil(S->Thread);
 				freeandnil(S->StaticsBuffer);
-				for( Int32 f=0; f<S->Methods.Num(); f++ )
+				for( Int32 f=0; f<S->Methods.size(); f++ )
 					freeandnil(S->Methods[f]);
-				for( Int32 f=0; f<S->StaticFunctions.Num(); f++ )
+				for( Int32 f=0; f<S->StaticFunctions.size(); f++ )
 					freeandnil(S->StaticFunctions[f]);
-				for( Int32 p=0; p<S->Statics.Num(); p++ )
+				for( Int32 p=0; p<S->Statics.size(); p++ )
 					freeandnil(S->Statics[p]);
-				S->Enums.Empty();
-				S->Structs.Empty();
-				S->Properties.Empty();
-				S->Methods.Empty();
-				S->Events.Empty();
-				S->VFTable.Empty();
-				S->Statics.Empty();
-				S->StaticFunctions.Empty();
+				S->Enums.empty();
+				S->Structs.empty();
+				S->Properties.empty();
+				S->Methods.empty();
+				S->Events.empty();
+				S->VFTable.empty();
+				S->Statics.empty();
+				S->StaticFunctions.empty();
 				S->InstanceSize	= S->StaticsSize = 0;
-				S->ResTable.Empty();
+				S->ResTable.empty();
 			}
 		}
 }
@@ -5884,43 +5884,43 @@ void CCompiler::StoreAllScripts()
 //
 void CCompiler::RestoreAfterFailure()
 {
-	for( Int32 i=0; i<Storage.Num(); i++ )
+	for( Int32 i=0; i<Storage.size(); i++ )
 	{
 		TStoredScript&	Stored = Storage[i];
 		FScript*		S		= Stored.Script;
 
 		// Clean up all newly created script objects.
 		freeandnil(S->Thread);
-		for( Int32 f=0; f<S->Methods.Num(); f++ )
+		for( Int32 f=0; f<S->Methods.size(); f++ )
 			freeandnil( S->Methods[f] );
 
-		for( Int32 f=0; f<S->StaticFunctions.Num(); f++ )
+		for( Int32 f=0; f<S->StaticFunctions.size(); f++ )
 			freeandnil( S->StaticFunctions[f] );
 
-		for( Int32 p=0; p<S->Statics.Num(); p++ )
+		for( Int32 p=0; p<S->Statics.size(); p++ )
 			freeandnil( S->Statics[p] );
 
-		for( Int32 p=0; p<S->Properties.Num(); p++ )
+		for( Int32 p=0; p<S->Properties.size(); p++ )
 			freeandnil( S->Properties[p] );
 
-		for( Int32 e=0; e<S->Enums.Num(); e++ )
+		for( Int32 e=0; e<S->Enums.size(); e++ )
 			freeandnil( S->Enums[e] );
 
-		for( Int32 s=0; s<S->Structs.Num(); s++ )
+		for( Int32 s=0; s<S->Structs.size(); s++ )
 			freeandnil( S->Structs[s] );
 
-		S->Enums.Empty();
-		S->Structs.Empty();
-		S->Properties.Empty();
-		S->Statics.Empty();
-		S->Methods.Empty();
-		S->Events.Empty();
-		S->VFTable.Empty();
-		S->StaticFunctions.Empty();
+		S->Enums.empty();
+		S->Structs.empty();
+		S->Properties.empty();
+		S->Statics.empty();
+		S->Methods.empty();
+		S->Events.empty();
+		S->VFTable.empty();
+		S->StaticFunctions.empty();
 		S->InstanceSize		= 0;
 		S->StaticsSize		= 0;
 		S->iFamily			= -1;
-		S->ResTable.Empty();
+		S->ResTable.empty();
 
 		assert(S->StaticsBuffer == nullptr);
 
@@ -5943,7 +5943,7 @@ void CCompiler::RestoreAfterFailure()
 //
 void CCompiler::RestoreAfterSuccess()
 {
-	for( Int32 iSlot=0; iSlot<Storage.Num(); iSlot++ )
+	for( Int32 iSlot=0; iSlot<Storage.size(); iSlot++ )
 	{
 		TStoredScript& Stored = Storage[iSlot];
 		FScript* Script	= Stored.Script;
@@ -5953,16 +5953,16 @@ void CCompiler::RestoreAfterSuccess()
 
 		if( !Script->IsStatic() )
 		{
-			for( Int32 iBuff=0; iBuff<Stored.Buffers.Num(); iBuff++ )
+			for( Int32 iBuff=0; iBuff<Stored.Buffers.size(); iBuff++ )
 			{
 				CInstanceBuffer* Buffer = Stored.Buffers[iBuff];
-				TArray<UInt8> NewData(Script->InstanceSize);
+				Array<UInt8> NewData(Script->InstanceSize);
 
-				for( Int32 iNew=0; iNew<Script->Properties.Num(); iNew++ )
+				for( Int32 iNew=0; iNew<Script->Properties.size(); iNew++ )
 				{
 					CProperty* NewProp = Script->Properties[iNew];
 
-					for( Int32 iOld=0; iOld<Stored.Properties.Num(); iOld++ )
+					for( Int32 iOld=0; iOld<Stored.Properties.size(); iOld++ )
 					{
 						CProperty* OldProp = Stored.Properties[iOld];
 
@@ -5991,22 +5991,22 @@ void CCompiler::RestoreAfterSuccess()
 
 		// Allocate new StaticBuffer.
 		Script->StaticsBuffer = new CInstanceBuffer(Script->Statics);
-		Script->StaticsBuffer->Data.SetNum(Script->StaticsSize);
+		Script->StaticsBuffer->Data.setSize(Script->StaticsSize);
 
-		if( Script->Statics.Num() > 0 )
+		if( Script->Statics.size() > 0 )
 			assert(Script->StaticsSize > 0);
 
 		// Destroy old storage data.
-		for( Int32 i=0; i<Stored.Properties.Num(); i++ )
+		for( Int32 i=0; i<Stored.Properties.size(); i++ )
 			freeandnil(Stored.Properties[i]);
 
-		for( Int32 i=0; i<Stored.Enums.Num(); i++ )
+		for( Int32 i=0; i<Stored.Enums.size(); i++ )
 			freeandnil(Stored.Enums[i]);
 
-		Stored.Buffers.Empty();
-		Stored.Enums.Empty();
-		Stored.Structs.Empty();
-		Stored.Properties.Empty();
+		Stored.Buffers.empty();
+		Stored.Enums.empty();
+		Stored.Structs.empty();
+		Stored.Properties.empty();
 		Stored.InstanceSize	= 0;
 	}
 }
@@ -6022,7 +6022,7 @@ void CCompiler::RestoreAfterSuccess()
 Bool Compiler::CompileAllScripts
 ( 
 	CObjectDatabase* InDatabase, 
-	TArray<String>& OutWarnings, 
+	Array<String>& OutWarnings, 
 	TError& OutFatalError 
 )
 {
@@ -6044,7 +6044,7 @@ Bool Compiler::DropAllScripts( CObjectDatabase* InDatabase )
 		return false;
 
 	// Walk through all objects.
-	for( Int32 i=0; i<InDatabase->GObjects.Num(); i++ )
+	for( Int32 i=0; i<InDatabase->GObjects.size(); i++ )
 	{
 		if( InDatabase->GObjects[i] && InDatabase->GObjects[i]->IsA(FScript::MetaClass) )
 		{
@@ -6056,14 +6056,14 @@ Bool Compiler::DropAllScripts( CObjectDatabase* InDatabase )
 
 			// Destroy bytecodes.
 			freeandnil(Script->Thread);
-			for( Int32 iFunc=0; iFunc<Script->Methods.Num(); iFunc++ )
+			for( Int32 iFunc=0; iFunc<Script->Methods.size(); iFunc++ )
 				freeandnil(Script->Methods[iFunc]);
 
 			// Clear tables.
-			Script->Methods.Empty();
-			Script->Events.Empty();
-			Script->VFTable.Empty();
-			Script->ResTable.Empty();
+			Script->Methods.empty();
+			Script->Events.empty();
+			Script->VFTable.empty();
+			Script->ResTable.empty();
 		}
 	}
 

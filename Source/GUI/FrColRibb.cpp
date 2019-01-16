@@ -38,7 +38,7 @@ WColorRibbon::WColorRibbon( WContainer* InOwner, WWindow* InRoot )
 	Ribbon->AnimSpeed		= 0.f;
 	Ribbon->bDynamic		= true;
 	Ribbon->bRedrawn		= false;
-	Ribbon->Data.SetNum(256*sizeof(TColor));
+	Ribbon->Data.setSize(256*sizeof(TColor));
 }
 
 
@@ -91,7 +91,7 @@ void WColorRibbon::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 	{
 		// Move sample.
 		TColor OldOutput = Curve->Samples[iSelected].Output;
-		Curve->Samples.RemoveShift(iSelected);
+		Curve->Samples.removeShift(iSelected);
 		iSelected = Curve->AddSample( Float(Clamp(X-5, 0, Size.Width-11))/Float(Size.Width), OldOutput );
 
 		OnChange();
@@ -137,9 +137,9 @@ void WColorRibbon::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 	{
 		// Remove selected sample.
 		Int32 iSample = GetMarkerAt( X, Y );
-		if( iSample != -1 && Curve->Samples.Num() > 1 )
+		if( iSample != -1 && Curve->Samples.size() > 1 )
 		{
-			Curve->Samples.RemoveShift(iSample);
+			Curve->Samples.removeShift(iSample);
 			iSelected = -1;
 			UpdateRibbon();
 			OnChange();
@@ -185,7 +185,7 @@ Int32 WColorRibbon::GetMarkerAt( Int32 X, Int32 Y )
 		if( Y < Size.Height-17 )
 			return -1;
 
-		for( Int32 i=0; i<Curve->Samples.Num(); i++ )
+		for( Int32 i=0; i<Curve->Samples.size(); i++ )
 		{
 			Int32 MarkerX = Curve->Samples[i].Input * Size.Width + 5;
 			if( Abs(X-MarkerX) <= 5 )
@@ -249,7 +249,7 @@ void WColorRibbon::OnPaint( CGUIRenderBase* Render )
 	// Render markers.
 	if( Curve )
 	{
-		for( Int32 i=0; i<Curve->Samples.Num(); i++ )
+		for( Int32 i=0; i<Curve->Samples.size(); i++ )
 		{
 			auto Sample = Curve->Samples[i];
 

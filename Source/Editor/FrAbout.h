@@ -29,8 +29,8 @@ public:
 			(Owner->Size.Height-Size.Height)/2 
 		);
 
-		for( Int32 i=Root->Children.FindItem(this); i<Root->Children.Num()-1; i++ )
-			Root->Children.Swap( i, i+1 );
+		for( Int32 i=Root->Children.find(this); i<Root->Children.size()-1; i++ )
+			Root->Children.swap( i, i+1 );
 
 		Root->SetFocused( this );
 

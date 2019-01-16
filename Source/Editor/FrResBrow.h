@@ -97,7 +97,7 @@ private:
 	// Internal.
 	WAssetsPage*	Page;
 	WSlider*		ScrollBar;
-	TArray<TIcon>	Icons;
+	Array<TIcon>	Icons;
 	Bool			bReadyForDrag;
 
 	// Notifications.

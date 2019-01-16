@@ -66,10 +66,10 @@ WWatchListDialog::WWatchListDialog( WPlayPage* InPage, WWindow* InRoot )
 
 	// Fill lists.
 	FLevel* Lev = Page->PlayLevel;
-	TArray<FScript*> Used;
-	for( Int32 i=0; i<Lev->Entities.Num(); i++ )
-		Used.AddUnique( Lev->Entities[i]->Script );
-	for( Int32 i=0; i<Used.Num(); i++ )
+	Array<FScript*> Used;
+	for( Int32 i=0; i<Lev->Entities.size(); i++ )
+		Used.addUnique( Lev->Entities[i]->Script );
+	for( Int32 i=0; i<Used.size(); i++ )
 		ScriptCombo->AddItem( Used[i]->GetName(), Used[i] );
 	ScriptCombo->AlphabetSort();
 
@@ -97,7 +97,7 @@ void WWatchListDialog::CountRefs( CSerializer& S )
 	// changed during playing.
 
 	Bool bNeedRebuild = false;
-	for( Int32 i=0; i<EntityCombo->Items.Num(); i++ )
+	for( Int32 i=0; i<EntityCombo->Items.size(); i++ )
 	{
 		FEntity* After = (FEntity*)EntityCombo->Items[i].Data;
 		Serialize( S, After );
@@ -143,16 +143,16 @@ void WWatchListDialog::OnPaint( CGUIRenderBase* Render )
 	);
 
 	// Render items.
-	if( Watches.Num() > 0 )
+	if( Watches.size() > 0 )
 	{
 		Int32 NumVis	= YSize / 17;
-		Int32	Offset	= Round((Float)(Watches.Num()-NumVis) * ScrollBar->Value / 100.f);
+		Int32	Offset	= Round((Float)(Watches.size()-NumVis) * ScrollBar->Value / 100.f);
 		
-		Offset	= Clamp( Offset, 0, Watches.Num()-1 );
-		if( NumVis > Watches.Num() )	
+		Offset	= Clamp( Offset, 0, Watches.size()-1 );
+		if( NumVis > Watches.size() )	
 			ScrollBar->Value	= 0;
 
-		for( Int32 i=Offset, j=0; i<Watches.Num(); i++, j++ )
+		for( Int32 i=Offset, j=0; i<Watches.size(); i++, j++ )
 		{
 			TWatch&	W	= Watches[i];
 
@@ -264,43 +264,43 @@ void WWatchListDialog::OnMouseScroll( Int32 Delta )
 //
 void WWatchListDialog::UpdateWatches()
 {
-	Watches.Empty();
+	Watches.empty();
 	if( Entity )
 	{
 		// Add properties being base.
 		for( CClass* C = Entity->Base->GetClass(); C; C = C->Super )
 		{
-			for( Int32 i=0; i<C->Properties.Num(); i++ )
+			for( Int32 i=0; i<C->Properties.size(); i++ )
 			{
 				CProperty* P = C->Properties[i];
 				if( P->ArrayDim == 1 )
 					if( !PublicOnlyCheck->bChecked || (P->Flags & PROP_Editable) )
-						Watches.Push(TWatch( P->Name, P, ((UInt8*)Entity->Base)+P->Offset ));
+						Watches.push(TWatch( P->Name, P, ((UInt8*)Entity->Base)+P->Offset ));
 			}
 		}
 
 		// Add properties being InstanceBuffer.
 		if( Entity->Script->IsScriptable() )
-			for( Int32 i=0; i<Entity->Script->Properties.Num(); i++ )
+			for( Int32 i=0; i<Entity->Script->Properties.size(); i++ )
 			{
 				CProperty* P = Entity->Script->Properties[i];
 				if( P->ArrayDim == 1 )
 					if( !PublicOnlyCheck->bChecked || (P->Flags & PROP_Editable) )
-						Watches.Push(TWatch( P->Name, P, &Entity->InstanceBuffer->Data[P->Offset] ));
+						Watches.push(TWatch( P->Name, P, &Entity->InstanceBuffer->Data[P->Offset] ));
 			}
 
 		// Add properties being extra components.
-		for( Int32 e=0; e<Entity->Components.Num(); e++ )
+		for( Int32 e=0; e<Entity->Components.size(); e++ )
 		{
 			FExtraComponent* Extra	= Entity->Components[e];
 			for( CClass* C=Extra->GetClass(); C; C = C->Super )
 			{
-				for( Int32 i=0; i<C->Properties.Num(); i++ )
+				for( Int32 i=0; i<C->Properties.size(); i++ )
 				{
 					CProperty*	P	= C->Properties[i];
 					if( P->ArrayDim == 1 )
 						if( !PublicOnlyCheck->bChecked || (P->Flags & PROP_Editable) )
-							Watches.Push(TWatch( String::Format( L"$%s.%s", *Extra->GetName(), *P->Name ), P, ((UInt8*)Extra)+P->Offset ));
+							Watches.push(TWatch( String::Format( L"$%s.%s", *Extra->GetName(), *P->Name ), P, ((UInt8*)Extra)+P->Offset ));
 				}
 			}
 		}
@@ -337,7 +337,7 @@ void WWatchListDialog::ComboScriptChange( WWidget* Sender )
 
 	// Update list of entities being this script.
 	FLevel* Lev = Page->PlayLevel;
-	for( Int32 i=0; i<Lev->Entities.Num(); i++ )
+	for( Int32 i=0; i<Lev->Entities.size(); i++ )
 		if( Lev->Entities[i]->Script == Script )
 			EntityCombo->AddItem( Lev->Entities[i]->GetName(), Lev->Entities[i] );
 	EntityCombo->AlphabetSort();

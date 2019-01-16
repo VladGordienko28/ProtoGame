@@ -100,7 +100,7 @@ void WWidget::SetOwner( WContainer* InOwner )
 {
 	if( Owner != nullptr )
 	{
-		Owner->Children.RemoveUnique( this );
+		Owner->Children.removeUnique( this );
 		Owner->ShuffleChildren();
 		Owner->AlignChildren();
 	}
@@ -108,7 +108,7 @@ void WWidget::SetOwner( WContainer* InOwner )
 	Owner = InOwner;
 	if( InOwner )
 	{
-		Owner->Children.Push( this );
+		Owner->Children.push( this );
 		Owner->ShuffleChildren();
 		Owner->AlignChildren();
 	}
@@ -368,7 +368,7 @@ WContainer::~WContainer()
 {
 	// Kill children by children this way,
 	// since they remove self itself.
-	while( Children.Num() > 0 )
+	while( Children.size() > 0 )
 		delete Children[0];
 }
 
@@ -379,7 +379,7 @@ WContainer::~WContainer()
 //
 WWidget* WContainer::GetWidgetAt( TPoint P ) const
 {
-	for( Int32 i=Children.Num()-1; i >= 0; i-- )
+	for( Int32 i=Children.size()-1; i >= 0; i-- )
 		if	( 
 				Children[i]->bEnabled && 
 				Children[i]->bVisible && 
@@ -397,7 +397,7 @@ WWidget* WContainer::GetWidgetAt( TPoint P ) const
 //
 Bool WContainer::IsChild( WWidget* Widget ) const
 {
-	return Children.FindItem( Widget ) != -1;
+	return Children.find( Widget ) != -1;
 }
 
 
@@ -410,7 +410,7 @@ void WContainer::WidgetProc( EWidgetProcEvent Event, TWidProcParms Parms )
 	{
 		case WPE_Paint:
 			WWidget::WidgetProc( Event, Parms );
-			for( Int32 i=0; i<Children.Num(); i++ )
+			for( Int32 i=0; i<Children.size(); i++ )
 				if( Children[i]->bVisible )
 					Children[i]->WidgetProc( Event, Parms );
 			break;
@@ -464,7 +464,7 @@ void WContainer::WidgetProc( EWidgetProcEvent Event, TWidProcParms Parms )
 
 		case WPE_Resize:
 			AlignChildren();
-			for( Int32 i=0; i<Children.Num(); i++ )
+			for( Int32 i=0; i<Children.size(); i++ )
 				Children[i]->WidgetProc( Event, Parms );
 
 			WWidget::WidgetProc( Event, Parms );
@@ -487,7 +487,7 @@ void WContainer::AlignChildren()
 			MaxY	= Size.Height-Padding.Bottom;
 
 	// Top widgets.
-	for( Int32 i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.size(); i++ )
 		if( Children[i]->Align == AL_Top )
 		{
 			WWidget* W	= Children[i];
@@ -502,7 +502,7 @@ void WContainer::AlignChildren()
 		}
 
 	// Bottom.
-	for( Int32 i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.size(); i++ )
 		if( Children[i]->Align == AL_Bottom )
 		{
 			WWidget* W	= Children[i];
@@ -518,7 +518,7 @@ void WContainer::AlignChildren()
 
 		
 	// Left widgets.
-	for( Int32 i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.size(); i++ )
 		if( Children[i]->Align == AL_Left )
 		{
 			WWidget* W	= Children[i];
@@ -533,7 +533,7 @@ void WContainer::AlignChildren()
 		}
 		
 	// Right widgets.
-	for( Int32 i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.size(); i++ )
 		if( Children[i]->Align == AL_Right )
 		{
 			WWidget* W	= Children[i];
@@ -548,7 +548,7 @@ void WContainer::AlignChildren()
 		}
 
 	// Client widget, just first one.
-	for( Int32 i=0; i<Children.Num(); i++ )
+	for( Int32 i=0; i<Children.size(); i++ )
 		if( Children[i]->Align == AL_Client )
 		{
 			WWidget* W	= Children[i];
@@ -577,18 +577,18 @@ void WContainer::AlignChildren()
 //
 void WContainer::ShuffleChildren()
 {
-	TArray<WWidget*> Stored = Children;
-	Children.Empty();
+	Array<WWidget*> Stored = Children;
+	Children.empty();
 
-	for( Int32 i=0; i<Stored.Num(); i++ )
+	for( Int32 i=0; i<Stored.size(); i++ )
 		if( !Stored[i]->bStayOnTop )
-			Children.Push( Stored[i] );
+			Children.push( Stored[i] );
 
-	for( Int32 i=0; i<Stored.Num(); i++ )
+	for( Int32 i=0; i<Stored.size(); i++ )
 		if( Stored[i]->bStayOnTop )
-			Children.Push( Stored[i] );
+			Children.push( Stored[i] );
 
-	assert(Children.Num() == Stored.Num());
+	assert(Children.size() == Stored.size());
 }
 
 
@@ -760,13 +760,13 @@ void WWindow::WidgetProc( EWidgetProcEvent Event, TWidProcParms Parms )
 
 		// Make sure modal dialog are ALWAYS last in the children list.
 		// Modal should be at top of the top.
-		if( Modal != Children.Last() )
+		if( Modal != Children.last() )
 		{
-			Int32 iModal = Children.FindItem(Modal);
+			Int32 iModal = Children.find(Modal);
 			assert(iModal != -1);
-			while( iModal < Children.Num()-1 )
+			while( iModal < Children.size()-1 )
 			{
-				Children.Swap( iModal, iModal+1 );
+				Children.swap( iModal, iModal+1 );
 				iModal++;
 			}
 		}
@@ -841,7 +841,7 @@ void WWindow::WidgetProc( EWidgetProcEvent Event, TWidProcParms Parms )
 				break;
 	
 			case WPE_Paint:
-				for( Int32 i=0; i<Children.Num(); i++ )
+				for( Int32 i=0; i<Children.size(); i++ )
 					if( Children[i]->bVisible )
 					{
 						Parms.Render->SetBrightness( Children[i] == Modal ? 1.f : 0.5f );

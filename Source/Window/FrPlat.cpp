@@ -157,9 +157,9 @@ TTimeOfDay CWinPlatform::GetTimeOfDay()
 //
 // Find files in specified directory with wildcard.
 //
-TArray<String> CWinPlatform::FindFiles( String Directory, String Wildcard )
+Array<String> CWinPlatform::FindFiles( String Directory, String Wildcard )
 {
-	TArray<String> Result;
+	Array<String> Result;
 	WIN32_FIND_DATA FindData;
 
 	HANDLE hFind = FindFirstFile( *String::Format(L"%s\\%s", *Directory, *Wildcard), &FindData );
@@ -167,7 +167,7 @@ TArray<String> CWinPlatform::FindFiles( String Directory, String Wildcard )
 	{
 		do
 		{
-			Result.Push(String::Format(L"%s\\%s", *Directory, FindData.cFileName));
+			Result.push(String::Format(L"%s\\%s", *Directory, FindData.cFileName));
 
 		} while( FindNextFile(hFind, &FindData) );
 
