@@ -636,7 +636,7 @@ template<class E> inline CTypeInfo _Cpp2FluType( E* Value )
 {
 	Char TypeName[64];
 	SizeT UnusedSize;
-	mbstowcs_s( &UnusedSize, TypeName, arr_len(TypeName), typeid(E).name(), arr_len(TypeName) );
+	mbstowcs_s( &UnusedSize, TypeName, arraySize(TypeName), typeid(E).name(), arraySize(TypeName) );
 	if( String::Copy(TypeName, 0, 5) == L"enum " )
 	{
 		// This is enum.

@@ -33,12 +33,12 @@ WHelloPage::WHelloPage( WContainer* InOwner, WWindow* InRoot )
 	OpenLink->SetSize( WWindow::Font1->TextWidth(*OpenLink->Caption), WWindow::Font1->Height );
 
 	// Links to recent projects.
-	for( Int32 i=0; i<arr_len(Recent); i++ )
+	for( Int32 i=0; i<arraySize(Recent); i++ )
 		RecentFiles[i]	= GEditor->Config->ReadString( L"Editor", L"Recent", *String::Format(L"Recent[%i]", i), L"" );
 
 	// Allocate links.
 	mem::zero( Recent, sizeof(Recent) );
-	for( Int32 i=0; i<arr_len(Recent); i++ )
+	for( Int32 i=0; i<arraySize(Recent); i++ )
 	{
 		if( !RecentFiles[i] )
 			break;
@@ -121,7 +121,7 @@ void WHelloPage::OnPaint( CGUIRenderBase* Render )
 		GUI_COLOR_TEXT,
 		Root->Font1
 	);
-	for( Int32 i=0; i<arr_len(Recent); i++ )
+	for( Int32 i=0; i<arraySize(Recent); i++ )
 		if( Recent[i] )
 			Recent[i]->SetLocation
 			(
@@ -174,7 +174,7 @@ void WHelloPage::LinkOpenClick( WWidget* Sender )
 void WHelloPage::LinkRecentClick( WWidget* Sender )
 {
 	String FileName;
-	for( Int32 i=0; i<arr_len(Recent); i++ )
+	for( Int32 i=0; i<arraySize(Recent); i++ )
 		if( Sender == Recent[i] )
 		{
 			FileName	= RecentFiles[i];

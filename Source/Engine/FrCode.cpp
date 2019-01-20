@@ -475,7 +475,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				// Get an r-value member.
 				UInt8 iReg = ReadByte();
 				UInt8 Offset = ReadByte();
-				mem::copy( &Regs[iReg].Value[0], &Regs[iReg].Value[Offset], arr_len(TRegister::Value)-Offset );
+				mem::copy( &Regs[iReg].Value[0], &Regs[iReg].Value[Offset], arraySize(Regs[iReg].Value)-Offset );
 				break;
 			}
 			case CODE_DynPop:
@@ -1207,7 +1207,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				// Call script method.
 				CFunction* Func = Context->Script->Methods[ReadByte()];
 				void* OutParms[16];
-				assert(Func->ParmsCount<=arr_len(OutParms));
+				assert(Func->ParmsCount<=arraySize(OutParms));
 				CFrame NewFrame( Context, Func, Depth+1, this );
 
 				for( Int32 i=0; i<Func->ParmsCount; i++ )
@@ -1267,7 +1267,7 @@ void CFrame::ProcessCode( TRegister* Result )
 
 				CFunction * Func = Delegate.Script->Methods[Delegate.iMethod];
 				void* OutParms[16];
-				assert(Func->ParmsCount<=arr_len(OutParms));
+				assert(Func->ParmsCount<=arraySize(OutParms));
 				CFrame NewFrame( Context, Func, Depth+1, this );
 
 				for( Int32 i=0; i<Func->ParmsCount; i++ )
@@ -1388,7 +1388,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				FScript* StaticScript = ReadScript();
 				CFunction* Func = StaticScript->StaticFunctions[ReadByte()];
 				void* OutParms[16];
-				assert(Func->ParmsCount<=arr_len(OutParms));
+				assert(Func->ParmsCount<=arraySize(OutParms));
 				CFrame NewFrame( StaticScript, Func, Depth+1, this );				
 
 				for( Int32 i=0; i<Func->ParmsCount; i++ )

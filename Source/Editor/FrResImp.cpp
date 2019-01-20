@@ -381,7 +381,7 @@ FBitmap* ImportPNG( String Filename, String ResName )
 
 	// Load from file.
 	char file_name[1024];
-	wcstombs( file_name, *Filename, arr_len(file_name) );	// It's not good.
+	wcstombs( file_name, *Filename, arraySize(file_name) );	// It's not good.
 	PngError = lodepng_decode32_file( &PngImage, &PngWidth, &PngHeight, file_name );
 	if( PngError )
 	{

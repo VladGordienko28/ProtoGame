@@ -20,6 +20,12 @@
       <Filter>Containers</Filter>
     </ClInclude>
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="Profiler.h">
+      <Filter>Profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="Stack.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp" />
@@ -31,6 +37,9 @@
     </ClCompile>
     <ClCompile Include="Array.cpp">
       <Filter>Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Profiler.cpp">
+      <Filter>Profiler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +54,9 @@
     </Filter>
     <Filter Include="Containers">
       <UniqueIdentifier>{be39dcfe-f0e7-4628-8a53-8f7f435804af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Profiler">
+      <UniqueIdentifier>{a7f0b409-6b37-4060-90a6-a719c6b58afc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

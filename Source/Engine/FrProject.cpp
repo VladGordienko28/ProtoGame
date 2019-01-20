@@ -228,6 +228,7 @@ FLevel* CProject::DuplicateLevel( FLevel* Source )
 	Result->Soundtrack		= Source->Soundtrack;
 	Result->Camera			= Source->Camera;
 	Result->AmbientLight	= Source->AmbientLight;
+	Result->BlurIntensity	= Source->BlurIntensity;
 	mem::copy( Result->Effect, Source->Effect, sizeof(FLevel::Effect) );
 
 	warn( L"World: Level \"%s\" duplicated", *Source->GetName() );

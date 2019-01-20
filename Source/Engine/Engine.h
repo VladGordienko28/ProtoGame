@@ -83,6 +83,10 @@ using namespace flu; //todo: remove this;
 #include "Core\FrCorUtils.h"
 #include "Core\FrNetBas.h"
 
+// Profiling
+#include "Chart/EngineProfiler.h"
+#include "Chart/EngineChart.h"
+
 #include "FrCom.h"
 #include "FrBlock.h"
 #include "FrRes.h"

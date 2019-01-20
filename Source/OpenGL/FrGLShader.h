@@ -194,9 +194,6 @@ private:
 };
 
 
-// Not implemented properly.
-#if 0
-
 /*-----------------------------------------------------------------------------
 	CGLHorizBlurShader.
 -----------------------------------------------------------------------------*/
@@ -219,11 +216,16 @@ public:
 	{
 		SetValue1f( idTargetWidth, NewWidth );
 	}
+	void SetIntensity( Float Intensity )
+	{
+		SetValue1f( idIntensity, Intensity );
+	}
 
 private:
 	// Uniform variables.
 	Int32 idTexture;
 	Int32 idTargetWidth;
+	Int32 idIntensity;
 };
 
 
@@ -249,13 +251,17 @@ public:
 	{
 		SetValue1f( idTargetHeight, NewHeight );
 	}
+	void SetIntensity( Float Intensity )
+	{
+		SetValue1f( idIntensity, Intensity );
+	}
 
 private:
 	// Uniform variables.
 	Int32 idTexture;
 	Int32 idTargetHeight;
+	Int32 idIntensity;
 };
-#endif
 
 /*-----------------------------------------------------------------------------
 	The End.

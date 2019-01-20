@@ -14,34 +14,58 @@
 //
 void CEditor::Tick( Float Delta )
 {
+	profile_zone( EProfilerGroup::General, TotalTime );
+	profile_counter( EProfilerGroup::Memory, Allocated_Kb, mem::stats().totalAllocatedBytes / 1024.0 );
+
 	// Get active page.
 	WEditorPage* Active = (WEditorPage*)EditorPages->GetActivePage();
 	
-	// Tick active page.
-	if( Active )
-		Active->TickPage( Delta );
+	{
+		profile_zone( EProfilerGroup::General, TickTime );
+
+		// Tick active page.
+		if( Active )
+			Active->TickPage( Delta );
+
+		// Update audio.
+		if( Active && Active->PageType == PAGE_Play )
+			GAudio->Tick( Delta, ((WPlayPage*)Active)->PlayLevel );
+		else
+			GAudio->Tick( Delta, nullptr );
+	}
 
 	// Render the editor.
-	CCanvas* Canvas	= GRender->Lock();
 	{
-		// Render page.
-		if( Active )
-			Active->RenderPageContent( Canvas );
+		profile_zone( EProfilerGroup::General, RenderTime )
 
-		// Render editor GUI.
-		GUIRender->BeginPaint( Canvas );
+		CCanvas* Canvas	= GRender->Lock();
 		{
-			GUIWindow->WidgetProc( WPE_Paint, GUIRender );
-		}
-		GUIRender->EndPaint();
-	}
-	GRender->Unlock();
+			// Render page.
+			if( Active )
+			{
+				profile_zone( EProfilerGroup::General, RenderPage );
+				Active->RenderPageContent( Canvas );
+			}
 
-	// Update audio.
-	if( Active && Active->PageType == PAGE_Play )
-		GAudio->Tick( Delta, ((WPlayPage*)Active)->PlayLevel );
-	else
-		GAudio->Tick( Delta, nullptr );
+			// Render editor GUI.
+			{
+				profile_zone( EProfilerGroup::General, RenderGUI );
+
+				GUIRender->BeginPaint( Canvas );
+				{
+					GUIWindow->WidgetProc( WPE_Paint, GUIRender );
+				}
+				GUIRender->EndPaint();
+			}
+
+			// update profiler
+			{
+				profile_zone( EProfilerGroup::General, RenderChart );
+				m_engineChart.render( Canvas, WWindow::Font1 );
+			}
+		}
+		GRender->Unlock();
+	}
 }
 
 

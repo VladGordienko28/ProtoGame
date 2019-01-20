@@ -5,26 +5,9 @@
 -----------------------------------------------------------------------------*/
 
 //
-// Debug macro.
-//
-#define benchmark_begin(op) \
-{\
-	Char* BenchOp = L#op; \
-	DWord InitTime = GPlat->Cycles();\
-
-#define benchmark_end \
-	log( L"Operation \"%s\" take %d cycles", BenchOp, GPlat->Cycles()-InitTime ); \
-}\
-
-
-//
 // Various macro.
 //
-#define align(value, bound) ((value)+(bound)-1)&(~((bound)-1))
 #define freeandnil(Obj) { if( Obj ){ delete Obj; Obj = nullptr; } }
-#define arr_len(arr) (sizeof(arr)/sizeof(arr[0]))
-
-
 
 
 /*-----------------------------------------------------------------------------

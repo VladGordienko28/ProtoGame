@@ -579,7 +579,7 @@ TDataBlock::TDataBlock( Int32 InSize )
 {
 	assert(GIsEditor);
 
-	Data		= mem::alloc(align(InSize, 16));
+	Data		= mem::alloc(alignValue(InSize, 16));
 	Flags		= BLOCK_Loaded;
 	Size		= InSize;
 	Cost		= 0.0;

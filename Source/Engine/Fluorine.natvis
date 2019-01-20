@@ -27,14 +27,14 @@
     </Expand>  
   </Type>
   
-  <!-- Fluorine TArray -->
-  <Type Name="TArray&lt;*&gt;">
-     <DisplayString>{{ Count={Count} }}</DisplayString>  
+  <!-- Fluorine Array -->
+  <Type Name="flu::Array&lt;*&gt;">
+     <DisplayString>{{ size={m_size} }}</DisplayString>  
      <Expand>
-      <Item Name="[Count]"> Count </Item>
+      <Item Name="[size]"> m_size </Item>
       <ArrayItems> 
-        <Size> Count </Size> 
-        <ValuePointer> ($T1*)Data </ValuePointer> 
+        <Size> m_size </Size> 
+        <ValuePointer> ($T1*)m_data </ValuePointer> 
       </ArrayItems>  
      </Expand>  
   </Type> 

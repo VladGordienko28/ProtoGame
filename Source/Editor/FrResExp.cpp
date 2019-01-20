@@ -150,7 +150,7 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 
 		// Save to file.
 		char file_name[1024];
-		wcstombs( file_name, *(Directory+L"\\"+Bitmap->FileName), arr_len(file_name) );	// It's not good.
+		wcstombs( file_name, *(Directory+L"\\"+Bitmap->FileName), arraySize(file_name) );	// It's not good.
 		
 		PngError = lodepng_encode32_file
 		( 

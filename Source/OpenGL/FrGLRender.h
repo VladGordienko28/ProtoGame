@@ -28,9 +28,12 @@ public:
 	// Shaders.
 	CGLFluShader		FluShader;
 	CGLFinalShader		FinalShader;
+	CGLHorizBlurShader	HorizBlurShader;
+	CGLVertBlurShader	VertBlurShader;
 
 	// FBOs.
 	class CGLFbo*		MasterFBO;
+	class CGLFbo*		BlurFBO;
 
 	// COpenGLCanvas interface.
 	COpenGLCanvas( COpenGLRender* InRender );

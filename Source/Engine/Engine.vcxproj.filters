@@ -4,6 +4,9 @@
     <Filter Include="Core">
       <UniqueIdentifier>{36e49054-5c9c-4d3c-887e-eb078eb70e82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Chart">
+      <UniqueIdentifier>{5e664a5c-cced-49ac-9938-55079df1ea8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\FrBase.h">
@@ -83,6 +86,12 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="FrDbgDraw.h" />
+    <ClInclude Include="Chart\EngineChart.h">
+      <Filter>Chart</Filter>
+    </ClInclude>
+    <ClInclude Include="Chart\EngineProfiler.h">
+      <Filter>Chart</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\FrClass.cpp">
@@ -139,6 +148,12 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="FrDbgDraw.cpp" />
+    <ClCompile Include="Chart\EngineProfiler.cpp">
+      <Filter>Chart</Filter>
+    </ClCompile>
+    <ClCompile Include="Chart\EngineChart.cpp">
+      <Filter>Chart</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Fluorine.natvis" />

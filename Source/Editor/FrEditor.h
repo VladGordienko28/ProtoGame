@@ -45,6 +45,8 @@ public:
 	WTaskDialog*			TaskDialog;
 	WGameBuilderDialog*		GameBuilder;
 
+	EngineChart m_engineChart;
+
 	// Editor functions.
 	void Tick( Float Delta );
 	WEditorPage* OpenPageWith( FResource* InResource );

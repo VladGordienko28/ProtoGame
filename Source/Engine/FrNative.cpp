@@ -293,7 +293,7 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 			if( This->Base->IsA(FPhysicComponent::MetaClass) )
 			{
 				FPhysicComponent* Phys = (FPhysicComponent*)This->Base;
-				for( Int32 i=0; i<arr_len(FPhysicComponent::Touched); i++ )
+				for( Int32 i=0; i<arraySize(Phys->Touched); i++ )
 					if( Phys->Touched[i] )
 						Foreach.Collection.push(Phys->Touched[i]);
 			}

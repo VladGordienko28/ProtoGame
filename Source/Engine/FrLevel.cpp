@@ -24,7 +24,8 @@ FLevel::FLevel()
 		CollHash( nullptr ),
 		GFXManager( nullptr ),
 		Navigator( nullptr ),
-		AmbientLight( COLOR_Black )
+		AmbientLight( COLOR_Black ),
+		BlurIntensity( 0.f )
 {
 	Effect[0] = Effect[1] = Effect[2] = 1.f;
 	Effect[3] = Effect[4] = Effect[5] = 1.f;
@@ -78,6 +79,7 @@ void FLevel::SerializeThis( CSerializer& S )
 	Serialize( S, Soundtrack );
 	Serialize( S, Navigator );
 	Serialize( S, AmbientLight );
+	Serialize( S, BlurIntensity );
 	S.SerializeData( Effect, sizeof(Effect) );
 
 	// Warning: Don't serialize level databases of
@@ -335,15 +337,24 @@ void FLevel::Tick( Float Delta )
 	if( bIsPlaying && !bIsPause )
 	{
 		// Normally play level.
-		for( Int32 i=0; i<Entities.size(); i++ )
-			if( Entities[i]->Thread )
-				Entities[i]->Thread->Tick( Delta );
+		{
+			profile_zone( EProfilerGroup::Entity, ExecuteThread );
+			for( Int32 i=0; i<Entities.size(); i++ )
+				if( Entities[i]->Thread )
+					Entities[i]->Thread->Tick( Delta );
+		}
 
-		for( Int32 i=0; i<TickObjects.size(); i++ )
-			TickObjects[i]->PreTick( Delta );
+		{
+			profile_zone( EProfilerGroup::Entity, PreTick );
+			for( Int32 i=0; i<TickObjects.size(); i++ )
+				TickObjects[i]->PreTick( Delta );
+		}
 
-		for( Int32 i=0; i<TickObjects.size(); i++ )
-			TickObjects[i]->Tick( Delta );
+		{
+			profile_zone( EProfilerGroup::Entity, Tick );
+			for( Int32 i=0; i<TickObjects.size(); i++ )
+				TickObjects[i]->Tick( Delta );
+		}
 
 		// Update GFX interpolation.
 		GFXManager->Tick( Delta );
@@ -351,18 +362,22 @@ void FLevel::Tick( Float Delta )
 	else
 	{
 		// We not play, just edit level or in pause.
+		profile_zone( EProfilerGroup::Entity, TickNonPlay );
 		for( Int32 i=0; i<TickObjects.size(); i++ )
 			TickObjects[i]->TickNonPlay( Delta );
 	}
 
 	// Destroy all marked entities.
-	for( Int32 iEntity=0; iEntity<Entities.size(); )
-		if( Entities[iEntity]->Base->bDestroyed )
-		{
-			ReleaseEntity( iEntity );
-		}
-		else
-			iEntity++;
+	{
+		profile_zone( EProfilerGroup::Entity, Cleanup );
+		for( Int32 iEntity=0; iEntity<Entities.size(); )
+			if( Entities[iEntity]->Base->bDestroyed )
+			{
+				ReleaseEntity( iEntity );
+			}
+			else
+				iEntity++;
+	}
 
 	// Update debug stuff.
 	CDebugDrawHelper::Instance().Tick(Delta);
@@ -903,6 +918,7 @@ REGISTER_CLASS_CPP( FLevel, FResource, CLASS_Sterile )
 	ADD_PROPERTY( Camera, PROP_Editable );
 	ADD_PROPERTY( Effect, PROP_Editable );
 	ADD_PROPERTY( AmbientLight, PROP_Editable );
+	ADD_PROPERTY( BlurIntensity, PROP_Editable );
 
 	// Engine functions.
 	DECLARE_EX_FUNCTION( DebugLine, TYPE_None, ARG(a, TYPE_Vector, ARG(b, TYPE_Vector, ARG(color, TYPE_Color, ARG(time, TYPE_Float, END)))));

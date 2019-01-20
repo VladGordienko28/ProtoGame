@@ -618,7 +618,7 @@ void FPhysicComponent::SerializeThis( CSerializer& S )
 	Serialize( S, Floor );
 	Serialize( S, Zone );
 
-	for( Int32 i=0; i<arr_len(Touched); i++ )
+	for( Int32 i=0; i<arraySize(Touched); i++ )
 		Serialize( S, Touched[i] );
 }
 
@@ -653,7 +653,7 @@ void FPhysicComponent::nativeIsTouching( CFrame& Frame )
 	Bool		Result	= false;
 
 	if( Other )
-		for( Int32 i=0; i<arr_len(Touched); i++ )
+		for( Int32 i=0; i<arraySize(Touched); i++ )
 			if( Touched[i] == Other )
 			{
 				Result	= true;

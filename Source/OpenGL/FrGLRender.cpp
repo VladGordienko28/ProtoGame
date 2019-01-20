@@ -64,6 +64,9 @@ void COpenGLRender::Resize( Int32 NewWidth, Int32 NewHeight )
 //
 CCanvas* COpenGLRender::Lock()
 {
+	// not supported yet
+	profile_counter( EProfilerGroup::Memory, GPU_Allocated_Kb, 0.0 );
+
 	// Setup OpenGL.
 	glClear( GL_COLOR_BUFFER_BIT );	
 	
@@ -82,6 +85,7 @@ CCanvas* COpenGLRender::Lock()
 //
 void COpenGLRender::Unlock()
 {
+	profile_zone( EProfilerGroup::Render, SwapBuffers );
 	SwapBuffers( hDc );
 }
 
@@ -158,6 +162,8 @@ COpenGLCanvas::COpenGLCanvas( COpenGLRender* InRender )
 	// Load shaders.
 	FluShader.Init( L"flu_shader" );
 	FinalShader.Init( L"final" );
+	HorizBlurShader.Init( L"horiz_blur" );
+	VertBlurShader.Init( L"vert_blur" );
 
 	// Set default OpenGL state.
 	glActiveTexture( GL_TEXTURE0 );
@@ -203,6 +209,7 @@ COpenGLCanvas::COpenGLCanvas( COpenGLRender* InRender )
 
 	// Initialize FBOs.
 	MasterFBO = new CGLFbo;
+	BlurFBO = new CGLFbo;
 
 	// Notify.
 	info( L"OpenGL: OpenGL canvas initialized" );
@@ -270,6 +277,7 @@ COpenGLCanvas::~COpenGLCanvas()
 {
 	// Destroy FBOs.
 	freeandnil(MasterFBO);
+	freeandnil(BlurFBO);
 }
 
 
@@ -365,6 +373,9 @@ void COpenGLCanvas::DrawRect( const TRenderRect& Rect )
 		SetStipple( Rect.Flags );
 		if( Rect.Flags & POLY_Ghost )
 			SetBlend( BLEND_Translucent );
+
+		if( Rect.Flags & POLY_AlphaGhost )
+			SetBlend( BLEND_Alpha );
 
 		glBegin( GL_POLYGON );
 		{
@@ -469,6 +480,8 @@ void COpenGLCanvas::DrawList( const TRenderList& List )
 		SetBitmap( nullptr );
 		if( List.Flags & POLY_Ghost )
 			SetBlend( BLEND_Translucent );
+		if( List.Flags & POLY_AlphaGhost )
+			SetBlend( BLEND_Alpha );
 
 		// Set color.
 		if( List.Colors )
@@ -493,6 +506,8 @@ void COpenGLCanvas::DrawList( const TRenderList& List )
 		SetBitmap( List.Texture ? As<FBitmap>(List.Texture) : FBitmap::NullBitmap(), List.Flags & POLY_Unlit );
 		if( List.Flags & POLY_Ghost )
 			SetBlend( BLEND_Brighten );
+		if( List.Flags & POLY_AlphaGhost )
+			SetBlend( BLEND_Alpha );
 
 		// Set color.
 		if( List.Colors )
@@ -534,6 +549,9 @@ void COpenGLCanvas::DrawPoly( const TRenderPoly& Poly )
 		if( Poly.Flags & POLY_Ghost )
 			SetBlend( BLEND_Translucent );
 
+		if( Poly.Flags & POLY_AlphaGhost )
+			SetBlend( BLEND_Alpha );
+
 		glBegin( GL_POLYGON );
 		{
 			for( Int32 i=0; i<Poly.NumVerts; i++ )
@@ -568,7 +586,7 @@ void COpenGLCanvas::DrawPoly( const TRenderPoly& Poly )
 				SetBlend(Layer->BlendMode);
 				SetColor(Layer->OverlayColor * Poly.Color);
 
-				TVector FinalTexCoords[arr_len(TRenderPoly::TexCoords)];
+				TVector FinalTexCoords[16];
 				Layer->ApplyTransform( View, Poly.TexCoords, FinalTexCoords, Poly.NumVerts );
 
 				glBegin( GL_POLYGON );
@@ -1348,6 +1366,8 @@ void drawSafeFrame( COpenGLCanvas* Canvas, TCamera& Observer )
 //
 void drawSkyZone( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& Parent )
 {
+	profile_zone( EProfilerGroup::Render, RenderSky );
+
 	// Prepare.
 	FSkyComponent* Sky = Level->Sky;
 	if( !Sky )
@@ -1836,14 +1856,50 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 		Canvas->PopTransform();
 	}
 
-	// Turn off scene rendering stuff.
-	Canvas->SetClip( CLIP_NONE );
-	Canvas->MasterFBO->Unbind();
-
-	// Apply Post-Processing.
+	// post-processing
 	{
+		profile_zone( EProfilerGroup::Render, PostFX );
+
+		// Turn off scene rendering stuff.
+		Canvas->SetClip( CLIP_NONE );
+		Canvas->SetBlend( BLEND_Regular );
 		glPushMatrix();
 		glLoadIdentity();
+
+		//Canvas->MasterFBO->Unbind();
+
+		// blur stage
+		if( Level->BlurIntensity > EPSILON && Level->RndFlags & RND_Effects )
+		{
+			// apply horiz blur
+			Canvas->BlurFBO->Bind( Canvas->ScreenWidth, Canvas->ScreenHeight );
+			Canvas->HorizBlurShader.SetTargetWidth( Canvas->ScreenWidth );
+			Canvas->HorizBlurShader.SetIntensity( Level->BlurIntensity );
+
+			glBindTexture( GL_TEXTURE_2D, Canvas->MasterFBO->GetTextureId() );
+
+			Canvas->EnableShader(&Canvas->HorizBlurShader);
+			{
+				drawFullScreenRect();
+			}
+			Canvas->DisableShader();
+
+			// apply vert blur
+			Canvas->MasterFBO->Bind( Canvas->ScreenWidth, Canvas->ScreenHeight );
+			Canvas->VertBlurShader.SetTargetHeight( Canvas->ScreenHeight );
+			Canvas->VertBlurShader.SetIntensity( Level->BlurIntensity );
+
+			glBindTexture( GL_TEXTURE_2D, Canvas->BlurFBO->GetTextureId() );
+
+			Canvas->EnableShader(&Canvas->VertBlurShader);
+			{
+				drawFullScreenRect();
+			}
+			Canvas->DisableShader();
+		}
+
+		// color correction stage (final)
+		Canvas->MasterFBO->Unbind();
 
 		// Select master scene effect.
 		if( !(Level->RndFlags & RND_Effects) )
@@ -1960,7 +2016,7 @@ bool CompileShader( String FileName, GLenum ShaderType, GLuint& iShader )
 		glGetShaderInfoLog
 		(
 			iShader,
-			arr_len(cError),
+			arraySize(cError),
 			nullptr,
 			cError
 		);
@@ -2202,7 +2258,6 @@ bool CGLFinalShader::Init( String ShaderName )
 }
 
 
-#if 0
 /*-----------------------------------------------------------------------------
 	CGLHorizBlurShader implementation.
 -----------------------------------------------------------------------------*/
@@ -2234,6 +2289,7 @@ bool CGLHorizBlurShader::Init( String ShaderName )
 
 	// Only one bitmap supported.
 	idTargetWidth = RegisterUniform( "targetWidth" );
+	idIntensity = RegisterUniform( "intensity" );
 	idTexture = RegisterUniform( "texture" );
 	SetValue1i( idTexture, 0 );
 
@@ -2241,7 +2297,7 @@ bool CGLHorizBlurShader::Init( String ShaderName )
 	bEnabled = false;
 
 	// Notify.
-	trace( L"Rend: CGLHorizBlurShader initialized" );
+	debug( L"Rend: CGLHorizBlurShader initialized" );
 	return true;
 }
 
@@ -2277,6 +2333,7 @@ bool CGLVertBlurShader::Init( String ShaderName )
 
 	// Only one bitmap supported.
 	idTargetHeight = RegisterUniform( "targetHeight" );
+	idIntensity = RegisterUniform( "intensity" );
 	idTexture = RegisterUniform( "texture" );
 	SetValue1i( idTexture, 0 );
 
@@ -2284,10 +2341,9 @@ bool CGLVertBlurShader::Init( String ShaderName )
 	bEnabled = false;
 
 	// Notify.
-	trace( L"Rend: CGLVertBlurShader initialized" );
+	debug( L"Rend: CGLVertBlurShader initialized" );
 	return true;
 }
-#endif
 
 
 /*-----------------------------------------------------------------------------

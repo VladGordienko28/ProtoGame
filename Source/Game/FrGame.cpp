@@ -78,7 +78,7 @@ CGame::CGame()
 
 	// Exe-directory.
 	Char Directory[256];
-	_wgetcwd( Directory, arr_len(Directory) );
+	_wgetcwd( Directory, arraySize(Directory) );
 	GDirectory	= Directory;
 
 	// Parse command line.
@@ -298,9 +298,13 @@ void CGame::Init( HINSTANCE InhInstance )
 //
 void CGame::Tick( Float Delta )
 {
-	CCanvas* Canvas		= GRender->Lock();
+	profile_zone( EProfilerGroup::General, TotalTime );
+	profile_counter( EProfilerGroup::Memory, Allocated_Kb, mem::stats().totalAllocatedBytes / 1024.0 );
+
+	// Tick, things, which need tick.
 	{
-		// Tick, things, which need tick.
+		profile_zone( EProfilerGroup::General, TickTime );
+
 		if( Level )	
 		{
 			Level->Tick( Delta );
@@ -309,22 +313,36 @@ void CGame::Tick( Float Delta )
 
 		if( Project )
 			Project->BlockMan->Tick( Delta );
-
-		// Render level.
-		if( Level )
-			GRender->RenderLevel
-			(
-				Canvas,
-				Level,
-				0, 0,
-				WinWidth, WinHeight
-			);
-
-		// Render console.
-		if( Console->IsActive() )
-			Console->Render( Canvas );
 	}
-	GRender->Unlock();
+
+	// Render level.
+	{
+		profile_zone( EProfilerGroup::General, RenderTime );
+
+		CCanvas* Canvas		= GRender->Lock();
+		{
+
+			if( Level )
+				GRender->RenderLevel
+				(
+					Canvas,
+					Level,
+					0, 0,
+					WinWidth, WinHeight
+				);
+
+			// Render console.
+			if( Console->IsActive() )
+				Console->Render( Canvas );
+
+			// update profiler
+			{
+				profile_zone( EProfilerGroup::General, RenderChart );
+				m_engineChart.render( Canvas, CConsole::Font );
+			}
+		}
+		GRender->Unlock();
+	}
 
 	// Handle level's travel. Play page don't allow to
 	// travel, so just notify player about it.
@@ -440,6 +458,8 @@ void CGame::MainLoop()
 				GfpsCount	= 0;	
 			}
 
+			profile_begin_frame();
+
 			// Update the client.
 			Tick( (Float)DeltaTime );
 			
@@ -457,6 +477,8 @@ void CGame::MainLoop()
 				TranslateMessage( &Msg );
 				DispatchMessage( &Msg );
 			}
+
+			profile_end_frame();
 		} 
 
 	ExitLoop:;
@@ -494,6 +516,24 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 				GGame->GInput->OnKeyDown( (Int32)WParam );
 			if(  WParam==VK_ESCAPE && GGame->Project && GGame->Project->Info->bQuitByEsc )
 				SendMessage( GGame->hWnd, WM_CLOSE, 0, 0 );
+
+			if( WParam == KEY_Tilde )
+			{
+				if( GGame->m_engineChart.isEnabled() )
+				{
+					GGame->m_engineChart.disable();
+				}
+				else
+				{
+					GGame->m_engineChart.enable();
+				}
+			}
+
+			if( WParam >= KEY_0 && WParam <= KEY_9 && GGame->m_engineChart.isEnabled() )
+			{
+				GGame->m_engineChart.toggleGroup( WParam - KEY_0 );
+			}
+
 			break;
 		}
 		case WM_KEYUP:
@@ -1059,10 +1099,10 @@ void CGame::handleFatalMessage( const Char* message )
 {
 	Char buffer[4096] = {};
 
-	cstr::cat( buffer, arr_len(buffer), L"Fatal Error: \"" );
-	cstr::cat( buffer, arr_len(buffer), message );
-	cstr::cat( buffer, arr_len(buffer), L"\" in " );
-	cstr::cat( buffer, arr_len(buffer), flu::win::stackTrace( nullptr ) );
+	cstr::cat( buffer, arraySize(buffer), L"Fatal Error: \"" );
+	cstr::cat( buffer, arraySize(buffer), message );
+	cstr::cat( buffer, arraySize(buffer), L"\" in " );
+	cstr::cat( buffer, arraySize(buffer), flu::win::stackTrace( nullptr ) );
 
 
 	MessageBox( 0, buffer, L"Critical Error", MB_OK | MB_ICONERROR | MB_TASKMODAL );

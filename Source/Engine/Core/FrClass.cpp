@@ -604,7 +604,7 @@ String CProperty::GetAliasName() const
 	{
 		// Should be valid property.
 		Char Buffer[64] = {}, *Walk = Buffer;
-		assert(Name.Len() < arr_len(Buffer));
+		assert(Name.Len() < arraySize(Buffer));
 		Bool bBool = Name(0) == 'b';
 		Int32 i = (Int32)bBool;
 		Char PrevChar = '\0';
@@ -1490,7 +1490,7 @@ String CEnum::GetAliasOf( Int32 i )
 		// Regular enum name.
 		Int32 i = 0;
 		Char Buffer[64] = {}, *Walk = Buffer;
-		assert(SourceName.Len() < arr_len(Buffer));
+		assert(SourceName.Len() < arraySize(Buffer));
 		while( SourceName(i) != '_' )
 			i++;
 		i++;

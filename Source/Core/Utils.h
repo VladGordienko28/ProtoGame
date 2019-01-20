@@ -10,7 +10,7 @@ namespace flu
 		return (value + bound - 1) & ~(bound - 1);
 	}
 
-	template<class T, SizeT S> inline constexpr SizeT arraySize( const T(&)[S] )
+	template<class T, SizeT S> inline constexpr const SizeT arraySize( const T(&)[S] )
 	{
 		return S;
 	}

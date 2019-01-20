@@ -16,6 +16,7 @@
 #define POLY_Ghost				0x0004			// Half-Translucent poly.
 #define POLY_StippleI			0x0008			// Draw with pattern.
 #define POLY_StippleII			0x0010			// Draw with pattern.
+#define POLY_AlphaGhost			0x0020			// Alpha translucent poly.
 
 
 //

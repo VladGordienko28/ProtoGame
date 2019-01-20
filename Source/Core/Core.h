@@ -16,7 +16,10 @@
 // legacy include
 #include "FrSerial.h"
 
+#include "Stack.h"
 #include "Array.h"
+#include "Profiler.h"
+
 
 
 // remove this!

@@ -13,9 +13,9 @@
 // Script fields alignment bounds.
 //
 #if FLU_X64
-	#define SCRIPT_PROP_ALIGN	8
+	static const SizeT SCRIPT_PROP_ALIGN = 8;
 #elif FLU_X32
-	#define SCRIPT_PROP_ALIGN	4
+	static const SizeT SCRIPT_PROP_ALIGN = 4;
 #else 
 	#error Bad platform configuration
 #endif
@@ -4437,7 +4437,7 @@ Bool CCompiler::CompileVarDecl( Array<CProperty*>& Vars, SizeT& VarsSize, UInt32
 
 		// Add property to the list.
 		Vars.push( Property );
-		VarsSize = align( VarsSize + TypeInfo.TypeSize(), SCRIPT_PROP_ALIGN );
+		VarsSize = alignValue( VarsSize + TypeInfo.TypeSize(), SCRIPT_PROP_ALIGN );
 
 		// Not really good place for it, but its works well.
 		// Compile variable initialization, but for locals only.
@@ -4590,7 +4590,7 @@ void CCompiler::CompileFunctionDecl()
 			return;
 
 		Function->ResultVar	= new CProperty( ResType, KW_result, PROP_None, Function->FrameSize );
-		Function->FrameSize = align( Function->FrameSize + ResType.TypeSize(), SCRIPT_PROP_ALIGN );
+		Function->FrameSize = alignValue( Function->FrameSize + ResType.TypeSize(), SCRIPT_PROP_ALIGN );
 		Function->Flags		= FUNC_HasResult;
 		// Warning: Result not added to list of locals, now, since parameters
 		// should be before the result variable.
@@ -4625,7 +4625,7 @@ void CCompiler::CompileFunctionDecl()
 			// Allocate parameter.
 			CProperty*	Property	= new CProperty( ParamType, ParamName, ParmFlags, Function->FrameSize );
 			Function->Locals.push( Property );
-			Function->FrameSize = align( Function->FrameSize + ParamType.TypeSize(), SCRIPT_PROP_ALIGN );
+			Function->FrameSize = alignValue( Function->FrameSize + ParamType.TypeSize(), SCRIPT_PROP_ALIGN );
 			Function->ParmsCount++;
 
 			if( MatchSymbol( L"," ) )
@@ -4825,7 +4825,7 @@ void CCompiler::CompileDelegateDecl()
 void CCompiler::PushNest( ENestType InType )
 {
 	// Check for overflow.
-	if( NestTop >= arr_len(Nest) )
+	if( NestTop >= arraySize(Nest) )
 		Error( L"Nest level exceed maximum" );
 
 	// Reset the nest.
@@ -4886,7 +4886,7 @@ void CCompiler::ResetRegs()
 UInt8 CCompiler::GetReg()
 {
 	Int32 iAvail = -1;
-	for( Int32 i=0; i<arr_len(Regs); i++ )
+	for( Int32 i=0; i<arraySize(Regs); i++ )
 		if( Regs[i] == false )
 		{
 			iAvail = i;
@@ -4907,7 +4907,7 @@ UInt8 CCompiler::GetReg()
 //
 void CCompiler::FreeReg( UInt8 iReg )
 {
-	assert(iReg>=0 && iReg<arr_len(Regs));
+	assert(iReg>=0 && iReg<arraySize(Regs));
 	Regs[iReg] = false;
 }
 
@@ -5751,7 +5751,7 @@ void CCompiler::Error( const Char* Fmt, ... )
 	Char Msg[1024] = {};
 	va_list ArgPtr;
 	va_start( ArgPtr, Fmt );
-	_vsnwprintf( Msg, arr_len(Msg), Fmt, ArgPtr );
+	_vsnwprintf( Msg, arraySize(Msg), Fmt, ArgPtr );
 	va_end( ArgPtr );
 
 	// Init fatal error info.
@@ -5779,7 +5779,7 @@ void CCompiler::Warn( const Char* Fmt, ... )
 	Char Msg[1024] = {};
 	va_list ArgPtr;
 	va_start( ArgPtr, Fmt );
-	_vsnwprintf( Msg, arr_len(Msg), Fmt, ArgPtr );
+	_vsnwprintf( Msg, arraySize(Msg), Fmt, ArgPtr );
 	va_end( ArgPtr );
 
 	Warnings.push( String::Format

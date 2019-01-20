@@ -101,6 +101,7 @@ public:
 	FMusic*					Soundtrack;
 	Float					Effect[10];
 	TColor					AmbientLight;
+	Float					BlurIntensity;
 
 	// FLevel interface.
 	FLevel();

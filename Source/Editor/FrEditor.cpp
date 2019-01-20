@@ -69,7 +69,7 @@ CEditor::CEditor()
 
 	// Exe-directory.
 	Char Directory[256];
-	_wgetcwd( Directory, arr_len(Directory) );
+	_wgetcwd( Directory, arraySize(Directory) );
 	GDirectory	= Directory;
 
 	// Parse command line.
@@ -365,37 +365,41 @@ void CEditor::MainLoop()
 				GfpsTime	= 0.0;
 				GfpsCount	= 0;	
 			}
-	
-			// Update the editor.
-			Tick( (Float)DeltaTime );
 
-			// Process incoming messages.
-			MSG	Msg;
-			while( PeekMessage( &Msg, 0, 0, 0, PM_REMOVE ) )
+			profile_begin_frame();
 			{
-				if( Msg.message == WM_QUIT )
-					goto ExitLoop;
+				// Update the editor.
+				Tick( (Float)DeltaTime );
 
-				TranslateMessage( &Msg );
-				DispatchMessage( &Msg );
-			}
+				// Process incoming messages.
+				MSG	Msg;
+				while( PeekMessage( &Msg, 0, 0, 0, PM_REMOVE ) )
+				{
+					if( Msg.message == WM_QUIT )
+						goto ExitLoop;
 
-			// Reduce process priority, if editor not in focus.
-			if( !(GFrameStamp & 127) )
-			{
-				Bool	Focused	= GetWindowThreadProcessId(GetForegroundWindow(), nullptr) == ThreadId;
-				if( bInFocus && !Focused )
-				{
-					// Reduce priority.
-					SetThreadPriority( hThread, THREAD_PRIORITY_BELOW_NORMAL );
+					TranslateMessage( &Msg );
+					DispatchMessage( &Msg );
 				}
-				else if( !bInFocus && Focused )
+
+				// Reduce process priority, if editor not in focus.
+				if( !(GFrameStamp & 127) )
 				{
-					// Restore normal priority.
-					SetThreadPriority( hThread, THREAD_PRIORITY_NORMAL );
+					Bool	Focused	= GetWindowThreadProcessId(GetForegroundWindow(), nullptr) == ThreadId;
+					if( bInFocus && !Focused )
+					{
+						// Reduce priority.
+						SetThreadPriority( hThread, THREAD_PRIORITY_BELOW_NORMAL );
+					}
+					else if( !bInFocus && Focused )
+					{
+						// Restore normal priority.
+						SetThreadPriority( hThread, THREAD_PRIORITY_NORMAL );
+					}
+					bInFocus	= Focused;
 				}
-				bInFocus	= Focused;
 			}
+			profile_end_frame();
 		} 
 		
 	ExitLoop:;
@@ -489,6 +493,13 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 					OldY		= NewY;
 				}
 			}
+			break;
+		}
+		case WM_SETCURSOR:
+		{
+			//
+			// Prevent cursor override by the system
+			//
 			break;
 		}
 		case WM_CLOSE:
@@ -585,6 +596,24 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			//
 			GEditor->GUIWindow->WidgetProc( WPE_KeyDown, (Int32)WParam );
 			GEditor->GInput->OnKeyDown( (Int32)WParam );
+
+			if( WParam == KEY_Tilde )
+			{
+				if( GEditor->m_engineChart.isEnabled() )
+				{
+					GEditor->m_engineChart.disable();
+				}
+				else
+				{
+					GEditor->m_engineChart.enable();
+				}
+			}
+
+			if( WParam >= KEY_0 && WParam <= KEY_9 && GEditor->m_engineChart.isEnabled() )
+			{
+				GEditor->m_engineChart.toggleGroup( WParam - KEY_0 );
+			}
+
 			break;
 		}
 		case WM_CHAR:
@@ -892,10 +921,10 @@ void CEditor::handleFatalMessage( const Char* message )
 {
 	Char buffer[4096] = {};
 
-	cstr::cat( buffer, arr_len(buffer), L"Fatal Error: \"" );
-	cstr::cat( buffer, arr_len(buffer), message );
-	cstr::cat( buffer, arr_len(buffer), L"\" in " );
-	cstr::cat( buffer, arr_len(buffer), flu::win::stackTrace( nullptr ) );
+	cstr::cat( buffer, arraySize(buffer), L"Fatal Error: \"" );
+	cstr::cat( buffer, arraySize(buffer), message );
+	cstr::cat( buffer, arraySize(buffer), L"\" in " );
+	cstr::cat( buffer, arraySize(buffer), flu::win::stackTrace( nullptr ) );
 
 
 	MessageBox( 0, buffer, L"Critical Error", MB_OK | MB_ICONERROR | MB_TASKMODAL );

@@ -687,7 +687,7 @@ public:
 			return L"";
 
 		Char	Buffer[32] = {}, *Walk = Buffer, 
-				*ValWalk = &Value[1], *End = &Value[arr_len(Value)-1];
+				*ValWalk = &Value[1], *End = &Value[arraySize(Value)-1];
 
 		while( *ValWalk != '"' && ValWalk != End )
 		{
@@ -702,7 +702,7 @@ public:
 	TVector ToVector()
 	{
 		Float X=0.f, Y=0.f;
-		Char *Walk=Value, *End = &Value[arr_len(Value)-1];
+		Char *Walk=Value, *End = &Value[arraySize(Value)-1];
 		Walk++;
 		X = _wtof(Walk);
 		while( *Walk != ';' )
@@ -731,7 +731,7 @@ public:
 	FObject* ToObject()
 	{
 		FObject* Result = nullptr;
-		Char *Walk=Value, *End = &Value[arr_len(Value)-1];
+		Char *Walk=Value, *End = &Value[arraySize(Value)-1];
 		Char ClassName[32]={}, ObjName[32]={};
 		CClass* ReqClass = nullptr;
 
@@ -765,7 +765,7 @@ public:
 	TRect ToAABB()
 	{
 		TRect Rect;
-		Char *Walk=Value, *End = &Value[arr_len(Value)-1];
+		Char *Walk=Value, *End = &Value[arraySize(Value)-1];
 		Walk++;
 		Rect.Min.X = _wtof(Walk);
 		while( *Walk != ';' )

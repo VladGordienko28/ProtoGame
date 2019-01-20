@@ -9,7 +9,7 @@ uniform	sampler2D texture;
 
 void main()
 {
-	vec4 result = 0.0;
+	vec4 result = vec4( 0.0, 0.0, 0.0, 0.0 );
 
 	result  = texture2D( texture, blurCoordsOffset[0] ) * 0.0093;
     result += texture2D( texture, blurCoordsOffset[1] ) * 0.028002;

@@ -114,7 +114,7 @@ private:
                 {
                     Velocity    = [0.0, 0.0];
                     sleep 1.0;
-                    log( "Unreachable orb %x", DesiredOrb );
+                    error( "Unreachable orb %x", DesiredOrb );
                     continue;
                 }
             }

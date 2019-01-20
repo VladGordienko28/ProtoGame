@@ -14,8 +14,8 @@ class CStackPoolBase
 {
 public:
 	// Constants.
-	enum{ DEFAULT_ALIGNMENT = 64 };
-	enum{ BLOCK_ALIGNMENT = 8 };
+	static const SizeT DEFAULT_ALIGNMENT = 64;
+	static const SizeT BLOCK_ALIGNMENT = 8;
 
 	// CStackPoolBase interface.
 	void Pop( const void* NewTop );
@@ -67,7 +67,7 @@ public:
 
 private:
 	// Variables.
-	UInt8	Buffer[align(N, DEFAULT_ALIGNMENT)];
+	UInt8	Buffer[alignValue(N, DEFAULT_ALIGNMENT)];
 };
 
 
@@ -85,7 +85,7 @@ public:
 	CDynamicPool( SizeT InSize )
 	{
 		Size	= InSize;
-		Top		= StartAdd = (UInt8*)mem::alloc(align(Size, DEFAULT_ALIGNMENT));
+		Top		= StartAdd = (UInt8*)mem::alloc(alignValue(Size, DEFAULT_ALIGNMENT));
 		EndAddr	= StartAdd + Size;
 	}
 	~CDynamicPool()
@@ -143,7 +143,7 @@ private:
 //
 inline void* CStackPoolBase::Push( SizeT NumBytes )
 {
-	NumBytes	= align( NumBytes, BLOCK_ALIGNMENT );
+	NumBytes	= flu::alignValue( NumBytes, BLOCK_ALIGNMENT );
 	void* Res	= Top;
 
 	if( Top+NumBytes > EndAddr )
@@ -160,7 +160,7 @@ inline void* CStackPoolBase::Push( SizeT NumBytes )
 //
 inline void* CStackPoolBase::Push0( SizeT NumBytes )
 {
-	NumBytes	= align( NumBytes, BLOCK_ALIGNMENT );
+	NumBytes	= alignValue( NumBytes, BLOCK_ALIGNMENT );
 	void* Res	= Top;
 
 	if( Top+NumBytes > EndAddr )
@@ -177,7 +177,7 @@ inline void* CStackPoolBase::Push0( SizeT NumBytes )
 //
 inline Bool CStackPoolBase::CanPush( SizeT NumBytes ) const
 {
-	return ((SizeT)Top + align(NumBytes, BLOCK_ALIGNMENT)) < (SizeT)EndAddr;
+	return ((SizeT)Top + alignValue(NumBytes, BLOCK_ALIGNMENT)) < (SizeT)EndAddr;
 }
 
 

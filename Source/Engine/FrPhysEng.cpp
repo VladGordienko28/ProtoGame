@@ -1121,7 +1121,7 @@ void CPhysics::PhysicComplex( FPhysicComponent* Body, Float Delta )
 		//
 		{
 			BodyToPoly( Body, AVerts, ANorms, ANum );
-			for( Int32 i=0; i<arr_len(Body->Touched); i++ )
+			for( Int32 i=0; i<arraySize(Body->Touched); i++ )
 				if( Body->Touched[i] )
 				{
 					Other	= Body->Touched[i]->Base;
@@ -1365,7 +1365,7 @@ void CPhysics::PhysicArcade( FPhysicComponent* Body, Float Delta )
 		{
 			TRect ThisRect = Body->GetAABB();
 
-			for( Int32 i=0; i<arr_len(Body->Touched); i++ )
+			for( Int32 i=0; i<arraySize(Body->Touched); i++ )
 				if( Body->Touched[i]  )
 				{
 					FBaseComponent* Other = Body->Touched[i]->Base;
@@ -1712,7 +1712,7 @@ void CPhysics::HandlePortals( FPhysicComponent* Body, const TVector& OldLocation
 Bool CPhysics::IsTouch( FPhysicComponent* Body, FBaseComponent* Other )
 {
 	// Iterate through array.
-	for( Int32 i=0; i<arr_len(Body->Touched); i++ )
+	for( Int32 i=0; i<arraySize(Body->Touched); i++ )
 		if( Body->Touched[i] == Other->Entity )
 			return true;
 
@@ -1735,7 +1735,7 @@ Bool CPhysics::BeginTouch( FPhysicComponent* Body, FBaseComponent* Other )
 		return false;
 
 	// Find avail slot in Object.
-	for( Int32 i=0; i<arr_len(Body->Touched); i++ )
+	for( Int32 i=0; i<arraySize(Body->Touched); i++ )
 		if( Body->Touched[i] == nullptr )
 		{
 			iA	= i;
@@ -1745,7 +1745,7 @@ Bool CPhysics::BeginTouch( FPhysicComponent* Body, FBaseComponent* Other )
 	// Find avail slot in Other.
 	FPhysicComponent* Phys = As<FPhysicComponent>( Other );
 	if( Phys )
-		for( Int32 i=0; i<arr_len(Phys->Touched); i++ )
+		for( Int32 i=0; i<arraySize(Phys->Touched); i++ )
 			if( Phys->Touched[i] == nullptr )
 			{
 				iB	= i;
@@ -1790,7 +1790,7 @@ Bool CPhysics::EndTouch( FPhysicComponent* Body, FBaseComponent* Other )
 {
 	Int32 iA = -1, iB = -1;
 
-	for( Int32 i=0; i<arr_len(Body->Touched); i++ )
+	for( Int32 i=0; i<arraySize(Body->Touched); i++ )
 		if( Body->Touched[i] == Other->Entity )
 		{
 			iA	= i;
@@ -1799,7 +1799,7 @@ Bool CPhysics::EndTouch( FPhysicComponent* Body, FBaseComponent* Other )
 
 	FPhysicComponent* Phys = As<FPhysicComponent>( Other );
 	if( Phys )
-		for( Int32 i=0; i<arr_len(Phys->Touched); i++ )
+		for( Int32 i=0; i<arraySize(Phys->Touched); i++ )
 			if( Phys->Touched[i] == Body->Entity )
 			{
 				iB	= i;

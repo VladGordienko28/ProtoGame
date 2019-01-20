@@ -2459,7 +2459,7 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 	{
 		const TColor BRACKET_COLOR = TColor( 0x0e, 0x3a, 0x6c, 0xff );
 		
-		for( Int32 i=0; i<arr_len(EnclosingBrackets); i++ )
+		for( Int32 i=0; i<arraySize(EnclosingBrackets); i++ )
 			Render->DrawRegion
 			(
 				TPoint
@@ -2873,7 +2873,7 @@ void WCodeEditor::HighlightAll()
 		UInt8 Buffer[2048];
 
 		// Don't highlight too long line.
-		if( Line.Text.Len() > arr_len(Buffer) )
+		if( Line.Text.Len() > arraySize(Buffer) )
 			continue;
 
 		// For each symbol.
@@ -2955,7 +2955,7 @@ void WCodeEditor::HighlightAll()
 				Char Word[64] = {};
 				Int32 iLetter = 0;
 
-				for( ; i<Line.Text.Len() && iLetter<arr_len(Word); i++ )
+				for( ; i<Line.Text.Len() && iLetter<arraySize(Word); i++ )
 				{
 					ThisChar = Line.Text(i);
 

@@ -2964,7 +2964,7 @@ static Bool GUglyFilter[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 //
 void WAssetsPage::PopClassClick( WWidget* Sender )
 {
-	assert(arr_len(GUglyFilter) >= ClassPopup->Items.size());
+	assert(arraySize(GUglyFilter) >= ClassPopup->Items.size());
 
 	// 'Not all are now'.
 	Int32 iChecked = 0;
@@ -2994,7 +2994,7 @@ void WAssetsPage::PopClassClick( WWidget* Sender )
 //
 void WAssetsPage::PopClassAllClick( WWidget* Sender )
 {
-	assert(arr_len(GUglyFilter) >= ClassPopup->Items.size());
+	assert(arraySize(GUglyFilter) >= ClassPopup->Items.size());
 
 	// If 'all' selected, mark everything.
 	for( Int32 i=0; i<ClassPopup->Items.size(); i++ )
