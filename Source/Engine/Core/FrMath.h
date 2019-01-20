@@ -649,7 +649,7 @@ template<class T> inline T TInterpCurve<T>::SampleSteppedAt( Float Input, const 
 	if( Input >= Samples[Samples.Num()-1].Input )
 		return Samples[Samples.Num()-1].Output;
 
-	for( Integer i=1; i<Samples.Num(); i++ )
+	for( Int32 i=1; i<Samples.Num(); i++ )
 	{
 		const TInterpPoint<T>& A = Samples[i-1];
 		const TInterpPoint<T>& B = Samples[i];

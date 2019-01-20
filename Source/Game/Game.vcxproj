@@ -111,6 +111,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\OpenGL\$(Configuration) $(PlatformShortName)\OpenGL.lib;..\Intermediate\OpenAL\$(Configuration) $(PlatformShortName)\OpenAL.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\OpenAL\Lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>$(OutDir)flu_tests.exe</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -126,6 +129,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\OpenGL\$(Configuration) $(PlatformShortName)\OpenGL.lib;..\Intermediate\OpenAL\$(Configuration) $(PlatformShortName)\OpenAL.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\OpenAL\Lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>$(OutDir)flu_tests.exe</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -145,6 +151,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\OpenGL\$(Configuration) $(PlatformShortName)\OpenGL.lib;..\Intermediate\OpenAL\$(Configuration) $(PlatformShortName)\OpenAL.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\OpenAL\Lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>$(OutDir)FluTests.exe</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -164,6 +173,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\OpenGL\$(Configuration) $(PlatformShortName)\OpenGL.lib;..\Intermediate\OpenAL\$(Configuration) $(PlatformShortName)\OpenAL.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\OpenAL\Lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>$(OutDir)FluTests.exe</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="FrConsole.h" />

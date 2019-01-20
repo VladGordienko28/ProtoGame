@@ -42,7 +42,7 @@ public:
 	// Return true, if map has this value.
 	Bool ContainsValue( const V& Value ) const
 	{
-		for( Integer i=0; i<Entries.Num(); i++ )
+		for( Int32 i=0; i<Entries.Num(); i++ )
 			if( Entries[i].Value == Value )
 				return true;
 		return false;
@@ -82,7 +82,7 @@ public:
 	Array<K> KeySet() const
 	{
 		TArray<K> Keys(Entries.Num());
-		for( Integer i=0; i<Entries.Num(); i++ )
+		for( Int32 i=0; i<Entries.Num(); i++ )
 			Keys[i] = Entries[i].Key;
 		return Keys;
 	}
@@ -91,7 +91,7 @@ public:
 	Array<V> Values() const
 	{
 		TArray<V> Vals(Entries.Num());
-		for( Integer i=0; i<Entries.Num(); i++ )
+		for( Int32 i=0; i<Entries.Num(); i++ )
 			Vals[i] = Entries[i].Value;
 		return Vals;
 	}
@@ -100,7 +100,7 @@ public:
 	// no key found.
 	Bool Remove( const K& Key )
 	{
-		Integer i = FindEntry(Key);
+		Int32 i = FindEntry(Key);
 		if( i != -1 )
 			Entries.RemoveShift(i);
 		return i != -1;

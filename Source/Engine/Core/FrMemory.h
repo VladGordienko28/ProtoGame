@@ -211,7 +211,6 @@ inline void CStackPoolBase::PopAll()
 //
 template<SizeT PAGE_SIZE> inline CPagePool<PAGE_SIZE>::CPagePool()
 {
-	f_guard;
 	// At least one page.
 	AddPage();
 }
@@ -222,8 +221,7 @@ template<SizeT PAGE_SIZE> inline CPagePool<PAGE_SIZE>::CPagePool()
 //
 template<SizeT PAGE_SIZE> inline CPagePool<PAGE_SIZE>::~CPagePool()
 {
-	f_guard;
-	for( Integer iPage=0; iPage<Pages.Num(); iPage++ )
+	for( Int32 iPage=0; iPage<Pages.Num(); iPage++ )
 	{
 		TPage& Page = Pages[iPage];
 		mem::free( Page.Data );
@@ -238,7 +236,6 @@ template<SizeT PAGE_SIZE> inline CPagePool<PAGE_SIZE>::~CPagePool()
 //
 template<SizeT PAGE_SIZE> inline void* CPagePool<PAGE_SIZE>::Alloc( SizeT NumBytes )
 {
-	f_guard;
 	NumBytes = align( NumBytes, BLOCK_ALIGNMENT );
 
 	// Make new page if required.
@@ -258,8 +255,6 @@ template<SizeT PAGE_SIZE> inline void* CPagePool<PAGE_SIZE>::Alloc( SizeT NumByt
 //
 template<SizeT PAGE_SIZE> inline Int32 CPagePool<PAGE_SIZE>::AddPage()
 {
-	f_guard;
-
 	TPage New;
 	New.Data	= (Byte*)mem::alloc(PAGE_SIZE);
 	New.NumUsed	= 0;
