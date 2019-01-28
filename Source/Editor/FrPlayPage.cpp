@@ -226,6 +226,14 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 				);
 #endif
 
+	Canvas->DrawText
+				( 
+					String::Format( L"Game Time: %s", *PlayLevel->m_timeOfDay.toString() ), 
+					Root->Font1, 
+					COLOR_White, 
+					TVector( 10.f, 72.f ) 
+				);
+
 	// In-pause mode.
 	if( PlayLevel->bIsPause )
 		Canvas->DrawText

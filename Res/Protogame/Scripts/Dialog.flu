@@ -1,0 +1,52 @@
+/**
+ * @Dialog: Dialog between Player & NPC
+ * @Author: ...
+ */
+script Dialog
+{
+public:
+    enum ESpeaker
+    {
+        SP_Player,
+        SP_Interlocutor
+    }
+
+    string[16] Messages;
+    ESpeaker[16] Speakers;
+
+    event OnBeginPlay()
+    {
+        iMessage = 0;
+    }
+    
+    // prepare for talk
+    fn Prepare()
+    {
+        iMessage = 0;
+    }
+ 
+    bool IsComplete()
+    {
+        return iMessage >= Messages.length || 
+            Messages[iMessage] == "";        
+    }
+    
+    string GetCurrentMessage()
+    {
+        return Messages[iMessage];
+    }
+    
+    bool IsPlayerMessage()
+    {
+        return Speakers[iMessage] == SP_Player;
+    }
+    
+    bool ToNextMessage()
+    {
+        iMessage++;
+        return IsComplete();
+    }
+    
+private:
+    integer iMessage;
+}

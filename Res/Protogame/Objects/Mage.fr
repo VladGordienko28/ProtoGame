@@ -3,17 +3,23 @@ BEGIN_RESOURCE FScript Mage
     ScriptFlags = 128
     BEGIN_COMPONENT FArcadeBodyComponent Base
             Mass = 1.0000
-            Size = [2.8000; 8.0000]
+            Size = [2.0000; 8.0000]
             Layer = 0.5000
+            bFixedAngle = true
+            bFixedSize = true
             bHashable = true
     END_COMPONENT
     BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
             Color = #ffffffff
             bUnlit = true
             Animation = FAnimation::AMage
+            Offset = [0.3000; 0.0000]
             Scale = [8.0000; 8.0000]
     END_COMPONENT
     BEGIN_COMPONENT FInputComponent Input
+    END_COMPONENT
+    BEGIN_COMPONENT FPainterComponent Painter
+            Color = #ffffffff
     END_COMPONENT
     BEGIN_INSTANCE
     END_INSTANCE

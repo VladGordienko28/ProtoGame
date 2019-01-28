@@ -1780,17 +1780,92 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 	// Draw scene.
 	Canvas->PushTransform( MasterView );
 	{
+
+		// Set ambient light in level.
+		if( Level->RndFlags & RND_Lighting )
+			//Canvas->FluShader.SetAmbientLight(Level->AmbientLight);
+			Canvas->FluShader.SetAmbientLight( Level->m_ambientColors.SampleLinearAt( Level->m_timeOfDay.toPercent(), COLOR_Black ) );
+
+		/*
 		// Render sky zone if any.
 		if( Level->Sky && (Level->RndFlags & RND_Backdrop) )
 			drawSkyZone( Canvas, Level, MasterView );
+			*/
+
+		// Temporary render sky
+		{
+			Canvas->PushTransform( TViewInfo( TVector(0, 0), 0, TVector(1, 1), 1, true, X,
+				Y, 
+				W, 
+				H ) );
+
+			TRenderRect rect;
+			rect.Bounds = TRect( TVector(0.f, 0.f), 1 );
+
+			rect.Flags = POLY_Unlit | POLY_AlphaGhost;
+			rect.TexCoords.Min = TVector( 1, 1 );
+			rect.TexCoords.Max = TVector( 0, 0 );
+			rect.Texture = Level->m_duskBitmap;
+
+
+			Float progress = Level->m_timeOfDay.toPercent();
+			FBitmap* first = nullptr;
+			FBitmap* second = nullptr;
+			Float alpha = 0.5f;
+
+			Float midnightTime = envi::TimeOfDay( 0, 0 ).toPercent();
+			Float dawnTime = envi::TimeOfDay( 8, 0 ).toPercent();
+			Float noonTime = envi::TimeOfDay( 15, 0 ).toPercent();
+			Float duskTime = envi::TimeOfDay( 21, 0 ).toPercent();
+
+			if( InRange( progress, midnightTime, dawnTime ) )
+			{
+				first = Level->m_midnightBitmap;
+				second = Level->m_dawnBitmap;
+				alpha = (dawnTime - progress) / (dawnTime - midnightTime);
+			}
+			else if ( InRange( progress, dawnTime, noonTime ) )
+			{
+				first = Level->m_dawnBitmap;
+				second = Level->m_noonBitmap;
+				alpha = (noonTime - progress) / (noonTime - dawnTime);
+			}
+			else if( InRange( progress, noonTime, duskTime ) )
+			{
+				first = Level->m_noonBitmap;
+				second = Level->m_duskBitmap;
+				alpha = (duskTime - progress) / (duskTime - noonTime);
+			}
+			else 
+			{
+				first = Level->m_duskBitmap;
+				second = Level->m_midnightBitmap;
+				alpha = (1.f - progress) / (1.f - duskTime);
+			}
+
+
+			rect.Texture = first;
+			rect.Color = TColor( 255, 255, 255, 255 );
+			Canvas->DrawRect( rect );
+
+			rect.Texture = second;
+			rect.Color = TColor( 255, 255, 255, 255 * (1-alpha) );
+			Canvas->DrawRect( rect );
+
+
+
+			
+
+
+			Canvas->PopTransform();
+		}
+
 
 		// Draw editor grid.
 		if( Level->RndFlags & RND_Grid )
 			drawGrid( Canvas );	
 
-		// Set ambient light in level.
-		if( Level->RndFlags & RND_Lighting )
-			Canvas->FluShader.SetAmbientLight(Level->AmbientLight);
+
 
 		// Handle all portals.
 		if( Level->RndFlags & RND_Portals )
@@ -1917,6 +1992,8 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 			// Default for editor
 			Canvas->FinalShader.SetPostEffect(Level->Effect);
 		}
+
+		Canvas->FinalShader.setAberrationIntensity( Level->AberrationIntensity );
 
 		// Render FBO to screen.
 		glBindTexture( GL_TEXTURE_2D, Canvas->MasterFBO->GetTextureId() );
@@ -2244,6 +2321,8 @@ bool CGLFinalShader::Init( String ShaderName )
 	idMidTones		= RegisterUniform( "midTones" );
 	idShadows		= RegisterUniform( "shadows" );
 	idBWScale		= RegisterUniform( "bwScale" );
+
+	idAberrationIntensity = RegisterUniform( "aberrationIntensity" );
 
 	// Only one bitmap supported.
 	idTexture = RegisterUniform( "texture" );

@@ -4,5 +4,5 @@ BEGIN_RESOURCE FBitmap BFireball
     AnimSpeed = 30.0000
     FileName = "BFireball.bmp"
     UBits = 6
-    VBits = 5
+    VBits = 6
 END_RESOURCE

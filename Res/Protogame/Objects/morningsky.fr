@@ -1,0 +1,9 @@
+BEGIN_RESOURCE FBitmap morningsky
+    BlendMode = 4
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    Group = "<unused>"
+    FileName = "morningsky.png"
+    UBits = 4
+    VBits = 7
+END_RESOURCE

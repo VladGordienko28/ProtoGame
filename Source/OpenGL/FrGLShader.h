@@ -183,6 +183,11 @@ public:
 		SetValue1f( idBWScale, InEffect.BWScale );
 	}
 
+	void setAberrationIntensity( Float intensity )
+	{
+		SetValue1f( idAberrationIntensity, intensity );
+	}
+
 private:
 	// Uniform variables.
 	Int32 idTexture;
@@ -191,6 +196,7 @@ private:
 	Int32 idMidTones;
 	Int32 idShadows;
 	Int32 idBWScale;
+	Int32 idAberrationIntensity;
 };
 
 

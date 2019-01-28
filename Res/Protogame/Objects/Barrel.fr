@@ -1,0 +1,21 @@
+BEGIN_RESOURCE FScript Barrel
+    FileName = "Barrel.flu"
+    ScriptFlags = 129
+    BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Size = [2.0000; 3.0000]
+            Layer = 0.5000
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+    END_COMPONENT
+    BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            bUnlit = true
+            Animation = FAnimation::ABarrel
+            Scale = [4.0000; 4.0000]
+    END_COMPONENT
+    BEGIN_INSTANCE
+            health = 4
+    END_INSTANCE
+END_RESOURCE

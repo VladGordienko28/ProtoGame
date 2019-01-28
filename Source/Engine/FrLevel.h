@@ -24,13 +24,16 @@
 #define RND_HUD				0x000400
 #define RND_Effects			0x000800
 #define RND_Paths			0x001000
+#define RND_Environment		0x002000
 
 // Combo flags.
 #define RND_Editor			RND_Grid | RND_Backdrop | RND_Hidden | RND_Logic | RND_Particles |\
-							RND_Portals | RND_Lighting | RND_Model | RND_Stats | RND_Other | RND_Effects | RND_Paths
+							RND_Portals | RND_Lighting | RND_Model | RND_Stats | RND_Other | RND_Effects | RND_Paths |\
+							RND_Environment
+
 
 #define RND_Game			RND_Backdrop | RND_Particles | RND_Portals | RND_Lighting | RND_Model | RND_HUD | RND_Paths|\
-							RND_Effects
+							RND_Effects | RND_Environment
 
 
 /*-----------------------------------------------------------------------------
@@ -103,6 +106,25 @@ public:
 	TColor					AmbientLight;
 	Float					BlurIntensity;
 
+
+
+	// temporary
+	// -----------
+
+	Float					AberrationIntensity = 0.f;
+
+	envi::TimeOfDay m_timeOfDay;
+	Float m_daySpeed;
+	TInterpCurve<TColor> m_ambientColors;
+
+	FBitmap* m_midnightBitmap = nullptr;
+	FBitmap* m_dawnBitmap = nullptr;
+	FBitmap* m_noonBitmap = nullptr;
+	FBitmap* m_duskBitmap = nullptr;
+
+
+	// -----------
+
 	// FLevel interface.
 	FLevel();
 	~FLevel();
@@ -115,6 +137,8 @@ public:
 	// FObject interface.
 	void SerializeThis( CSerializer& S );
 	void PostLoad();
+	void EditChange() override;
+
 	void Import( CImporterBase& Im );
 	void Export( CExporterBase& Ex );
 

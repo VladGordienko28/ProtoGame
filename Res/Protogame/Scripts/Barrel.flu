@@ -1,0 +1,61 @@
+/**
+ * @Barrel: Just a simple barrel
+ * @Author: Tough guys
+ */
+script Barrel
+{
+public:
+    integer health;
+
+    event OnBeginPlay()
+    {
+        $Sprite.PlayAnim( "Idle", 1.0, ANIM_Once );
+    }
+
+    bool TakeDamage( integer amount )
+    {
+        if( label != @Dieing )
+        {
+            string animName = "Crack" + string( 5 - health );
+        
+            if( health <= 4 && health >= 1 )
+            {
+                //info( "Play anim %s", animName );
+                $Sprite.PlayAnim( animName, 10.0, ANIM_Once );
+            }
+        
+            health -= amount;
+            
+            if( health <= 0 )
+            {
+                goto @Dieing;
+            }
+            
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    event OnCollide( entity Other, EHitSide Side )
+    {
+        if( label != @Dieing && Other is #Mage )
+        {
+            SolveOneway( true );
+        }             
+    }
+
+
+    thread
+    {
+        stop;
+        
+    @Dieing:
+        $Sprite.PlayAnim( "Dieing", 7.0, ANIM_Once );
+        //sleep 5.0;
+        wait !base.IsShown();
+        delete this;        
+    }
+}

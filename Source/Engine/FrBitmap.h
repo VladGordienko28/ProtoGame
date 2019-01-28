@@ -137,6 +137,33 @@ public:
 	void PostLoad();
 	void Import( CImporterBase& Im );
 	void Export( CExporterBase& Ex );
+
+	TColor getAverageColor()
+	{
+		Int32 r = 0, g = 0, b = 0, a = 0;
+		Int32 n = USize * VSize;
+
+		for( Int32 i = 0; i < n; i++ )
+		{
+			TColor c;
+
+			if( Format == EBitmapFormat::BF_Palette8 )
+			{
+				c = Palette.Colors[ ((UInt8*)GetData())[i] ];
+			}
+			else
+			{
+				c = ((TColor*)GetData())[i];
+			}
+
+			r += c.R;
+			g += c.G;
+			b += c.B;
+			a += c.A;
+		}
+
+		return TColor( r / n, g / n, b / n, a / n );
+	}
 };
 
 

@@ -10,14 +10,17 @@ public:
     fn init( Mage mage )
     {
         myMage = mage;
-        $Sprite.PlayAnim( "Glide", 16.0, ANIM_Loop );
         Layer = myMage.Layer + 0.01;
+        goto @Idle;
     }
     
-    fn shoot( float dir )
+    fn shoot( float d )
     {
-        Fireball f = new Fireball;
-        f.launch( dir );
+        if( label == @Idle )
+        {
+            dir = d;
+            goto @Attack;
+        }
     }
 
     event OnPreTick( float Delta )    
@@ -47,5 +50,25 @@ public:
 
 private:
     float desiredY;
+    float dir;
 
+    fn spawnProjectile()
+    {
+        Fireball f = new Fireball;
+        f.Launch( dir );
+    }
+
+
+    thread
+    {
+    @Idle:
+        $Sprite.PlayAnim( "Glide", 8.0, ANIM_Loop );
+        stop;
+        
+    @Attack:
+        $Sprite.PlayAnim( "Attack", 10.0, ANIM_Once );
+        sleep 0.4;
+        spawnProjectile();
+        goto @Idle; 
+    }
 }

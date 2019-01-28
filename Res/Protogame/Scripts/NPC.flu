@@ -1,0 +1,60 @@
+/**
+ * @NPC: ...
+ * @Author: ...
+ */
+script NPC
+{
+public:
+    Dialog dialog;
+    
+    event OnBeginPlay()
+    {
+        Mage m;
+        foreach( m: AllEntities(#Mage) )
+        {
+            mage = m;
+            break;
+        }         
+
+        goto @Idle; 
+
+        if( dialog == undefined )
+            error( "NPS without appropriated dialog" );                            
+    }
+
+    Dialog startTalk()
+    {
+        goto @Talk;
+        return dialog;
+    }
+
+    fn finishTalk()
+    {
+        goto @Idle;
+    }
+    
+
+private:
+    Mage mage;
+    
+    
+    thread
+    {
+    @Idle:
+        SetSize( [15.0, 10.0] );
+        $Sprite.PlayAnim( "Idle", 3.0, ANIM_Loop ); 
+        
+        while( true )
+        {
+            sleep 0.5 + randomf() * 0.5;
+            $Sprite.bFlipH = mage.Location.x < Location.x;
+        }
+    
+    
+    
+    @Talk:
+        SetSize( proto.Size );
+        $Sprite.PlayAnim( "Jump_Outdated", 3.0, ANIM_Loop ); 
+    
+    }
+}

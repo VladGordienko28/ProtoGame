@@ -1,0 +1,14 @@
+/**
+ * @SWolf: ...
+ * @Author: ...
+ */
+script SWolf
+{
+public:
+    event OnBeginPlay()
+    {
+        $Sprite.PlayAnim( "Idle", 4.5 + 0.7 * randomf(), ANIM_Loop );
+    }
+
+ 
+}

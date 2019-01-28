@@ -10,10 +10,24 @@ uniform vec3 highlights;
 uniform vec3 midTones;
 uniform vec3 shadows;
 uniform float bwScale;
+uniform float aberrationIntensity;
 
 void main()
 {
-	vec4 sampleColor = texture2D( texture, textureUV );
+	vec4 sampleColor;
+	
+	if( aberrationIntensity > 0.0 )
+	{
+		sampleColor.r = texture2D( texture, textureUV + vec2(0.001, 0.0007) * aberrationIntensity ).r;
+		sampleColor.g = texture2D( texture, textureUV + vec2(-0.0007, 0.001) * aberrationIntensity ).g;
+		sampleColor.b = texture2D( texture, textureUV + vec2(-0.001, -0.001) * aberrationIntensity ).b;
+
+		sampleColor.a = texture2D( texture, textureUV ).a;		
+	}
+	else
+	{
+		sampleColor = texture2D( texture, textureUV );
+	}
 
 	vec3 result = pow( max( vec3(0,0,0), (sampleColor.rgb-shadows) )*(highlights), midTones );
 

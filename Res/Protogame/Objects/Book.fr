@@ -9,7 +9,6 @@ BEGIN_RESOURCE FScript Book
     END_COMPONENT
     BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
             Color = #ffffffff
-            bUnlit = true
             Animation = FAnimation::ABook
             Scale = [2.0000; 2.0000]
     END_COMPONENT

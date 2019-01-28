@@ -7,6 +7,9 @@
     <Filter Include="Chart">
       <UniqueIdentifier>{5e664a5c-cced-49ac-9938-55079df1ea8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Environment">
+      <UniqueIdentifier>{f7f30db1-352d-4e94-8ef3-9b1a401f8326}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\FrBase.h">
@@ -92,6 +95,21 @@
     <ClInclude Include="Chart\EngineProfiler.h">
       <Filter>Chart</Filter>
     </ClInclude>
+    <ClInclude Include="Environment\Environment.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment\TimeOfDay.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment\EnvironmentContext.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment\Sky.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment\Satellite.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\FrClass.cpp">
@@ -153,6 +171,12 @@
     </ClCompile>
     <ClCompile Include="Chart\EngineChart.cpp">
       <Filter>Chart</Filter>
+    </ClCompile>
+    <ClCompile Include="Environment\Environment.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Environment\EnvironmentContext.cpp">
+      <Filter>Environment</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

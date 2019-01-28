@@ -4,5 +4,5 @@ BEGIN_RESOURCE FBitmap BBook
     AnimSpeed = 30.0000
     FileName = "BBook.bmp"
     UBits = 6
-    VBits = 5
+    VBits = 6
 END_RESOURCE

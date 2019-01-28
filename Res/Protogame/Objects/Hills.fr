@@ -1,0 +1,19 @@
+BEGIN_RESOURCE FScript Hills
+    ScriptFlags = 1
+    BEGIN_COMPONENT FRectComponent Base
+            Size = [2.0000; 2.0000]
+            Layer = 0.5000
+    END_COMPONENT
+    BEGIN_COMPONENT FParallaxLayerComponent ParallaxLayer
+            Parallax = [0.0500; 0.0500]
+            Scale = [20.0000; 20.0000]
+            Gap = [5.0000; 5.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            Color = #ffffffff
+    END_COMPONENT
+    BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (0.0000; 0.0000; 16.0000; 16.0000)
+            Color = #ffffffff
+    END_COMPONENT
+END_RESOURCE

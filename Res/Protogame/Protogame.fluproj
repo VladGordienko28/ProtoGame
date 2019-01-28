@@ -10,21 +10,39 @@ BEGIN_INCLUDE
     Sky.fr
     Book.fr
     Fireball.fr
+    Barrel.fr
+    Dialog.fr
+    NPC.fr
+    Hills.fr
+    SWolf.fr
     BSystem.fr
     BMage.fr
     BSky.fr
     BLevel1.fr
     BBook.fr
     BFireball.fr
+    BBarrel.fr
+    YosterIsland21_0.fr
+    morningsky.fr
+    nightsky.fr
+    daysky.fr
+    eveningsky.fr
+    sun (1).fr
+    wolf.fr
     ProjectInfo0.fr
     Index.fr
     AMage.fr
     ABook.fr
     AFireball.fr
+    ABarrel.fr
+    YosterIsland21.fr
+    AWolf.fr
 END_INCLUDE
 BEGIN_PAGES
     Fireball
     Mage
-    Book
+    NPC
+    Dialog
+    SWolf
     Index
 END_PAGES

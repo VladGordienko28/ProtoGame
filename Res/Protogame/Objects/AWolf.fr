@@ -1,0 +1,8 @@
+BEGIN_RESOURCE FAnimation AWolf
+    Sheet = FBitmap::wolf
+    FrameW = 64
+    FrameH = 64
+    NumSeqs = 1
+    Sequences[0].Name = "Idle"
+    Sequences[0].Count = 2
+END_RESOURCE

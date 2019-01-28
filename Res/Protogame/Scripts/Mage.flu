@@ -12,6 +12,9 @@ private:
     
     event OnPreTick( float delta )
     {
+        if( label != @Normal )
+            return;
+    
         // setup x-movement
         if( KeyIsPressed(KEY_Left) )
         {
@@ -55,12 +58,17 @@ private:
         if( Floor != undefined )
         {
             if( Velocity.X != 0.0 )
-                $Sprite.PlayAnim( "Walk", 9.6, ANIM_Loop );
+                $Sprite.PlayAnim( "Walk", 12.0, ANIM_Loop );
             else
                 $Sprite.PlayAnim( "Idle", 2.5, ANIM_Loop );
         }
         else
-            $Sprite.PlayAnim( "Jump", 10.0, ANIM_Loop ); 
+        {
+            if( Velocity.y > 0.0 )
+                $Sprite.PlayAnim( "JumpUp", 5.0, ANIM_Once );
+            else
+                 $Sprite.PlayAnim( "JumpDown", 2.0, ANIM_Once );           
+        }
     }
 
 
@@ -73,7 +81,7 @@ private:
                 SolveSolid( true );
             //else
             //    SolveOneway( true );                       
-        }        
+        }           
     }
     
     
@@ -93,6 +101,8 @@ private:
         // ---
         myBook = new Book;
         myBook.init( this );
+        
+        goto @Normal;
     }
  
     event OnTick( float Delta )
@@ -117,6 +127,72 @@ private:
             myBook.shoot( $Sprite.bFlipH ? -1.0 : 1.0 );
           
         }
+        
+        if( key == KEY_F && label == @Normal && nearestNPC != undefined )
+        {
+            goto @Talk;
+        }
+        
+        if( key == KEY_F && label == @Talk )
+        {
+            dialog.ToNextMessage();
+        }
+    }
+    
+    
+    event OnRender()
+    {
+        $Painter.Font = #YosterIsland21;
+        $Painter.Color = rgba( 255, 255, 255, 255 );
+        
+        $Painter.TextOut( [16, 16], "Trololo " + string(Location), 1.0 );
+        
+        if( nearestNPC != undefined && label == @Normal )
+            $Painter.TextOut( [16, 36], "Press <F> to enter chat...", 1.0 );  
+
+        if( label == @Talk )
+        {
+            $Painter.Color = dialog.IsPlayerMessage() ? rgba(255, 64, 64, 255) : rgba( 64, 64, 255, 255 );
+            string msg = dialog.GetCurrentMessage();
+            
+            $Painter.TextOut( [($Painter.Width - $Painter.TextSize(msg))/2, $Painter.Height - 30], msg, 1.0 ); 
+        }                                     
+    }    
+
+
+    event OnBeginTouch( entity other )
+    {
+        if( other is #NPC )
+            nearestNPC = NPC(other);
+    }
+
+    event OnEndTouch( entity other )
+    {
+        if( other == nearestNPC && label == @Normal )
+            nearestNPC = undefined;
+    }
+
+private:
+    NPC nearestNPC;
+    Dialog dialog;
+
+    thread
+    {
+    @Normal:
+        stop;
+    
+    
+    @Talk:
+        Velocity = [0.0, 0.0];
+        $Sprite.PlayAnim( "Jump_Outdated", 3.5, ANIM_Loop );
+        dialog = nearestNPC.startTalk();
+        dialog.Prepare();
+       
+       wait dialog.IsComplete();
+       
+       nearestNPC.finishTalk();       
+       goto @Normal;
+    
     }
 
 }

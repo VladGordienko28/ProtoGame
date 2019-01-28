@@ -2,7 +2,11 @@ BEGIN_RESOURCE FAnimation ABook
     Sheet = FBitmap::BBook
     FrameW = 16
     FrameH = 16
-    NumSeqs = 1
+    NumSeqs = 2
     Sequences[0].Name = "Glide"
-    Sequences[0].Count = 6
+    Sequences[0].Start = 8
+    Sequences[0].Count = 4
+    Sequences[1].Name = "Attack"
+    Sequences[1].Start = 2
+    Sequences[1].Count = 4
 END_RESOURCE

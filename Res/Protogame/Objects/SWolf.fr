@@ -1,0 +1,20 @@
+BEGIN_RESOURCE FScript SWolf
+    FileName = "SWolf.flu"
+    ScriptFlags = 129
+    BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Size = [5.0000; 3.0000]
+            Layer = 0.5000
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+    END_COMPONENT
+    BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            Animation = FAnimation::AWolf
+            Offset = [-0.3500; 1.9000]
+            Scale = [8.0000; 8.0000]
+    END_COMPONENT
+    BEGIN_INSTANCE
+    END_INSTANCE
+END_RESOURCE

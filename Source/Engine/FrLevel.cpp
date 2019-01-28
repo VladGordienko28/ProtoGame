@@ -39,6 +39,47 @@ FLevel::FLevel()
 	FirstLight			= nullptr;
 	FirstLogicElement	= nullptr;
 	FirstPainter		= nullptr;
+
+	// -----------------
+	m_daySpeed = 1200.f;
+
+	m_timeOfDay = envi::TimeOfDay( 12, 0 );
+
+	m_ambientColors.AddSample( envi::TimeOfDay( 0, 0 ).toPercent(), TColor( 60, 87, 144, 255 ) );
+	m_ambientColors.AddSample( envi::TimeOfDay( 8, 0 ).toPercent(), TColor( 186, 152, 140, 255 ) );
+	m_ambientColors.AddSample( envi::TimeOfDay( 15, 0 ).toPercent(), TColor( 159, 159, 190, 255 ) );
+	m_ambientColors.AddSample( envi::TimeOfDay( 21, 0 ).toPercent(), TColor( 250, 100, 145, 255 ) );
+
+
+	m_ambientColors.AddSample( 1.f, TColor( 60, 87, 144, 255 ) );
+}
+
+void FLevel::EditChange()
+{
+	FResource::EditChange();
+
+	static const Float scale = 1.5f;
+
+	if( m_midnightBitmap )
+	{
+		m_ambientColors.Samples[0].Output = m_ambientColors.Samples[4].Output = m_midnightBitmap->getAverageColor() * scale;
+	}
+
+	if( m_dawnBitmap )
+	{
+		m_ambientColors.Samples[1].Output =  m_dawnBitmap->getAverageColor() * scale;
+	}
+
+	if( m_noonBitmap )
+	{
+		m_ambientColors.Samples[2].Output =  m_noonBitmap->getAverageColor() * scale;
+	}
+
+	if( m_duskBitmap )
+	{
+		m_ambientColors.Samples[3].Output =  m_duskBitmap->getAverageColor() * scale;
+	}
+
 }
 
 
@@ -332,6 +373,10 @@ void FLevel::Tick( Float Delta )
 	// Modify delta according to game speed.
 	GameSpeed	= Clamp( GameSpeed, 0.01f, 10.f );
 	Delta		*= GameSpeed;
+
+	// update game time
+	m_timeOfDay.advance( Delta * m_daySpeed );
+	//m_timeOfDay = GPlat->GetTimeOfDay();
 
 	// Are we play now?
 	if( bIsPlaying && !bIsPause )
@@ -919,6 +964,12 @@ REGISTER_CLASS_CPP( FLevel, FResource, CLASS_Sterile )
 	ADD_PROPERTY( Effect, PROP_Editable );
 	ADD_PROPERTY( AmbientLight, PROP_Editable );
 	ADD_PROPERTY( BlurIntensity, PROP_Editable );
+
+	ADD_PROPERTY( AberrationIntensity, PROP_Editable );
+	ADD_PROPERTY( m_midnightBitmap, PROP_Editable );
+	ADD_PROPERTY( m_dawnBitmap, PROP_Editable );
+	ADD_PROPERTY( m_noonBitmap, PROP_Editable );
+	ADD_PROPERTY( m_duskBitmap, PROP_Editable );
 
 	// Engine functions.
 	DECLARE_EX_FUNCTION( DebugLine, TYPE_None, ARG(a, TYPE_Vector, ARG(b, TYPE_Vector, ARG(color, TYPE_Color, ARG(time, TYPE_Float, END)))));

@@ -25,7 +25,7 @@ public:
 	void ClipboardCopy( Char* Str );
 	String ClipboardPaste();
 	void Launch( const Char* Target, const Char* Parms );
-	TTimeOfDay GetTimeOfDay();
+	envi::TimeOfDay GetTimeOfDay();
 	void SetNow( Double InNow );
 	Array<String> FindFiles( String Directory, String Wildcard );
 

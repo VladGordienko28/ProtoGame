@@ -279,19 +279,20 @@ WLevelPage::WLevelPage( FLevel* InLevel, WContainer* InOwner, WWindow* InRoot )
 
 	// Render pop-up.
 	RndFlagsPopup	= new WPopupMenu( this, Root );
-	RndFlagsPopup->AddItem( L"Show Grid",		WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
-	RndFlagsPopup->AddItem( L"Show Backdrop",	WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
-	RndFlagsPopup->AddItem( L"Show Hidden",		WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
-	RndFlagsPopup->AddItem( L"Show Logic",		WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
-	RndFlagsPopup->AddItem( L"Show Particles",	WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
-	RndFlagsPopup->AddItem( L"Show Portals",	WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
-	RndFlagsPopup->AddItem( L"Show Lighting",	WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
-	RndFlagsPopup->AddItem( L"Show Model",		WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
-	RndFlagsPopup->AddItem( L"Show Stats",		WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
-	RndFlagsPopup->AddItem( L"Show Misc",		WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
-	RndFlagsPopup->AddItem( L"Show HUD",		WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
-	RndFlagsPopup->AddItem( L"Show Effects",	WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
-	RndFlagsPopup->AddItem( L"Show Paths",		WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
+	RndFlagsPopup->AddItem( L"Show Grid",			WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
+	RndFlagsPopup->AddItem( L"Show Backdrop",		WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
+	RndFlagsPopup->AddItem( L"Show Hidden",			WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
+	RndFlagsPopup->AddItem( L"Show Logic",			WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
+	RndFlagsPopup->AddItem( L"Show Particles",		WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
+	RndFlagsPopup->AddItem( L"Show Portals",		WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
+	RndFlagsPopup->AddItem( L"Show Lighting",		WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
+	RndFlagsPopup->AddItem( L"Show Model",			WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
+	RndFlagsPopup->AddItem( L"Show Stats",			WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
+	RndFlagsPopup->AddItem( L"Show Misc",			WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
+	RndFlagsPopup->AddItem( L"Show HUD",			WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
+	RndFlagsPopup->AddItem( L"Show Effects",		WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
+	RndFlagsPopup->AddItem( L"Show Paths",			WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
+	RndFlagsPopup->AddItem( L"Show Environment",	WIDGET_EVENT(WLevelPage::PopRndFlagClick), true );
 	for( Int32 i=0; i<RndFlagsPopup->Items.size(); i++ )
 		RndFlagsPopup->Items[i].bChecked	= Level->RndFlags & (1 << i);
 }
@@ -2279,6 +2280,14 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 					TVector( 10.f, 55.f ) 
 				);
 #endif
+
+	Canvas->DrawText
+				( 
+					String::Format( L"Game Time: %s", *Level->m_timeOfDay.toString() ), 
+					Root->Font1, 
+					COLOR_White, 
+					TVector( 10.f, 72.f ) 
+				);
 }
 
 

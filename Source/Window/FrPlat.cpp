@@ -146,11 +146,11 @@ void CWinPlatform::Launch( const Char* Target, const Char* Parms )
 //
 // Return current time of the day.
 //
-TTimeOfDay CWinPlatform::GetTimeOfDay()
+envi::TimeOfDay CWinPlatform::GetTimeOfDay()
 {
 	SYSTEMTIME Time;
 	GetLocalTime(&Time);
-	return TTimeOfDay(Time.wHour, Time.wMinute, Time.wSecond);
+	return envi::TimeOfDay(Time.wHour, Time.wMinute, Time.wSecond);
 };
 
 

@@ -55,15 +55,24 @@ class CNavigator;
 class CPhysics;
 enum EPathType;
 enum EEventName;
-class TTimeOfDay;
 struct TDelegate;
 struct TViewInfo;
 template<class K, class V> class TMap;
+
 
 // Flu includes.
 #include "Core/Core.h"
 
 using namespace flu; //todo: remove this;
+
+
+namespace flu
+{
+namespace envi
+{
+	class TimeOfDay;
+}
+}
 
 // Engine includes.
 #include "Core\FrBase.h"
@@ -86,6 +95,13 @@ using namespace flu; //todo: remove this;
 // Profiling
 #include "Chart/EngineProfiler.h"
 #include "Chart/EngineChart.h"
+
+// Environment
+#include "Environment/TimeOfDay.h"
+#include "Environment/Sky.h"
+#include "Environment/Satellite.h"
+#include "Environment/EnvironmentContext.h"
+#include "Environment/Environment.h"
 
 #include "FrCom.h"
 #include "FrBlock.h"

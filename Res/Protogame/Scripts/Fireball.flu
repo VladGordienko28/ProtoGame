@@ -2,26 +2,50 @@
  * @Fireball: A mage's projectile
  * @Author: Tough guys
  */
-script Fireball
+script Fireball: family Projectile
 {
 public:
-    event OnBeginPlay()
-    {
-    }
+    const FLIGH_TIME = 3.0;
 
-    fn launch( float dir )
+    fn Launch( float Direction ) unified
     {
         $Sprite.PlayAnim( "Process", 25.0, ANIM_Loop );
-        $Sprite.bFlipH = dir < 0.0;        
-        Velocity.x = 30.0 * dir;
+        $Sprite.bFlipH = Direction < 0.0;        
+        Velocity.X = 30.0 * Direction;
         Layer = 1.01;
-        
-        // add acceleration here!!!
+        // todo: add acceleration here!!!
+                
+        goto @Flight;
+    }
+    
+    event OnBeginTouch( entity Other )
+    {
+        if( label == @Flight )
+        {
+            if( Other is #Barrel )
+            {
+                bool WasHit = Barrel( Other ).TakeDamage( 1 );
+            
+                if( WasHit )
+                    goto @Dieing;                      
+            }
+            else if( (Other is #Brush) || (Other is #SWolf) )
+            {
+                goto @Dieing;
+            }
+        }                      
     }
     
     thread
     {
-        sleep 3.0;
+    @Flight:
+        sleep FLIGH_TIME;
+        delete this;
+           
+    @Dieing:
+        Velocity = Velocity * 0.02;
+        $Sprite.PlayAnim( "Boom", 13.0, ANIM_Once );
+        sleep 0.3;
         delete this;
     }
 }

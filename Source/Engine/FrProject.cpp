@@ -231,6 +231,12 @@ FLevel* CProject::DuplicateLevel( FLevel* Source )
 	Result->BlurIntensity	= Source->BlurIntensity;
 	mem::copy( Result->Effect, Source->Effect, sizeof(FLevel::Effect) );
 
+	Result->m_ambientColors = Source->m_ambientColors;
+	Result->m_dawnBitmap = Source->m_dawnBitmap;
+	Result->m_midnightBitmap = Source->m_midnightBitmap;
+	Result->m_noonBitmap = Source->m_noonBitmap;
+	Result->m_duskBitmap = Source->m_duskBitmap;
+
 	warn( L"World: Level \"%s\" duplicated", *Source->GetName() );
 	return Result;
 }

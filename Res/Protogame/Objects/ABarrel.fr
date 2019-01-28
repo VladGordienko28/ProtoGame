@@ -1,0 +1,22 @@
+BEGIN_RESOURCE FAnimation ABarrel
+    Sheet = FBitmap::BBarrel
+    FrameW = 32
+    FrameH = 32
+    NumSeqs = 6
+    Sequences[0].Name = "Idle"
+    Sequences[0].Count = 1
+    Sequences[1].Name = "Dieing"
+    Sequences[1].Start = 6
+    Sequences[1].Count = 5
+    Sequences[2].Name = "Crack1"
+    Sequences[2].Count = 2
+    Sequences[3].Name = "Crack2"
+    Sequences[3].Start = 1
+    Sequences[3].Count = 2
+    Sequences[4].Name = "Crack3"
+    Sequences[4].Start = 2
+    Sequences[4].Count = 2
+    Sequences[5].Name = "Crack4"
+    Sequences[5].Start = 3
+    Sequences[5].Count = 3
+END_RESOURCE
