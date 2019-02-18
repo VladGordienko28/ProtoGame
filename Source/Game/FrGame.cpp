@@ -565,12 +565,12 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 					
 					if( Level )
 					{
-						TVector	RealFOV		= Level->Camera.GetFitFOV( WinWidth, WinHeight );
-						TVector	CamFOV		= Level->Camera.FOV;
+						math::Vector	RealFOV		= Level->Camera.GetFitFOV( WinWidth, WinHeight );
+						math::Vector	CamFOV		= Level->Camera.FOV;
 						Float	lx			= 0.f,
-								ly			= WinHeight*((RealFOV.Y-CamFOV.Y)/2.f)/RealFOV.Y,
+								ly			= WinHeight*((RealFOV.y-CamFOV.y)/2.f)/RealFOV.y,
 								lw			= WinWidth,
-								lh			= WinHeight*(CamFOV.Y/RealFOV.Y);
+								lh			= WinHeight*(CamFOV.y/RealFOV.y);
 						Int32	TestX		= X,
 								TestY		= Y-ly;
 
@@ -676,7 +676,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 				Int32	Key		= Times > 0 ? KEY_WheelUp : KEY_WheelDown;
 
 				GGame->GInput->WheelScroll	+= SrlDlt;
-				for( Int32 i=0; i<Abs(Times); i++ )
+				for( Int32 i=0; i<abs(Times); i++ )
 				{
 					GGame->GInput->OnKeyDown( Key );
 					GGame->GInput->OnKeyUp( Key );

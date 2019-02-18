@@ -32,7 +32,7 @@ CInput::CInput()
 	MouseX		= 0;
 	MouseY		= 0;
 	WheelScroll	= 0;
-	WorldCursor	= TVector( 0.f, 0.f );
+	WorldCursor	= math::Vector( 0.f, 0.f );
 
 	// Nothing to process.
 	Level	= nullptr;
@@ -53,7 +53,7 @@ void CInput::Reset()
 	MouseX			= 0;
 	MouseY			= 0;
 	WheelScroll		= 0;
-	WorldCursor		= TVector( 0.f, 0.f );
+	WorldCursor		= math::Vector( 0.f, 0.f );
 
 	// Set no level.
 	Level	= nullptr;

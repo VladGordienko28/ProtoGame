@@ -16,7 +16,7 @@
 // successfully created and set FPuppetComponent::Goal*** fields,
 // to follow it. Otherwise return false and reset those fields.
 //
-Bool CNavigator::MakePathTo( FPuppetComponent* Seeker, TVector InDest )
+Bool CNavigator::MakePathTo( FPuppetComponent* Seeker, math::Vector InDest )
 {
 	// Reset seeker's goal info.
 	Seeker->GoalStart	= Seeker->Body->Location;
@@ -45,15 +45,15 @@ Bool CNavigator::MakePathTo( FPuppetComponent* Seeker, TVector InDest )
 	TPathNode&	Dest	= Nodes[iDest];
 
 	// Fast access seeker's stuff.
-	TVector	Size		= Seeker->Base->Size,
+	math::Vector	Size		= Seeker->Base->Size,
 			Location	= Seeker->Base->Location,
-			Size2		= TVector( Size.X*0.5f, Size.Y*0.5f ),
-			Bottom		= TVector( Location.X, Location.Y-Size2.Y ),
-			Top			= TVector( Location.X, Location.Y+Size2.Y );
+			Size2		= math::Vector( Size.x*0.5f, Size.y*0.5f ),
+			Bottom		= math::Vector( Location.x, Location.y-Size2.y ),
+			Top			= math::Vector( Location.x, Location.y+Size2.y );
 
 	// Hit detection.
 	FBrushComponent*	Brush	= nullptr;
-	TVector				Hit, HitNormal;
+	math::Vector		Hit, HitNormal;
 
 	if( iDest == iStart )
 	{	
@@ -65,7 +65,7 @@ Bool CNavigator::MakePathTo( FPuppetComponent* Seeker, TVector InDest )
 		Brush	= Level->TestLineGeom
 		(
 			InDest,
-			TVector( InDest.X, InDest.Y - Seeker->JumpHeight - Seeker->Base->Size.Y*0.6f ),
+			math::Vector( InDest.x, InDest.y - Seeker->JumpHeight - Seeker->Base->Size.y*0.6f ),
 			true, 
 			Hit,
 			HitNormal
@@ -77,10 +77,10 @@ Bool CNavigator::MakePathTo( FPuppetComponent* Seeker, TVector InDest )
 			if( Seeker->Body->Floor )
 			{
 ToDestDirectly:
-				if( InRange( InDest.X, Location.X-Size2.X, Location.X+Size2.X ) )
+				if( inRange( InDest.x, Location.x-Size2.x, Location.x+Size2.x ) )
 				{
 					// Jump to destination.
-					Float	Height	= Max( 0.f, InDest.Y-Top.Y );
+					Float	Height	= Max( 0.f, InDest.y-Top.y );
 					if( Height < Seeker->JumpHeight )
 					{
 						Seeker->GoalHint	= FPuppetComponent::SuggestJumpSpeed( Height, Seeker->GravityScale );
@@ -98,7 +98,7 @@ ToDestDirectly:
 					// Walk to destination.
 					Seeker->iHoldenNode	= iStart;
 					Seeker->iGoalNode	= -1;
-					Seeker->Goal		= TVector( InDest.X, Hit.Y+Size2.Y );
+					Seeker->Goal		= math::Vector( InDest.x, Hit.y+Size2.y );
 					Seeker->GoalHint	= 0.f;
 					Seeker->GoalReach	= PATH_Walk;
 					return true;
@@ -238,7 +238,7 @@ Bool CNavigator::MakeRandomPath( FPuppetComponent* Seeker )
 		return false;
 	}
 	TPathNode&	Start	= Nodes[iStart];
-	TVector		Bottom	= Seeker->Base->Location - TVector( 0.f, Seeker->Base->Size.Y*0.5f );
+	math::Vector	Bottom	= Seeker->Base->Location - math::Vector( 0.f, Seeker->Base->Size.y*0.5f );
 
 	if( Seeker->Body->GetAABB().IsInside(Start.Location) )
 	{
@@ -525,7 +525,7 @@ Found:
 // Tries to find a nearest node to point. Nodes will checked only
 // in radius, if no node found return -1.
 //
-Int32 CNavigator::FindNearestNode( TVector P, Bool bTraceLine, Float Radius )
+Int32 CNavigator::FindNearestNode( math::Vector P, Bool bTraceLine, Float Radius )
 {
 	Int32	Result		= -1;
 	Float	RadiusSq	= Radius * Radius;
@@ -534,11 +534,11 @@ Int32 CNavigator::FindNearestNode( TVector P, Bool bTraceLine, Float Radius )
 	for( Int32 iNode=0; iNode<Nodes.size(); iNode++ )
 	{
 		TPathNode& Node		= Nodes[iNode];
-		Float	TestDist	= (Node.Location - P).SizeSquared();
+		Float	TestDist	= (Node.Location - P).sizeSquared();
 
 		if( TestDist<RadiusSq && TestDist<BestDist )
 		{
-			TVector Hit, Normal;
+			math::Vector Hit, Normal;
 			if( !bTraceLine || !Level->TestLineGeom( Node.Location, P, true, Hit, Normal ) )
 			{
 				Result		= iNode;
@@ -565,7 +565,7 @@ Bool CNavigator::CanPassThrough( FPuppetComponent* Seeker, const TPathEdge& Edge
 			// Walking, if AI can walk and hull height
 			// allows to pass.
 			return	Seeker->MoveSpeed > 0.f && 
-					Seeker->Base->Size.Y < Edge.Height;
+					Seeker->Base->Size.y < Edge.Height;
 		}
 		case PATH_Jump:
 		{
@@ -664,7 +664,7 @@ void Serialize( CSerializer& S, TPathEdge& V )
 //
 TPathNode::TPathNode()
 {
-	Location	= TVector( 0.f, 0.f );
+	Location	= math::Vector( 0.f, 0.f );
 	Marker		= nullptr;
 	iParent		= -1;
 	Weight		= 0xffff;

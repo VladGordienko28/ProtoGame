@@ -43,9 +43,9 @@ public:
 	{
 		SetValue( iUniform, 4, Value );
 	}
-	inline void SetValue2f( Int32 iUniform, const TVector& Value )
+	inline void SetValue2f( Int32 iUniform, const math::Vector& Value )
 	{
-		SetValue( iUniform, 2, &Value.X );
+		SetValue( iUniform, 2, &Value.x );
 	}
 	inline void SetValue1i( Int32 iUniform, Int32 Value )
 	{
@@ -117,7 +117,7 @@ public:
 
 	// CGLFluShader setters.
 	void SetAmbientLight( const TColor& InAmbient );
-	Bool AddLight( FLightComponent* Light, const TVector& Location, TAngle Rotation );
+	Bool AddLight( FLightComponent* Light, const math::Vector& Location, math::Angle Rotation );
 	void ResetLights();
 
 	// Shader modes.

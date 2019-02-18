@@ -100,9 +100,9 @@ public:
 	Bool			bFrozen;
 
 	// World info.
-	TVector			Location;
-	TAngle			Rotation;
-	TVector			Size;
+	math::Vector	Location;
+	math::Angle		Rotation;
+	math::Vector	Size;
 	Float			Layer;
 
 	// FBaseComponent interface.
@@ -121,13 +121,13 @@ public:
 	void EditChange();
 
 	// Accessors.
-	inline TCoords ToWorld() const
+	inline math::Coords ToWorld() const
 	{
-		return TCoords( Location, Rotation ).Transpose();
+		return math::Coords( Location, Rotation ).transpose();
 	}
-	inline TCoords ToLocal() const
+	inline math::Coords ToLocal() const
 	{
-		return TCoords( Location, Rotation );
+		return math::Coords( Location, Rotation );
 	}
 	inline Bool IsHashed() const
 	{

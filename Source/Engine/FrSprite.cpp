@@ -44,11 +44,11 @@ FSpriteComponent::FSpriteComponent()
 {
 	bRenderable		= true;
 
-	Offset			= TVector( 0.f, 0.f );
-	Scale			= TVector( 1.f, 1.f );
-	Rotation		= TAngle( 0 );
-	TexCoords.Min	= TVector( 0.f, 0.f );
-	TexCoords.Max	= TVector( 16.f, 16.f );
+	Offset			= math::Vector( 0.f, 0.f );
+	Scale			= math::Vector( 1.f, 1.f );
+	Rotation		= math::Angle( 0 );
+	TexCoords.Min	= math::Vector( 0.f, 0.f );
+	TexCoords.Max	= math::Vector( 16.f, 16.f );
 }
 
 
@@ -81,12 +81,12 @@ void FSpriteComponent::Render( CCanvas* Canvas )
 		return;
 
 	// Precompute.
-	TVector Location	= Offset + Base->Location;
-	TVector Size		= TVector( Base->Size.X*Scale.X, Base->Size.Y*Scale.Y );
+	math::Vector Location	= Offset + Base->Location;
+	math::Vector Size		= math::Vector( Base->Size.x*Scale.x, Base->Size.y*Scale.y );
 
 	// Sprite is visible?
 	TRect Bounds = TRect( Location, Size );
-	if( !Canvas->View.Bounds.IsOverlap(TRect( Location, FastSqrt(Size.X*Size.X+Size.Y*Size.Y) )) )
+	if( !Canvas->View.Bounds.IsOverlap(TRect( Location, math::sqrt(Size.x*Size.x+Size.y*Size.y) )) )
 		return;
 
 	// Initialize rect.
@@ -98,19 +98,19 @@ void FSpriteComponent::Render( CCanvas* Canvas )
 	Rect.Bounds			= Bounds;
 	
 	// Integer texture coords to float.
-	Rect.TexCoords.Min.X	= TexCoords.Min.X * GRescale[Rect.Texture->UBits];
-	Rect.TexCoords.Max.X	= TexCoords.Max.X * GRescale[Rect.Texture->UBits];
-	Rect.TexCoords.Min.Y	= TexCoords.Max.Y * GRescale[Rect.Texture->VBits];
-	Rect.TexCoords.Max.Y	= TexCoords.Min.Y * GRescale[Rect.Texture->VBits];	
+	Rect.TexCoords.Min.x	= TexCoords.Min.x * GRescale[Rect.Texture->UBits];
+	Rect.TexCoords.Max.x	= TexCoords.Max.x * GRescale[Rect.Texture->UBits];
+	Rect.TexCoords.Min.y	= TexCoords.Max.y * GRescale[Rect.Texture->VBits];
+	Rect.TexCoords.Max.y	= TexCoords.Min.y * GRescale[Rect.Texture->VBits];	
 
 	if( Base->bFrozen )
 		Rect.Color	= Rect.Color * 0.55f;
 
 	// Apply flipping.
 	if( bFlipH )
-		Exchange( Rect.TexCoords.Min.X, Rect.TexCoords.Max.X );
+		Exchange( Rect.TexCoords.Min.x, Rect.TexCoords.Max.x );
 	if( bFlipV )
-		Exchange( Rect.TexCoords.Min.Y, Rect.TexCoords.Max.Y );
+		Exchange( Rect.TexCoords.Min.y, Rect.TexCoords.Max.y );
 
 	// Draw it!
 	Canvas->DrawRect( Rect );
@@ -136,8 +136,8 @@ FDecoComponent::FDecoComponent()
 		Amplitude( 1.f )		
 {
 	bRenderable		= true;
-	TexCoords.Min	= TVector( 0.f, 0.f );
-	TexCoords.Max	= TVector( 16.f, 16.f );
+	TexCoords.Min	= math::Vector( 0.f, 0.f );
+	TexCoords.Max	= math::Vector( 16.f, 16.f );
 }
 
 
@@ -178,11 +178,11 @@ void FDecoComponent::SerializeThis( CSerializer& S )
 void FDecoComponent::Render( CCanvas* Canvas )
 {
 	// Prepare.
-	TVector Scale	= Base->Size;
+	math::Vector Scale	= Base->Size;
 	Float	Now		= GPlat->Now();
 
 	// Is visible?
-	TRect Bounds = TRect( Base->Location, Max(Scale.X, Scale.Y)*2.f );
+	TRect Bounds = TRect( Base->Location, Max(Scale.x, Scale.y)*2.f );
 	if( !Canvas->View.Bounds.IsOverlap(Bounds) )
 		return;
 
@@ -194,26 +194,26 @@ void FDecoComponent::Render( CCanvas* Canvas )
 	Poly.NumVerts		= 4;
 
 	// Texture coords.
-	Float	U1	= TexCoords.Min.X * GRescale[Poly.Texture->UBits],
-			U2	= TexCoords.Max.X * GRescale[Poly.Texture->UBits],
-			V1	= TexCoords.Min.Y * GRescale[Poly.Texture->VBits],
-			V2	= TexCoords.Max.Y * GRescale[Poly.Texture->VBits];
+	Float	U1	= TexCoords.Min.x * GRescale[Poly.Texture->UBits],
+			U2	= TexCoords.Max.x * GRescale[Poly.Texture->UBits],
+			V1	= TexCoords.Min.y * GRescale[Poly.Texture->VBits],
+			V2	= TexCoords.Max.y * GRescale[Poly.Texture->VBits];
 
 	if( bFlipH )
 		Exchange( U1, U2 );
 	if( bFlipV )
 		Exchange( V1, V2 );
 
-	Poly.TexCoords[0]	= TVector( U1, V2 );
-	Poly.TexCoords[1]	= TVector( U1, V1 );
-	Poly.TexCoords[2]	= TVector( U2, V1 );
-	Poly.TexCoords[3]	= TVector( U2, V2 );
+	Poly.TexCoords[0]	= math::Vector( U1, V2 );
+	Poly.TexCoords[1]	= math::Vector( U1, V1 );
+	Poly.TexCoords[2]	= math::Vector( U2, V1 );
+	Poly.TexCoords[3]	= math::Vector( U2, V2 );
 
 	// Untransformed vertices in local coords.
-	Poly.Vertices[0]	= TVector( -Scale.X, -Scale.Y )*0.5;
-	Poly.Vertices[1]	= TVector( -Scale.X, +Scale.Y )*0.5;
-	Poly.Vertices[2]	= TVector( +Scale.X, +Scale.Y )*0.5;
-	Poly.Vertices[3]	= TVector( +Scale.X, -Scale.Y )*0.5;
+	Poly.Vertices[0]	= math::Vector( -Scale.x, -Scale.y )*0.5;
+	Poly.Vertices[1]	= math::Vector( -Scale.x, +Scale.y )*0.5;
+	Poly.Vertices[2]	= math::Vector( +Scale.x, +Scale.y )*0.5;
+	Poly.Vertices[3]	= math::Vector( +Scale.x, -Scale.y )*0.5;
 	  
 	// Apply distortion effect.
 	switch ( DecoType )
@@ -221,32 +221,32 @@ void FDecoComponent::Render( CCanvas* Canvas )
 		case DECO_Shrub:
 		{
 			// Windy shrub.
-			Float Sine		= Sin(Now*Frequency) * Amplitude;
-			Float Cosine	= Cos(Now*Frequency) * Amplitude;
+			Float Sine		= math::sin(Now*Frequency) * Amplitude;
+			Float Cosine	= math::cos(Now*Frequency) * Amplitude;
 
-			Poly.Vertices[1] += TVector( +Cosine, +Sine );
-			Poly.Vertices[2] += TVector( -Cosine, +Sine );
+			Poly.Vertices[1] += math::Vector( +Cosine, +Sine );
+			Poly.Vertices[2] += math::Vector( -Cosine, +Sine );
 			break;
 		}
 		case DECO_Trunc:
 		{
 			// Tree trunc.
-			Float Phase		= Sin(Now*Frequency) * Amplitude * (PI/8.f);
-			TCoords Matrix	= TCoords( TVector( Base->Location.X, Base->Location.Y-Scale.Y*0.5f ), Phase );
+			Float Phase		= math::sin(Now*Frequency) * Amplitude * (math::PI/8.f);
+			math::Coords Matrix	= math::Coords( math::Vector( Base->Location.x, Base->Location.y-Scale.y*0.5f ), Phase );
 
-			Poly.Vertices[1]	= TransformVectorBy( Poly.Vertices[1], Matrix ); 
-			Poly.Vertices[2]	= TransformVectorBy( Poly.Vertices[2], Matrix );
+			Poly.Vertices[1]	= math::transformVectorBy( Poly.Vertices[1], Matrix ); 
+			Poly.Vertices[2]	= math::transformVectorBy( Poly.Vertices[2], Matrix );
 			
 			break;
 		}
 		case DECO_Liana:
 		{
 			// Waver liana.
-			Float Phase		= Sin(Now*Frequency) * Amplitude * (PI/8.f);
-			TCoords Matrix	= TCoords( TVector( Base->Location.X, Base->Location.Y+Scale.Y*0.5f ), Phase );
+			Float Phase		= math::sin(Now*Frequency) * Amplitude * (math::PI/8.f);
+			math::Coords Matrix	= math::Coords( math::Vector( Base->Location.x, Base->Location.y+Scale.y*0.5f ), Phase );
 
-			Poly.Vertices[0]	= TransformVectorBy( Poly.Vertices[0], Matrix ); 
-			Poly.Vertices[3]	= TransformVectorBy( Poly.Vertices[3], Matrix );
+			Poly.Vertices[0]	= math::transformVectorBy( Poly.Vertices[0], Matrix ); 
+			Poly.Vertices[3]	= math::transformVectorBy( Poly.Vertices[3], Matrix );
 
 			break;
 		}
@@ -313,7 +313,7 @@ void FAnimatedSpriteComponent::Tick( Float Delta )
 			// Simple animation, just play it and stop with
 			// OnAnimEnd notification.
 			Frame		+= Rate * Delta;
-			iFrame		= Floor(Frame);
+			iFrame		= math::floor(Frame);
 
 			if( iFrame > MaxFrames )
 			{
@@ -328,7 +328,7 @@ void FAnimatedSpriteComponent::Tick( Float Delta )
 		{
 			// Looped animation.
 			Frame		+= Rate * Delta;
-			iFrame		= Floor(Frame);
+			iFrame		= math::floor(Frame);
 
 			if( iFrame > MaxFrames )
 			{
@@ -344,7 +344,7 @@ void FAnimatedSpriteComponent::Tick( Float Delta )
 			{
 				// Backward animation.
 				Frame		+= Rate * Delta;
-				iFrame		= Floor(Frame);
+				iFrame		= math::floor(Frame);
 				if( iFrame < 0 )
 				{
 					// Toggle to forward.
@@ -356,7 +356,7 @@ void FAnimatedSpriteComponent::Tick( Float Delta )
 			{
 				// Forward animation.
 				Frame		+= Rate * Delta;
-				iFrame		= Floor(Frame);
+				iFrame		= math::floor(Frame);
 				if( iFrame > MaxFrames )
 				{
 					// Toggle to backward.
@@ -380,8 +380,8 @@ void FAnimatedSpriteComponent::Render( CCanvas* Canvas )
 		return;
 
 	// Sprite is visible?
-	TVector DrawSize/*( Base->Size.X*Scale.X, Base->Size.Y*Scale.Y )*/ = Scale;
-	TVector DrawPos( Base->Location.X+Offset.X, Base->Location.Y+Offset.Y );
+	math::Vector DrawSize/*( Base->Size.X*Scale.X, Base->Size.Y*Scale.Y )*/ = Scale;
+	math::Vector DrawPos( Base->Location.x+Offset.x, Base->Location.y+Offset.y );
 	TRect Bounds( DrawPos, DrawSize );
 	if( !Canvas->View.Bounds.IsOverlap(Bounds) )
 		return;
@@ -399,7 +399,7 @@ void FAnimatedSpriteComponent::Render( CCanvas* Canvas )
 	{
 		// Draw animation.
 		TAnimSequence* Seq	= &Animation->Sequences[iSequence];
-		Int32 iDrawFrame	= Floor(Frame) + Seq->Start;
+		Int32 iDrawFrame	= math::floor(Frame) + Seq->Start;
 
 		Rect.Texture	= Animation->Sheet;
 		Rect.TexCoords	= Animation->GetTexCoords( iDrawFrame );
@@ -408,15 +408,15 @@ void FAnimatedSpriteComponent::Render( CCanvas* Canvas )
 	{
 		// Bad animation, draw chess board instead.
 		Rect.Texture		= nullptr;
-		Rect.TexCoords.Min	= TVector( 0.f, 1.f );
-		Rect.TexCoords.Max	= TVector( 1.f, 0.f );
+		Rect.TexCoords.Min	= math::Vector( 0.f, 1.f );
+		Rect.TexCoords.Max	= math::Vector( 1.f, 0.f );
 	}
 
 	// Apply flipping.
 	if( bFlipH )
-		Exchange( Rect.TexCoords.Min.X, Rect.TexCoords.Max.X );
+		Exchange( Rect.TexCoords.Min.x, Rect.TexCoords.Max.x );
 	if( bFlipV )
-		Exchange( Rect.TexCoords.Min.Y, Rect.TexCoords.Max.Y );
+		Exchange( Rect.TexCoords.Min.y, Rect.TexCoords.Max.y );
 
 	if( Base->bFrozen )
 		Rect.Color	= Rect.Color * 0.55f;
@@ -533,12 +533,12 @@ FParallaxLayerComponent::FParallaxLayerComponent()
 		Texture( nullptr )		
 {
 	bRenderable		= true;
-	Scale			= TVector( 20.f, 20.f );
-	Parallax		= TVector( 0.05f, 0.05f );
-	Gap				= TVector( 5.f, 5.f );
-	Offset			= TVector( 0.f, 0.f );
-	TexCoords.Min	= TVector( 0.f, 0.f );
-	TexCoords.Max	= TVector( 16.f, 16.f );
+	Scale			= math::Vector( 20.f, 20.f );
+	Parallax		= math::Vector( 0.05f, 0.05f );
+	Gap				= math::Vector( 5.f, 5.f );
+	Offset			= math::Vector( 0.f, 0.f );
+	TexCoords.Min	= math::Vector( 0.f, 0.f );
+	TexCoords.Max	= math::Vector( 16.f, 16.f );
 }
 
 
@@ -581,18 +581,18 @@ void FParallaxLayerComponent::Render( CCanvas* Canvas )
 		return;
 
 	// How much tiles draw.
-	TVector Period = Scale + Gap;
-	TVector Area = Canvas->View.Bounds.Size();
-	Int32 NumX = Ceil(Area.X / Period.X) + 1;
-	Int32 NumY = Ceil(Area.Y / Period.Y) + 1;
+	math::Vector Period = Scale + Gap;
+	math::Vector Area = Canvas->View.Bounds.Size();
+	Int32 NumX = math::ceil(Area.x / Period.x) + 1;
+	Int32 NumY = math::ceil(Area.y / Period.y) + 1;
 
 	// Compute parallax parameters.
-	TVector Bias;
-	Bias.X = Canvas->View.Coords.Origin.X * Parallax.X + Offset.X;
-	Bias.Y = Canvas->View.Coords.Origin.Y * Parallax.Y + Offset.Y;
+	math::Vector Bias;
+	Bias.x = Canvas->View.Coords.origin.x * Parallax.x + Offset.x;
+	Bias.y = Canvas->View.Coords.origin.y * Parallax.y + Offset.y;
 	
-	Bias.X = fmod( Bias.X, Period.X );
-	Bias.Y = fmod( Bias.Y, Period.Y );
+	Bias.x = fmod( Bias.x, Period.x );
+	Bias.y = fmod( Bias.y, Period.y );
 
 	// Setup render rect.
 	TRenderRect Rect;
@@ -601,22 +601,22 @@ void FParallaxLayerComponent::Render( CCanvas* Canvas )
 	Rect.Flags			= POLY_Unlit * (bUnlit | !(Level->RndFlags & RND_Lighting));
 	Rect.Rotation		= 0;
 
-	Rect.TexCoords.Min.X	= TexCoords.Min.X * GRescale[Rect.Texture->UBits];
-	Rect.TexCoords.Max.X	= TexCoords.Max.X * GRescale[Rect.Texture->UBits];
-	Rect.TexCoords.Min.Y	= TexCoords.Max.Y * GRescale[Rect.Texture->VBits];
-	Rect.TexCoords.Max.Y	= TexCoords.Min.Y * GRescale[Rect.Texture->VBits];	
+	Rect.TexCoords.Min.x	= TexCoords.Min.x * GRescale[Rect.Texture->UBits];
+	Rect.TexCoords.Max.x	= TexCoords.Max.x * GRescale[Rect.Texture->UBits];
+	Rect.TexCoords.Min.y	= TexCoords.Max.y * GRescale[Rect.Texture->VBits];
+	Rect.TexCoords.Max.y	= TexCoords.Min.y * GRescale[Rect.Texture->VBits];	
 
 	// Apply flipping.
 	if( bFlipH )
-		Exchange( Rect.TexCoords.Min.X, Rect.TexCoords.Max.X );
+		Exchange( Rect.TexCoords.Min.x, Rect.TexCoords.Max.x );
 	if( bFlipV )
-		Exchange( Rect.TexCoords.Min.Y, Rect.TexCoords.Max.Y );
+		Exchange( Rect.TexCoords.Min.y, Rect.TexCoords.Max.y );
 
 	// Draw all rectangles.
 	for( Int32 Y=0; Y<NumY; Y++ )
 	for( Int32 X=0; X<NumX; X++ )		
 	{
-		TVector Origin = Canvas->View.Bounds.Min - Bias + TVector( X*Period.X, Y*Period.Y ) - Scale*0.5f;
+		math::Vector Origin = Canvas->View.Bounds.Min - Bias + math::Vector( X*Period.x, Y*Period.y ) - Scale*0.5f;
 		Rect.Bounds	= TRect( Origin, Scale );
 		Canvas->DrawRect( Rect );
 	}
@@ -653,17 +653,17 @@ void FLabelComponent::Render( CCanvas* Canvas )
 	TViewInfo OldView = Canvas->View;
 	Canvas->PushTransform(TViewInfo( OldView.X, OldView.Y, OldView.Width, OldView.Height ));
 	{
-		TVector	P;
+		math::Vector	P;
 		Float	W = Font->TextWidth(*Text)*Scale, H = Font->Glyphs[0].H*Scale;
-		OldView.Project( Base->Location, P.X, P.Y );
+		OldView.Project( Base->Location, P.x, P.y );
 		
 		Canvas->DrawText
 		(
 			Text,
 			Font,
 			Color,
-			TVector( P.X-W*0.5f, P.Y-H*0.5f ),
-			TVector( Scale, Scale )
+			math::Vector( P.x-W*0.5f, P.y-H*0.5f ),
+			math::Vector( Scale, Scale )
 		);
 	}
 	Canvas->PopTransform();

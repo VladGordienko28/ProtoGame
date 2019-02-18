@@ -258,7 +258,7 @@ TMap<String, String>	GStaticBuffer;
 // Figure out is point inside brush. If point is
 // outside of any brush return nullptr.
 //
-FBrushComponent* FLevel::TestPointGeom( const TVector& P )
+FBrushComponent* FLevel::TestPointGeom( const math::Vector& P )
 {
 	assert(bIsPlaying && CollHash);
 
@@ -280,9 +280,9 @@ FBrushComponent* FLevel::TestPointGeom( const TVector& P )
 		if( Brush->Type == BRUSH_Solid )
 		{
 			// Transform test point to the Brush's local coords.
-			TVector LP = P - Brush->Location;
+			math::Vector LP = P - Brush->Location;
 
-			if( IsPointInsidePoly( LP, Brush->Vertices, Brush->NumVerts ) )
+			if( math::isPointInsidePoly( LP, Brush->Vertices, Brush->NumVerts ) )
 				return Brush;
 		}
 	}
@@ -295,7 +295,7 @@ FBrushComponent* FLevel::TestPointGeom( const TVector& P )
 //
 // Test a line with a level geometry.
 //
-FBrushComponent* FLevel::TestLineGeom( const TVector& A, const TVector& B, Bool bFast, TVector& Hit, TVector& Normal )
+FBrushComponent* FLevel::TestLineGeom( const math::Vector& A, const math::Vector& B, Bool bFast, math::Vector& Hit, math::Vector& Normal )
 {
 	assert(bIsPlaying && CollHash);
 
@@ -304,10 +304,10 @@ FBrushComponent* FLevel::TestLineGeom( const TVector& A, const TVector& B, Bool 
 
 	// Get line bounds.
 	TRect Bounds;
-	Bounds.Min.X	= Min( A.X, B.X );
-	Bounds.Min.Y	= Min( A.Y, B.Y );
-	Bounds.Max.X	= Max( A.X, B.X );
-	Bounds.Max.Y	= Max( A.Y, B.Y );
+	Bounds.Min.x	= Min( A.x, B.x );
+	Bounds.Min.y	= Min( A.y, B.y );
+	Bounds.Max.x	= Max( A.x, B.x );
+	Bounds.Max.y	= Max( A.y, B.y );
 
 	// Get list of brushes.
 	FBrushComponent* Brushes[MAX_COLL_LIST_OBJS];
@@ -328,15 +328,15 @@ FBrushComponent* FLevel::TestLineGeom( const TVector& A, const TVector& B, Bool 
 		{
 			// Test collision with solid/semi-solid brush.
 			Float TestTime;
-			TVector TestHit, TestNormal;
-			TVector LA = A - Brush->Location;
-			TVector LB = B - Brush->Location;
+			math::Vector TestHit, TestNormal;
+			math::Vector LA = A - Brush->Location;
+			math::Vector LB = B - Brush->Location;
 
-			if( LineIntersectPoly( LA, LB, Brush->Vertices, Brush->NumVerts, &TestHit, &TestNormal ) )
+			if( math::isLineIntersectPoly( LA, LB, Brush->Vertices, Brush->NumVerts, &TestHit, &TestNormal ) )
 			{
-				if( Brush->Type==BRUSH_Solid || (Brush->Type==BRUSH_SemiSolid && IsWalkable(TestNormal)) )
+				if( Brush->Type==BRUSH_Solid || (Brush->Type==BRUSH_SemiSolid && phys::isWalkableSurface(TestNormal)) )
 				{
-					TestTime	= ( TestHit + Brush->Location - A ).SizeSquared();
+					TestTime	= ( TestHit + Brush->Location - A ).sizeSquared();
 
 					if( TestTime < BestTime )
 					{
@@ -437,7 +437,7 @@ void FLevel::Tick( Float Delta )
 // Create a new entity. Use only it, because it
 // create, register and prepare entity for playing.
 //
-FEntity* FLevel::CreateEntity( FScript* InScript, String InName, TVector InLocation )
+FEntity* FLevel::CreateEntity( FScript* InScript, String InName, math::Vector InLocation )
 {
 	assert(InScript);
 
@@ -743,7 +743,7 @@ TCamera::TCamera()
 		Rotation( 0 ),
 		FOV( 64.f, 32.f ),
 		Zoom( 1.f ),
-		ScrollBound( TVector(0.f, 0.f), WORLD_SIZE )
+		ScrollBound( math::Vector(0.f, 0.f), math::WORLD_SIZE )
 {
 }
 
@@ -752,11 +752,11 @@ TCamera::TCamera()
 // Return a "good" camera FOV according to viewport
 // resolution.
 //
-TVector TCamera::GetFitFOV( Float ScreenX, Float ScreenY ) const
+math::Vector TCamera::GetFitFOV( Float ScreenX, Float ScreenY ) const
 {
-	TVector R;
-	R.X = FOV.X;
-	R.Y = ScreenY * Abs(FOV.X) / ScreenX;
+	math::Vector R;
+	R.x = FOV.x;
+	R.y = ScreenY * abs(FOV.x) / ScreenX;
 	return R;
 }
 
@@ -783,8 +783,8 @@ void Serialize( CSerializer& S, TCamera& V )
 //
 void fluDebugLine( CFrame& Frame )
 {
-	TVector A = POP_VECTOR;
-	TVector B = POP_VECTOR;
+	math::Vector A = POP_VECTOR;
+	math::Vector B = POP_VECTOR;
 	TColor Color = POP_COLOR;
 	Float Time = POP_FLOAT;
 
@@ -797,7 +797,7 @@ void fluDebugLine( CFrame& Frame )
 //
 void fluDebugPoint( CFrame& Frame )
 {
-	TVector P = POP_VECTOR;
+	math::Vector P = POP_VECTOR;
 	TColor Color = POP_COLOR;
 	Float Size = POP_FLOAT;
 	Float Time = POP_FLOAT;

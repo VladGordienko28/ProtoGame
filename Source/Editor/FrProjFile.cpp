@@ -228,15 +228,15 @@ public:
 	}
 
 	// Vector export.
-	void ExportVector( const Char* FieldName, TVector Value ) 
+	void ExportVector( const Char* FieldName, math::Vector Value ) 
 	{
-		if( Value.X!=0.f || Value.Y!=0.f )
+		if( Value.x!=0.f || Value.y!=0.f )
 			Writer.WriteString(String::Format
 			( 
 				L"%s%s = [%.4f; %.4f]", 
 				Whitespace, 
 				FieldName, 
-				Value.X, Value.Y 
+				Value.x, Value.y 
 			));
 	}
 
@@ -248,21 +248,21 @@ public:
 			L"%s%s = (%.4f; %.4f; %.4f; %.4f)", 
 			Whitespace, 
 			FieldName, 
-			Value.Min.X, Value.Min.Y, 
-			Value.Max.X, Value.Max.Y 
+			Value.Min.x, Value.Min.y, 
+			Value.Max.x, Value.Max.y 
 		));
 	}
 
 	// Angle export.
-	void ExportAngle( const Char* FieldName, TAngle Value ) 
+	void ExportAngle( const Char* FieldName, math::Angle Value ) 
 	{
-		if( Value.Angle != 0 )
+		if( Value )
 			Writer.WriteString(String::Format
 			( 
 				L"%s%s = %d", 
 				Whitespace, 
 				FieldName, 
-				Value.Angle 
+				(Int32)Value 
 			));
 	}
 
@@ -675,7 +675,7 @@ public:
 	}
 
 	// Parse angle value.
-	TAngle ToAngle()
+	math::Angle ToAngle()
 	{
 		return _wtoi(Value);
 	}
@@ -699,7 +699,7 @@ public:
 	}
 
 	// Parse vector value.
-	TVector ToVector()
+	math::Vector ToVector()
 	{
 		Float X=0.f, Y=0.f;
 		Char *Walk=Value, *End = &Value[arraySize(Value)-1];
@@ -709,11 +709,11 @@ public:
 		{
 			Walk++;
 			if( Walk > End ) 
-				return TVector( X, Y );
+				return math::Vector( X, Y );
 		}
 		Walk++;
 		Y = _wtof(Walk);
-		return TVector( X, Y );
+		return math::Vector( X, Y );
 	}
 
 	// Parse color value.
@@ -767,28 +767,28 @@ public:
 		TRect Rect;
 		Char *Walk=Value, *End = &Value[arraySize(Value)-1];
 		Walk++;
-		Rect.Min.X = _wtof(Walk);
+		Rect.Min.x = _wtof(Walk);
 		while( *Walk != ';' )
 		{
 			Walk++;
 			if( Walk > End ) return Rect;
 		}
 		Walk++;
-		Rect.Min.Y = _wtof(Walk);
+		Rect.Min.y = _wtof(Walk);
 		while( *Walk != ';' )
 		{
 			Walk++;
 			if( Walk > End ) return Rect;
 		}
 		Walk++;
-		Rect.Max.X = _wtof(Walk);
+		Rect.Max.x = _wtof(Walk);
 		while( *Walk != ';' )
 		{
 			Walk++;
 			if( Walk > End ) return Rect;
 		}
 		Walk++;
-		Rect.Max.Y = _wtof(Walk);
+		Rect.Max.y = _wtof(Walk);
 		return Rect;
 	}
 };
@@ -1501,24 +1501,24 @@ public:
 	}
 
 	// Vector import.
-	TVector	ImportVector( const Char* FieldName )
+	math::Vector ImportVector( const Char* FieldName )
 	{
 		TLoadProperty* Prop = Object->FindProperty( FieldName, false );
-		return Prop ? Prop->ToVector() : TVector(0,0);
+		return Prop ? Prop->ToVector() : math::Vector(0,0);
 	}
 
 	// Rect import.
 	TRect ImportAABB( const Char* FieldName )
 	{
 		TLoadProperty* Prop = Object->FindProperty( FieldName, false );
-		return Prop ? Prop->ToAABB() : TRect(TVector(0.f,0.f), TVector(0.f,0.f));
+		return Prop ? Prop->ToAABB() : TRect(math::Vector(0.f,0.f), math::Vector(0.f,0.f));
 	}
 
 	// Angle import.
-	TAngle ImportAngle( const Char* FieldName )
+	math::Angle ImportAngle( const Char* FieldName )
 	{
 		TLoadProperty* Prop = Object->FindProperty( FieldName, false );
-		return Prop ? Prop->ToAngle() : TAngle(0.f);
+		return Prop ? Prop->ToAngle() : math::Angle(0.f);
 	}
 
 	// Object import.

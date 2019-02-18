@@ -34,7 +34,7 @@ public:
 
 		Root->SetFocused( this );
 
-		Lines[0]	= String::Format( L"Fluorine Engine" );
+		Lines[0]	= String::Format( FLUORINE_INFO );
 		Lines[1]	= String::Format( L"Version: %s", FLU_VERSION );
 		Lines[2]	= String::Format( L"Build on: %hs", __DATE__ );
 		Lines[3]	= String::Format( L"%s", FLU_COPYRIGHT );

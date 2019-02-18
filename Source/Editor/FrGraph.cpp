@@ -49,8 +49,8 @@ struct TPin
 public:
 	// Variables.
 	UInt32				Flags;
-	TVector				Location;
-	TVector				Normal;
+	math::Vector		Location;
+	math::Vector		Normal;
 	FBrushComponent*	Floor;
 	Int32				iEdges[TPathNode::NUM_EDGES];
 	Int32				iGroup;
@@ -59,8 +59,8 @@ public:
 	TPin()
 	{
 		Flags		= PIN_None;
-		Location	= TVector( 0.f, 0.f );
-		Normal		= TVector( 0.f, 1.f );
+		Location	= math::Vector( 0.f, 0.f );
+		Normal		= math::Vector( 0.f, 1.f );
 		Floor		= nullptr;
 		iGroup		= -1;
 		for( Int32 i=0; i<TPathNode::NUM_EDGES; i++ )
@@ -163,14 +163,14 @@ public:
 	void ExplorePaths();
 
 	// Tracing functions.
-	FBrushComponent* TestPoint( const TVector& P );
+	FBrushComponent* TestPoint( const math::Vector& P );
 	FBrushComponent* TestLine
 	( 
 		Bool bFast,
-		const TVector& From, 
-		const TVector& To, 
-		TVector& Hit, 
-		TVector& Normal 
+		const math::Vector& From, 
+		const math::Vector& To, 
+		math::Vector& Hit, 
+		math::Vector& Normal 
 	);
 };
 
@@ -206,12 +206,12 @@ void CPathBuilder::LinkWalkable()
 		TRect		AABB2	= Group2.Bounds;
 		Bool		bOnLeft	= false;
 
-		if( AABB2.Max.X < AABB1.Min.X+0.5f )
+		if( AABB2.Max.x < AABB1.Min.x+0.5f )
 		{
 			// Group2 lies on left of Group1.
 			bOnLeft	= true;
 		}
-		else if( AABB2.Min.X > AABB1.Max.X-0.5f )
+		else if( AABB2.Min.x > AABB1.Max.x-0.5f )
 		{
 			// Group2 lies on right of Group1.
 			bOnLeft	= false;
@@ -226,7 +226,7 @@ void CPathBuilder::LinkWalkable()
 		TPin&	Best2	= Pins[iBest2];
 
 		// Trace line along walk dir.
-		TVector HitPoint, HitNormal;
+		math::Vector HitPoint, HitNormal;
 		FBrushComponent* Obstacle = TestLine
 		(
 			true,
@@ -242,9 +242,9 @@ void CPathBuilder::LinkWalkable()
 
 		// Walk along the path and check for floor.
 		FBrushComponent*	Floor;
-		TVector	PathDelta	= Best2.Location - Best1.Location;
-		Int32	NumSteps	= Max( 1, ::Floor(PathDelta.Size() / WALK_STEP) );
-		TVector	Walk		= Best1.Location;
+		math::Vector PathDelta	= Best2.Location - Best1.Location;
+		Int32	NumSteps	= Max( 1, math::floor(PathDelta.size() / WALK_STEP) );
+		math::Vector Walk		= Best1.Location;
 		PathDelta			*= 1.f / NumSteps;
 
 		for( Int32 k=0; k<NumSteps; k++ )
@@ -253,12 +253,12 @@ void CPathBuilder::LinkWalkable()
 			(
 				false,
 				Walk,
-				Walk - TVector( 0.f, WALK_HEIGHT ),
+				Walk - math::Vector( 0.f, WALK_HEIGHT ),
 				HitPoint,
 				HitNormal
 			);
 
-			if( Floor && ((HitPoint-Walk).SizeSquared() > PIN_BASE) )
+			if( Floor && ((HitPoint-Walk).sizeSquared() > PIN_BASE) )
 				Floor	= nullptr;
 
 			if( !Floor )
@@ -275,7 +275,7 @@ void CPathBuilder::LinkWalkable()
 			Edge.iStart		= iBest1;
 			Edge.iFinish	= iBest2;
 			Edge.PathType	= PATH_Walk;
-			Edge.Cost		= ::Floor(Abs(Best1.Location.X-Best2.Location.X));
+			Edge.Cost		= math::floor(abs(Best1.Location.x-Best2.Location.x));
 
 			// Add to navigator.
 			if( Best1.CanAddEdge() ) Best1.AddEdge(Navigator->Edges.push(Edge));
@@ -328,7 +328,7 @@ void CPathBuilder::LinkJumpable()
 			TPin&	Pin2 = Pins[Group2.iPins[p2]];
 
 			// Sort pins by height.
-			if( Pin1.Location.Y > Pin2.Location.Y )
+			if( Pin1.Location.y > Pin2.Location.y )
 			{
 				iUpper	= Group1.iPins[p1];
 				iLower	= Group2.iPins[p2];
@@ -349,9 +349,9 @@ void CPathBuilder::LinkJumpable()
 			Bool bLeft	= Upper.Flags & PIN_Left;
 
 			// Compute initial jump spot.
-			TVector	Tangent	= -Upper.Normal.Cross();
-			TVector	Dir		= Lower.Location - Upper.Location;
-			TVector	JumpSpot, UnusedPoint, UnusedNormal;
+			math::Vector	Tangent	= -Upper.Normal.cross();
+			math::Vector	Dir		= Lower.Location - Upper.Location;
+			math::Vector	JumpSpot, UnusedPoint, UnusedNormal;
 			if( bLeft )
 				JumpSpot	= Upper.Location + (Upper.Normal-Tangent) * PIN_BASE * 1.f;
 			else
@@ -359,8 +359,8 @@ void CPathBuilder::LinkJumpable()
 
 			// Make sure, we can jump.
 			if	(
-					( bLeft ? Dir.X < 0.f : Dir.X > 0.f ) &&
-					( Abs(Dir.X) <= MAX_JUMP_X ) &&
+					( bLeft ? Dir.x < 0.f : Dir.x > 0.f ) &&
+					( abs(Dir.x) <= MAX_JUMP_X ) &&
 					TestPoint(JumpSpot) == nullptr
 				)
 			{
@@ -381,7 +381,7 @@ void CPathBuilder::LinkJumpable()
 					Edge.iStart		= iUpper;
 					Edge.iFinish	= iLower;
 					Edge.PathType	= PATH_Jump;
-					Edge.Cost		= Floor(JUMP_WEIGHT*(Abs(Dir.X)+Abs(Dir.Y)));
+					Edge.Cost		= math::floor(JUMP_WEIGHT*(abs(Dir.x)+abs(Dir.y)));
 
 					Links[bLeft].push(Edge);
 				}
@@ -431,27 +431,27 @@ void CPathBuilder::ExplorePaths()
 
 		// Walk along the edge and trace line up.
 		Edge.Height			= MAX_HULL_HEIGHT;
-		TVector	A			= Navigator->Nodes[Edge.iStart].Location,
+		math::Vector	A			= Navigator->Nodes[Edge.iStart].Location,
 				B			= Navigator->Nodes[Edge.iFinish].Location,
 				Delta		= B - A,
 				Walk		= A;
-		Int32	NumSteps	= Max( 1, Floor(Delta.Size()) );
+		Int32	NumSteps	= Max( 1, math::floor(Delta.size()) );
 
 		Delta	*= 1.f/NumSteps;
 
 		for( Int32 i=0; i<NumSteps; i++ )
 		{
-			TVector HitPoint, HitNormal;
+			math::Vector HitPoint, HitNormal;
 			if( TestLine
 				(
 					true,
 					Walk,
-					TVector( Walk.X, Walk.Y+MAX_HULL_HEIGHT ),
+					math::Vector( Walk.x, Walk.y+MAX_HULL_HEIGHT ),
 					HitPoint,
 					HitNormal
 				) )
 			{
-				Float	TestHeight = Abs(HitPoint.Y - Walk.Y) + PIN_BASE;
+				Float	TestHeight = abs(HitPoint.y - Walk.y) + PIN_BASE;
 
 				if( Edge.Height > TestHeight )
 						Edge.Height	= TestHeight;
@@ -476,20 +476,20 @@ void CPathBuilder::CreateSurfacePins()
 		FBrushComponent* Brush = BrushList[b];
 
 		// Winding the brush.
-		TVector P2, P1 = Brush->Vertices[Brush->NumVerts-1];
+		math::Vector P2, P1 = Brush->Vertices[Brush->NumVerts-1];
 		for( Int32 i=0; i<Brush->NumVerts; i++ )
 		{
 			// Information about current edge.
 			P2	= Brush->Vertices[i];
-			TVector	Tanget	= P2 - P1;
-			Tanget.Normalize();
-			TVector Normal	= Tanget.Cross();
+			math::Vector	Tanget	= P2 - P1;
+			Tanget.normalize();
+			math::Vector Normal	= Tanget.cross();
 
 			// Place only above walkable surfaces.
-			if( IsWalkable(Normal) )
+			if( phys::isWalkableSurface(Normal) )
 			{
 				// Place left one.
-				TVector Left	= P1 + (Normal+Tanget) * PIN_BASE + Brush->Location;
+				math::Vector Left	= P1 + (Normal+Tanget) * PIN_BASE + Brush->Location;
 				if( TestPoint(Left) == nullptr )
 				{
 					TPin	Pin;
@@ -501,7 +501,7 @@ void CPathBuilder::CreateSurfacePins()
 				}
 
 				// Place right one.
-				TVector Right	= P2 + (Normal-Tanget) * PIN_BASE + Brush->Location;
+				math::Vector Right	= P2 + (Normal-Tanget) * PIN_BASE + Brush->Location;
 				if( TestPoint(Right) == nullptr )
 				{
 					TPin	Pin;
@@ -530,11 +530,11 @@ void CPathBuilder::CreateFallPins()
 	for( Int32 i=0; i<NumSource; i++ )
 	{
 		TPin&	Source	= Pins[i];
-		TVector	Tangent	= -Source.Normal.Cross();
+		math::Vector	Tangent	= -Source.Normal.cross();
 
 		// Compute jump 'from' and 'to' points.
 		assert(Source.Flags & (PIN_Left | PIN_Right));
-		TVector From, To;
+		math::Vector From, To;
 		if( Source.Flags & PIN_Left )
 		{
 			// From left.
@@ -545,18 +545,18 @@ void CPathBuilder::CreateFallPins()
 			// From right.
 			From	= Source.Location + Tangent * PIN_FALL_OFFSET;
 		}
-		To	= TVector( From.X, From.Y-FALL_MAX_LEN );
+		To	= math::Vector( From.x, From.y-FALL_MAX_LEN );
 
 		// Trace line.
-		TVector HitNormal, HitPoint;
+		math::Vector HitNormal, HitPoint;
 		FBrushComponent* HitBrush;
 		HitBrush	= TestLine( false, From, To, HitPoint, HitNormal );
 
 		if	( 
 				HitBrush && 
 				HitBrush != Source.Floor && 
-				IsWalkable(HitNormal) &&
-				Abs(HitPoint.Y-From.Y) > PIN_BASE*1.5f
+				phys::isWalkableSurface(HitNormal) &&
+				abs(HitPoint.y-From.y) > PIN_BASE*1.5f
 			)
 		{
 			// Create new pin.
@@ -588,7 +588,7 @@ void CPathBuilder::MergePins()
 				TPin&	Pin1 = Pins[i];
 				TPin&	Pin2 = Pins[j];
 
-				if( (Pin2.Location-Pin1.Location).SizeSquared() <= PIN_SAME*PIN_SAME )
+				if( (Pin2.Location-Pin1.Location).sizeSquared() <= PIN_SAME*PIN_SAME )
 				{
 					// Marge them.
 					Pin1.Flags		|= Pin2.Flags;
@@ -611,7 +611,7 @@ void CPathBuilder::MergePins()
 static CPathBuilder*	GBuilder;
 Bool PinXCmp( const Int32& A, const Int32& B )
 {
-	return GBuilder->Pins[A].Location.X < GBuilder->Pins[B].Location.X;
+	return GBuilder->Pins[A].Location.x < GBuilder->Pins[B].Location.x;
 }
 
 
@@ -620,7 +620,7 @@ Bool PinXCmp( const Int32& A, const Int32& B )
 //
 Bool GroupXCmp( const TPinGroup& A, const TPinGroup& B )
 {
-	return A.Bounds.Min.X < B.Bounds.Min.X;
+	return A.Bounds.Min.x < B.Bounds.Min.x;
 }
 
 
@@ -653,7 +653,7 @@ void CPathBuilder::GroupPins()
 		Group.iPins.push(List[0]);
 		for( Int32 i=1; i<List.size(); i++ )
 		{
-			TVector	UnusedHit, UnusedNormal;
+			math::Vector	UnusedHit, UnusedNormal;
 			Int32	iFrom	= List[i-1],
 					iTo		= List[i];
 			TPin&	From	= Pins[iFrom];
@@ -712,7 +712,7 @@ void CPathBuilder::GroupPins()
 				Edge.iStart		= Group.iPins[i];
 				Edge.iFinish	= Group.iPins[i+1];
 				Edge.PathType	= PATH_Walk;
-				Edge.Cost		= ::Floor(Abs(Pins[Edge.iStart].Location.X-Pins[Edge.iFinish].Location.X));
+				Edge.Cost		= math::floor(abs(Pins[Edge.iStart].Location.x-Pins[Edge.iFinish].Location.x));
 
 				Pins[Edge.iStart].AddEdge(Navigator->Edges.push(Edge));
 				Exchange( Edge.iStart, Edge.iFinish );
@@ -874,16 +874,16 @@ Bool CPathBuilder::IsLinked2( Int32 iGroup1, Int32 iGroup2 )
 // Test a point with level's geometry. Return brush where
 // point resides in, or nullptr, if point outside of any brush.
 //
-FBrushComponent* CPathBuilder::TestPoint( const TVector& P )
+FBrushComponent* CPathBuilder::TestPoint( const math::Vector& P )
 {
 	for( Int32 b=0; b<BrushList.size(); b++ )
 		if( BrushList[b]->Type == BRUSH_Solid )
 		{
 			// Transform point to Brush's local coords system.
 			FBrushComponent* Brush = BrushList[b];
-			TVector	Local	= P - Brush->Location;
+			math::Vector	Local	= P - Brush->Location;
 
-			if( IsPointInsidePoly( Local, Brush->Vertices, Brush->NumVerts ) )
+			if( math::isPointInsidePoly( Local, Brush->Vertices, Brush->NumVerts ) )
 				return Brush;
 		}
 
@@ -901,10 +901,10 @@ FBrushComponent* CPathBuilder::TestPoint( const TVector& P )
 FBrushComponent* CPathBuilder::TestLine
 ( 
 	Bool bFast,
-	const TVector& From, 
-	const TVector& To, 
-	TVector& OutHit, 
-	TVector& OutNormal 
+	const math::Vector& From, 
+	const math::Vector& To, 
+	math::Vector& OutHit, 
+	math::Vector& OutNormal 
 )
 {
 	FBrushComponent*	Result		= nullptr;
@@ -915,19 +915,19 @@ FBrushComponent* CPathBuilder::TestLine
 		FBrushComponent* Brush = BrushList[b];
 
 		// To brush local coords system.
-		TVector	Normal, Hit;
-		TVector	LocalFrom	= From - Brush->Location,
+		math::Vector	Normal, Hit;
+		math::Vector	LocalFrom	= From - Brush->Location,
 				LocalTo		= To - Brush->Location;
 
-		if( LineIntersectPoly( LocalFrom, LocalTo, Brush->Vertices, Brush->NumVerts, &Hit, &Normal ) )
+		if( math::isLineIntersectPoly( LocalFrom, LocalTo, Brush->Vertices, Brush->NumVerts, &Hit, &Normal ) )
 		{
 			if	(
 					(Brush->Type == BRUSH_Solid) ||
-					(Brush->Type == BRUSH_SemiSolid && IsWalkable(Normal))
+					(Brush->Type == BRUSH_SemiSolid && phys::isWalkableSurface(Normal))
 				)
 			{
 				Hit			+= Brush->Location;
-				TestDist	= (Hit - From).SizeSquared();
+				TestDist	= (Hit - From).sizeSquared();
 
 				if( TestDist < BestDist )
 				{

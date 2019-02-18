@@ -84,7 +84,7 @@ private:
 	void ShowBoneProperties( Int32 iBone );
 	void DrawLink( CCanvas* Canvas, Int32 i, Int32 j, TColor Color );
 	void UnselectAll();
-	TVector GetBoneCenter( Int32 iBone );
+	math::Vector GetBoneCenter( Int32 iBone );
 	String MakeUniqueBoneName( String Prefix );
 	void UpdateGizmo( Int32 iNewSele = -1 );
 	void BoneEditChange( WWidget* Sender );

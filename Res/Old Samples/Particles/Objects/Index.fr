@@ -22,8 +22,8 @@ BEGIN_RESOURCE FLevel Index
             Vertices[1] = [-52.0000; 4.0000]
             Vertices[2] = [148.0000; 4.0000]
             Vertices[3] = [148.0000; -4.0000]
-            TexCoords.XAxis = [0.2500; 0.0000]
-            TexCoords.YAxis = [0.0000; -0.2500]
+            TexCoords.xAxis = [0.2500; 0.0000]
+            TexCoords.yAxis = [0.0000; -0.2500]
             Location = [-28.0000; -12.0000]
             Size = [1.0000; 1.0000]
             Layer = 0.5027

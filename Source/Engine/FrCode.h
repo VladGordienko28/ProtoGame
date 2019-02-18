@@ -111,10 +111,10 @@ public:
 	inline Bool ReadBool();
 	inline Int32 ReadInteger();
 	inline Float ReadFloat();
-	inline TAngle ReadAngle();
+	inline math::Angle ReadAngle();
 	inline TColor ReadColor();
 	inline String ReadString();
-	inline TVector ReadVector();
+	inline math::Vector ReadVector();
 	inline TRect ReadAABB();
 	inline FResource* ReadResource();
 	inline FEntity* ReadEntity();
@@ -206,10 +206,10 @@ inline Float CFrame::ReadFloat()
 	return R;
 }
 
-inline TAngle CFrame::ReadAngle()
+inline math::Angle CFrame::ReadAngle()
 {
-	TAngle R = *(TAngle*)Code;
-	Code += sizeof(TAngle);
+	math::Angle R = *(math::Angle*)Code;
+	Code += sizeof(math::Angle);
 	return R;
 }
 
@@ -245,10 +245,10 @@ inline String CFrame::ReadString()
 	return Buffer;
 }
 
-inline TVector CFrame::ReadVector()
+inline math::Vector CFrame::ReadVector()
 {
-	TVector R = *(TVector*)Code;
-	Code += sizeof(TVector);
+	math::Vector R = *(math::Vector*)Code;
+	Code += sizeof(math::Vector);
 	return R;
 }
 
@@ -308,10 +308,10 @@ inline EPropType CFrame::ReadPropType()
 #define POP_BOOL			(*(Bool*)(Frame.Regs[Frame.ReadByte()].Value))		
 #define POP_INTEGER			(*(Int32*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POP_FLOAT			(*(Float*)(Frame.Regs[Frame.ReadByte()].Value))
-#define POP_ANGLE			(*(TAngle*)(Frame.Regs[Frame.ReadByte()].Value))
+#define POP_ANGLE			(*(math::Angle*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POP_COLOR			(*(TColor*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POP_STRING			(Frame.Regs[Frame.ReadByte()].StrValue)
-#define POP_VECTOR			(*(TVector*)(Frame.Regs[Frame.ReadByte()].Value))
+#define POP_VECTOR			(*(math::Vector*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POP_AABB			(*(TRect*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POP_RESOURCE		(*(FResource**)(Frame.Regs[Frame.ReadByte()].Value))
 #define POP_ENTITY			(*(FEntity**)(Frame.Regs[Frame.ReadByte()].Value))
@@ -320,10 +320,10 @@ inline EPropType CFrame::ReadPropType()
 #define POPA_BOOL			((Bool*)(Frame.Regs[Frame.ReadByte()].Value))		
 #define POPA_INTEGER		((Int32*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POPA_FLOAT			((Float*)(Frame.Regs[Frame.ReadByte()].Value))
-#define POPA_ANGLE			((TAngle*)(Frame.Regs[Frame.ReadByte()].Value))
+#define POPA_ANGLE			((math::Angle*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POPA_COLOR			((TColor*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POPA_STRING			(&Frame.Regs[Frame.ReadByte()].StrValue)
-#define POPA_VECTOR			((TVector*)(Frame.Regs[Frame.ReadByte()].Value))
+#define POPA_VECTOR			((math::Vector*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POPA_AABB			((TRect*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POPA_RESOURCE		((FResource**)(Frame.Regs[Frame.ReadByte()].Value))
 #define POPA_ENTITY			((FEntity**)(Frame.Regs[Frame.ReadByte()].Value))

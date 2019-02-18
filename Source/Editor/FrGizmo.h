@@ -45,10 +45,10 @@ public:
 	void Reset();
 
 	// Setters.
-	void SetLocation( const TVector& NewLoc );
-	void SetRotation( TAngle NewAng );
-	void Move( const TVector& DeltaMove );
-	void Rotate( TAngle DeltaRot );
+	void SetLocation( const math::Vector& NewLoc );
+	void SetRotation( math::Angle NewAng );
+	void Move( const math::Vector& DeltaMove );
+	void Rotate( math::Angle DeltaRot );
 	void SetMode( EGizmoMode NewMode );
 	void SetAxis( EGizmoAxis Selected );
 
@@ -58,11 +58,11 @@ public:
 	void Perform
 	(
 		const TViewInfo& ViewInfo,
-		const TVector& CursorPos,
-		const TVector& MovementDelta,
-		TVector* OutTranslation,
-		TAngle* OutRotation,
-		TVector* OutScale
+		const math::Vector& CursorPos,
+		const math::Vector& MovementDelta,
+		math::Vector* OutTranslation,
+		math::Angle* OutRotation,
+		math::Vector* OutScale
 	);
 
 private:
@@ -70,9 +70,9 @@ private:
 	EGizmoMode		Mode;
 	EGizmoAxis		CurrentAxis;
 	Float			Size;
-	TVector			Location;
-	TAngle			Rotation;
-	TVector			Scale;
+	math::Vector	Location;
+	math::Angle		Rotation;
+	math::Vector	Scale;
 };
 
 

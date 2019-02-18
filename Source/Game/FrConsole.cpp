@@ -116,8 +116,8 @@ void CConsole::Render( CCanvas* Canvas )
 		// Backdrop.
 		TRenderRect R;
 		R.Texture		= nullptr;
-		R.Bounds.Min	= TVector( 0.f, 0.f );
-		R.Bounds.Max	= TVector( Canvas->ScreenWidth, 16.f*(MAX_CON_HISTORY+1)+16 );
+		R.Bounds.Min	= math::Vector( 0.f, 0.f );
+		R.Bounds.Max	= math::Vector( Canvas->ScreenWidth, 16.f*(MAX_CON_HISTORY+1)+16 );
 		R.Color			= COLOR_Black;
 		R.Flags			= POLY_FlatShade;
 		R.Rotation		= 0;
@@ -143,7 +143,7 @@ void CConsole::Render( CCanvas* Canvas )
 				History[i].Text,
 				CConsole::Font,
 				ConsoleClrs[History[i].Color],
-				TVector( 8.f, 8.f+16.f*i)
+				math::Vector( 8.f, 8.f+16.f*i)
 			);
 
 		// Typing command.
@@ -152,7 +152,7 @@ void CConsole::Render( CCanvas* Canvas )
 			String(L"<> ") + Command + String(L"_"),
 			CConsole::Font,
 			TColor( 0xc0, 0xc0, 0xc0, 0xc0 ),
-			TVector( 8.f, 8.f+16.f*MAX_CON_HISTORY)
+			math::Vector( 8.f, 8.f+16.f*MAX_CON_HISTORY)
 		);
 	}
 	Canvas->PopTransform();

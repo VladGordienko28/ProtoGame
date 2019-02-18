@@ -22,21 +22,21 @@ CStaticPool<4*1024*1024>	CCanvas::GPool;
 //
 void CCanvas::DrawCircle
 ( 
-	const TVector& Center,
+	const math::Vector& Center,
 	Float Radius,
 	TColor Color,
 	Bool bStipple,
 	Int32 Detail 
 )
 {
-	TVector P1, P2;
-	P1.X = Center.X + Radius * FastSinF( 2.f * 0 * PI / Detail );
-	P1.Y = Center.Y + Radius * FastCosF( 2.f * 0 * PI / Detail );
+	math::Vector P1, P2;
+	P1.x = Center.x + Radius * math::sin( 2.f * 0 * math::PI / Detail );
+	P1.y = Center.y + Radius * math::cos( 2.f * 0 * math::PI / Detail );
 
 	for( Int32 i=1; i<=Detail; i++ )
 	{
-		P2.X = Center.X + Radius * FastSinF( 2.f * i * PI / Detail );
-		P2.Y = Center.Y + Radius * FastCosF( 2.f * i * PI / Detail );
+		P2.x = Center.x + Radius * math::sin( 2.f * i * math::PI / Detail );
+		P2.y = Center.y + Radius * math::cos( 2.f * i * math::PI / Detail );
 
 		DrawLine( P1, P2, Color, bStipple );
 		P1 = P2;
@@ -51,27 +51,30 @@ void CCanvas::DrawCircle
 //
 void CCanvas::DrawSmoothLine
 ( 
-	const TVector& A,
-	const TVector& B,
+	const math::Vector& A,
+	const math::Vector& B,
 	TColor Color,
 	Bool bStipple,
 	Int32 Detail 
 )
 {
+	DrawLine( A, B, Color, bStipple );
+
+	/*
 	// Precompute values.
-	Float LineX = B.X - A.X;
-	Float LineY = (B.Y - A.Y) / 2.f;
+	Float LineX = B.x - A.x;
+	Float LineY = (B.y - A.y) / 2.f;
 	Float DFX = LineX / Detail;
-	TVector P1 = A, P2;
-	Float XWalk = A.X;
+	math::Vector P1 = A, P2;
+	Float XWalk = A.x;
 	Int32 X = 2048;
 	Int32 DX = 4096 / Detail;
 
 	// Draw chain of lines.
 	for( Int32 i=0; i<=Detail; i++ )
 	{
-		Float Y = B.Y - (Sin8192(X) + 1.f) * LineY;
-		P2 = TVector( XWalk, Y );
+		Float Y = B.y - (Sin8192(X) + 1.f) * LineY;
+		P2 = math::Vector( XWalk, Y );
 
 		DrawLine( P1, P2, Color, bStipple );
 
@@ -79,6 +82,7 @@ void CCanvas::DrawSmoothLine
 		XWalk += DFX;
 		X += DX;
 	}
+*/
 }
 
 
@@ -87,23 +91,23 @@ void CCanvas::DrawSmoothLine
 //
 void CCanvas::DrawLineRect
 ( 
-	const TVector& Center,
-	const TVector& Size,
-	TAngle Rotation,
+	const math::Vector& Center,
+	const math::Vector& Size,
+	math::Angle Rotation,
 	TColor Color,
 	Bool bStipple 
 )
 {
-	TVector Size2 = Size * 0.5f;
-	TCoords Coords = TCoords( Center, Rotation );
+	math::Vector Size2 = Size * 0.5f;
+	math::Coords Coords = math::Coords( Center, Rotation );
 	
-	TVector XAxis = Coords.XAxis * Size2.X,
-			YAxis = Coords.YAxis * Size2.Y;
+	math::Vector XAxis = Coords.xAxis * Size2.x,
+			YAxis = Coords.yAxis * Size2.y;
 
-	TVector V1 = Center - YAxis - XAxis;
-	TVector V2 = Center + YAxis - XAxis;
-	TVector V3 = Center + YAxis + XAxis;
-	TVector V4 = Center - YAxis + XAxis;
+	math::Vector V1 = Center - YAxis - XAxis;
+	math::Vector V2 = Center + YAxis - XAxis;
+	math::Vector V3 = Center + YAxis + XAxis;
+	math::Vector V4 = Center - YAxis + XAxis;
 
 	DrawLine( V1, V2, Color, bStipple );
 	DrawLine( V2, V3, Color, bStipple );
@@ -117,22 +121,22 @@ void CCanvas::DrawLineRect
 //
 void CCanvas::DrawLineStar
 ( 
-	const TVector& Center,
-	TAngle Rotation,
+	const math::Vector& Center,
+	math::Angle Rotation,
 	Float Size,
 	TColor Color,
 	Bool bStipple 
 )
 {
 	Float Size2 = Size / 2.f;
-	TCoords Coords = TCoords( Rotation );
+	math::Coords Coords = math::Coords( Rotation );
 
-	DrawLine( Center - Coords.XAxis * Size2,
-		      Center + Coords.XAxis * Size2,
+	DrawLine( Center - Coords.xAxis * Size2,
+		      Center + Coords.xAxis * Size2,
 			  Color, bStipple );
 
-	DrawLine( Center - Coords.YAxis * Size2,
-		      Center + Coords.YAxis * Size2,
+	DrawLine( Center - Coords.yAxis * Size2,
+		      Center + Coords.yAxis * Size2,
 			  Color, bStipple );
 }
 
@@ -140,7 +144,7 @@ void CCanvas::DrawLineStar
 //
 // Draw a point with border.
 //
-void CCanvas::DrawCoolPoint( const TVector& P, Float Size, TColor Color )
+void CCanvas::DrawCoolPoint( const math::Vector& P, Float Size, TColor Color )
 {
 	DrawPoint( P, Size + 2.0f, COLOR_Black );
 	DrawPoint( P, Size, Color );
@@ -156,8 +160,8 @@ void CCanvas::DrawText
 	Int32 Len,
 	FFont* Font, 
 	TColor Color,
-	const TVector& Start, 
-	const TVector& Scale
+	const math::Vector& Start, 
+	const math::Vector& Scale
 )
 {
 	assert(Font);
@@ -172,7 +176,7 @@ void CCanvas::DrawText
 		R.Flags			= POLY_Unlit;
 		R.Rotation		= 0;
 
-		TVector Walk = Start;
+		math::Vector Walk = Start;
 
 		// For each character in string.
 		for( Int32 i=0; i<Len; i++ )
@@ -181,13 +185,13 @@ void CCanvas::DrawText
 			if( Text[i] == L' ' )
 			{
 				TGlyph& Glyph = Font->GetGlyph(L'a');
-				Walk.X += Glyph.W * Scale.X;
+				Walk.x += Glyph.W * Scale.x;
 				continue;
 			}
 
 			// Get glyph info.
 			TGlyph& Glyph = Font->GetGlyph(Text[i]);
-			TVector CharSize = TVector( Glyph.W * Scale.X, Glyph.H * Scale.Y );
+			math::Vector CharSize = math::Vector( Glyph.W * Scale.x, Glyph.H * Scale.y );
 
 			// Character location.
 			R.Texture		= Font->Bitmaps[Glyph.iBitmap];
@@ -195,14 +199,14 @@ void CCanvas::DrawText
 			R.Bounds.Max	= Walk + CharSize;
 
 			// Glyph texture coords.
-			R.TexCoords.Min = TVector( Glyph.X, Glyph.Y ) * (1.f/GLYPHS_ATLAS_SIZE);
-			R.TexCoords.Max = TVector( Glyph.X+Glyph.W, Glyph.Y+Glyph.H ) * (1.f/GLYPHS_ATLAS_SIZE);
+			R.TexCoords.Min = math::Vector( Glyph.X, Glyph.Y ) * (1.f/GLYPHS_ATLAS_SIZE);
+			R.TexCoords.Max = math::Vector( Glyph.X+Glyph.W, Glyph.Y+Glyph.H ) * (1.f/GLYPHS_ATLAS_SIZE);
 
 			// Draw tile.
 			DrawRect(R);
 
 			// Walk to next.
-			Walk.X += CharSize.X;
+			Walk.x += CharSize.x;
 		}
 	}
 	else
@@ -215,7 +219,7 @@ void CCanvas::DrawText
 		List.Flags		= POLY_Unlit;
 		List.DrawColor	= Color;
 
-		TVector Walk	= Start;
+		math::Vector Walk	= Start;
 		Int32 NumRnd	= 0;
 
 		// For each character in string.
@@ -225,18 +229,18 @@ void CCanvas::DrawText
 			if( Text[i] == L' ' )
 			{
 				TGlyph& Glyph = Font->GetGlyph(L'a');
-				Walk.X += Glyph.W * Scale.X;
+				Walk.x += Glyph.W * Scale.x;
 				continue;
 			}
 
 			// Get glyph info.
 			TGlyph& Glyph = Font->GetGlyph(Text[i]);
-			TVector CharSize = TVector( Glyph.W * Scale.X, Glyph.H * Scale.Y );
+			math::Vector CharSize = math::Vector( Glyph.W * Scale.x, Glyph.H * Scale.y );
 
-			List.Vertices[NumRnd*4+0]		= TVector( Walk.X, Walk.Y );
-			List.Vertices[NumRnd*4+1]		= TVector( Walk.X, Walk.Y+CharSize.Y );
-			List.Vertices[NumRnd*4+2]		= TVector( Walk.X+CharSize.X, Walk.Y+CharSize.Y );
-			List.Vertices[NumRnd*4+3]		= TVector( Walk.X+CharSize.X, Walk.Y );
+			List.Vertices[NumRnd*4+0]		= math::Vector( Walk.x, Walk.y );
+			List.Vertices[NumRnd*4+1]		= math::Vector( Walk.x, Walk.y+CharSize.y );
+			List.Vertices[NumRnd*4+2]		= math::Vector( Walk.x+CharSize.x, Walk.y+CharSize.y );
+			List.Vertices[NumRnd*4+3]		= math::Vector( Walk.x+CharSize.x, Walk.y );
 
 			// Glyph coords.
 			Float X1	= (Glyph.X)*(1.f/GLYPHS_ATLAS_SIZE);
@@ -244,15 +248,15 @@ void CCanvas::DrawText
 			Float X2	= (Glyph.X+Glyph.W)*(1.f/GLYPHS_ATLAS_SIZE);
 			Float Y2	= (Glyph.Y+Glyph.H)*(1.f/GLYPHS_ATLAS_SIZE);
 
-			List.TexCoords[NumRnd*4+0]		= TVector( X1, Y1 );
-			List.TexCoords[NumRnd*4+1]		= TVector( X1, Y2 );
-			List.TexCoords[NumRnd*4+2]		= TVector( X2, Y2 );
-			List.TexCoords[NumRnd*4+3]		= TVector( X2, Y1 );
+			List.TexCoords[NumRnd*4+0]		= math::Vector( X1, Y1 );
+			List.TexCoords[NumRnd*4+1]		= math::Vector( X1, Y2 );
+			List.TexCoords[NumRnd*4+2]		= math::Vector( X2, Y2 );
+			List.TexCoords[NumRnd*4+3]		= math::Vector( X2, Y1 );
 
 			NumRnd++;
 
 			// Walk to next.
-			Walk.X += CharSize.X;
+			Walk.x += CharSize.x;
 		}
 
 		// Don't render whitespace.
@@ -305,29 +309,29 @@ TViewInfo::TViewInfo()
 TViewInfo::TViewInfo( Float InX, Float InY, Float InWidth, Float InHeight )
 	:	X( InX ), Y( InY ), Width( InWidth ), Height( InHeight ), 
 		bMirage( false ),
-		Coords( TVector( Width/2.f, Height/2.f ), TVector( 1.f, 0.f ), TVector( 0.f, 1.f ) ),
+		Coords( math::Vector( Width/2.f, Height/2.f ), math::Vector( 1.f, 0.f ), math::Vector( 0.f, 1.f ) ),
 		FOV( Width, -Height ),
 		Zoom( 1.f ),
-		UnCoords( Coords.Transpose() ),
-		Bounds( TVector( 0.f, 0.f ), TVector( Width, Height ) )
+		UnCoords( Coords.transpose() ),
+		Bounds( math::Vector( 0.f, 0.f ), math::Vector( Width, Height ) )
 {}
 
 
 //
 // Level or part of level constructor.
 //
-TViewInfo::TViewInfo( TVector InLocation, TAngle InRotation, TVector InFOV, Float InZoom, Bool InbMirage, Float InX, Float InY, Float InWidth, Float InHeight  )
+TViewInfo::TViewInfo( math::Vector InLocation, math::Angle InRotation, math::Vector InFOV, Float InZoom, Bool InbMirage, Float InX, Float InY, Float InWidth, Float InHeight  )
 	:	X( InX ), Y( InY ), Width( InWidth ), Height( InHeight ), 
 		bMirage( InbMirage ),
 		Coords( InLocation, InRotation ),
 		FOV( InFOV ),
 		Zoom( InZoom ),
-		UnCoords( Coords.Transpose() )
+		UnCoords( Coords.transpose() )
 {
 	if( InRotation )
-		Bounds	= TRect( Coords.Origin, Zoom * FastSqrt(Sqr(FOV.X)+Sqr(FOV.Y)));
+		Bounds	= TRect( Coords.origin, Zoom * math::sqrt(sqr(FOV.x)+sqr(FOV.y)));
 	else
-		Bounds	= TRect( Coords.Origin, FOV * Zoom );
+		Bounds	= TRect( Coords.origin, FOV * Zoom );
 }
 
 
@@ -335,16 +339,16 @@ TViewInfo::TViewInfo( TVector InLocation, TAngle InRotation, TVector InFOV, Floa
 // Transform a point in the world's coords to the screen
 // coords system.
 //
-void TViewInfo::Project( const TVector V, Float& OutX, Float& OutY ) const
+void TViewInfo::Project( const math::Vector V, Float& OutX, Float& OutY ) const
 {
-	TVector R, PixToFOV;
+	math::Vector R, PixToFOV;
 
-	R			= TransformPointBy( V, Coords );
-	PixToFOV.X	= Width		/ FOV.X;
-	PixToFOV.Y	= Height	/ FOV.Y;
+	R			= math::transformPointBy( V, Coords );
+	PixToFOV.x	= Width		/ FOV.x;
+	PixToFOV.y	= Height	/ FOV.y;
 
-	OutX	= Width	 * 0.5f + R.X * PixToFOV.X/Zoom;
-	OutY	= Height * 0.5f - R.Y * PixToFOV.Y/Zoom;
+	OutX	= Width	 * 0.5f + R.x * PixToFOV.x/Zoom;
+	OutY	= Height * 0.5f - R.y * PixToFOV.y/Zoom;
 }
 
 
@@ -352,17 +356,17 @@ void TViewInfo::Project( const TVector V, Float& OutX, Float& OutY ) const
 // Transform a point in the screen's coords to the world
 // coords system.
 //
-TVector TViewInfo::Deproject( Float InX, Float InY ) const
+math::Vector TViewInfo::Deproject( Float InX, Float InY ) const
 {
-	TVector R, FOVToPix;
+	math::Vector R, FOVToPix;
 
-	FOVToPix.X	= FOV.X / Width;
-	FOVToPix.Y	= FOV.Y / Height;
+	FOVToPix.x	= FOV.x / Width;
+	FOVToPix.y	= FOV.y / Height;
 
-	R.X	= ( InX - Width * 0.5f  ) * FOVToPix.X * Zoom;
-	R.Y = ( Height * 0.5f - InY ) * FOVToPix.Y * Zoom;
+	R.x	= ( InX - Width * 0.5f  ) * FOVToPix.x * Zoom;
+	R.y = ( Height * 0.5f - InY ) * FOVToPix.y * Zoom;
 
-	return TransformPointBy( R, UnCoords );
+	return math::transformPointBy( R, UnCoords );
 }
 
 
@@ -379,8 +383,8 @@ TRenderList::TRenderList( Int32 InNumRcts )
 	Flags		= POLY_None;
 	Texture		= nullptr;
 	NumRects	= InNumRcts;
-	Vertices	= (TVector*)CCanvas::GPool.Push(NumRects*4*sizeof(TRect));
-	TexCoords	= (TVector*)CCanvas::GPool.Push(NumRects*4*sizeof(TRect));
+	Vertices	= (math::Vector*)CCanvas::GPool.Push(NumRects*4*sizeof(TRect));
+	TexCoords	= (math::Vector*)CCanvas::GPool.Push(NumRects*4*sizeof(TRect));
 	Colors		= (TColor*)CCanvas::GPool.Push(NumRects*4*sizeof(TColor));
 }
 
@@ -394,8 +398,8 @@ TRenderList::TRenderList( Int32 InNumRcts, TColor InColor )
 	Flags		= POLY_None;
 	Texture		= nullptr;
 	NumRects	= InNumRcts;
-	Vertices	= (TVector*)CCanvas::GPool.Push(NumRects*4*sizeof(TRect));
-	TexCoords	= (TVector*)CCanvas::GPool.Push(NumRects*4*sizeof(TRect));
+	Vertices	= (math::Vector*)CCanvas::GPool.Push(NumRects*4*sizeof(TRect));
+	TexCoords	= (math::Vector*)CCanvas::GPool.Push(NumRects*4*sizeof(TRect));
 	Colors		= nullptr;
 	DrawColor	= InColor;
 }

@@ -14,4 +14,19 @@ namespace flu
 	{
 		return S;
 	}
+
+	template<class T> inline Bool inRange( T value, T a, T b )
+	{
+		return ( value >= a ) && ( value <= b );
+	}
+
+	template<class T> inline T sqr( T value )
+	{
+		return value * value;
+	}
+
+	template<class T> inline T abs( T value )
+	{
+		return ( value < T(0) ) ? -value : value;
+	}
 }

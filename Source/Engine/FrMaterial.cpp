@@ -153,7 +153,7 @@ FDiffuseLayer::~FDiffuseLayer()
 //
 // Apply layer transforms.
 //
-void FDiffuseLayer::ApplyTransform( const TViewInfo& View, const TVector* InCoords, TVector* OutCoords, Int32 NumVerts )
+void FDiffuseLayer::ApplyTransform( const TViewInfo& View, const math::Vector* InCoords, math::Vector* OutCoords, Int32 NumVerts )
 {
 	Float Time = GPlat->TimeStamp();
 
@@ -173,12 +173,12 @@ void FDiffuseLayer::ApplyTransform( const TViewInfo& View, const TVector* InCoor
 	//
 	// Apply scale.
 	//
-	if( Scaler.Scale.X != 1.f || Scaler.Scale.Y != 1.f )
+	if( Scaler.Scale.x != 1.f || Scaler.Scale.y != 1.f )
 	{
 		for( Int32 i=0; i<NumVerts; i++ )
 		{
-			OutCoords[i].X *= Scaler.Scale.X;
-			OutCoords[i].Y *= Scaler.Scale.Y;
+			OutCoords[i].x *= Scaler.Scale.x;
+			OutCoords[i].y *= Scaler.Scale.y;
 		}
 	}
 
@@ -187,10 +187,10 @@ void FDiffuseLayer::ApplyTransform( const TViewInfo& View, const TVector* InCoor
 	//
 	if( Rotator.Speed != 0.f )
 	{
-		TAngle Angle = TAngle::FromRads(Rotator.Speed*Time);
-		TCoords Coords = TCoords( Rotator.Origin, Angle );
+		math::Angle Angle = math::Angle::fromRads(Rotator.Speed*Time);
+		math::Coords Coords = math::Coords( Rotator.Origin, Angle );
 		for( Int32 i=0; i<NumVerts; i++ )
-			OutCoords[i] = TransformPointBy(OutCoords[i], Coords);
+			OutCoords[i] = math::transformPointBy(OutCoords[i], Coords);
 	}
 
 	// 
@@ -198,16 +198,16 @@ void FDiffuseLayer::ApplyTransform( const TViewInfo& View, const TVector* InCoor
 	//
 	if( Panner.Speed != 0.f )
 	{
-		TVector PanVector = AngleToVector(Panner.Direction);
+		math::Vector PanVector = math::angleToVector(Panner.Direction);
 		for( Int32 i=0; i<NumVerts; i++ )
 			OutCoords[i] += PanVector * Time * Panner.Speed;
 	}
-	if( Oscillator.Amplitude.X != 0.f || Oscillator.Amplitude.Y != 0.f )
+	if( Oscillator.Amplitude.x != 0.f || Oscillator.Amplitude.y != 0.f )
 	{
 		for( Int32 i=0; i<NumVerts; i++ )
 		{
-			OutCoords[i].X += FastSinF(2.f*PI * Time*Oscillator.Frequency.X + 2.f*PI * Oscillator.Phase.X) * Oscillator.Amplitude.X;
-			OutCoords[i].Y += FastSinF(2.f*PI * Time*Oscillator.Frequency.Y + 2.f*PI * Oscillator.Phase.Y) * Oscillator.Amplitude.Y;
+			OutCoords[i].x += math::sin(2.f*math::PI * Time*Oscillator.Frequency.x + 2.f*math::PI * Oscillator.Phase.x) * Oscillator.Amplitude.x;
+			OutCoords[i].y += math::sin(2.f*math::PI * Time*Oscillator.Frequency.y + 2.f*math::PI * Oscillator.Phase.y) * Oscillator.Amplitude.y;
 		}
 	}
 
@@ -217,17 +217,17 @@ void FDiffuseLayer::ApplyTransform( const TViewInfo& View, const TVector* InCoor
 	if( bFlipH )
 	{
 		for( Int32 i=0; i<NumVerts; i++ )
-			OutCoords[i].X = -OutCoords[i].X;
+			OutCoords[i].x = -OutCoords[i].x;
 	}
 	if( bFlipV )
 	{
 		for( Int32 i=0; i<NumVerts; i++ )
-			OutCoords[i].Y = -OutCoords[i].Y;
+			OutCoords[i].y = -OutCoords[i].y;
 	}
 	if( bTurn90 )
 	{
 		for( Int32 i=0; i<NumVerts; i++ )
-			Exchange(OutCoords[i].X, OutCoords[i].Y);
+			Exchange(OutCoords[i].x, OutCoords[i].y);
 	}
 }
 

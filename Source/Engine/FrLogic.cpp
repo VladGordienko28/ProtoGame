@@ -206,14 +206,14 @@ void FLogicComponent::Export( CExporterBase& Ex )
 //
 // Return the world location of the iPlug (right-side) socket.
 //
-TVector FLogicComponent::GetPlugPos( Int32 iPlug )
+math::Vector FLogicComponent::GetPlugPos( Int32 iPlug )
 {
 	iPlug	= Clamp( iPlug, 0, NumPlugs );
 
-	TVector V;
+	math::Vector V;
 
-	V.X	= Base->Location.X + Base->Size.X * 0.5f;
-	V.Y	= Base->Location.Y + Base->Size.Y * 0.5f - (iPlug+1)*Base->Size.Y/(NumPlugs+1);
+	V.x	= Base->Location.x + Base->Size.x * 0.5f;
+	V.y	= Base->Location.y + Base->Size.y * 0.5f - (iPlug+1)*Base->Size.y/(NumPlugs+1);
 
 	return V;
 }
@@ -222,14 +222,14 @@ TVector FLogicComponent::GetPlugPos( Int32 iPlug )
 //
 // Return the world location of the iJack (left-side) socket.
 //
-TVector FLogicComponent::GetJackPos( Int32 iJack )
+math::Vector FLogicComponent::GetJackPos( Int32 iJack )
 {
 	iJack	= Clamp( iJack, 0, NumJacks );
 
-	TVector V;
+	math::Vector V;
 
-	V.X	= Base->Location.X - Base->Size.X * 0.5f;
-	V.Y	= Base->Location.Y + Base->Size.Y * 0.5f - (iJack+1)*Base->Size.Y/(NumJacks+1);
+	V.x	= Base->Location.x - Base->Size.x * 0.5f;
+	V.y	= Base->Location.y + Base->Size.y * 0.5f - (iJack+1)*Base->Size.y/(NumJacks+1);
 
 	return V;
 }

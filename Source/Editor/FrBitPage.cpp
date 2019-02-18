@@ -532,7 +532,7 @@ void WDemoEffectPanel::AnySliderChange( WWidget* Sender )
 	for( Int32 i=0; i<MAX_EFFECT_PARAMS; i++ )
 		if( Params[i].Address && Sliders[i] == Sender )
 		{
-			*Params[i].Address = Round(Sliders[i]->Value*255.f/100.f);
+			*Params[i].Address = math::round(Sliders[i]->Value*255.f/100.f);
 			Labels[i]->Caption = String::Format( L"%s %d", *Params[i].Name, *Params[i].Address );
 		}
 }
@@ -641,7 +641,7 @@ void WDemoEffectPanel::DrawTypeChange( WWidget* Sender )
 		{
 			Sliders[i]->bVisible = true;
 			Labels[i]->bVisible = true;
-			Sliders[i]->SetValue(Round((Float)(*Params[i].Address)*100.f/255.f));
+			Sliders[i]->SetValue(math::round((Float)(*Params[i].Address)*100.f/255.f));
 		}
 		else
 		{

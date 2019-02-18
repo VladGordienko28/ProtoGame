@@ -199,6 +199,7 @@
     <ClInclude Include="FrRes.h" />
     <ClInclude Include="FrScript.h" />
     <ClInclude Include="FrSkelet.h" />
+    <ClInclude Include="Physics\PhysicsUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Chart\EngineChart.cpp">

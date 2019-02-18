@@ -56,7 +56,7 @@ private:
 	THashItem*			FirstAvail;
 	UInt32				Mark;
 
-	void GetHashIndex( TVector V, Int32& iX, Int32& iY );
+	void GetHashIndex( math::Vector V, Int32& iX, Int32& iY );
 
 	// Stats.
 	Int32				HashActivItems;

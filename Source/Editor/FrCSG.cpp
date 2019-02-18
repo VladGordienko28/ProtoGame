@@ -17,14 +17,14 @@ struct TCSGPoly
 {
 public:
 	// Variables.
-	TVector			Vertices[FBrushComponent::MAX_BRUSH_VERTS*2];
+	math::Vector	Vertices[FBrushComponent::MAX_BRUSH_VERTS*2];
 	Int32			NumVerts;
 
 	// TCSGPoly interface.
 	void FromBrush( FBrushComponent* Source );
 	FBrushComponent* ToBrush( FLevel* Level, FBrushComponent* Sample );
-	Bool TestSegment( TVector A, TVector B );
-	void Split( TVector A, TVector B, TCSGPoly& Front, TCSGPoly& Back );
+	Bool TestSegment( math::Vector A, math::Vector B );
+	void Split( math::Vector A, math::Vector B, TCSGPoly& Front, TCSGPoly& Back );
 	TRect GetAABB();
 	void MergeOverlap();
 };
@@ -50,7 +50,7 @@ void TCSGPoly::FromBrush( FBrushComponent* Source )
 //
 // Part of "Separated Axis Theorem" used for CSG.
 //
-inline Bool TestAxis( TVector Axis, TVector A, TVector B, const TCSGPoly& Poly )
+inline Bool TestAxis( math::Vector Axis, math::Vector A, math::Vector B, const TCSGPoly& Poly )
 {
 	// Project segment onto axis.
 	Float MinS	= A * Axis;
@@ -81,20 +81,20 @@ inline Bool TestAxis( TVector Axis, TVector A, TVector B, const TCSGPoly& Poly )
 //
 // Figure out whether segment intersect this poly.
 //
-Bool TCSGPoly::TestSegment( TVector A, TVector B )
+Bool TCSGPoly::TestSegment( math::Vector A, math::Vector B )
 {
 	// Fast detection, if some point is 
 	// inside the poly.
-	if( IsPointInsidePoly( A, Vertices, NumVerts ) ||
-		IsPointInsidePoly( B, Vertices, NumVerts ) )
+	if( math::isPointInsidePoly( A, Vertices, NumVerts ) ||
+		math::isPointInsidePoly( B, Vertices, NumVerts ) )
 			return true;
 
 	// Test all poly's axis.
-	TVector Axis, V1 = Vertices[NumVerts-1];
+	math::Vector Axis, V1 = Vertices[NumVerts-1];
 	for( Int32 i=0; i<NumVerts; i++ )
 	{
-		TVector V2 = Vertices[i];
-		Axis = (V2 - V1).Cross();
+		math::Vector V2 = Vertices[i];
+		Axis = (V2 - V1).cross();
 
 		if( !TestAxis( Axis, A, B, *this ) )
 			return false;
@@ -103,7 +103,7 @@ Bool TCSGPoly::TestSegment( TVector A, TVector B )
 	}
 
 	// Test with segment axis.
-	Axis = (A-B).Cross();
+	Axis = (A-B).cross();
 	if( !TestAxis( Axis, A, B, *this ) )
 		return false;
 
@@ -116,31 +116,31 @@ Bool TCSGPoly::TestSegment( TVector A, TVector B )
 // of line, some out poly( front or back ) are totally copy this, 
 // other one is empty( NumVers=0 ).
 //
-void TCSGPoly::Split( TVector A, TVector B, TCSGPoly& Front, TCSGPoly& Back )
+void TCSGPoly::Split( math::Vector A, math::Vector B, TCSGPoly& Front, TCSGPoly& Back )
 {
 	// Precompute.
-	TVector SplitOrigin	= A;
-	TVector SplitNormal = ( B - A ).Cross();
-	SplitNormal.Normalize();
+	math::Vector SplitOrigin	= A;
+	math::Vector SplitNormal = ( B - A ).cross();
+	SplitNormal.normalize();
 
 	// Zero out polys.
 	Front.NumVerts	= 0;
 	Back.NumVerts	= 0;
 
-	TVector V1 = Vertices[NumVerts-1];
-	Float PrevDist = PointLineDist( V1, SplitOrigin, SplitNormal );
+	math::Vector V1 = Vertices[NumVerts-1];
+	Float PrevDist = math::pointLineDistance( V1, SplitOrigin, SplitNormal );
 
 	for( Int32 i=0; i<NumVerts; i++ )
 	{
-		TVector V2 = Vertices[i];
-		Float Dist = PointLineDist( V2, SplitOrigin, SplitNormal );
+		math::Vector V2 = Vertices[i];
+		Float Dist = math::pointLineDistance( V2, SplitOrigin, SplitNormal );
 
-		if( PrevDist <= -EPSILON )
+		if( PrevDist <= -math::EPSILON )
 		{
 			// Add V1 to the back poly.
 			Back.Vertices[Back.NumVerts++] = V1;
 		}
-		else if( PrevDist >= +EPSILON )
+		else if( PrevDist >= +math::EPSILON )
 		{
 			// Add V1 to the front poly.
 			Front.Vertices[Front.NumVerts++] = V1;
@@ -153,9 +153,9 @@ void TCSGPoly::Split( TVector A, TVector B, TCSGPoly& Front, TCSGPoly& Back )
 		}
 
 		// Now, test for segment intersection.
-		if( (Dist * PrevDist) <= -EPSILON )
+		if( (Dist * PrevDist) <= -math::EPSILON )
 		{
-			TVector Middle = LineSegmentInter( V1, V2, SplitOrigin, SplitNormal );
+			math::Vector Middle = LineSegmentInter( V1, V2, SplitOrigin, SplitNormal );
 
 			Back.Vertices[Back.NumVerts++] = Middle;
 			Front.Vertices[Front.NumVerts++] = Middle;	
@@ -186,10 +186,10 @@ void TCSGPoly::MergeOverlap()
 {
 	for( Int32 v=0; v<NumVerts; v++ )
 	{
-		TVector&	V1 = Vertices[v],
+		math::Vector&	V1 = Vertices[v],
 					V2 = Vertices[(v+1) % NumVerts];
 
-		if( (V1-V2).SizeSquared() <= 0.25f )
+		if( (V1-V2).sizeSquared() <= 0.25f )
 		{
 			for( Int32 i=v; i<NumVerts-1; i++ )
 				Vertices[i] = Vertices[i+1];
@@ -300,10 +300,10 @@ void CSGIntersection( FBrushComponent* Brush, FLevel* Level )
 		OtherPoly.FromBrush( Other );
 
 		// Here we split other poly and add chunks to world.
-		TVector V1 = Poly.Vertices[Poly.NumVerts-1];
+		math::Vector V1 = Poly.Vertices[Poly.NumVerts-1];
 		for( Int32 j=0; j<Poly.NumVerts; j++ )
 		{
-			TVector V2 = Poly.Vertices[j];
+			math::Vector V2 = Poly.Vertices[j];
 
 			if( OtherPoly.TestSegment( V1, V2 ) )
 			{
@@ -324,7 +324,7 @@ void CSGIntersection( FBrushComponent* Brush, FLevel* Level )
 		{
 			Int32 NumIns = 0;
 			for( Int32 j=0; j<OtherPoly.NumVerts; j++ )
-				if( IsPointInsidePoly( OtherPoly.Vertices[j], Poly.Vertices, Poly.NumVerts ) )
+				if( math::isPointInsidePoly( OtherPoly.Vertices[j], Poly.Vertices, Poly.NumVerts ) )
 					NumIns++;
 
 			bHasAffect = NumIns == OtherPoly.NumVerts;
@@ -382,10 +382,10 @@ void CSGDifference( FBrushComponent* Brush, FLevel* Level )
 		OtherPoly.FromBrush(Other);
 
 		// Here we split other poly and add chunks to world.
-		TVector V1 = Poly.Vertices[Poly.NumVerts-1];
+		math::Vector V1 = Poly.Vertices[Poly.NumVerts-1];
 		for( Int32 j=0; j<Poly.NumVerts; j++ )
 		{
-			TVector V2 = Poly.Vertices[j];
+			math::Vector V2 = Poly.Vertices[j];
 
 			if( OtherPoly.TestSegment( V1, V2 ) )
 			{
@@ -409,7 +409,7 @@ void CSGDifference( FBrushComponent* Brush, FLevel* Level )
 		{
 			Int32 NumIns = 0;
 			for( Int32 j=0; j<OtherPoly.NumVerts; j++ )
-				if( IsPointInsidePoly( OtherPoly.Vertices[j], Poly.Vertices, Poly.NumVerts ) )
+				if( math::isPointInsidePoly( OtherPoly.Vertices[j], Poly.Vertices, Poly.NumVerts ) )
 					NumIns++;
 
 			bHasAffect = NumIns == OtherPoly.NumVerts;

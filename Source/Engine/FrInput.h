@@ -97,10 +97,10 @@ public:
 	UInt8		ConfigRemap[KEY_MAX];
 
 	// Cursor, wheel and/or touch variables.
-	Int32		MouseX;
-	Int32		MouseY;
-	Int32		WheelScroll;
-	TVector		WorldCursor;
+	Int32			MouseX;
+	Int32			MouseY;
+	Int32			WheelScroll;
+	math::Vector	WorldCursor;
 
 	// Current level.
 	FLevel*		Level;

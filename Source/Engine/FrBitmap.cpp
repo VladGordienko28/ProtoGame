@@ -64,9 +64,9 @@ UInt8 TPalette::FindMatched( TColor InColor )
 
 	for( Int32 i=0; i < Colors.size(); i++ )
 	{
-		Cost	= R_FACTOR * Sqr( (Int32)InColor.R - (Int32)Colors[i].R ) +
-			      G_FACTOR * Sqr( (Int32)InColor.G - (Int32)Colors[i].G ) +
-				  B_FACTOR * Sqr( (Int32)InColor.B - (Int32)Colors[i].B );
+		Cost	= R_FACTOR * sqr( (Int32)InColor.R - (Int32)Colors[i].R ) +
+			      G_FACTOR * sqr( (Int32)InColor.G - (Int32)Colors[i].G ) +
+				  B_FACTOR * sqr( (Int32)InColor.B - (Int32)Colors[i].B );
 
 		if( Cost < BestCost )
 		{

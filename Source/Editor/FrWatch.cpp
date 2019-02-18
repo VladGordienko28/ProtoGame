@@ -146,7 +146,7 @@ void WWatchListDialog::OnPaint( CGUIRenderBase* Render )
 	if( Watches.size() > 0 )
 	{
 		Int32 NumVis	= YSize / 17;
-		Int32	Offset	= Round((Float)(Watches.size()-NumVis) * ScrollBar->Value / 100.f);
+		Int32	Offset	= math::round((Float)(Watches.size()-NumVis) * ScrollBar->Value / 100.f);
 		
 		Offset	= Clamp( Offset, 0, Watches.size()-1 );
 		if( NumVis > Watches.size() )	
@@ -208,7 +208,7 @@ static Bool	GDivMove	= false;
 void WWatchListDialog::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 { 
 	WForm::OnMouseDown( Button, X, Y );
-	if( Button == MB_Left && Abs(X-Divider)<=3 && Y<Size.Height-12 && Y>20 )
+	if( Button == MB_Left && abs(X-Divider)<=3 && Y<Size.Height-12 && Y>20 )
 		GDivMove	= true;
 }
 
@@ -238,7 +238,7 @@ void WWatchListDialog::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 
 	// Switch cursor accroding to style.
 	if( Y<Size.Height-12 && Y>20 )
-		Cursor	= GDivMove || Abs(X-Divider)<=3	?	CR_SizeWE:
+		Cursor	= GDivMove || abs(X-Divider)<=3	?	CR_SizeWE:
 													CR_Arrow;
 }
 

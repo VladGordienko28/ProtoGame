@@ -21,7 +21,7 @@ FSkeletonComponent::FSkeletonComponent()
 
 	bRenderable		= true;
 	Skeleton		= nullptr;
-	Scale			= TVector( 1.f, 1.f );
+	Scale			= math::Vector( 1.f, 1.f );
 	Rate			= 0.f;
 	Frame			= 0.f;
 	iAction			= -1;

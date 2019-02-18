@@ -85,8 +85,8 @@ void CGUIRender::DrawRegion( TPoint P, TSize S, TColor Color, TColor BorderColor
 		//
 		TRenderRect Rect;
 		Rect.Texture	= nullptr;
-		Rect.Bounds.Min	= TVector( P.X, P.Y );
-		Rect.Bounds.Max	= TVector( P.X + S.Width, P.Y + S.Height );
+		Rect.Bounds.Min	= math::Vector( P.X, P.Y );
+		Rect.Bounds.Max	= math::Vector( P.X + S.Width, P.Y + S.Height );
 		Rect.Color		= Color;
 		Rect.Flags		= POLY_FlatShade;
 		Rect.Rotation	= 0;
@@ -99,8 +99,8 @@ void CGUIRender::DrawRegion( TPoint P, TSize S, TColor Color, TColor BorderColor
 		// Case 2: Just draw border.
 		//
 		TRect Rect;
-		Rect.Min	= TVector( P.X, P.Y );
-		Rect.Max	= TVector( P.X + S.Width, P.Y + S.Height );
+		Rect.Min	= math::Vector( P.X, P.Y );
+		Rect.Max	= math::Vector( P.X + S.Width, P.Y + S.Height );
 
 		Canvas->DrawLineRect
 		( 
@@ -118,18 +118,18 @@ void CGUIRender::DrawRegion( TPoint P, TSize S, TColor Color, TColor BorderColor
 		//
 		TRenderRect Rect;
 		Rect.Texture	= nullptr;
-		Rect.Bounds.Min	= TVector( P.X, P.Y );
-		Rect.Bounds.Max	= TVector( P.X + S.Width, P.Y + S.Height );
+		Rect.Bounds.Min	= math::Vector( P.X, P.Y );
+		Rect.Bounds.Max	= math::Vector( P.X + S.Width, P.Y + S.Height );
 		Rect.Color		= BorderColor;
 		Rect.Flags		= POLY_FlatShade;
 		Rect.Rotation	= 0;
 
 		Canvas->DrawRect( Rect );
 
-		Rect.Bounds.Min.X++;
-		Rect.Bounds.Min.Y++;
-		Rect.Bounds.Max.X--;
-		Rect.Bounds.Max.Y--;
+		Rect.Bounds.Min.x++;
+		Rect.Bounds.Min.y++;
+		Rect.Bounds.Max.x--;
+		Rect.Bounds.Max.y--;
 		Rect.Color		= Color;
 
 		Canvas->DrawRect( Rect );
@@ -141,8 +141,8 @@ void CGUIRender::DrawRegion( TPoint P, TSize S, TColor Color, TColor BorderColor
 		//
 		TRenderRect Rect;
 		Rect.Texture	= nullptr;
-		Rect.Bounds.Min	= TVector( P.X, P.Y );
-		Rect.Bounds.Max	= TVector( P.X + S.Width, P.Y + S.Height );
+		Rect.Bounds.Min	= math::Vector( P.X, P.Y );
+		Rect.Bounds.Max	= math::Vector( P.X + S.Width, P.Y + S.Height );
 		Rect.Color		= BorderColor;
 		Rect.Flags		= POLY_FlatShade | PatternFlag[Pattern];
 		Rect.Rotation	= 0;
@@ -170,8 +170,8 @@ void CGUIRender::DrawPicture( TPoint P, TSize S, TPoint BP, TSize BS, FTexture* 
 	// Setup rect.
 	TRenderRect Rect;
 	Rect.Texture	= Texture;
-	Rect.Bounds.Min	= TVector( P.X, P.Y );
-	Rect.Bounds.Max	= TVector( P.X + S.Width, P.Y + S.Height );
+	Rect.Bounds.Min	= math::Vector( P.X, P.Y );
+	Rect.Bounds.Max	= math::Vector( P.X + S.Width, P.Y + S.Height );
 	Rect.Color		= Brightness != 1.f ? COLOR_White*Brightness : COLOR_White;
 	Rect.Color.A	= 0xff;
 	Rect.Flags		= POLY_Unlit;	
@@ -197,10 +197,10 @@ void CGUIRender::DrawPicture( TPoint P, TSize S, TPoint BP, TSize BS, FTexture* 
 	};
 
 	// Texture coords.
-	Rect.TexCoords.Min.X	= BP.X * Rescale[Texture->UBits];
-	Rect.TexCoords.Min.Y	= BP.Y * Rescale[Texture->VBits];
-	Rect.TexCoords.Max.X	= (BP.X+BS.Width)  * Rescale[Texture->UBits];
-	Rect.TexCoords.Max.Y	= (BP.Y+BS.Height) * Rescale[Texture->VBits];
+	Rect.TexCoords.Min.x	= BP.X * Rescale[Texture->UBits];
+	Rect.TexCoords.Min.y	= BP.Y * Rescale[Texture->VBits];
+	Rect.TexCoords.Max.x	= (BP.X+BS.Width)  * Rescale[Texture->UBits];
+	Rect.TexCoords.Max.y	= (BP.Y+BS.Height) * Rescale[Texture->VBits];
 
 	// Draw it.
 	Canvas->DrawRect( Rect );
@@ -214,7 +214,7 @@ void CGUIRender::DrawText( TPoint P, const Char* Text, Int32 Len, TColor Color, 
 {
 	if( Brightness != 1.f )
 		Color *= Brightness;
-	Canvas->DrawText( Text, Len, Font, Color, TVector(P.X, P.Y) );
+	Canvas->DrawText( Text, Len, Font, Color, math::Vector(P.X, P.Y) );
 }
 
 

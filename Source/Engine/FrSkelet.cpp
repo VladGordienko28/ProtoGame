@@ -62,11 +62,11 @@ void FSkeleton::Import( CImporterBase& Im )
 	for( Int32 i=0; i<RefPose.BonesPose.size(); i++ )
 	{
 		TBonePose& P = RefPose.BonesPose[i];
-		P.Coords.Origin = Im.ImportVector(*String::Format(L"RefPose.BonesPose[%i].Location", i));
+		P.Coords.origin = Im.ImportVector(*String::Format(L"RefPose.BonesPose[%i].Location", i));
 		
-		TAngle Rotation = Im.ImportAngle(*String::Format(L"RefPose.BonesPose[%i].Rotation", i));
-		P.Coords.XAxis = AngleToVector(Rotation);
-		P.Coords.YAxis = P.Coords.XAxis.Cross();
+		math::Angle Rotation = Im.ImportAngle(*String::Format(L"RefPose.BonesPose[%i].Rotation", i));
+		P.Coords.xAxis = math::angleToVector(Rotation);
+		P.Coords.yAxis = P.Coords.xAxis.cross();
 	}
 
 	// Actions.
@@ -137,8 +137,8 @@ void FSkeleton::Export( CExporterBase& Ex )
 	for( Int32 i=0; i<RefPose.BonesPose.size(); i++ )
 	{
 		TBonePose& P = RefPose.BonesPose[i];
-		Ex.ExportVector( *String::Format(L"RefPose.BonesPose[%i].Location", i), P.Coords.Origin );
-		Ex.ExportAngle( *String::Format(L"RefPose.BonesPose[%i].Rotation", i), VectorToAngle(P.Coords.XAxis) );
+		Ex.ExportVector( *String::Format(L"RefPose.BonesPose[%i].Location", i), P.Coords.origin );
+		Ex.ExportAngle( *String::Format(L"RefPose.BonesPose[%i].Rotation", i), math::vectorToAngle(P.Coords.xAxis) );
 	}
 
 	// Actions.
@@ -220,13 +220,13 @@ Int32 FSkeleton::FindAction( String InName )
 //
 // Draw a wire bone.
 //
-static inline void DrawBone( CCanvas* Canvas, const TVector& Origin, TAngle Rotation, Float Size, Float Length, TColor Color )
+static inline void DrawBone( CCanvas* Canvas, const math::Vector& Origin, math::Angle Rotation, Float Size, Float Length, TColor Color )
 {
 	Float	Size2 = Size * 0.5f;
-	TCoords BoneLocal( Origin, Rotation );
-	TVector	BoneTip = Origin + BoneLocal.XAxis * Length;
-	TVector	Wing1	= Origin + (BoneLocal.XAxis + BoneLocal.YAxis) * Size2;
-	TVector	Wing2	= Origin + (BoneLocal.XAxis - BoneLocal.YAxis) * Size2;
+	math::Coords BoneLocal( Origin, Rotation );
+	math::Vector	BoneTip = Origin + BoneLocal.xAxis * Length;
+	math::Vector	Wing1	= Origin + (BoneLocal.xAxis + BoneLocal.yAxis) * Size2;
+	math::Vector	Wing2	= Origin + (BoneLocal.xAxis - BoneLocal.yAxis) * Size2;
 
 	// Draw bone.
 	TRenderPoly P;
@@ -253,7 +253,7 @@ static inline void DrawBone( CCanvas* Canvas, const TVector& Origin, TAngle Rota
 //
 // Draw a wire master control.
 //
-static inline void DrawMaster( CCanvas* Canvas, const TVector& Origin, TAngle Rotation, Float Size, TColor Color )
+static inline void DrawMaster( CCanvas* Canvas, const math::Vector& Origin, math::Angle Rotation, Float Size, TColor Color )
 {
 	TRenderPoly P;
 	P.Texture		= nullptr;
@@ -261,19 +261,19 @@ static inline void DrawMaster( CCanvas* Canvas, const TVector& Origin, TAngle Ro
 	P.Flags			= POLY_FlatShade | POLY_Ghost;
 	P.NumVerts		= 16;
 	
-	TAngle Walk = Rotation;
+	math::Angle Walk = Rotation;
 	for( Int32 i=0; i<16; i++ )
 	{
-		P.Vertices[i] = Origin + TVector(Walk.GetCos(), Walk.GetSin()) * Size;
+		P.Vertices[i] = Origin + math::Vector(Walk.getCos(), Walk.getSin()) * Size;
 		Walk += 65536/16;
 	}
 
 	Canvas->DrawPoly(P);
 
-	TVector Prev = P.Vertices[15];
+	math::Vector Prev = P.Vertices[15];
 	for( Int32 i=0; i<16; i++ )
 	{
-		TVector This = P.Vertices[i];
+		math::Vector This = P.Vertices[i];
 
 		Canvas->DrawLine( Prev, This, Color, false );
 
@@ -288,8 +288,8 @@ static inline void DrawMaster( CCanvas* Canvas, const TVector& Origin, TAngle Ro
 void FSkeleton::Render
 ( 
 	CCanvas* Canvas, 
-	const TVector& Origin, 
-	const TVector& Scale, 
+	const math::Vector& Origin, 
+	const math::Vector& Scale, 
 	const TSkelPose& Pose 
 )
 {
@@ -345,7 +345,7 @@ TSkelPose::TSkelPose()
 // Hacky table of Matrices being to each bone. This is not only
 // table of RefMarices but also animation computed.
 //
-static Array<TCoords> GBones;
+static Array<math::Coords> GBones;
 
 
 //
@@ -383,14 +383,14 @@ void TSkelPose::CumputeAnimFrame( FSkeleton* Skel, TSkeletonAction& Action, Floa
 	for( Int32 i=0; i<Action.BoneTracks.size(); i++ )
 	{
 		TBoneTrack& Track = Action.BoneTracks[i];
-		GBones[Track.iBone].Origin = Track.PosKeys.SampleAt( Time, GBones[Track.iBone].Origin );
+		GBones[Track.iBone].origin = Track.PosKeys.SampleAt( Time, GBones[Track.iBone].origin );
 		
-		TAngle OldRotation = VectorToAngle(GBones[Track.iBone].XAxis); 
-		TAngle NewRotation = Track.RotKeys.SampleAt( Time, OldRotation );
+		math::Angle OldRotation = math::vectorToAngle(GBones[Track.iBone].xAxis); 
+		math::Angle NewRotation = Track.RotKeys.SampleAt( Time, OldRotation );
 		if( OldRotation != NewRotation )
 		{
-			GBones[Track.iBone].XAxis = AngleToVector(NewRotation);
-			GBones[Track.iBone].YAxis = GBones[Track.iBone].XAxis.Cross();
+			GBones[Track.iBone].xAxis = math::angleToVector(NewRotation);
+			GBones[Track.iBone].yAxis = GBones[Track.iBone].xAxis.cross();
 		}
 	}
 
@@ -414,20 +414,20 @@ void TSkelPose::SolveSkeleton( FSkeleton* Skel )
 	{
 		TBoneInfo& ThisInfo = Skel->Bones[Skel->TransformTable[iBone]];
 		TBonePose& BoneResult = BonesPose[Skel->TransformTable[iBone]];
-		TCoords&   BoneCoords = GBones[Skel->TransformTable[iBone]];	
+		math::Coords&   BoneCoords = GBones[Skel->TransformTable[iBone]];	
 
 		// Compute position of current bone.
 		if( ThisInfo.iPosCtrl != -1 )
 		{
 			// Compute according to parent 
 			TBonePose& ParentResult = BonesPose[ThisInfo.iPosCtrl];
-			TCoords FromParentSpace = TCoords( ParentResult.Location, ParentResult.Rotation ).Transpose();
-			BoneResult.Location	= TransformPointBy( BoneCoords.Origin, FromParentSpace );
+			math::Coords FromParentSpace = math::Coords( ParentResult.Location, ParentResult.Rotation ).transpose();
+			BoneResult.Location	= math::transformPointBy( BoneCoords.origin, FromParentSpace );
 		}
 		else
 		{
 			// No position controller, so use this transform.
-			BoneResult.Location	= BoneCoords.Origin;
+			BoneResult.Location	= BoneCoords.origin;
 		}
 
 		// Compute rotation of current bone.
@@ -448,54 +448,54 @@ void TSkelPose::SolveSkeleton( FSkeleton* Skel )
 						TBonePose& Chain1 = BonesPose[Chain2Info.iPosCtrl];
 						TBoneInfo& Chain1Info = Skel->Bones[Chain2Info.iPosCtrl];
 
-						TVector Dir = ParentResult.Location - Chain1.Location;
-						if( Dir.Size() < (Chain1Info.Scale + Chain2Info.Scale) )
+						math::Vector Dir = ParentResult.Location - Chain1.Location;
+						if( Dir.size() < (Chain1Info.Scale + Chain2Info.Scale) )
 						{
-							Float Cos2 = (Sqr(Dir.X)+Sqr(Dir.Y)-Sqr(Chain1Info.Scale)-Sqr(Chain2Info.Scale))/(2.f*Chain1Info.Scale*Chain2Info.Scale);
-							TAngle Angle2 = TAngle(acosf(Cos2));
+							Float Cos2 = (sqr(Dir.x)+sqr(Dir.y)-sqr(Chain1Info.Scale)-sqr(Chain2Info.Scale))/(2.f*Chain1Info.Scale*Chain2Info.Scale);
+							math::Angle Angle2 = math::Angle(acosf(Cos2));
 
 							if( ParentInfo.bFlipIK )
 								Angle2 = -Angle2;
 
-							Float Sin2 = Angle2.GetSin();
+							Float Sin2 = Angle2.getSin();
 
-							Float P3 = ArcTan2( Dir.Y, Dir.X );
-							Float P4 = ArcTan((Chain2Info.Scale*Sin2)/(Chain1Info.Scale+Chain2Info.Scale*Cos2));
-							TAngle Angle1 = TAngle(P3-P4);
+							Float P3 = math::arcTan2( Dir.y, Dir.x );
+							Float P4 = math::arcTan((Chain2Info.Scale*Sin2)/(Chain1Info.Scale+Chain2Info.Scale*Cos2));
+							math::Angle Angle1 = math::Angle(P3-P4);
 
 							BoneResult.Rotation = &ThisInfo == &Chain2Info ? Angle1+Angle2 : Angle1;
 						}
 						else
 						{
 							// We cant compute IK.
-							BoneResult.Rotation	= VectorToAngle(Dir);
+							BoneResult.Rotation	= math::vectorToAngle(Dir);
 						}
 					}
 					else
 					{
 						// IK chain broken, so no computations.
-						BoneResult.Rotation	= VectorToAngle(BoneCoords.XAxis);
+						BoneResult.Rotation	= math::vectorToAngle(BoneCoords.xAxis);
 					}
 				}
 				else
 				{
 					// IK broken, so no computations.
-					BoneResult.Rotation	= VectorToAngle(BoneCoords.XAxis);
+					BoneResult.Rotation	= math::vectorToAngle(BoneCoords.xAxis);
 				}
 			}
 			else
 			{
 				// Simple rotation.
 				if( ThisInfo.bLookAt ) 
-					BoneResult.Rotation	= VectorToAngle(ParentResult.Location - BoneResult.Location);
+					BoneResult.Rotation	= math::vectorToAngle(ParentResult.Location - BoneResult.Location);
 				else
-					BoneResult.Rotation	= ParentResult.Rotation + VectorToAngle(BoneCoords.XAxis);
+					BoneResult.Rotation	= ParentResult.Rotation + math::vectorToAngle(BoneCoords.xAxis);
 			}
 		}
 		else
 		{
 			// No rotation controller, so use transform.
-			BoneResult.Rotation	= VectorToAngle(BoneCoords.XAxis);
+			BoneResult.Rotation	= math::vectorToAngle(BoneCoords.xAxis);
 		}
 	}
 }
@@ -522,12 +522,12 @@ Bool FSkeleton::LinkTo( Int32 iBone, Int32 iParent )
 	{
 		// Transform own coords system to parent space.
 		TBonePose& ParentPose = RefPose.BonesPose[iParent];
-		TCoords ParentSpace( ParentPose.Location, ParentPose.Rotation );
+		math::Coords ParentSpace( ParentPose.Location, ParentPose.Rotation );
 
-		ThisPose.Coords	= TCoords
+		ThisPose.Coords	= math::Coords
 		(
-			TransformPointBy( ThisPose.Coords.Origin, ParentSpace ),
-			VectorToAngle(ThisPose.Coords.XAxis) - ParentPose.Rotation
+			math::transformPointBy( ThisPose.Coords.origin, ParentSpace ),
+			math::vectorToAngle(ThisPose.Coords.xAxis) - ParentPose.Rotation
 		);
 
 		ThisInfo.iPosCtrl	= iParent;
@@ -537,7 +537,7 @@ Bool FSkeleton::LinkTo( Int32 iBone, Int32 iParent )
 	else
 	{
 		// Link to world.
-		ThisPose.Coords	= TCoords::Identity;
+		ThisPose.Coords	= math::Coords::IDENTITY;
 	}
 
 	return true;	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11 make real check!!! 
@@ -599,8 +599,8 @@ Bool FSkeleton::LinkRotationTo( Int32 iBone, Int32 iParent )
 	{
 		TBonePose& OldParent = RefPose.BonesPose[ThisInfo.iRotCtrl];
 
-		ThisPose.Coords.XAxis	= AngleToVector(VectorToAngle(ThisPose.Coords.XAxis) + OldParent.Rotation);
-		ThisPose.Coords.YAxis = ThisPose.Coords.XAxis.Cross();
+		ThisPose.Coords.xAxis	= math::angleToVector(math::vectorToAngle(ThisPose.Coords.xAxis) + OldParent.Rotation);
+		ThisPose.Coords.yAxis = ThisPose.Coords.xAxis.cross();
 	}
 
 
@@ -660,8 +660,8 @@ Bool FSkeleton::BreakRotLink( Int32 iBone )
 	// Restore rotation from the world space. 
 	if( Info.iRotCtrl != -1 )
 	{
-		Pose.Coords.XAxis	= AngleToVector(Pose.Rotation);
-		Pose.Coords.YAxis	= Pose.Coords.XAxis.Cross();
+		Pose.Coords.xAxis	= math::angleToVector(Pose.Rotation);
+		Pose.Coords.yAxis	= Pose.Coords.xAxis.cross();
 
 
 		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -688,7 +688,7 @@ Bool FSkeleton::BreakPosLink( Int32 iBone )
 
 	if( Info.iPosCtrl != -1 )
 	{
-		Pose.Coords.Origin	= Pose.Location;
+		Pose.Coords.origin	= Pose.Location;
 		Info.iPosCtrl		= -1;
 	}
 

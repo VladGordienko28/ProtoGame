@@ -104,7 +104,7 @@ void InitTables()
 
 	// Sine table.
 	for( Int32 i=0; i<256; i++ )
-		SineTab[i] = Sin(i/256.f*2.f*PI)*127.f+128;
+		SineTab[i] = math::sin(i/256.f*2.f*math::PI)*127.f+128;
 
 	// Wave table.
 	for( Int32 i=0; i<1536; i++ )
@@ -488,10 +488,10 @@ void FPlasmaBitmap::SetPlasmaTable()
 {
 	for( Int32 i=0; i<256; i++ )
 	{
-		PlasmaTable[0][i]	= Round( Sin(i*(PlasmaA*6.283f/USize*2.f))*31.5f + 32.f );
-		PlasmaTable[1][i]	= Round( Sin(i*(PlasmaB*6.283f/USize*2.f))*31.5f + 32.f );
-		PlasmaTable[2][i]	= Round( Sin(i*(PlasmaC*6.283f/USize*2.f))*31.5f + 32.f );
-		PlasmaTable[3][i]	= Round( Sin(i*(PlasmaD*6.283f/USize*2.f))*31.5f + 32.f );
+		PlasmaTable[0][i]	= math::round( math::sin(i*(PlasmaA*6.283f/USize*2.f))*31.5f + 32.f );
+		PlasmaTable[1][i]	= math::round( math::sin(i*(PlasmaB*6.283f/USize*2.f))*31.5f + 32.f );
+		PlasmaTable[2][i]	= math::round( math::sin(i*(PlasmaC*6.283f/USize*2.f))*31.5f + 32.f );
+		PlasmaTable[3][i]	= math::round( math::sin(i*(PlasmaD*6.283f/USize*2.f))*31.5f + 32.f );
 	}
 }
 
@@ -697,7 +697,7 @@ void FFireBitmap::DeleteSparks( Int32 X, Int32 Y, Int32 Size )
 
 	for( Int32 i=0; i<NumSparks; )
 	{
-		if( Abs(X-Sparks[i].X)<=Size && Abs(Y-Sparks[i].Y)<=Size )
+		if( abs(X-Sparks[i].X)<=Size && abs(Y-Sparks[i].Y)<=Size )
 		{
 			Sparks[i] = Sparks[NumSparks--];
 		}
@@ -826,7 +826,7 @@ void FFireBitmap::DrawLighting( Int32 X1, Int32 Y1, Int32 X2, Int32 Y2, UInt8 He
 	// Preinitialize.
 	// Used some fixed math magic in 24:8 format.
 	UInt8*	Data		= (UInt8*)GetData();
-	Int32 Length		= Trunc(FastSqrt(Sqr<Float>(X1-X2)+Sqr<Float>(Y1-Y2))*256.f);
+	Int32 Length		= math::trunc(math::sqrt(sqr<Float>(X1-X2)+sqr<Float>(Y1-Y2))*256.f);
 	Int32 LastX			= X1 << 8;
 	Int32 LastY			= Y1 << 8;
 	Int32 FromX			= X1 << 8;
@@ -863,7 +863,7 @@ void FFireBitmap::DrawLighting( Int32 X1, Int32 Y1, Int32 X2, Int32 Y2, UInt8 He
 
 		Int32 SegX	= X-LastX;
 		Int32 SegY	= Y-LastY;
-		Int32 Seg		= Max( Abs(SegX), Abs(SegY) );
+		Int32 Seg	= Max( abs(SegX), abs(SegY) );
 		Int32 i		= Seg >> 8;
 
 		SegX	= (SegX << 8) / Seg;
@@ -1369,7 +1369,7 @@ void FFireBitmap::SetFireTable()
 		// Pretty strange formula, but it's works well.
 		Float Value = ((Float)iHeat/2.f - 16.f * RandomF());
 		Value		*= Lerp( 10.f/128.f, 150.f/128.f, (Float)FireHeat/255.f ); 
-		FireTable[iHeat]	= Clamp( Round(Value), 0x00, 0xff );
+		FireTable[iHeat]	= Clamp( math::round(Value), 0x00, 0xff );
 	}
 }
 
@@ -1595,7 +1595,7 @@ void FWaterBitmap::DeleteDrops( Int32 X, Int32 Y, Int32 Size )
 
 	for( Int32 i=0; i<NumDrops; )
 	{
-		if( Abs(X-Drops[i].X)<=Size && Abs(Y-Drops[i].Y)<=Size )
+		if( abs(X-Drops[i].X)<=Size && abs(Y-Drops[i].Y)<=Size )
 		{
 			Drops[i] = Drops[NumDrops--];
 		}
@@ -1612,7 +1612,7 @@ void FWaterBitmap::SetDistortionTable()
 {
 	for( Int32 i=0; i<1024; i++ )
 	{
-		Int32 Val		= Trunc((i-511)*((Float)WaterAmpl/512.f));
+		Int32 Val		= math::trunc((i-511)*((Float)WaterAmpl/512.f));
 		DistTable[i]	= Clamp( Val, -128, 127 );
 	}
 }
@@ -2040,7 +2040,7 @@ void FTechBitmap::DeletePanels( Int32 X, Int32 Y, Int32 Area )
 
 	for( Int32 i=0; i<NumPanels; )
 	{
-		if( Abs(X-Panels[i].X)<=Area && Abs(Y-Panels[i].Y)<=Area )
+		if( abs(X-Panels[i].X)<=Area && abs(Y-Panels[i].Y)<=Area )
 		{
 			Panels[i] = Panels[NumPanels--];
 		}
@@ -2498,16 +2498,16 @@ void FTechBitmap::EditChange()
 //
 void FTechBitmap::SetLigthTable()
 {
-	Float LampAngle = PI * BumpMapAngle / 255.f;
+	Float LampAngle = math::PI * BumpMapAngle / 255.f;
 
 	for( Int32 i=0; i<575; i++ )
 	{
-		Float Normal = ArcTan((255.f-i)/95.f) + PI*0.5f;
-		Int32 TempLight = Round(Cos(Normal-LampAngle)*200.f);
-		Float Reflected = Abs(2.f*Normal - LampAngle - BumpMapLight*PI/255.f);
+		Float Normal = math::arcTan((255.f-i)/95.f) + math::PI*0.5f;
+		Int32 TempLight = math::round(math::cos(Normal-LampAngle)*200.f);
+		Float Reflected = abs(2.f*Normal - LampAngle - BumpMapLight*math::PI/255.f);
 
 		if( Reflected < 0.1f )
-			TempLight += Round((0.1f-Reflected)*1200.f);
+			TempLight += math::round((0.1f-Reflected)*1200.f);
 
 		LightTable[i] = Clamp( TempLight, 0, 255 );
 	}
@@ -2691,8 +2691,8 @@ void FGlassBitmap::RenderGlassI()
 {
 	// Compute position.
 	Float	Time = GPlat->Now();
-	Int32 PosX = (HOffset + Round(Time*HSpeed)) & UMask;
-	Int32 PosY = (VOffset + Round(Time*VSpeed)) & VMask;
+	Int32 PosX = (HOffset + math::round(Time*HSpeed)) & UMask;
+	Int32 PosY = (VOffset + math::round(Time*VSpeed)) & VMask;
 
 	UInt8* Dst = (UInt8*)GetData();
 	UInt8* Img = (UInt8*)Image->GetData();
@@ -2719,8 +2719,8 @@ void FGlassBitmap::RenderGlassII()
 {
 	// Compute position.
 	Float	Time = GPlat->Now();
-	Int32 PosX = (HOffset + Round(Time*HSpeed)) & UMask;
-	Int32 PosY = (VOffset + Round(Time*VSpeed)) & VMask;
+	Int32 PosX = (HOffset + math::round(Time*HSpeed)) & UMask;
+	Int32 PosY = (VOffset + math::round(Time*VSpeed)) & VMask;
 
 	UInt8* Dst = (UInt8*)GetData();
 	UInt8* Img = (UInt8*)Image->GetData();

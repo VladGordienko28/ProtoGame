@@ -135,7 +135,7 @@ static void DrawPathNetwork( CCanvas* Canvas, CNavigator* Navig )
 	}
 
 	// Draw all edges.
-	TVector Bias( 0.f, (5.f*Canvas->View.FOV.Y*Canvas->View.Zoom)/(Canvas->View.Height) );
+	math::Vector Bias( 0.f, (5.f*Canvas->View.FOV.y*Canvas->View.Zoom)/(Canvas->View.Height) );
 	for( Int32 iEdge=0; iEdge<Navig->Edges.size(); iEdge++ )
 	{
 		TPathEdge& Edge = Navig->Edges[iEdge];
@@ -213,7 +213,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 					String::Format( L"FPS: %d", GEditor->FPS ),
 					Root->Font1, 
 					COLOR_White, 
-					TVector( 10, 10 ) 
+					math::Vector( 10, 10 ) 
 				);
 
 #if FLU_PROFILE_MEMORY
@@ -222,7 +222,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 					String::Format( L"Mem: %.2f kB", Double(mem::stats().totalAllocatedBytes) / 1024 ), 
 					Root->Font1, 
 					COLOR_White, 
-					TVector( 10.f, 30.f ) 
+					math::Vector( 10.f, 30.f ) 
 				);
 #endif
 
@@ -231,7 +231,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 					String::Format( L"Game Time: %s", *PlayLevel->m_timeOfDay.toString() ), 
 					Root->Font1, 
 					COLOR_White, 
-					TVector( 10.f, 72.f ) 
+					math::Vector( 10.f, 72.f ) 
 				);
 
 	// In-pause mode.
@@ -241,7 +241,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 						L"Pause",
 						Root->Font1, 
 						COLOR_White, 
-						TVector( Size.Width/2.f, Size.Height/2.f )
+						math::Vector( Size.Width/2.f, Size.Height/2.f )
 					);
 
 
@@ -253,7 +253,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 						Messages[iMsg], 
 						Root->Font2, 
 						COLOR_White, 
-						TVector( 10.f, Size.Height - (Root->Font2->Height+2)*(iMsg+1) )
+						math::Vector( 10.f, Size.Height - (Root->Font2->Height+2)*(iMsg+1) )
 					);
 	}
 }
@@ -352,13 +352,13 @@ void WPlayPage::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 
 	// Compute clipped area.
 	TPoint Base				= ClientToWindow(TPoint::Zero);
-	TVector	RealFOV			= PlayLevel->Camera.GetFitFOV( Size.Width, Size.Height );
-	TVector	CamFOV			= PlayLevel->Camera.FOV;
+	math::Vector	RealFOV	= PlayLevel->Camera.GetFitFOV( Size.Width, Size.Height );
+	math::Vector	CamFOV	= PlayLevel->Camera.FOV;
 
 	Float	lx	= 0,
-			ly	= Size.Height*((RealFOV.Y-CamFOV.Y)/2.f)/RealFOV.Y,
+			ly	= Size.Height*((RealFOV.y-CamFOV.y)/2.f)/RealFOV.y,
 			lw	= Size.Width,
-			lh	= Size.Height*(CamFOV.Y/RealFOV.Y);
+			lh	= Size.Height*(CamFOV.y/RealFOV.y);
 
 	Int32	TestX	= X,
 			TestY	= Y-ly;
@@ -437,7 +437,7 @@ void WPlayPage::OnMouseScroll( Int32 Delta )
 	Int32 Times	= Clamp( Delta / 120, -5, 5 );
 	Int32	Key	= Times > 0 ? KEY_WheelUp : KEY_WheelDown;
 
-	for( Int32 i=0; i<Abs(Times); i++ )
+	for( Int32 i=0; i<abs(Times); i++ )
 	{
 		GEditor->GInput->OnKeyDown( Key );
 		GEditor->GInput->OnKeyUp( Key );

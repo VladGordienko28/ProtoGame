@@ -44,20 +44,20 @@ CGizmo::~CGizmo()
 //
 void CGizmo::Reset()
 {
-	Location	= TVector( 0.f, 0.f );
+	Location	= { 0.f, 0.f };
 	Rotation	= 0;
-	Scale		= TVector( 1.f, 1.f );
+	Scale		= { 1.f, 1.f };
 }
 
 
 //
 // Gizmo setters.
 //
-void CGizmo::SetLocation( const TVector& NewLoc )
+void CGizmo::SetLocation( const math::Vector& NewLoc )
 {
 	Location	= NewLoc;
 }
-void CGizmo::SetRotation( TAngle NewAng )
+void CGizmo::SetRotation( math::Angle NewAng )
 {
 	Rotation	= NewAng;
 }
@@ -69,11 +69,11 @@ void CGizmo::SetAxis( EGizmoAxis Selected )
 {
 	CurrentAxis	= Selected;
 }
-void CGizmo::Move( const TVector& DeltaMove )
+void CGizmo::Move( const math::Vector& DeltaMove )
 {
 	Location	+= DeltaMove;
 }
-void CGizmo::Rotate( TAngle DeltaRot )
+void CGizmo::Rotate( math::Angle DeltaRot )
 {
 	Rotation	+= DeltaRot;
 }
@@ -85,18 +85,18 @@ void CGizmo::Rotate( TAngle DeltaRot )
 void CGizmo::Perform
 (
 	const TViewInfo& View,
-	const TVector& CursorPos,
-	const TVector& MovementDelta,
-	TVector* OutTranslation,
-	TAngle* OutRotation,
-	TVector* OutScale
+	const math::Vector& CursorPos,
+	const math::Vector& MovementDelta,
+	math::Vector* OutTranslation,
+	math::Angle* OutRotation,
+	math::Vector* OutScale
 )
 {
 	// Don't do anything if no axis.
 	if( CurrentAxis == GIAX_None )
 		return;
 
-	TCoords ToLocal( Location, Rotation );
+	math::Coords ToLocal( Location, Rotation );
 
 	// According to gizmo mode.
 	switch( Mode )
@@ -106,15 +106,15 @@ void CGizmo::Perform
 			//
 			// Perform translation.
 			//
-			TVector StoredLocation = Location;
+			math::Vector StoredLocation = Location;
 
 			if( CurrentAxis == GIAX_X )
 			{
-				Location += ToLocal.XAxis * (ToLocal.XAxis * MovementDelta);
+				Location += ToLocal.xAxis * (ToLocal.xAxis * MovementDelta);
 			}
 			else if( CurrentAxis == GIAX_Y )
 			{
-				Location += ToLocal.YAxis * (ToLocal.YAxis * MovementDelta);
+				Location += ToLocal.yAxis * (ToLocal.yAxis * MovementDelta);
 			}
 			else
 			{
@@ -130,11 +130,11 @@ void CGizmo::Perform
 			//
 			// Perform rotation.
 			//
-			TAngle StoredRotation = Rotation;
-			TVector WorldCursor = View.Deproject(CursorPos.X, CursorPos.Y);
-			TVector Normal = WorldCursor - Location;
-			Normal.Normalize();
-			TVector Tangent = Normal.Cross();
+			math::Angle StoredRotation = Rotation;
+			math::Vector WorldCursor = View.Deproject(CursorPos.x, CursorPos.y);
+			math::Vector Normal = WorldCursor - Location;
+			Normal.normalize();
+			math::Vector Tangent = Normal.cross();
 
 			Rotation += (Tangent * MovementDelta) * 0.1f;
 
@@ -147,29 +147,29 @@ void CGizmo::Perform
 			//
 			// Perform scale.
 			//
-			TVector StoredScale = Scale;
+			math::Vector StoredScale = Scale;
 
 			if( CurrentAxis == GIAX_X )
 			{
-				Float FactorX = (ToLocal.XAxis * MovementDelta)*0.15f / View.Zoom;
-				Scale.X = Clamp( Scale.X+FactorX, 0.01f, 100.f );
+				Float FactorX = (ToLocal.xAxis * MovementDelta)*0.15f / View.Zoom;
+				Scale.x = Clamp( Scale.x+FactorX, 0.01f, 100.f );
 			}
 			else if( CurrentAxis == GIAX_Y )
 			{
-				Float FactorY = (ToLocal.YAxis * MovementDelta)*0.15f / View.Zoom;
-				Scale.Y = Clamp( Scale.Y+FactorY, 0.01f, 100.f );
+				Float FactorY = (ToLocal.yAxis * MovementDelta)*0.15f / View.Zoom;
+				Scale.y = Clamp( Scale.y+FactorY, 0.01f, 100.f );
 			}
 			else
 			{
-				Float Factor = (MovementDelta * ((ToLocal.XAxis+ToLocal.YAxis)*0.5f))*0.15f / View.Zoom;
-				Scale.X = Clamp( Scale.X+Factor, 0.01f, 100.f );
-				Scale.Y = Clamp( Scale.Y+Factor, 0.01f, 100.f );
+				Float Factor = (MovementDelta * ((ToLocal.xAxis+ToLocal.yAxis)*0.5f))*0.15f / View.Zoom;
+				Scale.x = Clamp( Scale.x+Factor, 0.01f, 100.f );
+				Scale.y = Clamp( Scale.y+Factor, 0.01f, 100.f );
 			}
 
 			if( OutScale )
 			{
-				OutScale->X = Scale.X / StoredScale.X;
-				OutScale->Y = Scale.Y / StoredScale.Y;
+				OutScale->x = Scale.x / StoredScale.x;
+				OutScale->y = Scale.y / StoredScale.y;
 			}
 			break;
 		}
@@ -184,20 +184,20 @@ void CGizmo::Perform
 //
 // Test hit with translation gizmo.
 //
-static EGizmoAxis HitTranslationGizmo( const TViewInfo& View, Float Size, Int32 Cx, Int32 Cy, const TCoords& ToLocal, const TVector& Scale )
+static EGizmoAxis HitTranslationGizmo( const TViewInfo& View, Float Size, Int32 Cx, Int32 Cy, const math::Coords& ToLocal, const math::Vector& Scale )
 {
 	// Project to screen space.
-	TVector Center, XEnd, YEnd;
-	View.Project( ToLocal.Origin, Center.X, Center.Y );
-	View.Project( ToLocal.Origin + ToLocal.XAxis*((GIZMO_ARROW_LEN+0.93f)*View.Zoom*Size), XEnd.X, XEnd.Y );
-	View.Project( ToLocal.Origin + ToLocal.YAxis*((GIZMO_ARROW_LEN+0.93f)*View.Zoom*Size), YEnd.X, YEnd.Y );
+	math::Vector Center, XEnd, YEnd;
+	View.Project( ToLocal.origin, Center.x, Center.y );
+	View.Project( ToLocal.origin + ToLocal.xAxis*((GIZMO_ARROW_LEN+0.93f)*View.Zoom*Size), XEnd.x, XEnd.y );
+	View.Project( ToLocal.origin + ToLocal.yAxis*((GIZMO_ARROW_LEN+0.93f)*View.Zoom*Size), YEnd.x, YEnd.y );
 
-	if( PointOnSegment( TVector(Cx, Cy), Center, XEnd, 3.f ) )
+	if( math::isPointOnSegment( math::Vector(Cx, Cy), Center, XEnd, 3.f ) )
 	{
 		// X hit.
 		return GIAX_X;
 	}
-	else if( PointOnSegment( TVector(Cx, Cy), Center, YEnd, 3.f ) )
+	else if( math::isPointOnSegment( math::Vector(Cx, Cy), Center, YEnd, 3.f ) )
 	{
 		// Y hit.
 		return GIAX_Y;
@@ -205,17 +205,17 @@ static EGizmoAxis HitTranslationGizmo( const TViewInfo& View, Float Size, Int32 
 	else
 	{
 		// Everything or nothing.
-		TVector Tmp = XEnd - Center;
-		Tmp.Normalize();
-		TCoords RectLocal( Center, Tmp );
+		math::Vector Tmp = XEnd - Center;
+		Tmp.normalize();
+		math::Coords RectLocal( Center, Tmp );
 
-		TVector TestPoint = TransformPointBy( TVector(Cx, Cy), RectLocal );
-		TestPoint.Y = -TestPoint.Y;
-		Float RectSize = GIZMO_RECT_SIZE * (XEnd-Center).Size()/(GIZMO_ARROW_LEN+0.93f);
+		math::Vector TestPoint = math::transformPointBy( math::Vector(Cx, Cy), RectLocal );
+		TestPoint.y = -TestPoint.y;
+		Float RectSize = GIZMO_RECT_SIZE * (XEnd-Center).size()/(GIZMO_ARROW_LEN+0.93f);
 
 		TRect R;
-		R.Min = TVector( 0.f, 0.f );
-		R.Max = TVector( RectSize, RectSize );
+		R.Min = math::Vector( 0.f, 0.f );
+		R.Max = math::Vector( RectSize, RectSize );
 		return R.IsInside(TestPoint) ? GIAX_Both : GIAX_None;
 	}
 }
@@ -224,14 +224,14 @@ static EGizmoAxis HitTranslationGizmo( const TViewInfo& View, Float Size, Int32 
 //
 // Test hit with rotation gizmo.
 //
-static EGizmoAxis HitRotationGizmo( const TViewInfo& View, Float Size, Int32 Cx, Int32 Cy, const TCoords& ToLocal, const TVector& Scale )
+static EGizmoAxis HitRotationGizmo( const TViewInfo& View, Float Size, Int32 Cx, Int32 Cy, const math::Coords& ToLocal, const math::Vector& Scale )
 {
-	TVector Center, CirclePoint;
-	View.Project( ToLocal.Origin, Center.X, Center.Y );
-	View.Project( ToLocal.Origin + (TVector(0.f, GIZMO_RADIUS)*View.Zoom*Size), CirclePoint.X, CirclePoint.Y );
+	math::Vector Center, CirclePoint;
+	View.Project( ToLocal.origin, Center.x, Center.y );
+	View.Project( ToLocal.origin + (math::Vector(0.f, GIZMO_RADIUS)*View.Zoom*Size), CirclePoint.x, CirclePoint.y );
 
-	Float RealRadius = Distance( Center, CirclePoint );
-	Float TestRadius = Distance( Center, TVector(Cx, Cy) );
+	Float RealRadius = math::distance( Center, CirclePoint );
+	Float TestRadius = math::distance( Center, math::Vector(Cx, Cy) );
 
 	// 3px threshold.
 	return (TestRadius>=RealRadius-1.5f && TestRadius<=RealRadius+1.5f) ? GIAX_Both : GIAX_None;
@@ -241,19 +241,19 @@ static EGizmoAxis HitRotationGizmo( const TViewInfo& View, Float Size, Int32 Cx,
 //
 // Test hit with rotation gizmo.
 //
-static EGizmoAxis HitScaleGizmo( const TViewInfo& View, Float Size, Int32 Cx, Int32 Cy, const TCoords& ToLocal, const TVector& Scale )
+static EGizmoAxis HitScaleGizmo( const TViewInfo& View, Float Size, Int32 Cx, Int32 Cy, const math::Coords& ToLocal, const math::Vector& Scale )
 {
-	TVector Center, XEnd, YEnd;
-	View.Project( ToLocal.Origin, Center.X, Center.Y );
-	View.Project( ToLocal.Origin + ToLocal.XAxis*((GIZMO_ARROW_LEN+0.5f)*View.Zoom*Size), XEnd.X, XEnd.Y );
-	View.Project( ToLocal.Origin + ToLocal.YAxis*((GIZMO_ARROW_LEN+0.5f)*View.Zoom*Size), YEnd.X, YEnd.Y );
+	math::Vector Center, XEnd, YEnd;
+	View.Project( ToLocal.origin, Center.x, Center.y );
+	View.Project( ToLocal.origin + ToLocal.xAxis*((GIZMO_ARROW_LEN+0.5f)*View.Zoom*Size), XEnd.x, XEnd.y );
+	View.Project( ToLocal.origin + ToLocal.yAxis*((GIZMO_ARROW_LEN+0.5f)*View.Zoom*Size), YEnd.x, YEnd.y );
 
-	if( PointOnSegment(TVector(Cx, Cy), Center, XEnd, 3.f) )
+	if( math::isPointOnSegment(math::Vector(Cx, Cy), Center, XEnd, 3.f) )
 	{
 		// X stick hit.
 		return GIAX_X;
 	}
-	else if( PointOnSegment(TVector(Cx, Cy), Center, YEnd, 3.f) )
+	else if( math::isPointOnSegment(math::Vector(Cx, Cy), Center, YEnd, 3.f) )
 	{
 		// Y stick hit.
 		return GIAX_Y;
@@ -261,15 +261,15 @@ static EGizmoAxis HitScaleGizmo( const TViewInfo& View, Float Size, Int32 Cx, In
 	else 
 	{
 		// Everything or nothing.
-		TVector Tmp = XEnd - Center;
-		Tmp.Normalize();
-		TCoords TriLocal( Center, Tmp );
+		math::Vector Tmp = XEnd - Center;
+		Tmp.normalize();
+		math::Coords TriLocal( Center, Tmp );
 
-		TVector Point = TransformPointBy( TVector(Cx, Cy), TriLocal );
-		Point.Y = -Point.Y;
-		Float Side = GIZMO_RECT_SIZE * ((XEnd-Center).Size()/(GIZMO_ARROW_LEN+0.5f));
+		math::Vector Point = math::transformPointBy( math::Vector(Cx, Cy), TriLocal );
+		Point.y = -Point.y;
+		Float Side = GIZMO_RECT_SIZE * ((XEnd-Center).size()/(GIZMO_ARROW_LEN+0.5f));
 
-		return Point.X>=0 && Point.Y>=0 && Abs(Point.X+Point.Y)<=Side ? GIAX_Both : GIAX_None;
+		return Point.x>=0 && Point.y>=0 && abs(Point.x+Point.y)<=Side ? GIAX_Both : GIAX_None;
 	}
 }
 
@@ -279,7 +279,7 @@ static EGizmoAxis HitScaleGizmo( const TViewInfo& View, Float Size, Int32 Cx, In
 //
 EGizmoAxis CGizmo::AxisAt( const TViewInfo& ViewInfo, Int32 Cx, Int32 Cy )
 {
-	static EGizmoAxis(*GizmoHitTable[GIZMO_MAX])( const TViewInfo&, Float, Int32, Int32, const TCoords&, const TVector& ) = 
+	static EGizmoAxis(*GizmoHitTable[GIZMO_MAX])( const TViewInfo&, Float, Int32, Int32, const math::Coords&, const math::Vector& ) = 
 	{
 		HitTranslationGizmo,
 		HitRotationGizmo,
@@ -287,7 +287,7 @@ EGizmoAxis CGizmo::AxisAt( const TViewInfo& ViewInfo, Int32 Cx, Int32 Cy )
 	};
 
 	// Test hit.
-	return GizmoHitTable[Mode](ViewInfo, Size, Cx, Cy, TCoords(Location, Rotation), Scale );
+	return GizmoHitTable[Mode](ViewInfo, Size, Cx, Cy, math::Coords(Location, Rotation), Scale );
 }
 
 
@@ -306,10 +306,10 @@ EGizmoAxis CGizmo::AxisAt( const TViewInfo& ViewInfo, Int32 Cx, Int32 Cy )
 //
 // Draw a gizmo arrow.
 //
-static void DrawArrow( CCanvas* Canvas, const TVector& From, const TVector& Dir, Float Length, Float Size, TColor Color )
+static void DrawArrow( CCanvas* Canvas, const math::Vector& From, const math::Vector& Dir, Float Length, Float Size, TColor Color )
 {
-	TVector End		= From + Dir * (Length * Canvas->View.Zoom);
-	TCoords ToWorld	= TCoords( End, Dir ).Transpose();
+	math::Vector End = From + Dir * (Length * Canvas->View.Zoom);
+	math::Coords ToWorld = math::Coords( End, Dir ).transpose();
 
 	// Draw arrow tail.
 	Canvas->DrawLine( From, End, Color, false );
@@ -321,9 +321,9 @@ static void DrawArrow( CCanvas* Canvas, const TVector& From, const TVector& Dir,
 	Poly.Flags			= POLY_FlatShade;
 	Poly.NumVerts		= 3;
 
-	Poly.Vertices[0]	= TransformPointBy( TVector( +0.0000f, -0.3125f )*Canvas->View.Zoom*Size, ToWorld );
-	Poly.Vertices[1]	= TransformPointBy( TVector( +0.9375f, -0.0000f )*Canvas->View.Zoom*Size, ToWorld );
-	Poly.Vertices[2]	= TransformPointBy( TVector( +0.0000f, +0.3125f )*Canvas->View.Zoom*Size, ToWorld );
+	Poly.Vertices[0]	= math::transformPointBy( math::Vector( +0.0000f, -0.3125f )*Canvas->View.Zoom*Size, ToWorld );
+	Poly.Vertices[1]	= math::transformPointBy( math::Vector( +0.9375f, -0.0000f )*Canvas->View.Zoom*Size, ToWorld );
+	Poly.Vertices[2]	= math::transformPointBy( math::Vector( +0.0000f, +0.3125f )*Canvas->View.Zoom*Size, ToWorld );
 
 	Canvas->DrawPoly(Poly);
 }
@@ -332,10 +332,10 @@ static void DrawArrow( CCanvas* Canvas, const TVector& From, const TVector& Dir,
 //
 // Draw a gizmo stick.
 //
-static void DrawStick( CCanvas* Canvas, const TVector& From, const TVector& Dir, Float Length, TColor Color )
+static void DrawStick( CCanvas* Canvas, const math::Vector& From, const math::Vector& Dir, Float Length, TColor Color )
 {
 	// Line.
-	TVector End		= From + Dir * (Length * Canvas->View.Zoom);
+	math::Vector End = From + Dir * (Length * Canvas->View.Zoom);
 	Canvas->DrawLine( From, End, Color, false );
 
 	// Head.
@@ -346,7 +346,7 @@ static void DrawStick( CCanvas* Canvas, const TVector& From, const TVector& Dir,
 //
 // Draw translation gizmo.
 //
-static void DrawTranslationGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, const TCoords& ToLocal, const TVector& Scale )
+static void DrawTranslationGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, const math::Coords& ToLocal, const math::Vector& Scale )
 {
 	Float RectSize = GIZMO_RECT_SIZE * Canvas->View.Zoom * Size;
 
@@ -357,38 +357,38 @@ static void DrawTranslationGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, 
 		R.Texture	= nullptr;
 		R.Color		= GIZMO_BOTH_COLOR * 0.5f;
 		R.Flags		= POLY_FlatShade | POLY_Ghost;
-		R.Rotation	= VectorToAngle(ToLocal.XAxis);
-		R.Bounds	= TRect( ToLocal.Origin + (ToLocal.XAxis+ToLocal.YAxis)*(RectSize*0.5f), RectSize );
+		R.Rotation	= math::vectorToAngle(ToLocal.xAxis);
+		R.Bounds	= TRect( ToLocal.origin + (ToLocal.xAxis+ToLocal.yAxis)*(RectSize*0.5f), RectSize );
 		Canvas->DrawRect( R );
 	}
 
 	// Draw 'both' corner.
-	TVector Opposite = ToLocal.Origin + (ToLocal.XAxis+ToLocal.YAxis)*RectSize;
-	Canvas->DrawLine( ToLocal.Origin + ToLocal.XAxis*RectSize, Opposite, GIZMO_BOTH_COLOR, false );
-	Canvas->DrawLine( ToLocal.Origin + ToLocal.YAxis*RectSize, Opposite, GIZMO_BOTH_COLOR, false );
+	math::Vector Opposite = ToLocal.origin + (ToLocal.xAxis+ToLocal.yAxis)*RectSize;
+	Canvas->DrawLine( ToLocal.origin + ToLocal.xAxis*RectSize, Opposite, GIZMO_BOTH_COLOR, false );
+	Canvas->DrawLine( ToLocal.origin + ToLocal.yAxis*RectSize, Opposite, GIZMO_BOTH_COLOR, false );
 
 	// And finally draw arrows.
-	DrawArrow( Canvas, ToLocal.Origin, ToLocal.XAxis, GIZMO_ARROW_LEN*Size, Size, (Axis==GIAX_X || Axis==GIAX_Both) ? GIZMO_BOTH_COLOR : GIZMO_X_COLOR );
-	DrawArrow( Canvas, ToLocal.Origin, ToLocal.YAxis, GIZMO_ARROW_LEN*Size, Size, (Axis==GIAX_Y || Axis==GIAX_Both) ? GIZMO_BOTH_COLOR : GIZMO_Y_COLOR );
+	DrawArrow( Canvas, ToLocal.origin, ToLocal.xAxis, GIZMO_ARROW_LEN*Size, Size, (Axis==GIAX_X || Axis==GIAX_Both) ? GIZMO_BOTH_COLOR : GIZMO_X_COLOR );
+	DrawArrow( Canvas, ToLocal.origin, ToLocal.yAxis, GIZMO_ARROW_LEN*Size, Size, (Axis==GIAX_Y || Axis==GIAX_Both) ? GIZMO_BOTH_COLOR : GIZMO_Y_COLOR );
 }
 
 
 //
 // Draw rotation gizmo.
 //
-static void DrawRotationGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, const TCoords& ToLocal, const TVector& Scale )
+static void DrawRotationGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, const math::Coords& ToLocal, const math::Vector& Scale )
 {
 	Canvas->DrawCircle
 	(
-		ToLocal.Origin,
+		ToLocal.origin,
 		GIZMO_RADIUS * Canvas->View.Zoom * Size,
 		Axis == AXIS_None ? GIZMO_X_COLOR : GIZMO_BOTH_COLOR,
 		false
 	);
 	Canvas->DrawLineStar
 	(
-		ToLocal.Origin,
-		VectorToAngle(ToLocal.XAxis),
+		ToLocal.origin,
+		math::vectorToAngle(ToLocal.xAxis),
 		GIZMO_RADIUS * Canvas->View.Zoom * 0.75f * Size,
 		GIZMO_BOTH_COLOR,
 		false
@@ -399,10 +399,10 @@ static void DrawRotationGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, con
 //
 // Draw scale gizmo.
 //
-static void DrawScaleGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, const TCoords& ToLocal, const TVector& Scale )
+static void DrawScaleGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, const math::Coords& ToLocal, const math::Vector& Scale )
 {
-	Float RectSizeX = GIZMO_RECT_SIZE * Canvas->View.Zoom * Scale.X * Size;
-	Float RectSizeY = GIZMO_RECT_SIZE * Canvas->View.Zoom * Scale.Y * Size;
+	Float RectSizeX = GIZMO_RECT_SIZE * Canvas->View.Zoom * Scale.x * Size;
+	Float RectSizeY = GIZMO_RECT_SIZE * Canvas->View.Zoom * Scale.y * Size;
 
 	// Draw semi-solid rect.
 	if( Axis == GIAX_Both )
@@ -412,24 +412,24 @@ static void DrawScaleGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, const 
 		P.Color			= GIZMO_BOTH_COLOR * 0.5f;
 		P.Flags			= POLY_FlatShade | POLY_Ghost;
 		P.NumVerts		= 3;
-		P.Vertices[0]	= ToLocal.Origin;
-		P.Vertices[1]	= ToLocal.Origin + ToLocal.XAxis*RectSizeX;
-		P.Vertices[2]	= ToLocal.Origin + ToLocal.YAxis*RectSizeY;
+		P.Vertices[0]	= ToLocal.origin;
+		P.Vertices[1]	= ToLocal.origin + ToLocal.xAxis*RectSizeX;
+		P.Vertices[2]	= ToLocal.origin + ToLocal.yAxis*RectSizeY;
 		Canvas->DrawPoly(P);
 	}
 
 	// Draw triangle edge.
 	Canvas->DrawLine
 	(
-		ToLocal.Origin + ToLocal.XAxis*RectSizeX,
-		ToLocal.Origin + ToLocal.YAxis*RectSizeY,
+		ToLocal.origin + ToLocal.xAxis*RectSizeX,
+		ToLocal.origin + ToLocal.yAxis*RectSizeY,
 		GIZMO_BOTH_COLOR,
 		false
 	);
 
 	// Draw sticks-handles.
-	DrawStick( Canvas, ToLocal.Origin, ToLocal.XAxis, GIZMO_ARROW_LEN*Scale.X*Size, (Axis==GIAX_X || Axis==GIAX_Both) ? GIZMO_BOTH_COLOR : GIZMO_X_COLOR );
-	DrawStick( Canvas, ToLocal.Origin, ToLocal.YAxis, GIZMO_ARROW_LEN*Scale.Y*Size, (Axis==GIAX_Y || Axis==GIAX_Both) ? GIZMO_BOTH_COLOR : GIZMO_Y_COLOR );
+	DrawStick( Canvas, ToLocal.origin, ToLocal.xAxis, GIZMO_ARROW_LEN*Scale.x*Size, (Axis==GIAX_X || Axis==GIAX_Both) ? GIZMO_BOTH_COLOR : GIZMO_X_COLOR );
+	DrawStick( Canvas, ToLocal.origin, ToLocal.yAxis, GIZMO_ARROW_LEN*Scale.y*Size, (Axis==GIAX_Y || Axis==GIAX_Both) ? GIZMO_BOTH_COLOR : GIZMO_Y_COLOR );
 }
 
 
@@ -438,7 +438,7 @@ static void DrawScaleGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, const 
 //
 void CGizmo::Render( CCanvas* Canvas )
 {
-	static void(*GizmoRenderTable[GIZMO_MAX])( CCanvas*, Float, EGizmoAxis, const TCoords&, const TVector& ) = 
+	static void(*GizmoRenderTable[GIZMO_MAX])( CCanvas*, Float, EGizmoAxis, const math::Coords&, const math::Vector& ) = 
 	{
 		DrawTranslationGizmo,
 		DrawRotationGizmo,
@@ -446,7 +446,7 @@ void CGizmo::Render( CCanvas* Canvas )
 	};
 
 	// Render it.
-	GizmoRenderTable[Mode](Canvas, Size, CurrentAxis, TCoords(Location, Rotation), Scale );
+	GizmoRenderTable[Mode](Canvas, Size, CurrentAxis, math::Coords(Location, Rotation), Scale );
 }
 
 

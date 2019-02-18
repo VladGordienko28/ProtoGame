@@ -64,7 +64,7 @@ Int32 WEdit::PixelToCaret( Int32 X )
 {
 	return Clamp
 			( 
-				Round((Float)X / (Float)CharSize.Width)+ScrollX, 
+				math::round((Float)X / (Float)CharSize.Width)+ScrollX, 
 				0, 
 				Text.Len() 
 			);	

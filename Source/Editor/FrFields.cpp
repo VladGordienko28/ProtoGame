@@ -321,7 +321,7 @@ CPropertyItem::CPropertyItem
 											(
 												Inspector,
 												Depth + 1,
-												CustomAddr + (SizeT)((UInt8*)&(&((TVector*)nullptr)->X)[i] -(UInt8*)nullptr),
+												CustomAddr + (SizeT)((UInt8*)&(&((math::Vector*)nullptr)->x)[i] -(UInt8*)nullptr),
 												MemNames[i],
 												TYPE_Float,
 												Flags
@@ -473,7 +473,7 @@ CPropertyItem::CPropertyItem
 												InObjs,
 												MemNames[i],
 												TYPE_Float,
-												InAddrOffset + (SizeT)((UInt8*)&(&((TVector*)nullptr)->X)[i] -(UInt8*)nullptr),
+												InAddrOffset + (SizeT)((UInt8*)&(&((math::Vector*)nullptr)->x)[i] -(UInt8*)nullptr),
 												Flags
 											) );
 
@@ -806,10 +806,10 @@ void CPropertyItem::OnSomethingChange( WWidget* Sender )
 			if( Inspector->LevelPage )	Inspector->LevelPage->Transactor->TrackEnter();
 			{
 				if( CustomAddr ) 
-					*(TAngle*)CustomAddr = TAngle::FromDegs(Value);
+					*(math::Angle*)CustomAddr = math::Angle::fromDegs(Value);
 
 				for( Int32 i=0; i<Objects.size(); i++ )
-					*(TAngle*)GetAddress(i) = TAngle::FromDegs(Value);
+					*(math::Angle*)GetAddress(i) = math::Angle::fromDegs(Value);
 			}
 			if( Inspector->LevelPage )	Inspector->LevelPage->Transactor->TrackLeave();
 			break;
@@ -878,7 +878,7 @@ void CPropertyItem::OnSomethingChange( WWidget* Sender )
 //
 Bool CPropertyItem::IsAtSign( Int32 X ) const
 { 
-	return Abs( X - (18+Depth*20) ) < 20;
+	return abs( X - (18+Depth*20) ) < 20;
 }
 
 
@@ -1042,7 +1042,7 @@ void CPropertyItem::MouseDown( EMouseButton MouseButton, Int32 X, Int32 Y )
 				Spinner->SetRange( 0.f, 360.f, 0.1f );
 				Spinner->EventChange = TNotifyEvent( Inspector, (TNotifyEvent::TEvent)&WObjectInspector::SomethingChange );
 				if( bMatched )
-					Spinner->SetValue((*(TAngle*)GetAddress(0)).ToDegs(), false);
+					Spinner->SetValue((*(math::Angle*)GetAddress(0)).toDegs(), false);
 				break;
 			}
 			case TYPE_Resource:
@@ -1295,7 +1295,7 @@ void CPropertyItem::MouseMove( EMouseButton Button, Int32 X, Int32 Y )
 //
 Bool CPropertyItem::IsAtSeparator( Int32 X ) const
 {
-	return Abs(Inspector->Separator - X) < 5;
+	return abs(Inspector->Separator - X) < 5;
 }
 
 
@@ -1825,7 +1825,7 @@ void WObjectInspector::UpdateChildren()
 			NonHidden++;
 
 	// Compute scrolling.
-	Int32 NumVisible		= Floor( (Float)(Size.Height-Padding.Top)  / (Float)INSPECTOR_ITEM_HEIGHT );
+	Int32 NumVisible	= math::floor( (Float)(Size.Height-Padding.Top)  / (Float)INSPECTOR_ITEM_HEIGHT );
 	Int32 NumInvis		= Max( NonHidden-NumVisible, 0);
 	Int32 Scroll		= (NumInvis * ScrollBar->Value * INSPECTOR_ITEM_HEIGHT) / 100;
 

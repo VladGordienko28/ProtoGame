@@ -9,7 +9,7 @@
 #pragma warning(disable : 4244)
 
 // C++ includes.
-#include <math.h>
+#include <math.h>			// to be removed!!
 #include <stdlib.h>
 #include <string.h>
 #include <tchar.h>
@@ -62,6 +62,7 @@ template<class K, class V> class TMap;
 
 // Flu includes.
 #include "Core/Core.h"
+#include "Math/Math.h"
 
 using namespace flu; //todo: remove this;
 
@@ -102,6 +103,9 @@ namespace envi
 #include "Environment/Satellite.h"
 #include "Environment/EnvironmentContext.h"
 #include "Environment/Environment.h"
+
+// Physics engine
+#include "Physics/PhysicsUtils.h"
 
 #include "FrCom.h"
 #include "FrBlock.h"

@@ -431,8 +431,8 @@ void WAnimationPage::OnPaint( CGUIRenderBase* Render )
 						);
 
 		// Draw cells.
-		Int32 FrmPerX	= Floor((Float)(Animation->Sheet->USize+Animation->SpaceX) / (Float)(Animation->FrameW+Animation->SpaceX));		
-		Int32 FrmPerY	= Floor((Float)(Animation->Sheet->VSize+Animation->SpaceY) / (Float)(Animation->FrameH+Animation->SpaceY));
+		Int32 FrmPerX	= math::floor((Float)(Animation->Sheet->USize+Animation->SpaceX) / (Float)(Animation->FrameW+Animation->SpaceX));		
+		Int32 FrmPerY	= math::floor((Float)(Animation->Sheet->VSize+Animation->SpaceY) / (Float)(Animation->FrameH+Animation->SpaceY));
 
 		// Vertical lines.
 		for( Int32 iX=0; iX<=FrmPerX; iX++ )
@@ -632,10 +632,10 @@ void WAnimationPlayer::OnPaint( CGUIRenderBase* Render )
 	TPoint Base = ClientToWindow(TPoint::Zero);
 	Render->SetClipArea( Base, Size );
 
-	Int32	X	= Floor( R.Min.X * Animation->Sheet->USize ),
-			Y	= Floor( R.Min.Y * Animation->Sheet->VSize ),
-			W	= Floor( (R.Max.X-R.Min.X) * Animation->Sheet->USize ),
-			H	= Floor( (R.Max.Y-R.Min.Y) * Animation->Sheet->VSize );
+	Int32	X	= math::floor( R.Min.x * Animation->Sheet->USize ),
+			Y	= math::floor( R.Min.y * Animation->Sheet->VSize ),
+			W	= math::floor( (R.Max.x-R.Min.x) * Animation->Sheet->USize ),
+			H	= math::floor( (R.Max.y-R.Min.y) * Animation->Sheet->VSize );
 
 	Int32 DestX	= Base.X + (Size.Width - W) / 2,
 			DestY	= Base.Y + (Size.Height - H) / 2;

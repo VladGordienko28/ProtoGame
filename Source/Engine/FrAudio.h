@@ -67,7 +67,7 @@ public:
 	virtual void Tick( Float Delta, FLevel* Scene=nullptr ) = 0;
 	virtual void PlayMusic( FMusic* Music, Float FadeTime ) = 0;
 	virtual void PlayFX( FSound* Sound, Float Gain, Float Pitch ) = 0;
-	virtual void PlayAmbient( FSound* Sound, TVector Location, Float Radius, Float Gain, Float Pitch, FObject* Owner ) = 0;
+	virtual void PlayAmbient( FSound* Sound, math::Vector Location, Float Radius, Float Gain, Float Pitch, FObject* Owner ) = 0;
 	virtual void StopAmbient( FObject* Owner ) = 0;
 	virtual void FlushAmbients() = 0;
 };
@@ -88,7 +88,7 @@ public:
 	void Tick( Float Delta, FLevel* Scene=nullptr ){};
 	void PlayMusic( FMusic* Music, Float FadeTime ){};
 	void PlayFX( FSound* Sound, Float Gain, Float Pitch ){};
-	void PlayAmbient( FSound* Sound, TVector Location, Float Radius, Float Gain, Float Pitch, FObject* Owner ){};
+	void PlayAmbient( FSound* Sound, math::Vector Location, Float Radius, Float Gain, Float Pitch, FObject* Owner ){};
 	void StopAmbient( FObject* Owner ){};
 	void FlushAmbients(){};
 };

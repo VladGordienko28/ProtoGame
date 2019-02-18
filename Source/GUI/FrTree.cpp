@@ -342,16 +342,16 @@ Int32 WTreeView::XYToIndex( Int32 X, Int32 Y, Bool* AtSign )
 		YWalk += TREEVIEW_NODES_INTERVAL + CharHeight;
 
 		// Test Y.
-		if( InRange( Y, LabelY, YWalk ) )
+		if( inRange( Y, LabelY, YWalk ) )
 		{
 			// Test X.
 			Int32 TextWidth = Root->Font1->TextWidth(*Node.Name) + 2;
 
-			if( InRange( X, LabelX, LabelX+TextWidth ) )
+			if( inRange( X, LabelX, LabelX+TextWidth ) )
 			{
 				return iNode;
 			}
-			else if( AtSign && InRange( X, LabelX-20, LabelX ) )
+			else if( AtSign && inRange( X, LabelX-20, LabelX ) )
 			{
 				*AtSign = true;
 				return iNode;

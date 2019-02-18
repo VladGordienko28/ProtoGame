@@ -44,7 +44,7 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		}
 		case OP_GetScreenCursor:
 		{
-			*POPA_VECTOR	= TVector( GApp->GInput->MouseX, GApp->GInput->MouseY );
+			*POPA_VECTOR	= math::Vector( GApp->GInput->MouseX, GApp->GInput->MouseY );
 			break;
 		}
 		case OP_GetWorldCursor:
@@ -123,46 +123,46 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		case OP_Abs:
 		{
 			Float A = POP_FLOAT;
-			*POPA_FLOAT = Abs( A );
+			*POPA_FLOAT = abs( A );
 			break;
 		}
 		case OP_ArcTan:
 		{
 			Float A = POP_FLOAT;
-			*POPA_FLOAT = ArcTan( A );
+			*POPA_FLOAT = math::arcTan( A );
 			break;
 		}
 		case OP_ArcTan2:
 		{
 			Float Y = POP_FLOAT;
 			Float X = POP_FLOAT;
-			*POPA_FLOAT = ArcTan2( Y, X );
+			*POPA_FLOAT = math::arcTan2( Y, X );
 			break;
 		}
 		case OP_Cos:
 		{
 			Float A = POP_FLOAT;
-			*POPA_FLOAT = Cos( A );
+			*POPA_FLOAT = math::cos( A );
 			break;
 		}
 		case OP_Sin:
 		{
 			Float A = POP_FLOAT;
-			*POPA_FLOAT = Sin( A );
+			*POPA_FLOAT = math::sin( A );
 			break;
 		}
 		case OP_Sqrt:
 		{
 			Float A = POP_FLOAT;
 			if( A < 0.f ) ScriptError( L"Negative X in 'sqrt'" );
-			*POPA_FLOAT = Sqrt( A );
+			*POPA_FLOAT = math::sqrt( A );
 			break;
 		}
 		case OP_Distance:
 		{
-			TVector A = POP_VECTOR;
-			TVector B = POP_VECTOR;
-			*POPA_FLOAT = Distance( A, B );
+			math::Vector A = POP_VECTOR;
+			math::Vector B = POP_VECTOR;
+			*POPA_FLOAT = math::distance( A, B );
 			break;
 		}
 		case OP_Exp:
@@ -174,25 +174,25 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		case OP_Ln:
 		{
 			Float A = POP_FLOAT;
-			*POPA_FLOAT = Ln( A );
+			*POPA_FLOAT = math::ln( A );
 			break;
 		}
 		case OP_Frac:
 		{
 			Float A = POP_FLOAT;
-			*POPA_FLOAT = Frac( A );
+			*POPA_FLOAT = math::frac( A );
 			break;
 		}
 		case OP_Round:
 		{
 			Float A = POP_FLOAT;
-			*POPA_INTEGER = Round( A );
+			*POPA_INTEGER = math::round( A );
 			break;
 		}
 		case OP_Normalize:
 		{
-			TVector A = POP_VECTOR;
-			A.Normalize();
+			math::Vector A = POP_VECTOR;
+			A.normalize();
 			*POPA_VECTOR = A;
 			break;
 		}
@@ -209,8 +209,8 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		}
 		case OP_VectorSize:
 		{
-			TVector A = POP_VECTOR;
-			*POPA_FLOAT = A.Size();
+			math::Vector A = POP_VECTOR;
+			*POPA_FLOAT = A.size();
 			break;
 		}
 		case OP_RGBA:
@@ -308,18 +308,18 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		CASE_BINARY( BIN_Mult_Integer,		*,	Int32,		Int32,		Int32		)
 		CASE_BINARY( BIN_Mult_Float,		*,	Float,		Float,		Float		)
 		CASE_BINARY( BIN_Mult_Color,		*,	TColor,		TColor,		TColor		)
-		CASE_BINARY( BIN_Mult_Vector,		*,	TVector,	Float,		TVector		)
+		CASE_BINARY( BIN_Mult_Vector,		*,	math::Vector,	Float,		math::Vector		)
 		CASE_BINARY( BIN_Div_Integer,		/,	Int32,		Int32,		Int32		)
 		CASE_BINARY( BIN_Div_Float,			/,	Float,		Float,		Float		)
 		CASE_BINARY( BIN_Mod_Integer,		%,	Int32,		Int32,		Int32		)
 		CASE_BINARY( BIN_Add_Integer,		+,	Int32,		Int32,		Int32		)
 		CASE_BINARY( BIN_Add_Float,			+,	Float,		Float,		Float		)
 		CASE_BINARY( BIN_Add_Color,			+,	TColor,		TColor,		TColor		)
-		CASE_BINARY( BIN_Add_Vector,		+,	TVector,	TVector,	TVector		)
+		CASE_BINARY( BIN_Add_Vector,		+,	math::Vector,	math::Vector,	math::Vector		)
 		CASE_BINARY( BIN_Sub_Integer,		-,	Int32,		Int32,		Int32		)
 		CASE_BINARY( BIN_Sub_Float,			-,	Float,		Float,		Float		)
 		CASE_BINARY( BIN_Sub_Color,			-,	TColor,		TColor,		TColor		)
-		CASE_BINARY( BIN_Sub_Vector,		-,	TVector,	TVector,	TVector		)
+		CASE_BINARY( BIN_Sub_Vector,		-,	math::Vector,	math::Vector,	math::Vector		)
 		CASE_BINARY( BIN_Shr_Integer,		>>,	Int32,		Int32,		Int32		)
 		CASE_BINARY( BIN_Shl_Integer,		<<,	Int32,		Int32,		Int32		)
 		CASE_BINARY( BIN_Less_Integer,		<,	Int32,		Int32,		Bool		)
@@ -332,9 +332,9 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		CASE_BINARY( BIN_GreaterEq_Float,	>=,	Float,		Float,		Bool		)
 		CASE_BINARY( BIN_And_Integer,		&,	Int32,		Int32,		Int32		)
 		CASE_BINARY( BIN_Xor_Integer,		^,	Int32,		Int32,		Int32		)
-		CASE_BINARY( BIN_Cross_Vector,		/,	TVector,	TVector,	Float		)
+		CASE_BINARY( BIN_Cross_Vector,		/,	math::Vector,	math::Vector,	Float		)
 		CASE_BINARY( BIN_Or_Integer,		|,	Int32,		Int32,		Int32		)
-		CASE_BINARY( BIN_Dot_Vector,		*,	TVector,	TVector,	Float		)
+		CASE_BINARY( BIN_Dot_Vector,		*,	math::Vector,	math::Vector,	Float		)
 		#undef CASE_BINARY
 
 		//
@@ -343,11 +343,11 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		#define CASE_ASSIGN( icode, op, a1, a2, r ) case icode: { UInt8 iReg=ReadByte(); *(r*)Regs[iReg].Addr op *(a2*)Regs[ReadByte()].Value; break;}
 		CASE_ASSIGN( BIN_AddEqual_Integer,	+=,		Int32,		Int32,		Int32 )
 		CASE_ASSIGN( BIN_AddEqual_Float,	+=,		Float,		Float,		Float )
-		CASE_ASSIGN( BIN_AddEqual_Vector,	+=,		TVector,	TVector,	TVector )
+		CASE_ASSIGN( BIN_AddEqual_Vector,	+=,		math::Vector,	math::Vector,	math::Vector )
 		CASE_ASSIGN( BIN_AddEqual_Color,	+=,		TColor,		TColor,		TColor )
 		CASE_ASSIGN( BIN_SubEqual_Integer,	-=,		Int32,		Int32,		Int32 )
 		CASE_ASSIGN( BIN_SubEqual_Float,	-=,		Float,		Float,		Float )
-		CASE_ASSIGN( BIN_SubEqual_Vector,	-=,		TVector,	TVector,	TVector )
+		CASE_ASSIGN( BIN_SubEqual_Vector,	-=,		math::Vector,	math::Vector,	math::Vector )
 		CASE_ASSIGN( BIN_SubEqual_Color,	-=,		TColor,		TColor,		TColor )
 		CASE_ASSIGN( BIN_MulEqual_Integer,	*=,		Int32,		Int32,		Int32 )
 		CASE_ASSIGN( BIN_MulEqual_Float,	*=,		Float,		Float,		Float )
@@ -368,11 +368,11 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		#define CASE_UNARY( icode, op, type ) case icode:{UInt8 iReg=ReadByte(); *(type*)(Regs[iReg].Value) = op *(type*)(Regs[iReg].Value); break;}
 		CASE_UNARY( UN_Plus_Integer,		+,		Int32 );
 		CASE_UNARY( UN_Plus_Float,			+,		Float );
-		CASE_UNARY( UN_Plus_Vector,			+,		TVector );
+		CASE_UNARY( UN_Plus_Vector,			+,		math::Vector );
 		CASE_UNARY( UN_Plus_Color,			+,		TColor );
 		CASE_UNARY( UN_Minus_Integer,		-,		Int32 );
 		CASE_UNARY( UN_Minus_Float,			-,		Float );
-		CASE_UNARY( UN_Minus_Vector,		-,		TVector );
+		CASE_UNARY( UN_Minus_Vector,		-,		math::Vector );
 		CASE_UNARY( UN_Minus_Color,			-,		TColor );
 		CASE_UNARY( UN_Not_Bool,			!,		Bool );
 		CASE_UNARY( UN_Not_Integer,			~,		Int32 );

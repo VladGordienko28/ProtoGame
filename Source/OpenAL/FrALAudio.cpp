@@ -900,8 +900,8 @@ void COpenALAudio::Tick( Float Delta, FLevel* Scene )
 	// Process scene's ambient sources.
 	if( Scene )
 	{
-		TCamera&	Camera = Scene->Camera;
-		TCoords		Listener = TCoords( Camera.Location, Camera.Rotation );
+		TCamera&		Camera = Scene->Camera;
+		math::Coords	Listener = math::Coords( Camera.Location, Camera.Rotation );
 
 		// Turn on, or turn off ambient emitters.
 		for( Int32 i=0; i<Emitters.size(); i++ )
@@ -909,7 +909,7 @@ void COpenALAudio::Tick( Float Delta, FLevel* Scene )
 			TAmbientEmitter& E	= Emitters[i];
 
 			// Remove?..
-			if( E.iSource != -1 && (Camera.Location-E.Position).SizeSquared() > E.RadiusSq )
+			if( E.iSource != -1 && (Camera.Location-E.Position).sizeSquared() > E.RadiusSq )
 			{
 				// This emitter is too far from listener now.
 				alSourceStop( AmbientSources[E.iSource].iALId );
@@ -918,7 +918,7 @@ void COpenALAudio::Tick( Float Delta, FLevel* Scene )
 			}
 
 			// ..or add?
-			if( E.iSource == -1 && (Camera.Location-E.Position).SizeSquared() <= E.RadiusSq )
+			if( E.iSource == -1 && (Camera.Location-E.Position).sizeSquared() <= E.RadiusSq )
 			{
 				// This emitter is close now.
 				Int32 j;
@@ -943,10 +943,10 @@ void COpenALAudio::Tick( Float Delta, FLevel* Scene )
 
 			TAmbientEmitter& E = Emitters[S.iEmitter];
 
-			TVector LocalPos	= TransformPointBy( E.Position, Listener );
-			Float	DistFactor	= (1.f - LocalPos.Size()/Sqrt(E.RadiusSq));
-			LocalPos.Normalize();
-			ALfloat ALPos[3] = { LocalPos.X, LocalPos.Y, 0.f };
+			math::Vector LocalPos	= math::transformPointBy( E.Position, Listener );
+			Float	DistFactor	= (1.f - LocalPos.size()/math::sqrt(E.RadiusSq));
+			LocalPos.normalize();
+			ALfloat ALPos[3] = { LocalPos.x, LocalPos.y, 0.f };
 
 			alSourcefv	( S.iALId,	AL_POSITION,		ALPos );
 			alSourcef	( S.iALId,	AL_PITCH,			E.Pitch );
@@ -996,7 +996,7 @@ void COpenALAudio::StopAmbient( FObject* Owner )
 void COpenALAudio::PlayAmbient
 ( 
 	FSound* Sound, 
-	TVector Location, 
+	math::Vector Location, 
 	Float Radius, 
 	Float Gain, 
 	Float Pitch, 

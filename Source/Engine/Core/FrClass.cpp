@@ -350,10 +350,10 @@ CVariant::CVariant( Float InFloat )
 {
 	*((Float*)(&Value[0])) = InFloat;
 }
-CVariant::CVariant( TAngle InAngle )
+CVariant::CVariant( math::Angle InAngle )
 	:	Type( TYPE_Angle )
 {
-	*((TAngle*)(&Value[0])) = InAngle;
+	*((math::Angle*)(&Value[0])) = InAngle;
 }
 CVariant::CVariant( TColor InColor )
 	:	Type( TYPE_Color )
@@ -365,10 +365,10 @@ CVariant::CVariant( String InString )
 {
 	StringValue = InString;
 }
-CVariant::CVariant( const TVector& InVector )
+CVariant::CVariant( const math::Vector& InVector )
 	:	Type( TYPE_Vector )
 {
-	*((TVector*)(&Value[0])) = InVector;
+	*((math::Vector*)(&Value[0])) = InVector;
 }
 CVariant::CVariant( const TRect& InRect )
 	:	Type( TYPE_AABB )
@@ -670,14 +670,14 @@ SizeT CTypeInfo::TypeSize( Bool bNoArray ) const
 		static const SizeT TypeSizes[TYPE_MAX] =
 		{
 			0,						//	TYPE_None
-			sizeof( UInt8 ),			//	TYPE_Byte
+			sizeof( UInt8 ),		//	TYPE_Byte
 			sizeof( Bool ),			//	TYPE_Bool
 			sizeof( Int32 ),		//	TYPE_Integer
 			sizeof( Float ),		//	TYPE_Float
-			sizeof( TAngle ),		//	TYPE_Angle
+			sizeof( math::Angle ),	//	TYPE_Angle
 			sizeof( TColor ),		//	TYPE_Color	
 			sizeof( String ),		//	TYPE_String
-			sizeof( TVector ),		//	TYPE_Vector
+			sizeof( math::Vector ),	//	TYPE_Vector
 			sizeof( TRect ),		//	TYPE_AABB
 			sizeof( FResource* ),	//	TYPE_Resource
 			sizeof( FEntity* ),		//	TYPE_Entity
@@ -970,7 +970,7 @@ String CTypeInfo::ToString( const void* Addr ) const
 		}
 		case TYPE_Angle:
 		{
-			return String::Format( L"%.2f deg.", (*(TAngle*)Addr).ToDegs() );
+			return String::Format( L"%.2f deg.", (*(math::Angle*)Addr).toDegs() );
 		}
 		case TYPE_Color:
 		{
@@ -983,13 +983,13 @@ String CTypeInfo::ToString( const void* Addr ) const
 		}	
 		case TYPE_Vector:
 		{
-			TVector Value = *(TVector*)Addr;
-			return String::Format( L"[%.2f, %.2f]", Value.X, Value.Y );
+			math::Vector Value = *(math::Vector*)Addr;
+			return String::Format( L"[%.2f, %.2f]", Value.x, Value.y );
 		}
 		case TYPE_AABB:
 		{
 			TRect Value = *(TRect*)Addr;
-			return String::Format( L"(%2.f, %2.f, %2.f, %2.f )", Value.Min.X, Value.Min.Y, Value.Max.X, Value.Max.Y );
+			return String::Format( L"(%2.f, %2.f, %2.f, %2.f )", Value.Min.x, Value.Min.y, Value.Max.x, Value.Max.y );
 		}
 		case TYPE_Resource:
 		{
@@ -1193,10 +1193,10 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 		case TYPE_Angle:
 			// Import angle.
 			if( ArrayDim == 1 )
-				*(TAngle*)Addr = Im.ImportAngle( *Prefix );
+				*(math::Angle*)Addr = Im.ImportAngle( *Prefix );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					((TAngle*)Addr)[i] = Im.ImportAngle( *String::Format( L"%s[%d]", *Prefix, i ) );
+					((math::Angle*)Addr)[i] = Im.ImportAngle( *String::Format( L"%s[%d]", *Prefix, i ) );
 			break;
 
 		case TYPE_Color:
@@ -1220,10 +1220,10 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 		case TYPE_Vector:
 			// Import vector.
 			if( ArrayDim == 1 )
-				*(TVector*)Addr = Im.ImportVector( *Prefix );
+				*(math::Vector*)Addr = Im.ImportVector( *Prefix );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					((TVector*)Addr)[i] = Im.ImportVector( *String::Format( L"%s[%d]", *Prefix, i ) );
+					((math::Vector*)Addr)[i] = Im.ImportVector( *String::Format( L"%s[%d]", *Prefix, i ) );
 			break;
 
 		case TYPE_AABB:
@@ -1330,10 +1330,10 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 		case TYPE_Angle:
 			// Export angle.
 			if( ArrayDim == 1 )
-				Ex.ExportAngle( *Prefix, *(TAngle*)Addr );
+				Ex.ExportAngle( *Prefix, *(math::Angle*)Addr );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					Ex.ExportAngle( *String::Format( L"%s[%d]", *Prefix, i ), ((TAngle*)Addr)[i] );
+					Ex.ExportAngle( *String::Format( L"%s[%d]", *Prefix, i ), ((math::Angle*)Addr)[i] );
 			break;
 
 		case TYPE_Color:
@@ -1357,10 +1357,10 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 		case TYPE_Vector:
 			// Export vector.
 			if( ArrayDim == 1 )
-				Ex.ExportVector( *Prefix, *(TVector*)Addr );
+				Ex.ExportVector( *Prefix, *(math::Vector*)Addr );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					Ex.ExportVector( *String::Format( L"%s[%d]", *Prefix, i ), ((TVector*)Addr)[i] );
+					Ex.ExportVector( *String::Format( L"%s[%d]", *Prefix, i ), ((math::Vector*)Addr)[i] );
 			break;
 
 		case TYPE_AABB:

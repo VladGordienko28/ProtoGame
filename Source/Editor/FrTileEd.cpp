@@ -82,8 +82,8 @@ void WTileEditor::WTilesGrid::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y
 		FModelComponent* Model = Editor->Model;
 
 		// Compute tile index below cursor.
-		Int32 NewX = Trunc( X * Model->TilesPerU / 256.f );
-		Int32 NewY = Trunc( Y * Model->TilesPerV / 256.f );
+		Int32 NewX = math::trunc( X * Model->TilesPerU / 256.f );
+		Int32 NewY = math::trunc( Y * Model->TilesPerV / 256.f );
 		Int32 iTile = NewX + NewY * Model->TilesPerU;
 
 		if( Model->Selected.size() == 0 )
@@ -433,7 +433,7 @@ void WTileEditor::ButtonRemoveLeftClick( WWidget* Sender )
 		delete[] Buffer;
 
 #if SAVE_TILE_LOC
-		Model->Location.X += Model->TileSize.X;
+		Model->Location.x += Model->TileSize.x;
 #endif
 	}
 }
@@ -464,7 +464,7 @@ void WTileEditor::ButtonAddLeftClick( WWidget* Sender )
 		delete[] Buffer;
 
 #if SAVE_TILE_LOC
-		Model->Location.X -= Model->TileSize.X;
+		Model->Location.x -= Model->TileSize.x;
 #endif
 	}
 }
@@ -488,7 +488,7 @@ void WTileEditor::ButtonRemoveDownClick( WWidget* Sender )
 		Model->Map.setSize( Model->MapXSize * Model->MapYSize );
 
 #if SAVE_TILE_LOC
-		Model->Location.Y += Model->TileSize.Y;
+		Model->Location.y += Model->TileSize.y;
 #endif
 	}
 }
@@ -518,7 +518,7 @@ void WTileEditor::ButtonAddDownClick( WWidget* Sender )
 				);
 
 #if SAVE_TILE_LOC
-		Model->Location.Y -= Model->TileSize.Y;
+		Model->Location.y -= Model->TileSize.y;
 #endif
 	}
 }

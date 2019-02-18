@@ -19,24 +19,24 @@ static Int32 HashYTab[COLL_HASH_SIZE];
 //
 // Discretize world's coords to hash index.
 //
-void CCollisionHash::GetHashIndex( TVector V, Int32& iX, Int32& iY )
+void CCollisionHash::GetHashIndex( math::Vector V, Int32& iX, Int32& iY )
 {
 	// Check bounds.
 	if	( 
-			V.X >= +WORLD_HALF ||
-			V.Y >= +WORLD_HALF ||
-			V.X <= -WORLD_HALF ||
-			V.Y <= -WORLD_HALF
+			V.x >= +math::WORLD_HALF ||
+			V.y >= +math::WORLD_HALF ||
+			V.x <= -math::WORLD_HALF ||
+			V.y <= -math::WORLD_HALF
 		)
 	{
-		debug( L"Hash: Point [%.4f, %.4f] is out of world", V.X, V.Y );
-		V.X	= Clamp<Float>( V.X, -WORLD_HALF, +WORLD_HALF );
-		V.Y	= Clamp<Float>( V.Y, -WORLD_HALF, +WORLD_HALF );
+		debug( L"Hash: Point [%.4f, %.4f] is out of world", V.x, V.y );
+		V.x	= Clamp<Float>( V.x, -math::WORLD_HALF, +math::WORLD_HALF );
+		V.y	= Clamp<Float>( V.y, -math::WORLD_HALF, +math::WORLD_HALF );
 	}
 
     // Discretize.
-	iX	= (COLL_HASH_SIZE-1) & (Floor( V.X + WORLD_HALF ) >> COLL_FACTOR);
-	iY	= (COLL_HASH_SIZE-1) & (Floor( V.Y + WORLD_HALF ) >> COLL_FACTOR);
+	iX	= (COLL_HASH_SIZE-1) & (math::floor( V.x + math::WORLD_HALF ) >> COLL_FACTOR);
+	iY	= (COLL_HASH_SIZE-1) & (math::floor( V.y + math::WORLD_HALF ) >> COLL_FACTOR);
 }
 
 

@@ -250,10 +250,10 @@ public:
 	CVariant( Bool InBool );
 	CVariant( Int32 InInteger );
 	CVariant( Float InFloat );
-	CVariant( TAngle InAngle );
+	CVariant( math::Angle InAngle );
 	CVariant( TColor InColor );
 	CVariant( String InString );
-	CVariant( const TVector& InVector );
+	CVariant( const math::Vector& InVector );
 	CVariant( const TRect& InRect );
 	CVariant( FResource* InResource );
 	CVariant( FEntity* InEntity );
@@ -520,15 +520,15 @@ inline CTypeInfo _Cpp2FluType( Array<Float>* Value )
 }
 
 // [TYPE_Angle]
-inline CTypeInfo _Cpp2FluType( TAngle* Value )
+inline CTypeInfo _Cpp2FluType( math::Angle* Value )
 {
 	return CTypeInfo(TYPE_Angle, 1, nullptr);
 }
-template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( TAngle(*Value)[ArrLen] )
+template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( math::Angle(*Value)[ArrLen] )
 {
 	return CTypeInfo( TYPE_Angle, ArrLen, nullptr );
 }
-inline CTypeInfo _Cpp2FluType( Array<TAngle>* Value )
+inline CTypeInfo _Cpp2FluType( Array<math::Angle>* Value )
 {
 	return CTypeInfo( TYPE_Angle, -1, nullptr );
 }
@@ -562,15 +562,15 @@ inline CTypeInfo _Cpp2FluType( Array<String>* Value )
 }
 
 // [TYPE_Vector]
-inline CTypeInfo _Cpp2FluType( TVector* Value )
+inline CTypeInfo _Cpp2FluType( math::Vector* Value )
 {
 	return CTypeInfo(TYPE_Vector, 1, nullptr);
 }
-template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( TVector(*Value)[ArrLen] )
+template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( math::Vector(*Value)[ArrLen] )
 {
 	return CTypeInfo( TYPE_Vector, ArrLen, nullptr );
 }
-inline CTypeInfo _Cpp2FluType( Array<TVector>* Value )
+inline CTypeInfo _Cpp2FluType( Array<math::Vector>* Value )
 {
 	return CTypeInfo( TYPE_Vector, -1, nullptr );
 }
@@ -647,10 +647,10 @@ template<class E> inline CTypeInfo _Cpp2FluType( E* Value )
 
 		return CTypeInfo( TYPE_Byte, 1, Enum );
 	}
-	else if( String::Copy(TypeName, 0, 7) == L"struct " )
+	else if( String::Copy(TypeName, 0, 7) == L"struct " || String::Copy(TypeName, 0, 6) == L"class " )
 	{
 		// This is struct.
-		String StructName = String::Delete(TypeName, 0, 7);
+		String StructName = String::Delete(TypeName, 0, String::Copy(TypeName, 0, 6) == L"class " ? 6 : 7);
 		CStruct* Struct = CClassDatabase::StaticFindStruct(*StructName);	
 
 		// Freaky way to ignore namespace prefix.

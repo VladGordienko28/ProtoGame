@@ -56,8 +56,8 @@ void FJointComponent::Render( CCanvas* Canvas )
 	if( Level->RndFlags & RND_Other )
 		if( Body1 && Body2 )
 		{
-			TVector Point1 = TransformPointBy( Hook1, Body1->Base->ToWorld() );
-			TVector Point2 = TransformPointBy( Hook2, Body2->Base->ToWorld() );
+			math::Vector Point1 = math::transformPointBy( Hook1, Body1->Base->ToWorld() );
+			math::Vector Point2 = math::transformPointBy( Hook2, Body2->Base->ToWorld() );
 
 			Canvas->DrawLine
 						(
@@ -115,20 +115,20 @@ void FSpringComponent::Render( CCanvas* Canvas )
 	if( Body1 && Body2 && Segment && NumSegs >= 0 )
 	{
 		// Get hooks location.
-		TVector Point1 = TransformPointBy( Hook1, Body1->Base->ToWorld() );
-		TVector Point2 = TransformPointBy( Hook2, Body2->Base->ToWorld() );
+		math::Vector Point1 = math::transformPointBy( Hook1, Body1->Base->ToWorld() );
+		math::Vector Point2 = math::transformPointBy( Hook2, Body2->Base->ToWorld() );
 
 		// Setup spring rectangle.
 		TRenderRect Rect;
 		Rect.Texture			= Segment;
 		Rect.Color				= bSelected ? TColor( 0x80, 0xe6, 0x80, 0xff ) : COLOR_White;
 		Rect.Flags				= POLY_Unlit;
-		Rect.Rotation			= VectorToAngle((Point1-Point2).Cross());
-		Rect.TexCoords			= TRect( TVector( 0.5f, 0.f ), TVector( 1.f, NumSegs ) );
+		Rect.Rotation			= math::vectorToAngle((Point1-Point2).cross());
+		Rect.TexCoords			= TRect( math::Vector( 0.5f, 0.f ), math::Vector( 1.f, NumSegs ) );
 		Rect.Bounds				=	TRect
 									( 
 										(Point1+Point2) * 0.5, 
-										TVector( Width, (Point1-Point2).Size() ) 
+										math::Vector( Width, (Point1-Point2).size() ) 
 									);
 
 		// Draw spring.
@@ -148,28 +148,28 @@ void FSpringComponent::PreTick( Float Delta )
 	FPhysicComponent* Phys1	= As<FPhysicComponent>( Body1->Base );
 	FPhysicComponent* Phys2	= As<FPhysicComponent>( Body2->Base );
 
-	TCoords ToWorld1 = Body1->Base->ToWorld(),
+	math::Coords ToWorld1 = Body1->Base->ToWorld(),
 			ToWorld2 = Body2->Base->ToWorld();
 
-	TVector	Point1	= TransformPointBy( Hook1, ToWorld1 ),
-			Point2	= TransformPointBy( Hook2, ToWorld2 );
+	math::Vector	Point1	= math::transformPointBy( Hook1, ToWorld1 ),
+			Point2	= math::transformPointBy( Hook2, ToWorld2 );
 
-	TVector	Rad1	= TransformVectorBy( Hook1, ToWorld1 ),
-			Rad2	= TransformVectorBy( Hook2, ToWorld2 );
+	math::Vector	Rad1	= math::transformVectorBy( Hook1, ToWorld1 ),
+			Rad2	= math::transformVectorBy( Hook2, ToWorld2 );
 
-	TVector Vel1	= Phys1 ? Phys1->Velocity : TVector( 0.f, 0.f );
-	TVector Vel2	= Phys2 ? Phys2->Velocity : TVector( 0.f, 0.f );
+	math::Vector Vel1	= Phys1 ? Phys1->Velocity : math::Vector( 0.f, 0.f );
+	math::Vector Vel2	= Phys2 ? Phys2->Velocity : math::Vector( 0.f, 0.f );
 
-	TVector RelVel, RelLoc;
+	math::Vector RelVel, RelLoc;
 	RelVel	= Vel2 - Vel1;
 	RelLoc	= Point2 - Point1;
 
 	Float DL, S;
-	TVector F;
+	math::Vector F;
 
-	DL	= RelLoc.Size() - Length;
+	DL	= RelLoc.size() - Length;
 	S	= Spring * DL;
-	RelLoc.Normalize();
+	RelLoc.normalize();
 
 	F	= (RelLoc * S) + RelLoc*(Damping*(RelVel*RelLoc));
 
@@ -243,7 +243,7 @@ void FHingeComponent::Render( CCanvas* Canvas )
 		// Render Body1.
 		if( Body1 )
 		{
-			TVector Pin = TransformPointBy( Hook1, Body1->Base->ToWorld() );
+			math::Vector Pin = math::transformPointBy( Hook1, Body1->Base->ToWorld() );
 			Canvas->DrawLineStar( Pin, Body1->Base->Rotation, 2.f, COLOR_LightCoral, false );
 			Canvas->DrawPoint( Pin, 5.f, COLOR_LightCoral );
 		}
@@ -251,7 +251,7 @@ void FHingeComponent::Render( CCanvas* Canvas )
 		// Render Body2.
 		if( Body2 )
 		{
-			TVector Pin = TransformPointBy( Hook2, Body2->Base->ToWorld() );
+			math::Vector Pin = math::transformPointBy( Hook2, Body2->Base->ToWorld() );
 			Canvas->DrawLineStar( Pin, Body2->Base->Rotation, 2.f, COLOR_LightBlue, false );
 			Canvas->DrawPoint( Pin, 5.f, COLOR_LightBlue );
 		}
@@ -276,15 +276,15 @@ void FHingeComponent::PreTick( Float Delta )
 	if( Phys2->bHashable ) 
 		Level->CollHash->RemoveFromHash(Phys2);
 	{
-		TVector	Pin1	= TransformPointBy( Hook1, Body1->Base->ToWorld() );
-		TVector	Pin2	= TransformPointBy( Hook2, Body2->Base->ToWorld() );
-		TVector	Fix		= Pin1 - Pin2;
+		math::Vector	Pin1	= math::transformPointBy( Hook1, Body1->Base->ToWorld() );
+		math::Vector	Pin2	= math::transformPointBy( Hook2, Body2->Base->ToWorld() );
+		math::Vector	Fix		= Pin1 - Pin2;
 
 		// Move body to pin, and eliminate movement
 		// forces.
 		Phys2->Location	+= Fix;
-		Phys2->Velocity	= TVector( 0.f, 0.f );
-		Phys2->Forces	= TVector( 0.f, 0.f );
+		Phys2->Velocity	= math::Vector( 0.f, 0.f );
+		Phys2->Forces	= math::Vector( 0.f, 0.f );
 	}
 	if( Phys2->bHashable )
 		Level->CollHash->AddToHash(Phys2);
@@ -752,7 +752,7 @@ void FMoverComponent::PreTick( Float Delta )
 		Entity->OnStep( Delta );
 
 		// Compute delta.
-		TVector Shift	= Location - OldLocation;
+		math::Vector Shift	= Location - OldLocation;
 		OldLocation		= Location;					
 
 		// Move each rider.
@@ -760,7 +760,7 @@ void FMoverComponent::PreTick( Float Delta )
 #if 1
 			// Drown riders a little, this is a little hack 
 			// but works well.
-			Shift	-= TVector( 0.f, 4.f ) * Delta;
+			Shift	-= math::Vector( 0.f, 4.f ) * Delta;
 #endif
 			for( Int32 iRd=0; iRd<NumRds; iRd++ )
 			{

@@ -81,7 +81,7 @@ void CDebugDrawHelper::Tick( Float Delta )
 //
 // Draw point.
 //
-Bool CDebugDrawHelper::DrawLine( const TVector& A, const TVector& B, TColor Color, Float LifeTime )
+Bool CDebugDrawHelper::DrawLine( const math::Vector& A, const math::Vector& B, TColor Color, Float LifeTime )
 {
 	if( Lines.size() >= MAX_LINES )
 		return false;
@@ -100,7 +100,7 @@ Bool CDebugDrawHelper::DrawLine( const TVector& A, const TVector& B, TColor Colo
 //
 // Draw point.
 //
-Bool CDebugDrawHelper::DrawPoint( const TVector& P, TColor Color, Float Size, Float LifeTime )
+Bool CDebugDrawHelper::DrawPoint( const math::Vector& P, TColor Color, Float Size, Float LifeTime )
 {
 	if( Points.size() >= MAX_POINTS )
 		return false;

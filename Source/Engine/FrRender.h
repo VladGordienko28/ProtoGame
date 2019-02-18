@@ -27,7 +27,7 @@ struct TRenderRect
 public:
 	UInt32			Flags;
 	TRect			Bounds;
-	TAngle			Rotation;
+	math::Angle		Rotation;
 	FTexture*		Texture;
 	TColor			Color;
 	TRect			TexCoords;
@@ -41,8 +41,8 @@ struct TRenderPoly
 {
 public:
 	UInt32			Flags;
-	TVector			Vertices[16];
-	TVector			TexCoords[16];
+	math::Vector	Vertices[16];
+	math::Vector	TexCoords[16];
 	Int32			NumVerts;
 	FTexture*		Texture;
 	TColor			Color;
@@ -58,8 +58,8 @@ public:
 	UInt32			Flags;
 	FTexture*		Texture;
 	Int32			NumRects;
-	TVector*		Vertices;
-	TVector*		TexCoords;
+	math::Vector*	Vertices;
+	math::Vector*	TexCoords;
 	TColor*			Colors;
 	TColor			DrawColor;
 
@@ -83,21 +83,21 @@ public:
 	Float		Height;
 
 	// World transform.
-	TCoords		Coords;
-	TCoords		UnCoords;
-	TVector		FOV;
-	Float		Zoom;
-	Bool		bMirage;
-	TRect		Bounds;
+	math::Coords	Coords;
+	math::Coords	UnCoords;
+	math::Vector	FOV;
+	Float			Zoom;
+	Bool			bMirage;
+	TRect			Bounds;
 
 	// Constructor.
 	TViewInfo();
 	TViewInfo( Float InX, Float InY, Float InWidth, Float InHeight );
-	TViewInfo( TVector InLocation, TAngle InRotation, TVector InFOV, Float InZoom, Bool InbMirage, Float InX, Float InY, Float InWidth, Float InHeight  );
+	TViewInfo( math::Vector InLocation, math::Angle InRotation, math::Vector InFOV, Float InZoom, Bool InbMirage, Float InX, Float InY, Float InWidth, Float InHeight  );
 
 	// Projection functions.
-	void Project( const TVector V, Float& OutX, Float& OutY ) const;
-	TVector Deproject( Float InX, Float InY ) const;
+	void Project( const math::Vector V, Float& OutX, Float& OutY ) const;
+	math::Vector Deproject( Float InX, Float InY ) const;
 };
 
 
@@ -167,8 +167,8 @@ public:
 	// CCanvas interface.
 	virtual void SetTransform( const TViewInfo& Info ) = 0;
 	virtual void SetClip( const TClipArea& Area ) = 0;
-	virtual void DrawPoint( const TVector& P, Float Size, TColor Color ) = 0;
-	virtual void DrawLine( const TVector& A, const TVector& B, TColor Color, Bool bStipple ) = 0;
+	virtual void DrawPoint( const math::Vector& P, Float Size, TColor Color ) = 0;
+	virtual void DrawLine( const math::Vector& A, const math::Vector& B, TColor Color, Bool bStipple ) = 0;
 	virtual void DrawPoly( const TRenderPoly& Poly ) = 0;
 	virtual void DrawRect( const TRenderRect& Rect ) = 0;
 	virtual void DrawList( const TRenderList& List ) = 0;
@@ -180,7 +180,7 @@ public:
 	// Drawing utilities.
 	void DrawCircle
 	( 
-		const TVector& Center,
+		const math::Vector& Center,
 		Float Radius,
 		TColor Color,
 		Bool bStipple,
@@ -189,15 +189,15 @@ public:
 
 	void DrawCoolPoint
 	( 
-		const TVector& P,
+		const math::Vector& P,
 		Float Size,
 		TColor Color 
 	);
 
 	void DrawSmoothLine
 	( 
-		const TVector& A,
-		const TVector& B,
+		const math::Vector& A,
+		const math::Vector& B,
 		TColor Color,
 		Bool bStipple,
 		Int32 Detail = 16 
@@ -205,8 +205,8 @@ public:
 
 	void DrawLineStar
 	( 
-		const TVector& Center,
-		TAngle Rotation,
+		const math::Vector& Center,
+		math::Angle Rotation,
 		Float Size,
 		TColor Color,
 		Bool bStipple 
@@ -214,9 +214,9 @@ public:
 
 	void DrawLineRect
 	( 
-		const TVector& Center,
-		const TVector& Size,
-		TAngle Rotation,
+		const math::Vector& Center,
+		const math::Vector& Size,
+		math::Angle Rotation,
 		TColor Color,
 		Bool bStipple 
 	);
@@ -227,8 +227,8 @@ public:
 		Int32 Len,
 		FFont* Font, 
 		TColor Color,
-		const TVector& Start, 
-		const TVector& Scale = TVector( 1.f, 1.f )  
+		const math::Vector& Start, 
+		const math::Vector& Scale = math::Vector( 1.f, 1.f )  
 	);
 
 	void DrawText
@@ -236,8 +236,8 @@ public:
 		const String& S,
 		FFont* Font, 
 		TColor Color,
-		const TVector& Start, 
-		const TVector& Scale = TVector( 1.f, 1.f ) 
+		const math::Vector& Start, 
+		const math::Vector& Scale = math::Vector( 1.f, 1.f ) 
 	)
 	{
 		DrawText( *S, S.Len(), Font, Color, Start, Scale );

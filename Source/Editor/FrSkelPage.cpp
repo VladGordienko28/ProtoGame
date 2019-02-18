@@ -140,8 +140,8 @@ WSkeletonPage::WSkeletonPage( FSkeleton* InSkeleton, WContainer* InOwner, WWindo
 
 
 	SceneView.Zoom	= 1.f;
-	SceneView.Coords	= TCoords(TVector(0, 0), 0);
-	SceneView.UnCoords	= SceneView.Coords.Transpose();
+	SceneView.Coords	= math::Coords(math::Vector(0, 0), 0);
+	SceneView.UnCoords	= SceneView.Coords.transpose();
 
 	AnimationTrack			= new WAnimationTrack( this, Root );
 	AnimationTrack->Align	= AL_Bottom;
@@ -509,30 +509,30 @@ void WSkeletonPage::OnOpen()
 //
 // Draw a controls linking arrow.
 //
-static void DrawArrow( CCanvas* Canvas, const TVector& From, const TVector& To, TColor Color )
+static void DrawArrow( CCanvas* Canvas, const math::Vector& From, const math::Vector& To, TColor Color )
 {
 	// Draw straight line.
 	Canvas->DrawLine( From, To, Color, false );
 
 	// Precompute arrowhead.
-	TVector ArrowHead = TVector( 0.13f, 0.05f )*Canvas->View.Zoom;
-	TCoords AHCoords = TCoords
+	math::Vector ArrowHead = math::Vector( 0.13f, 0.05f )*Canvas->View.Zoom;
+	math::Coords AHCoords = math::Coords
 	(
 		To,
-		VectorToAngle(From-To)
-	).Transpose();
+		math::vectorToAngle(From-To)
+	).transpose();
 
 	// Draw arrowhead.
 	Canvas->DrawLine
 	(
-		TransformPointBy( TVector( ArrowHead.X, ArrowHead.Y ), AHCoords ),
+		math::transformPointBy( math::Vector( ArrowHead.x, ArrowHead.y ), AHCoords ),
 		To,
 		Color,
 		false
 	);
 	Canvas->DrawLine
 	(
-		TransformPointBy( TVector( ArrowHead.X, -ArrowHead.Y ), AHCoords ),
+		math::transformPointBy( math::Vector( ArrowHead.x, -ArrowHead.y ), AHCoords ),
 		To,
 		Color,
 		false
@@ -544,14 +544,14 @@ static void DrawArrow( CCanvas* Canvas, const TVector& From, const TVector& To, 
 // Return world location of bone or other control center.
 // Warning, center is not a bone pivot!
 //
-TVector WSkeletonPage::GetBoneCenter( Int32 iBone )
+math::Vector WSkeletonPage::GetBoneCenter( Int32 iBone )
 {
 	assert(iBone>=0 && iBone<Skeleton->Bones.size());
 	TBonePose& Pose = GetCurrentPose().BonesPose[iBone];
 	TBoneInfo& Info = Skeleton->Bones[iBone];
 
 	return Info.Type == SC_Bone ? 
-						Pose.Location + AngleToVector(Pose.Rotation)*(Info.Scale*0.5f) :
+						Pose.Location + math::angleToVector(Pose.Rotation)*(Info.Scale*0.5f) :
 						Pose.Location;
 }
 
@@ -599,7 +599,7 @@ TSkelPose& WSkeletonPage::GetCurrentPose()
 //
 Int32 WSkeletonPage::GetBoneAt( Int32 X, Int32 Y )
 {
-	TVector ScenePoint	= SceneView.Deproject( X, Y );
+	math::Vector ScenePoint	= SceneView.Deproject( X, Y );
 	TSkelPose& Pose		= GetCurrentPose();
 
 	// Go through the bones.
@@ -608,30 +608,30 @@ Int32 WSkeletonPage::GetBoneAt( Int32 X, Int32 Y )
 		TBoneInfo& Bone = Skeleton->Bones[i];
 		TBonePose& Tran	= Pose.BonesPose[i];
 
-		TCoords BoneCoords( Tran.Location, Tran.Rotation );
-		TVector LocalPoint = TransformPointBy( ScenePoint, BoneCoords );
+		math::Coords BoneCoords( Tran.Location, Tran.Rotation );
+		math::Vector LocalPoint = math::transformPointBy( ScenePoint, BoneCoords );
 
 		switch( Bone.Type )
 		{
 			case SC_Bone:
 			{
-				if( LocalPoint.X>=0.f && LocalPoint.X<=Bone.Scale )
-					if( Abs(LocalPoint.Y) <= 0.2f )						// /// // // /// magic const!! eliminate it!!!
+				if( LocalPoint.x>=0.f && LocalPoint.x<=Bone.Scale )
+					if( abs(LocalPoint.y) <= 0.2f )						// /// // // /// magic const!! eliminate it!!!
 						return i;
 				break;
 			}
 			case SC_Master:
 			{
-				if( Distance(ScenePoint, Tran.Location) <= Bone.Scale )
+				if( math::distance(ScenePoint, Tran.Location) <= Bone.Scale )
 					return i;
 				break;
 			}
 			case SC_IKSolver:
 			{
 				const Float ThreshHold = 0.1f;			///////////////////////////////// another magic. eliminate it!
-				if( Abs(LocalPoint.Y)<=Bone.Scale/2.f && Abs(LocalPoint.X)<=ThreshHold )
+				if( abs(LocalPoint.y)<=Bone.Scale/2.f && abs(LocalPoint.x)<=ThreshHold )
 					return i;
-				if( Abs(LocalPoint.X)<=Bone.Scale/2.f && Abs(LocalPoint.Y)<=ThreshHold )
+				if( abs(LocalPoint.x)<=Bone.Scale/2.f && abs(LocalPoint.y)<=ThreshHold )
 					return i;
 				break;
 			}
@@ -803,9 +803,9 @@ void WSkeletonPage::ButtonAddIKClick( WWidget* Sender )
 	}
 
 	// Compute solver location.
-	TVector Pivot =	GetCurrentPose().BonesPose[iEndBone].Location + 
-					AngleToVector(GetCurrentPose().BonesPose[iEndBone].Rotation)  *EndJoint.Scale;
-	Pivot.Snap(TranslationSnap);
+	math::Vector Pivot =	GetCurrentPose().BonesPose[iEndBone].Location + 
+					math::angleToVector(GetCurrentPose().BonesPose[iEndBone].Rotation)  *EndJoint.Scale;
+	Pivot.snap(TranslationSnap);
 
 	// Create solver itself.
 	Int32 iIK = Skeleton->Bones.push(TBoneInfo
@@ -925,7 +925,7 @@ void WSkeletonPage::OnMouseScroll( Int32 Delta )
 	}
 
 	// Snap & Clamp zoom!
-	SceneView.Zoom	= Round(SceneView.Zoom*50.f)*0.02f;
+	SceneView.Zoom	= math::round(SceneView.Zoom*50.f)*0.02f;
 	SceneView.Zoom	= Clamp( SceneView.Zoom, 0.2f, 5.f );
 }
 
@@ -983,7 +983,7 @@ void WSkeletonPage::UpdateGizmo( Int32 iNewSele )
 	( 
 		iSelected != -1 ? 
 			GetCurrentPose().BonesPose[iSelected].Location : 
-			TVector(999.f, 999.f) 
+			math::Vector(999.f, 999.f) 
 	);
 }
 
@@ -1064,11 +1064,11 @@ public:
 void WSkeletonPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 DeltaX, Int32 DeltaY )
 {
 	// Transform widget delta to scene vector.
-	TVector Delta;
-	TVector FOV	= SceneView.FOV;
-	Delta.X		= +DeltaX * (FOV.X / Size.Width ) * SceneView.Zoom;
-	Delta.Y		= -DeltaY * (FOV.Y / Size.Height) * SceneView.Zoom;
-	Delta		= TransformVectorBy( Delta, SceneView.UnCoords );
+	math::Vector Delta;
+	math::Vector FOV	= SceneView.FOV;
+	Delta.x		= +DeltaX * (FOV.x / Size.Width ) * SceneView.Zoom;
+	Delta.y		= -DeltaY * (FOV.y / Size.Height) * SceneView.Zoom;
+	Delta		= math::transformVectorBy( Delta, SceneView.UnCoords );
 
 	// Process proper drag.
 	switch( DragInfo.DragType )
@@ -1076,12 +1076,12 @@ void WSkeletonPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 De
 		case SKDR_Observer:
 		{
 			// Move scene observer.
-			SceneView.Coords.Origin	-= Delta;
+			SceneView.Coords.origin	-= Delta;
 
-			SceneView.Coords.Origin.X	= Clamp( SceneView.Coords.Origin.X, -10.f, +10.f );		// PROPER SCALE@@@@@@@
-			SceneView.Coords.Origin.Y	= Clamp( SceneView.Coords.Origin.Y, -10.f, +10.f );
+			SceneView.Coords.origin.x	= Clamp( SceneView.Coords.origin.x, -10.f, +10.f );		// PROPER SCALE@@@@@@@
+			SceneView.Coords.origin.y	= Clamp( SceneView.Coords.origin.y, -10.f, +10.f );
 
-			SceneView.UnCoords		= SceneView.Coords.Transpose();
+			SceneView.UnCoords		= SceneView.Coords.transpose();
 			break;
 		}
 		case SKDR_Translate:
@@ -1093,12 +1093,12 @@ void WSkeletonPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 De
 				{
 					// Perform translation in parent's space.
 					TBoneInfo& Info = Skeleton->Bones[i];
-					TCoords ParentSpace = Info.iPosCtrl != -1 ? 
-											TCoords( Pose.BonesPose[Info.iPosCtrl].Location, Pose.BonesPose[Info.iPosCtrl].Rotation ) : 
-											TCoords::Identity;
+					math::Coords ParentSpace = Info.iPosCtrl != -1 ? 
+											math::Coords( Pose.BonesPose[Info.iPosCtrl].Location, Pose.BonesPose[Info.iPosCtrl].Rotation ) : 
+											math::Coords::IDENTITY;
 
-					Pose.BonesPose[i].Coords.Origin.X	+= ParentSpace.XAxis * Delta;
-					Pose.BonesPose[i].Coords.Origin.Y	+= ParentSpace.YAxis * Delta;
+					Pose.BonesPose[i].Coords.origin.x	+= ParentSpace.xAxis * Delta;
+					Pose.BonesPose[i].Coords.origin.y	+= ParentSpace.yAxis * Delta;
 				}
 
 			Pose.ComputeRefTransform( Skeleton );
@@ -1110,15 +1110,15 @@ void WSkeletonPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 De
 		case SKDR_Rotate:
 		{
 			// Rotate selected bones.
-			TAngle DeltaRot;
-			Gizmo.Perform( SceneView, TVector(X, Y), Delta, nullptr, &DeltaRot, nullptr );
+			math::Angle DeltaRot;
+			Gizmo.Perform( SceneView, math::Vector(X, Y), Delta, nullptr, &DeltaRot, nullptr );
 			TSkelPose& Pose = GetCurrentPose();
 			for( Int32 i=0; i<Skeleton->Bones.size(); i++ )
 				if( Skeleton->Bones[i].Flags & BONE_Selected )
 				{
-					TAngle OldAngle	= VectorToAngle(Pose.BonesPose[i].Coords.XAxis);
-					Pose.BonesPose[i].Coords.XAxis	= AngleToVector(OldAngle + DeltaRot);
-					Pose.BonesPose[i].Coords.YAxis	= Pose.BonesPose[i].Coords.XAxis.Cross();	
+					math::Angle OldAngle	= math::vectorToAngle(Pose.BonesPose[i].Coords.xAxis);
+					Pose.BonesPose[i].Coords.xAxis	= math::angleToVector(OldAngle + DeltaRot);
+					Pose.BonesPose[i].Coords.yAxis	= Pose.BonesPose[i].Coords.xAxis.cross();	
 				}		
 			Pose.ComputeRefTransform( Skeleton );
 			break;
@@ -1131,14 +1131,14 @@ void WSkeletonPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 De
 			TBonePose& Pose = Skeleton->RefPose.BonesPose[DragInfo.iNewBone];
 
 			// Update direction and scale.
-			TVector EndPoint = SceneView.Deproject( X, Y );
-			EndPoint.Snap(TranslationSnap);
-			Info.Scale	= Distance( Pose.Coords.Origin, EndPoint );
+			math::Vector EndPoint = SceneView.Deproject( X, Y );
+			EndPoint.snap(TranslationSnap);
+			Info.Scale	= math::distance( Pose.Coords.origin, EndPoint );
 			if( Info.Type == SC_Bone )
 			{
-				Pose.Rotation		= VectorToAngle(EndPoint-Pose.Coords.Origin);
-				Pose.Coords.XAxis	= AngleToVector(Pose.Rotation);
-				Pose.Coords.YAxis	= Pose.Coords.XAxis.Cross();
+				Pose.Rotation		= math::vectorToAngle(EndPoint-Pose.Coords.origin);
+				Pose.Coords.xAxis	= math::angleToVector(Pose.Rotation);
+				Pose.Coords.yAxis	= Pose.Coords.xAxis.cross();
 			}
 			break;
 		}
@@ -1182,8 +1182,8 @@ void WSkeletonPage::OnMouseBeginDrag( EMouseButton Button, Int32 X, Int32 Y )
 		case SKT_AddMaster:
 		{
 			// Add a new bone.
-			TVector Pivot = SceneView.Deproject( X, Y );
-			Pivot.Snap(TranslationSnap);
+			math::Vector Pivot = SceneView.Deproject( X, Y );
+			Pivot.snap(TranslationSnap);
 
 			Skeleton->Bones.push(TBoneInfo
 				( 
@@ -1260,7 +1260,7 @@ void WSkeletonPage::OnMouseEndDrag( EMouseButton Button, Int32 X, Int32 Y )
 			for( Int32 i=0; i<Skeleton->Bones.size(); i++ )
 				if( Skeleton->Bones[i].Flags & BONE_Selected )
 				{
-					Pose.BonesPose[i].Coords.Origin.Snap(TranslationSnap);
+					Pose.BonesPose[i].Coords.origin.snap(TranslationSnap);
 					AnimationTrack->NoteMovement( i, false );
 				}
 
@@ -1275,10 +1275,10 @@ void WSkeletonPage::OnMouseEndDrag( EMouseButton Button, Int32 X, Int32 Y )
 			for( Int32 i=0; i<Skeleton->Bones.size(); i++ )
 				if( Skeleton->Bones[i].Flags & BONE_Selected )
 				{
-					TAngle Rotation = VectorToAngle(Pose.BonesPose[i].Coords.XAxis);
-					Rotation.Snap(RotationSnap);
-					Pose.BonesPose[i].Coords.XAxis	= AngleToVector(Rotation);
-					Pose.BonesPose[i].Coords.YAxis	= Pose.BonesPose[i].Coords.XAxis.Cross();
+					math::Angle Rotation = math::vectorToAngle(Pose.BonesPose[i].Coords.xAxis);
+					Rotation.snap(RotationSnap);
+					Pose.BonesPose[i].Coords.xAxis	= math::angleToVector(Rotation);
+					Pose.BonesPose[i].Coords.yAxis	= Pose.BonesPose[i].Coords.xAxis.cross();
 					AnimationTrack->NoteMovement( i, true );
 				}		
 			Pose.ComputeRefTransform( Skeleton );
@@ -1352,10 +1352,10 @@ void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 
 	// Not really good place to compute!!!!!!!!!!!
 
-	SceneView.FOV		= TVector( 20, Size.Height * 20.f / Size.Width );
+	SceneView.FOV		= math::Vector( 20, Size.Height * 20.f / Size.Width );
 	// ignore zoom!
 	SceneView.bMirage	= false;
-	SceneView.Bounds	= TRect( SceneView.Coords.Origin, SceneView.FOV * SceneView.Zoom );
+	SceneView.Bounds	= TRect( SceneView.Coords.origin, SceneView.FOV * SceneView.Zoom );
 
 	SceneView.X	= P.X;
 	SceneView.Y = P.Y;
@@ -1368,27 +1368,27 @@ void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 		// Render background and grid.
 		TRenderRect Background;
 		Background.Texture		= nullptr;
-		Background.Bounds		= TRect( TVector(0.f, 0.f), SKEL_SCENE_SIZE );
+		Background.Bounds		= TRect( math::Vector(0.f, 0.f), SKEL_SCENE_SIZE );
 		Background.Color		= SKEL_SCENE_BG_COLOR;
 		Background.Flags		= POLY_FlatShade;
 		Background.Rotation		= 0;
 		Canvas->DrawRect(Background);
 
-		Int32 CMinX = Trunc(Max<Float>( Canvas->View.Bounds.Min.X, -SKEL_SCENE_SIZE_HALF ))*2;
-		Int32 CMinY = Trunc(Max<Float>( Canvas->View.Bounds.Min.Y, -SKEL_SCENE_SIZE_HALF ))*2;
-		Int32 CMaxX = Trunc(Min<Float>( Canvas->View.Bounds.Max.X, +SKEL_SCENE_SIZE_HALF ))*2;
-		Int32 CMaxY = Trunc(Min<Float>( Canvas->View.Bounds.Max.Y, +SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMinX = math::trunc(Max<Float>( Canvas->View.Bounds.Min.x, -SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMinY = math::trunc(Max<Float>( Canvas->View.Bounds.Min.y, -SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMaxX = math::trunc(Min<Float>( Canvas->View.Bounds.Max.x, +SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMaxY = math::trunc(Min<Float>( Canvas->View.Bounds.Max.y, +SKEL_SCENE_SIZE_HALF ))*2;
 
 		for( Int32 i=CMinX; i<=CMaxX; i++ )
 		{
-			TVector V1( i/2.f, -SKEL_SCENE_SIZE_HALF );
-			TVector V2( i/2.f, +SKEL_SCENE_SIZE_HALF );
+			math::Vector V1( i/2.f, -SKEL_SCENE_SIZE_HALF );
+			math::Vector V2( i/2.f, +SKEL_SCENE_SIZE_HALF );
 			Canvas->DrawLine( V1, V2, SKEL_SCENE_GRID_COLOR, i & 1 );
 		}
 		for( Int32 i=CMinY; i<=CMaxY; i++ )
 		{
-			TVector V1( -SKEL_SCENE_SIZE_HALF, i/2.f );
-			TVector V2( +SKEL_SCENE_SIZE_HALF, i/2.f );
+			math::Vector V1( -SKEL_SCENE_SIZE_HALF, i/2.f );
+			math::Vector V2( +SKEL_SCENE_SIZE_HALF, i/2.f );
 			Canvas->DrawLine( V1, V2, SKEL_SCENE_GRID_COLOR, i & 1 );
 		}
 
@@ -1397,9 +1397,9 @@ void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 
 		// Draw centroid.
 		TColor CentroidColor = AnimationTrack->IsRecording() ? SKEL_SCENE_RECORD_CENTER_COLOR : SKEL_SCENE_CENTER_COLOR;
-		Canvas->DrawLine( TVector(0.f, -SKEL_SCENE_SIZE_HALF), TVector(0.f, +SKEL_SCENE_SIZE_HALF), CentroidColor, false );
-		Canvas->DrawLine( TVector(-SKEL_SCENE_SIZE_HALF, 0.f), TVector(+SKEL_SCENE_SIZE_HALF, 0.f), CentroidColor, false );
-		Canvas->DrawLineRect( TVector(0.f, 0.f), TVector(SKEL_SCENE_SIZE, SKEL_SCENE_SIZE), 0, CentroidColor, false );
+		Canvas->DrawLine( math::Vector(0.f, -SKEL_SCENE_SIZE_HALF), math::Vector(0.f, +SKEL_SCENE_SIZE_HALF), CentroidColor, false );
+		Canvas->DrawLine( math::Vector(-SKEL_SCENE_SIZE_HALF, 0.f), math::Vector(+SKEL_SCENE_SIZE_HALF, 0.f), CentroidColor, false );
+		Canvas->DrawLineRect( math::Vector(0.f, 0.f), math::Vector(SKEL_SCENE_SIZE, SKEL_SCENE_SIZE), 0, CentroidColor, false );
 
 
 
@@ -1432,9 +1432,9 @@ void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 	}
 */
 
-		Skeleton->Render( Canvas, TVector(0,0), TVector(1, 1), Skeleton->RefPose );
+		Skeleton->Render( Canvas, math::Vector(0,0), math::Vector(1, 1), Skeleton->RefPose );
 
-		Canvas->DrawLineStar( TVector(5, 5), (Float)GPlat->Now()*65536.f, 3, COLOR_Gold, true );
+		Canvas->DrawLineStar( math::Vector(5, 5), (Float)GPlat->Now()*65536.f, 3, COLOR_Gold, true );
 
 
 		// Draw a links if need.
@@ -1810,12 +1810,12 @@ void WAnimationTrack::NoteMovement( Int32 iBone, Bool bOnlyRotation )
 	if( bOnlyRotation )
 	{
 		// Rotation key.
-		Track.RotKeys.AddSample( CurrentTime, VectorToAngle(BonePose.Coords.XAxis) );
+		Track.RotKeys.AddSample( CurrentTime, math::vectorToAngle(BonePose.Coords.xAxis) );
 	}
 	else
 	{
 		// Translation key.
-		Track.PosKeys.AddSample( CurrentTime, BonePose.Coords.Origin );
+		Track.PosKeys.AddSample( CurrentTime, BonePose.Coords.origin );
 	}
 
 

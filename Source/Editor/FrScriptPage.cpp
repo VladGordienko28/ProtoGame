@@ -1937,7 +1937,7 @@ Bool WCodeEditor::IsInSelection( Int32 X, Int32 Y )
 		return false;
 
 	// XToColumn(..), without clamp.
-	Int32 Column	= Round((Float)(X-15) / (Float)CharSize.Width);  
+	Int32 Column	= math::round((Float)(X-15) / (Float)CharSize.Width);  
 
 	if( Line == Y1 )
 	{
@@ -2189,7 +2189,7 @@ Int32 WCodeEditor::XToColumn( Int32 X, Int32 iLine )
 {
 	return Clamp
 			( 
-				Round((Float)(X-15) / (Float)CharSize.Width),		
+				math::round((Float)(X-15) / (Float)CharSize.Width),		
 				0, 
 				Lines[iLine].Text.Len() 
 			);	
@@ -2236,7 +2236,7 @@ void WCodeEditor::HighlightBrackets( Bool bUnmark )
 	Int32 X = CaretXBegin,
 			Y = CaretYBegin;
 
-	if( !InRange(Y, 0, Lines.size()-1) || !InRange(X, 0, Lines[Y].Text.Len()-1) )
+	if( !inRange(Y, 0, Lines.size()-1) || !inRange(X, 0, Lines[Y].Text.Len()-1) )
 		return;
 
 	const Char OpenBracks[] = L"([{";

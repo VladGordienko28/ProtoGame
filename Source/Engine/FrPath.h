@@ -34,7 +34,7 @@ public:
 	enum { NUM_EDGES = 4 };
 
 	// General info.
-	TVector				Location;
+	math::Vector		Location;
 	Int32				iEdges[NUM_EDGES];
 	FBaseComponent*		Marker;	
 
@@ -95,8 +95,8 @@ public:
 
 	// Path making.
 	Bool CanPassThrough( FPuppetComponent* Seeker, const TPathEdge& Edge );
-	Int32 FindNearestNode( TVector P, Bool bTraceLine = false, Float Radius = 8.f );
-	Bool MakePathTo( FPuppetComponent* Seeker, TVector Dest );
+	Int32 FindNearestNode( math::Vector P, Bool bTraceLine = false, Float Radius = 8.f );
+	Bool MakePathTo( FPuppetComponent* Seeker, math::Vector Dest );
 	Bool MakeRandomPath( FPuppetComponent* Seeker );
 
 private:

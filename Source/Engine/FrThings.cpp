@@ -106,7 +106,7 @@ FSkyComponent::FSkyComponent()
 		Offset( 0.f, 0.f ),
 		RollSpeed( 0.f )
 {
-	Size			= TVector( 24.f, 16.f );
+	Size			= math::Vector( 24.f, 16.f );
 	bFixedAngle		= true;
 	bHashable		= false;
 }
@@ -145,7 +145,7 @@ void FSkyComponent::SerializeThis( CSerializer& S )
 void FSkyComponent::EditChange()
 {
 	FZoneComponent::EditChange();
-	Extent	= Clamp( Extent, 1.f, Size.X * 0.5f );
+	Extent	= Clamp( Extent, 1.f, Size.x * 0.5f );
 }
 
 
@@ -164,28 +164,28 @@ void FSkyComponent::Render( CCanvas* Canvas )
 	// Draw view area.
 	if( bSelected )
 	{
-		TVector ViewArea, Eye;
+		math::Vector ViewArea, Eye;
 		TRect Skydome;
 		Float Side, Side2;
 
-		ViewArea.X	= Extent;
-		ViewArea.Y	= (Extent * Canvas->View.FOV.Y) / Canvas->View.FOV.X;
+		ViewArea.x	= Extent;
+		ViewArea.y	= (Extent * Canvas->View.FOV.y) / Canvas->View.FOV.x;
 
 		Skydome		= TRect( Location, Size );
-		Side		= FastSqrt( ViewArea.X*ViewArea.X + ViewArea.Y*ViewArea.Y );
+		Side		= math::sqrt( ViewArea.x*ViewArea.x + ViewArea.y*ViewArea.y );
 		Side2		= Side * 0.5f;
 
 		// Transform observer location and apply parallax.
-		Eye.X	= Canvas->View.Coords.Origin.X * Parallax.X + Offset.X;
-		Eye.Y	= Canvas->View.Coords.Origin.Y * Parallax.Y + Offset.Y;
+		Eye.x	= Canvas->View.Coords.origin.x * Parallax.x + Offset.x;
+		Eye.y	= Canvas->View.Coords.origin.y * Parallax.y + Offset.y;
 
 		// Azimuth of sky should be wrapped.
-		Eye.X	= Wrap( Eye.X, Skydome.Min.X, Skydome.Max.X );
+		Eye.x	= Wrap( Eye.x, Skydome.Min.x, Skydome.Max.x );
 
 		// Height of sky should be clamped.
-		Eye.Y	= Clamp( Eye.Y, Skydome.Min.Y+Side2, Skydome.Max.Y-Side2 );
+		Eye.y	= Clamp( Eye.y, Skydome.Min.y+Side2, Skydome.Max.y-Side2 );
 
-		TAngle Roll = TAngle(fmodf(RollSpeed*(Float)GPlat->Now(), 2.f*PI ));		
+		math::Angle Roll = math::Angle(fmodf(RollSpeed*(Float)GPlat->Now(), 2.f*math::PI ));		
 		Canvas->DrawLineRect( Eye, ViewArea, Roll, COLOR_Red, false );
 		Canvas->DrawLineStar( Eye, Roll, 1.f * Canvas->View.Zoom, COLOR_Red, false );
 	}
@@ -204,7 +204,7 @@ FZoneComponent::FZoneComponent()
 {
 	bFixedAngle		= true;
 	bHashable		= true;
-	Size			= TVector( 10.f, 10.f );
+	Size			= math::Vector( 10.f, 10.f );
 }
 
 
@@ -230,7 +230,7 @@ void FZoneComponent::Render( CCanvas* Canvas )
 					( 
 						Location, 
 						Size, 
-						TAngle(0), 
+						math::Angle(0), 
 						Color2, 
 						false
 					);
@@ -242,7 +242,7 @@ void FZoneComponent::Render( CCanvas* Canvas )
 		TRenderRect Rect;
 		Rect.Flags		= POLY_Unlit | POLY_FlatShade | POLY_Ghost;
 		Rect.Bounds		= Bounds;
-		Rect.Rotation	= TAngle(0);
+		Rect.Rotation	= math::Angle(0);
 		Rect.Texture	= nullptr;
 		Rect.Color		= Color1;
 
@@ -266,7 +266,7 @@ FRectComponent::FRectComponent()
 {
 	bRenderable	= true;
 	bFixedAngle	= false;
-	Size		= TVector( 2.f, 2.f );
+	Size		= math::Vector( 2.f, 2.f );
 }
 
 
@@ -275,10 +275,10 @@ FRectComponent::FRectComponent()
 //
 TRect FRectComponent::GetAABB()
 {
-	if( Rotation.Angle == 0 )
+	if( !Rotation )
 		return TRect( Location, Size );
 	else
-		return TRect( Location, FastSqrt(Sqr(Size.X)+Sqr(Size.Y)) );
+		return TRect( Location, math::sqrt(sqr(Size.x)+sqr(Size.y)) );
 }
 
 
@@ -334,10 +334,10 @@ void FRectComponent::Render( CCanvas* Canvas )
 	// Draw stretch handles.
 	if( bSelected )
 	{
-		TVector Size2 = Size * 0.5f;
-		TCoords	Coords	= TCoords( Location, Rotation );
-		TVector XAxis = Coords.XAxis * Size2.X, 
-				YAxis = Coords.YAxis * Size2.Y;
+		math::Vector Size2 = Size * 0.5f;
+		math::Coords Coords	= math::Coords( Location, Rotation );
+		math::Vector XAxis = Coords.xAxis * Size2.x, 
+				YAxis = Coords.yAxis * Size2.y;
 
 		// Draw wire border.
 		Canvas->DrawLineRect( Location, Size, Rotation, COLOR_White, false );
@@ -345,16 +345,16 @@ void FRectComponent::Render( CCanvas* Canvas )
 		// Draw points.
 		if( !bFixedSize )
 		{
-			TVector Points[8] = 
+			math::Vector Points[8] = 
 			{
-				Coords.Origin - XAxis + YAxis,
-				Coords.Origin + YAxis,
-				Coords.Origin + XAxis + YAxis,
-				Coords.Origin + XAxis,
-				Coords.Origin + XAxis - YAxis,
-				Coords.Origin - YAxis,
-				Coords.Origin - XAxis - YAxis,
-				Coords.Origin - XAxis,
+				Coords.origin - XAxis + YAxis,
+				Coords.origin + YAxis,
+				Coords.origin + XAxis + YAxis,
+				Coords.origin + XAxis,
+				Coords.origin + XAxis - YAxis,
+				Coords.origin - YAxis,
+				Coords.origin - XAxis - YAxis,
+				Coords.origin - XAxis,
 			};
 
 			for( Int32 i=0; i<8; i++ )
@@ -389,7 +389,7 @@ FBrushComponent::FBrushComponent()
 		Type( BRUSH_Solid ),
 		Vertices(),
 		NumVerts( 0 ),
-		TexCoords( TVector( 0.f, 0.f ), TVector( 0.25f, 0.f ), TVector( 0.f, -0.25f ) ),
+		TexCoords( math::Vector( 0.f, 0.f ), math::Vector( 0.25f, 0.f ), math::Vector( 0.f, -0.25f ) ),
 		Scroll( 0.f, 0.f )
 {
 	bHashable	= true;
@@ -457,7 +457,7 @@ void FBrushComponent::Render( CCanvas* Canvas )
 
 	// Pick wire color.
 	TColor Color1, Color2;
-	if( IsConvexPoly( Vertices, NumVerts ) )
+	if( math::isConvexPoly( Vertices, NumVerts ) )
 	{
 		// A valid brush.
 		Color1 = BrushColors[Type];
@@ -484,15 +484,15 @@ void FBrushComponent::Render( CCanvas* Canvas )
 		Poly.Color		= Color;
 
 		// Apply flips to matrix.
-		TCoords	Coords = TexCoords;
-		if( bFlipH )	Coords.XAxis	= -Coords.XAxis;
-		if( bFlipV )	Coords.YAxis	= -Coords.YAxis;
+		math::Coords	Coords = TexCoords;
+		if( bFlipH )	Coords.xAxis	= -Coords.xAxis;
+		if( bFlipV )	Coords.yAxis	= -Coords.yAxis;
 
-		Coords.Origin	+= Scroll;
+		Coords.origin	+= Scroll;
 
 		// Compute texture coords.
 		for( Int32 i=0; i<NumVerts; i++ )
-			Poly.TexCoords[i]	= TransformPointBy( Vertices[i], Coords );
+			Poly.TexCoords[i]	= math::transformPointBy( Vertices[i], Coords );
 
 		Canvas->DrawPoly( Poly );
 	}
@@ -514,7 +514,7 @@ void FBrushComponent::Render( CCanvas* Canvas )
 	if( bSelected || (Level->RndFlags & RND_Other) )
 	{
 		TColor WireColor;
-		TVector V1, V2;
+		math::Vector V1, V2;
 
 		if( !Texture )
 			WireColor = bSelected ? Color1 : Color2;
@@ -538,15 +538,15 @@ void FBrushComponent::Render( CCanvas* Canvas )
 	{
 		Canvas->DrawLineStar
 						( 
-							Location + TexCoords.Origin,
-							VectorToAngle( TexCoords.XAxis ),
+							Location + TexCoords.origin,
+							math::vectorToAngle( TexCoords.xAxis ),
 							2.5f * Canvas->View.Zoom,
 							Color1,
 							false
 						);
 		Canvas->DrawCoolPoint
 							(
-								Location + TexCoords.Origin,
+								Location + TexCoords.origin,
 								5.f,
 								Color2
 							);

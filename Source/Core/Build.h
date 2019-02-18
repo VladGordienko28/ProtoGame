@@ -58,6 +58,21 @@
 #define CLIENT_EXE_NAME L"Flu.exe"
 #endif
 
+// Fluorine engine configuration
+#if FLU_DEBUG
+	#if FLU_X32
+		#define FLUORINE_INFO L"Fluorine Engine x86 Debug"
+	#else
+		#define FLUORINE_INFO L"Fluorine Engine x64 Debug"
+	#endif
+#elif FLU_RELEASE
+	#if FLU_X32
+		#define FLUORINE_INFO L"Fluorine Engine x86"
+	#else
+		#define FLUORINE_INFO L"Fluorine Engine x64"
+	#endif
+#endif
+
 /*-----------------------------------------------------------------------------
 	The End.
 -----------------------------------------------------------------------------*/

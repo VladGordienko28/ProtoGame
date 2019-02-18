@@ -112,18 +112,18 @@ TRect FEmitterComponent::GetCloudRect()
 		TParticle& P = Particles[i];
 
 		// Update bounds.
-		Result.Min.X	= Min( Result.Min.X, P.Location.X );
-		Result.Min.Y	= Min( Result.Min.Y, P.Location.Y );
-		Result.Max.X	= Max( Result.Max.X, P.Location.X );
-		Result.Max.Y	= Max( Result.Max.Y, P.Location.Y );
+		Result.Min.x	= Min( Result.Min.x, P.Location.x );
+		Result.Min.y	= Min( Result.Min.y, P.Location.y );
+		Result.Max.x	= Max( Result.Max.x, P.Location.x );
+		Result.Max.y	= Max( Result.Max.y, P.Location.y );
 	}
 
     // Cloud bound is compute, but necessary to consider
     // the particles size too.
-	Result.Min.X	-= SizeRange[1];
-	Result.Min.Y	-= SizeRange[1];
-	Result.Max.X	+= SizeRange[1];
-	Result.Max.Y	+= SizeRange[1];
+	Result.Min.x	-= SizeRange[1];
+	Result.Min.y	-= SizeRange[1];
+	Result.Max.x	+= SizeRange[1];
+	Result.Max.y	+= SizeRange[1];
 
 	return Result;
 }
@@ -269,24 +269,24 @@ void FLissajousEmitterComponent::SerializeThis( CSerializer& S )
 //
 void FLissajousEmitterComponent::UpdateEmitter( Float DeltaTime )
 {
-	TVector Basis	= Base->Location + SpawnOffset;
+	math::Vector Basis	= Base->Location + SpawnOffset;
 
 	// Accumulate time.
 	Accumulator += DeltaTime;
 
 	// Spawn new particles.
-	Int32 NewPrts = Trunc( Accumulator * EmitPerSec );
+	Int32 NewPrts = math::trunc( Accumulator * EmitPerSec );
 	if( NewPrts > 0 )
 		Accumulator = 0.f;
 	while( NewPrts>0 && NumPrts<MaxParticles )
 	{
 		TParticle P;
-		P.Location.X	= RandomRange( Basis.X-SpawnArea.X, Basis.X+SpawnArea.X );
-		P.Location.Y	= RandomRange( Basis.Y-SpawnArea.Y, Basis.Y+SpawnArea.Y );
+		P.Location.x	= RandomRange( Basis.x-SpawnArea.x, Basis.x+SpawnArea.x );
+		P.Location.y	= RandomRange( Basis.y-SpawnArea.y, Basis.y+SpawnArea.y );
 
 		P.Speed			= P.Location;		// Store spawn location.
 		P.iTile			= Random(NumUTiles * NumVTiles);
-		P.Phase			= RandomRange( 0.f, 2.f*PI );
+		P.Phase			= RandomRange( 0.f, 2.f*math::PI );
 		P.Life			= RandomRange( LifeRange[0], LifeRange[1] );
 		P.MaxLifeInv	= 1.f / Max( 0.001f, P.Life );
 		P.Size			= SizeParam == PPT_Random ? RandomRange( SizeRange[0], SizeRange[1] ) : SizeRange[0];
@@ -316,10 +316,10 @@ void FLissajousEmitterComponent::UpdateEmitter( Float DeltaTime )
 		TParticle& P = Particles[i];
 
 		// Individual 'time' for each particle.
-		Float T = P.Life * P.MaxLifeInv * (2.f*PI) + P.Phase;
+		Float T = P.Life * P.MaxLifeInv * (2.f*math::PI) + P.Phase;
 
-		P.Location.X	= P.Speed.X + X * FastSinF( Alpha * T + Delta );
-		P.Location.Y	= P.Speed.Y + Y * FastSinF( Beta * T );
+		P.Location.x	= P.Speed.x + X * math::sin( Alpha * T + Delta );
+		P.Location.y	= P.Speed.y + Y * math::sin( Beta * T );
 
 		P.Rotation		+= DeltaTime * P.SpinRate;
 		P.Life			-= DeltaTime;
@@ -356,8 +356,8 @@ FWeatherEmitterComponent::FWeatherEmitterComponent()
 	SpeedRange[0]	= 3.f;
 	SpeedRange[1]	= 10.f;
 
-	SpawnArea.X		= 32.f;
-	SpawnArea.Y		= 10.f;
+	SpawnArea.x		= 32.f;
+	SpawnArea.y		= 10.f;
 }
 
 
@@ -367,7 +367,7 @@ FWeatherEmitterComponent::FWeatherEmitterComponent()
 //
 TRect FWeatherEmitterComponent::GetCloudRect()
 {
-	return TRect( TVector( 0.f, 0.f ), WORLD_SIZE );
+	return TRect( math::Vector( 0.f, 0.f ), math::WORLD_SIZE );
 }
 
 
@@ -398,36 +398,36 @@ void FWeatherEmitterComponent::SerializeThis( CSerializer& S )
 void FWeatherEmitterComponent::UpdateEmitter( Float Delta )
 {
 	// Precompute.
-	Float ViewTop	= Level->Camera.FOV.Y*0.5f + Level->Camera.Location.Y;
+	Float ViewTop	= Level->Camera.FOV.y*0.5f + Level->Camera.Location.y;
 
 	// Accumulate time.
 	Accumulator += Delta;
 
 	// Spawn new particles.
-	Int32 NewPrts = Trunc( Accumulator * EmitPerSec );
+	Int32 NewPrts = math::trunc( Accumulator * EmitPerSec );
 	if( NewPrts > 0 )
 		Accumulator = 0.f;
 	while( NewPrts>0 && NumPrts<MaxParticles )
 	{
 		TParticle P;
-		P.Location.X	= RandomRange( -SpawnArea.X, SpawnArea.X ) + Level->Camera.Location.X;
-		P.Location.Y	= ViewTop + SpawnArea.Y;
+		P.Location.x	= RandomRange( -SpawnArea.x, SpawnArea.x ) + Level->Camera.Location.x;
+		P.Location.y	= ViewTop + SpawnArea.y;
 
 		if( WeatherType == WEATHER_Snow )
 		{
 			// Emit new snowflake.
-			P.Speed.X	= P.Location.X;		// Store origin X, to apply jitter effect.
-			P.Speed.Y	= RandomRange( SpeedRange[0], SpeedRange[1] );
+			P.Speed.x	= P.Location.x;		// Store origin X, to apply jitter effect.
+			P.Speed.y	= RandomRange( SpeedRange[0], SpeedRange[1] );
 		}
 		else
 		{
 			// Emit new raindrop.
-			P.Speed.X	= 0.f;		
-			P.Speed.Y	= RandomRange( SpeedRange[0], SpeedRange[1] );
+			P.Speed.x	= 0.f;		
+			P.Speed.y	= RandomRange( SpeedRange[0], SpeedRange[1] );
 		}
 
 		P.iTile			= Random(NumUTiles * NumVTiles);
-		P.Phase			= RandomRange( 0.f, 2.f*PI );
+		P.Phase			= RandomRange( 0.f, 2.f*math::PI );
 		P.Life			= RandomRange( LifeRange[0], LifeRange[1] );
 		P.MaxLifeInv	= 1.f / Max( 0.001f, P.Life );
 		P.Size			= RandomRange( SizeRange[0], SizeRange[1] );
@@ -459,14 +459,14 @@ void FWeatherEmitterComponent::UpdateEmitter( Float Delta )
 		if( WeatherType == WEATHER_Snow )
 		{
 			// Snowflake physics.
-			P.Location.X	= P.Speed.X + FastSinF(P.Phase)*5.f;
-			P.Location.Y	-= P.Speed.Y * Delta;
+			P.Location.x	= P.Speed.x + math::sin(P.Phase)*5.f;
+			P.Location.y	-= P.Speed.y * Delta;
 			P.Phase			+= Delta;
 		}
 		else
 		{
 			// Raindrop physics.
-			P.Location.Y -= P.Speed.Y * Delta;
+			P.Location.y -= P.Speed.y * Delta;
 		}
 
 		P.Rotation		+= Delta * P.SpinRate;
@@ -494,9 +494,9 @@ void FWeatherEmitterComponent::UpdateEmitter( Float Delta )
 FPhysEmitterComponent::FPhysEmitterComponent()
 	:	FEmitterComponent()
 {
-	SpeedRange[0]	= TVector( -5.f, -5.f );
-	SpeedRange[1]	= TVector( +5.f, +5.f );
-	Acceleration	= TVector( 0.f, 0.f );
+	SpeedRange[0]	= math::Vector( -5.f, -5.f );
+	SpeedRange[1]	= math::Vector( +5.f, +5.f );
+	Acceleration	= math::Vector( 0.f, 0.f );
 }
 
 
@@ -515,26 +515,26 @@ void FPhysEmitterComponent::SerializeThis( CSerializer& S )
 void FPhysEmitterComponent::UpdateEmitter( Float Delta )
 {
 	// Let's velocity and acceleration in local coords.
-	TCoords LocalToWorld = Base->ToWorld();
-	TVector WorldAcc = TransformVectorBy( Acceleration, LocalToWorld );
-	TVector Basis	= Base->Location + SpawnOffset;
+	math::Coords LocalToWorld = Base->ToWorld();
+	math::Vector WorldAcc = math::transformVectorBy( Acceleration, LocalToWorld );
+	math::Vector Basis	= Base->Location + SpawnOffset;
 
 	// Accumulate time.
 	Accumulator += Delta;
 
 	// Spawn new particles.
-	Int32 NewPrts = Trunc( Accumulator * EmitPerSec );
+	Int32 NewPrts = math::trunc( Accumulator * EmitPerSec );
 	if( NewPrts > 0 )
 		Accumulator = 0.f;
 	while( NewPrts>0 && NumPrts<MaxParticles )
 	{
 		TParticle P;
-		P.Location.X	= RandomRange( Basis.X-SpawnArea.X, Basis.X+SpawnArea.X );
-		P.Location.Y	= RandomRange( Basis.Y-SpawnArea.Y, Basis.Y+SpawnArea.Y );
+		P.Location.x	= RandomRange( Basis.x-SpawnArea.x, Basis.x+SpawnArea.x );
+		P.Location.y	= RandomRange( Basis.y-SpawnArea.y, Basis.y+SpawnArea.y );
 
-		P.Speed.X		= RandomRange( SpeedRange[0].X, SpeedRange[1].X );
-		P.Speed.Y		= RandomRange( SpeedRange[0].Y, SpeedRange[1].Y );
-		P.Speed			= TransformVectorBy( P.Speed, LocalToWorld );
+		P.Speed.x		= RandomRange( SpeedRange[0].x, SpeedRange[1].x );
+		P.Speed.y		= RandomRange( SpeedRange[0].y, SpeedRange[1].y );
+		P.Speed			= math::transformVectorBy( P.Speed, LocalToWorld );
 
 		P.Life			= RandomRange( LifeRange[0], LifeRange[1] );
 		P.MaxLifeInv	= 1.f / Max( 0.001f, P.Life );
@@ -667,7 +667,7 @@ void FEmitterComponent::Render( CCanvas* Canvas )
 #else
 	// Compute texture coords for each tile, will
 	// be cool to cache it.
-	TVector CoordTable[16][4];
+	math::Vector CoordTable[16][4];
 	for( Int32 V=0; V<NumVTiles; V++ )
 	for( Int32 U=0; U<NumUTiles; U++ )
 	{
@@ -679,10 +679,10 @@ void FEmitterComponent::Render( CCanvas* Canvas )
 		Float	Y1		= 1.f - (Float)(V+0.f) / (Float)NumVTiles;
 		Float	Y2		= 1.f - (Float)(V+1.f) / (Float)NumVTiles;
 
-		CoordTable[iSlot][0]	= TVector( X1, Y1 );
-		CoordTable[iSlot][1]	= TVector( X1, Y2 );
-		CoordTable[iSlot][2]	= TVector( X2, Y2 );
-		CoordTable[iSlot][3]	= TVector( X2, Y1 );
+		CoordTable[iSlot][0]	= math::Vector( X1, Y1 );
+		CoordTable[iSlot][1]	= math::Vector( X1, Y2 );
+		CoordTable[iSlot][2]	= math::Vector( X2, Y2 );
+		CoordTable[iSlot][3]	= math::Vector( X2, Y1 );
 	}
 
 	// Initialize list.
@@ -717,9 +717,9 @@ void FEmitterComponent::Render( CCanvas* Canvas )
 		List.TexCoords[i*4+3]	= CoordTable[P.iTile][3];
 
 		// Vertices.
-		TCoords Coords		= TCoords( P.Location, P.Rotation );
-		TVector XAxis = Coords.XAxis * Side,
-				YAxis = Coords.YAxis * Side;
+		math::Coords Coords		= math::Coords( P.Location, P.Rotation );
+		math::Vector XAxis = Coords.xAxis * Side,
+				YAxis = Coords.yAxis * Side;
 
 		List.Vertices[i*4+0]	= P.Location - YAxis - XAxis;
 		List.Vertices[i*4+1]	= P.Location + YAxis - XAxis;

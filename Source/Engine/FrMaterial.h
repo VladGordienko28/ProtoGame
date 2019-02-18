@@ -66,27 +66,27 @@ public:
 	// Internal structs.
 	struct TPannerParam
 	{
-		TAngle	Direction = 0;
+		math::Angle	Direction = 0;
 		Float	Speed = 0.f;
 	};
 	struct TScalerParam
 	{
-		TVector	Scale = TVector(1.f, 1.f);
+		math::Vector	Scale = math::Vector(1.f, 1.f);
 	};
 	struct TRotatorParam
 	{
 		Float	Speed = 0.f;
-		TVector	Origin = TVector(0.f, 0.f);
+		math::Vector	Origin = math::Vector(0.f, 0.f);
 	};
 	struct TOscillatorParam
 	{
-		TVector	Amplitude = TVector(0.f, 0.f);
-		TVector Frequency = TVector(0.f, 0.f);
-		TVector	Phase = TVector(0.f, 0.f);
+		math::Vector Amplitude = math::Vector(0.f, 0.f);
+		math::Vector Frequency = math::Vector(0.f, 0.f);
+		math::Vector Phase = math::Vector(0.f, 0.f);
 	};
 	struct TParallaxParam
 	{
-		TVector Coefficient = TVector(0.f, 0.f);
+		math::Vector Coefficient = math::Vector(0.f, 0.f);
 	};
 
 
@@ -111,7 +111,7 @@ public:
 	// FDiffuseLayer interface.
 	FDiffuseLayer();
 	~FDiffuseLayer();
-	void ApplyTransform( const TViewInfo& View, const TVector* InCoords, TVector* OutCoords, Int32 NumVerts );
+	void ApplyTransform( const TViewInfo& View, const math::Vector* InCoords, math::Vector* OutCoords, Int32 NumVerts );
 
 	// FObject interface.
 	void SerializeThis( CSerializer& S );

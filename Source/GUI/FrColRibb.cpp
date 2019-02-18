@@ -188,7 +188,7 @@ Int32 WColorRibbon::GetMarkerAt( Int32 X, Int32 Y )
 		for( Int32 i=0; i<Curve->Samples.size(); i++ )
 		{
 			Int32 MarkerX = Curve->Samples[i].Input * Size.Width + 5;
-			if( Abs(X-MarkerX) <= 5 )
+			if( abs(X-MarkerX) <= 5 )
 				return i;
 		}
 	}

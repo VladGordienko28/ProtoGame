@@ -71,7 +71,7 @@ void WHSplitBox::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 	{
 		HoldOffset = X-Separator;
 		
-		if( Abs(HoldOffset) <= HSPLIT_THICKNESS/2 )
+		if( abs(HoldOffset) <= HSPLIT_THICKNESS/2 )
 		{
 			bMoveSeparator = true;
 		}
@@ -228,7 +228,7 @@ void WVSplitBox::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 	{
 		HoldOffset = Y-Separator;
 		
-		if( Abs(HoldOffset) <= VSPLIT_THICKNESS/2 )
+		if( abs(HoldOffset) <= VSPLIT_THICKNESS/2 )
 		{
 			bMoveSeparator = true;
 		}

@@ -702,7 +702,7 @@ void WLevelPage::OnMouseScroll( Int32 Delta )
 		}
 
 		// Snap & Clamp zoom!
-		Camera.Zoom	= Round(Camera.Zoom*50.f)*0.02f;
+		Camera.Zoom	= math::round(Camera.Zoom*50.f)*0.02f;
 		Camera.Zoom	= Clamp( Camera.Zoom, 0.2f, 5.f );
 	}
 }
@@ -763,7 +763,7 @@ public:
 		struct{ FBrushComponent* VBrush; Int32 ViVert; };						// DRAG_Vertex.
 		struct{ FBaseComponent* SBase; WLevelPage::EStretchHandle SHandle; };	// DRAG_Scale.
 		struct{ FLogicComponent* LSource; Int32 LPlug; };						// DRAG_LogicLink.
-		struct{ TVector AScale; };												// DRAG_TexAlign;
+		struct{ math::Vector AScale; };											// DRAG_TexAlign;
 	};
 
 	TMouseDragInfo()
@@ -777,12 +777,12 @@ public:
 void WLevelPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 DeltaX, Int32 DeltaY )
 {
 	// Transform widget delta to world vector.
-	TVector Delta;
+	math::Vector Delta;
 	TCamera& Camera = Level->Camera;
-	TVector FOV	= Camera.GetFitFOV( Size.Width, Size.Height );
-	Delta.X		= +DeltaX * (FOV.X / Size.Width ) * Camera.Zoom;
-	Delta.Y		= -DeltaY * (FOV.Y / Size.Height) * Camera.Zoom;
-	Delta		= TransformVectorBy( Delta, TCoords(Camera.Location, Camera.Rotation).Transpose() );
+	math::Vector FOV	= Camera.GetFitFOV( Size.Width, Size.Height );
+	Delta.x		= +DeltaX * (FOV.x / Size.Width ) * Camera.Zoom;
+	Delta.y		= -DeltaY * (FOV.y / Size.Height) * Camera.Zoom;
+	Delta		= math::transformVectorBy( Delta, math::Coords(Camera.Location, Camera.Rotation).transpose() );
 
 	// Process drag type.
 	switch( DragInfo.DragType )		
@@ -821,7 +821,7 @@ void WLevelPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 Delta
 			{
 				FKeyframeComponent* Keyframe = KeyframeEditor->Keyframe;
 				Keyframe->Points[KeyframeEditor->iFrame].Location	= Keyframe->Base->Location;
-				Keyframe->Points[KeyframeEditor->iFrame].Location.Snap( TranslationSnap );
+				Keyframe->Points[KeyframeEditor->iFrame].Location.snap( TranslationSnap );
 			}
 			break;
 		}
@@ -849,7 +849,7 @@ void WLevelPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 Delta
 			{
 				FKeyframeComponent* Keyframe = KeyframeEditor->Keyframe;
 				Keyframe->Points[KeyframeEditor->iFrame].Rotation	= Keyframe->Base->Rotation;
-				Keyframe->Points[KeyframeEditor->iFrame].Rotation.Snap( RotationSnap );
+				Keyframe->Points[KeyframeEditor->iFrame].Rotation.snap( RotationSnap );
 				Keyframe->Points[KeyframeEditor->iFrame].bCCW		= RotDelta > 0;
 			}
 			break;
@@ -857,49 +857,49 @@ void WLevelPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 Delta
 		case DRAG_Scale:
 		{
 			// Scale entity.
-			TVector DeltaS, DeltaL;
+			math::Vector DeltaS, DeltaL;
 			FBaseComponent* Base = DragInfo.SBase;
-			Delta	= TransformVectorBy( Delta, Base->ToLocal() );
+			Delta	= math::transformVectorBy( Delta, Base->ToLocal() );
 
 			switch( DragInfo.SHandle )
 			{
 				case STH_NW:
 				case STH_SE:
-					DeltaL = TVector( +Delta.X*0.5f, +Delta.Y*0.5 );
-					DeltaS = TVector( -Delta.X, +Delta.Y ) * (DragInfo.SHandle == STH_NW ? 1.f : -1.f);
+					DeltaL = math::Vector( +Delta.x*0.5f, +Delta.y*0.5 );
+					DeltaS = math::Vector( -Delta.x, +Delta.y ) * (DragInfo.SHandle == STH_NW ? 1.f : -1.f);
 					break;
 
 				case STH_NE:
 				case STH_SW:
-					DeltaL = TVector( +Delta.X*0.5f, +Delta.Y*0.5 );
-					DeltaS = TVector( +Delta.X, +Delta.Y ) * (DragInfo.SHandle == STH_NE ? 1.f : -1.f);
+					DeltaL = math::Vector( +Delta.x*0.5f, +Delta.y*0.5 );
+					DeltaS = math::Vector( +Delta.x, +Delta.y ) * (DragInfo.SHandle == STH_NE ? 1.f : -1.f);
 					break;
 
 				case STH_N:
 				case STH_S:
-					DeltaL = TVector( 0.f, +Delta.Y*0.5 );
-					DeltaS = TVector( 0.f, +Delta.Y ) * (DragInfo.SHandle == STH_N ? 1.f : -1.f);
+					DeltaL = math::Vector( 0.f, +Delta.y*0.5 );
+					DeltaS = math::Vector( 0.f, +Delta.y ) * (DragInfo.SHandle == STH_N ? 1.f : -1.f);
 					break;
 
 				case STH_E:
 				case STH_W:
-					DeltaL = TVector( +Delta.X*0.5f, 0.f );
-					DeltaS = TVector( +Delta.X, 0.f ) * (DragInfo.SHandle == STH_E ? 1.f : -1.f);
+					DeltaL = math::Vector( +Delta.x*0.5f, 0.f );
+					DeltaS = math::Vector( +Delta.x, 0.f ) * (DragInfo.SHandle == STH_E ? 1.f : -1.f);
 					break;
 			}
 
 			// Apply deltas.
-			DeltaL	= TransformVectorBy( DeltaL, Base->ToWorld() );
+			DeltaL	= math::transformVectorBy( DeltaL, Base->ToWorld() );
 
-			if( ( Base->Size.X + DeltaS.X >= 0.5f )&&
-				( Base->Size.Y + DeltaS.Y >= 0.5f ) )
+			if( ( Base->Size.x + DeltaS.x >= 0.5f )&&
+				( Base->Size.y + DeltaS.y >= 0.5f ) )
 			{
 				Base->Location += DeltaL;
 				Base->Size += DeltaS;
 			}
 
-			Base->Size.X = Clamp( Base->Size.X, 0.5f, 1000.f );
-			Base->Size.Y = Clamp( Base->Size.Y, 0.5f, 1000.f );
+			Base->Size.x = Clamp( Base->Size.x, 0.5f, 1000.f );
+			Base->Size.y = Clamp( Base->Size.y, 0.5f, 1000.f );
 
 			Roller.Update(Selector);
 			break;
@@ -934,18 +934,18 @@ void WLevelPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 Delta
 					else if( Button == MB_Right )
 					{
 						// Scale texture.
-						DragInfo.AScale	+= TVector( DeltaX, DeltaY ) * 0.03125f;		
-						Int32 dX	= Trunc(DragInfo.AScale.X);
-						Int32 dY	= Trunc(DragInfo.AScale.Y);
+						DragInfo.AScale	+= math::Vector( DeltaX, DeltaY ) * 0.03125f;		
+						Int32 dX	= math::trunc(DragInfo.AScale.x);
+						Int32 dY	= math::trunc(DragInfo.AScale.y);
 
-						DragInfo.AScale.X	-= dX;
-						DragInfo.AScale.Y	-= dY;
+						DragInfo.AScale.x	-= dX;
+						DragInfo.AScale.y	-= dY;
 
-						for( ; dX>0; dX-- )		Brush->TexCoords.XAxis	*= 0.95f;
-						for( ; dX<0; dX++ )		Brush->TexCoords.XAxis	*= 1.05f;
+						for( ; dX>0; dX-- )		Brush->TexCoords.xAxis	*= 0.95f;
+						for( ; dX<0; dX++ )		Brush->TexCoords.xAxis	*= 1.05f;
 
-						for( ; dY>0; dY-- )		Brush->TexCoords.YAxis	*= 1.05f;
-						for( ; dY<0; dY++ )		Brush->TexCoords.YAxis	*= 0.95f;
+						for( ; dY>0; dY-- )		Brush->TexCoords.yAxis	*= 1.05f;
+						for( ; dY<0; dY++ )		Brush->TexCoords.yAxis	*= 0.95f;
 					}
 				}
 			}
@@ -968,7 +968,7 @@ void WLevelPage::OnMouseEndDrag( EMouseButton Button, Int32 X, Int32 Y )
 			for( Int32 i=0; i<Selector.Selected.size(); i++ )
 			{
 				FBaseComponent* Base = Selector.Selected[i]->Base;
-				Base->Location.Snap(TranslationSnap);
+				Base->Location.snap(TranslationSnap);
 			}
 			Roller.Update( Selector );
 			Transactor->TrackLeave();
@@ -979,14 +979,14 @@ void WLevelPage::OnMouseEndDrag( EMouseButton Button, Int32 X, Int32 Y )
 			// Snap the vertex.
 			FBrushComponent* B = DragInfo.VBrush;
 			Int32 i = DragInfo.ViVert;
-			B->Vertices[i].Snap(TranslationSnap);
+			B->Vertices[i].snap(TranslationSnap);
 	
 			// Merge overlap vertices.
 			for( Int32 v=0; v<B->NumVerts && B->NumVerts>3; v++ )
 			{
-				TVector&	V1 = B->Vertices[v],
+				math::Vector&	V1 = B->Vertices[v],
 							V2 = B->Vertices[(v+1) % B->NumVerts];
-				if( (V1-V2).SizeSquared() < EPSILON )
+				if( (V1-V2).sizeSquared() < math::EPSILON )
 				{
 					for( Int32 m=v; m<B->NumVerts-1; m++ )
 						B->Vertices[m] = B->Vertices[m+1];
@@ -1001,8 +1001,8 @@ void WLevelPage::OnMouseEndDrag( EMouseButton Button, Int32 X, Int32 Y )
 		{
 			// Snap scale.
 			FBaseComponent* Base = DragInfo.SBase;
-			Base->Location.Snap( TranslationSnap * 0.5f );
-			Base->Size.Snap( TranslationSnap );
+			Base->Location.snap( TranslationSnap * 0.5f );
+			Base->Size.snap( TranslationSnap );
 			Transactor->TrackLeave();
 			break;
 		}
@@ -1013,7 +1013,7 @@ void WLevelPage::OnMouseEndDrag( EMouseButton Button, Int32 X, Int32 Y )
 				if( !Selector.Selected[i]->Base->bFixedAngle )
 				{
 					FBaseComponent* Base = Selector.Selected[i]->Base;
-					Base->Rotation.Snap(RotationSnap);
+					Base->Rotation.snap(RotationSnap);
 				}
 			Transactor->TrackLeave();
 			break;
@@ -1049,16 +1049,16 @@ void WLevelPage::OnMouseEndDrag( EMouseButton Button, Int32 X, Int32 Y )
 					FBrushComponent* Brush = (FBrushComponent*)Selector.Selected[i]->Base;
 
 					// Translation snap.
-					Brush->TexCoords.Origin.Snap( TranslationSnap );
+					Brush->TexCoords.origin.snap( TranslationSnap );
 
 					// Rotation snap.
-					Float	XLen	= Brush->TexCoords.XAxis.Size();
-					Float	YLen	= Brush->TexCoords.YAxis.Size();
-					TAngle	Rot		= VectorToAngle( Brush->TexCoords.XAxis );
+					Float	XLen	= Brush->TexCoords.xAxis.size();
+					Float	YLen	= Brush->TexCoords.yAxis.size();
+					math::Angle	Rot	= math::vectorToAngle( Brush->TexCoords.xAxis );
 
-					Rot.Snap( RotationSnap );
-					Brush->TexCoords.XAxis	= AngleToVector(Rot) * XLen;
-					Brush->TexCoords.YAxis	= -AngleToVector(Rot).Cross() * YLen;
+					Rot.snap( RotationSnap );
+					Brush->TexCoords.xAxis	= math::angleToVector(Rot) * XLen;
+					Brush->TexCoords.yAxis	= -math::angleToVector(Rot).cross() * YLen;
 				}
 			}
 			Transactor->TrackLeave();
@@ -1173,8 +1173,8 @@ void WLevelPage::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 			//
 			if( TileEditor->Model )
 			{
-				TVector P = ScreenToWorld( X, Y );
-				TileEditor->Model->PenIndex = TileEditor->Model->WorldToMapIndex( P.X, P.Y );
+				math::Vector P = ScreenToWorld( X, Y );
+				TileEditor->Model->PenIndex = TileEditor->Model->WorldToMapIndex( P.x, P.y );
 			}
 			break;
 		}
@@ -1192,7 +1192,7 @@ void WLevelPage::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 	if( !(GFrameStamp & 7) )
 	{
 		FEntity* Entity = GetEntityAt( X, Y, false );
-		TVector Pen	= ScreenToWorld( X, Y );
+		math::Vector Pen	= ScreenToWorld( X, Y );
 		GEditor->StatusBar->Panels[0].Text = Entity ? String::Format
 																( 
 																	L"%s [%s]", 
@@ -1203,8 +1203,8 @@ void WLevelPage::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 		GEditor->StatusBar->Panels[1].Text = String::Format
 														( 
 															L"[X=%.2f, Y=%.2f]", 
-															Pen.X, 
-															Pen.Y 
+															Pen.x, 
+															Pen.y 
 														);
 	}
 }	 
@@ -1538,7 +1538,7 @@ void WLevelPage::OnMouseBeginDrag( EMouseButton Button, Int32 X, Int32 Y )
 				{
 					// Shift texture.
 					Transactor->TrackEnter();
-					DragInfo.AScale		= TVector( 0.f, 0.f );
+					DragInfo.AScale		= math::Vector( 0.f, 0.f );
 					DragInfo.DragType	= DRAG_TexAlign;
 				}
 				else
@@ -1621,7 +1621,7 @@ FEntity* WLevelPage::GetEntityAt( Int32 X, Int32 Y, Bool bFast )
 {
 	FEntity*	Result		= nullptr;
 	Float		BestLayer	= -9999.9f;
-	TVector		V			= ScreenToWorld( X, Y );
+	math::Vector	V		= ScreenToWorld( X, Y );
 
 	for( Int32 i=0; i<Level->Entities.size(); i++ )
 	{
@@ -1641,12 +1641,12 @@ FEntity* WLevelPage::GetEntityAt( Int32 X, Int32 Y, Bool bFast )
 			// Test hit with brush.
 			FBrushComponent* Brush = (FBrushComponent*)Base;
 
-			if( IsConvexPoly( Brush->Vertices, Brush->NumVerts ) )
+			if( math::isConvexPoly( Brush->Vertices, Brush->NumVerts ) )
 			{
 				// Convex poly, test for real hit.
-				if( IsPointInsidePoly
+				if( math::isPointInsidePoly
 								( 
-									TransformPointBy( V, Brush->ToLocal() ), 
+									math::transformPointBy( V, Brush->ToLocal() ), 
 									Brush->Vertices, 
 									Brush->NumVerts ) 
 								)
@@ -1674,10 +1674,10 @@ FEntity* WLevelPage::GetEntityAt( Int32 X, Int32 Y, Bool bFast )
 			TRect ScreenRect;
 
 			// Flip Y axis.
-			WorldToScreen( Zone->GetAABB().Min, ScreenRect.Min.X, ScreenRect.Max.Y );
-			WorldToScreen( Zone->GetAABB().Max, ScreenRect.Max.X, ScreenRect.Min.Y );
+			WorldToScreen( Zone->GetAABB().Min, ScreenRect.Min.x, ScreenRect.Max.y );
+			WorldToScreen( Zone->GetAABB().Max, ScreenRect.Max.x, ScreenRect.Min.y );
 
-			if( ScreenRect.AtBorder(TVector(X, Y), 3.f) )
+			if( ScreenRect.AtBorder(math::Vector(X, Y), 3.f) )
 			{
 				Result		= Entity;
 				BestLayer	= Base->Layer;
@@ -1699,13 +1699,13 @@ FEntity* WLevelPage::GetEntityAt( Int32 X, Int32 Y, Bool bFast )
 		{
 			// Test hit with the portal.
 			FPortalComponent* Portal = (FPortalComponent*)Base;
-			TCoords C = Portal->ToWorld();
-			TVector V1 = TransformPointBy( TVector( 0.f, -Portal->Width*0.5f ), C );
-			TVector V2 = TransformPointBy( TVector( 0.f, +Portal->Width*0.5f ), C );
-			WorldToScreen( V1, V1.X, V1.Y );
-			WorldToScreen( V2, V2.X, V2.Y );
+			math::Coords C = Portal->ToWorld();
+			math::Vector V1 = math::transformPointBy( math::Vector( 0.f, -Portal->Width*0.5f ), C );
+			math::Vector V2 = math::transformPointBy( math::Vector( 0.f, +Portal->Width*0.5f ), C );
+			WorldToScreen( V1, V1.x, V1.y );
+			WorldToScreen( V2, V2.x, V2.y );
 
-			if( PointOnSegment( TVector(X, Y), V1, V2, 2.9f ) )
+			if( math::isPointOnSegment( math::Vector(X, Y), V1, V2, 2.9f ) )
 			{
 				// Hit portal.
 				Result		= Entity;
@@ -1715,9 +1715,9 @@ FEntity* WLevelPage::GetEntityAt( Int32 X, Int32 Y, Bool bFast )
 		else
 		{
 			// Most probably FRectComponent.
-			TRect R		= TRect( TVector( 0.f, 0.f ), Base->Size );
+			TRect R		= TRect( math::Vector( 0.f, 0.f ), Base->Size );
 
-			if( R.IsInside( TransformPointBy( V, Base->ToLocal() ) ) )
+			if( R.IsInside( math::transformPointBy( V, Base->ToLocal() ) ) )
 			{
 				// Hit entity.
 				Result		= Entity;
@@ -1750,31 +1750,31 @@ WLevelPage::EStretchHandle WLevelPage::GetStretchHandleAt( Int32 X, Int32 Y, FBa
 			continue;
 
 		// Compute handles.
-		TVector Size2 = Base->Size * 0.5f;
-		TCoords	Coords	= TCoords( Base->Location, Base->Rotation );
-		TVector XAxis = Coords.XAxis * Size2.X, 
-				YAxis = Coords.YAxis * Size2.Y;
+		math::Vector Size2 = Base->Size * 0.5f;
+		math::Coords Coords	= math::Coords( Base->Location, Base->Rotation );
+		math::Vector XAxis = Coords.xAxis * Size2.x, 
+				YAxis = Coords.yAxis * Size2.y;
 
-		TVector Handles[STH_MAX] = 
+		math::Vector Handles[STH_MAX] = 
 		{
-			TVector( 0.f, 0.f ),
-			Coords.Origin - XAxis + YAxis,
-			Coords.Origin + YAxis,
-			Coords.Origin + XAxis + YAxis,
-			Coords.Origin + XAxis,
-			Coords.Origin + XAxis - YAxis,
-			Coords.Origin - YAxis,
-			Coords.Origin - XAxis - YAxis,
-			Coords.Origin - XAxis,
+			math::Vector( 0.f, 0.f ),
+			Coords.origin - XAxis + YAxis,
+			Coords.origin + YAxis,
+			Coords.origin + XAxis + YAxis,
+			Coords.origin + XAxis,
+			Coords.origin + XAxis - YAxis,
+			Coords.origin - YAxis,
+			Coords.origin - XAxis - YAxis,
+			Coords.origin - XAxis,
 		};
 
 		// Transform handles.
 		for( Int32 i=1; i<STH_MAX; i++ )
-			WorldToScreen( Handles[i], Handles[i].X, Handles[i].Y );
+			WorldToScreen( Handles[i], Handles[i].x, Handles[i].y );
 
 		// Test for hit.
 		for( Int32 i=1; i<STH_MAX; i++ )
-			if( Abs(X-Handles[i].X) <= 8.f && Abs(Y-Handles[i].Y) <= 8.f )
+			if( abs(X-Handles[i].x) <= 8.f && abs(Y-Handles[i].y) <= 8.f )
 			{
 				// Found.
 				OutBase	= Base;
@@ -1807,10 +1807,10 @@ Int32 WLevelPage::GetSocketAt( Int32 X, Int32 Y, ELogicSocket& SType, FLogicComp
 		if( SType != LOGSOC_Jack )
 			for( Int32 j=0; j<Test->NumPlugs; j++ )
 			{
-				TVector S = Test->GetPlugPos(j);
-				WorldToScreen( S, S.X, S.Y );
+				math::Vector S = Test->GetPlugPos(j);
+				WorldToScreen( S, S.x, S.y );
 
-				if( Abs(X-S.X) <= 7.f && Abs(Y-S.Y) <= 7.f )
+				if( abs(X-S.x) <= 7.f && abs(Y-S.y) <= 7.f )
 				{
 					SType	= LOGSOC_Plug;
 					L		= Test;
@@ -1821,10 +1821,10 @@ Int32 WLevelPage::GetSocketAt( Int32 X, Int32 Y, ELogicSocket& SType, FLogicComp
 		if( SType != LOGSOC_Plug )
 			for( Int32 j=0; j<Test->NumJacks; j++ )
 			{
-				TVector S = Test->GetJackPos(j);
-				WorldToScreen( S, S.X, S.Y );
+				math::Vector S = Test->GetJackPos(j);
+				WorldToScreen( S, S.x, S.y );
 
-				if( Abs(X-S.X) <= 7.f && Abs(Y-S.Y) <= 7.f )
+				if( abs(X-S.x) <= 7.f && abs(Y-S.y) <= 7.f )
 				{
 					SType	= LOGSOC_Jack;
 					L		= Test;
@@ -1844,7 +1844,7 @@ Int32 WLevelPage::GetSocketAt( Int32 X, Int32 Y, ELogicSocket& SType, FLogicComp
 //
 Int32 WLevelPage::GetVertexAt( Int32 X, Int32 Y, FBrushComponent*& OutBrush )
 {
-	TVector Pix( X, Y );
+	math::Vector Pix( X, Y );
 	OutBrush	= nullptr;
 
 	for( Int32 k=0; k<Selector.Selected.size(); k++ )
@@ -1857,10 +1857,10 @@ Int32 WLevelPage::GetVertexAt( Int32 X, Int32 Y, FBrushComponent*& OutBrush )
 		FBrushComponent* Brush = As<FBrushComponent>(Base);
 		for( Int32 iVert=0; iVert<Brush->NumVerts; iVert++ )
 		{
-			TVector V;
-			WorldToScreen( Brush->Location + Brush->Vertices[iVert], V.X, V.Y );
+			math::Vector V;
+			WorldToScreen( Brush->Location + Brush->Vertices[iVert], V.x, V.y );
 
-			if( Abs(Pix.X-V.X) <= 8.f && Abs(Pix.Y-V.Y) <= 8.f )
+			if( abs(Pix.x-V.x) <= 8.f && abs(Pix.y-V.y) <= 8.f )
 			{
 				OutBrush = Brush;
 				return iVert;
@@ -1877,8 +1877,8 @@ Int32 WLevelPage::GetVertexAt( Int32 X, Int32 Y, FBrushComponent*& OutBrush )
 //
 void WLevelPage::PaintModelAt( FModelComponent* Model, Int32 iLayer, Int32 X, Int32 Y )
 {
-	TVector V = ScreenToWorld( X, Y ); 
-	Int32 iTile = Model->WorldToMapIndex( V.X, V.Y );
+	math::Vector V = ScreenToWorld( X, Y ); 
+	Int32 iTile = Model->WorldToMapIndex( V.x, V.y );
 
 	if( iTile != -1 && Model->Selected.size() > 0 )
 	{
@@ -1925,11 +1925,11 @@ FEntity* WLevelPage::AddEntityTo( FScript* Script, Int32 X, Int32 Y )
 	FEntity* Entity;
 	Transactor->TrackEnter();
 	{
-		TVector V = ScreenToWorld( X, Y );
+		math::Vector V = ScreenToWorld( X, Y );
 		Entity = Level->CreateEntity( Script, L"", V );
 
 		// Initially snap it to grid.
-		Entity->Base->Location.Snap( TranslationSnap );
+		Entity->Base->Location.snap( TranslationSnap );
 	}
 	Transactor->TrackLeave();
 
@@ -1947,7 +1947,7 @@ Bool WLevelPage::GetRollerAt( Int32 X, Int32 Y )
 
 	// Distance from cursor to roller.
 	Float Zoom	= Level->Camera.Zoom;
-	Float Dist	= Distance( Roller.Position, ScreenToWorld( X, Y ) );
+	Float Dist	= math::distance( Roller.Position, ScreenToWorld( X, Y ) );
 
 	return	( Dist >= (ROLLER_RADIUS-0.15f)*Zoom ) &&
 			( Dist <= (ROLLER_RADIUS+0.15f)*Zoom );
@@ -1957,7 +1957,7 @@ Bool WLevelPage::GetRollerAt( Int32 X, Int32 Y )
 //
 // Transform point in widget coords to the level worlds.
 //
-TVector WLevelPage::ScreenToWorld( Int32 X, Int32 Y )
+math::Vector WLevelPage::ScreenToWorld( Int32 X, Int32 Y )
 {
 	TPoint P = ClientToWindow(TPoint::Zero);
 	TViewInfo View
@@ -1980,7 +1980,7 @@ TVector WLevelPage::ScreenToWorld( Int32 X, Int32 Y )
 //
 // Transform point in the level world coords to the widgets.
 //
-void WLevelPage::WorldToScreen( TVector V, Float& OutX, Float& OutY )
+void WLevelPage::WorldToScreen( math::Vector V, Float& OutX, Float& OutY )
 {
 	TPoint P = ClientToWindow(TPoint::Zero);
 	TViewInfo View
@@ -2023,7 +2023,7 @@ void WLevelPage::DrawPathsNetwork( CCanvas* Canvas, CNavigator* Navigator )
 	}
 
 	// Draw all edges.
-	TVector Bias( 0.f, (5.f*Canvas->View.FOV.Y*Canvas->View.Zoom)/(Canvas->View.Height) );
+	math::Vector Bias( 0.f, (5.f*Canvas->View.FOV.y*Canvas->View.Zoom)/(Canvas->View.Height) );
 
 	for( Int32 iEdge=0; iEdge<Navigator->Edges.size(); iEdge++ )
 	{
@@ -2103,7 +2103,7 @@ void WLevelPage::DrawKeyframe( CCanvas* Canvas, FEntity* Entity )
 						String::Format( L"%d", i+1 ),
 						Root->Font2,
 						COLOR_White,
-						TVector( X-10, Y-25 )
+						math::Vector( X-10, Y-25 )
 					);
 	}
 	Canvas->PopTransform();
@@ -2139,7 +2139,7 @@ void WLevelPage::DrawLogicCircuit( CCanvas* Canvas )
 					Logic->PlugsName[i],
 					Root->Font2,
 					COLOR_White,
-					TVector( X-Root->Font2->TextWidth(*Logic->PlugsName[i])-4, Y-8 )
+					math::Vector( X-Root->Font2->TextWidth(*Logic->PlugsName[i])-4, Y-8 )
 				);
 			}
 
@@ -2154,7 +2154,7 @@ void WLevelPage::DrawLogicCircuit( CCanvas* Canvas )
 					Logic->JacksName[i],
 					Root->Font2,
 					COLOR_White,
-					TVector( X+4, Y-8 )
+					math::Vector( X+4, Y-8 )
 				);
 			}
 		}
@@ -2246,7 +2246,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 		case DRAG_LogicLink:
 		{
 			// Draw active link line.
-			TVector Pen = ScreenToWorld( LLastPos.X, LLastPos.Y );
+			math::Vector Pen = ScreenToWorld( LLastPos.X, LLastPos.Y );
 			Canvas->DrawSmoothLine( DragInfo.LSource->GetPlugPos(DragInfo.LPlug), Pen, COLOR_LightBlue, false );
 		}
 	}
@@ -2268,7 +2268,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 					String::Format( L"FPS: %d", GEditor->FPS ), 
 					Root->Font1, 
 					COLOR_White, 
-					TVector( 10.f, 38.f ) 
+					math::Vector( 10.f, 38.f ) 
 				);
 
 #if FLU_PROFILE_MEMORY
@@ -2277,7 +2277,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 					String::Format( L"Mem: %.2f kB", Double(mem::stats().totalAllocatedBytes) / 1024 ), 
 					Root->Font1, 
 					COLOR_White, 
-					TVector( 10.f, 55.f ) 
+					math::Vector( 10.f, 55.f ) 
 				);
 #endif
 
@@ -2286,7 +2286,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 					String::Format( L"Game Time: %s", *Level->m_timeOfDay.toString() ), 
 					Root->Font1, 
 					COLOR_White, 
-					TVector( 10.f, 72.f ) 
+					math::Vector( 10.f, 72.f ) 
 				);
 }
 
@@ -2522,7 +2522,7 @@ void WLevelPage::PopPasteClick( WWidget* Sender )
 
 		// Place entity to proper location in world.
 		Entity->Base->Location	= ScreenToWorld( RDwdPos.X, RDwdPos.Y );
-		Entity->Base->Location.Snap(TranslationSnap);
+		Entity->Base->Location.snap(TranslationSnap);
 
 Leave:;
 	}
@@ -2815,7 +2815,7 @@ void WLevelPage::PopDuplicateClick( WWidget* Sender )
 
 			// Place entity to proper location in world.
 			New->Base->Location	+= Source->Base->GetAABB().Size()*1.17f;
-			New->Base->Location.Snap(TranslationSnap);
+			New->Base->Location.snap(TranslationSnap);
 			New->Base->Layer	+= 0.01f;
 		}
 	}
@@ -2828,7 +2828,7 @@ void WLevelPage::PopDuplicateClick( WWidget* Sender )
 //
 void WLevelPage::ComboDragSnapChange( WWidget* Sender )
 {
-	TranslationSnap	= Pow( 2.f, DragSnapCombo->ItemIndex-2.f );
+	TranslationSnap	= math::pow( 2.f, DragSnapCombo->ItemIndex-2.f );
 }
 
 
@@ -3066,7 +3066,7 @@ void WLevelPage::TRoller::Update( TSelector& Sel )
 	{
 		// No master, mean no roller.
 		bVisible	= false;
-		Position	= TVector( -9999.9f, -9999.9f );
+		Position	= math::Vector( -9999.9f, -9999.9f );
 	}
 }
 

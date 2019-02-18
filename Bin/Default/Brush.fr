@@ -12,9 +12,9 @@ BEGIN_RESOURCE FScript Brush
             bUnlit = true
             Type = 2
             NumVerts = 4
-            TexCoords.Origin = [0.0000; 0.0000]
-            TexCoords.XAxis = [0.2500; 0.0000]
-            TexCoords.YAxis = [0.0000; -0.2500]
+            TexCoords.origin = [0.0000; 0.0000]
+            TexCoords.xAxis = [0.2500; 0.0000]
+            TexCoords.yAxis = [0.0000; -0.2500]
             Vertices[0] = [-4.0000; -4.0000]
             Vertices[1] = [-4.0000; 4.0000]
             Vertices[2] = [4.0000; 4.0000]

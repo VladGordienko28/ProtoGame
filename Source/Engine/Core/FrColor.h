@@ -31,9 +31,9 @@ public:
 		:	R( InR ), G( InG ), B( InB ), A( InA )
 	{}
 	TColor( Float InR, Float InG, Float InB )
-		:	R( Clamp(Floor(InR*256.f), 0, 255) ), 
-			G( Clamp(Floor(InG*256.f), 0, 255) ), 
-			B( Clamp(Floor(InB*256.f), 0, 255) ), 
+		:	R( Clamp(math::floor(InR*256.f), 0, 255) ), 
+			G( Clamp(math::floor(InG*256.f), 0, 255) ), 
+			B( Clamp(math::floor(InB*256.f), 0, 255) ), 
 			A( 0xff )
 	{}
 
@@ -87,9 +87,9 @@ public:
 	{
 		return TColor
 					(
-						Clamp( Floor(R*F), 0, 255 ),
-						Clamp( Floor(G*F), 0, 255 ),
-						Clamp( Floor(B*F), 0, 255 ),
+						Clamp( math::floor(R*F), 0, 255 ),
+						Clamp( math::floor(G*F), 0, 255 ),
+						Clamp( math::floor(B*F), 0, 255 ),
 						/*Clamp( Floor(A*F), 0, 255 )*/A
 					);	
 	}
@@ -119,9 +119,9 @@ public:
 	}
 	TColor operator*=( Float F )
 	{
-		R	=	Clamp( Floor(R*F), 0, 255 );
-		G	=	Clamp( Floor(G*F), 0, 255 );
-		B	=	Clamp( Floor(B*F), 0, 255 );
+		R	=	Clamp( math::floor(R*F), 0, 255 );
+		G	=	Clamp( math::floor(G*F), 0, 255 );
+		B	=	Clamp( math::floor(B*F), 0, 255 );
 		A	=	/*Clamp( Floor(A*F), 0, 255 )*/A;
 		return *this;
 	}

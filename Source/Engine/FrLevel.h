@@ -47,15 +47,15 @@ struct TCamera
 {
 public:
 	// Variables.
-	TVector		Location;
-	TAngle		Rotation;
-	TVector		FOV;
-	Float		Zoom;
-	TRect		ScrollBound;
+	math::Vector	Location;
+	math::Angle		Rotation;
+	math::Vector	FOV;
+	Float			Zoom;
+	TRect			ScrollBound;
 
 	// TCamera interface.
 	TCamera();
-	TVector GetFitFOV( Float ScreenX, Float ScreenY ) const;
+	math::Vector GetFitFOV( Float ScreenX, Float ScreenY ) const;
 	friend void Serialize( CSerializer& S, TCamera& V );
 };
 
@@ -143,15 +143,15 @@ public:
 	void Export( CExporterBase& Ex );
 
 	// Entity functions.
-	FEntity* CreateEntity( FScript* InScript, String InName, TVector InLocation );
+	FEntity* CreateEntity( FScript* InScript, String InName, math::Vector InLocation );
 	void DestroyEntity( FEntity* Entity );
 	FEntity* FindEntity( String InName );
 	Int32 GetEntityIndex( FEntity* Entity );
 	void ReleaseEntity( Int32 iEntity );
 
 	// Collisions.
-	FBrushComponent* TestPointGeom( const TVector& P );
-	FBrushComponent* TestLineGeom( const TVector& A, const TVector& B, Bool bFast, TVector& Hit, TVector& Normal );
+	FBrushComponent* TestPointGeom( const math::Vector& P );
+	FBrushComponent* TestLineGeom( const math::Vector& A, const math::Vector& B, Bool bFast, math::Vector& Hit, math::Vector& Normal );
 
 	// Accessors.
 	inline Bool IsTemporal()

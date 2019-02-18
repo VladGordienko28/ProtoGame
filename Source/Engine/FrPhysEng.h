@@ -56,8 +56,8 @@ public:
 
 private:
 	// Detected collision info.
-	static TVector			HitNormal;
-	static TVector			HitSlope;
+	static math::Vector		HitNormal;
+	static math::Vector		HitSlope;
 	static Float			HitTime;
 	static EHitSide			HitSide;
 
@@ -71,7 +71,7 @@ private:
 	static Bool IsTouch( FPhysicComponent* Body, FBaseComponent* Other );
 
 	// Portals.
-	static void HandlePortals( FPhysicComponent* Body, const TVector& OldLocation );
+	static void HandlePortals( FPhysicComponent* Body, const math::Vector& OldLocation );
 
 	// Zones.
 	static Bool SetBodyZone( FPhysicComponent* Body, FZoneComponent* NewZone );
@@ -96,15 +96,15 @@ private:
 	static Int32			NumOthers;
 
 	// Polys.
-	static TVector			AVerts[16];
-	static TVector			ANorms[16];
-	static TVector			BVerts[16];
-	static TVector			BNorms[16];
+	static math::Vector		AVerts[16];
+	static math::Vector		ANorms[16];
+	static math::Vector		BVerts[16];
+	static math::Vector		BNorms[16];
 	static Int32			ANum;
 	static Int32			BNum;
 
 	// Contact info.
-	static TVector			Contacts[2];
+	static math::Vector		Contacts[2];
 	static Int32			NumConts;
 
 	// Friends.

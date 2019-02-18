@@ -105,7 +105,7 @@
       <PrecompiledHeaderOutputFile>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration) $(PlatformShortName)\$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -120,7 +120,7 @@
       <PrecompiledHeaderOutputFile>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration) $(PlatformShortName)\$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -139,7 +139,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -158,7 +158,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

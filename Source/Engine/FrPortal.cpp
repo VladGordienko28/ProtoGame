@@ -16,7 +16,7 @@ FPortalComponent::FPortalComponent()
 	:	Width( 16.f ),
 		NextPortal( nullptr )
 {
-	Size		= TVector( 0.f, 0.f );
+	Size		= math::Vector( 0.f, 0.f );
 	bRenderable	= true;
 	bFixedAngle	= false;
 }
@@ -35,7 +35,7 @@ FPortalComponent::~FPortalComponent()
 //
 // Transfer a point through the portal.
 //
-TVector FPortalComponent::TransferPoint( TVector P )
+math::Vector FPortalComponent::TransferPoint( math::Vector P )
 {
 	return P;
 }
@@ -44,7 +44,7 @@ TVector FPortalComponent::TransferPoint( TVector P )
 //
 // Transfer a vector through the portal.
 //
-TVector FPortalComponent::TransferVector( TVector V )
+math::Vector FPortalComponent::TransferVector( math::Vector V )
 {
 	return V;
 }
@@ -107,18 +107,18 @@ FMirrorComponent::FMirrorComponent()
 //
 // Transfer point through the mirror.
 //
-TVector FMirrorComponent::TransferPoint( TVector P )
+math::Vector FMirrorComponent::TransferPoint( math::Vector P )
 {
-	return TVector( P.X + (Location.X - P.X)*2.f, P.Y );
+	return math::Vector( P.x + (Location.x - P.x)*2.f, P.y );
 }
 
 
 //
 // Transfer vector through the mirror.
 //
-TVector FMirrorComponent::TransferVector( TVector V )
+math::Vector FMirrorComponent::TransferVector( math::Vector V )
 {
-	return TVector( -V.X, V.Y );
+	return math::Vector( -V.x, V.y );
 }
 
 
@@ -132,29 +132,29 @@ Bool FMirrorComponent::ComputeViewInfo( const TViewInfo& Parent, TViewInfo& Resu
 	Result.Width			= Parent.Width;
 	Result.Height			= Parent.Height;
 	Result.bMirage			= true;
-	Result.Coords.Origin	= TransferPoint( Parent.Coords.Origin );
-	Result.Coords.XAxis		= -Parent.Coords.XAxis;
-	Result.Coords.YAxis		= Parent.Coords.YAxis;
-	Result.UnCoords			= Result.Coords.Transpose();
+	Result.Coords.origin	= TransferPoint( Parent.Coords.origin );
+	Result.Coords.xAxis		= -Parent.Coords.xAxis;
+	Result.Coords.yAxis		= Parent.Coords.yAxis;
+	Result.UnCoords			= Result.Coords.transpose();
 	Result.FOV				= Parent.FOV;
 	Result.Zoom				= Parent.Zoom;
 
 	// Mirror bounds.
-	if( Location.X > Parent.Coords.Origin.X )
+	if( Location.x > Parent.Coords.origin.x )
 	{
 		// Parent lie on the left half-plane.
-		Result.Bounds.Min.X	= Parent.Bounds.Min.X;
-		Result.Bounds.Max.X	= Location.X + (Location.X-Parent.Bounds.Min.X);
+		Result.Bounds.Min.x	= Parent.Bounds.Min.x;
+		Result.Bounds.Max.x	= Location.x + (Location.x-Parent.Bounds.Min.x);
 	}
 	else
 	{
 		// Parent lie on the right half-plane.
-		Result.Bounds.Min.X	= Location.X - (Parent.Bounds.Max.X - Location.X);
-		Result.Bounds.Max.X	= Parent.Bounds.Max.X;
+		Result.Bounds.Min.x	= Location.x - (Parent.Bounds.Max.x - Location.x);
+		Result.Bounds.Max.x	= Parent.Bounds.Max.x;
 	}
 
-	Result.Bounds.Min.Y	= Parent.Bounds.Min.Y;
-	Result.Bounds.Max.Y	= Parent.Bounds.Max.Y;
+	Result.Bounds.Min.y	= Parent.Bounds.Min.y;
+	Result.Bounds.Max.y	= Parent.Bounds.Max.y;
 
 	return true;
 }
@@ -174,8 +174,8 @@ void FMirrorComponent::Render( CCanvas* Canvas )
 		DrawColor *= 1.5f;
 
 	// Master line.
-	TVector V1 = TVector( Location.X, Location.Y - 0.5f * Width );
-	TVector V2 = TVector( Location.X, Location.Y + 0.5f * Width );
+	math::Vector V1 = math::Vector( Location.x, Location.y - 0.5f * Width );
+	math::Vector V2 = math::Vector( Location.x, Location.y + 0.5f * Width );
 
 	Canvas->DrawLine( V1, V2, DrawColor, false );
 
@@ -190,14 +190,14 @@ void FMirrorComponent::Render( CCanvas* Canvas )
 
 void FMirrorComponent::nativeMirrorPoint( CFrame& Frame )
 {
-	TVector P = POP_VECTOR;
+	math::Vector P = POP_VECTOR;
 	*POPA_VECTOR = TransferPoint( P );
 }
 
 
 void FMirrorComponent::nativeMirrorVector( CFrame& Frame )
 {
-	TVector V = POP_VECTOR;
+	math::Vector V = POP_VECTOR;
 	*POPA_VECTOR = TransferVector( V );
 }
 
@@ -221,10 +221,10 @@ FWarpComponent::FWarpComponent()
 // Transfer a point through the warp portal. 
 // Caution: Destination should be specified.
 //
-TVector FWarpComponent::TransferPoint( TVector P )
+math::Vector FWarpComponent::TransferPoint( math::Vector P )
 {
 	assert(Other);
-	return TransformPointBy( TransformPointBy(P, ToLocal()), Other->Base->ToWorld() );
+	return math::transformPointBy( math::transformPointBy(P, ToLocal()), Other->Base->ToWorld() );
 }
 
 
@@ -232,10 +232,10 @@ TVector FWarpComponent::TransferPoint( TVector P )
 // Transfer a vector through the warp portal. 
 // Caution: Destination should be specified.
 //
-TVector FWarpComponent::TransferVector( TVector V )
+math::Vector FWarpComponent::TransferVector( math::Vector V )
 {
 	assert(Other);
-	return TransformVectorBy( TransformVectorBy(V, ToLocal()), Other->Base->ToWorld() );
+	return math::transformVectorBy( math::transformVectorBy(V, ToLocal()), Other->Base->ToWorld() );
 }
 
 
@@ -253,16 +253,16 @@ Bool FWarpComponent::ComputeViewInfo( const TViewInfo& Parent, TViewInfo& Result
 	Result.Width			= Parent.Width;
 	Result.Height			= Parent.Height;
 	Result.bMirage			= true;
-	Result.Coords.Origin	= TransferPoint( Parent.Coords.Origin );
-	Result.Coords.XAxis		= TransferVector( Parent.Coords.XAxis );
-	Result.Coords.YAxis		= TransferVector( Parent.Coords.YAxis );
-	Result.UnCoords			= Result.Coords.Transpose();
+	Result.Coords.origin	= TransferPoint( Parent.Coords.origin );
+	Result.Coords.xAxis		= TransferVector( Parent.Coords.xAxis );
+	Result.Coords.yAxis		= TransferVector( Parent.Coords.yAxis );
+	Result.UnCoords			= Result.Coords.transpose();
 	Result.FOV				= Parent.FOV;
 	Result.Zoom				= Parent.Zoom;
 	Result.Bounds			= TRect
 								( 
-									Result.Coords.Origin, 
-									FastSqrt( Sqr(Result.FOV.X)+Sqr(Result.FOV.Y)*Result.Zoom  )
+									Result.Coords.origin, 
+									math::sqrt( sqr(Result.FOV.x)+sqr(Result.FOV.y)*Result.Zoom  )
 								);
 
 	return true;
@@ -300,9 +300,9 @@ void FWarpComponent::Render( CCanvas* Canvas )
 	if( Canvas->View.bMirage || !(Level->RndFlags & RND_Other) )
 		return;
 
-	TCoords C = ToWorld();
-	TVector V1 = TransformPointBy( TVector( 0.f, -Width*0.5f ), C );
-	TVector V2 = TransformPointBy( TVector( 0.f, +Width*0.5f ), C );
+	math::Coords C = ToWorld();
+	math::Vector V1 = math::transformPointBy( math::Vector( 0.f, -Width*0.5f ), C );
+	math::Vector V2 = math::transformPointBy( math::Vector( 0.f, +Width*0.5f ), C );
 
 	TColor DrawColor = Other ? COLOR_Green : COLOR_Crimson;
 	if( bSelected )
@@ -321,14 +321,14 @@ void FWarpComponent::Render( CCanvas* Canvas )
 
 void FWarpComponent::nativeWarpPoint( CFrame& Frame )
 {
-	TVector P = POP_VECTOR;
+	math::Vector P = POP_VECTOR;
 	*POPA_VECTOR = Other ? TransferPoint( P ) : P;
 }
 
 
 void FWarpComponent::nativeWarpVector( CFrame& Frame )
 {
-	TVector V = POP_VECTOR;
+	math::Vector V = POP_VECTOR;
 	*POPA_VECTOR = Other ? TransferVector( V ) : V;
 }
 

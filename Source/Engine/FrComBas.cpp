@@ -86,7 +86,7 @@ FBaseComponent::FBaseComponent()
 		Layer( 0.5f ),
 		bHashed( false ),
 		HashMark( -1 ),
-		HashAABB( TVector( 0.f, 0.f ), 1.f )
+		HashAABB( math::Vector( 0.f, 0.f ), 1.f )
 {}
 
 
@@ -116,7 +116,7 @@ void FBaseComponent::EditChange()
 	FComponent::EditChange();
 
 	// Don't allow rotate if bFixedAngle.
-	if( bFixedAngle && Rotation.Angle != 0 )
+	if( bFixedAngle && Rotation )
 		Rotation = 0;
 }
 
@@ -191,7 +191,7 @@ void FBaseComponent::EndPlay()
 //
 void FBaseComponent::nativeSetLocation( CFrame& Frame )
 {
-	TVector NewLocation = POP_VECTOR;
+	math::Vector NewLocation = POP_VECTOR;
 		
 	if( bHashable && bHashed )
 	{
@@ -212,7 +212,7 @@ void FBaseComponent::nativeSetLocation( CFrame& Frame )
 //
 void FBaseComponent::nativeMove( CFrame& Frame )
 {
-	TVector DeltaMove = POP_VECTOR;
+	math::Vector DeltaMove = POP_VECTOR;
 		
 	if( bHashable && bHashed )
 	{
@@ -233,7 +233,7 @@ void FBaseComponent::nativeMove( CFrame& Frame )
 //
 void FBaseComponent::nativeSetSize( CFrame& Frame )
 {
-	TVector NewSize = POP_VECTOR;
+	math::Vector NewSize = POP_VECTOR;
 
 	if( bHashable && bHashed )
 	{
@@ -254,7 +254,7 @@ void FBaseComponent::nativeSetSize( CFrame& Frame )
 //
 void FBaseComponent::nativeSetRotation( CFrame& Frame )
 {
-	TAngle NewRotation = POP_ANGLE;
+	math::Angle NewRotation = POP_ANGLE;
 
 	if( bHashable && bHashed )
 	{
@@ -478,10 +478,12 @@ void FComponent::Export( CExporterBase& Ex )
 
 REGISTER_CLASS_CPP( FComponent, FObject, CLASS_Abstract )
 {
-	BEGIN_STRUCT(TCoords);
-		STRUCT_MEMBER(Origin);
-		STRUCT_MEMBER(XAxis);
-		STRUCT_MEMBER(YAxis);
+	// to be fixed
+	using namespace math;
+	BEGIN_STRUCT(Coords);
+		STRUCT_MEMBER(origin);
+		STRUCT_MEMBER(xAxis);
+		STRUCT_MEMBER(yAxis);
 	END_STRUCT;
 }
 

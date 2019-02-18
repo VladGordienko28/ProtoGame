@@ -70,8 +70,8 @@ namespace flu
 		TRenderRect metricItem;
 		metricItem.Flags = POLY_FlatShade | POLY_Unlit;
 		metricItem.Rotation = 0;
-		metricItem.Bounds.Min = TVector( 10.f, 10.f );
-		metricItem.Bounds.Max = TVector( 30.f, 30.f );
+		metricItem.Bounds.Min = { 10.f, 10.f };
+		metricItem.Bounds.Max = { 30.f, 30.f };
 
 		const Array<profile::EngineProfiler::Group>& groups = m_profiler.getMetrics();
 
@@ -133,10 +133,10 @@ namespace flu
 
 				canvas->DrawText( *String::Format( L"%s: %s (avg %.2f)", 
 					getGroupName(static_cast<EProfilerGroup>( groupId )), it.name, ( cumulativeValue / it.samples.size() ) ), 
-					font, COLOR_White, TVector( 40.f, metricItem.Bounds.Min.Y + 2.f ) );
+					font, COLOR_White, { 40.f, metricItem.Bounds.Min.y + 2.f } );
 
-				metricItem.Bounds.Min.Y += metricDrawStep;
-				metricItem.Bounds.Max.Y += metricDrawStep;
+				metricItem.Bounds.Min.y += metricDrawStep;
+				metricItem.Bounds.Max.y += metricDrawStep;
 
 				maxValue = Max( maxValue, maxMetricValue );
 			}		

@@ -132,8 +132,8 @@ private:
 	public:
 		// Variables.
 		Bool			bVisible;
-		TVector			Position;
-		TAngle			Angle;
+		math::Vector	Position;
+		math::Angle		Angle;
 
 		// Functions.
 		TRoller();
@@ -193,8 +193,8 @@ private:
 	void ButtonDestroyPathsClick( WWidget* Sender );
 
 	// Helper functions.
-	TVector ScreenToWorld( Int32 X, Int32 Y );
-	void WorldToScreen( TVector V, Float& OutX, Float& OutY );
+	math::Vector ScreenToWorld( Int32 X, Int32 Y );
+	void WorldToScreen( math::Vector V, Float& OutX, Float& OutY );
 	void UpdateInspector();
 	void PaintModelAt( FModelComponent* Model, Int32 iLayer, Int32 X, Int32 Y );
 	FEntity* GetEntityAt( Int32 X, Int32 Y, Bool bFast = false );

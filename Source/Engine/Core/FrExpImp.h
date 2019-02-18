@@ -20,9 +20,9 @@ public:
 	virtual void ExportString	( const Char* FieldName, String Value	) = 0;
 	virtual void ExportBool		( const Char* FieldName, Bool Value		) = 0;
 	virtual void ExportColor	( const Char* FieldName, TColor Value	) = 0;
-	virtual void ExportVector	( const Char* FieldName, TVector Value	) = 0;
+	virtual void ExportVector	( const Char* FieldName, math::Vector Value	) = 0;
 	virtual void ExportAABB		( const Char* FieldName, TRect Value	) = 0;
-	virtual void ExportAngle	( const Char* FieldName, TAngle Value	) = 0;
+	virtual void ExportAngle	( const Char* FieldName, math::Angle Value	) = 0;
 	virtual void ExportObject	( const Char* FieldName, FObject* Value	) = 0;
 };
 
@@ -38,16 +38,16 @@ class CImporterBase
 {
 public:
 	// CImporterBase interface.
-	virtual UInt8		ImportByte		( const Char* FieldName ) = 0;
-	virtual Int32		ImportInteger	( const Char* FieldName ) = 0;
-	virtual Float		ImportFloat		( const Char* FieldName ) = 0;
-	virtual String		ImportString	( const Char* FieldName ) = 0;
-	virtual Bool		ImportBool		( const Char* FieldName ) = 0;
-	virtual TColor		ImportColor		( const Char* FieldName ) = 0;
-	virtual TVector		ImportVector	( const Char* FieldName ) = 0;
-	virtual TRect		ImportAABB		( const Char* FieldName ) = 0;
-	virtual TAngle		ImportAngle		( const Char* FieldName ) = 0;
-	virtual FObject*	ImportObject	( const Char* FieldName ) = 0;
+	virtual UInt8			ImportByte		( const Char* FieldName ) = 0;
+	virtual Int32			ImportInteger	( const Char* FieldName ) = 0;
+	virtual Float			ImportFloat		( const Char* FieldName ) = 0;
+	virtual String			ImportString	( const Char* FieldName ) = 0;
+	virtual Bool			ImportBool		( const Char* FieldName ) = 0;
+	virtual TColor			ImportColor		( const Char* FieldName ) = 0;
+	virtual math::Vector	ImportVector	( const Char* FieldName ) = 0;
+	virtual TRect			ImportAABB		( const Char* FieldName ) = 0;
+	virtual math::Angle		ImportAngle		( const Char* FieldName ) = 0;
+	virtual FObject*		ImportObject	( const Char* FieldName ) = 0;
 };
 
 

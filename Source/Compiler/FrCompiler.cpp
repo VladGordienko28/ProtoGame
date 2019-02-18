@@ -103,8 +103,8 @@ public:
 	String			cString;
 
 	// Not really simple types.
-	TVector& cVector(){ return *(TVector*)_Payload; }
-	TAngle& cAngle(){ return *(TAngle*)_Payload; }
+	math::Vector& cVector(){ return *(math::Vector*)_Payload; }
+	math::Angle& cAngle(){ return *(math::Angle*)_Payload; }
 	TColor& cColor(){ return *(TColor*)_Payload; }
 	TRect& cAABB(){ return *(TRect*)_Payload; }
 	TDelegate& cDelegate(){ return *(TDelegate*)_Payload; }
@@ -1951,7 +1951,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 				// Vector member.
 				String Elem = String::LowerCase(GetIdentifier( L"vector member" ));
 				UInt8 Offset = 0xff;
-				Offset = Elem == L"x" ? PROPERTY_OFFSET(TVector, X) : Elem == L"y" ? PROPERTY_OFFSET(TVector, Y) : 0xff;
+				Offset = Elem == L"x" ? PROPERTY_OFFSET(math::Vector, x) : Elem == L"y" ? PROPERTY_OFFSET(math::Vector, y) : 0xff;
 				if( Offset == 0xff )
 					Error( L"Unknown vector member '%s'", *Elem );
 				ExprRes.Type.Type	= TYPE_Float;
@@ -5549,9 +5549,9 @@ void CCompiler::GetToken( TToken& T, Bool bAllowNeg, Bool bAllowVect )
 			// Vector constant.
 			T.Type				= TOK_Const;
 			T.TypeInfo.Type		= TYPE_Vector;
-			T.cVector().X		= ReadFloat( L"vector X component" );
+			T.cVector().x		= ReadFloat( L"vector X component" );
 			RequireSymbol( L",", L"vector" );
-			T.cVector().Y		= ReadFloat( L"vector Y component" );
+			T.cVector().y		= ReadFloat( L"vector Y component" );
 			RequireSymbol( L"]", L"vector" );
 		}
 		else if( T.Text == L"-" && bAllowNeg )

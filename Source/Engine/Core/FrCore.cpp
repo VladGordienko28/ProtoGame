@@ -475,9 +475,9 @@ void TColor::RGBToHSL( TColor Color, UInt8& H, UInt8& S, UInt8& L )
 		FH /= 6.f;
 		if( FH < 0.f ) FH += 1.f;
 
-		H	= Trunc( FH * 254.9f );
-		S	= Trunc( FS * 254.9f );
-		L	= Trunc( FL * 254.9f );
+		H	= math::trunc( FH * 254.9f );
+		S	= math::trunc( FS * 254.9f );
+		L	= math::trunc( FL * 254.9f );
 	}
 }
 
@@ -543,9 +543,9 @@ TColor TColor::HSLToRGB( UInt8 H, UInt8 S, UInt8 L )
 		else
 			FB	= temp1;
 
-		return TColor( Trunc( FR * 254.9f ),
-					   Trunc( FG * 254.9f ),
-					   Trunc( FB * 254.9f ),
+		return TColor( math::trunc( FR * 254.9f ),
+					   math::trunc( FG * 254.9f ),
+					   math::trunc( FB * 254.9f ),
 					   0xff );
 	}
 }

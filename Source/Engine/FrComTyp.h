@@ -24,9 +24,9 @@ enum EKeyGlide
 struct TKeyframePoint
 {
 public:
-	TVector		Location;
-	TAngle		Rotation;
-	Bool		bCCW;
+	math::Vector	Location;
+	math::Angle		Rotation;
+	Bool			bCCW;
 };
 
 
@@ -61,7 +61,7 @@ private:
 	Bool				bLooped;
 	Float				Speed;
 	Float				Progress;
-	TVector				StartLocation;
+	math::Vector		StartLocation;
 
 	// Native.
 	void nativeStart( CFrame& Frame );
@@ -117,8 +117,8 @@ public:
 	// FLogicComponent interface.
 	FLogicComponent();
 	~FLogicComponent();
-	TVector GetPlugPos( Int32 iPlug );
-	TVector GetJackPos( Int32 iJack );
+	math::Vector GetPlugPos( Int32 iPlug );
+	math::Vector GetJackPos( Int32 iJack );
 	void AddConnector( FLogicComponent* InTarget, Int32 iPlug, Int32 iJack );
 	void RemoveConnectors( Int32 iPlug );
 	void CleanBadConnectors();
@@ -157,9 +157,9 @@ public:
 	Bool			bFlipV;
 	FAnimation*		Animation;
 	TColor			Color;
-	TVector			Offset;
-	TVector			Scale;
-	TAngle			Rotation;
+	math::Vector	Offset;
+	math::Vector	Scale;
+	math::Angle		Rotation;
 
 	// FAnimatedSpriteComponent interface.
 	FAnimatedSpriteComponent();
@@ -227,10 +227,10 @@ public:
 	TColor				Color;	
 	FTexture*			Texture;
 	EBrushType			Type;
-	TVector				Vertices[MAX_BRUSH_VERTS];
+	math::Vector		Vertices[MAX_BRUSH_VERTS];
 	Int32				NumVerts;
-	TCoords				TexCoords;
-	TVector				Scroll;
+	math::Coords		TexCoords;
+	math::Vector		Scroll;
 
 	// FBrushComponent interface.
 	FBrushComponent();
@@ -266,8 +266,8 @@ public:
 	// FPortalComponent interface.
 	FPortalComponent();
 	~FPortalComponent();
-	virtual TVector TransferPoint( TVector P );
-	virtual TVector TransferVector( TVector V );
+	virtual math::Vector TransferPoint( math::Vector P );
+	virtual math::Vector TransferVector( math::Vector V );
 	virtual Bool ComputeViewInfo( const TViewInfo& Parent, TViewInfo& Result );
 
 	// FComponent interface.
@@ -292,8 +292,8 @@ REGISTER_CLASS_H(FMirrorComponent);
 public:
 	// FPortalComponent interface.
 	FMirrorComponent();
-	TVector TransferPoint( TVector P );
-	TVector TransferVector( TVector V );
+	math::Vector TransferPoint( math::Vector P );
+	math::Vector TransferVector( math::Vector V );
 	Bool ComputeViewInfo( const TViewInfo& Parent, TViewInfo& Result );
 
 	// CRenderAddon interface.
@@ -324,8 +324,8 @@ public:
 	FWarpComponent();
 
 	// FPortalComponent interface.
-	TVector TransferPoint( TVector P );
-	TVector TransferVector( TVector V );
+	math::Vector TransferPoint( math::Vector P );
+	math::Vector TransferVector( math::Vector V );
 	Bool ComputeViewInfo( const TViewInfo& Parent, TViewInfo& Result );
 
 	// FObject interface.
@@ -365,7 +365,7 @@ public:
 	Array<UInt16>		Map;
 	Int32				MapXSize;
 	Int32				MapYSize;
-	TVector				TileSize;
+	math::Vector		TileSize;
 
 	// Tileset information.
 	UInt8				TilesPerU;
@@ -470,9 +470,9 @@ public:
 	Bool				bFlipV;
 	TColor				Color;	
 	FTexture*			Texture;
-	TVector				Offset;
-	TVector				Scale;
-	TAngle				Rotation;
+	math::Vector		Offset;
+	math::Vector		Scale;
+	math::Angle			Rotation;
 	TRect				TexCoords;
 
 	// FSpriteComponent interface.
@@ -577,8 +577,8 @@ public:
 	// Variables.
 	FEntity*		Body1;
 	FEntity*		Body2;
-	TVector			Hook1;
-	TVector			Hook2;
+	math::Vector	Hook1;
+	math::Vector	Hook2;
 
 	// FJointComponent interface.
 	FJointComponent();
@@ -639,9 +639,9 @@ class FSkyComponent: public FZoneComponent
 REGISTER_CLASS_H(FSkyComponent);
 public:
 	// Variables.
-	TVector			Parallax;
+	math::Vector	Parallax;
 	Float			Extent;
-	TVector			Offset;
+	math::Vector	Offset;
 	Float			RollSpeed;
 
 	// FSkyComponent interface.
@@ -751,10 +751,10 @@ public:
 	Bool			bFlipV;
 	TColor			Color;	
 	FTexture*		Texture;
-	TVector			Scale;
-	TVector			Parallax;
-	TVector			Gap;
-	TVector			Offset;
+	math::Vector	Scale;
+	math::Vector	Parallax;
+	math::Vector	Gap;
+	math::Vector	Offset;
 	TRect			TexCoords;
 
 	// FParallaxLayerComponent interface.
@@ -803,15 +803,15 @@ public:
 struct TParticle
 {
 public:
-	TVector		Location;
-	TAngle		Rotation;
-	TVector		Speed;
-	Float		SpinRate;
-	Float		Size;
-	Float		Life;
-	Float		MaxLifeInv;
-	Float		Phase;
-	UInt8		iTile;
+	math::Vector	Location;
+	math::Angle		Rotation;
+	math::Vector	Speed;
+	Float			SpinRate;
+	Float			Size;
+	Float			Life;
+	Float			MaxLifeInv;
+	Float			Phase;
+	UInt8			iTile;
 };
 
 
@@ -838,8 +838,8 @@ public:
 	// Variables.
 	Int32					MaxParticles;
 	Float					LifeRange[2];
-	TVector					SpawnArea;
-	TVector					SpawnOffset;
+	math::Vector			SpawnArea;
+	math::Vector			SpawnOffset;
 	Int32					EmitPerSec;
 	EParticleParam			SizeParam;
 	Float					SizeRange[2];
@@ -889,8 +889,8 @@ class FPhysEmitterComponent: public FEmitterComponent
 REGISTER_CLASS_H(FPhysEmitterComponent);
 public:
 	// Variables.
-	TVector					SpeedRange[2];
-	TVector					Acceleration;
+	math::Vector			SpeedRange[2];
+	math::Vector			Acceleration;
 
 	// FEmitter interface.
 	FPhysEmitterComponent();
@@ -1020,10 +1020,10 @@ REGISTER_CLASS_H(FPhysicComponent);
 public:
 	// Variables.
 	EPhysMaterial	Material;
-	TVector			Velocity;
+	math::Vector	Velocity;
 	Float			Mass;
 	Float			Inertia;
-	TVector			Forces;
+	math::Vector	Forces;
 	Float			AngVelocity;
 	Float			Torque;
 	FEntity*		Floor;
@@ -1077,7 +1077,7 @@ private:
 	// Mover internal.
 	FPhysicComponent*	Riders[MAX_RIDERS];
 	Int32				NumRds;
-	TVector				OldLocation;
+	math::Vector		OldLocation;
 };
 
 
@@ -1214,7 +1214,7 @@ public:
 	Float				GravityScale;
 
 	// Navigation.
-	TVector				Goal;
+	math::Vector		Goal;
 	EPathType			GoalReach;
 	Float				GoalHint;
 
@@ -1243,13 +1243,13 @@ public:
 	// Puppet static functions.
 	static Float SuggestJumpHeight( Float JumpSpeed, Float Gravity );
 	static Float SuggestJumpSpeed( Float DesiredHeight, Float Gravity );
-	static Float SpeedForJump( TVector From, TVector To, Float XSpeed, Float Gravity );
+	static Float SpeedForJump( math::Vector From, math::Vector To, Float XSpeed, Float Gravity );
 
 private:
 	// Puppet internal.
 	FPuppetComponent*		NextPuppet;
 	FArcadeBodyComponent*	Body;
-	TVector					GoalStart;
+	math::Vector			GoalStart;
 	Float					LookCounter;
 	FPuppetComponent*		LookList[MAX_WATCHED];
 	Int32					iHoldenNode;
@@ -1257,7 +1257,7 @@ private:
 
 	// Internal functions.
 	void LookAtPuppets();
-	Bool CanJumpTo( TVector From, TVector To, Float& SuggestedSpeed );
+	Bool CanJumpTo( math::Vector From, math::Vector To, Float& SuggestedSpeed );
 	Bool MoveToGoal();
 
 	// Natives.
@@ -1287,7 +1287,7 @@ public:
 	Bool			bHidden;
 	TColor			Color;
 	FSkeleton*		Skeleton;
-	TVector			Scale;
+	math::Vector	Scale;
 	//	+offset and rotation.
 
 	// FSkeletonComponent interface.

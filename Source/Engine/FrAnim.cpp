@@ -49,7 +49,7 @@ TRect FAnimation::GetTexCoords( Int32 iFrame )
 {
 	return iFrame>=0 && iFrame<Frames.size() ? 
 				Frames[iFrame] : 
-				TRect( TVector(0.5f, 0.5f), 1.f );
+				TRect( math::Vector(0.5f, 0.5f), 1.f );
 }
 
 
@@ -152,22 +152,22 @@ void FAnimation::SetFramesTable()
 
 	// Without horrible whitespace after frames, for 
 	// power-of-two size.
-	Int32 FrmPerX	= Floor((Float)(XSize+SpaceX) / (Float)(FrameW+SpaceX));		
-	Int32 FrmPerY	= Floor((Float)(YSize+SpaceY) / (Float)(FrameH+SpaceY));
+	Int32 FrmPerX	= math::floor((Float)(XSize+SpaceX) / (Float)(FrameW+SpaceX));		
+	Int32 FrmPerY	= math::floor((Float)(YSize+SpaceY) / (Float)(FrameH+SpaceY));
 
 	for( Int32 Y=0; Y<FrmPerY; Y++ )
 	for( Int32 X=0; X<FrmPerX; X++ )
 	{
 		TRect R;
 
-		R.Min.X	= (Float)((X+0)*(FrameW+SpaceX)) / (Float)(XSize);
-		R.Min.Y	= (Float)((Y+0)*(FrameH+SpaceY)) / (Float)(YSize);
+		R.Min.x	= (Float)((X+0)*(FrameW+SpaceX)) / (Float)(XSize);
+		R.Min.y	= (Float)((Y+0)*(FrameH+SpaceY)) / (Float)(YSize);
 
-		R.Max.X	= (Float)((X+1)*(FrameW+SpaceX)-SpaceX) / (Float)(XSize);
-		R.Max.Y	= (Float)((Y+1)*(FrameH+SpaceY)-SpaceY) / (Float)(YSize);
+		R.Max.x	= (Float)((X+1)*(FrameW+SpaceX)-SpaceX) / (Float)(XSize);
+		R.Max.y	= (Float)((Y+1)*(FrameH+SpaceY)-SpaceY) / (Float)(YSize);
 
 		// Flip V.
-		Exchange( R.Min.Y, R.Max.Y );
+		Exchange( R.Min.y, R.Max.y );
 
 		Frames.push( R );
 	}

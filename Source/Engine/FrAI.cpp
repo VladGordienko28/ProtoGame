@@ -25,7 +25,7 @@ FPuppetComponent::FPuppetComponent()
 	JumpHeight			= 8.f;
 	GravityScale		= 10.f;
 	Goal				= 
-	GoalStart			= TVector( 0.f, 0.f );
+	GoalStart			= { 0.f, 0.f };
 	GoalReach			= PATH_None;
 	GoalHint			= 0.f;
 	iGoalNode			=
@@ -154,17 +154,17 @@ void FPuppetComponent::LookAtPuppets()
 			continue;
 
 		// Look direction testing.
-		TVector	Dir	= Other->Base->Location - Base->Location;
-		if( Dir.X>0.f && LookDirection==LOOK_Left )		continue;
-		if( Dir.X<0.f && LookDirection==LOOK_Right )	continue;
+		math::Vector	Dir	= Other->Base->Location - Base->Location;
+		if( Dir.x>0.f && LookDirection==LOOK_Left )		continue;
+		if( Dir.x<0.f && LookDirection==LOOK_Right )	continue;
 
 		// Distance and LOS testing.
-		TVector UnusedHit, UnusedNormal;
-		if( Dir.SizeSquared() > Dist2 ) continue;
+		math::Vector UnusedHit, UnusedNormal;
+		if( Dir.sizeSquared() > Dist2 ) continue;
 		if	( Level->TestLineGeom
 				(
-					Base->Location + TVector( 0.f, Base->Size.Y*0.5f ),
-					Other->Base->Location + TVector( 0.f, Other->Base->Size.Y*0.5f ),
+					Base->Location + math::Vector( 0.f, Base->Size.y*0.5f ),
+					Other->Base->Location + math::Vector( 0.f, Other->Base->Size.y*0.5f ),
 					true,
 					UnusedHit, UnusedNormal
 				)
@@ -212,31 +212,31 @@ Bool FPuppetComponent::MoveToGoal()
 		//
 		// Walking.
 		//
-		if( Goal.X > GoalStart.X )
+		if( Goal.x > GoalStart.x )
 		{
 			// Walk rightward.
-			if( Body->Location.X < Goal.X+Body->Size.X*0.25f )
+			if( Body->Location.x < Goal.x+Body->Size.x*0.25f )
 			{
-				Body->Velocity.X	= MoveSpeed;
+				Body->Velocity.x	= MoveSpeed;
 				return false;
 			}
 			else
 			{
-				Body->Velocity.X	= 0.f;
+				Body->Velocity.x	= 0.f;
 				return true;
 			}
 		}
 		else
 		{
 			// Walk leftward.
-			if( Body->Location.X > Goal.X-Body->Size.X*0.25f )
+			if( Body->Location.x > Goal.x-Body->Size.x*0.25f )
 			{
-				Body->Velocity.X	= -MoveSpeed;
+				Body->Velocity.x	= -MoveSpeed;
 				return false;
 			}
 			else
 			{
-				Body->Velocity.X	= 0.f;
+				Body->Velocity.x	= 0.f;
 				return true;
 			}
 		}
@@ -247,26 +247,26 @@ Bool FPuppetComponent::MoveToGoal()
 		// Jumping.
 		//
 		Bool bXOk	= false;
-		if( Goal.X > GoalStart.X )
+		if( Goal.x > GoalStart.x )
 		{
 			// X move rightward.
-			Body->Velocity.X	= MoveSpeed;
-			bXOk				= Body->Location.X > Goal.X+Body->Size.X*0.25f;
+			Body->Velocity.x	= MoveSpeed;
+			bXOk				= Body->Location.x > Goal.x+Body->Size.x*0.25f;
 		}
 		else
 		{
 			// X move leftward.
-			Body->Velocity.X	= -MoveSpeed;	
-			bXOk				= Body->Location.X < Goal.X-Body->Size.X*0.25f;
+			Body->Velocity.x	= -MoveSpeed;	
+			bXOk				= Body->Location.x < Goal.x-Body->Size.x*0.25f;
 		}
 
 		if( Body->Floor && !bXOk )
-			Body->Velocity.Y	= GoalHint * 1.f;
+			Body->Velocity.y	= GoalHint * 1.f;
 
 		if( bXOk )
-			Body->Velocity.X	= 0.f;
+			Body->Velocity.x	= 0.f;
 
-		return bXOk && Abs(Goal.Y - Body->Location.Y)<Body->Size.Y*0.5f;
+		return bXOk && abs(Goal.y - Body->Location.y)<Body->Size.y*0.5f;
 	}
 	else
 	{
@@ -282,7 +282,7 @@ Bool FPuppetComponent::MoveToGoal()
 // Returns true, if figure can make a jump from the 'From' to 'To' spot.
 // SuggestedSpeed - Recommended initial speed for jumping.
 //
-Bool FPuppetComponent::CanJumpTo( TVector From, TVector To, Float& SuggestedSpeed )
+Bool FPuppetComponent::CanJumpTo( math::Vector From, math::Vector To, Float& SuggestedSpeed )
 {
 	Float Speed	= SpeedForJump( From, To, MoveSpeed, GravityScale );
 
@@ -318,7 +318,7 @@ Float FPuppetComponent::SuggestJumpHeight( Float JumpSpeed, Float Gravity )
 //
 Float FPuppetComponent::SuggestJumpSpeed( Float DesiredHeight, Float Gravity )
 {
-	return Sqrt(2.f * Gravity * DesiredHeight);
+	return math::sqrt(2.f * Gravity * DesiredHeight);
 }
 
 
@@ -326,10 +326,10 @@ Float FPuppetComponent::SuggestJumpSpeed( Float DesiredHeight, Float Gravity )
 // Returns the vertical speed to jump from the 'From' location to 
 // the 'To' location.
 //
-Float FPuppetComponent::SpeedForJump( TVector From, TVector To, Float XSpeed, Float Gravity )
+Float FPuppetComponent::SpeedForJump( math::Vector From, math::Vector To, Float XSpeed, Float Gravity )
 {
-	Float XTime	= Abs(From.X - To.X) / XSpeed;
-	Float Speed = (To.Y + 0.5f*XTime*XTime*Gravity - From.Y) / XTime;
+	Float XTime	= abs(From.x - To.x) / XSpeed;
+	Float Speed = (To.y + 0.5f*XTime*XTime*Gravity - From.y) / XTime;
 
 	// Slightly modify speed to make unpredictable results.
 	return Max( 0.f, Speed ) * 1.1f;
@@ -345,11 +345,11 @@ Float FPuppetComponent::SpeedForJump( TVector From, TVector To, Float XSpeed, Fl
 //
 void FPuppetComponent::nativeMakeNoise( CFrame& Frame )
 {
-	Float Radius2 = Sqr(POP_FLOAT);
+	Float Radius2 = sqr(POP_FLOAT);
 	for( FPuppetComponent* Other=Level->FirstPuppet; Other; Other = Other->NextPuppet )
 	{
 		if	( 
-				(Base->Location-Other->Base->Location).SizeSquared() < Radius2 && 
+				(Base->Location-Other->Base->Location).sizeSquared() < Radius2 && 
 				Other != this 
 			)
 		{
@@ -394,13 +394,13 @@ void FPuppetComponent::nativeSendOrder( CFrame& Frame )
 {
 	Int32	NumRecipients	= 0;
 	String	Order			= POP_STRING;
-	Float	Radius2			= Sqr(POP_FLOAT);
+	Float	Radius2			= sqr(POP_FLOAT);
 
 	for( FPuppetComponent* Testee=Level->FirstPuppet; Testee; Testee = Testee->NextPuppet )
 	{
 		if	(
 				Testee->Clan == Clan &&
-				(Base->Location-Testee->Base->Location).SizeSquared() < Radius2 &&
+				(Base->Location-Testee->Base->Location).sizeSquared() < Radius2 &&
 				Testee != this
 			)
 		{
@@ -468,7 +468,7 @@ void FPuppetComponent::nativeCreateRandomPath( CFrame& Frame )
 //
 void FPuppetComponent::nativeCreatePathTo( CFrame& Frame )
 {
-	TVector	Dest	= POP_VECTOR;
+	math::Vector	Dest	= POP_VECTOR;
 	if( Level->Navigator )
 	{
 		*POPA_BOOL	= Level->Navigator->MakePathTo( this, Dest );

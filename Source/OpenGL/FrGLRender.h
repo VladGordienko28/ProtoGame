@@ -42,8 +42,8 @@ public:
 	// CCanvas interface.
 	void SetTransform( const TViewInfo& Info );
 	void SetClip( const TClipArea& Area );
-	void DrawPoint( const TVector& P, Float Size, TColor Color );
-	void DrawLine( const TVector& A, const TVector& B, TColor Color, Bool bStipple );
+	void DrawPoint( const math::Vector& P, Float Size, TColor Color );
+	void DrawLine( const math::Vector& A, const math::Vector& B, TColor Color, Bool bStipple );
 	void DrawPoly( const TRenderPoly& Poly );
 	void DrawRect( const TRenderRect& Rect );
 	void DrawList( const TRenderList& List );
@@ -63,7 +63,7 @@ public:
 
 private:
 	// Internal used.
-	TVector				BitmapPan;
+	math::Vector		BitmapPan;
 	EBitmapBlend		OldBlend;
 	FBitmap*			OldBitmap;
 	TColor				OldColor;

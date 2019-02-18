@@ -443,7 +443,7 @@ void WListBox::OnPaint( CGUIRenderBase* Render )
 Int32 WListBox::YToIndex( Int32 Y ) const
 {
 	Int32 NumVis = Size.Height / ItemsHeight;
-	Int32 Offset = Round((Items.size() - NumVis) * Slider->Value / 100.f);
+	Int32 Offset = math::round((Items.size() - NumVis) * Slider->Value / 100.f);
 	Int32 Index  = Offset + Y / ItemsHeight;
 	return Index < 0 ? -1 : Index >= Items.size() ? -1 : Index;
 }

@@ -98,7 +98,7 @@ void FPainterComponent::RenderHUD( CCanvas* InCanvas )
 //
 void FPainterComponent::nativePoint( CFrame& Frame )
 {
-	TVector P	= POP_VECTOR;
+	math::Vector P	= POP_VECTOR;
 	Float	S	= POP_FLOAT;
 
 	if( Canvas )
@@ -111,7 +111,7 @@ void FPainterComponent::nativePoint( CFrame& Frame )
 //
 void FPainterComponent::nativeLine( CFrame& Frame )
 {
-	TVector	A	= POP_VECTOR,
+	math::Vector	A	= POP_VECTOR,
 			B	= POP_VECTOR;
 
 	if( Canvas )
@@ -124,7 +124,7 @@ void FPainterComponent::nativeLine( CFrame& Frame )
 //
 void FPainterComponent::nativeTile( CFrame& Frame )
 {
-	TVector	P	= POP_VECTOR,
+	math::Vector	P	= POP_VECTOR,
 			PL	= POP_VECTOR,
 			T	= POP_VECTOR,
 			TL	= POP_VECTOR;
@@ -163,10 +163,10 @@ void FPainterComponent::nativeTile( CFrame& Frame )
 			};
 
 			// Texture coords.
-			R.TexCoords.Min.X	= T.X * Rescale[Texture->UBits];
-			R.TexCoords.Min.Y	= T.Y * Rescale[Texture->VBits];
-			R.TexCoords.Max.X	= (T.X+TL.X)  * Rescale[Texture->UBits];
-			R.TexCoords.Max.Y	= (T.Y+TL.Y) * Rescale[Texture->VBits];
+			R.TexCoords.Min.x	= T.x * Rescale[Texture->UBits];
+			R.TexCoords.Min.y	= T.y * Rescale[Texture->VBits];
+			R.TexCoords.Max.x	= (T.x+TL.x)  * Rescale[Texture->UBits];
+			R.TexCoords.Max.y	= (T.y+TL.y) * Rescale[Texture->VBits];
 		}
 		else
 		{
@@ -184,12 +184,12 @@ void FPainterComponent::nativeTile( CFrame& Frame )
 //
 void FPainterComponent::nativeTextOut( CFrame& Frame )
 {
-	TVector P	= POP_VECTOR;
+	math::Vector P	= POP_VECTOR;
 	String	T	= POP_STRING;
 	Float	S	= POP_FLOAT;
 
 	if( Canvas && Font )
-		Canvas->DrawText( *T, T.Len(), Font, Color, P, TVector( S, S ) );
+		Canvas->DrawText( *T, T.Len(), Font, Color, P, math::Vector( S, S ) );
 }
 
 
@@ -229,7 +229,7 @@ void FPainterComponent::nativeProject( CFrame& Frame )
 {
 	Float	X, Y;
 	ViewInfo.Project( POP_VECTOR, X, Y );
-	*POPA_VECTOR	= TVector( X, Y );
+	*POPA_VECTOR	= math::Vector( X, Y );
 }
 
 
@@ -239,8 +239,8 @@ void FPainterComponent::nativeProject( CFrame& Frame )
 //
 void FPainterComponent::nativeDeproject( CFrame& Frame )
 {
-	TVector V		= POP_VECTOR;
-	*POPA_VECTOR	= ViewInfo.Deproject( V.X, V.Y );
+	math::Vector V		= POP_VECTOR;
+	*POPA_VECTOR	= ViewInfo.Deproject( V.x, V.y );
 }
 
 

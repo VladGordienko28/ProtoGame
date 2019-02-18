@@ -57,7 +57,7 @@ public:
 	ALfloat			Gain;
 	ALfloat			Pitch;
 	Float			RadiusSq;
-	TVector			Position;
+	math::Vector	Position;
 };
 
 
@@ -91,7 +91,7 @@ public:
 	void Tick( Float Delta, FLevel* Scene );
 	void PlayMusic( FMusic* Music, Float FadeTime );
 	void PlayFX( FSound* Sound, Float Gain, Float Pitch );
-	void PlayAmbient( FSound* Sound, TVector Location, Float Radius, Float Gain, Float Pitch, FObject* Owner );
+	void PlayAmbient( FSound* Sound, math::Vector Location, Float Radius, Float Gain, Float Pitch, FObject* Owner );
 	void StopAmbient( FObject* Owner );
 	void FlushAmbients();
 

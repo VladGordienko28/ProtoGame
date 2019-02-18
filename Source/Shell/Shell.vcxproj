@@ -109,7 +109,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Compiler\$(Configuration) $(PlatformShortName)\Compiler.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Compiler\$(Configuration) $(PlatformShortName)\Compiler.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -124,7 +124,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Compiler\$(Configuration) $(PlatformShortName)\Compiler.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Compiler\$(Configuration) $(PlatformShortName)\Compiler.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -143,7 +143,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Compiler\$(Configuration) $(PlatformShortName)\Compiler.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Compiler\$(Configuration) $(PlatformShortName)\Compiler.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -162,7 +162,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Compiler\$(Configuration) $(PlatformShortName)\Compiler.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Compiler\$(Configuration) $(PlatformShortName)\Compiler.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

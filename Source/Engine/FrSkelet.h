@@ -73,12 +73,12 @@ struct TBonePose
 {
 public:
 	// Variables.
-	TVector	Location;			// World space position of bone.
-	TAngle	Rotation;			// World space rotation of bone.
-	TCoords	Coords;				// Local coords system in parent space.
+	math::Vector	Location;			// World space position of bone.
+	math::Angle		Rotation;			// World space rotation of bone.
+	math::Coords	Coords;				// Local coords system in parent space.
 
 	// TBonePose interface.
-	TBonePose( const TVector& InLocation, TAngle InRotation )
+	TBonePose( const math::Vector& InLocation, math::Angle InRotation )
 		:	Location(InLocation), Rotation(InRotation), 
 			Coords( InLocation, InRotation )
 	{}
@@ -128,9 +128,9 @@ class TBoneTrack
 {
 public:
 	// Variables.
-	Int32					iBone;
-	TInterpCurve<TVector>	PosKeys;
-	TInterpCurve<TAngle>	RotKeys;
+	Int32						iBone;
+	TInterpCurve<math::Vector>	PosKeys;
+	TInterpCurve<math::Angle>	RotKeys;
 
 	// TBoneTrack interface.
 	TBoneTrack()
@@ -208,8 +208,8 @@ public:
 	void Render
 	( 
 		CCanvas* Canvas, 
-		const TVector& Origin, 
-		const TVector& Scale, 
+		const math::Vector& Origin, 
+		const math::Vector& Scale, 
 		const TSkelPose& Pose 
 	);
 

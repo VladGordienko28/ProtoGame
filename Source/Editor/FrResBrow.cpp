@@ -1020,10 +1020,10 @@ void WResourcePane::Refresh()
 					TRect Frame = Anim->GetTexCoords(Anim->Sequences[0].Start);
 					Icon.Picture			= Anim->Sheet;
 
-					Icon.PicOffset.X	= Int32( (Float)Anim->Sheet->USize*Frame.Min.X );
-					Icon.PicOffset.Y	= Int32( (Float)Anim->Sheet->VSize*Frame.Max.Y );
-					Icon.PicSize.Width	= Int32( (Float)Anim->Sheet->USize*(Frame.Max.X-Frame.Min.X) );
-					Icon.PicSize.Height	= Int32( (Float)Anim->Sheet->VSize*(Frame.Min.Y-Frame.Max.Y) );
+					Icon.PicOffset.X	= Int32( (Float)Anim->Sheet->USize*Frame.Min.x );
+					Icon.PicOffset.Y	= Int32( (Float)Anim->Sheet->VSize*Frame.Max.y );
+					Icon.PicSize.Width	= Int32( (Float)Anim->Sheet->USize*(Frame.Max.x-Frame.Min.x) );
+					Icon.PicSize.Height	= Int32( (Float)Anim->Sheet->VSize*(Frame.Min.y-Frame.Max.y) );
 
 					Float Scale = Max( 1, Max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
 					Icon.Scale.Width	= Max<Int32>( 1, Icon.PicSize.Width/Scale );
@@ -1063,10 +1063,10 @@ void WResourcePane::Refresh()
 							TRect Frame = Anim->GetTexCoords(Anim->Sequences[0].Start);
 							Icon.Picture			= Anim->Sheet;
 
-							Icon.PicOffset.X	= Int32( (Float)Anim->Sheet->USize*Frame.Min.X );
-							Icon.PicOffset.Y	= Int32( (Float)Anim->Sheet->VSize*Frame.Max.Y );
-							Icon.PicSize.Width	= Int32( (Float)Anim->Sheet->USize*(Frame.Max.X-Frame.Min.X) );
-							Icon.PicSize.Height	= Int32( (Float)Anim->Sheet->VSize*(Frame.Min.Y-Frame.Max.Y) );
+							Icon.PicOffset.X	= Int32( (Float)Anim->Sheet->USize*Frame.Min.x );
+							Icon.PicOffset.Y	= Int32( (Float)Anim->Sheet->VSize*Frame.Max.y );
+							Icon.PicSize.Width	= Int32( (Float)Anim->Sheet->USize*(Frame.Max.x-Frame.Min.x) );
+							Icon.PicSize.Height	= Int32( (Float)Anim->Sheet->VSize*(Frame.Min.y-Frame.Max.y) );
 
 							Float Scale = Max( 1, Max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
 							Icon.Scale.Width	= Max<Int32>( 1, Icon.PicSize.Width/Scale );
@@ -1085,10 +1085,10 @@ void WResourcePane::Refresh()
 							TRect	Frame			= Sprite->TexCoords;
 							Icon.Picture			= Sprite->Texture;
 
-							Icon.PicOffset.X	= Int32( Frame.Min.X );
-							Icon.PicOffset.Y	= Int32( Frame.Min.Y );
-							Icon.PicSize.Width	= Int32( (Frame.Max.X-Frame.Min.X) );
-							Icon.PicSize.Height	= Int32( (Frame.Max.Y-Frame.Min.Y) );
+							Icon.PicOffset.X	= Int32( Frame.Min.x );
+							Icon.PicOffset.Y	= Int32( Frame.Min.y );
+							Icon.PicSize.Width	= Int32( (Frame.Max.x-Frame.Min.x) );
+							Icon.PicSize.Height	= Int32( (Frame.Max.y-Frame.Min.y) );
 
 							Float Scale = Max( 1, Max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
 							Icon.Scale.Width	= Max<Int32>( 1, Icon.PicSize.Width/Scale );
@@ -1107,10 +1107,10 @@ void WResourcePane::Refresh()
 							TRect	Frame			= Sprite->TexCoords;
 							Icon.Picture			= Sprite->Texture;
 
-							Icon.PicOffset.X	= Int32( (Float)Icon.Picture->USize*Frame.Min.X );
-							Icon.PicOffset.Y	= Int32( (Float)Icon.Picture->VSize*Frame.Max.Y );
-							Icon.PicSize.Width	= Int32( (Float)Icon.Picture->USize*(Frame.Max.X-Frame.Min.X) );
-							Icon.PicSize.Height	= Int32( (Float)Icon.Picture->VSize*(Frame.Min.Y-Frame.Max.Y) );
+							Icon.PicOffset.X	= Int32( (Float)Icon.Picture->USize*Frame.Min.x );
+							Icon.PicOffset.Y	= Int32( (Float)Icon.Picture->VSize*Frame.Max.y );
+							Icon.PicSize.Width	= Int32( (Float)Icon.Picture->USize*(Frame.Max.x-Frame.Min.x) );
+							Icon.PicSize.Height	= Int32( (Float)Icon.Picture->VSize*(Frame.Min.y-Frame.Max.y) );
 
 							Float Scale = Max( 1, Max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
 							Icon.Scale.Width	= Max<Int32>( 1, Icon.PicSize.Width/Scale );
