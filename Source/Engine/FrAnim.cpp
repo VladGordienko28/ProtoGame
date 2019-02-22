@@ -45,11 +45,11 @@ Int32 FAnimation::FindSequence( String InName )
 // Return the texture coords for the frame iFrame.
 // If iFrame are invalid, return an identity rectangle.
 //
-TRect FAnimation::GetTexCoords( Int32 iFrame )
+math::Rect FAnimation::GetTexCoords( Int32 iFrame )
 {
 	return iFrame>=0 && iFrame<Frames.size() ? 
 				Frames[iFrame] : 
-				TRect( math::Vector(0.5f, 0.5f), 1.f );
+				math::Rect( math::Vector( 0.5f, 0.5f ), 1.f );
 }
 
 
@@ -158,16 +158,16 @@ void FAnimation::SetFramesTable()
 	for( Int32 Y=0; Y<FrmPerY; Y++ )
 	for( Int32 X=0; X<FrmPerX; X++ )
 	{
-		TRect R;
+		math::Rect R;
 
-		R.Min.x	= (Float)((X+0)*(FrameW+SpaceX)) / (Float)(XSize);
-		R.Min.y	= (Float)((Y+0)*(FrameH+SpaceY)) / (Float)(YSize);
+		R.min.x	= (Float)((X+0)*(FrameW+SpaceX)) / (Float)(XSize);
+		R.min.y	= (Float)((Y+0)*(FrameH+SpaceY)) / (Float)(YSize);
 
-		R.Max.x	= (Float)((X+1)*(FrameW+SpaceX)-SpaceX) / (Float)(XSize);
-		R.Max.y	= (Float)((Y+1)*(FrameH+SpaceY)-SpaceY) / (Float)(YSize);
+		R.max.x	= (Float)((X+1)*(FrameW+SpaceX)-SpaceX) / (Float)(XSize);
+		R.max.y	= (Float)((Y+1)*(FrameH+SpaceY)-SpaceY) / (Float)(YSize);
 
 		// Flip V.
-		Exchange( R.Min.y, R.Max.y );
+		exchange( R.min.y, R.max.y );
 
 		Frames.push( R );
 	}

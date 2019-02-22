@@ -36,9 +36,9 @@ public:
 	~CCollisionHash();
 	void AddToHash( FBaseComponent* Object );
 	void RemoveFromHash( FBaseComponent* Object );
-	void GetOverlapped( TRect Bounds, Int32& OutNumObjs, FBaseComponent** OutList );
-	void GetOverlappedByClass( TRect Bounds, CClass* Class, Int32& OutNumObjs, FBaseComponent** OutList );
-	void GetOverlappedByScript( TRect Bounds, FScript* Script, Int32& OutNumObjs, FBaseComponent** OutList );
+	void GetOverlapped( const math::Rect& Bounds, Int32& OutNumObjs, FBaseComponent** OutList );
+	void GetOverlappedByClass( const math::Rect& Bounds, CClass* Class, Int32& OutNumObjs, FBaseComponent** OutList );
+	void GetOverlappedByScript( const math::Rect& Bounds, FScript* Script, Int32& OutNumObjs, FBaseComponent** OutList );
 	void DebugHash();
 
 private:

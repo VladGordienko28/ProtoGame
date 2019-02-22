@@ -434,7 +434,7 @@ void WPlayPage::OnMouseScroll( Int32 Delta )
 	WEditorPage::OnMouseScroll(Delta);
 
 	GEditor->GInput->WheelScroll	+= Delta;
-	Int32 Times	= Clamp( Delta / 120, -5, 5 );
+	Int32 Times	= clamp( Delta / 120, -5, 5 );
 	Int32	Key	= Times > 0 ? KEY_WheelUp : KEY_WheelDown;
 
 	for( Int32 i=0; i<abs(Times); i++ )

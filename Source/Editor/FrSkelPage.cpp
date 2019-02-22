@@ -926,7 +926,7 @@ void WSkeletonPage::OnMouseScroll( Int32 Delta )
 
 	// Snap & Clamp zoom!
 	SceneView.Zoom	= math::round(SceneView.Zoom*50.f)*0.02f;
-	SceneView.Zoom	= Clamp( SceneView.Zoom, 0.2f, 5.f );
+	SceneView.Zoom	= clamp( SceneView.Zoom, 0.2f, 5.f );
 }
 
 
@@ -1078,8 +1078,8 @@ void WSkeletonPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 De
 			// Move scene observer.
 			SceneView.Coords.origin	-= Delta;
 
-			SceneView.Coords.origin.x	= Clamp( SceneView.Coords.origin.x, -10.f, +10.f );		// PROPER SCALE@@@@@@@
-			SceneView.Coords.origin.y	= Clamp( SceneView.Coords.origin.y, -10.f, +10.f );
+			SceneView.Coords.origin.x	= clamp( SceneView.Coords.origin.x, -10.f, +10.f );		// PROPER SCALE@@@@@@@
+			SceneView.Coords.origin.y	= clamp( SceneView.Coords.origin.y, -10.f, +10.f );
 
 			SceneView.UnCoords		= SceneView.Coords.transpose();
 			break;
@@ -1355,7 +1355,8 @@ void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 	SceneView.FOV		= math::Vector( 20, Size.Height * 20.f / Size.Width );
 	// ignore zoom!
 	SceneView.bMirage	= false;
-	SceneView.Bounds	= TRect( SceneView.Coords.origin, SceneView.FOV * SceneView.Zoom );
+	SceneView.Bounds	= math::Rect( SceneView.Coords.origin, 
+		SceneView.FOV.x * SceneView.Zoom, SceneView.FOV.y * SceneView.Zoom );
 
 	SceneView.X	= P.X;
 	SceneView.Y = P.Y;
@@ -1368,16 +1369,16 @@ void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 		// Render background and grid.
 		TRenderRect Background;
 		Background.Texture		= nullptr;
-		Background.Bounds		= TRect( math::Vector(0.f, 0.f), SKEL_SCENE_SIZE );
+		Background.Bounds		= math::Rect( math::Vector(0.f, 0.f), SKEL_SCENE_SIZE );
 		Background.Color		= SKEL_SCENE_BG_COLOR;
 		Background.Flags		= POLY_FlatShade;
 		Background.Rotation		= 0;
 		Canvas->DrawRect(Background);
 
-		Int32 CMinX = math::trunc(Max<Float>( Canvas->View.Bounds.Min.x, -SKEL_SCENE_SIZE_HALF ))*2;
-		Int32 CMinY = math::trunc(Max<Float>( Canvas->View.Bounds.Min.y, -SKEL_SCENE_SIZE_HALF ))*2;
-		Int32 CMaxX = math::trunc(Min<Float>( Canvas->View.Bounds.Max.x, +SKEL_SCENE_SIZE_HALF ))*2;
-		Int32 CMaxY = math::trunc(Min<Float>( Canvas->View.Bounds.Max.y, +SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMinX = math::trunc(max<Float>( Canvas->View.Bounds.min.x, -SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMinY = math::trunc(max<Float>( Canvas->View.Bounds.min.y, -SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMaxX = math::trunc(min<Float>( Canvas->View.Bounds.max.x, +SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMaxY = math::trunc(min<Float>( Canvas->View.Bounds.max.y, +SKEL_SCENE_SIZE_HALF ))*2;
 
 		for( Int32 i=CMinX; i<=CMaxX; i++ )
 		{

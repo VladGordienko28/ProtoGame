@@ -424,7 +424,7 @@ void CRLECompressor::Encode( const void* InBuffer, SizeT InSize, void*& OutBuffe
 		}
 
 		// Write it.
-		for( SizeT i=0; i<Min<SizeT>(RLE_THRESH, Count); i++ )
+		for( SizeT i=0; i<min<SizeT>(RLE_THRESH, Count); i++ )
 			Out[OutSize++]	= C;
 		if( Count >= RLE_THRESH )
 		{
@@ -505,7 +505,7 @@ SizeT CRLECompressor::ForecastSize( const void* InBuffer, SizeT InSize )
 		}
 
 		// Write it.
-		TotalSize	+= Min<SizeT>(RLE_THRESH, Count);
+		TotalSize	+= min<SizeT>(RLE_THRESH, Count);
 		if( Count >= RLE_THRESH )
 			TotalSize += 1;		
 	}

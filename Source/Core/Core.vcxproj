@@ -151,6 +151,7 @@
     <ClInclude Include="Heap.h" />
     <ClInclude Include="LogCallback.h" />
     <ClInclude Include="LogManager.h" />
+    <ClInclude Include="Namespace.h" />
     <ClInclude Include="Profiler.h" />
     <ClInclude Include="Stack.h" />
     <ClInclude Include="Types.h" />
@@ -166,6 +167,7 @@
     </ClCompile>
     <ClCompile Include="Heap.cpp" />
     <ClCompile Include="LogManager.cpp" />
+    <ClCompile Include="Namespace.cpp" />
     <ClCompile Include="Profiler.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

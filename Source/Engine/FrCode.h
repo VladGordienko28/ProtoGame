@@ -115,7 +115,7 @@ public:
 	inline TColor ReadColor();
 	inline String ReadString();
 	inline math::Vector ReadVector();
-	inline TRect ReadAABB();
+	inline math::Rect ReadAABB();
 	inline FResource* ReadResource();
 	inline FEntity* ReadEntity();
 	inline FScript* ReadScript();
@@ -252,10 +252,10 @@ inline math::Vector CFrame::ReadVector()
 	return R;
 }
 
-inline TRect CFrame::ReadAABB()
+inline math::Rect CFrame::ReadAABB()
 {
-	TRect R = *(TRect*)Code;
-	Code += sizeof(TRect);
+	math::Rect R = *(math::Rect*)Code;
+	Code += sizeof(math::Rect);
 	return R;
 }
 
@@ -312,7 +312,7 @@ inline EPropType CFrame::ReadPropType()
 #define POP_COLOR			(*(TColor*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POP_STRING			(Frame.Regs[Frame.ReadByte()].StrValue)
 #define POP_VECTOR			(*(math::Vector*)(Frame.Regs[Frame.ReadByte()].Value))
-#define POP_AABB			(*(TRect*)(Frame.Regs[Frame.ReadByte()].Value))
+#define POP_AABB			(*(math::Rect*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POP_RESOURCE		(*(FResource**)(Frame.Regs[Frame.ReadByte()].Value))
 #define POP_ENTITY			(*(FEntity**)(Frame.Regs[Frame.ReadByte()].Value))
 
@@ -324,7 +324,7 @@ inline EPropType CFrame::ReadPropType()
 #define POPA_COLOR			((TColor*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POPA_STRING			(&Frame.Regs[Frame.ReadByte()].StrValue)
 #define POPA_VECTOR			((math::Vector*)(Frame.Regs[Frame.ReadByte()].Value))
-#define POPA_AABB			((TRect*)(Frame.Regs[Frame.ReadByte()].Value))
+#define POPA_AABB			((math::Rect*)(Frame.Regs[Frame.ReadByte()].Value))
 #define POPA_RESOURCE		((FResource**)(Frame.Regs[Frame.ReadByte()].Value))
 #define POPA_ENTITY			((FEntity**)(Frame.Regs[Frame.ReadByte()].Value))
 

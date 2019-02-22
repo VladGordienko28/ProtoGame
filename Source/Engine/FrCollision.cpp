@@ -30,8 +30,8 @@ void CCollisionHash::GetHashIndex( math::Vector V, Int32& iX, Int32& iY )
 		)
 	{
 		debug( L"Hash: Point [%.4f, %.4f] is out of world", V.x, V.y );
-		V.x	= Clamp<Float>( V.x, -math::WORLD_HALF, +math::WORLD_HALF );
-		V.y	= Clamp<Float>( V.y, -math::WORLD_HALF, +math::WORLD_HALF );
+		V.x	= clamp<Float>( V.x, -math::WORLD_HALF, +math::WORLD_HALF );
+		V.y	= clamp<Float>( V.y, -math::WORLD_HALF, +math::WORLD_HALF );
 	}
 
     // Discretize.
@@ -72,8 +72,8 @@ CCollisionHash::CCollisionHash( FLevel* InLevel )
 		// Shuffle indexes, but keep all values.
 		for( Int32 i=0; i<COLL_HASH_SIZE; i++ )
 		{
-			Exchange( HashXTab[i], HashXTab[Random(COLL_HASH_SIZE)] );
-			Exchange( HashYTab[i], HashYTab[Random(COLL_HASH_SIZE)] );
+			exchange( HashXTab[i], HashXTab[Random(COLL_HASH_SIZE)] );
+			exchange( HashYTab[i], HashYTab[Random(COLL_HASH_SIZE)] );
 		}
 
 		bTabInit = true;
@@ -112,8 +112,8 @@ void CCollisionHash::AddToHash( FBaseComponent* Object )
 	// Get bounds.
 	Int32 X1, X2, Y1, Y2;
 	Object->HashAABB = Object->GetAABB();
-	GetHashIndex( Object->HashAABB.Min, X1, Y1 );
-	GetHashIndex( Object->HashAABB.Max, X2, Y2 );
+	GetHashIndex( Object->HashAABB.min, X1, Y1 );
+	GetHashIndex( Object->HashAABB.max, X2, Y2 );
 
 	for( Int32 Y=Y1; Y<=Y2; Y++ )
 	for( Int32 X=X1; X<=X2; X++ )
@@ -164,14 +164,14 @@ void CCollisionHash::RemoveFromHash( FBaseComponent* Object )
 
 	// Get bounds.
 	Int32 X1, X2, Y1, Y2;
-	TRect R = Object->GetAABB();
+	math::Rect R = Object->GetAABB();
 	if( R != Object->HashAABB )
 	{
 		debug( L"Hash: Object \"%s\" modified without hashing", *Object->GetFullName() );
 		R = Object->HashAABB;
 	}
-	GetHashIndex( R.Min, X1, Y1 );
-	GetHashIndex( R.Max, X2, Y2 );
+	GetHashIndex( R.min, X1, Y1 );
+	GetHashIndex( R.max, X2, Y2 );
 
 	for( Int32 Y=Y1; Y<=Y2; Y++ )
 	for( Int32 X=X1; X<=X2; X++ )
@@ -209,12 +209,12 @@ void CCollisionHash::RemoveFromHash( FBaseComponent* Object )
 // Return any object inside the bounds.
 // Return first MAX_COLL_LIST_OBJS objects.
 //
-void CCollisionHash::GetOverlapped( TRect Bounds, Int32& OutNumObjs, FBaseComponent** OutList )
+void CCollisionHash::GetOverlapped( const math::Rect& Bounds, Int32& OutNumObjs, FBaseComponent** OutList )
 {
 	// Get bounds.
 	Int32 X1, X2, Y1, Y2;
-	GetHashIndex( Bounds.Min, X1, Y1 );
-	GetHashIndex( Bounds.Max, X2, Y2 );
+	GetHashIndex( Bounds.min, X1, Y1 );
+	GetHashIndex( Bounds.max, X2, Y2 );
 
 	// Prepare.
 	OutNumObjs	= 0;
@@ -233,7 +233,7 @@ void CCollisionHash::GetOverlapped( TRect Bounds, Int32& OutNumObjs, FBaseCompon
 			if	(
 					Object->HashMark != Mark &&
 					!Object->bDestroyed &&
-					Bounds.IsOverlap(Object->HashAABB)
+					Bounds.isOverlap( Object->HashAABB )
 				)
 			{
 				// Add to list.
@@ -257,12 +257,12 @@ Enough:;
 // Return any object inside the bounds of class 'Class' only.
 // Return first MAX_COLL_LIST_OBJS objects.
 //
-void CCollisionHash::GetOverlappedByClass( TRect Bounds, CClass* Class, Int32& OutNumObjs, FBaseComponent** OutList )
+void CCollisionHash::GetOverlappedByClass( const math::Rect& Bounds, CClass* Class, Int32& OutNumObjs, FBaseComponent** OutList )
 {
 	// Get bounds.
 	Int32 X1, X2, Y1, Y2;
-	GetHashIndex( Bounds.Min, X1, Y1 );
-	GetHashIndex( Bounds.Max, X2, Y2 );
+	GetHashIndex( Bounds.min, X1, Y1 );
+	GetHashIndex( Bounds.max, X2, Y2 );
 
 	// Prepare.
 	OutNumObjs	= 0;
@@ -282,7 +282,7 @@ void CCollisionHash::GetOverlappedByClass( TRect Bounds, CClass* Class, Int32& O
 					Object->HashMark != Mark &&
 					!Object->bDestroyed &&
 					Object->IsA(Class) &&
-					Bounds.IsOverlap(Object->HashAABB)
+					Bounds.isOverlap( Object->HashAABB )
 				)
 			{
 				// Add to list.
@@ -306,12 +306,12 @@ Enough:;
 // Return any object inside the bounds of script 'Script' only.
 // Return first MAX_COLL_LIST_OBJS objects.
 //
-void CCollisionHash::GetOverlappedByScript( TRect Bounds, FScript* Script, Int32& OutNumObjs, FBaseComponent** OutList )
+void CCollisionHash::GetOverlappedByScript( const math::Rect& Bounds, FScript* Script, Int32& OutNumObjs, FBaseComponent** OutList )
 {
 	// Get bounds.
 	Int32 X1, X2, Y1, Y2;
-	GetHashIndex( Bounds.Min, X1, Y1 );
-	GetHashIndex( Bounds.Max, X2, Y2 );
+	GetHashIndex( Bounds.min, X1, Y1 );
+	GetHashIndex( Bounds.max, X2, Y2 );
 
 	// Prepare.
 	OutNumObjs	= 0;
@@ -331,7 +331,7 @@ void CCollisionHash::GetOverlappedByScript( TRect Bounds, FScript* Script, Int32
 					Object->HashMark != Mark &&
 					!Object->bDestroyed &&
 					Object->Entity->Script == Script &&
-					Bounds.IsOverlap(Object->HashAABB)
+					Bounds.isOverlap( Object->HashAABB )
 				)
 			{
 				// Add to list.

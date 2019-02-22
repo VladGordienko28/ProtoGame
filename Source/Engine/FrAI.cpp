@@ -273,7 +273,7 @@ Bool FPuppetComponent::MoveToGoal()
 		//
 		// Miscellaneous, handled by script, here we detect only ovelap.
 		//
-		return Body->GetAABB().IsInside(Goal);
+		return Body->GetAABB().isInside( Goal );
 	}
 }
 
@@ -332,7 +332,7 @@ Float FPuppetComponent::SpeedForJump( math::Vector From, math::Vector To, Float 
 	Float Speed = (To.y + 0.5f*XTime*XTime*Gravity - From.y) / XTime;
 
 	// Slightly modify speed to make unpredictable results.
-	return Max( 0.f, Speed ) * 1.1f;
+	return max( 0.f, Speed ) * 1.1f;
 }
 
 

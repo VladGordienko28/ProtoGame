@@ -116,8 +116,8 @@ void CConsole::Render( CCanvas* Canvas )
 		// Backdrop.
 		TRenderRect R;
 		R.Texture		= nullptr;
-		R.Bounds.Min	= math::Vector( 0.f, 0.f );
-		R.Bounds.Max	= math::Vector( Canvas->ScreenWidth, 16.f*(MAX_CON_HISTORY+1)+16 );
+		R.Bounds.min	= math::Vector( 0.f, 0.f );
+		R.Bounds.max	= math::Vector( Canvas->ScreenWidth, 16.f*(MAX_CON_HISTORY+1)+16 );
 		R.Color			= COLOR_Black;
 		R.Flags			= POLY_FlatShade;
 		R.Rotation		= 0;

@@ -62,7 +62,7 @@ Int32 WEdit::CaretToPixel( Int32 C )
 //
 Int32 WEdit::PixelToCaret( Int32 X )
 {
-	return Clamp
+	return clamp
 			( 
 				math::round((Float)X / (Float)CharSize.Width)+ScrollX, 
 				0, 
@@ -91,7 +91,7 @@ void WEdit::ClearSelected()
 
 	Store();
 	Text = String::Delete( Text, CaretBegin, CaretEnd-CaretBegin );
-	CaretEnd = CaretBegin = Clamp( CaretBegin, 0, Text.Len() );
+	CaretEnd = CaretBegin = clamp( CaretBegin, 0, Text.Len() );
 	//ScrollX -= 2;
 	ScrollToCaret();
 	OnChange();
@@ -155,7 +155,7 @@ void WEdit::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 
 	// Fix selection range order.
 	if( CaretBegin > CaretEnd )
-		Exchange( CaretBegin, CaretEnd );
+		exchange( CaretBegin, CaretEnd );
 }
 
 
@@ -196,7 +196,7 @@ void WEdit::OnKeyDown( Int32 Key )
 	if( Key == 0x25 )
 	{
 		// <Left> button.
-		CaretBegin = CaretEnd = Clamp
+		CaretBegin = CaretEnd = clamp
 								( 
 									CaretBegin == CaretEnd ? CaretBegin-1 : CaretBegin,
 									0,
@@ -206,7 +206,7 @@ void WEdit::OnKeyDown( Int32 Key )
 	else if( Key == 0x27 )
 	{
 		// <Right> button.
-		CaretBegin = CaretEnd = Clamp
+		CaretBegin = CaretEnd = clamp
 								( 
 									CaretBegin == CaretEnd ? CaretEnd+1 : CaretEnd,
 									0,
@@ -634,7 +634,7 @@ void WSpinner::OnPaint( CGUIRenderBase* Render )
 //
 void WSpinner::SetValue( Int32 InValue, Bool bNotify )
 {
-	InValue = Clamp( InValue, IMin, IMax );
+	InValue = clamp( InValue, IMin, IMax );
 	SetText( String::FromInteger(InValue), bNotify );
 }
 
@@ -644,7 +644,7 @@ void WSpinner::SetValue( Int32 InValue, Bool bNotify )
 //
 void WSpinner::SetValue( Float InValue, Bool bNotify )
 {
-	InValue = Clamp( InValue, FMin, FMax );
+	InValue = clamp( InValue, FMin, FMax );
 	SetText( String::FromFloat(InValue), bNotify );
 }
 
@@ -715,7 +715,7 @@ void WSpinner::Increment( bool bDown, Int32 Multiplier )
 		Float Value;
 
 		Text.ToFloat( Value, OldFloat );
-		Value	= Clamp( Value+Inc*Multiplier, FMin, FMax );
+		Value	= clamp( Value+Inc*Multiplier, FMin, FMax );
 
 		SetText(String::FromFloat(Value));
 	}
@@ -726,7 +726,7 @@ void WSpinner::Increment( bool bDown, Int32 Multiplier )
 		Int32 Value;
 
 		Text.ToInteger( Value, OldInt32 );
-		Value	= Clamp( Value+Inc*Multiplier, IMin, IMax );
+		Value	= clamp( Value+Inc*Multiplier, IMin, IMax );
 
 		SetText(String::FromInteger(Value));
 	}
@@ -754,7 +754,7 @@ void WSpinner::FixValue()
 		Float Value;
 
 		Text.ToFloat( Value, OldFloat );
-		Value	= Clamp( Value, FMin, FMax );
+		Value	= clamp( Value, FMin, FMax );
 
 		Text = String::FromFloat(Value);
 	}
@@ -764,7 +764,7 @@ void WSpinner::FixValue()
 		Int32 Value;
 
 		Text.ToInteger( Value, OldInt32 );
-		Value	= Clamp( Value, IMin, IMax );
+		Value	= clamp( Value, IMin, IMax );
 
 		Text = String::FromInteger(Value);
 	}
@@ -792,13 +792,13 @@ Int32 WSpinner::GetIntValue() const
 {
 	Int32 i;
 	Text.ToInteger( i, OldInt32 );
-	return Clamp( i, IMin, IMax );
+	return clamp( i, IMin, IMax );
 }
 Float WSpinner::GetFloatValue() const
 {
 	Float f;
 	Text.ToFloat( f, OldFloat );
-	return Clamp( f, FMin, FMax );
+	return clamp( f, FMin, FMax );
 }
 
 

@@ -267,7 +267,7 @@ FBrushComponent* FLevel::TestPointGeom( const math::Vector& P )
 	Int32 NumBrshs;
 	CollHash->GetOverlappedByClass
 								( 
-									TRect( P, 0.1f ),
+									math::Rect( P, 0.1f ),
 									FBrushComponent::MetaClass,
 									NumBrshs,
 									(FBaseComponent**)Brushes
@@ -303,11 +303,11 @@ FBrushComponent* FLevel::TestLineGeom( const math::Vector& A, const math::Vector
 	FBrushComponent* Result	= nullptr;
 
 	// Get line bounds.
-	TRect Bounds;
-	Bounds.Min.x	= Min( A.x, B.x );
-	Bounds.Min.y	= Min( A.y, B.y );
-	Bounds.Max.x	= Max( A.x, B.x );
-	Bounds.Max.y	= Max( A.y, B.y );
+	math::Rect Bounds;
+	Bounds.min.x	= min( A.x, B.x );
+	Bounds.min.y	= min( A.y, B.y );
+	Bounds.max.x	= max( A.x, B.x );
+	Bounds.max.y	= max( A.y, B.y );
 
 	// Get list of brushes.
 	FBrushComponent* Brushes[MAX_COLL_LIST_OBJS];
@@ -368,10 +368,10 @@ FBrushComponent* FLevel::TestLineGeom( const math::Vector& A, const math::Vector
 void FLevel::Tick( Float Delta )
 {
 	// Clamp delta.
-	Delta	= Clamp( Delta, 1.f/500.f, 1.f/30.f );
+	Delta	= clamp( Delta, 1.f/500.f, 1.f/30.f );
 
 	// Modify delta according to game speed.
-	GameSpeed	= Clamp( GameSpeed, 0.01f, 10.f );
+	GameSpeed	= clamp( GameSpeed, 0.01f, 10.f );
 	Delta		*= GameSpeed;
 
 	// update game time
@@ -970,6 +970,11 @@ REGISTER_CLASS_CPP( FLevel, FResource, CLASS_Sterile )
 	ADD_PROPERTY( m_dawnBitmap, PROP_Editable );
 	ADD_PROPERTY( m_noonBitmap, PROP_Editable );
 	ADD_PROPERTY( m_duskBitmap, PROP_Editable );
+
+	ADD_PROPERTY( m_vignetteIntensity, PROP_Editable );
+	ADD_PROPERTY( m_vignetteInnerRadius, PROP_Editable );
+	ADD_PROPERTY( m_vignetteOuterRadius, PROP_Editable );
+
 
 	// Engine functions.
 	DECLARE_EX_FUNCTION( DebugLine, TYPE_None, ARG(a, TYPE_Vector, ARG(b, TYPE_Vector, ARG(color, TYPE_Color, ARG(time, TYPE_Float, END)))));

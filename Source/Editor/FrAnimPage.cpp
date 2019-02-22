@@ -251,7 +251,7 @@ void WAnimationPage::EditStartChange( WWidget* Sender )
 	{
 		TAnimSequence* Seq = (TAnimSequence*)SeqsList->Items[SeqsList->ItemIndex].Data;
 		StartFrmEdit->Text.ToInteger( Seq->Start, 0 );
-		Seq->Start	= Clamp( Seq->Start, 0, 255 );
+		Seq->Start	= clamp( Seq->Start, 0, 255 );
 	}
 }
 
@@ -266,7 +266,7 @@ void WAnimationPage::EditCountChange( WWidget* Sender )
 	{
 		TAnimSequence* Seq = (TAnimSequence*)SeqsList->Items[SeqsList->ItemIndex].Data;
 		CountFrmsEdit->Text.ToInteger( Seq->Count, 0 );
-		Seq->Count	= Clamp( Seq->Count, 1, 255 );
+		Seq->Count	= clamp( Seq->Count, 1, 255 );
 	}
 }
 
@@ -519,7 +519,7 @@ void WAnimationPage::OnDragDrop( void* Data, Int32 X, Int32 Y )
 //
 void WAnimationPage::ButtonZoomInClick( WWidget* Sender )
 {
-	Scale	= Min( 4.f, 2.f*Scale );
+	Scale	= min( 4.f, 2.f*Scale );
 }
 
 
@@ -528,7 +528,7 @@ void WAnimationPage::ButtonZoomInClick( WWidget* Sender )
 //
 void WAnimationPage::ButtonZoomOutClick( WWidget* Sender )
 {
-	Scale	= Max( 0.25f, Scale*0.5f );
+	Scale	= max( 0.25f, Scale*0.5f );
 }
 
 
@@ -626,16 +626,16 @@ void WAnimationPlayer::OnPaint( CGUIRenderBase* Render )
 	if( Frame < 0 || Frame >= Animation->Frames.size() )
 		return;
 
-	TRect R = Animation->GetTexCoords( Frame );
+	math::Rect R = Animation->GetTexCoords( Frame );
 
 	// Clip to viewport.
 	TPoint Base = ClientToWindow(TPoint::Zero);
 	Render->SetClipArea( Base, Size );
 
-	Int32	X	= math::floor( R.Min.x * Animation->Sheet->USize ),
-			Y	= math::floor( R.Min.y * Animation->Sheet->VSize ),
-			W	= math::floor( (R.Max.x-R.Min.x) * Animation->Sheet->USize ),
-			H	= math::floor( (R.Max.y-R.Min.y) * Animation->Sheet->VSize );
+	Int32	X	= math::floor( R.min.x * Animation->Sheet->USize ),
+			Y	= math::floor( R.min.y * Animation->Sheet->VSize ),
+			W	= math::floor( (R.max.x-R.min.x) * Animation->Sheet->USize ),
+			H	= math::floor( (R.max.y-R.min.y) * Animation->Sheet->VSize );
 
 	Int32 DestX	= Base.X + (Size.Width - W) / 2,
 			DestY	= Base.Y + (Size.Height - H) / 2;

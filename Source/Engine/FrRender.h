@@ -26,11 +26,11 @@ struct TRenderRect
 {
 public:
 	UInt32			Flags;
-	TRect			Bounds;
+	math::Rect		Bounds;
 	math::Angle		Rotation;
 	FTexture*		Texture;
 	TColor			Color;
-	TRect			TexCoords;
+	math::Rect		TexCoords;
 };
 
 
@@ -88,7 +88,7 @@ public:
 	math::Vector	FOV;
 	Float			Zoom;
 	Bool			bMirage;
-	TRect			Bounds;
+	math::Rect		Bounds;
 
 	// Constructor.
 	TViewInfo();

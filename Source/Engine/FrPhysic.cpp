@@ -124,11 +124,11 @@ void FSpringComponent::Render( CCanvas* Canvas )
 		Rect.Color				= bSelected ? TColor( 0x80, 0xe6, 0x80, 0xff ) : COLOR_White;
 		Rect.Flags				= POLY_Unlit;
 		Rect.Rotation			= math::vectorToAngle((Point1-Point2).cross());
-		Rect.TexCoords			= TRect( math::Vector( 0.5f, 0.f ), math::Vector( 1.f, NumSegs ) );
-		Rect.Bounds				=	TRect
+		Rect.TexCoords			= math::Rect( math::Vector( 0.5f, 0.f ), 1.f, NumSegs );
+		Rect.Bounds				= math::Rect
 									( 
 										(Point1+Point2) * 0.5, 
-										math::Vector( Width, (Point1-Point2).size() ) 
+										Width, (Point1-Point2).size()
 									);
 
 		// Draw spring.
@@ -422,7 +422,7 @@ void FKeyframeComponent::nativeStop( CFrame& Frame )
 void FKeyframeComponent::nativeMoveTo( CFrame& Frame )
 {
 	Speed			= POP_FLOAT;
-	iTarget			= Clamp( POP_INTEGER, 0, Points.size()-1 );
+	iTarget			= clamp( POP_INTEGER, 0, Points.size()-1 );
 	StartLocation	= Base->Location;
 	GlideType		= GLIDE_Target;
 	Progress		= 0.f;
@@ -629,7 +629,7 @@ void FPhysicComponent::SerializeThis( CSerializer& S )
 void FPhysicComponent::nativeSolveSolid( CFrame& Frame )
 {
 	CPhysics::bBrake	= POP_BOOL || CPhysics::bBrake;
-	CPhysics::Solution	= Max( CPhysics::Solution, HSOL_Solid );
+	CPhysics::Solution	= max( CPhysics::Solution, HSOL_Solid );
 }
 
 
@@ -640,7 +640,7 @@ void FPhysicComponent::nativeSolveSolid( CFrame& Frame )
 void FPhysicComponent::nativeSolveOneway( CFrame& Frame )
 {
 	CPhysics::bBrake	= POP_BOOL || CPhysics::bBrake;
-	CPhysics::Solution	= Max( CPhysics::Solution, HSOL_Oneway );
+	CPhysics::Solution	= max( CPhysics::Solution, HSOL_Oneway );
 }
 
 

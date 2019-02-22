@@ -191,7 +191,7 @@ void WTreeView::ScrollToNode( Int32 iNode )
 	while( iOrdered >= ScrollTop+NumVis )		ScrollTop++;
 
 	// Update scroll bar.
-	ScrollBar->Value	= 100*ScrollTop / Max( RenderOrder.size()-1, 1 );
+	ScrollBar->Value	= 100*ScrollTop / max( RenderOrder.size()-1, 1 );
 }
 
 
@@ -215,7 +215,7 @@ void WTreeView::OnPaint( CGUIRenderBase* Render )
 
 	// Visible lines bounds.
 	Int32 iVisFirst	= ScrollTop;
-	Int32 iVisLast	= Min( ScrollTop + Size.Height/(TREEVIEW_NODES_INTERVAL+CharHeight), RenderOrder.size()-1 );
+	Int32 iVisLast	= min( ScrollTop + Size.Height/(TREEVIEW_NODES_INTERVAL+CharHeight), RenderOrder.size()-1 );
 
 	// Draw root line.
 	if( RenderOrder.size() != 0 )
@@ -241,8 +241,8 @@ void WTreeView::OnPaint( CGUIRenderBase* Render )
 			Int32 LineYBegin = (i-ScrollTop) * (TREEVIEW_NODES_INTERVAL + CharHeight) + TREEVIEW_NODES_INTERVAL;
 			Int32 LineYEnd = (FindLastChildren(iNode)-ScrollTop)*(TREEVIEW_NODES_INTERVAL+CharHeight) - TREEVIEW_NODES_INTERVAL;
 
-			LineYBegin = Clamp( LineYBegin, 1, Size.Height-1 );
-			LineYEnd = Clamp( LineYEnd, 1, Size.Height-1 );
+			LineYBegin = clamp( LineYBegin, 1, Size.Height-1 );
+			LineYEnd = clamp( LineYEnd, 1, Size.Height-1 );
 
 			if( (LineYBegin >= Size.Height) )
 				break;
@@ -541,10 +541,10 @@ void WTreeView::OnMouseScroll( Int32 Delta )
 
 	// Scroll text in aspect 1:3.
 	ScrollTop	-= Delta / 40;
-	ScrollTop	= Clamp( ScrollTop, 0, RenderOrder.size()-1 );
+	ScrollTop	= clamp( ScrollTop, 0, RenderOrder.size()-1 );
 
 	// Update scroll bar.
-	ScrollBar->Value	= 100*ScrollTop / Max( RenderOrder.size()-1, 1 );
+	ScrollBar->Value	= 100*ScrollTop / max( RenderOrder.size()-1, 1 );
 }
 
 
@@ -554,7 +554,7 @@ void WTreeView::OnMouseScroll( Int32 Delta )
 void WTreeView::ScrollBarChange( WWidget* Sender )
 {
 	ScrollTop	= ScrollBar->Value * (RenderOrder.size()-1) / 100;
-	ScrollTop	= Clamp( ScrollTop, 0, RenderOrder.size()-1 );
+	ScrollTop	= clamp( ScrollTop, 0, RenderOrder.size()-1 );
 }
 
 

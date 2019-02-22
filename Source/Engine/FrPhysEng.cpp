@@ -174,13 +174,13 @@ void BodyToPoly( FBaseComponent* Body, math::Vector* OutVerts, math::Vector* Out
 		if( Body->bFixedAngle || !Body->Rotation )
 		{
 			// AABB body.
-			TRect AABB( Body->Location, Body->Size );
+			math::Rect AABB( Body->Location, Body->Size.x, Body->Size.y );
 			OutNum	= 4;
 
-			OutVerts[0]	= math::Vector( AABB.Min.x, AABB.Min.y );
-			OutVerts[1]	= math::Vector( AABB.Min.x, AABB.Max.y );
-			OutVerts[2]	= math::Vector( AABB.Max.x, AABB.Max.y );
-			OutVerts[3]	= math::Vector( AABB.Max.x, AABB.Min.y );
+			OutVerts[0]	= math::Vector( AABB.min.x, AABB.min.y );
+			OutVerts[1]	= math::Vector( AABB.min.x, AABB.max.y );
+			OutVerts[2]	= math::Vector( AABB.max.x, AABB.max.y );
+			OutVerts[3]	= math::Vector( AABB.max.x, AABB.min.y );
 
 			OutNorms[0]	= math::Vector( -1.f, +0.f );
 			OutNorms[1]	= math::Vector( +0.f, +1.f );
@@ -297,8 +297,8 @@ void ProjectPoly( const math::Vector& Axis, math::Vector* Verts, Int32 Num, Floa
 	for( Int32 i=1; i<Num; i++ )
 	{
 		Float Test = Verts[i] * Axis;
-		OutMin	= Min( Test, OutMin );
-		OutMax	= Max( Test, OutMax );
+		OutMin	= min( Test, OutMin );
+		OutMax	= max( Test, OutMax );
 	}
 }
 
@@ -497,7 +497,7 @@ Bool CPhysics::DetectArcadeCollision( EAxis Axis, FPhysicComponent* Body, FBaseC
 		FBrushComponent*	Brush		= (FBrushComponent*)Other;		
 		Bool				Result		= false;
 		Float				TestTime	= 1000.f;
-		TRect				BodyRect	= Body->GetAABB();
+		math::Rect			BodyRect	= Body->GetAABB();
 
 		HitTime							= 500.f;
 		HitNormal						= math::Vector( 0.f, 0.f );
@@ -511,63 +511,63 @@ Bool CPhysics::DetectArcadeCollision( EAxis Axis, FPhysicComponent* Body, FBaseC
 			TestTime		= 1000.f;
 
 			// Edge bounds.
-			TRect Edge;
-			Edge.Min.x	= Min( P1.x, P2.x );
-			Edge.Min.y	= Min( P1.y, P2.y );
-			Edge.Max.x	= Max( P1.x, P2.x );
-			Edge.Max.y	= Max( P1.y, P2.y );
+			math::Rect Edge;
+			Edge.min.x	= min( P1.x, P2.x );
+			Edge.min.y	= min( P1.y, P2.y );
+			Edge.max.x	= max( P1.x, P2.x );
+			Edge.max.y	= max( P1.y, P2.y );
 			
-			if( Axis == AXIS_X && (Edge.Max.x-Edge.Min.x)<math::EPSILON )
+			if( Axis == AXIS_X && (Edge.max.x-Edge.min.x)<math::EPSILON )
 			{
 				// Flat vertical surface.
 				if	( 
-						BodyRect.Min.x	< Edge.Min.x &&
-						BodyRect.Max.x	> Edge.Max.x &&
-						BodyRect.Max.y	> Edge.Min.y &&
-						BodyRect.Min.y	< Edge.Max.y
+						BodyRect.min.x	< Edge.min.x &&
+						BodyRect.max.x	> Edge.max.x &&
+						BodyRect.max.y	> Edge.min.y &&
+						BodyRect.min.y	< Edge.max.y
 					)
 				{
 					if( Normal.x > 0.f )
 					{
 						TestNormal		= math::Vector( +1.f, 0.f );
 						TestSlope		= TestNormal;
-						TestTime		= Edge.Max.x - BodyRect.Min.x;
+						TestTime		= Edge.max.x - BodyRect.min.x;
 					}
 					else
 					{
 						TestNormal		= math::Vector( -1.f, 0.f );
 						TestSlope		= TestNormal;
-						TestTime		= BodyRect.Max.x - Edge.Max.x;
+						TestTime		= BodyRect.max.x - Edge.max.x;
 					} 
 				}
 			}
-			else if( Axis == AXIS_Y && (Edge.Max.y-Edge.Min.y)<math::EPSILON )
+			else if( Axis == AXIS_Y && (Edge.max.y-Edge.min.y)<math::EPSILON )
 			{
 				// Flat horizontal surface.
 				if	(
-						BodyRect.Min.y	< Edge.Min.y &&
-						BodyRect.Max.y	> Edge.Max.y &&
-						BodyRect.Max.x	> Edge.Min.x &&
-						BodyRect.Min.x	< Edge.Max.x
+						BodyRect.min.y	< Edge.min.y &&
+						BodyRect.max.y	> Edge.max.y &&
+						BodyRect.max.x	> Edge.min.x &&
+						BodyRect.min.x	< Edge.max.x
 					)
 				{
 					if( Normal.y > 0.f )
 					{
 						TestNormal		= math::Vector( 0.f, +1.f );
 						TestSlope		= TestNormal;
-						TestTime		= Edge.Max.y - BodyRect.Min.y;
+						TestTime		= Edge.max.y - BodyRect.min.y;
 					}
 					else
 					{
 						TestNormal		= math::Vector( 0.f, -1.f );
 						TestSlope		= TestNormal;
-						TestTime		= BodyRect.Max.y - Edge.Max.y;
+						TestTime		= BodyRect.max.y - Edge.max.y;
 					}
 				}
 			}
 			else if	( 
 						Body->Velocity.y*Normal.y <= 0.f && 
-						Edge.IsOverlap(BodyRect) && 
+						Edge.isOverlap( BodyRect ) && 
 						math::pointLineDistance( Body->Location, P1, Normal ) >= 0.f 
 					)
 			{			
@@ -580,31 +580,31 @@ Bool CPhysics::DetectArcadeCollision( EAxis Axis, FPhysicComponent* Body, FBaseC
 					if( Normal.x > 0.f )
 					{
 						// I'st quadrant.
-						Float X			= Clamp( BodyRect.Min.x, Edge.Min.x, Edge.Max.x );		
-						Float YSlope	= Edge.Max.y + ((Edge.Max.y-Edge.Min.y)*(Edge.Min.x-X)) / (Edge.Max.x-Edge.Min.x);	
+						Float X			= clamp( BodyRect.min.x, Edge.min.x, Edge.max.x );		
+						Float YSlope	= Edge.max.y + ((Edge.max.y-Edge.min.y)*(Edge.min.x-X)) / (Edge.max.x-Edge.min.x);	
 							
-						if( YSlope > BodyRect.Min.y )
+						if( YSlope > BodyRect.min.y )
 						{
 							TestNormal		= math::Vector( 0.f, +1.f );
 							TestSlope		= Normal;
-							TestTime		= YSlope - BodyRect.Min.y;
+							TestTime		= YSlope - BodyRect.min.y;
 						}
-						if( X != BodyRect.Min.x )	
+						if( X != BodyRect.min.x )	
 							ExtraTime	= 5.f;
 					}
 					else
 					{
 						// II'nd quadrant.
-						Float X			= Clamp( BodyRect.Max.x, Edge.Min.x, Edge.Max.x );		
-						Float YSlope	= Edge.Min.y + ((X-Edge.Min.x)*(Edge.Max.y-Edge.Min.y)) / (Edge.Max.x-Edge.Min.x);	
+						Float X			= clamp( BodyRect.max.x, Edge.min.x, Edge.max.x );		
+						Float YSlope	= Edge.min.y + ((X-Edge.min.x)*(Edge.max.y-Edge.min.y)) / (Edge.max.x-Edge.min.x);	
 						
-						if( YSlope > BodyRect.Min.y )
+						if( YSlope > BodyRect.min.y )
 						{
 							TestNormal		= math::Vector( 0.f, +1.f );
 							TestSlope		= Normal;
-							TestTime		= YSlope - BodyRect.Min.y;
+							TestTime		= YSlope - BodyRect.min.y;
 						}
-						if( X != BodyRect.Max.x )	
+						if( X != BodyRect.max.x )	
 							ExtraTime	= 5.f;
 					}
 				}
@@ -614,31 +614,31 @@ Bool CPhysics::DetectArcadeCollision( EAxis Axis, FPhysicComponent* Body, FBaseC
 					if( Normal.x > 0.f )
 					{
 						// IV'th quadrant.
-						Float X			= Clamp( BodyRect.Min.x, Edge.Min.x, Edge.Max.x );	
-						Float YSlope	= Edge.Min.y + ((X-Edge.Min.x)*(Edge.Max.y-Edge.Min.y)) / (Edge.Max.x-Edge.Min.x);	
+						Float X			= clamp( BodyRect.min.x, Edge.min.x, Edge.max.x );	
+						Float YSlope	= Edge.min.y + ((X-Edge.min.x)*(Edge.max.y-Edge.min.y)) / (Edge.max.x-Edge.min.x);	
 
-						if( YSlope < BodyRect.Max.y )
+						if( YSlope < BodyRect.max.y )
 						{
 							TestNormal		= math::Vector( 0.f, -1.f );
 							TestSlope		= Normal;
-							TestTime		= BodyRect.Max.y - YSlope;
+							TestTime		= BodyRect.max.y - YSlope;
 						}
-						if( X != BodyRect.Min.x )	
+						if( X != BodyRect.min.x )	
 							ExtraTime	= 5.f;
 					}
 					else
 					{
 						// III'rd quadrant.
-						Float X			= Clamp( BodyRect.Max.x, Edge.Min.x, Edge.Max.x );		
-						Float YSlope	= Edge.Max.y + ((Edge.Max.y-Edge.Min.y)*(Edge.Min.x-X)) / (Edge.Max.x-Edge.Min.x);
+						Float X			= clamp( BodyRect.max.x, Edge.min.x, Edge.max.x );		
+						Float YSlope	= Edge.max.y + ((Edge.max.y-Edge.min.y)*(Edge.min.x-X)) / (Edge.max.x-Edge.min.x);
 
-						if( YSlope < BodyRect.Max.y )
+						if( YSlope < BodyRect.max.y )
 						{
 							TestNormal		= math::Vector( 0.f, -1.f );
 							TestSlope		= Normal;
-							TestTime		= BodyRect.Max.y - YSlope;
+							TestTime		= BodyRect.max.y - YSlope;
 						}
-						if( X != BodyRect.Max.x )	
+						if( X != BodyRect.max.x )	
 							ExtraTime	= 5.f;
 					}
 				}
@@ -661,22 +661,22 @@ Bool CPhysics::DetectArcadeCollision( EAxis Axis, FPhysicComponent* Body, FBaseC
 	else if( !Other->IsA(FRigidBodyComponent::MetaClass) )
 	{
 		// Detect aabb collision.
-		TRect BodyRect		= Body->GetAABB();
-		TRect OtherRect		= Other->GetAABB();
+		math::Rect BodyRect		= Body->GetAABB();
+		math::Rect OtherRect	= Other->GetAABB();
 
 		// Direction from Other to Body.
 		Float	BodyEx, OtherEx, OverlapX, OverlapY;
 		math::Vector Dir			= Body->Location - Other->Location;
 
-		BodyEx		= 0.5f * (BodyRect.Max.x - BodyRect.Min.x);
-		OtherEx		= 0.5f * (OtherRect.Max.x - OtherRect.Min.x);
+		BodyEx		= 0.5f * (BodyRect.max.x - BodyRect.min.x);
+		OtherEx		= 0.5f * (OtherRect.max.x - OtherRect.min.x);
 
 		OverlapX	= BodyEx + OtherEx - abs(Dir.x);
 
 		if( OverlapX > 0.f )
 		{
-			BodyEx		= 0.5f * (BodyRect.Max.y - BodyRect.Min.y);
-			OtherEx		= 0.5f * (OtherRect.Max.y - OtherRect.Min.y);
+			BodyEx		= 0.5f * (BodyRect.max.y - BodyRect.min.y);
+			OtherEx		= 0.5f * (OtherRect.max.y - OtherRect.min.y);
 
 			OverlapY	= BodyEx + OtherEx - abs(Dir.y);
 
@@ -875,8 +875,8 @@ void CPhysics::PhysicComplex( FPhysicComponent* Body, Float Delta )
 		// of body's size.
 		//
 		math::Vector VelDelta	= Body->Velocity * Delta;
-		VelDelta.x	= Clamp( VelDelta.x, -Body->Size.x*0.95f, +Body->Size.x*0.95f );
-		VelDelta.y	= Clamp( VelDelta.y, -Body->Size.y*0.95f, +Body->Size.y*0.95f );
+		VelDelta.x	= clamp( VelDelta.x, -Body->Size.x*0.95f, +Body->Size.x*0.95f );
+		VelDelta.y	= clamp( VelDelta.y, -Body->Size.y*0.95f, +Body->Size.y*0.95f );
 
 		Body->Location	+= VelDelta;
 
@@ -887,7 +887,7 @@ void CPhysics::PhysicComplex( FPhysicComponent* Body, Float Delta )
 
 		// Get list of potential collide bodies, using cheap
 		// AABB test.
-		TRect OtherAABB, BodyAABB = Body->GetAABB();
+		math::Rect OtherAABB, BodyAABB = Body->GetAABB();
 		Level->CollHash->GetOverlapped( BodyAABB, NumOthers, Others );
 
 		// Sort list of objects's for proper processing order.
@@ -906,7 +906,7 @@ void CPhysics::PhysicComplex( FPhysicComponent* Body, Float Delta )
 			BodyAABB	=	Body->GetAABB();
 			OtherAABB	=	Other->GetAABB();
 
-			if( !BodyAABB.IsOverlap(OtherAABB) )
+			if( !BodyAABB.isOverlap( OtherAABB ) )
 				continue;
 
 			// See if body already touch other.
@@ -1019,7 +1019,7 @@ void CPhysics::PhysicComplex( FPhysicComponent* Body, Float Delta )
 
 						// Pick elasticity for hit solving.
 						Float	e	=	!PhysOther ? GMaterials[Body->Material].Elasticity :
-										Min( GMaterials[Body->Material].Elasticity, GMaterials[PhysOther->Material].Elasticity );
+										min( GMaterials[Body->Material].Elasticity, GMaterials[PhysOther->Material].Elasticity );
 
 						// Scalar impulse.
 						Float	j	= -(1 + e) * ProjVel / (InvMassTotal*NumConts);
@@ -1076,7 +1076,7 @@ void CPhysics::PhysicComplex( FPhysicComponent* Body, Float Delta )
 
 				// Apply correction to bodies location.
 				math::Vector Correct =	HitNormal * PHYS_PENET_PERCENT * 
-									(Max( 0.f, HitTime-PHYS_PENET_ALLOW )/(BodyInvMass+OtherInvMass)); 
+									(max( 0.f, HitTime-PHYS_PENET_ALLOW )/(BodyInvMass+OtherInvMass)); 
 
 				Body->Location -= Correct * BodyInvMass;
 
@@ -1191,8 +1191,8 @@ void CPhysics::PhysicArcade( FPhysicComponent* Body, Float Delta )
 		// of body's size.
 		//
 		math::Vector VelDelta	= Body->Velocity * Delta;
-		VelDelta.x	= Clamp( VelDelta.x, -Body->Size.x*0.95f, +Body->Size.x*0.95f );
-		VelDelta.y	= Clamp( VelDelta.y, -Body->Size.y*0.95f, +Body->Size.y*0.95f );
+		VelDelta.x	= clamp( VelDelta.x, -Body->Size.x*0.95f, +Body->Size.x*0.95f );
+		VelDelta.y	= clamp( VelDelta.y, -Body->Size.y*0.95f, +Body->Size.y*0.95f );
 
 		//
 		// Perform X-Movement.
@@ -1202,7 +1202,7 @@ void CPhysics::PhysicArcade( FPhysicComponent* Body, Float Delta )
 
 			// Get list of potential collide bodies, using cheap
 			// AABB test.
-			TRect BodyAABB = Body->GetAABB();
+			math::Rect BodyAABB = Body->GetAABB();
 			Level->CollHash->GetOverlapped( BodyAABB, NumOthers, Others );
 
 			// Test collision with all actors.
@@ -1217,7 +1217,7 @@ void CPhysics::PhysicArcade( FPhysicComponent* Body, Float Delta )
 					continue;
 
 				// Handle zones.
-				if( Other->IsA(FZoneComponent::MetaClass) && BodyAABB.IsOverlap(Other->GetAABB()) )
+				if( Other->IsA(FZoneComponent::MetaClass) && BodyAABB.isOverlap( Other->GetAABB() ) )
 				{
 					DetectedZone	= (FZoneComponent*)Other;
 					continue;
@@ -1276,7 +1276,7 @@ void CPhysics::PhysicArcade( FPhysicComponent* Body, Float Delta )
 
 			// Get list of potential collide bodies, using cheap
 			// AABB test.
-			TRect BodyAABB = Body->GetAABB();
+			math::Rect BodyAABB = Body->GetAABB();
 			Level->CollHash->GetOverlapped( BodyAABB, NumOthers, Others );
 
 			// Test collision with all actors.
@@ -1291,7 +1291,7 @@ void CPhysics::PhysicArcade( FPhysicComponent* Body, Float Delta )
 					continue;
 
 				// Handle zones.
-				if( Other->IsA(FZoneComponent::MetaClass) && BodyAABB.IsOverlap(Other->GetAABB()) )
+				if( Other->IsA(FZoneComponent::MetaClass) && BodyAABB.isOverlap( Other->GetAABB() ) )
 				{
 					DetectedZone	= (FZoneComponent*)Other;
 					continue;
@@ -1363,7 +1363,7 @@ void CPhysics::PhysicArcade( FPhysicComponent* Body, Float Delta )
 		// See if no more touch touched actors.
 		//
 		{
-			TRect ThisRect = Body->GetAABB();
+			math::Rect ThisRect = Body->GetAABB();
 
 			for( Int32 i=0; i<arraySize(Body->Touched); i++ )
 				if( Body->Touched[i]  )
@@ -1374,8 +1374,8 @@ void CPhysics::PhysicArcade( FPhysicComponent* Body, Float Delta )
 							!Other->IsA(FBrushComponent::MetaClass)
 						)
 					{
-						TRect OtherRect = Other->GetAABB();
-						if( !ThisRect.IsOverlap(OtherRect) )
+						math::Rect OtherRect = Other->GetAABB();
+						if( !ThisRect.isOverlap( OtherRect ) )
 							EndTouch( Body, Other );
 					}
 				}
@@ -1442,7 +1442,7 @@ void CPhysics::PhysicKeyframe( FKeyframeComponent* Object, Float Delta )
 					if( iDestKey < Object->Points.size() )
 					{
 						// Continue gliding.
-						Float PathLen = Max( math::distance( Object->Points[iPrevKey].Location, Object->Points[iDestKey].Location ), 0.01f );
+						Float PathLen = max( math::distance( Object->Points[iPrevKey].Location, Object->Points[iDestKey].Location ), 0.01f );
 						Object->Progress += (Object->Speed / PathLen) * Delta;
 						Float Alpha	  = Interpolate(Object->Progress-iPrevKey);
 						Base->Location	= Lerp
@@ -1487,7 +1487,7 @@ void CPhysics::PhysicKeyframe( FKeyframeComponent* Object, Float Delta )
 					if( iDestKey >= 0 )
 					{
 						// Continue gliding.
-						Float PathLen = Max( math::distance( Object->Points[iDestKey].Location, Object->Points[iPrevKey].Location ), 0.01f );
+						Float PathLen = max( math::distance( Object->Points[iDestKey].Location, Object->Points[iPrevKey].Location ), 0.01f );
 						Object->Progress += (Object->Speed / PathLen) * Delta;
 						Float Alpha	  = Interpolate(Object->Progress-iDestKey);
 						Base->Location	= Lerp
@@ -1530,7 +1530,7 @@ void CPhysics::PhysicKeyframe( FKeyframeComponent* Object, Float Delta )
 				// Glide to the target key.
 				Int32 iTarget		= Object->iTarget;
 				math::Vector MoveFrom	= Object->StartLocation;
-				Float PathLen		= Max( math::distance
+				Float PathLen		= max( math::distance
 												( 
 													MoveFrom, 
 													Object->Points[iTarget].Location 

@@ -67,7 +67,7 @@ void CGFXManager::Tick( Float Delta )
 	// Process interpolation while Alpha not reached 100%
 	if( Alpha <= 0.99999f )
 	{
-		Alpha	= Clamp( Alpha, 0.f, 1.f );
+		Alpha	= clamp( Alpha, 0.f, 1.f );
 
 		// Interpolate all.
 		for( Int32 i=0; i<3; i++ )

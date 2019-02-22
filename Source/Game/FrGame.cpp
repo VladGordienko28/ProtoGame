@@ -672,7 +672,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			if ( !GGame->Console->IsActive() )
 			{
 				Int32 SrlDlt	= GET_WHEEL_DELTA_WPARAM(WParam);
-				Int32	Times	= Clamp( SrlDlt/120, -5, 5 );
+				Int32	Times	= clamp( SrlDlt/120, -5, 5 );
 				Int32	Key		= Times > 0 ? KEY_WheelUp : KEY_WheelDown;
 
 				GGame->GInput->WheelScroll	+= SrlDlt;
@@ -985,8 +985,8 @@ void CGame::SetSize( Int32 NewWidth, Int32 NewHeight, EAppWindowType NewType )
 	Int32	ScreenHeight	= GetSystemMetrics(SM_CYSCREEN);
 	
 	// Clamp size.
-	NewWidth	= Clamp( NewWidth, MIN_GAME_X, ScreenWidth );
-	NewHeight	= Clamp( NewHeight, MIN_GAME_Y, ScreenHeight );
+	NewWidth	= clamp( NewWidth, MIN_GAME_X, ScreenWidth );
+	NewHeight	= clamp( NewHeight, MIN_GAME_Y, ScreenHeight );
 
 	switch( NewType )
 	{

@@ -241,15 +241,15 @@ public:
 	}
 
 	// Rect export.
-	void ExportAABB( const Char* FieldName, TRect Value ) 
+	void ExportAABB( const Char* FieldName, math::Rect Value ) 
 	{
 		Writer.WriteString(String::Format
 		( 
 			L"%s%s = (%.4f; %.4f; %.4f; %.4f)", 
 			Whitespace, 
 			FieldName, 
-			Value.Min.x, Value.Min.y, 
-			Value.Max.x, Value.Max.y 
+			Value.min.x, Value.min.y, 
+			Value.max.x, Value.max.y 
 		));
 	}
 
@@ -762,33 +762,33 @@ public:
 	}
 
 	// Parse rect value.
-	TRect ToAABB()
+	math::Rect ToAABB()
 	{
-		TRect Rect;
+		math::Rect Rect;
 		Char *Walk=Value, *End = &Value[arraySize(Value)-1];
 		Walk++;
-		Rect.Min.x = _wtof(Walk);
+		Rect.min.x = _wtof(Walk);
 		while( *Walk != ';' )
 		{
 			Walk++;
 			if( Walk > End ) return Rect;
 		}
 		Walk++;
-		Rect.Min.y = _wtof(Walk);
+		Rect.min.y = _wtof(Walk);
 		while( *Walk != ';' )
 		{
 			Walk++;
 			if( Walk > End ) return Rect;
 		}
 		Walk++;
-		Rect.Max.x = _wtof(Walk);
+		Rect.max.x = _wtof(Walk);
 		while( *Walk != ';' )
 		{
 			Walk++;
 			if( Walk > End ) return Rect;
 		}
 		Walk++;
-		Rect.Max.y = _wtof(Walk);
+		Rect.max.y = _wtof(Walk);
 		return Rect;
 	}
 };
@@ -1508,10 +1508,10 @@ public:
 	}
 
 	// Rect import.
-	TRect ImportAABB( const Char* FieldName )
+	math::Rect ImportAABB( const Char* FieldName )
 	{
 		TLoadProperty* Prop = Object->FindProperty( FieldName, false );
-		return Prop ? Prop->ToAABB() : TRect(math::Vector(0.f,0.f), math::Vector(0.f,0.f));
+		return Prop ? Prop->ToAABB() : math::Rect(math::Vector(0.f,0.f), 0.f, 0.f);
 	}
 
 	// Angle import.

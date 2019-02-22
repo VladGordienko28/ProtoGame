@@ -54,8 +54,8 @@ public:
 	// given character.
 	inline TGlyph& GetGlyph( Char C )
 	{
-		Int32 iGlyph = Remap[Min<Int32>( C, Remap.size()-1 )];
-		return Glyphs[Min( iGlyph, Glyphs.size()-1 )];
+		Int32 iGlyph = Remap[min<Int32>( C, Remap.size()-1 )];
+		return Glyphs[min( iGlyph, Glyphs.size()-1 )];
 	}
 };
 

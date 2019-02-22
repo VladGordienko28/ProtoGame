@@ -41,8 +41,8 @@ FModelComponent::FModelComponent()
 void FModelComponent::SetAtlasTable()
 {
 	// Clamp parameters.
-	TilesPerU	= Clamp<UInt8>( TilesPerU, 1, 200 );
-	TilesPerV	= Clamp<UInt8>( TilesPerV, 1, 200 );
+	TilesPerU	= clamp<UInt8>( TilesPerU, 1, 200 );
+	TilesPerV	= clamp<UInt8>( TilesPerV, 1, 200 );
 
 	Float TileSizeU	= 1.f / TilesPerU;
 	Float TileSizeV	= 1.f / TilesPerV;
@@ -51,9 +51,9 @@ void FModelComponent::SetAtlasTable()
 	for( V=0; V<TilesPerV; V++ )
 		for( U=0; U<TilesPerU; U++ )
 		{
-			TRect Tile;
-			Tile.Min		= math::Vector( (Float)TileSizeU*(U+0.f), (Float)TileSizeV*(V+1.f) );
-			Tile.Max		= math::Vector( (Float)TileSizeU*(U+1.f), (Float)TileSizeV*(V+0.f) );
+			math::Rect Tile;
+			Tile.min		= math::Vector( (Float)TileSizeU*(U+0.f), (Float)TileSizeV*(V+1.f) );
+			Tile.max		= math::Vector( (Float)TileSizeU*(U+1.f), (Float)TileSizeV*(V+0.f) );
 
 			AtlasTable[iTile++]	= Tile;
 
@@ -99,8 +99,8 @@ void FModelComponent::EditChange()
 void FModelComponent::ReallocMap()
 {
 	// Clamp map size.
-	MapXSize	= Clamp<Int32>( MapXSize, 1, MAX_TILES_SIDE );
-	MapYSize	= Clamp<Int32>( MapYSize, 1, MAX_TILES_SIDE );
+	MapXSize	= clamp<Int32>( MapXSize, 1, MAX_TILES_SIDE );
+	MapYSize	= clamp<Int32>( MapYSize, 1, MAX_TILES_SIDE );
 
 	// Reallocate data, and zero map, since
 	// reallocation cause tiles shuffle.
@@ -150,15 +150,15 @@ void FModelComponent::PostLoad()
 // Probably unused, since model is even not
 // hashable entity.
 //
-TRect FModelComponent::GetAABB()
+math::Rect FModelComponent::GetAABB()
 {
-	TRect Result;
+	math::Rect Result;
 
-	Result.Min.x	= Location.x;
-	Result.Min.y	= Location.y;
+	Result.min.x	= Location.x;
+	Result.min.y	= Location.y;
 
-	Result.Max.x	= Location.x + MapXSize * TileSize.x;
-	Result.Max.y	= Location.y + MapYSize * TileSize.y;
+	Result.max.x	= Location.x + MapXSize * TileSize.x;
+	Result.max.y	= Location.y + MapYSize * TileSize.y;
 
 	return Result;
 }
@@ -175,11 +175,11 @@ void FModelComponent::Render( CCanvas* Canvas )
 	if( !( Level->RndFlags & RND_Model ) )
 		return;
 
-	TRect	View		= Canvas->View.Bounds;
-	TRect	ModelBounds	= GetAABB();
+	math::Rect	View		= Canvas->View.Bounds;
+	math::Rect	ModelBounds	= GetAABB();
 
 	// Is visible?
-	if( !View.IsOverlap(ModelBounds) )
+	if( !View.isOverlap( ModelBounds ) )
 		return;
 
 	// Draw model pad.
@@ -195,11 +195,11 @@ void FModelComponent::Render( CCanvas* Canvas )
 	}
 
 	// Compute screen bound indexes for drawing tiles.
-	Int32 XMin = Max( math::trunc((View.Min.x - Location.x) / TileSize.x), 0 );
-	Int32 YMin = Max( math::trunc((View.Min.y - Location.y) / TileSize.y), 0 );
+	Int32 XMin = max( math::trunc((View.min.x - Location.x) / TileSize.x), 0 );
+	Int32 YMin = max( math::trunc((View.min.y - Location.y) / TileSize.y), 0 );
 
-	Int32 XMax = Min( math::ceil((View.Max.x - Location.x) / TileSize.x), MapXSize );
-	Int32 YMax = Min( math::ceil((View.Max.y - Location.y) / TileSize.y), MapYSize );
+	Int32 XMax = min( math::ceil((View.max.x - Location.x) / TileSize.x), MapXSize );
+	Int32 YMax = min( math::ceil((View.max.y - Location.y) / TileSize.y), MapYSize );
 
 	// Setup shared tile info.
 #if 0
@@ -259,15 +259,15 @@ void FModelComponent::Render( CCanvas* Canvas )
 #define DRAW_TILE(itile)\
 	if( itile )\
 	{\
-		TRect	T						= AtlasTable[itile];\
+		math::Rect T					= AtlasTable[itile];\
 		List.Vertices[NumTiles*4+0]		= math::Vector( MinX, MinY );\
 		List.Vertices[NumTiles*4+1]		= math::Vector( MinX, MaxY );\
 		List.Vertices[NumTiles*4+2]		= math::Vector( MaxX, MaxY );\
 		List.Vertices[NumTiles*4+3]		= math::Vector( MaxX, MinY );\
-		List.TexCoords[NumTiles*4+0]	= math::Vector( T.Min.x, T.Min.y );\
-		List.TexCoords[NumTiles*4+1]	= math::Vector( T.Min.x, T.Max.y );\
-		List.TexCoords[NumTiles*4+2]	= math::Vector( T.Max.x, T.Max.y );\
-		List.TexCoords[NumTiles*4+3]	= math::Vector( T.Max.x, T.Min.y );\
+		List.TexCoords[NumTiles*4+0]	= math::Vector( T.min.x, T.min.y );\
+		List.TexCoords[NumTiles*4+1]	= math::Vector( T.min.x, T.max.y );\
+		List.TexCoords[NumTiles*4+2]	= math::Vector( T.max.x, T.max.y );\
+		List.TexCoords[NumTiles*4+3]	= math::Vector( T.max.x, T.min.y );\
 		NumTiles++;\
 	};\
 
@@ -323,10 +323,10 @@ void FModelComponent::Render( CCanvas* Canvas )
 			Tile.Color				= COLOR_FireBrick;
 			Tile.Texture			= nullptr;
 			
-			Tile.Bounds.Min.x		= (X + 0.f)*TileSize.x + Location.x;
-			Tile.Bounds.Min.y		= (Y + 0.f)*TileSize.y + Location.y;
-			Tile.Bounds.Max.x		= (X + 1.f)*TileSize.x + Location.x;
-			Tile.Bounds.Max.y		= (Y + 1.f)*TileSize.y + Location.y;
+			Tile.Bounds.min.x		= (X + 0.f)*TileSize.x + Location.x;
+			Tile.Bounds.min.y		= (Y + 0.f)*TileSize.y + Location.y;
+			Tile.Bounds.max.x		= (X + 1.f)*TileSize.x + Location.x;
+			Tile.Bounds.max.y		= (Y + 1.f)*TileSize.y + Location.y;
 
 			Canvas->DrawRect( Tile );
 		}
@@ -358,10 +358,10 @@ void FModelComponent::Render( CCanvas* Canvas )
 					if( iTile )
 					{
 						Tile.TexCoords		= AtlasTable[iTile];
-						Tile.Bounds.Min.x	= (X + 0.f)*TileSize.x + Location.x;
-						Tile.Bounds.Min.y	= (Y + 0.f)*TileSize.y + Location.y;
-						Tile.Bounds.Max.x	= (X + 1.f)*TileSize.x + Location.x;
-						Tile.Bounds.Max.y	= (Y + 1.f)*TileSize.y + Location.y;
+						Tile.Bounds.min.x	= (X + 0.f)*TileSize.x + Location.x;
+						Tile.Bounds.min.y	= (Y + 0.f)*TileSize.y + Location.y;
+						Tile.Bounds.max.x	= (X + 1.f)*TileSize.x + Location.x;
+						Tile.Bounds.max.y	= (Y + 1.f)*TileSize.y + Location.y;
 						Canvas->DrawRect(Tile);
 					}
 				}

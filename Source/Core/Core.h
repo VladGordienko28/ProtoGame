@@ -38,8 +38,22 @@ namespace cstr
 		mbstowcs( buffer, source, bufferSize );
 		return buffer;
 	}
+
+	// -- freaky hash functions
+	// -- just for experiments here
+	inline UInt32 hash( const Char* string )
+	{
+		return string[0] ^ (string[1] * 13);
+	}
+
+	inline Int32 compare( const Char* str1, const Char* str2 )
+	{
+		return wcscmp( str1, str2 );
+	}
 }
 }
+
+#include "Namespace.h"
 
 /*-----------------------------------------------------------------------------
 	The End.

@@ -674,7 +674,7 @@ void WLevelPage::OnMouseScroll( Int32 Delta )
 		{
 			FBaseComponent* Base = Selector.Selected[i]->Base;
 			Base->Layer -= Delta / 8400.f;
-			Base->Layer = Clamp( Base->Layer, 0.014f, 1.f );
+			Base->Layer = clamp( Base->Layer, 0.014f, 1.f );
 		}
 	}
 	else
@@ -703,7 +703,7 @@ void WLevelPage::OnMouseScroll( Int32 Delta )
 
 		// Snap & Clamp zoom!
 		Camera.Zoom	= math::round(Camera.Zoom*50.f)*0.02f;
-		Camera.Zoom	= Clamp( Camera.Zoom, 0.2f, 5.f );
+		Camera.Zoom	= clamp( Camera.Zoom, 0.2f, 5.f );
 	}
 }
 
@@ -898,8 +898,8 @@ void WLevelPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 Delta
 				Base->Size += DeltaS;
 			}
 
-			Base->Size.x = Clamp( Base->Size.x, 0.5f, 1000.f );
-			Base->Size.y = Clamp( Base->Size.y, 0.5f, 1000.f );
+			Base->Size.x = clamp( Base->Size.x, 0.5f, 1000.f );
+			Base->Size.y = clamp( Base->Size.y, 0.5f, 1000.f );
 
 			Roller.Update(Selector);
 			break;
@@ -1422,7 +1422,7 @@ void WLevelPage::ClickEntity( FEntity* Entity, EMouseButton Button, Int32 X, Int
 			EntityPopup->Items[8].SubMenu->Items[2].bEnabled	= Script->Base->IsA(FBrushComponent::MetaClass);
 			EntityPopup->Items[8].SubMenu->Items[0].bEnabled	= false; // CSG_Union.
 			EntityPopup->Items[12].bEnabled	= Selector.Selected.size()==1 && Selector.Selected[0]->Script->IsScriptable();
-			EntityPopup->Size.Width			= Max( 60+Root->Font1->TextWidth(*EntityPopup->Items[0].Text), 138 );
+			EntityPopup->Size.Width			= max( 60+Root->Font1->TextWidth(*EntityPopup->Items[0].Text), 138 );
 			EntityPopup->Show( TPoint( X, Y ) );
 		}
 		else
@@ -1457,7 +1457,7 @@ void WLevelPage::ClickBackdrop( EMouseButton Button, Int32 X, Int32 Y )
 		BackdropPopup->Items[0].Text		= String::Format( L"Add %s here", Script ? *Script->GetName() : L"<Entity>" );
 		BackdropPopup->Items[0].bEnabled	= Script != nullptr;
 		BackdropPopup->Items[2].bEnabled	= GEntityClipboard.size()!=0 && GPlat->ClipboardPaste()==L"Entity";
-		BackdropPopup->Size.Width			= Max( 60+Root->Font1->TextWidth(*BackdropPopup->Items[0].Text), 165 );
+		BackdropPopup->Size.Width			= max( 60+Root->Font1->TextWidth(*BackdropPopup->Items[0].Text), 165 );
 		BackdropPopup->Show(TPoint( X, Y ));		
 		Selector.UnselectAll();
 		UpdateInspector();
@@ -1659,7 +1659,7 @@ FEntity* WLevelPage::GetEntityAt( Int32 X, Int32 Y, Bool bFast )
 			else
 			{
 				// Not convex brush, test for aabb hit.
-				if( Brush->GetAABB().IsInside(V) )
+				if( Brush->GetAABB().isInside(V) )
 				{
 					// Hit brush!
 					Result		= Entity;
@@ -1671,13 +1671,13 @@ FEntity* WLevelPage::GetEntityAt( Int32 X, Int32 Y, Bool bFast )
 		{
 			// Test hit with zone.
 			FZoneComponent* Zone = (FZoneComponent*)Base;
-			TRect ScreenRect;
+			math::Rect ScreenRect;
 
 			// Flip Y axis.
-			WorldToScreen( Zone->GetAABB().Min, ScreenRect.Min.x, ScreenRect.Max.y );
-			WorldToScreen( Zone->GetAABB().Max, ScreenRect.Max.x, ScreenRect.Min.y );
+			WorldToScreen( Zone->GetAABB().min, ScreenRect.min.x, ScreenRect.max.y );
+			WorldToScreen( Zone->GetAABB().max, ScreenRect.max.x, ScreenRect.min.y );
 
-			if( ScreenRect.AtBorder(math::Vector(X, Y), 3.f) )
+			if( ScreenRect.atBorder( math::Vector(X, Y), 3.f ) )
 			{
 				Result		= Entity;
 				BestLayer	= Base->Layer;
@@ -1686,9 +1686,9 @@ FEntity* WLevelPage::GetEntityAt( Int32 X, Int32 Y, Bool bFast )
 		else if( Base->IsA(FModelComponent::MetaClass) )
 		{
 			// Test hit with model.
-			TRect R	= Base->GetAABB();
+			math::Rect R	= Base->GetAABB();
 
-			if( R.IsInside( V ) )
+			if( R.isInside( V ) )
 			{
 				// Hit entity.
 				Result		= Entity;
@@ -1715,9 +1715,9 @@ FEntity* WLevelPage::GetEntityAt( Int32 X, Int32 Y, Bool bFast )
 		else
 		{
 			// Most probably FRectComponent.
-			TRect R		= TRect( math::Vector( 0.f, 0.f ), Base->Size );
+			math::Rect R		= math::Rect( math::Vector( 0.f, 0.f ), Base->Size.x, Base->Size.y );
 
-			if( R.IsInside( math::transformPointBy( V, Base->ToLocal() ) ) )
+			if( R.isInside( math::transformPointBy( V, Base->ToLocal() ) ) )
 			{
 				// Hit entity.
 				Result		= Entity;
@@ -2123,7 +2123,7 @@ void WLevelPage::DrawLogicCircuit( CCanvas* Canvas )
 		FBaseComponent*		Base = Logic->Base;
 
 		// Is visible?
-		if( !Canvas->View.Bounds.IsOverlap(Base->GetAABB()) )
+		if( !Canvas->View.Bounds.isOverlap( Base->GetAABB() ) )
 			continue;
 
 		Canvas->PushTransform(TViewInfo( P.X, P.Y, Size.Width, Size.Height ));
@@ -2170,8 +2170,8 @@ void WLevelPage::DrawScrollClamp( CCanvas* Canvas )
 {
 	Canvas->DrawLineRect
 	(
-		Level->Camera.ScrollBound.Center(),
-		Level->Camera.ScrollBound.Size(),
+		Level->Camera.ScrollBound.center(),
+		Level->Camera.ScrollBound.size(),
 		0,
 		COLOR_LimeGreen,
 		false
@@ -2814,7 +2814,7 @@ void WLevelPage::PopDuplicateClick( WWidget* Sender )
 			Level->Entities.push( New );
 
 			// Place entity to proper location in world.
-			New->Base->Location	+= Source->Base->GetAABB().Size()*1.17f;
+			New->Base->Location	+= Source->Base->GetAABB().size()*1.17f;
 			New->Base->Location.snap(TranslationSnap);
 			New->Base->Layer	+= 0.01f;
 		}

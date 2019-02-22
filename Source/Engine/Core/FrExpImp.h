@@ -21,7 +21,7 @@ public:
 	virtual void ExportBool		( const Char* FieldName, Bool Value		) = 0;
 	virtual void ExportColor	( const Char* FieldName, TColor Value	) = 0;
 	virtual void ExportVector	( const Char* FieldName, math::Vector Value	) = 0;
-	virtual void ExportAABB		( const Char* FieldName, TRect Value	) = 0;
+	virtual void ExportAABB		( const Char* FieldName, math::Rect Value	) = 0;
 	virtual void ExportAngle	( const Char* FieldName, math::Angle Value	) = 0;
 	virtual void ExportObject	( const Char* FieldName, FObject* Value	) = 0;
 };
@@ -45,7 +45,7 @@ public:
 	virtual Bool			ImportBool		( const Char* FieldName ) = 0;
 	virtual TColor			ImportColor		( const Char* FieldName ) = 0;
 	virtual math::Vector	ImportVector	( const Char* FieldName ) = 0;
-	virtual TRect			ImportAABB		( const Char* FieldName ) = 0;
+	virtual math::Rect		ImportAABB		( const Char* FieldName ) = 0;
 	virtual math::Angle		ImportAngle		( const Char* FieldName ) = 0;
 	virtual FObject*		ImportObject	( const Char* FieldName ) = 0;
 };

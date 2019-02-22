@@ -47,8 +47,8 @@ COpenGLRender::COpenGLRender( HWND InhWnd )
 void COpenGLRender::Resize( Int32 NewWidth, Int32 NewHeight )
 {
 	// Clamp.
-	NewWidth	= Clamp( NewWidth,  1, MAX_X_RES );
-	NewHeight	= Clamp( NewHeight, 1, MAX_Y_RES );
+	NewWidth	= clamp( NewWidth,  1, MAX_X_RES );
+	NewHeight	= clamp( NewHeight, 1, MAX_Y_RES );
 
 	// Store resolution.
 	WinWidth	= NewWidth;
@@ -75,6 +75,8 @@ CCanvas* COpenGLRender::Lock()
 	Canvas->ScreenHeight	= WinHeight;
 	Canvas->LockTime		= fmod( GPlat->Now(), 1000.f*2.f*math::PI );
 
+	mem::zero( &Canvas->m_stats, sizeof(COpenGLCanvas::DrawStats) );
+
 	return Canvas;
 }
 
@@ -85,8 +87,16 @@ CCanvas* COpenGLRender::Lock()
 //
 void COpenGLRender::Unlock()
 {
-	profile_zone( EProfilerGroup::Render, SwapBuffers );
-	SwapBuffers( hDc );
+	{
+		profile_zone( EProfilerGroup::Render, SwapBuffers );
+		SwapBuffers( hDc );
+	}
+
+	profile_counter( EProfilerGroup::DrawCalls, Points, Canvas->m_stats.points );
+	profile_counter( EProfilerGroup::DrawCalls, Lines, Canvas->m_stats.lines );
+	profile_counter( EProfilerGroup::DrawCalls, Rects, Canvas->m_stats.rects );
+	profile_counter( EProfilerGroup::DrawCalls, Polygons, Canvas->m_stats.polygons );
+	profile_counter( EProfilerGroup::DrawCalls, Lists, Canvas->m_stats.lists );
 }
 
 
@@ -294,6 +304,7 @@ void COpenGLCanvas::DrawPoint( const math::Vector& P, Float Size, TColor Color )
 	SetColor( Color );
 	SetBitmap( nullptr );
 
+	m_stats.points++;
 	glBegin( GL_POINTS );
 	{
 		glVertex2fv( (GLfloat*)&P );
@@ -322,6 +333,7 @@ void COpenGLCanvas::DrawLine( const math::Vector& A, const math::Vector& B, TCol
 		glDisable( GL_LINE_STIPPLE );
 	}
 
+	m_stats.lines++;
 	glBegin( GL_LINES );
 	{
 		glVertex2fv( (GLfloat*)&A );
@@ -342,16 +354,16 @@ void COpenGLCanvas::DrawRect( const TRenderRect& Rect )
 	if( !Rect.Rotation )
 	{
 		// No rotation.
-		Verts[0] = Rect.Bounds.Min;
-		Verts[1] = math::Vector( Rect.Bounds.Min.x, Rect.Bounds.Max.y );
-		Verts[2] = Rect.Bounds.Max;
-		Verts[3] = math::Vector( Rect.Bounds.Max.x, Rect.Bounds.Min.y );
+		Verts[0] = Rect.Bounds.min;
+		Verts[1] = math::Vector( Rect.Bounds.min.x, Rect.Bounds.max.y );
+		Verts[2] = Rect.Bounds.max;
+		Verts[3] = math::Vector( Rect.Bounds.max.x, Rect.Bounds.min.y );
 	}
 	else
 	{
 		// Rotation.
-		math::Vector Center	= Rect.Bounds.Center();
-		math::Vector Size2	= Rect.Bounds.Size() * 0.5f;
+		math::Vector Center	= Rect.Bounds.center();
+		math::Vector Size2	= Rect.Bounds.size() * 0.5f;
 		math::Coords Coords	= math::Coords( Center, Rect.Rotation );
 
 		math::Vector XAxis = Coords.xAxis * Size2.x,
@@ -377,6 +389,7 @@ void COpenGLCanvas::DrawRect( const TRenderRect& Rect )
 		if( Rect.Flags & POLY_AlphaGhost )
 			SetBlend( BLEND_Alpha );
 
+		m_stats.rects++;
 		glBegin( GL_POLYGON );
 		{
 			for( Int32 i=0; i<4; i++ )
@@ -401,8 +414,8 @@ void COpenGLCanvas::DrawRect( const TRenderRect& Rect )
 			}
 
 			// Material texture coords.
-			math::Vector T1	= Rect.TexCoords.Min;
-			math::Vector T2	= Rect.TexCoords.Max;
+			math::Vector T1	= Rect.TexCoords.min;
+			math::Vector T2	= Rect.TexCoords.max;
 			math::Vector RawTexVerts[4];
 			RawTexVerts[0]	= math::Vector( T1.x, T1.y );
 			RawTexVerts[1]	= math::Vector( T1.x, T2.y );
@@ -423,6 +436,7 @@ void COpenGLCanvas::DrawRect( const TRenderRect& Rect )
 				math::Vector FinalTexCoords[4];
 				Layer->ApplyTransform( View, RawTexVerts, FinalTexCoords, 4 );
 
+				m_stats.rects++;
 				glBegin( GL_POLYGON );
 				{
 					for( Int32 i=0; i<4; i++ )
@@ -447,14 +461,15 @@ void COpenGLCanvas::DrawRect( const TRenderRect& Rect )
 				SetBlend( BLEND_Brighten );
 
 			// Texture coords.
-			math::Vector T1	= Rect.TexCoords.Min + BitmapPan;
-			math::Vector T2	= Rect.TexCoords.Max + BitmapPan;
+			math::Vector T1	= Rect.TexCoords.min + BitmapPan;
+			math::Vector T2	= Rect.TexCoords.max + BitmapPan;
 			math::Vector TexVerts[4];
 			TexVerts[0]	= math::Vector( T1.x, T1.y );
 			TexVerts[1]	= math::Vector( T1.x, T2.y );
 			TexVerts[2]	= math::Vector( T2.x, T2.y );
 			TexVerts[3]	= math::Vector( T2.x, T1.y );
 
+			m_stats.rects++;
 			glBegin( GL_POLYGON );
 			{
 				for( Int32 i=0; i<4; i++ )
@@ -493,6 +508,7 @@ void COpenGLCanvas::DrawList( const TRenderList& List )
 			SetColor( List.DrawColor );
 
 		// Render it.
+		m_stats.lists++;
 		glVertexPointer( 2, GL_FLOAT, 0, List.Vertices );
 		glDrawArrays( GL_QUADS, 0, List.NumRects*4 );
 
@@ -524,6 +540,7 @@ void COpenGLCanvas::DrawList( const TRenderList& List )
 				List.TexCoords[i]	+= BitmapPan;
 
 		// Render it.
+		m_stats.lists++;
 		glVertexPointer( 2, GL_FLOAT, 0, List.Vertices );
 		glTexCoordPointer( 2, GL_FLOAT, 0, List.TexCoords ); 
 		glDrawArrays( GL_QUADS, 0, List.NumRects*4 );
@@ -552,6 +569,7 @@ void COpenGLCanvas::DrawPoly( const TRenderPoly& Poly )
 		if( Poly.Flags & POLY_AlphaGhost )
 			SetBlend( BLEND_Alpha );
 
+		m_stats.polygons++;
 		glBegin( GL_POLYGON );
 		{
 			for( Int32 i=0; i<Poly.NumVerts; i++ )
@@ -589,6 +607,7 @@ void COpenGLCanvas::DrawPoly( const TRenderPoly& Poly )
 				math::Vector FinalTexCoords[16];
 				Layer->ApplyTransform( View, Poly.TexCoords, FinalTexCoords, Poly.NumVerts );
 
+				m_stats.polygons++;
 				glBegin( GL_POLYGON );
 				{
 					for( Int32 i=0; i<Poly.NumVerts; i++ )
@@ -612,6 +631,7 @@ void COpenGLCanvas::DrawPoly( const TRenderPoly& Poly )
 			if( Poly.Flags & POLY_Ghost )
 				SetBlend( BLEND_Brighten );
 
+			m_stats.polygons++;
 			glBegin( GL_POLYGON );
 			{
 				for( Int32 i=0; i<Poly.NumVerts; i++ )
@@ -1284,10 +1304,10 @@ void CGLFluShader::SetModeLightmap()
 void drawGrid( COpenGLCanvas* Canvas )
 {
 	// Compute bounds.
-	Int32 CMinX = math::trunc(Max<Float>( Canvas->View.Bounds.Min.x, -math::WORLD_HALF ));
-	Int32 CMinY = math::trunc(Max<Float>( Canvas->View.Bounds.Min.y, -math::WORLD_HALF ));
-	Int32 CMaxX = math::trunc(Min<Float>( Canvas->View.Bounds.Max.x, +math::WORLD_HALF ));
-	Int32 CMaxY = math::trunc(Min<Float>( Canvas->View.Bounds.Max.y, +math::WORLD_HALF ));
+	Int32 CMinX = math::trunc(max<Float>( Canvas->View.Bounds.min.x, -math::WORLD_HALF ));
+	Int32 CMinY = math::trunc(max<Float>( Canvas->View.Bounds.min.y, -math::WORLD_HALF ));
+	Int32 CMaxX = math::trunc(min<Float>( Canvas->View.Bounds.max.x, +math::WORLD_HALF ));
+	Int32 CMaxY = math::trunc(min<Float>( Canvas->View.Bounds.max.y, +math::WORLD_HALF ));
 
 	// Pick colors.
 	TColor GridColor0 = TColor( 0x40, 0x40, 0x40, 0xff );
@@ -1333,12 +1353,13 @@ void COpenGLCanvas::RenderLightmap()
 	FluShader.SetModeLightmap();
 	SetBlend( BLEND_Translucent );
 
+	m_stats.rects++;
 	glBegin( GL_QUADS );
 	{
-		glVertex2f( View.Bounds.Min.x, View.Bounds.Min.y );
-		glVertex2f( View.Bounds.Min.x, View.Bounds.Max.y );
-		glVertex2f( View.Bounds.Max.x, View.Bounds.Max.y );
-		glVertex2f( View.Bounds.Max.x, View.Bounds.Min.y );
+		glVertex2f( View.Bounds.min.x, View.Bounds.min.y );
+		glVertex2f( View.Bounds.min.x, View.Bounds.max.y );
+		glVertex2f( View.Bounds.max.x, View.Bounds.max.y );
+		glVertex2f( View.Bounds.max.x, View.Bounds.min.y );
 	}
 	glEnd();
 }
@@ -1378,7 +1399,7 @@ void drawSkyZone( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& Parent 
 	ViewArea.x	= Sky->Extent;
 	ViewArea.y	= Sky->Extent * Parent.FOV.y / Parent.FOV.x;
 
-	TRect	SkyDome	= TRect( Sky->Location, Sky->Size );
+	math::Rect SkyDome	= math::Rect( Sky->Location, Sky->Size.x, Sky->Size.y );
 	Float	Side	= math::sqrt(sqr(ViewArea.x) + sqr(ViewArea.y)),
 			Side2	= Side * 0.5f;
 
@@ -1387,10 +1408,10 @@ void drawSkyZone( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& Parent 
 	Eye.y	= Canvas->View.Coords.origin.y * Sky->Parallax.y + Sky->Offset.y;
 
 	// Azimuth of sky should be wrapped.
-	Eye.x	= Wrap( Eye.x, SkyDome.Min.x, SkyDome.Max.x );
+	Eye.x	= Wrap( Eye.x, SkyDome.min.x, SkyDome.max.x );
 
 	// Height of sky should be clamped.
-	Eye.y	= Clamp( Eye.y, SkyDome.Min.y+Side2, SkyDome.Max.y-Side2 );
+	Eye.y	= clamp( Eye.y, SkyDome.min.y+Side2, SkyDome.max.y-Side2 );
 
 	// Sky roll angle.
 	math::Angle Roll = math::Angle(fmodf( Sky->RollSpeed*(Float)GPlat->Now(), 2.f*math::PI ));	
@@ -1415,10 +1436,10 @@ void drawSkyZone( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& Parent 
 	TViewInfo WestView, EastView;
 
 	// Compute wrapped pieces of sky zone.
-	if( Eye.x-Side2 < SkyDome.Min.x )
+	if( Eye.x-Side2 < SkyDome.min.x )
 	{
 		// Draw also west piece.
-		math::Vector WestEye = math::Vector( SkyDome.Max.x+(Eye.x-SkyDome.Min.x), Eye.y );
+		math::Vector WestEye = math::Vector( SkyDome.max.x+(Eye.x-SkyDome.min.x), Eye.y );
 		WestView		= TViewInfo
 		(
 			WestEye,
@@ -1433,10 +1454,10 @@ void drawSkyZone( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& Parent 
 		);
 		bDrawWest	= true;
 	}
-	if( Eye.x+Side2 > SkyDome.Max.x )
+	if( Eye.x+Side2 > SkyDome.max.x )
 	{
 		// Draw also east piece.
-		math::Vector EastEye = math::Vector( SkyDome.Min.x-(SkyDome.Max.x-Eye.x), Eye.y );
+		math::Vector EastEye = math::Vector( SkyDome.min.x-(SkyDome.max.x-Eye.x), Eye.y );
 		EastView		= TViewInfo
 		(
 			EastEye,
@@ -1464,8 +1485,8 @@ void drawSkyZone( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& Parent 
 			FBaseComponent*		Base	= Light->Base;
 
 			// From master view.
-			TRect LightRect = TRect( Base->Location, Light->Radius*2.f );
-			if( SkyDome.IsOverlap(LightRect) )
+			math::Rect LightRect = math::Rect( Base->Location, Light->Radius*2.f );
+			if( SkyDome.isOverlap(LightRect) )
 			{
 				if( !Canvas->FluShader.AddLight( Light, Base->Location, Base->Rotation ) )
 					break;
@@ -1474,15 +1495,15 @@ void drawSkyZone( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& Parent 
 				continue;
 
 			// Fake west side.
-			LightRect	= TRect( Base->Location-math::Vector( Sky->Size.x, 0.f ), Light->Radius*2.f );
-			if( SkyDome.IsOverlap(LightRect) )
-				if( !Canvas->FluShader.AddLight( Light, LightRect.Center(), Base->Rotation ) )
+			LightRect	= math::Rect( Base->Location-math::Vector( Sky->Size.x, 0.f ), Light->Radius*2.f );
+			if( SkyDome.isOverlap(LightRect) )
+				if( !Canvas->FluShader.AddLight( Light, LightRect.center(), Base->Rotation ) )
 					break;
 
 			// Fake east side.
-			LightRect	= TRect( Base->Location+math::Vector( Sky->Size.x, 0.f ), Light->Radius*2.f );
-			if( SkyDome.IsOverlap(LightRect) )
-				if( !Canvas->FluShader.AddLight( Light, LightRect.Center(), Base->Rotation ) )
+			LightRect	= math::Rect( Base->Location+math::Vector( Sky->Size.x, 0.f ), Light->Radius*2.f );
+			if( SkyDome.isOverlap(LightRect) )
+				if( !Canvas->FluShader.AddLight( Light, LightRect.center(), Base->Rotation ) )
 					break;
 		}
 	}
@@ -1528,7 +1549,7 @@ void drawSkyZone( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& Parent 
 //
 void drawHalfPlaneMirror( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& Parent )
 {
-	TRect Observer	= Parent.Bounds;
+	math::Rect Observer	= Parent.Bounds;
 
 	for( FPortalComponent* Portal=Level->FirstPortal; Portal; Portal=Portal->NextPortal )
 	{
@@ -1539,15 +1560,15 @@ void drawHalfPlaneMirror( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo&
 
 		// Fast X reject.
 		if	( 
-				Portal->Location.x < Observer.Min.x ||
-				Portal->Location.x > Observer.Max.x	
+				Portal->Location.x < Observer.min.x ||
+				Portal->Location.x > Observer.max.x	
 			)
 			continue;
 
 		// Fast Y reject.
 		if	(
-				Portal->Location.y+HalfWidth < Observer.Min.y ||
-				Portal->Location.y-HalfWidth > Observer.Max.y
+				Portal->Location.y+HalfWidth < Observer.min.y ||
+				Portal->Location.y-HalfWidth > Observer.max.y
 			)
 			continue;
 
@@ -1564,7 +1585,7 @@ void drawHalfPlaneMirror( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo&
 
 				for( FLightComponent* Light=Level->FirstLight; Light; Light=Light->NextLight )
 				{
-					if( Canvas->View.Bounds.IsOverlap(Light->GetLightRect()) )
+					if( Canvas->View.Bounds.isOverlap( Light->GetLightRect() ) )
 						Canvas->FluShader.AddLight
 						( 
 							Light, 
@@ -1599,7 +1620,7 @@ void drawHalfPlaneMirror( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo&
 //
 void drawHalfPlaneWarp( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& Parent )
 {
-	TRect Observer	= Parent.Bounds;
+	math::Rect Observer	= Parent.Bounds;
 
 	for( FPortalComponent* Portal=Level->FirstPortal; Portal; Portal=Portal->NextPortal )
 	{
@@ -1614,15 +1635,15 @@ void drawHalfPlaneWarp( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& P
 
 		// Fast X reject.
 		if	( 
-				Portal->Location.x+HalfWidth < Observer.Min.x ||
-				Portal->Location.x-HalfWidth > Observer.Max.x	
+				Portal->Location.x+HalfWidth < Observer.min.x ||
+				Portal->Location.x-HalfWidth > Observer.max.x	
 			)
 			continue;
 
 		// Fast Y reject.
 		if	(
-				Portal->Location.y+HalfWidth < Observer.Min.y ||
-				Portal->Location.y-HalfWidth > Observer.Max.y
+				Portal->Location.y+HalfWidth < Observer.min.y ||
+				Portal->Location.y-HalfWidth > Observer.max.y
 			)
 			continue;
 
@@ -1631,7 +1652,7 @@ void drawHalfPlaneWarp( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& P
 		math::Vector V[2];
 		V[0] = math::transformPointBy( math::Vector(0.f, +HalfWidth), TestToWorld );
 		V[1] = math::transformPointBy( math::Vector(0.f, -HalfWidth), TestToWorld );
-		if( !Observer.IsOverlap(TRect( V, 2 )) )
+		if( !Observer.isOverlap( math::Rect( V, 2.f ) ) )
 			continue;
 
 		// Yes, warp is visible, render objects.
@@ -1649,7 +1670,7 @@ void drawHalfPlaneWarp( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& P
 				{
 					//TVector				LightPos	= Warp->TransferPoint(Light->Base->Location);
 
-					if( Canvas->View.Bounds.IsOverlap(Light->GetLightRect()) )
+					if( Canvas->View.Bounds.isOverlap( Light->GetLightRect() ) )
 						Canvas->FluShader.AddLight
 						( 
 							Light, 
@@ -1730,18 +1751,18 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 	{
 		TCamera& Camera = Level->Camera;
 
-		Camera.Location.x	= Clamp
+		Camera.Location.x	= clamp
 		(
 			Camera.Location.x,
-			Camera.ScrollBound.Min.x + Camera.FOV.x*0.5f,
-			Camera.ScrollBound.Max.x - Camera.FOV.x*0.5f
+			Camera.ScrollBound.min.x + Camera.FOV.x*0.5f,
+			Camera.ScrollBound.max.x - Camera.FOV.x*0.5f
 		);
 
-		Camera.Location.y	= Clamp
+		Camera.Location.y	= clamp
 		(
 			Camera.Location.y,
-			Camera.ScrollBound.Min.y + Camera.FOV.y*0.5f,
-			Camera.ScrollBound.Max.y - Camera.FOV.y*0.5f
+			Camera.ScrollBound.min.y + Camera.FOV.y*0.5f,
+			Camera.ScrollBound.max.y - Camera.FOV.y*0.5f
 		);
 	}
 
@@ -1800,11 +1821,11 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 				H ) );
 
 			TRenderRect rect;
-			rect.Bounds = TRect( math::Vector(0.f, 0.f), 1 );
+			rect.Bounds = math::Rect( math::Vector(0.f, 0.f), 1.f );
 
 			rect.Flags = POLY_Unlit | POLY_AlphaGhost;
-			rect.TexCoords.Min = math::Vector( 1, 1 );
-			rect.TexCoords.Max = math::Vector( 0, 0 );
+			rect.TexCoords.min = math::Vector( 1, 1 );
+			rect.TexCoords.max = math::Vector( 0, 0 );
 			rect.Texture = Level->m_duskBitmap;
 
 
@@ -1882,7 +1903,7 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 		if( Level->RndFlags & RND_Lighting )
 			for( FLightComponent* Light=Level->FirstLight; Light; Light=Light->NextLight )
 			{
-				if( Canvas->View.Bounds.IsOverlap(Light->GetLightRect()) )
+				if( Canvas->View.Bounds.isOverlap( Light->GetLightRect() ) )
 					Canvas->FluShader.AddLight
 					(
 						Light,
@@ -1994,6 +2015,7 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 		}
 
 		Canvas->FinalShader.setAberrationIntensity( Level->AberrationIntensity );
+		Canvas->FinalShader.setVignette( Level->m_vignetteIntensity, Level->m_vignetteInnerRadius, Level->m_vignetteOuterRadius );
 
 		// Render FBO to screen.
 		glBindTexture( GL_TEXTURE_2D, Canvas->MasterFBO->GetTextureId() );
@@ -2323,6 +2345,11 @@ bool CGLFinalShader::Init( String ShaderName )
 	idBWScale		= RegisterUniform( "bwScale" );
 
 	idAberrationIntensity = RegisterUniform( "aberrationIntensity" );
+
+	idvignetteIntensity	= RegisterUniform( "m_vignetteIntensity" );
+	idvignetteInnerRadius	= RegisterUniform( "m_vignetteInnerRadius" );
+	idvignetteOuterRadius	= RegisterUniform( "m_vignetteOuterRadius" );
+
 
 	// Only one bitmap supported.
 	idTexture = RegisterUniform( "texture" );

@@ -659,8 +659,8 @@ void CFrame::ProcessCode( TRegister* Result )
 			case CODE_ConstAABB:
 			{
 				// TRect constant.
-				TRect Value = ReadAABB();
-				*(TRect*)(Regs[ReadByte()].Value) = Value;
+				math::Rect Value = ReadAABB();
+				*(math::Rect*)(Regs[ReadByte()].Value) = Value;
 				break;
 			}
 			case CODE_ConstResource:
@@ -1077,16 +1077,16 @@ void CFrame::ProcessCode( TRegister* Result )
 			{
 				// Aabb to bool cast.
 				UInt8 iReg = ReadByte();
-				TRect Value = *(TRect*)Regs[iReg].Value;
-				*(Bool*)Regs[iReg].Value = Value.Min != Value.Max;
+				math::Rect Value = *(math::Rect*)Regs[iReg].Value;
+				*(Bool*)Regs[iReg].Value = Value.min != Value.max;
 				break;
 			}
 			case CAST_AabbToStrnig:
 			{
 				// Aabb to string cast.
 				UInt8 iReg = ReadByte();
-				TRect Value = *(TRect*)Regs[iReg].Value;
-				Regs[iReg].StrValue = String::Format( L"(%2.f, %2.f, %2.f, %2.f )", Value.Min.x, Value.Min.y, Value.Max.x, Value.Max.y );
+				math::Rect Value = *(math::Rect*)Regs[iReg].Value;
+				Regs[iReg].StrValue = String::Format( L"(%2.f, %2.f, %2.f, %2.f )", Value.min.x, Value.min.y, Value.max.x, Value.max.y );
 				break;
 			}
 			case CAST_ResourceToBool:

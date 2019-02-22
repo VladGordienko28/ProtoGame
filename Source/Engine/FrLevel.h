@@ -51,7 +51,7 @@ public:
 	math::Angle		Rotation;
 	math::Vector	FOV;
 	Float			Zoom;
-	TRect			ScrollBound;
+	math::Rect		ScrollBound;
 
 	// TCamera interface.
 	TCamera();
@@ -121,6 +121,12 @@ public:
 	FBitmap* m_dawnBitmap = nullptr;
 	FBitmap* m_noonBitmap = nullptr;
 	FBitmap* m_duskBitmap = nullptr;
+
+
+
+	Float m_vignetteIntensity = 1.f;
+	Float m_vignetteInnerRadius = 0.1f;
+	Float m_vignetteOuterRadius = 0.5f;
 
 
 	// -----------

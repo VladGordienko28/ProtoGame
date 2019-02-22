@@ -254,7 +254,7 @@ public:
 	CVariant( TColor InColor );
 	CVariant( String InString );
 	CVariant( const math::Vector& InVector );
-	CVariant( const TRect& InRect );
+	CVariant( const math::Rect& InRect );
 	CVariant( FResource* InResource );
 	CVariant( FEntity* InEntity );
 	CVariant( const TDelegate& InDelegate );
@@ -576,15 +576,15 @@ inline CTypeInfo _Cpp2FluType( Array<math::Vector>* Value )
 }
 
 // [TYPE_AABB]
-inline CTypeInfo _Cpp2FluType( TRect* Value )
+inline CTypeInfo _Cpp2FluType( math::Rect* Value )
 {
 	return CTypeInfo(TYPE_AABB, 1, nullptr);
 }
-template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( TRect(*Value)[ArrLen] )
+template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( math::Rect(*Value)[ArrLen] )
 {
 	return CTypeInfo( TYPE_AABB, ArrLen, nullptr );
 }
-inline CTypeInfo _Cpp2FluType( Array<TRect>* Value )
+inline CTypeInfo _Cpp2FluType( Array<math::Rect>* Value )
 {
 	return CTypeInfo( TYPE_AABB, -1, nullptr );
 }

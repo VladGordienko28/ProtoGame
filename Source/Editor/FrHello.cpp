@@ -116,7 +116,7 @@ void WHelloPage::OnPaint( CGUIRenderBase* Render )
 	// Recent projects list.
 	Render->DrawText
 	(
-		TPoint( Base.X+Max(Size.Width-200, 240), Base.Y+150 ),
+		TPoint( Base.X+max(Size.Width-200, 240), Base.Y+150 ),
 		L"Recent projects",
 		GUI_COLOR_TEXT,
 		Root->Font1
@@ -125,7 +125,7 @@ void WHelloPage::OnPaint( CGUIRenderBase* Render )
 		if( Recent[i] )
 			Recent[i]->SetLocation
 			(
-				Max(Size.Width-200, 240),
+				max(Size.Width-200, 240),
 				180 + i*25
 			);
 

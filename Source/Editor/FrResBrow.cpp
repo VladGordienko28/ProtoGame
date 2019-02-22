@@ -1003,9 +1003,9 @@ void WResourcePane::Refresh()
 				Icon.PicSize	= TSize( Icon.Picture->USize, Icon.Picture->VSize );
 
 				// Compute new scale, but keep aspect ratio.
-				Int32 Scale = Max( 1, Max( Icon.Picture->USize, Icon.Picture->VSize )/RES_ICON_SIZE );
-				Icon.Scale.Width		= Max( 1, Icon.Picture->USize/Scale );
-				Icon.Scale.Height	= Max( 1, Icon.Picture->VSize/Scale );
+				Int32 Scale = max( 1, max( Icon.Picture->USize, Icon.Picture->VSize )/RES_ICON_SIZE );
+				Icon.Scale.Width	= max( 1, Icon.Picture->USize/Scale );
+				Icon.Scale.Height	= max( 1, Icon.Picture->VSize/Scale );
 			}
 			else if( Res->IsA(FAnimation::MetaClass) )
 			{
@@ -1017,17 +1017,17 @@ void WResourcePane::Refresh()
 				if( Anim->Sheet && Anim->Frames.size() && Anim->Sequences.size() )
 				{
 					// Valid animation frame.
-					TRect Frame = Anim->GetTexCoords(Anim->Sequences[0].Start);
+					math::Rect Frame = Anim->GetTexCoords(Anim->Sequences[0].Start);
 					Icon.Picture			= Anim->Sheet;
 
-					Icon.PicOffset.X	= Int32( (Float)Anim->Sheet->USize*Frame.Min.x );
-					Icon.PicOffset.Y	= Int32( (Float)Anim->Sheet->VSize*Frame.Max.y );
-					Icon.PicSize.Width	= Int32( (Float)Anim->Sheet->USize*(Frame.Max.x-Frame.Min.x) );
-					Icon.PicSize.Height	= Int32( (Float)Anim->Sheet->VSize*(Frame.Min.y-Frame.Max.y) );
+					Icon.PicOffset.X	= Int32( (Float)Anim->Sheet->USize*Frame.min.x );
+					Icon.PicOffset.Y	= Int32( (Float)Anim->Sheet->VSize*Frame.max.y );
+					Icon.PicSize.Width	= Int32( (Float)Anim->Sheet->USize*(Frame.max.x-Frame.min.x) );
+					Icon.PicSize.Height	= Int32( (Float)Anim->Sheet->VSize*(Frame.min.y-Frame.max.y) );
 
-					Float Scale = Max( 1, Max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
-					Icon.Scale.Width	= Max<Int32>( 1, Icon.PicSize.Width/Scale );
-					Icon.Scale.Height	= Max<Int32>( 1, Icon.PicSize.Height/Scale );
+					Float Scale = max( 1, max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
+					Icon.Scale.Width	= max<Int32>( 1, Icon.PicSize.Width/Scale );
+					Icon.Scale.Height	= max<Int32>( 1, Icon.PicSize.Height/Scale );
 				}
 				else
 				{
@@ -1060,17 +1060,17 @@ void WResourcePane::Refresh()
 						FAnimation* Anim	= As<FAnimatedSpriteComponent>(Com)->Animation;
 						if( Anim && Anim->Sheet && Anim->Frames.size() && Anim->Sequences.size() )
 						{
-							TRect Frame = Anim->GetTexCoords(Anim->Sequences[0].Start);
+							math::Rect Frame = Anim->GetTexCoords(Anim->Sequences[0].Start);
 							Icon.Picture			= Anim->Sheet;
 
-							Icon.PicOffset.X	= Int32( (Float)Anim->Sheet->USize*Frame.Min.x );
-							Icon.PicOffset.Y	= Int32( (Float)Anim->Sheet->VSize*Frame.Max.y );
-							Icon.PicSize.Width	= Int32( (Float)Anim->Sheet->USize*(Frame.Max.x-Frame.Min.x) );
-							Icon.PicSize.Height	= Int32( (Float)Anim->Sheet->VSize*(Frame.Min.y-Frame.Max.y) );
+							Icon.PicOffset.X	= Int32( (Float)Anim->Sheet->USize*Frame.min.x );
+							Icon.PicOffset.Y	= Int32( (Float)Anim->Sheet->VSize*Frame.max.y );
+							Icon.PicSize.Width	= Int32( (Float)Anim->Sheet->USize*(Frame.max.x-Frame.min.x) );
+							Icon.PicSize.Height	= Int32( (Float)Anim->Sheet->VSize*(Frame.min.y-Frame.max.y) );
 
-							Float Scale = Max( 1, Max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
-							Icon.Scale.Width	= Max<Int32>( 1, Icon.PicSize.Width/Scale );
-							Icon.Scale.Height	= Max<Int32>( 1, Icon.PicSize.Height/Scale );
+							Float Scale = max( 1, max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
+							Icon.Scale.Width	= max<Int32>( 1, Icon.PicSize.Width/Scale );
+							Icon.Scale.Height	= max<Int32>( 1, Icon.PicSize.Height/Scale );
 							break;
 						}
 						else
@@ -1082,17 +1082,17 @@ void WResourcePane::Refresh()
 						FSpriteComponent* Sprite = As<FSpriteComponent>(Com);
 						if( Sprite->Texture )
 						{
-							TRect	Frame			= Sprite->TexCoords;
+							math::Rect	Frame		= Sprite->TexCoords;
 							Icon.Picture			= Sprite->Texture;
 
-							Icon.PicOffset.X	= Int32( Frame.Min.x );
-							Icon.PicOffset.Y	= Int32( Frame.Min.y );
-							Icon.PicSize.Width	= Int32( (Frame.Max.x-Frame.Min.x) );
-							Icon.PicSize.Height	= Int32( (Frame.Max.y-Frame.Min.y) );
+							Icon.PicOffset.X	= Int32( Frame.min.x );
+							Icon.PicOffset.Y	= Int32( Frame.min.y );
+							Icon.PicSize.Width	= Int32( (Frame.max.x-Frame.min.x) );
+							Icon.PicSize.Height	= Int32( (Frame.max.y-Frame.min.y) );
 
-							Float Scale = Max( 1, Max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
-							Icon.Scale.Width	= Max<Int32>( 1, Icon.PicSize.Width/Scale );
-							Icon.Scale.Height	= Max<Int32>( 1, Icon.PicSize.Height/Scale );
+							Float Scale = max( 1, max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
+							Icon.Scale.Width	= max<Int32>( 1, Icon.PicSize.Width/Scale );
+							Icon.Scale.Height	= max<Int32>( 1, Icon.PicSize.Height/Scale );
 							break;
 						}
 						else
@@ -1104,17 +1104,17 @@ void WResourcePane::Refresh()
 						FDecoComponent* Sprite = As<FDecoComponent>(Com);
 						if( Sprite->Texture )
 						{
-							TRect	Frame			= Sprite->TexCoords;
+							math::Rect	Frame		= Sprite->TexCoords;
 							Icon.Picture			= Sprite->Texture;
 
-							Icon.PicOffset.X	= Int32( (Float)Icon.Picture->USize*Frame.Min.x );
-							Icon.PicOffset.Y	= Int32( (Float)Icon.Picture->VSize*Frame.Max.y );
-							Icon.PicSize.Width	= Int32( (Float)Icon.Picture->USize*(Frame.Max.x-Frame.Min.x) );
-							Icon.PicSize.Height	= Int32( (Float)Icon.Picture->VSize*(Frame.Min.y-Frame.Max.y) );
+							Icon.PicOffset.X	= Int32( (Float)Icon.Picture->USize*Frame.min.x );
+							Icon.PicOffset.Y	= Int32( (Float)Icon.Picture->VSize*Frame.max.y );
+							Icon.PicSize.Width	= Int32( (Float)Icon.Picture->USize*(Frame.max.x-Frame.min.x) );
+							Icon.PicSize.Height	= Int32( (Float)Icon.Picture->VSize*(Frame.min.y-Frame.max.y) );
 
-							Float Scale = Max( 1, Max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
-							Icon.Scale.Width	= Max<Int32>( 1, Icon.PicSize.Width/Scale );
-							Icon.Scale.Height	= Max<Int32>( 1, Icon.PicSize.Height/Scale );
+							Float Scale = max( 1, max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
+							Icon.Scale.Width	= max<Int32>( 1, Icon.PicSize.Width/Scale );
+							Icon.Scale.Height	= max<Int32>( 1, Icon.PicSize.Height/Scale );
 							break;
 						}
 						else
@@ -1287,7 +1287,7 @@ void WResourcePane::ScrollChange( WWidget* Sender )
 	// Prepare for walking.
 	Int32 TotalWidth	= Size.Width - PANE_ICONS_STEP;
 	Int32 XCount		= TotalWidth / (RES_ICON_SIZE + PANE_ICONS_STEP);
-	Int32 XSpacing	= (TotalWidth - XCount*(RES_ICON_SIZE + PANE_ICONS_STEP)) / Max(1, XCount);
+	Int32 XSpacing		= (TotalWidth - XCount*(RES_ICON_SIZE + PANE_ICONS_STEP)) / max(1, XCount);
 	Int32	XWalk		= PANE_ICONS_STEP;
 	Int32	YWalk		= PANE_ICONS_STEP;
 
@@ -1310,7 +1310,7 @@ void WResourcePane::ScrollChange( WWidget* Sender )
 	}
 
 	// Apply scroll for each icon.
-	Int32 YScroll = Max( 0, YWalk-RES_ICON_SIZE-30 )*ScrollBar->Value / 100;
+	Int32 YScroll = max( 0, YWalk-RES_ICON_SIZE-30 )*ScrollBar->Value / 100;
 	for( Int32 i=0; i<Icons.size(); i++ )
 		Icons[i].Position.Y -= YScroll;
 }
@@ -1321,7 +1321,7 @@ void WResourcePane::ScrollChange( WWidget* Sender )
 //
 void WResourcePane::OnMouseScroll( Int32 Delta )
 {
-	ScrollBar->Value = Clamp
+	ScrollBar->Value = clamp
 	( 
 		ScrollBar->Value - Delta/40, 
 		0, 

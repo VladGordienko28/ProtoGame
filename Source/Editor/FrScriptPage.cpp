@@ -183,7 +183,7 @@ public:
 	}
 	void ButtonGoClick( WWidget* Sender )
 	{
-		Int32 iLine = Clamp( LineSpinner->GetIntValue(), 1, CodeEditor->Lines.size() )-1;
+		Int32 iLine = clamp( LineSpinner->GetIntValue(), 1, CodeEditor->Lines.size() )-1;
 		CodeEditor->ScrollToLine(iLine);
 		Hide();
 	}
@@ -982,12 +982,12 @@ void WCodeEditor::OnKeyUp( Int32 Key )
 		if( CaretYBegin == CaretYEnd )
 		{
 			if( CaretXBegin > CaretXEnd )
-				Exchange( CaretXBegin, CaretXEnd );
+				exchange( CaretXBegin, CaretXEnd );
 		}
 		else if( CaretYBegin > CaretYEnd )
 		{
-			Exchange( CaretYBegin, CaretYEnd );
-			Exchange( CaretXBegin, CaretXEnd );
+			exchange( CaretYBegin, CaretYEnd );
+			exchange( CaretXBegin, CaretXEnd );
 		}
 	}
 }
@@ -1013,12 +1013,12 @@ void WCodeEditor::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 	if( CaretYBegin == CaretYEnd )
 	{
 		if( CaretXBegin > CaretXEnd )
-			Exchange( CaretXBegin, CaretXEnd );
+			exchange( CaretXBegin, CaretXEnd );
 	}
 	else if( CaretYBegin > CaretYEnd )
 	{
-		Exchange( CaretYBegin, CaretYEnd );
-		Exchange( CaretXBegin, CaretXEnd );
+		exchange( CaretYBegin, CaretYEnd );
+		exchange( CaretXBegin, CaretXEnd );
 	}
 
 	// Drop text.
@@ -1160,9 +1160,9 @@ void WCodeEditor::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 		CaretXEnd	= XToColumn( X, CaretYEnd );
 
 		// Slowly scroll.
-		if( Y < 0 )				ScrollTop = Max( 0, ScrollTop-1 );
-		if( Y > Size.Height )	ScrollTop = Min( Lines.size()-1, ScrollTop+1 );
-		ScrollBar->Value = 100*ScrollTop / Max( Lines.size()-1, 1 );
+		if( Y < 0 )				ScrollTop = max( 0, ScrollTop-1 );
+		if( Y > Size.Height )	ScrollTop = min( Lines.size()-1, ScrollTop+1 );
+		ScrollBar->Value = 100*ScrollTop / max( Lines.size()-1, 1 );
 	}
 
 	// Change cursor style.
@@ -1243,14 +1243,14 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 		else if( Key == 0x26 )
 		{
 			// <Up> arrow.
-			CaretYEnd	= Max( 0, CaretYEnd-1 );
-			CaretXEnd	= Min( CaretXEnd, Lines[CaretYEnd].Text.Len() );
+			CaretYEnd	= max( 0, CaretYEnd-1 );
+			CaretXEnd	= min( CaretXEnd, Lines[CaretYEnd].Text.Len() );
 		}
 		else if( Key == 0x28 )
 		{
 			// <Down> arrow.
-			CaretYEnd	= Min( CaretYEnd+1, Lines.size()-1 );
-			CaretXEnd = Min( CaretXEnd, Lines[CaretYEnd].Text.Len() );
+			CaretYEnd	= min( CaretYEnd+1, Lines.size()-1 );
+			CaretXEnd = min( CaretXEnd, Lines[CaretYEnd].Text.Len() );
 		}
 
 		ScrollToCaret();
@@ -1326,8 +1326,8 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 		// <Up> button.
 		if( !AutoDialog )
 		{
-			CaretYEnd	= CaretYBegin = Max( 0, CaretYBegin-1 );
-			CaretXEnd	= CaretXBegin = Min( CaretXBegin, Lines[CaretYBegin].Text.Len() );
+			CaretYEnd	= CaretYBegin = max( 0, CaretYBegin-1 );
+			CaretXEnd	= CaretXBegin = min( CaretXBegin, Lines[CaretYBegin].Text.Len() );
 		}
 		else
 			AutoDialog->OnKeyDown( Key );
@@ -1339,8 +1339,8 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 		// <Down> button.
 		if( !AutoDialog )
 		{
-			CaretYBegin	= CaretYEnd	= Min( CaretYEnd+1, Lines.size()-1 );
-			CaretXBegin	= CaretXEnd = Min( CaretXEnd, Lines[CaretYBegin].Text.Len() );
+			CaretYBegin	= CaretYEnd	= min( CaretYEnd+1, Lines.size()-1 );
+			CaretXBegin	= CaretXEnd = min( CaretXEnd, Lines[CaretYBegin].Text.Len() );
 		}
 		else
 			AutoDialog->OnKeyDown( Key );
@@ -1603,7 +1603,7 @@ void WCodeEditor::ScrollToCaret()
 	while( CaretYEnd >= ScrollTop+NumVis )		ScrollTop++;
 
 	// Update scroll bar.
-	ScrollBar->Value	= 100*ScrollTop / Max( Lines.size()-1, 1 );
+	ScrollBar->Value	= 100*ScrollTop / max( Lines.size()-1, 1 );
 }
 
 
@@ -1638,7 +1638,7 @@ void WCodeEditor::OnCharType( Char TypedChar )
 				else
 				{
 #if BACKSPACE_TAB
-					Int32 Dest		= Max( 0, (4*(((CaretXBegin-1)/4)+1))-4 );
+					Int32 Dest		= max( 0, (4*(((CaretXBegin-1)/4)+1))-4 );
 					Int32 NumEra		= CaretXBegin - Dest;
 
 					// Test for spaces only.
@@ -1964,17 +1964,17 @@ Bool WCodeEditor::IsInSelection( Int32 X, Int32 Y )
 void WCodeEditor::ScrollToLine( Int32 iLine )
 { 
 	// Clamp it.
-	iLine	= Clamp( iLine, 0, Lines.size()-1 );
+	iLine	= clamp( iLine, 0, Lines.size()-1 );
 
 	// Set caret location.
 	CaretYBegin	= CaretYEnd	= iLine;
 	CaretXBegin	= CaretXEnd	= 0;
 	
 	// Set scroll.
-	ScrollTop	= Max( 0, iLine-10 );	
+	ScrollTop	= max( 0, iLine-10 );	
 
 	// Update scroll bar.
-	ScrollBar->Value	= 100*ScrollTop / Max( Lines.size()-1, 1 );
+	ScrollBar->Value	= 100*ScrollTop / max( Lines.size()-1, 1 );
 }
 
 
@@ -2092,7 +2092,7 @@ void WCodeEditor::OnDragOver( void* Data, Int32 X, Int32 Y, Bool& bAccept )
 void WCodeEditor::ScrollBarChange( WWidget* Sender )
 {
 	ScrollTop	= ScrollBar->Value * (Lines.size()-1) / 100;
-	ScrollTop	= Clamp( ScrollTop, 0, Lines.size()-1 );
+	ScrollTop	= clamp( ScrollTop, 0, Lines.size()-1 );
 }
 
 
@@ -2105,10 +2105,10 @@ void WCodeEditor::OnMouseScroll( Int32 Delta )
 	{
 		// Scroll text in aspect 1:3.
 		ScrollTop	-= Delta / 40;
-		ScrollTop	= Clamp( ScrollTop, 0, Lines.size()-1 );
+		ScrollTop	= clamp( ScrollTop, 0, Lines.size()-1 );
 
 		// Update scroll bar.
-		ScrollBar->Value	= 100*ScrollTop / Max( Lines.size()-1, 1 );
+		ScrollBar->Value	= 100*ScrollTop / max( Lines.size()-1, 1 );
 	}
 	else
 	{
@@ -2129,7 +2129,7 @@ void WCodeEditor::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 
 	// If at end, try to select just something.
 	if( CaretXBegin >= Line.Text.Len() )
-		CaretXBegin = Max( 0, CaretXBegin-1 );
+		CaretXBegin = max( 0, CaretXBegin-1 );
 
 	// Prepare for selection.
 	CaretYEnd	= CaretYBegin;
@@ -2187,7 +2187,7 @@ Int32 WCodeEditor::ColumnToX( Int32 iColumn )
 //
 Int32 WCodeEditor::XToColumn( Int32 X, Int32 iLine )
 {
-	return Clamp
+	return clamp
 			( 
 				math::round((Float)(X-15) / (Float)CharSize.Width),		
 				0, 
@@ -2210,7 +2210,7 @@ Int32 WCodeEditor::LineToY( Int32 iLine )
 //
 Int32 WCodeEditor::YToLine( Int32 Y )
 {
-	return Clamp
+	return clamp
 			(
 				ScrollTop + Y / CharSize.Height,
 				0,
@@ -2331,7 +2331,7 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 
 	// Visible lines bounds.
 	Int32 iVisFirst	= ScrollTop;
-	Int32 iVisLast	= Min( ScrollTop + Size.Height/CharSize.Height, Lines.size()-1 );
+	Int32 iVisLast	= min( ScrollTop + Size.Height/CharSize.Height, Lines.size()-1 );
 	
 	// Draw background.
 	Render->DrawRegion
@@ -2415,7 +2415,7 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 			EndX	= CaretXBegin;
 		}
 
-		for( Int32 Y=Max(Y1, iVisFirst); Y<=Min(Y2, iVisLast); Y++ )  
+		for( Int32 Y=max(Y1, iVisFirst); Y<=min(Y2, iVisLast); Y++ )  
 		{
 			Int32 X1 = Y==Y1 ? BeginX : 0;
 			Int32 X2 = Y==Y2 ? EndX : Lines[Y].Text.Len();		
@@ -2493,7 +2493,7 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 								TPoint(	Base.X + RndChars*CharSize.Width + 17, 
 										Base.Y + (iLine-ScrollTop)*CharSize.Height ),
 								&Line.Text[RndChars],
-								Min( S->Length, Line.Text.Len()-RndChars ),
+								min( S->Length, Line.Text.Len()-RndChars ),
 								GHightlight[S->Type],
 								Root->Font2
 							);
@@ -2546,7 +2546,7 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 //
 Int32 FindInLine( const String& Needle, const String& HayStack, Int32 iStart )
 {
-	const Char* Gotten = wcsstr( &(*HayStack)[Clamp(iStart, 0, HayStack.Len())], *Needle );
+	const Char* Gotten = wcsstr( &(*HayStack)[clamp(iStart, 0, HayStack.Len())], *Needle );
 	return Gotten ? ((Int32)Gotten - (Int32)*HayStack)/sizeof(Char) : -1;
 }
 
@@ -2796,7 +2796,7 @@ void WCodeEditor::LoadFromUndoStack( Int32 iSlot )
 	HighlightAll();
 	CaretXEnd			= CaretXBegin;
 	CaretYEnd			= CaretYBegin;
-	ScrollBar->Value	= 100*ScrollTop / Max( Lines.size()-1, 1 );
+	ScrollBar->Value	= 100*ScrollTop / max( Lines.size()-1, 1 );
 
 #if UNDO_TEXT_COMPRESS
 	// Free.

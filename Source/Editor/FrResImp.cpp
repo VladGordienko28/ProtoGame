@@ -75,7 +75,7 @@ FBitmap* ImportBMP( String Filename, String ResName )
 	RGBQUAD BmpPalette[256];
 	if( BmpInfo.biClrUsed )
 	{
-		BmpInfo.biClrUsed = Min( BmpInfo.biClrUsed, (DWORD)256 );
+		BmpInfo.biClrUsed = min( BmpInfo.biClrUsed, (DWORD)256 );
 		Loader.SerializeData( BmpPalette, sizeof(RGBQUAD)*BmpInfo.biClrUsed );
 	}
 
@@ -391,7 +391,7 @@ FBitmap* ImportPNG( String Filename, String ResName )
 		free(PngImage);
 		return nullptr;
 	}
-	if( !(IsPowerOfTwo(PngWidth) && IsPowerOfTwo(PngHeight)) )
+	if( !(isPowerOfTwo(PngWidth) && isPowerOfTwo(PngHeight)) )
 	{
 		MessageBox( 0, *String::Format( L"Png size should be power of two" ), 
 			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
@@ -547,7 +547,7 @@ FFont* ImportFLF( String Filename, String ResName )
 			C[0] = *fgetws( C, 2, File );
 
 			fwscanf( File, L"%d %d %d %d %d\n", &iBitmap, &X, &Y, &W, &H );	
-			NumPages = Max( NumPages, iBitmap+1 );
+			NumPages = max( NumPages, iBitmap+1 );
 
 			TGlyph Glyph;
 			Glyph.iBitmap	= iBitmap;
@@ -556,8 +556,8 @@ FFont* ImportFLF( String Filename, String ResName )
 			Glyph.W			= W;
 			Glyph.H			= H;	
 
-			RealHeight		= Max( RealHeight, H );
-			iMaxChar		= Max<Int32>( C[0], iMaxChar );
+			RealHeight		= max( RealHeight, H );
+			iMaxChar		= max<Int32>( C[0], iMaxChar );
 			Remap[(UInt16)C[0]] = Glyphs.push(Glyph);
 		}
 

@@ -4,101 +4,6 @@
 =============================================================================*/
 
 /*-----------------------------------------------------------------------------
-    Declarations.
------------------------------------------------------------------------------*/
-
-// Forward declaration.
-struct TRect;
-
-/*-----------------------------------------------------------------------------
-    TRect.
------------------------------------------------------------------------------*/
-
-//
-// An AABB rectangle.
-//
-struct TRect
-{
-public:
-	math::Vector	Min;
-	math::Vector	Max;
-
-	// Constructors.
-	TRect()
-	{}
-	TRect( const math::Vector& InCenter, const math::Vector& InSize )
-	{
-		math::Vector Half = InSize * 0.5f;
-		Min = InCenter - Half;
-		Max = InCenter + Half;
-	}
-	TRect( const math::Vector& InCenter, Float InSide )
-	{
-		Float Half = InSide * 0.5f;
-		Min = math::Vector( InCenter.x - Half, InCenter.y - Half );
-		Max = math::Vector( InCenter.x + Half, InCenter.y + Half );
-	}
-	TRect( const math::Vector* Verts, Int32 NumVerts );
-
-	// Operators.
-	Bool operator==( const TRect& R ) const
-	{
-		return Min == R.Min && Max == R.Max;
-	}
-	Bool operator!=( const TRect& R ) const
-	{
-		return Min != R.Min || Max != R.Max;
-	}
-	operator Bool() const
-	{
-		return Min != Max;
-	}
-	TRect operator+( const math::Vector& V ) const;
-	TRect operator+=( const math::Vector& V );
-
-	// Functions.
-	math::Vector Center() const
-	{
-		return (Min + Max) * 0.5;
-	}
-	math::Vector Size() const
-	{
-		return Max - Min;
-	}
-	Float Area() const
-	{
-		math::Vector Diagonal = Max - Min;
-		return Diagonal.x * Diagonal.y;
-	}
-	Bool IsInside( const math::Vector& P ) const
-	{
-		return P.x >= Min.x && P.x <= Max.x &&
-			   P.y >= Min.y && P.y <= Max.y;
-	}
-	Float GetExtrema( Int32 i ) const
-	{
-		return ((Float*)&Min)[i];
-	}
-	Bool AtBorder( const math::Vector& P, Float Thresh = 0.01 ) const;
-	Bool IsOverlap( const TRect& Other ) const;
-	Bool LineIntersect
-	( 
-		const math::Vector& A, 
-		const math::Vector& B, 
-		math::Vector* V = nullptr, 
-		math::Vector* Normal = nullptr,
-		Float* Time = nullptr 
-	) const;
-
-	// Friends.
-	friend void Serialize( CSerializer& S, TRect& R )
-	{
-		Serialize( S, R.Min );
-		Serialize( S, R.Max );
-	}
-};
-
-/*-----------------------------------------------------------------------------
 	TInterpCurve.
 -----------------------------------------------------------------------------*/
 
@@ -313,30 +218,10 @@ template<class T> inline T TInterpCurve<T>::SampleSteppedAt( Float Input, const 
 //
 // General purpose.
 //
-template<class T> inline T Min( T A, T B )
-{
-	return A < B ? A : B;
-}
-template<class T> inline T Max( T A, T B )
-{
-	return A > B ? A : B;
-}
-template<class T> inline T Clamp( T V, T A, T B )
-{
-	return V < A ? A : V > B ? B : V;
-}
-template<class T> inline void Exchange( T& A, T& B )
-{
-	T C = A;
-	A = B;
-	B = C;
-}
 template<class T> inline T Lerp( T A, T B, Float Alpha )
 {
 	return A + ( B - A ) * Alpha;
 }
-
-
 
 /*-----------------------------------------------------------------------------
     Math functions.
@@ -365,10 +250,6 @@ inline Float InvPow2( Int32 A )
 		1.f / 4096.f,
 	};
 	return GRescale[A];
-}
-inline Bool IsPowerOfTwo( UInt32 i )
-{
-	return ((i) & (i-1)) == 0;
 }
 
 extern inline Float Wrap( Float V, Float Min, Float Max );

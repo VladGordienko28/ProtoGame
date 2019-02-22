@@ -308,7 +308,7 @@ void WTexturePage::OnOpen()
 //
 void WTexturePage::ButtonZoomInClick( WWidget* Sender )
 {
-	Scale = Min( 4.f, Scale * 2.f );
+	Scale = min( 4.f, Scale * 2.f );
 }
 
 
@@ -317,7 +317,7 @@ void WTexturePage::ButtonZoomInClick( WWidget* Sender )
 //
 void WTexturePage::ButtonZoomOutClick( WWidget* Sender )
 {
-	Scale = Max( 0.125f, Scale * 0.5f );
+	Scale = max( 0.125f, Scale * 0.5f );
 }
 
 
@@ -745,7 +745,7 @@ void WMaterialPanel::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 	{
 			Int32 NewY = Y - 42;
 
-			iSelected = Clamp( NewY/52, -1, Material->Layers.size()-1 );
+			iSelected = clamp( NewY/52, -1, Material->Layers.size()-1 );
 
 		if( iSelected != -1 )
 		{

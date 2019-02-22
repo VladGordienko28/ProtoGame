@@ -25,7 +25,7 @@ namespace flu
 		}
 		for( Int32 i = 0; i < arraySize(m_colorSet); ++i )
 		{
-			Exchange( m_colorSet[i], m_colorSet[Random( arraySize(m_colorSet) )] );
+			exchange( m_colorSet[i], m_colorSet[Random( arraySize(m_colorSet) )] );
 		}
 
 		// help
@@ -63,15 +63,15 @@ namespace flu
 		renderRect.Flags = POLY_FlatShade | POLY_AlphaGhost | POLY_Unlit;
 
 		renderRect.Color = TIMELINE_PANEL_COLOR;
-		renderRect.Bounds.Min = { 0.f, 0.f };
-		renderRect.Bounds.Max = { screenW , screenH };
+		renderRect.Bounds.min = { 0.f, 0.f };
+		renderRect.Bounds.max = { screenW , screenH };
 		canvas->DrawRect( renderRect );
 
 		TRenderRect metricItem;
 		metricItem.Flags = POLY_FlatShade | POLY_Unlit;
 		metricItem.Rotation = 0;
-		metricItem.Bounds.Min = { 10.f, 10.f };
-		metricItem.Bounds.Max = { 30.f, 30.f };
+		metricItem.Bounds.min = { 10.f, 10.f };
+		metricItem.Bounds.max = { 30.f, 30.f };
 
 		const Array<profile::EngineProfiler::Group>& groups = m_profiler.getMetrics();
 
@@ -133,12 +133,12 @@ namespace flu
 
 				canvas->DrawText( *String::Format( L"%s: %s (avg %.2f)", 
 					getGroupName(static_cast<EProfilerGroup>( groupId )), it.name, ( cumulativeValue / it.samples.size() ) ), 
-					font, COLOR_White, { 40.f, metricItem.Bounds.Min.y + 2.f } );
+					font, COLOR_White, { 40.f, metricItem.Bounds.min.y + 2.f } );
 
-				metricItem.Bounds.Min.y += metricDrawStep;
-				metricItem.Bounds.Max.y += metricDrawStep;
+				metricItem.Bounds.min.y += metricDrawStep;
+				metricItem.Bounds.max.y += metricDrawStep;
 
-				maxValue = Max( maxValue, maxMetricValue );
+				maxValue = max( maxValue, maxMetricValue );
 			}		
 		}
 
@@ -199,6 +199,7 @@ namespace flu
 			case EProfilerGroup::Entity:	return L"Entity";
 			case EProfilerGroup::Render:	return L"Render";
 			case EProfilerGroup::Memory:	return L"Memory";
+			case EProfilerGroup::DrawCalls:	return L"DrawCalls";
 			default:						return L"Unknown";
 		}
 	}

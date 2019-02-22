@@ -72,7 +72,7 @@ Int32 WMenu::AddSubMenu( String Title, WMenu* SubMenu )
 
 	// Resize to fit the item.
 	SetSize	(	
-				Max( Size.Width, Root->Font1->TextWidth(*Title)+64 ), 
+				max( Size.Width, Root->Font1->TextWidth(*Title)+64 ), 
 				Item.Y + Item.Height + 1 
 			);
 
@@ -97,7 +97,7 @@ Int32 WMenu::AddItem( String Title, TNotifyEvent InEvent, Bool InbToggle )
 
 	// Resize to fit the item.
 	SetSize	(	
-				Max( Size.Width, Root->Font1->TextWidth(*Title)+64 ), 
+				max( Size.Width, Root->Font1->TextWidth(*Title)+64 ), 
 				Item.Y + Item.Height + 1 
 			);
 

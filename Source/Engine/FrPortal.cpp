@@ -76,7 +76,7 @@ void FPortalComponent::InitForEntity( FEntity* InEntity )
 void FPortalComponent::EditChange()
 {
 	FBaseComponent::EditChange();
-	Width	= Clamp( Width, 2.f, 64.f );
+	Width	= clamp( Width, 2.f, 64.f );
 }
 
 
@@ -143,18 +143,18 @@ Bool FMirrorComponent::ComputeViewInfo( const TViewInfo& Parent, TViewInfo& Resu
 	if( Location.x > Parent.Coords.origin.x )
 	{
 		// Parent lie on the left half-plane.
-		Result.Bounds.Min.x	= Parent.Bounds.Min.x;
-		Result.Bounds.Max.x	= Location.x + (Location.x-Parent.Bounds.Min.x);
+		Result.Bounds.min.x	= Parent.Bounds.min.x;
+		Result.Bounds.max.x	= Location.x + (Location.x-Parent.Bounds.min.x);
 	}
 	else
 	{
 		// Parent lie on the right half-plane.
-		Result.Bounds.Min.x	= Location.x - (Parent.Bounds.Max.x - Location.x);
-		Result.Bounds.Max.x	= Parent.Bounds.Max.x;
+		Result.Bounds.min.x	= Location.x - (Parent.Bounds.max.x - Location.x);
+		Result.Bounds.max.x	= Parent.Bounds.max.x;
 	}
 
-	Result.Bounds.Min.y	= Parent.Bounds.Min.y;
-	Result.Bounds.Max.y	= Parent.Bounds.Max.y;
+	Result.Bounds.min.y	= Parent.Bounds.min.y;
+	Result.Bounds.max.y	= Parent.Bounds.max.y;
 
 	return true;
 }
@@ -259,7 +259,7 @@ Bool FWarpComponent::ComputeViewInfo( const TViewInfo& Parent, TViewInfo& Result
 	Result.UnCoords			= Result.Coords.transpose();
 	Result.FOV				= Parent.FOV;
 	Result.Zoom				= Parent.Zoom;
-	Result.Bounds			= TRect
+	Result.Bounds			= math::Rect
 								( 
 									Result.Coords.origin, 
 									math::sqrt( sqr(Result.FOV.x)+sqr(Result.FOV.y)*Result.Zoom  )

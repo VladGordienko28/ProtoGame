@@ -99,10 +99,10 @@ void WForm::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 		Int32 NewWidth, NewHeight;
 
 		NewWidth		= X + HoldOffset.X;
-		NewWidth		= Clamp( NewWidth, MinWindth, Owner->Size.Width );
+		NewWidth		= clamp( NewWidth, MinWindth, Owner->Size.Width );
 
 		NewHeight		= Y + HoldOffset.Y;
-		NewHeight		= Clamp( NewHeight, MinHeight, Owner->Size.Height );
+		NewHeight		= clamp( NewHeight, MinHeight, Owner->Size.Height );
 
 		if( bSizeableW && (Size.Width-NewWidth != 0) && (RealPos.X < Owner->Size.Width-13) )
 		{
@@ -135,10 +135,10 @@ void WForm::OnPaint( CGUIRenderBase* Render )
 	WContainer::OnPaint(Render);
 
 	// Clamp form into parent area.
-	Location.X	= Max( Location.X, 10 );
-	Location.Y	= Max( Location.Y, 10 );
-	Location.X	= Min( Location.X, Owner->Size.Width-10-Size.Width );
-	Location.Y	= Min( Location.Y, Owner->Size.Height-10-Size.Height );
+	Location.X	= max( Location.X, 10 );
+	Location.Y	= max( Location.Y, 10 );
+	Location.X	= min( Location.X, Owner->Size.Width-10-Size.Width );
+	Location.Y	= min( Location.Y, Owner->Size.Height-10-Size.Height );
 
 	TPoint Base = ClientToWindow(TPoint::Zero);
 

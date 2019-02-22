@@ -145,8 +145,8 @@ String String::FromFloat( Float Value )
 //
 String String::Copy( String Source, Int32 StartChar, Int32 Count )
 {
-	StartChar = Clamp<Int32>( StartChar, 0, Source.Len()-1 );
-	Count = Clamp<Int32>( Count, 0, Source.Len()-StartChar );
+	StartChar = clamp<Int32>( StartChar, 0, Source.Len()-1 );
+	Count = clamp<Int32>( Count, 0, Source.Len()-StartChar );
 	return Count ? String( &Source.Internal->Data[StartChar], Count ) : String();
 }
 
@@ -156,8 +156,8 @@ String String::Copy( String Source, Int32 StartChar, Int32 Count )
 //
 String String::Delete( String Str, Int32 StartChar, Int32 Count )
 {
-	StartChar = Clamp<Int32>( StartChar, 0, Str.Len()-1 );
-	Count = Clamp<Int32>( Count, 0, Str.Len()-StartChar );
+	StartChar = clamp<Int32>( StartChar, 0, Str.Len()-1 );
+	Count = clamp<Int32>( Count, 0, Str.Len()-StartChar );
 	return Copy( Str, 0, StartChar ) + Copy( Str, StartChar+Count, Str.Len()-StartChar-Count );	
 }
 
@@ -445,8 +445,8 @@ void TColor::RGBToHSL( TColor Color, UInt8& H, UInt8& S, UInt8& L )
 	Float G	= Color.G / 256.f;
 	Float B = Color.B / 256.f;
 	
-	Float MinValue	= Min( R, Min( G, B ) );
-	Float MaxValue	= Max( R, Max( G, B ) );
+	Float MinValue	= min( R, min( G, B ) );
+	Float MaxValue	= max( R, max( G, B ) );
 
 	if( R == G && G == B )
 	{
@@ -644,7 +644,7 @@ TUrl::TUrl( String InUrl )
 	}
 
 	// Port.
-	Int32 iPortBegin = String::Pos( L":", InUrl, Max(iUserEnd, iProtocolEnd) );
+	Int32 iPortBegin = String::Pos( L":", InUrl, max(iUserEnd, iProtocolEnd) );
 	Int32 iPortEnd = iPortBegin+1;
 	if( iPortBegin != -1 )
 	{
@@ -658,7 +658,7 @@ TUrl::TUrl( String InUrl )
 
 
 	// Host.
-	Int32 iHostBegin = Max( iUserEnd+1, iProtocolEnd );
+	Int32 iHostBegin = max( iUserEnd+1, iProtocolEnd );
 	Int32 iHostEnd = iPortBegin != -1 ? iPortBegin : String::Pos(L"/", InUrl, iHostBegin);
 	Host = String::Copy( InUrl, iHostBegin, iHostEnd-iHostBegin );
 
@@ -687,7 +687,7 @@ TUrl::TUrl( String InUrl )
 	}
 
 	// Path.
-	Int32 iPathBegin = Max(iHostEnd+1, iPortEnd+1);
+	Int32 iPathBegin = max(iHostEnd+1, iPortEnd+1);
 	Int32 iPathEnd = iQueryBegin != -1 ? iQueryBegin-1 : iFragmentBegin != -1 ? iFragmentBegin : InUrl.Len();
 	Path = String::Copy( InUrl, iPathBegin, iPathEnd-iPathBegin );
 }

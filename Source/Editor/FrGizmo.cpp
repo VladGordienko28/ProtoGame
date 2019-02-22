@@ -152,18 +152,18 @@ void CGizmo::Perform
 			if( CurrentAxis == GIAX_X )
 			{
 				Float FactorX = (ToLocal.xAxis * MovementDelta)*0.15f / View.Zoom;
-				Scale.x = Clamp( Scale.x+FactorX, 0.01f, 100.f );
+				Scale.x = clamp( Scale.x+FactorX, 0.01f, 100.f );
 			}
 			else if( CurrentAxis == GIAX_Y )
 			{
 				Float FactorY = (ToLocal.yAxis * MovementDelta)*0.15f / View.Zoom;
-				Scale.y = Clamp( Scale.y+FactorY, 0.01f, 100.f );
+				Scale.y = clamp( Scale.y+FactorY, 0.01f, 100.f );
 			}
 			else
 			{
 				Float Factor = (MovementDelta * ((ToLocal.xAxis+ToLocal.yAxis)*0.5f))*0.15f / View.Zoom;
-				Scale.x = Clamp( Scale.x+Factor, 0.01f, 100.f );
-				Scale.y = Clamp( Scale.y+Factor, 0.01f, 100.f );
+				Scale.x = clamp( Scale.x+Factor, 0.01f, 100.f );
+				Scale.y = clamp( Scale.y+Factor, 0.01f, 100.f );
 			}
 
 			if( OutScale )
@@ -213,10 +213,10 @@ static EGizmoAxis HitTranslationGizmo( const TViewInfo& View, Float Size, Int32 
 		TestPoint.y = -TestPoint.y;
 		Float RectSize = GIZMO_RECT_SIZE * (XEnd-Center).size()/(GIZMO_ARROW_LEN+0.93f);
 
-		TRect R;
-		R.Min = math::Vector( 0.f, 0.f );
-		R.Max = math::Vector( RectSize, RectSize );
-		return R.IsInside(TestPoint) ? GIAX_Both : GIAX_None;
+		math::Rect R;
+		R.min = math::Vector( 0.f, 0.f );
+		R.max = math::Vector( RectSize, RectSize );
+		return R.isInside(TestPoint) ? GIAX_Both : GIAX_None;
 	}
 }
 
@@ -358,7 +358,7 @@ static void DrawTranslationGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, 
 		R.Color		= GIZMO_BOTH_COLOR * 0.5f;
 		R.Flags		= POLY_FlatShade | POLY_Ghost;
 		R.Rotation	= math::vectorToAngle(ToLocal.xAxis);
-		R.Bounds	= TRect( ToLocal.origin + (ToLocal.xAxis+ToLocal.yAxis)*(RectSize*0.5f), RectSize );
+		R.Bounds	= math::Rect( ToLocal.origin + (ToLocal.xAxis+ToLocal.yAxis)*(RectSize*0.5f), RectSize );
 		Canvas->DrawRect( R );
 	}
 

@@ -62,6 +62,16 @@ public:
 	friend COpenGLRender;
 
 private:
+	// todo: move to the other file
+	struct DrawStats
+	{
+		Int32 points;
+		Int32 lines;
+		Int32 rects;
+		Int32 polygons;
+		Int32 lists;
+	};
+
 	// Internal used.
 	math::Vector		BitmapPan;
 	EBitmapBlend		OldBlend;
@@ -70,6 +80,7 @@ private:
 	UInt32				OldStipple;
 	Float				LockTime;
 	CGLShaderBase*		ActiveShader;
+	DrawStats			m_stats;
 };
 
 

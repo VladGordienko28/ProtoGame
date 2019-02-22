@@ -195,12 +195,12 @@ void CCanvas::DrawText
 
 			// Character location.
 			R.Texture		= Font->Bitmaps[Glyph.iBitmap];
-			R.Bounds.Min	= Walk;
-			R.Bounds.Max	= Walk + CharSize;
+			R.Bounds.min	= Walk;
+			R.Bounds.max	= Walk + CharSize;
 
 			// Glyph texture coords.
-			R.TexCoords.Min = math::Vector( Glyph.X, Glyph.Y ) * (1.f/GLYPHS_ATLAS_SIZE);
-			R.TexCoords.Max = math::Vector( Glyph.X+Glyph.W, Glyph.Y+Glyph.H ) * (1.f/GLYPHS_ATLAS_SIZE);
+			R.TexCoords.min = math::Vector( Glyph.X, Glyph.Y ) * (1.f/GLYPHS_ATLAS_SIZE);
+			R.TexCoords.max = math::Vector( Glyph.X+Glyph.W, Glyph.Y+Glyph.H ) * (1.f/GLYPHS_ATLAS_SIZE);
 
 			// Draw tile.
 			DrawRect(R);
@@ -313,7 +313,7 @@ TViewInfo::TViewInfo( Float InX, Float InY, Float InWidth, Float InHeight )
 		FOV( Width, -Height ),
 		Zoom( 1.f ),
 		UnCoords( Coords.transpose() ),
-		Bounds( math::Vector( 0.f, 0.f ), math::Vector( Width, Height ) )
+		Bounds( math::Vector( 0.f, 0.f ), Width, Height )
 {}
 
 
@@ -329,9 +329,9 @@ TViewInfo::TViewInfo( math::Vector InLocation, math::Angle InRotation, math::Vec
 		UnCoords( Coords.transpose() )
 {
 	if( InRotation )
-		Bounds	= TRect( Coords.origin, Zoom * math::sqrt(sqr(FOV.x)+sqr(FOV.y)));
+		Bounds	= math::Rect( Coords.origin, Zoom * math::sqrt(sqr(FOV.x)+sqr(FOV.y)));
 	else
-		Bounds	= TRect( Coords.origin, FOV * Zoom );
+		Bounds	= math::Rect( Coords.origin, FOV.x * Zoom, FOV.y * Zoom );
 }
 
 
@@ -383,8 +383,8 @@ TRenderList::TRenderList( Int32 InNumRcts )
 	Flags		= POLY_None;
 	Texture		= nullptr;
 	NumRects	= InNumRcts;
-	Vertices	= (math::Vector*)CCanvas::GPool.Push(NumRects*4*sizeof(TRect));
-	TexCoords	= (math::Vector*)CCanvas::GPool.Push(NumRects*4*sizeof(TRect));
+	Vertices	= (math::Vector*)CCanvas::GPool.Push(NumRects*4*sizeof(math::Rect));
+	TexCoords	= (math::Vector*)CCanvas::GPool.Push(NumRects*4*sizeof(math::Rect));
 	Colors		= (TColor*)CCanvas::GPool.Push(NumRects*4*sizeof(TColor));
 }
 
@@ -398,8 +398,8 @@ TRenderList::TRenderList( Int32 InNumRcts, TColor InColor )
 	Flags		= POLY_None;
 	Texture		= nullptr;
 	NumRects	= InNumRcts;
-	Vertices	= (math::Vector*)CCanvas::GPool.Push(NumRects*4*sizeof(TRect));
-	TexCoords	= (math::Vector*)CCanvas::GPool.Push(NumRects*4*sizeof(TRect));
+	Vertices	= (math::Vector*)CCanvas::GPool.Push(NumRects*4*sizeof(math::Rect));
+	TexCoords	= (math::Vector*)CCanvas::GPool.Push(NumRects*4*sizeof(math::Rect));
 	Colors		= nullptr;
 	DrawColor	= InColor;
 }

@@ -106,7 +106,7 @@ public:
 	math::Vector& cVector(){ return *(math::Vector*)_Payload; }
 	math::Angle& cAngle(){ return *(math::Angle*)_Payload; }
 	TColor& cColor(){ return *(TColor*)_Payload; }
-	TRect& cAABB(){ return *(TRect*)_Payload; }
+	math::Rect& cAABB(){ return *(math::Rect*)_Payload; }
 	TDelegate& cDelegate(){ return *(TDelegate*)_Payload; }
 };
 
@@ -1964,7 +1964,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 				// TRect member.
 				String Elem = String::LowerCase(GetIdentifier( L"aabb member" ));
 				UInt8 Offset = 0xff;
-				Offset = Elem == L"min" ? PROPERTY_OFFSET(TRect, Min) : Elem == L"max" ? PROPERTY_OFFSET(TRect, Max) : 0xff;
+				Offset = Elem == L"min" ? PROPERTY_OFFSET(math::Rect, min) : Elem == L"max" ? PROPERTY_OFFSET(math::Rect, max) : 0xff;
 				if( Offset == 0xff )
 					Error( L"Unknown aabb member '%s'", *Elem );
 				ExprRes.Type.Type	= TYPE_Vector;
@@ -5980,9 +5980,9 @@ void CCompiler::RestoreAfterSuccess()
 				}
 
 				// Destroy old instance buffer data.
-				Exchange( Script->Properties, Stored.Properties );
+				exchange( Script->Properties, Stored.Properties );
 				Buffer->DestroyValues();
-				Exchange( Script->Properties, Stored.Properties );
+				exchange( Script->Properties, Stored.Properties );
 
 				// Copy new data.
 				Buffer->Data	= NewData;

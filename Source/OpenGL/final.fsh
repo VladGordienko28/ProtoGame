@@ -12,6 +12,11 @@ uniform vec3 shadows;
 uniform float bwScale;
 uniform float aberrationIntensity;
 
+uniform float m_vignetteIntensity;
+uniform float m_vignetteInnerRadius;
+uniform float m_vignetteOuterRadius;
+
+
 void main()
 {
 	vec4 sampleColor;
@@ -39,6 +44,14 @@ void main()
 	else
 	{
 		gl_FragColor = vec4( result, sampleColor.a );
+	}
+
+	if( m_vignetteIntensity > 0.0 )
+	{
+		float centreDist = clamp( length( textureUV - vec2( 0.5, 0.5 ) ), m_vignetteInnerRadius, m_vignetteOuterRadius ) - m_vignetteInnerRadius;
+		float vignetteSize = m_vignetteOuterRadius - m_vignetteInnerRadius;
+
+		gl_FragColor *= 1.0 - centreDist * m_vignetteIntensity / vignetteSize;
 	}
 }
 

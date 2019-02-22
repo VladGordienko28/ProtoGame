@@ -80,7 +80,7 @@ ToDestDirectly:
 				if( inRange( InDest.x, Location.x-Size2.x, Location.x+Size2.x ) )
 				{
 					// Jump to destination.
-					Float	Height	= Max( 0.f, InDest.y-Top.y );
+					Float	Height	= max( 0.f, InDest.y-Top.y );
 					if( Height < Seeker->JumpHeight )
 					{
 						Seeker->GoalHint	= FPuppetComponent::SuggestJumpSpeed( Height, Seeker->GravityScale );
@@ -125,7 +125,7 @@ ToDestDirectly:
 		//
 		
 		// Figure out, does Seeker actually holds the nearest node?
-		if( Seeker->Body->GetAABB().IsInside(Start.Location) )
+		if( Seeker->Body->GetAABB().isInside( Start.Location ) )
 		{
 			// B1: The node actually holded by Seeker, so try to make
 			//	path to the next node.
@@ -240,7 +240,7 @@ Bool CNavigator::MakeRandomPath( FPuppetComponent* Seeker )
 	TPathNode&	Start	= Nodes[iStart];
 	math::Vector	Bottom	= Seeker->Base->Location - math::Vector( 0.f, Seeker->Base->Size.y*0.5f );
 
-	if( Seeker->Body->GetAABB().IsInside(Start.Location) )
+	if( Seeker->Body->GetAABB().isInside( Start.Location ) )
 	{
 		// 
 		// A: Seeker actually hold node, make path to next in chain.

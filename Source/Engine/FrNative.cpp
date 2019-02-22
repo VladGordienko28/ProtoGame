@@ -225,7 +225,7 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		case OP_CharAt:
 		{
 			String	S = POP_STRING;
-			Int32 i = Clamp( POP_INTEGER, 0, S.Len()-1 );
+			Int32 i = clamp( POP_INTEGER, 0, S.Len()-1 );
 			Char Tmp[2] = { S[i], 0 };
 			*POPA_STRING	= String(Tmp);
 			break;
@@ -274,7 +274,7 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		case IT_RectEntities:
 		{
 			FScript*		Script		= As<FScript>(POP_RESOURCE);
-			TRect			Area		= POP_AABB;
+			math::Rect		Area		= POP_AABB;
 			FLevel*			Level		= This->Level;
 			Int32			NumBases	= 0;
 			FBaseComponent*	Bases[MAX_COLL_LIST_OBJS];

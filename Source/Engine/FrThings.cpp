@@ -54,8 +54,8 @@ void FLightComponent::EditChange()
 {
 	FExtraComponent::EditChange();
 
-	Radius		= Clamp( Radius, 1.f, MAX_LIGHT_RADIUS );
-	Brightness	= Clamp( Brightness, 0.f, 10.f );
+	Radius		= clamp( Radius, 1.f, MAX_LIGHT_RADIUS );
+	Brightness	= clamp( Brightness, 0.f, 10.f );
 }
 
 
@@ -87,9 +87,9 @@ void FLightComponent::Render( CCanvas* Canvas )
 //
 // Return light map bounds.
 //
-TRect FLightComponent::GetLightRect()
+math::Rect FLightComponent::GetLightRect()
 {
-	return TRect( Base->Location, Radius*2.f );
+	return math::Rect( Base->Location, Radius*2.f );
 }
 
 
@@ -145,7 +145,7 @@ void FSkyComponent::SerializeThis( CSerializer& S )
 void FSkyComponent::EditChange()
 {
 	FZoneComponent::EditChange();
-	Extent	= Clamp( Extent, 1.f, Size.x * 0.5f );
+	Extent	= clamp( Extent, 1.f, Size.x * 0.5f );
 }
 
 
@@ -165,13 +165,13 @@ void FSkyComponent::Render( CCanvas* Canvas )
 	if( bSelected )
 	{
 		math::Vector ViewArea, Eye;
-		TRect Skydome;
+		math::Rect Skydome;
 		Float Side, Side2;
 
 		ViewArea.x	= Extent;
 		ViewArea.y	= (Extent * Canvas->View.FOV.y) / Canvas->View.FOV.x;
 
-		Skydome		= TRect( Location, Size );
+		Skydome		= math::Rect( Location, Size.x, Size.y );
 		Side		= math::sqrt( ViewArea.x*ViewArea.x + ViewArea.y*ViewArea.y );
 		Side2		= Side * 0.5f;
 
@@ -180,10 +180,10 @@ void FSkyComponent::Render( CCanvas* Canvas )
 		Eye.y	= Canvas->View.Coords.origin.y * Parallax.y + Offset.y;
 
 		// Azimuth of sky should be wrapped.
-		Eye.x	= Wrap( Eye.x, Skydome.Min.x, Skydome.Max.x );
+		Eye.x	= Wrap( Eye.x, Skydome.min.x, Skydome.max.x );
 
 		// Height of sky should be clamped.
-		Eye.y	= Clamp( Eye.y, Skydome.Min.y+Side2, Skydome.Max.y-Side2 );
+		Eye.y	= clamp( Eye.y, Skydome.min.y+Side2, Skydome.max.y-Side2 );
 
 		math::Angle Roll = math::Angle(fmodf(RollSpeed*(Float)GPlat->Now(), 2.f*math::PI ));		
 		Canvas->DrawLineRect( Eye, ViewArea, Roll, COLOR_Red, false );
@@ -214,8 +214,8 @@ FZoneComponent::FZoneComponent()
 void FZoneComponent::Render( CCanvas* Canvas )
 {
 	// Is visible?
-	TRect Bounds = GetAABB();
-	if( !Canvas->View.Bounds.IsOverlap(Bounds) || !(Level->RndFlags & RND_Other) )
+	math::Rect Bounds = GetAABB();
+	if( !Canvas->View.Bounds.isOverlap( Bounds ) || !(Level->RndFlags & RND_Other) )
 		return;
 
 	// Choose colors.
@@ -273,12 +273,12 @@ FRectComponent::FRectComponent()
 //
 // Return rectangle AABB.
 //
-TRect FRectComponent::GetAABB()
+math::Rect FRectComponent::GetAABB()
 {
 	if( !Rotation )
-		return TRect( Location, Size );
+		return math::Rect( Location, Size.x, Size.y );
 	else
-		return TRect( Location, math::sqrt(sqr(Size.x)+sqr(Size.y)) );
+		return math::Rect( Location, math::sqrt(sqr(Size.x)+sqr(Size.y)) );
 }
 
 
@@ -301,8 +301,8 @@ void FRectComponent::BeginPlay()
 void FRectComponent::Render( CCanvas* Canvas )
 {
 	// Is visible?
-	TRect Bounds = GetAABB();
-	Bool bVisible	= Canvas->View.Bounds.IsOverlap(Bounds);
+	math::Rect Bounds = GetAABB();
+	Bool bVisible	= Canvas->View.Bounds.isOverlap( Bounds );
 
 	// Send in game OnHide/OnShow notifications.
 	if( Level->bIsPlaying && !Canvas->View.bMirage )
@@ -424,14 +424,14 @@ void FBrushComponent::SerializeThis( CSerializer& S )
 //
 // Return brush collision bounds.
 //
-TRect FBrushComponent::GetAABB()
+math::Rect FBrushComponent::GetAABB()
 {
 	// Bounds in locals.
-	TRect R( Vertices, NumVerts );
+	math::Rect R( Vertices, NumVerts );
 
 	// Simple transformation.
-	R.Min += Location;
-	R.Max += Location;
+	R.min += Location;
+	R.max += Location;
 
 	return R;
 }
@@ -451,8 +451,8 @@ void FBrushComponent::Render( CCanvas* Canvas )
 	};
 
 	// Is visible?
-	TRect Bounds = GetAABB();
-	if( !Canvas->View.Bounds.IsOverlap(Bounds) )
+	math::Rect Bounds = GetAABB();
+	if( !Canvas->View.Bounds.isOverlap(Bounds) )
 		return;
 
 	// Pick wire color.

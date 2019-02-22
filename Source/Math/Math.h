@@ -26,3 +26,4 @@
 #include "Coords.h"
 #include "Polygon.h"
 #include "Circle.h"
+#include "Rect.h"

@@ -208,7 +208,7 @@ void FLogicComponent::Export( CExporterBase& Ex )
 //
 math::Vector FLogicComponent::GetPlugPos( Int32 iPlug )
 {
-	iPlug	= Clamp( iPlug, 0, NumPlugs );
+	iPlug	= clamp( iPlug, 0, NumPlugs );
 
 	math::Vector V;
 
@@ -224,7 +224,7 @@ math::Vector FLogicComponent::GetPlugPos( Int32 iPlug )
 //
 math::Vector FLogicComponent::GetJackPos( Int32 iJack )
 {
-	iJack	= Clamp( iJack, 0, NumJacks );
+	iJack	= clamp( iJack, 0, NumJacks );
 
 	math::Vector V;
 
@@ -244,7 +244,7 @@ void FLogicComponent::Render( CCanvas* Canvas )
 	if( (Level->RndFlags & RND_Logic) == 0 )
 			return;
 
-	TRect Rect = Base->GetAABB();
+	math::Rect Rect = Base->GetAABB();
 
 	// Pick a colors.
 	TColor WireColor = bEnabled ? COLOR_PaleVioletRed : COLOR_LightSlateGray;

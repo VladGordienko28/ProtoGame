@@ -72,11 +72,11 @@ void FEmitterComponent::EditChange()
 	FExtraComponent::EditChange();
 
 	// Clamp tiles count.
-	NumUTiles	= Clamp<UInt8>( NumUTiles, 1, 4 );
-	NumVTiles	= Clamp<UInt8>( NumVTiles, 1, 4 );
+	NumUTiles	= clamp<UInt8>( NumUTiles, 1, 4 );
+	NumVTiles	= clamp<UInt8>( NumVTiles, 1, 4 );
 
 	// Clamp particles limit.
-	MaxParticles	= Clamp<Int32>( MaxParticles, 1, MAX_PARTICLES );
+	MaxParticles	= clamp<Int32>( MaxParticles, 1, MAX_PARTICLES );
 }
 
 
@@ -101,29 +101,29 @@ void FEmitterComponent::UpdateEmitter( Float Delta )
 //
 // Return particle system cloud bound.
 //
-TRect FEmitterComponent::GetCloudRect()
+math::Rect FEmitterComponent::GetCloudRect()
 {
-	TRect Result;
-	Result.Min		= Base->Location;
-	Result.Max		= Base->Location;
+	math::Rect Result;
+	Result.min		= Base->Location;
+	Result.max		= Base->Location;
 
 	for( Int32 i=0; i<NumPrts; i++ )
 	{
 		TParticle& P = Particles[i];
 
 		// Update bounds.
-		Result.Min.x	= Min( Result.Min.x, P.Location.x );
-		Result.Min.y	= Min( Result.Min.y, P.Location.y );
-		Result.Max.x	= Max( Result.Max.x, P.Location.x );
-		Result.Max.y	= Max( Result.Max.y, P.Location.y );
+		Result.min.x	= min( Result.min.x, P.Location.x );
+		Result.min.y	= min( Result.min.y, P.Location.y );
+		Result.max.x	= max( Result.max.x, P.Location.x );
+		Result.max.y	= max( Result.max.y, P.Location.y );
 	}
 
     // Cloud bound is compute, but necessary to consider
     // the particles size too.
-	Result.Min.x	-= SizeRange[1];
-	Result.Min.y	-= SizeRange[1];
-	Result.Max.x	+= SizeRange[1];
-	Result.Max.y	+= SizeRange[1];
+	Result.min.x	-= SizeRange[1];
+	Result.min.y	-= SizeRange[1];
+	Result.max.x	+= SizeRange[1];
+	Result.max.y	+= SizeRange[1];
 
 	return Result;
 }
@@ -146,16 +146,16 @@ void FEmitterComponent::Tick( Float Delta )
 	// Reallocate list, if need.
 	if( MaxParticles != Particles.size() )
 	{
-		MaxParticles	= Clamp<Int32>( MaxParticles, 1, MAX_PARTICLES );
+		MaxParticles	= clamp<Int32>( MaxParticles, 1, MAX_PARTICLES );
 		NumPrts			= 0;
 		Particles.setSize( MaxParticles );
 	}
 
 	// Not really good way to determinate
 	// is should update particles.
-	TRect Camera = TRect( Level->Camera.Location, Level->Camera.FOV );
-	TRect Cloud = GetCloudRect();
-	if( !Camera.IsOverlap(Cloud) )
+	math::Rect Camera = math::Rect( Level->Camera.Location, Level->Camera.FOV.x, Level->Camera.FOV.y );
+	math::Rect Cloud = GetCloudRect();
+	if( !Camera.isOverlap( Cloud ) )
 		return;
 
 	// Sub-classes will process particles.
@@ -212,13 +212,13 @@ void FEmitterComponent::SerializeThis( CSerializer& S )
 	{
 		// Really reduce particles count, it's can crash
 		// even CObjectDatabase!
-		Int32 NumToSave = Min( 100, NumPrts );
+		Int32 NumToSave = min( 100, NumPrts );
 		if( NumToSave )
 			S.SerializeData( &Particles[0], NumToSave*sizeof(TParticle) );
 	}
 	else if( S.GetMode() == SM_Load )
 	{
-		Int32 NumToLoad = Min( 100, NumPrts );
+		Int32 NumToLoad = min( 100, NumPrts );
 		Particles.setSize(NumToLoad);
 		if( NumToLoad )
 			S.SerializeData( &Particles[0], NumToLoad*sizeof(TParticle) );
@@ -288,7 +288,7 @@ void FLissajousEmitterComponent::UpdateEmitter( Float DeltaTime )
 		P.iTile			= Random(NumUTiles * NumVTiles);
 		P.Phase			= RandomRange( 0.f, 2.f*math::PI );
 		P.Life			= RandomRange( LifeRange[0], LifeRange[1] );
-		P.MaxLifeInv	= 1.f / Max( 0.001f, P.Life );
+		P.MaxLifeInv	= 1.f / max( 0.001f, P.Life );
 		P.Size			= SizeParam == PPT_Random ? RandomRange( SizeRange[0], SizeRange[1] ) : SizeRange[0];
 
 		if( SpinRange[0] == SpinRange[1] && SpinRange[0] == 0.f )
@@ -365,9 +365,9 @@ FWeatherEmitterComponent::FWeatherEmitterComponent()
 // Return the particles cloud bounds. But
 // snowflakes or raindrops are fall in the entire world!
 //
-TRect FWeatherEmitterComponent::GetCloudRect()
+math::Rect FWeatherEmitterComponent::GetCloudRect()
 {
-	return TRect( math::Vector( 0.f, 0.f ), math::WORLD_SIZE );
+	return math::Rect( math::Vector( 0.f, 0.f ), math::WORLD_SIZE );
 }
 
 
@@ -429,7 +429,7 @@ void FWeatherEmitterComponent::UpdateEmitter( Float Delta )
 		P.iTile			= Random(NumUTiles * NumVTiles);
 		P.Phase			= RandomRange( 0.f, 2.f*math::PI );
 		P.Life			= RandomRange( LifeRange[0], LifeRange[1] );
-		P.MaxLifeInv	= 1.f / Max( 0.001f, P.Life );
+		P.MaxLifeInv	= 1.f / max( 0.001f, P.Life );
 		P.Size			= RandomRange( SizeRange[0], SizeRange[1] );
 
 		if( SpinRange[0] == SpinRange[1] && SpinRange[0] == 0.f )
@@ -537,7 +537,7 @@ void FPhysEmitterComponent::UpdateEmitter( Float Delta )
 		P.Speed			= math::transformVectorBy( P.Speed, LocalToWorld );
 
 		P.Life			= RandomRange( LifeRange[0], LifeRange[1] );
-		P.MaxLifeInv	= 1.f / Max( 0.001f, P.Life );
+		P.MaxLifeInv	= 1.f / max( 0.001f, P.Life );
 		P.iTile			= Random(NumUTiles * NumVTiles);
 		P.Size			= SizeParam == PPT_Random ? RandomRange( SizeRange[0], SizeRange[1] ) : SizeRange[0];
 
@@ -621,8 +621,8 @@ void FEmitterComponent::Render( CCanvas* Canvas )
 		return;
 
 	// Render particles if they actually visible.
-	TRect Cloud = GetCloudRect();
-	if( !Canvas->View.Bounds.IsOverlap(Cloud) )
+	math::Rect Cloud = GetCloudRect();
+	if( !Canvas->View.Bounds.isOverlap( Cloud ) )
 		return;
 
 #if 0
@@ -735,8 +735,8 @@ void FEmitterComponent::Render( CCanvas* Canvas )
 	if( Base->bSelected )
 		Canvas->DrawLineRect
 						( 
-							Cloud.Center(), 
-							Cloud.Size(), 
+							Cloud.center(), 
+							Cloud.size(), 
 							0, 
 							COLOR_Orange, 
 							false 

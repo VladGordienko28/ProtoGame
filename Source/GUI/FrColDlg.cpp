@@ -401,7 +401,7 @@ void WColorChooser::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 	if( bMoveH )
 	{
 		// Process Hue movement.
-		Int32	Hue	= Clamp( Y-30, 0x00, 0xff );
+		Int32	Hue	= clamp( Y-30, 0x00, 0xff );
 
 		HSpinner->SetValue( Hue, false );
 		UpdateFromHSL( this );
@@ -409,8 +409,8 @@ void WColorChooser::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 	if( bMoveSL )
 	{
 		// Process Saturation/Lightness movement.
-		Int32	Saturation	= Clamp( X-10, 0x00, 0xff ),
-				Lightness	= Clamp( Y-30, 0x00, 0xff );
+		Int32	Saturation	= clamp( X-10, 0x00, 0xff ),
+				Lightness	= clamp( Y-30, 0x00, 0xff );
 
 		SSpinner->SetValue( Saturation, false );
 		LSpinner->SetValue( Lightness, false );
@@ -469,9 +469,9 @@ void WColorChooser::UpdateFromRGB( WWidget* Sender )
 
 	Selected	= TColor
 	(
-		Clamp( R, 0x00, 0xff ),
-		Clamp( G, 0x00, 0xff ),
-		Clamp( B, 0x00, 0xff ),
+		clamp( R, 0x00, 0xff ),
+		clamp( G, 0x00, 0xff ),
+		clamp( B, 0x00, 0xff ),
 		Selected.A
 	);
 
@@ -499,9 +499,9 @@ void WColorChooser::UpdateFromHSL( WWidget* Sender )
 	UInt8 Alpha = Selected.A;
 	Selected	= TColor::HSLToRGB
 	(
-		Clamp( H, 0x00, 0xff ),
-		Clamp( S, 0x00, 0xff ),
-		Clamp( L, 0x00, 0xff )
+		clamp( H, 0x00, 0xff ),
+		clamp( S, 0x00, 0xff ),
+		clamp( L, 0x00, 0xff )
 	);
 	Selected.A	= Alpha;
 

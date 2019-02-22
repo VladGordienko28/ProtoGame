@@ -110,7 +110,7 @@ public:
 	// Variables.
 	Array<Int32>		iPins;
 	Array<Int32>		iLinked;
-	TRect				Bounds;
+	math::Rect			Bounds;
 	FBrushComponent*	Floor;
 
 	// Group initialization.
@@ -202,16 +202,16 @@ void CPathBuilder::LinkWalkable()
 	{
 		TPinGroup&	Group1	= Groups[g1];
 		TPinGroup&	Group2	= Groups[g2];
-		TRect		AABB1	= Group1.Bounds;
-		TRect		AABB2	= Group2.Bounds;
+		math::Rect	AABB1	= Group1.Bounds;
+		math::Rect	AABB2	= Group2.Bounds;
 		Bool		bOnLeft	= false;
 
-		if( AABB2.Max.x < AABB1.Min.x+0.5f )
+		if( AABB2.max.x < AABB1.min.x+0.5f )
 		{
 			// Group2 lies on left of Group1.
 			bOnLeft	= true;
 		}
-		else if( AABB2.Min.x > AABB1.Max.x-0.5f )
+		else if( AABB2.min.x > AABB1.max.x-0.5f )
 		{
 			// Group2 lies on right of Group1.
 			bOnLeft	= false;
@@ -243,7 +243,7 @@ void CPathBuilder::LinkWalkable()
 		// Walk along the path and check for floor.
 		FBrushComponent*	Floor;
 		math::Vector PathDelta	= Best2.Location - Best1.Location;
-		Int32	NumSteps	= Max( 1, math::floor(PathDelta.size() / WALK_STEP) );
+		Int32	NumSteps	= max( 1, math::floor(PathDelta.size() / WALK_STEP) );
 		math::Vector Walk		= Best1.Location;
 		PathDelta			*= 1.f / NumSteps;
 
@@ -279,7 +279,7 @@ void CPathBuilder::LinkWalkable()
 
 			// Add to navigator.
 			if( Best1.CanAddEdge() ) Best1.AddEdge(Navigator->Edges.push(Edge));
-			Exchange( Edge.iStart, Edge.iFinish );
+			exchange( Edge.iStart, Edge.iFinish );
 			if( Best2.CanAddEdge() ) Best2.AddEdge(Navigator->Edges.push(Edge));
 
 			// Link groups.
@@ -394,10 +394,10 @@ void CPathBuilder::LinkJumpable()
 			{
 				// Sort links by distance.
 				Links[d].sort(JumpLinksCmp);
-				TPathEdge Edge	= Links[d][Max( (Links[d].size())/2-1, 0 )];
+				TPathEdge Edge	= Links[d][max( (Links[d].size())/2-1, 0 )];
 
 				if( Pins[Edge.iStart].CanAddEdge() ) Pins[Edge.iStart].AddEdge(Navigator->Edges.push(Edge));
-				Exchange( Edge.iStart, Edge.iFinish );
+				exchange( Edge.iStart, Edge.iFinish );
 				if( Pins[Edge.iStart].CanAddEdge() ) Pins[Edge.iStart].AddEdge(Navigator->Edges.push(Edge));
 			}
 
@@ -435,7 +435,7 @@ void CPathBuilder::ExplorePaths()
 				B			= Navigator->Nodes[Edge.iFinish].Location,
 				Delta		= B - A,
 				Walk		= A;
-		Int32	NumSteps	= Max( 1, math::floor(Delta.size()) );
+		Int32	NumSteps	= max( 1, math::floor(Delta.size()) );
 
 		Delta	*= 1.f/NumSteps;
 
@@ -620,7 +620,7 @@ Bool PinXCmp( const Int32& A, const Int32& B )
 //
 Bool GroupXCmp( const TPinGroup& A, const TPinGroup& B )
 {
-	return A.Bounds.Min.x < B.Bounds.Min.x;
+	return A.Bounds.min.x < B.Bounds.min.x;
 }
 
 
@@ -682,8 +682,8 @@ void CPathBuilder::GroupPins()
 	{
 		TPinGroup& Group = Groups[g];
 
-		Group.Bounds.Min	=
-		Group.Bounds.Max	= Pins[Group.iPins[0]].Location;
+		Group.Bounds.min	=
+		Group.Bounds.max	= Pins[Group.iPins[0]].Location;
 		for( Int32 i=1; i<Group.iPins.size(); i++ )
 			Group.Bounds += Pins[Group.iPins[i]].Location;
 	}
@@ -715,7 +715,7 @@ void CPathBuilder::GroupPins()
 				Edge.Cost		= math::floor(abs(Pins[Edge.iStart].Location.x-Pins[Edge.iFinish].Location.x));
 
 				Pins[Edge.iStart].AddEdge(Navigator->Edges.push(Edge));
-				Exchange( Edge.iStart, Edge.iFinish );
+				exchange( Edge.iStart, Edge.iFinish );
 				Pins[Edge.iStart].AddEdge(Navigator->Edges.push(Edge));
 			}
 		}

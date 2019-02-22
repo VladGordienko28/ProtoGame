@@ -122,10 +122,10 @@ void FBitmap::EditChange()
 	FTexture::EditChange();
 
 	// Validate input data.
-	PanUSpeed	= Clamp( PanUSpeed,		-10.f,	+10.f );
-	PanVSpeed	= Clamp( PanVSpeed,		-10.f,	+10.f );
-	Saturation	= Clamp( Saturation,	-10.f,	+10.f );
-	AnimSpeed	= Clamp( AnimSpeed,		0.01f,	60.f );
+	PanUSpeed	= clamp( PanUSpeed,		-10.f,	+10.f );
+	PanVSpeed	= clamp( PanVSpeed,		-10.f,	+10.f );
+	Saturation	= clamp( Saturation,	-10.f,	+10.f );
+	AnimSpeed	= clamp( AnimSpeed,		0.01f,	60.f );
 }
 
 

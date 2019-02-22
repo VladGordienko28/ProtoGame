@@ -9,11 +9,13 @@
     <ClInclude Include="Angle.h" />
     <ClInclude Include="Coords.h" />
     <ClInclude Include="Circle.h" />
+    <ClInclude Include="Rect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="Polygon.cpp" />
     <ClCompile Include="Angle.cpp" />
     <ClCompile Include="Coords.cpp" />
+    <ClCompile Include="Rect.cpp" />
   </ItemGroup>
 </Project>

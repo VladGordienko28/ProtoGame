@@ -92,7 +92,7 @@ void WColorRibbon::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 		// Move sample.
 		TColor OldOutput = Curve->Samples[iSelected].Output;
 		Curve->Samples.removeShift(iSelected);
-		iSelected = Curve->AddSample( Float(Clamp(X-5, 0, Size.Width-11))/Float(Size.Width), OldOutput );
+		iSelected = Curve->AddSample( Float(clamp(X-5, 0, Size.Width-11))/Float(Size.Width), OldOutput );
 
 		OnChange();
 		UpdateRibbon();
@@ -122,7 +122,7 @@ void WColorRibbon::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 		if( iCandidate == -1 )
 		{
 			// Add a new sample.
-			Float Input = Float(Clamp(X-5, 0, Size.Width-11))/Float(Size.Width);
+			Float Input = Float(clamp(X-5, 0, Size.Width-11))/Float(Size.Width);
 			iSelected = Curve->AddSample( Input, Curve->SampleLinearAt(Input, COLOR_Black) );
 			OnChange();
 			UpdateRibbon();

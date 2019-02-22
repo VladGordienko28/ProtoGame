@@ -370,10 +370,10 @@ CVariant::CVariant( const math::Vector& InVector )
 {
 	*((math::Vector*)(&Value[0])) = InVector;
 }
-CVariant::CVariant( const TRect& InRect )
+CVariant::CVariant( const math::Rect& InRect )
 	:	Type( TYPE_AABB )
 {
-	*((TRect*)(&Value[0])) = InRect;
+	*((math::Rect*)(&Value[0])) = InRect;
 }
 CVariant::CVariant( FResource* InResource )
 	:	Type( TYPE_Resource )
@@ -678,7 +678,7 @@ SizeT CTypeInfo::TypeSize( Bool bNoArray ) const
 			sizeof( TColor ),		//	TYPE_Color	
 			sizeof( String ),		//	TYPE_String
 			sizeof( math::Vector ),	//	TYPE_Vector
-			sizeof( TRect ),		//	TYPE_AABB
+			sizeof( math::Rect ),	//	TYPE_AABB
 			sizeof( FResource* ),	//	TYPE_Resource
 			sizeof( FEntity* ),		//	TYPE_Entity
 			sizeof( TDelegate ),	//	TYPE_Delegate
@@ -988,8 +988,8 @@ String CTypeInfo::ToString( const void* Addr ) const
 		}
 		case TYPE_AABB:
 		{
-			TRect Value = *(TRect*)Addr;
-			return String::Format( L"(%2.f, %2.f, %2.f, %2.f )", Value.Min.x, Value.Min.y, Value.Max.x, Value.Max.y );
+			math::Rect Value = *(math::Rect*)Addr;
+			return String::Format( L"(%2.f, %2.f, %2.f, %2.f )", Value.min.x, Value.min.y, Value.max.x, Value.max.y );
 		}
 		case TYPE_Resource:
 		{
@@ -1229,10 +1229,10 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 		case TYPE_AABB:
 			// Import rect.
 			if( ArrayDim == 1 )
-				*(TRect*)Addr = Im.ImportAABB( *Prefix );
+				*(math::Rect*)Addr = Im.ImportAABB( *Prefix );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					((TRect*)Addr)[i] = Im.ImportAABB( *String::Format( L"%s[%d]", *Prefix, i ) );
+					((math::Rect*)Addr)[i] = Im.ImportAABB( *String::Format( L"%s[%d]", *Prefix, i ) );
 			break;
 
 		case TYPE_Resource:
@@ -1366,10 +1366,10 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 		case TYPE_AABB:
 			// Export rect.
 			if( ArrayDim == 1 )
-				Ex.ExportAABB( *Prefix, *(TRect*)Addr );
+				Ex.ExportAABB( *Prefix, *(math::Rect*)Addr );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					Ex.ExportAABB( *String::Format( L"%s[%d]", *Prefix, i ), ((TRect*)Addr)[i] );
+					Ex.ExportAABB( *String::Format( L"%s[%d]", *Prefix, i ), ((math::Rect*)Addr)[i] );
 			break;
 
 		case TYPE_Resource:

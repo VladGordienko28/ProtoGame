@@ -188,6 +188,13 @@ public:
 		SetValue1f( idAberrationIntensity, intensity );
 	}
 
+	void setVignette( Float intensity, Float innerRadius, Float outerRadius )
+	{
+		SetValue1f( idvignetteIntensity, intensity );
+		SetValue1f( idvignetteInnerRadius, innerRadius );
+		SetValue1f( idvignetteOuterRadius, outerRadius );
+	}
+
 private:
 	// Uniform variables.
 	Int32 idTexture;
@@ -197,6 +204,10 @@ private:
 	Int32 idShadows;
 	Int32 idBWScale;
 	Int32 idAberrationIntensity;
+
+	Int32 idvignetteIntensity;
+	Int32 idvignetteInnerRadius;
+	Int32 idvignetteOuterRadius;
 };
 
 

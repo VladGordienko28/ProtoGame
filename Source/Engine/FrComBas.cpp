@@ -93,9 +93,9 @@ FBaseComponent::FBaseComponent()
 //
 // Return component bounding rect.
 //
-TRect FBaseComponent::GetAABB()
+math::Rect FBaseComponent::GetAABB()
 {
-	return TRect( Location, Size );
+	return math::Rect( Location, Size.x, Size.y );
 }
 
 

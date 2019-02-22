@@ -165,7 +165,7 @@ TStaticFont* LoadFontFromResource( HINSTANCE hInstance, LPCTSTR FontID, LPCTSTR 
 		sscanf( Walk, "%d %d %d %d %d\n", &iBitmap, &X, &Y, &W, &H );
 		to_next;
 
-		NumPages = Max( NumPages, iBitmap+1 );
+		NumPages = max( NumPages, iBitmap+1 );
 
 		TGlyph Glyph;
 		Glyph.iBitmap	= iBitmap;
@@ -174,7 +174,7 @@ TStaticFont* LoadFontFromResource( HINSTANCE hInstance, LPCTSTR FontID, LPCTSTR 
 		Glyph.W			= W;
 		Glyph.H			= H;	
 
-		Font->Height			= Max( Font->Height, H );
+		Font->Height			= max( Font->Height, H );
 		Font->Remap[(UInt16)C[0]] = Font->Glyphs.push(Glyph);
 
 #if 0

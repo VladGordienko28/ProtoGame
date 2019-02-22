@@ -44,7 +44,7 @@ void paletteFire( TColor* Palette )
 {
 	for( Int32 i=0; i<256; i++ )
 	{
-		Palette[i]		= TColor::HSLToRGB( i/0x03, 0xff, Min( 0xff, i*0x02 ) );
+		Palette[i]		= TColor::HSLToRGB( i/0x03, 0xff, min( 0xff, i*0x02 ) );
 		Palette[i].A	= 0xff;
 	}
 }
@@ -112,7 +112,7 @@ void InitTables()
 		Int32 W = i / 2 - 256;
 		if( (i-512) < 256 ) 
 			W++;
-		WaveTab[i] = Clamp( W, 0, 255 );
+		WaveTab[i] = clamp( W, 0, 255 );
 	}
 }
 
@@ -863,7 +863,7 @@ void FFireBitmap::DrawLighting( Int32 X1, Int32 Y1, Int32 X2, Int32 Y2, UInt8 He
 
 		Int32 SegX	= X-LastX;
 		Int32 SegY	= Y-LastY;
-		Int32 Seg	= Max( abs(SegX), abs(SegY) );
+		Int32 Seg	= max( abs(SegX), abs(SegY) );
 		Int32 i		= Seg >> 8;
 
 		SegX	= (SegX << 8) / Seg;
@@ -1313,7 +1313,7 @@ void FFireBitmap::AddSpark( Int32 X, Int32 Y )
 			// Whirligig effect.
 			Spark.ParamA	= DrawParams.Frequency;
 			Spark.ParamB	= DrawParams.Life;
-			Spark.ParamC	= Max( 1, ~DrawParams.Area >> 5 );
+			Spark.ParamC	= max( 1, ~DrawParams.Area >> 5 );
 			Spark.ParamD	= 0;
 			break;
 		}
@@ -1369,7 +1369,7 @@ void FFireBitmap::SetFireTable()
 		// Pretty strange formula, but it's works well.
 		Float Value = ((Float)iHeat/2.f - 16.f * RandomF());
 		Value		*= Lerp( 10.f/128.f, 150.f/128.f, (Float)FireHeat/255.f ); 
-		FireTable[iHeat]	= Clamp( math::round(Value), 0x00, 0xff );
+		FireTable[iHeat]	= clamp( math::round(Value), 0x00, 0xff );
 	}
 }
 
@@ -1613,7 +1613,7 @@ void FWaterBitmap::SetDistortionTable()
 	for( Int32 i=0; i<1024; i++ )
 	{
 		Int32 Val		= math::trunc((i-511)*((Float)WaterAmpl/512.f));
-		DistTable[i]	= Clamp( Val, -128, 127 );
+		DistTable[i]	= clamp( Val, -128, 127 );
 	}
 }
 
@@ -2509,7 +2509,7 @@ void FTechBitmap::SetLigthTable()
 		if( Reflected < 0.1f )
 			TempLight += math::round((0.1f-Reflected)*1200.f);
 
-		LightTable[i] = Clamp( TempLight, 0, 255 );
+		LightTable[i] = clamp( TempLight, 0, 255 );
 	}
 }
 

@@ -40,12 +40,12 @@ public:
 	Int32					FrameH;
 	Int32					SpaceX;
 	Int32					SpaceY;
-	Array<TRect>			Frames;
+	Array<math::Rect>		Frames;
 
 	// FAnimation interface.
 	FAnimation();
 	Int32 FindSequence( String InName );
-	TRect GetTexCoords( Int32 iFrame );
+	math::Rect GetTexCoords( Int32 iFrame );
 
 	// FObject interface.
 	void SerializeThis( CSerializer& S );

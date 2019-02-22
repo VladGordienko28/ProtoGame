@@ -227,7 +227,7 @@ void FDiffuseLayer::ApplyTransform( const TViewInfo& View, const math::Vector* I
 	if( bTurn90 )
 	{
 		for( Int32 i=0; i<NumVerts; i++ )
-			Exchange(OutCoords[i].x, OutCoords[i].y);
+			exchange(OutCoords[i].x, OutCoords[i].y);
 	}
 }
 

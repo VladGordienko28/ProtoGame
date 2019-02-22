@@ -197,7 +197,7 @@ void CBlockManager::SaveAllBlocks( String InFileName )
 				LZWSize		= LZW.ForecastSize( B->Data, B->Size );
 				
 				// Make decision.
-				if( RealSize-Min(RLESize, LZWSize) <= 8*1024 )
+				if( RealSize-min(RLESize, LZWSize) <= 8*1024 )
 				{
 					// Uncompressed data is smaller than compressed, yes
 					// this can happen, but really seldom.

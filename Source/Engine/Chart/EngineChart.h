@@ -14,6 +14,7 @@ namespace flu
 		Entity,
 		Render,
 		Memory,
+		DrawCalls,
 		MAX
 	};
 

@@ -171,7 +171,7 @@ public:
 		if( Button == MB_Left )
 		{	
 			Value = Orientation == SLIDER_Horizontal ? (X * 100 / Size.Width) : (Y * 100 / Size.Height);
-			Value = Clamp( Value, 0, 100 );
+			Value = clamp( Value, 0, 100 );
 			OnChange();
 		}
 	}
@@ -182,7 +182,7 @@ public:
 		if( Button == MB_Left )
 		{	
 			Value = Orientation == SLIDER_Horizontal ? (X * 100 / Size.Width) : (Y * 100 / Size.Height);
-			Value = Clamp( Value, 0, 100 );
+			Value = clamp( Value, 0, 100 );
 			OnChange();
 		}
 	}
@@ -227,7 +227,7 @@ public:
 	}
 	void SetValue( Int32 NewValue )
 	{
-		Value = Clamp( NewValue, 0, 100 );
+		Value = clamp( NewValue, 0, 100 );
 		OnChange();
 	}
 	virtual void OnChange()
@@ -326,7 +326,7 @@ public:
 	}
 	void SetValue( Int32 NewValue )
 	{
-		Value	= Clamp( NewValue, 0, 100 );
+		Value	= clamp( NewValue, 0, 100 );
 	}
 	void ZeroValue()
 	{

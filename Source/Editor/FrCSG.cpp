@@ -25,7 +25,7 @@ public:
 	FBrushComponent* ToBrush( FLevel* Level, FBrushComponent* Sample );
 	Bool TestSegment( math::Vector A, math::Vector B );
 	void Split( math::Vector A, math::Vector B, TCSGPoly& Front, TCSGPoly& Back );
-	TRect GetAABB();
+	math::Rect GetAABB();
 	void MergeOverlap();
 };
 
@@ -58,7 +58,7 @@ inline Bool TestAxis( math::Vector Axis, math::Vector A, math::Vector B, const T
 	
 	// Assume MinS <= MaxS.
 	if( MinS > MaxS )
-		Exchange( MinS, MaxS );
+		exchange( MinS, MaxS );
 
 	// Project poly onto axis.
 	Float MinP	= Poly.Vertices[0] * Axis;
@@ -173,9 +173,9 @@ void TCSGPoly::Split( math::Vector A, math::Vector B, TCSGPoly& Front, TCSGPoly&
 //
 // Return polygon bounds.
 //
-TRect TCSGPoly::GetAABB()
+math::Rect TCSGPoly::GetAABB()
 {
-	return TRect( Vertices, NumVerts );
+	return math::Rect( Vertices, NumVerts );
 }
 
 
@@ -229,7 +229,7 @@ FBrushComponent* TCSGPoly::ToBrush( FLevel* Level, FBrushComponent* Sample )
 	B->Type			= Sample->Type;
 
 	// Copy vertices.
-	B->NumVerts		= Min<Int32>( NumVerts, FBrushComponent::MAX_BRUSH_VERTS );
+	B->NumVerts		= min<Int32>( NumVerts, FBrushComponent::MAX_BRUSH_VERTS );
 	for( Int32 i=0; i<B->NumVerts; i++ )
 		B->Vertices[i] = Vertices[i] - B->Location;
 
@@ -276,7 +276,7 @@ void CSGIntersection( FBrushComponent* Brush, FLevel* Level )
 	// Prepare.
 	Int32 NumEnts = Level->Entities.size();
 	TCSGPoly Poly, OtherPoly;
-	TRect Rect;
+	math::Rect Rect;
 	
 	Poly.FromBrush( Brush );
 	Rect = Brush->GetAABB();
@@ -293,7 +293,7 @@ void CSGIntersection( FBrushComponent* Brush, FLevel* Level )
 		FBrushComponent* Other = (FBrushComponent*)Level->Entities[i]->Base;
 
 		// Another fast test.
-		if( !Rect.IsOverlap( Other->GetAABB() ) )
+		if( !Rect.isOverlap( Other->GetAABB() ) )
 			continue;
 
 		Bool bHasAffect = false;
@@ -358,7 +358,7 @@ void CSGDifference( FBrushComponent* Brush, FLevel* Level )
 	// Prepare.
 	Int32 NumEnts = Level->Entities.size();
 	TCSGPoly Poly, OtherPoly;
-	TRect Rect;
+	math::Rect Rect;
 	
 	Poly.FromBrush( Brush );
 	Rect = Brush->GetAABB();
@@ -375,7 +375,7 @@ void CSGDifference( FBrushComponent* Brush, FLevel* Level )
 		FBrushComponent* Other = (FBrushComponent*)Level->Entities[i]->Base;
 
 		// Another cheap test.
-		if( !Rect.IsOverlap( Other->GetAABB() ) )
+		if( !Rect.isOverlap( Other->GetAABB() ) )
 			continue;
 
 		Bool bHasAffect = false;

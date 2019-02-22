@@ -132,8 +132,8 @@ void FPainterComponent::nativeTile( CFrame& Frame )
 	if( Canvas )
 	{
 		TRenderRect	R;
-		R.Bounds.Min	= P;
-		R.Bounds.Max	= P + PL;
+		R.Bounds.min	= P;
+		R.Bounds.max	= P + PL;
 
 		R.Color			= Color;
 		R.Rotation		= 0;
@@ -163,10 +163,10 @@ void FPainterComponent::nativeTile( CFrame& Frame )
 			};
 
 			// Texture coords.
-			R.TexCoords.Min.x	= T.x * Rescale[Texture->UBits];
-			R.TexCoords.Min.y	= T.y * Rescale[Texture->VBits];
-			R.TexCoords.Max.x	= (T.x+TL.x)  * Rescale[Texture->UBits];
-			R.TexCoords.Max.y	= (T.y+TL.y) * Rescale[Texture->VBits];
+			R.TexCoords.min.x	= T.x * Rescale[Texture->UBits];
+			R.TexCoords.min.y	= T.y * Rescale[Texture->VBits];
+			R.TexCoords.max.x	= (T.x+TL.x)  * Rescale[Texture->UBits];
+			R.TexCoords.max.y	= (T.y+TL.y) * Rescale[Texture->VBits];
 		}
 		else
 		{

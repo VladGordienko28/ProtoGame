@@ -148,7 +148,7 @@ void WWatchListDialog::OnPaint( CGUIRenderBase* Render )
 		Int32 NumVis	= YSize / 17;
 		Int32	Offset	= math::round((Float)(Watches.size()-NumVis) * ScrollBar->Value / 100.f);
 		
-		Offset	= Clamp( Offset, 0, Watches.size()-1 );
+		Offset	= clamp( Offset, 0, Watches.size()-1 );
 		if( NumVis > Watches.size() )	
 			ScrollBar->Value	= 0;
 
@@ -232,7 +232,7 @@ void WWatchListDialog::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 
 	if( GDivMove )
 	{
-		Divider	= Clamp( X, 100, Size.Width-100 );
+		Divider	= clamp( X, 100, Size.Width-100 );
 		//log( L"Divider at %i", Divider );
 	}
 
@@ -250,7 +250,7 @@ void WWatchListDialog::OnMouseScroll( Int32 Delta )
 { 
 	WForm::OnMouseScroll(Delta); 
 
-	ScrollBar->Value	= Clamp
+	ScrollBar->Value	= clamp
 	( 
 		ScrollBar->Value-Delta/120, 
 		0, 

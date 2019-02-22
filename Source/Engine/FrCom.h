@@ -107,7 +107,7 @@ public:
 
 	// FBaseComponent interface.
 	FBaseComponent();
-	virtual TRect GetAABB();
+	virtual math::Rect GetAABB();
 
 	// FComponent interface.
 	void InitForEntity( FEntity* InEntity );
@@ -140,7 +140,7 @@ private:
 	friend CCollisionHash;
 	Bool		bHashed;
 	UInt32		HashMark;
-	TRect		HashAABB;
+	math::Rect	HashAABB;
 
 	// Natives.
 	void nativeSetLocation( CFrame& Frame );

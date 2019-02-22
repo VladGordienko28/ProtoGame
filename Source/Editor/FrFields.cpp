@@ -339,7 +339,7 @@ CPropertyItem::CPropertyItem
 											(
 												Inspector,
 												Depth + 1,
-												CustomAddr + (SizeT)((UInt8*)&(&((TRect*)nullptr)->Min)[i] -(UInt8*)nullptr),
+												CustomAddr + (SizeT)((UInt8*)&(&((math::Rect*)nullptr)->min)[i] -(UInt8*)nullptr),
 												MemNames[i],
 												TYPE_Vector,
 												Flags
@@ -492,7 +492,7 @@ CPropertyItem::CPropertyItem
 												InObjs,
 												MemNames[i],
 												TYPE_Vector,
-												InAddrOffset + (SizeT)((UInt8*)&(&((TRect*)nullptr)->Min)[i] -(UInt8*)nullptr),
+												InAddrOffset + (SizeT)((UInt8*)&(&((math::Rect*)nullptr)->min)[i] -(UInt8*)nullptr),
 												Flags
 											) );
 
@@ -1280,7 +1280,7 @@ void CPropertyItem::MouseMove( EMouseButton Button, Int32 X, Int32 Y )
 	{
 		// Move separator.
 		Inspector->Separator	= X;
-		Inspector->Separator	= Clamp( Inspector->Separator, 100, Inspector->Size.Width-100 );
+		Inspector->Separator	= clamp( Inspector->Separator, 100, Inspector->Size.Width-100 );
 		
 		Inspector->UnselectAll();
 	}
@@ -1826,7 +1826,7 @@ void WObjectInspector::UpdateChildren()
 
 	// Compute scrolling.
 	Int32 NumVisible	= math::floor( (Float)(Size.Height-Padding.Top)  / (Float)INSPECTOR_ITEM_HEIGHT );
-	Int32 NumInvis		= Max( NonHidden-NumVisible, 0);
+	Int32 NumInvis		= max( NonHidden-NumVisible, 0);
 	Int32 Scroll		= (NumInvis * ScrollBar->Value * INSPECTOR_ITEM_HEIGHT) / 100;
 
 	Int32 WalkY	= INSPECTOR_HEADER_SIZE + 1 - Scroll;
@@ -1930,7 +1930,7 @@ void WObjectInspector::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 //
 void WObjectInspector::OnMouseScroll( Int32 Delta )
 {
-	ScrollBar->Value	= Clamp
+	ScrollBar->Value	= clamp
 							( 
 								ScrollBar->Value-Delta/40, 
 								0, 
@@ -2078,7 +2078,7 @@ void WObjectInspector::ColorSelected( WWidget* Sender )
 void WObjectInspector::OnResize()
 {
 	// Clamp separator.
-	Separator	= Clamp( Separator, 100, Size.Width-100 );
+	Separator	= clamp( Separator, 100, Size.Width-100 );
 
 	// Reset focus.
 	UnselectAll();

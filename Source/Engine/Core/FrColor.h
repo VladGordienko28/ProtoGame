@@ -31,9 +31,9 @@ public:
 		:	R( InR ), G( InG ), B( InB ), A( InA )
 	{}
 	TColor( Float InR, Float InG, Float InB )
-		:	R( Clamp(math::floor(InR*256.f), 0, 255) ), 
-			G( Clamp(math::floor(InG*256.f), 0, 255) ), 
-			B( Clamp(math::floor(InB*256.f), 0, 255) ), 
+		:	R( clamp(math::floor(InR*256.f), 0, 255) ), 
+			G( clamp(math::floor(InG*256.f), 0, 255) ), 
+			B( clamp(math::floor(InB*256.f), 0, 255) ), 
 			A( 0xff )
 	{}
 
@@ -50,20 +50,20 @@ public:
 	{
 		return TColor
 					( 
-						Min( 0xff, (Int32)R + (Int32)C.R ),
-						Min( 0xff, (Int32)G + (Int32)C.G ),
-						Min( 0xff, (Int32)B + (Int32)C.B ),
-						Min( 0xff, (Int32)A + (Int32)C.A ) 
+						min( 0xff, (Int32)R + (Int32)C.R ),
+						min( 0xff, (Int32)G + (Int32)C.G ),
+						min( 0xff, (Int32)B + (Int32)C.B ),
+						min( 0xff, (Int32)A + (Int32)C.A ) 
 					);
 	}
 	TColor operator-( const TColor C ) const
 	{
 		return TColor
 					( 
-						Max( 0x00, (Int32)R - (Int32)C.R ),
-						Max( 0x00, (Int32)G - (Int32)C.G ),
-						Max( 0x00, (Int32)B - (Int32)C.B ),
-						Max( 0x00, (Int32)A - (Int32)C.A ) 
+						max( 0x00, (Int32)R - (Int32)C.R ),
+						max( 0x00, (Int32)G - (Int32)C.G ),
+						max( 0x00, (Int32)B - (Int32)C.B ),
+						max( 0x00, (Int32)A - (Int32)C.A ) 
 					);
 	}
 	TColor operator*( UInt8 Brig ) const
@@ -87,26 +87,26 @@ public:
 	{
 		return TColor
 					(
-						Clamp( math::floor(R*F), 0, 255 ),
-						Clamp( math::floor(G*F), 0, 255 ),
-						Clamp( math::floor(B*F), 0, 255 ),
+						clamp( math::floor(R*F), 0, 255 ),
+						clamp( math::floor(G*F), 0, 255 ),
+						clamp( math::floor(B*F), 0, 255 ),
 						/*Clamp( Floor(A*F), 0, 255 )*/A
 					);	
 	}
 	TColor operator+=( const TColor C )
 	{
-		R	= Min( 0xff, (Int32)R + (Int32)C.R );
-		G	= Min( 0xff, (Int32)G + (Int32)C.G );
-		B	= Min( 0xff, (Int32)B + (Int32)C.B );
-		A	= Min( 0xff, (Int32)A + (Int32)C.A );
+		R	= min( 0xff, (Int32)R + (Int32)C.R );
+		G	= min( 0xff, (Int32)G + (Int32)C.G );
+		B	= min( 0xff, (Int32)B + (Int32)C.B );
+		A	= min( 0xff, (Int32)A + (Int32)C.A );
 		return *this;
 	}
 	TColor operator-=( const TColor C )
 	{
-		R	= Max( 0x00, (Int32)R - (Int32)C.R );
-		G	= Max( 0x00, (Int32)G - (Int32)C.G );
-		B	= Max( 0x00, (Int32)B - (Int32)C.B );
-		A	= Max( 0x00, (Int32)A - (Int32)C.A );
+		R	= max( 0x00, (Int32)R - (Int32)C.R );
+		G	= max( 0x00, (Int32)G - (Int32)C.G );
+		B	= max( 0x00, (Int32)B - (Int32)C.B );
+		A	= max( 0x00, (Int32)A - (Int32)C.A );
 		return *this;
 	}
 	TColor operator*=( const TColor C )
@@ -119,9 +119,9 @@ public:
 	}
 	TColor operator*=( Float F )
 	{
-		R	=	Clamp( math::floor(R*F), 0, 255 );
-		G	=	Clamp( math::floor(G*F), 0, 255 );
-		B	=	Clamp( math::floor(B*F), 0, 255 );
+		R	=	clamp( math::floor(R*F), 0, 255 );
+		G	=	clamp( math::floor(G*F), 0, 255 );
+		B	=	clamp( math::floor(B*F), 0, 255 );
 		A	=	/*Clamp( Floor(A*F), 0, 255 )*/A;
 		return *this;
 	}

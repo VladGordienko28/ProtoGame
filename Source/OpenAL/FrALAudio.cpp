@@ -890,9 +890,9 @@ COpenALAudio::~COpenALAudio()
 void COpenALAudio::Tick( Float Delta, FLevel* Scene )
 { 
 	// Validate volume.
-	MasterVolume	= Clamp( MasterVolume,	0.f, 1.f );
-	FXVolume		= Clamp( FXVolume,		0.f, 1.f );
-	MusicVolume		= Clamp( MusicVolume,	0.f, 1.f );
+	MasterVolume	= clamp( MasterVolume,	0.f, 1.f );
+	FXVolume		= clamp( FXVolume,		0.f, 1.f );
+	MusicVolume		= clamp( MusicVolume,	0.f, 1.f );
 
 	// Update music streamer.
 	Stream->Tick( Delta );  
@@ -926,7 +926,7 @@ void COpenALAudio::Tick( Float Delta, FLevel* Scene )
 					if( AmbientSources[j].iEmitter == -1 )
 						break;
 
-				j	= Clamp( j, 0, AUDIO_MAX_AMBIENT-1 );
+				j	= clamp( j, 0, AUDIO_MAX_AMBIENT-1 );
 
 				AmbientSources[j].iEmitter	= i;
 				E.iSource					= j;
@@ -1005,9 +1005,9 @@ void COpenALAudio::PlayAmbient
 {
 	// Validate.
 	assert(Sound);
-	Gain	= Clamp( Gain,		0.f, 1.f );
-	Radius	= Clamp( Radius,	1.f, 1000.f );
-	Pitch	= Clamp( Pitch,		0.5f, 2.f );
+	Gain	= clamp( Gain,		0.f, 1.f );
+	Radius	= clamp( Radius,	1.f, 1000.f );
+	Pitch	= clamp( Pitch,		0.5f, 2.f );
 
 	// Register FSound if any.
 	if( Sound->AudioInfo == -1 )
@@ -1264,7 +1264,7 @@ void COpenALAudio::PlayFX( FSound* Sound, Float Gain, Float Pitch )
 
 	FX.Sound	= Sound;
 	FX.Pitch	= Pitch;
-	FX.Gain		= Clamp( Gain, 0.f, 1.f );
+	FX.Gain		= clamp( Gain, 0.f, 1.f );
 
 	alSourcei( FX.iALId,	AL_BUFFER,	Sound->AudioInfo );		
 	alSourcef( FX.iALId,	AL_PITCH,	FX.Pitch );

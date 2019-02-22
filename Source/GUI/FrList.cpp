@@ -316,7 +316,7 @@ void WListBox::OnKeyDown( Int32 Key )
 
 	// Scroll to show selected.
 	if( Slider->bVisible && Items.size()>1 )
-		Slider->Value	= Clamp( ItemIndex*100/(Items.size()-1), 0, 100 );
+		Slider->Value	= clamp( ItemIndex*100/(Items.size()-1), 0, 100 );
 }
 
 
@@ -328,7 +328,7 @@ void WListBox::OnMouseScroll( Int32 Delta )
 	WList::OnMouseScroll(Delta);
 	if( Slider->bVisible )
 	{
-		Slider->Value	= Clamp
+		Slider->Value	= clamp
 		( 
 			Slider->Value-Delta/120, 
 			0, 
@@ -491,7 +491,7 @@ void WList::Remove( Int32 iItem )
 	if( iItem >= 0 && iItem < Items.size() )
 	{
 		Items.removeShift(iItem);
-		ItemIndex = Clamp( ItemIndex, -1, Items.size()-1 );	
+		ItemIndex = clamp( ItemIndex, -1, Items.size()-1 );	
 	}
 }
 
@@ -511,7 +511,7 @@ void WList::Empty()
 //
 void WList::SetItemIndex( Int32 NewIdx, Bool bNotify )	
 {
-	ItemIndex = Clamp( NewIdx, -1, Items.size()-1 );
+	ItemIndex = clamp( NewIdx, -1, Items.size()-1 );
 
 	if( bNotify )
 		OnChange();
@@ -639,7 +639,7 @@ void WLog::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 	{
 		// Sort for copying.
 		if( iLast < iFirst )
-			Exchange( iFirst, iLast );
+			exchange( iFirst, iLast );
 
 		// Unselect if out of list.
 		if( iLast == -1 || iFirst == -1 )
@@ -676,9 +676,9 @@ void WLog::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 			iLast = iBelow;
 			
 			// Slowly scroll.
-			if( Y < 0 )				ScrollTop = Max( 0, ScrollTop-1 );
-			if( Y > Size.Height )	ScrollTop = Min( Lines.size()-1, ScrollTop+1 );
-			ScrollBar->Value = 100*ScrollTop / Max( Lines.size()-1, 1 );
+			if( Y < 0 )				ScrollTop = max( 0, ScrollTop-1 );
+			if( Y > Size.Height )	ScrollTop = min( Lines.size()-1, ScrollTop+1 );
+			ScrollBar->Value = 100*ScrollTop / max( Lines.size()-1, 1 );
 		}
 	}
 }
@@ -726,7 +726,7 @@ void WLog::OnPaint( CGUIRenderBase* Render )
 
 	// Visible lines bounds.
 	Int32 iVisFirst	= ScrollTop;
-	Int32 iVisLast	= Min( ScrollTop + Size.Height/13, Lines.size()-1 );
+	Int32 iVisLast	= min( ScrollTop + Size.Height/13, Lines.size()-1 );
 
 	// Draw frame.
 	Render->DrawRegion
@@ -741,12 +741,12 @@ void WLog::OnPaint( CGUIRenderBase* Render )
 	// Draw selection area.
 	if( iFirst != -1 && iLast != -1 )
 	{
-		Int32 FirstLine = Min( iFirst-ScrollTop, iLast-ScrollTop );
-		Int32 LastLine = Max( iFirst-ScrollTop, iLast-ScrollTop );
+		Int32 FirstLine = min( iFirst-ScrollTop, iLast-ScrollTop );
+		Int32 LastLine = max( iFirst-ScrollTop, iLast-ScrollTop );
 
 		// Test out of bound selection.
-		Int32 Y1 = Max( 0, FirstLine*13 ) + 1;
-		Int32 Y2 = Min( Size.Height-1, (LastLine+1)*13 );
+		Int32 Y1 = max( 0, FirstLine*13 ) + 1;
+		Int32 Y2 = min( Size.Height-1, (LastLine+1)*13 );
 
 		if( Y1 < Size.Height-1 && Y2 > 1 )
 			Render->DrawRegion
@@ -785,7 +785,7 @@ void WLog::OnKeyDown( Int32 Key )
 		if( Key == KEY_Up )
 		{
 			if( iLast == iFirst )
-				iLast = iFirst = Clamp( iFirst-1, 0, Lines.size()-1 );
+				iLast = iFirst = clamp( iFirst-1, 0, Lines.size()-1 );
 			else
 				iLast = iFirst;
 
@@ -794,7 +794,7 @@ void WLog::OnKeyDown( Int32 Key )
 		if( Key == KEY_Down )
 		{
 			if( iLast == iFirst )
-				iLast = iFirst = Clamp( iFirst+1, 0, Lines.size()-1 );
+				iLast = iFirst = clamp( iFirst+1, 0, Lines.size()-1 );
 			else
 				iFirst = iLast;
 
@@ -823,7 +823,7 @@ void WLog::OnKeyDown( Int32 Key )
 void WLog::ScrollBarChange( WWidget* Sender )
 {
 	ScrollTop	= ScrollBar->Value * (Lines.size()-1) / 100;
-	ScrollTop	= Clamp( ScrollTop, 0, Lines.size()-1 );
+	ScrollTop	= clamp( ScrollTop, 0, Lines.size()-1 );
 }
 
 
@@ -834,10 +834,10 @@ void WLog::OnMouseScroll( Int32 Delta )
 {
 	// Scroll text in aspect 1:3.
 	ScrollTop	-= Delta / 40;
-	ScrollTop	= Clamp( ScrollTop, 0, Lines.size()-1 );
+	ScrollTop	= clamp( ScrollTop, 0, Lines.size()-1 );
 
 	// Update scroll bar.
-	ScrollBar->Value	= 100*ScrollTop / Max( Lines.size()-1, 1 );
+	ScrollBar->Value	= 100*ScrollTop / max( Lines.size()-1, 1 );
 }
 
 
@@ -853,7 +853,7 @@ void WLog::ScrollToLast()
 	while( iLast >= ScrollTop+NumVis )		ScrollTop++;
 
 	// Update scroll bar.
-	ScrollBar->Value	= 100*ScrollTop / Max( Lines.size()-1, 1 );
+	ScrollBar->Value	= 100*ScrollTop / max( Lines.size()-1, 1 );
 }
 
 
@@ -901,7 +901,7 @@ Int32 WLog::YToIndex( Int32 Y ) const
 	if( Lines.size() == 0 )
 		return -1;
 
-	Int32 i = Max( 0, ScrollTop + Y/13 );
+	Int32 i = max( 0, ScrollTop + Y/13 );
 	return i >= Lines.size() ? -1 : i;
 }
 
@@ -928,7 +928,7 @@ Int32 WLog::AddLine( String InText, void* InData, TColor InColor )
 	}
 
 	// Update scroll bar.
-	ScrollBar->Value	= 100*ScrollTop / Max( Lines.size()-1, 1 );
+	ScrollBar->Value	= 100*ScrollTop / max( Lines.size()-1, 1 );
 
 	return iNew;
 }
@@ -959,8 +959,8 @@ void WLog::OnGoto( Int32 i )
 void WLog::PopCopyClick( WWidget* Sender )
 {
 	assert(iFirst != -1 && iLast != -1);
-	Int32 i1 = Min( iFirst, iLast );
-	Int32 i2 = Max( iFirst, iLast );
+	Int32 i1 = min( iFirst, iLast );
+	Int32 i2 = max( iFirst, iLast );
 
 	if( i1 != i2 )
 	{

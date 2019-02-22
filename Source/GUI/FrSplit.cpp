@@ -111,7 +111,7 @@ void WHSplitBox::OnResize()
 	}
 	if( RatioRule == HRR_KeepAspect )
 	{
-		Float Aspect = Float(Separator) / Max(Float(OldXSize), 0.1f );
+		Float Aspect = Float(Separator) / max(Float(OldXSize), 0.1f );
 		Separator = Size.Width * Aspect;
 	}
 
@@ -128,12 +128,12 @@ Bool WHSplitBox::UpdateSubWidgets()
 {
 	// Clip separator.
 	if( LeftMax != 0 )
-		Separator = Min( Separator, LeftMax );
+		Separator = min( Separator, LeftMax );
 
 	if( RightMax != 0 )
-		Separator = Max( Separator, Size.Width-RightMax );
+		Separator = max( Separator, Size.Width-RightMax );
 
-	Separator = Clamp
+	Separator = clamp
 	(
 		Separator,
 		LeftMin + HSPLIT_THICKNESS/2,
@@ -268,7 +268,7 @@ void WVSplitBox::OnResize()
 	}
 	if( RatioRule == VRR_KeepAspect )
 	{
-		Float Aspect = Float(Separator) / Max(Float(OldYSize), 0.1f );
+		Float Aspect = Float(Separator) / max(Float(OldYSize), 0.1f );
 		Separator = Size.Width * Aspect;
 	}
 
@@ -285,12 +285,12 @@ Bool WVSplitBox::UpdateSubWidgets()
 {
 	// Clip separator.
 	if( TopMax != 0 )
-		Separator = Min( Separator, TopMax );
+		Separator = min( Separator, TopMax );
 
 	if( BottomMax != 0 )
-		Separator = Max( Separator, Size.Height-BottomMax );
+		Separator = max( Separator, Size.Height-BottomMax );
 
-	Separator = Clamp
+	Separator = clamp
 	(
 		Separator,
 		TopMin + VSPLIT_THICKNESS/2,

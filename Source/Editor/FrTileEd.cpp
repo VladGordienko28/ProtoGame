@@ -364,7 +364,7 @@ void WTileEditor::ButtonRemoveRightClick( WWidget* Sender )
 		UInt16* Buffer = new UInt16[Model->MapXSize*Model->MapYSize]();
 		mem::copy( Buffer, &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(UInt16) );
 
-		Model->MapXSize = Max( Model->MapXSize - 1, 1 );
+		Model->MapXSize = max( Model->MapXSize - 1, 1 );
 		Model->Map.setSize( Model->MapXSize * Model->MapYSize );
 		mem::zero( &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(UInt16) );
 
@@ -391,7 +391,7 @@ void WTileEditor::ButtonAddRightClick( WWidget* Sender )
 		UInt16* Buffer = new UInt16[Model->MapXSize*Model->MapYSize]();
 		mem::copy( Buffer, &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(UInt16) );
 
-		Model->MapXSize = Min<Int32>( Model->MapXSize + 1, FModelComponent::MAX_TILES_SIDE );
+		Model->MapXSize = min<Int32>( Model->MapXSize + 1, FModelComponent::MAX_TILES_SIDE );
 		Model->Map.setSize( Model->MapXSize * Model->MapYSize );
 		mem::zero( &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(UInt16) );
 
@@ -418,7 +418,7 @@ void WTileEditor::ButtonRemoveLeftClick( WWidget* Sender )
 		UInt16* Buffer = new UInt16[Model->MapXSize*Model->MapYSize]();
 		mem::copy( Buffer, &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(UInt16) );
 
-		Model->MapXSize = Max( Model->MapXSize - 1, 1 );
+		Model->MapXSize = max( Model->MapXSize - 1, 1 );
 		Model->Map.setSize( Model->MapXSize * Model->MapYSize );
 		mem::zero( &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(UInt16) );
 
@@ -449,7 +449,7 @@ void WTileEditor::ButtonAddLeftClick( WWidget* Sender )
 		UInt16* Buffer = new UInt16[Model->MapXSize*Model->MapYSize]();
 		mem::copy( Buffer, &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(UInt16) );
 
-		Model->MapXSize = Min<Int32>( Model->MapXSize + 1, FModelComponent::MAX_TILES_SIDE );
+		Model->MapXSize = min<Int32>( Model->MapXSize + 1, FModelComponent::MAX_TILES_SIDE );
 		Model->Map.setSize( Model->MapXSize * Model->MapYSize );
 		mem::zero( &Model->Map[0], Model->MapXSize*Model->MapYSize*sizeof(UInt16) );
 
@@ -484,7 +484,7 @@ void WTileEditor::ButtonRemoveDownClick( WWidget* Sender )
 					Model->MapXSize * Model->MapYSize * sizeof(UInt16)
 				);
 
-		Model->MapYSize = Max( Model->MapYSize - 1, 1 );
+		Model->MapYSize = max( Model->MapYSize - 1, 1 );
 		Model->Map.setSize( Model->MapXSize * Model->MapYSize );
 
 #if SAVE_TILE_LOC
@@ -501,7 +501,7 @@ void WTileEditor::ButtonAddDownClick( WWidget* Sender )
 {
 	if( Model && Model->MapYSize < FModelComponent::MAX_TILES_SIDE )
 	{
-		Model->MapYSize = Min<Int32>( Model->MapYSize + 1, FModelComponent::MAX_TILES_SIDE );
+		Model->MapYSize = min<Int32>( Model->MapYSize + 1, FModelComponent::MAX_TILES_SIDE );
 		Model->Map.setSize( Model->MapXSize * Model->MapYSize );
 
 		mem::copy
@@ -531,7 +531,7 @@ void WTileEditor::ButtonRemoveUpClick( WWidget* Sender )
 {
 	if( Model )
 	{
-		Model->MapYSize = Max( Model->MapYSize - 1, 1 );
+		Model->MapYSize = max( Model->MapYSize - 1, 1 );
 		Model->Map.setSize( Model->MapXSize * Model->MapYSize );
 	}
 }
@@ -544,7 +544,7 @@ void WTileEditor::ButtonAddUpClick( WWidget* Sender )
 {
 	if( Model )
 	{
-		Model->MapYSize = Min<Int32>( Model->MapYSize + 1, FModelComponent::MAX_TILES_SIDE );
+		Model->MapYSize = min<Int32>( Model->MapYSize + 1, FModelComponent::MAX_TILES_SIDE );
 		Model->Map.setSize( Model->MapXSize * Model->MapYSize );
 	}
 }

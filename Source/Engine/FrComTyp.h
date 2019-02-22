@@ -236,7 +236,7 @@ public:
 	FBrushComponent();
 
 	// FBaseComponent interface.
-	TRect GetAABB();
+	math::Rect GetAABB();
 
 	// FComponent interface.
 	void Render( CCanvas* Canvas );
@@ -372,7 +372,7 @@ public:
 	UInt8				TilesPerV;
 
 	// Precomputed tables.
-	TRect				AtlasTable[256];
+	math::Rect			AtlasTable[256];
 
 	// Model edit tool.
 	Int32				PenIndex;
@@ -393,7 +393,7 @@ public:
 
 	// FBaseComponent interface.
 	void InitForEntity( FEntity* InEntity );
-	TRect GetAABB();
+	math::Rect GetAABB();
 
 	// CBitmapRenderAddon interface.
 	void Render( CCanvas* Canvas );
@@ -438,7 +438,7 @@ public:
 	EDecoType		DecoType;
 	Float			Frequency;
 	Float			Amplitude;
-	TRect			TexCoords;
+	math::Rect		TexCoords;
 
 	// FDecoComponent interface.
 	FDecoComponent();
@@ -473,7 +473,7 @@ public:
 	math::Vector		Offset;
 	math::Vector		Scale;
 	math::Angle			Rotation;
-	TRect				TexCoords;
+	math::Rect			TexCoords;
 
 	// FSpriteComponent interface.
 	FSpriteComponent();
@@ -530,7 +530,7 @@ public:
 
 	// FComponent interface.
 	void BeginPlay();
-	TRect GetAABB();
+	math::Rect GetAABB();
 
 	// CRenderable interface.
 	void Render( CCanvas* Canvas );
@@ -722,7 +722,7 @@ public:
 	// FLightComponent interface.
 	FLightComponent();
 	~FLightComponent();
-	TRect GetLightRect();
+	math::Rect GetLightRect();
 
 	// FComponent interface.
 	void InitForEntity( FEntity* InEntity );
@@ -755,7 +755,7 @@ public:
 	math::Vector	Parallax;
 	math::Vector	Gap;
 	math::Vector	Offset;
-	TRect			TexCoords;
+	math::Rect		TexCoords;
 
 	// FParallaxLayerComponent interface.
 	FParallaxLayerComponent();
@@ -853,7 +853,7 @@ public:
 	// FEmitterComponent interface.
 	FEmitterComponent();
 	~FEmitterComponent();
-	virtual TRect GetCloudRect();
+	virtual math::Rect GetCloudRect();
 	virtual void UpdateEmitter( Float Delta );
 
 	// CRenderAddon interface.
@@ -953,7 +953,7 @@ public:
 
 	// FEmitter interface.
 	FWeatherEmitterComponent();
-	TRect GetCloudRect();
+	math::Rect GetCloudRect();
 	void UpdateEmitter( Float Delta );
 
 	// CRenderAddon interface.
