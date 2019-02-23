@@ -161,7 +161,7 @@ public:
 	{
 		WForm::Show( X, Y );
 
-		TopLabel->Caption = String::Format( L"Line Number (%i - %i):", 1, CodeEditor->Lines.size() );
+		TopLabel->Caption = String::format( L"Line Number (%i - %i):", 1, CodeEditor->Lines.size() );
 		LineSpinner->SetRange( 1, CodeEditor->Lines.size(), 1 );
 		LineSpinner->SetValue( CodeEditor->CaretYBegin+1, false );
 	}
@@ -381,8 +381,8 @@ public:
 			CClass* ComClass = (CClass*)ExtraList->Items[ExtraList->ItemIndex].Data;
 
 			// Make friendly name.
-			assert(String::Pos( L"Component", ComClass->GetAltName() ) != -1);
-			ExtraUsedList->AddItem( String::Copy( ComClass->GetAltName(), 0, ComClass->GetAltName().Len()-9 ), ComClass );
+			assert(String::pos( L"Component", ComClass->GetAltName() ) != -1);
+			ExtraUsedList->AddItem( String::copy( ComClass->GetAltName(), 0, ComClass->GetAltName().len()-9 ), ComClass );
 			UpdateSingleCompFlags();
 		}
 	}
@@ -422,11 +422,11 @@ public:
 			CClass* Class = (CClass*)ExtraUsedList->Items[i].Data;
 			String  Name  = ExtraUsedList->Items[i].Name;
 
-			if( Name.Len() == 0 )
+			if( Name.len() == 0 )
 			{
 				Root->ShowMessage
 				(
-					String::Format( L"Please specify the name of %d extra component", i ),
+					String::format( L"Please specify the name of %d extra component", i ),
 					L"Components Editor",
 					true
 				);
@@ -438,7 +438,7 @@ public:
 				{
 					Root->ShowMessage
 					(
-						String::Format( L"Component name '%s' redefined", *Name ),
+						String::format( L"Component name '%s' redefined", *Name ),
 						L"Components Editor",
 						true
 					);
@@ -459,7 +459,7 @@ public:
 			// Ask?
 			Root->AskYesNo
 			(
-				String::Format( L"Do you really want to alter script '%s' and destroy %d entities being it?", *Script->GetName(), NumEnts ),
+				String::format( L"Do you really want to alter script '%s' and destroy %d entities being it?", *Script->GetName(), NumEnts ),
 				L"Components Editor", 
 				true, 
 				WIDGET_EVENT(WAlterDialog::ButtonYesClick)
@@ -689,7 +689,7 @@ void WScriptPage::SaveScriptText( Bool bAsk )
 		if	( bAsk && MessageBox
 							( 
 								GEditor->hWnd, 
-								*String::Format( L"Save changes to script '%s'?", *Script->GetName() ), 
+								*String::format( L"Save changes to script '%s'?", *Script->GetName() ), 
 								L"Confirm", 
 								MB_YESNO | MB_ICONASTERISK | MB_TASKMODAL 
 							) == IDNO
@@ -887,7 +887,7 @@ WCodeEditor::WCodeEditor( WScriptPage* InPage, WContainer* InOwner, WWindow* InR
 	{
 		// Script has no text, insert some message.
 		TLine Line;
-		Line.Text	= String::Format( L"// Script '%s' has no text.", *Script->GetName() );	
+		Line.Text	= String::format( L"// Script '%s' has no text.", *Script->GetName() );	
 		Line.First	= nullptr;
 		Lines.push( Line );
 	}
@@ -925,13 +925,13 @@ void WCodeEditor::SetDirty( Bool InbDirty )
 		if( InbDirty && !bDirty )
 		{
 			// Mark text as dirty.
-			Page->Caption	= String::Format( L"%s*", *Script->GetName() );
+			Page->Caption	= String::format( L"%s*", *Script->GetName() );
 			bDirty			= true;
 		}
 		if( !InbDirty && bDirty )
 		{
 			// Mark text as not dirty.
-			Page->Caption	= String::Format( L"%s", *Script->GetName() );
+			Page->Caption	= String::format( L"%s", *Script->GetName() );
 			bDirty			= false;
 		}
 	}
@@ -1036,7 +1036,7 @@ void WCodeEditor::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 				{
 					// Copy piece of line.
 					Int32 NumChars = CaretXEnd - CaretXBegin;
-					Buffer.push(String::Copy( Lines[CaretYBegin].Text, CaretXBegin, NumChars ));
+					Buffer.push(String::copy( Lines[CaretYBegin].Text, CaretXBegin, NumChars ));
 				}
 				else
 				{
@@ -1045,12 +1045,12 @@ void WCodeEditor::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 						if( Y == CaretYEnd )
 						{
 							// Last line.
-							Buffer.push(String::Copy( Lines[Y].Text, 0, CaretXEnd ));
+							Buffer.push(String::copy( Lines[Y].Text, 0, CaretXEnd ));
 						}
 						else if( Y == CaretYBegin )
 						{
 							// First line.
-							Buffer.push(String::Copy( Lines[Y].Text, CaretXBegin, Lines[Y].Text.Len()-CaretXBegin ));
+							Buffer.push(String::copy( Lines[Y].Text, CaretXBegin, Lines[Y].Text.len()-CaretXBegin ));
 						}
 						else
 						{
@@ -1068,8 +1068,8 @@ void WCodeEditor::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 
 				// Inert from the buffer.
 				// Store rest of the line.
-				String Rest			= String::Copy( Lines[DragY].Text, DragX, Lines[DragY].Text.Len()-DragX );
-				Lines[DragY].Text	= String::Delete( Lines[DragY].Text, DragX, Lines[DragY].Text.Len()-DragX );
+				String Rest			= String::copy( Lines[DragY].Text, DragX, Lines[DragY].Text.len()-DragX );
+				Lines[DragY].Text	= String::del( Lines[DragY].Text, DragX, Lines[DragY].Text.len()-DragX );
 
 				CaretXBegin	= CaretXEnd = DragX;
 				CaretYBegin	= CaretYEnd	= DragY;
@@ -1094,7 +1094,7 @@ void WCodeEditor::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 
 				// Goto end of buffer.
 				CaretYEnd	= CaretYBegin;
-				CaretXEnd	= CaretXBegin	= Lines[CaretYBegin].Text.Len();
+				CaretXEnd	= CaretXBegin	= Lines[CaretYBegin].Text.len();
 
 				// Insert the rest.
 				Lines[CaretYBegin].Text += Rest;
@@ -1220,7 +1220,7 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 				if( CaretYEnd != 0 )
 				{
 					CaretYEnd--;
-					CaretXEnd	= Lines[CaretYEnd].Text.Len();
+					CaretXEnd	= Lines[CaretYEnd].Text.len();
 				}
 				else
 					CaretXEnd	= 0;
@@ -1229,7 +1229,7 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 		else if( Key == 0x27 )
 		{
 			// <Right> arrow.
-			if( ++CaretXEnd > Lines[CaretYEnd].Text.Len() )
+			if( ++CaretXEnd > Lines[CaretYEnd].Text.len() )
 			{
 				if( CaretYEnd != Lines.size()-1 )
 				{
@@ -1237,20 +1237,20 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 					CaretXEnd	= 0;
 				}
 				else
-					CaretXEnd	= Lines[CaretYEnd].Text.Len();
+					CaretXEnd	= Lines[CaretYEnd].Text.len();
 			}
 		}
 		else if( Key == 0x26 )
 		{
 			// <Up> arrow.
-			CaretYEnd	= max( 0, CaretYEnd-1 );
-			CaretXEnd	= min( CaretXEnd, Lines[CaretYEnd].Text.Len() );
+			CaretYEnd	= max<Int32>( 0, CaretYEnd-1 );
+			CaretXEnd	= min<Int32>( CaretXEnd, Lines[CaretYEnd].Text.len() );
 		}
 		else if( Key == 0x28 )
 		{
 			// <Down> arrow.
-			CaretYEnd	= min( CaretYEnd+1, Lines.size()-1 );
-			CaretXEnd = min( CaretXEnd, Lines[CaretYEnd].Text.Len() );
+			CaretYEnd = min<Int32>( CaretYEnd+1, Lines.size()-1 );
+			CaretXEnd = min<Int32>( CaretXEnd, Lines[CaretYEnd].Text.len() );
 		}
 
 		ScrollToCaret();
@@ -1273,7 +1273,7 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 				if( CaretYBegin != 0 )
 				{
 					CaretYBegin--;
-					CaretXBegin	= Lines[CaretYBegin].Text.Len();
+					CaretXBegin	= Lines[CaretYBegin].Text.len();
 				}
 				else
 					CaretXBegin	= 0;
@@ -1294,7 +1294,7 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 		if( CaretXBegin==CaretXEnd && CaretYBegin==CaretYEnd )
 		{
 			CaretXBegin	+= 1;
-			if( CaretXBegin > Lines[CaretYBegin].Text.Len() )
+			if( CaretXBegin > Lines[CaretYBegin].Text.len() )
 			{
 				freeandnil(AutoDialog);
 
@@ -1304,7 +1304,7 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 					CaretXBegin	= 0;
 				}
 				else
-					CaretXBegin	= Lines[CaretYBegin].Text.Len();
+					CaretXBegin	= Lines[CaretYBegin].Text.len();
 			}
 
 			CaretYEnd	= CaretYBegin;
@@ -1326,8 +1326,8 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 		// <Up> button.
 		if( !AutoDialog )
 		{
-			CaretYEnd	= CaretYBegin = max( 0, CaretYBegin-1 );
-			CaretXEnd	= CaretXBegin = min( CaretXBegin, Lines[CaretYBegin].Text.Len() );
+			CaretYEnd	= CaretYBegin = max<Int32>( 0, CaretYBegin-1 );
+			CaretXEnd	= CaretXBegin = min<Int32>( CaretXBegin, Lines[CaretYBegin].Text.len() );
 		}
 		else
 			AutoDialog->OnKeyDown( Key );
@@ -1339,8 +1339,8 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 		// <Down> button.
 		if( !AutoDialog )
 		{
-			CaretYBegin	= CaretYEnd	= min( CaretYEnd+1, Lines.size()-1 );
-			CaretXBegin	= CaretXEnd = min( CaretXEnd, Lines[CaretYBegin].Text.Len() );
+			CaretYBegin	= CaretYEnd	= min<Int32>( CaretYEnd+1, Lines.size()-1 );
+			CaretXBegin	= CaretXEnd = min<Int32>( CaretXEnd, Lines[CaretYBegin].Text.len() );
 		}
 		else
 			AutoDialog->OnKeyDown( Key );
@@ -1354,7 +1354,7 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 		{
 			if( CaretYBegin==CaretYEnd && CaretXBegin==CaretXEnd )
 			{
-				if( CaretXEnd == Lines[CaretYBegin].Text.Len() )
+				if( CaretXEnd == Lines[CaretYBegin].Text.len() )
 				{
 					if( CaretYBegin != Lines.size()-1 )
 					{
@@ -1364,7 +1364,7 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 					freeandnil(AutoDialog);
 				}
 				else
-					Lines[CaretYBegin].Text = String::Delete( Lines[CaretYBegin].Text, CaretXEnd, 1 );
+					Lines[CaretYBegin].Text = String::del( Lines[CaretYBegin].Text, CaretXEnd, 1 );
 			}
 			else
 			{
@@ -1424,7 +1424,7 @@ void WCodeEditor::OnKeyDown( Int32 Key )
 			Int32	iFrom	= CaretXBegin;
 			while	( 
 						iFrom > 0 && 
-						(IsDigit(Line(iFrom-1)) || IsLetter(Line(iFrom-1))) 
+						(cstr::isDigit(Line(iFrom-1)) || cstr::isLetter(Line(iFrom-1))) 
 					)
 				iFrom--;
 
@@ -1453,7 +1453,7 @@ void WCodeEditor::SelectAll()
 	CaretYBegin	= 0;
 	CaretYEnd	= Lines.size()-1;
 	CaretXBegin	= 0;
-	CaretXEnd	= Lines[CaretYEnd].Text.Len();
+	CaretXEnd	= Lines[CaretYEnd].Text.len();
 
 	ScrollToCaret();
 	HighlightBrackets();
@@ -1475,11 +1475,11 @@ void WCodeEditor::PopPasteClick( WWidget* Sender )
 		if( ClipText )
 		{
 			// Store rest of the line.
-			String Rest = String::Copy( Lines[CaretYBegin].Text, CaretXBegin, Lines[CaretYBegin].Text.Len()-CaretXBegin );
-			Lines[CaretYBegin].Text	= String::Delete( Lines[CaretYBegin].Text, CaretXBegin, Lines[CaretYBegin].Text.Len()-CaretXBegin );
+			String Rest = String::copy( Lines[CaretYBegin].Text, CaretXBegin, Lines[CaretYBegin].Text.len()-CaretXBegin );
+			Lines[CaretYBegin].Text	= String::del( Lines[CaretYBegin].Text, CaretXBegin, Lines[CaretYBegin].Text.len()-CaretXBegin );
 
 			// Insert it.
-			for( Int32 i=0; i<ClipText.Len(); i++ )
+			for( Int32 i=0; i<ClipText.len(); i++ )
 			{
 				Char C[2] = { ClipText(i), 0 };
 				if( *C == '\r' )	continue;  // Windows feature.
@@ -1505,7 +1505,7 @@ void WCodeEditor::PopPasteClick( WWidget* Sender )
 			}
 
 			CaretYEnd	= CaretYBegin;
-			CaretXEnd	= CaretXBegin	= Lines[CaretYBegin].Text.Len();
+			CaretXEnd	= CaretXBegin	= Lines[CaretYBegin].Text.len();
 
 			// Insert the rest.
 			Lines[CaretYBegin].Text += Rest;
@@ -1558,7 +1558,7 @@ void WCodeEditor::PopCopyClick( WWidget* Sender )
 
 		// Count count, not exactly of course.
 		for( Int32 Y=CaretYBegin; Y<=CaretYEnd; Y++ )
-			NumChars += Lines[Y].Text.Len() + 4;
+			NumChars += Lines[Y].Text.len() + 4;
 
 		Char* Text = (Char*)mem::alloc( (NumChars+1)*sizeof(Char) );
 
@@ -1572,15 +1572,15 @@ void WCodeEditor::PopCopyClick( WWidget* Sender )
 			}
 			else if( Y == CaretYBegin )
 			{
-				mem::copy( Walk, &Lines[Y].Text[CaretXBegin], (Lines[Y].Text.Len()-CaretXBegin)*sizeof(Char) );
-				Walk += Lines[Y].Text.Len()-CaretXBegin;
+				mem::copy( Walk, &Lines[Y].Text[CaretXBegin], (Lines[Y].Text.len()-CaretXBegin)*sizeof(Char) );
+				Walk += Lines[Y].Text.len()-CaretXBegin;
 				*Walk = L'\n';
 				Walk++;
 			}
 			else
 			{
-				mem::copy( Walk, &Lines[Y].Text[0], Lines[Y].Text.Len()*sizeof(Char) );
-				Walk += Lines[Y].Text.Len();
+				mem::copy( Walk, &Lines[Y].Text[0], Lines[Y].Text.len()*sizeof(Char) );
+				Walk += Lines[Y].Text.len();
 				*Walk = L'\n';
 				Walk++;
 			}
@@ -1630,7 +1630,7 @@ void WCodeEditor::OnCharType( Char TypedChar )
 					if( CaretYBegin != 0 )
 					{
 						CaretYBegin--;
-						CaretXBegin	= Lines[CaretYBegin].Text.Len();
+						CaretXBegin	= Lines[CaretYBegin].Text.len();
 						Lines[CaretYBegin].Text += Lines[CaretYBegin+1].Text;
 						Lines.removeShift( CaretYBegin+1 );
 					}
@@ -1652,12 +1652,12 @@ void WCodeEditor::OnCharType( Char TypedChar )
 
 					if( bSpacesOnly )
 					{
-						Lines[CaretYBegin].Text = String::Delete( Lines[CaretYBegin].Text, CaretXBegin-NumEra, NumEra );
+						Lines[CaretYBegin].Text = String::del( Lines[CaretYBegin].Text, CaretXBegin-NumEra, NumEra );
 						CaretXBegin	-= NumEra;
 					}
 					else
 					{
-						Lines[CaretYBegin].Text = String::Delete( Lines[CaretYBegin].Text, CaretXBegin-1, 1 );
+						Lines[CaretYBegin].Text = String::del( Lines[CaretYBegin].Text, CaretXBegin-1, 1 );
 						CaretXBegin--;
 					}
 #else
@@ -1696,10 +1696,10 @@ void WCodeEditor::OnCharType( Char TypedChar )
 
 				TLine Line;
 				Line.First	= nullptr;
-				Line.Text	= String::Copy( Lines[CaretYBegin].Text, CaretXBegin, Lines[CaretYBegin].Text.Len()-CaretXBegin );
+				Line.Text	= String::copy( Lines[CaretYBegin].Text, CaretXBegin, Lines[CaretYBegin].Text.len()-CaretXBegin );
 
-				Int32 LastLen = Lines[CaretYBegin].Text.Len();
-				Lines[CaretYBegin].Text	= String::Delete( Lines[CaretYBegin].Text, CaretXBegin, Lines[CaretYBegin].Text.Len()-CaretXBegin );
+				Int32 LastLen = Lines[CaretYBegin].Text.len();
+				Lines[CaretYBegin].Text	= String::del( Lines[CaretYBegin].Text, CaretXBegin, Lines[CaretYBegin].Text.len()-CaretXBegin );
 
 				Lines.insert( CaretYBegin, 1 );
 				Lines[CaretYBegin+1] = Line;
@@ -1707,7 +1707,7 @@ void WCodeEditor::OnCharType( Char TypedChar )
 #if NEW_LINE_WHITESPACE
 				CaretYBegin = CaretYEnd	= CaretYBegin + 1;
 				Int32 PrevLineWhite = 0;
-				for( PrevLineWhite=0; PrevLineWhite<Lines[CaretYBegin-1].Text.Len(); PrevLineWhite++ )
+				for( PrevLineWhite=0; PrevLineWhite<Lines[CaretYBegin-1].Text.len(); PrevLineWhite++ )
 					if( Lines[CaretYBegin-1].Text(PrevLineWhite) != L' ' )
 						break;
 
@@ -1717,7 +1717,7 @@ void WCodeEditor::OnCharType( Char TypedChar )
 				if( CaretXEnd < LastLen )
 					CaretXBegin	= CaretXEnd	= 0;
 				else
-					CaretXBegin	= CaretXEnd	= Lines[CaretYBegin].Text.Len();
+					CaretXBegin	= CaretXEnd	= Lines[CaretYBegin].Text.len();
 #else
 				CaretXBegin	= CaretXEnd	= 0;
 				CaretYBegin	= CaretYEnd	= CaretYBegin+1;
@@ -1739,18 +1739,18 @@ void WCodeEditor::OnCharType( Char TypedChar )
 		Char tmp[8] = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
 		tmp[NumSpaces]	= '\0';
 
-		Lines[CaretYBegin].Text = String::Copy
+		Lines[CaretYBegin].Text = String::copy
 											( 
 												Lines[CaretYBegin].Text, 
 												0, 
 												CaretXBegin 
 											) 
 						+ tmp + 
-								  String::Copy
+								  String::copy
 											( 
 												Lines[CaretYBegin].Text, 
 												CaretXBegin, 
-												Lines[CaretYBegin].Text.Len()-CaretXBegin 
+												Lines[CaretYBegin].Text.len()-CaretXBegin 
 											);		
 
 		CaretXBegin = CaretXEnd = CaretXBegin + NumSpaces;
@@ -1773,18 +1773,18 @@ void WCodeEditor::OnCharType( Char TypedChar )
 
 			// Append.
 			Char tmp[2] = { TypedChar, '\0' };
-			Lines[CaretYBegin].Text = String::Copy
+			Lines[CaretYBegin].Text = String::copy
 												( 
 													Lines[CaretYBegin].Text, 
 													0, 
 													CaretXBegin 
 												) 
 							+ tmp + 
-									  String::Copy
+									  String::copy
 												( 
 													Lines[CaretYBegin].Text, 
 													CaretXBegin, 
-													Lines[CaretYBegin].Text.Len()-CaretXBegin 
+													Lines[CaretYBegin].Text.len()-CaretXBegin 
 												);		
 
 			CaretXBegin = CaretXEnd = CaretXBegin + 1;
@@ -1838,7 +1838,7 @@ void WCodeEditor::OnCharType( Char TypedChar )
 			Int32 i, iDollar;
 
 			for( i=CaretXBegin-2; i>=0; i-- )
-				if( !(IsLetter(ThisLine(i))||IsDigit(ThisLine(i))||(ThisLine(i)==' ')) )
+				if( !(cstr::isLetter(ThisLine(i))||cstr::isDigit(ThisLine(i))||(ThisLine(i)==' ')) )
 				{
 					bDollarDetected	= ThisLine(i) == '$';
 					iDollar			= i;
@@ -1855,8 +1855,8 @@ void WCodeEditor::OnCharType( Char TypedChar )
 			if( bDollarDetected && !bDotDetected )
 			{
 				Char ComName[128] = {}, *Walk = ComName;
-				for( Int32 j=iDollar+1; j<ThisLine.Len(); j++ )
-					if( IsLetter(ThisLine(j)) || IsDigit(ThisLine(j)) )
+				for( Int32 j=iDollar+1; j<ThisLine.len(); j++ )
+					if( cstr::isLetter(ThisLine(j)) || cstr::isDigit(ThisLine(j)) )
 					{
 						*Walk	= ThisLine(j);
 						Walk++;
@@ -1942,7 +1942,7 @@ Bool WCodeEditor::IsInSelection( Int32 X, Int32 Y )
 	if( Line == Y1 )
 	{
 		// First line.
-		return Column >= BeginX && Column <= Lines[Line].Text.Len();
+		return Column >= BeginX && Column <= Lines[Line].Text.len();
 	}
 	else if( Line == Y2 )
 	{
@@ -1952,7 +1952,7 @@ Bool WCodeEditor::IsInSelection( Int32 X, Int32 Y )
 	else
 	{
 		// Middle line.
-		return Column >= 0 && Column <= Lines[Line].Text.Len();
+		return Column >= 0 && Column <= Lines[Line].Text.len();
 	}
 }
 
@@ -1987,7 +1987,7 @@ void WCodeEditor::ClearSelected()
 	{
 		// Clean text in the line.
 		if( CaretXBegin != CaretXEnd )
-			Lines[CaretYBegin].Text	= String::Delete
+			Lines[CaretYBegin].Text	= String::del
 												( 
 													Lines[CaretYBegin].Text, 
 													CaretXBegin, 
@@ -1999,18 +1999,18 @@ void WCodeEditor::ClearSelected()
 	else
 	{
 		// Cleanup block of text.
-		Lines[CaretYBegin].Text		= String::Delete
+		Lines[CaretYBegin].Text		= String::del
 												( 
 													Lines[CaretYBegin].Text, 
 													CaretXBegin, 
-													Lines[CaretYBegin].Text.Len()-CaretXBegin 
+													Lines[CaretYBegin].Text.len()-CaretXBegin 
 												);
 
-		Lines[CaretYBegin].Text		+= String::Copy
+		Lines[CaretYBegin].Text		+= String::copy
 												( 
 													Lines[CaretYEnd].Text, 
 													CaretXEnd, 
-													Lines[CaretYEnd].Text.Len()-CaretXEnd  
+													Lines[CaretYEnd].Text.len()-CaretXEnd  
 												);
 
 		for( Int32 i=CaretYBegin+1; i<=CaretYEnd; i++ )
@@ -2036,10 +2036,10 @@ void WCodeEditor::OnDragDrop( void* Data, Int32 X, Int32 Y )
 		assert(Res);
 		String Name = Res->IsA(FScript::MetaClass) ? 
 								Res->GetName() : 
-								String::Format( L"#%s", *Res->GetName() );
+								String::format( L"#%s", *Res->GetName() );
 
 		// Insert resource name into line.
-		Lines[DragY].Text =		String::Copy
+		Lines[DragY].Text =		String::copy
 										( 
 											Lines[DragY].Text, 
 											0, 
@@ -2048,16 +2048,16 @@ void WCodeEditor::OnDragDrop( void* Data, Int32 X, Int32 Y )
 
 										+ Name +
 
-								String::Copy
+								String::copy
 										( 
 											Lines[DragY].Text, 
 											DragX, 
-											Lines[DragY].Text.Len()-DragX 
+											Lines[DragY].Text.len()-DragX 
 										);		
 
 		// Move caret to drop location.
 		CaretYBegin	= CaretYEnd	= DragY;
-		CaretXBegin = CaretXEnd = DragX + Name.Len();
+		CaretXBegin = CaretXEnd = DragX + Name.len();
 
 		// Switch mode.
 		bDrag = false;
@@ -2128,7 +2128,7 @@ void WCodeEditor::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 	TLine& Line = Lines[CaretYBegin];
 
 	// If at end, try to select just something.
-	if( CaretXBegin >= Line.Text.Len() )
+	if( CaretXBegin >= Line.Text.len() )
 		CaretXBegin = max( 0, CaretXBegin-1 );
 
 	// Prepare for selection.
@@ -2136,18 +2136,18 @@ void WCodeEditor::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 	CaretXEnd	= CaretXBegin;
 	Char C		= Line.Text(CaretXBegin);
 
-	if( IsLetter(C) || IsDigit(C) )
+	if( cstr::isLetter( C ) || cstr::isDigit( C ) )
 	{
 		// Select entire word or identifier.
 		while	( 
 					CaretXBegin > 0 && 
-					(IsDigit(Line.Text(CaretXBegin-1)) || IsLetter(Line.Text(CaretXBegin-1))) 
+					(cstr::isDigit(Line.Text(CaretXBegin-1)) || cstr::isLetter(Line.Text(CaretXBegin-1))) 
 				)
 			CaretXBegin--;
 
 		while	( 
-					CaretXEnd < Line.Text.Len() && 
-					(IsDigit(Line.Text(CaretXEnd)) || IsLetter(Line.Text(CaretXEnd))) 
+					CaretXEnd < Line.Text.len() && 
+					(cstr::isDigit(Line.Text(CaretXEnd)) || cstr::isLetter(Line.Text(CaretXEnd))) 
 				)
 			CaretXEnd++;
 	} 
@@ -2157,13 +2157,13 @@ void WCodeEditor::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 		while( CaretXBegin>0 && Line.Text(CaretXBegin-1)==' ' )
 			CaretXBegin--;
 
-		while( CaretXEnd<Line.Text.Len() && Line.Text(CaretXEnd)==' ' )
+		while( CaretXEnd<Line.Text.len() && Line.Text(CaretXEnd)==' ' )
 			CaretXEnd++;
 	}
 	else
 	{
 		// Select something else.
-		if( CaretXEnd < Line.Text.Len() )
+		if( CaretXEnd < Line.Text.len() )
 			CaretXEnd++;
 	}
 
@@ -2187,11 +2187,11 @@ Int32 WCodeEditor::ColumnToX( Int32 iColumn )
 //
 Int32 WCodeEditor::XToColumn( Int32 X, Int32 iLine )
 {
-	return clamp
+	return clamp<Int32>
 			( 
 				math::round((Float)(X-15) / (Float)CharSize.Width),		
 				0, 
-				Lines[iLine].Text.Len() 
+				Lines[iLine].Text.len() 
 			);	
 }
 
@@ -2236,7 +2236,7 @@ void WCodeEditor::HighlightBrackets( Bool bUnmark )
 	Int32 X = CaretXBegin,
 			Y = CaretYBegin;
 
-	if( !inRange(Y, 0, Lines.size()-1) || !inRange(X, 0, Lines[Y].Text.Len()-1) )
+	if( !inRange(Y, 0, Lines.size()-1) || !inRange<Int32>(X, 0, Lines[Y].Text.len()-1) )
 		return;
 
 	const Char OpenBracks[] = L"([{";
@@ -2270,7 +2270,7 @@ void WCodeEditor::HighlightBrackets( Bool bUnmark )
 		Int32 NestLevel = 0;
 		for( Y; Y<Lines.size(); Y++ )
 		{
-			for( X; X<Lines[Y].Text.Len(); X++ )
+			for( X; X<Lines[Y].Text.len(); X++ )
 			{
 				Char ThisChar = Lines[Y].Text[X];
 				if( ThisChar == C ) NestLevel++;
@@ -2307,7 +2307,7 @@ void WCodeEditor::HighlightBrackets( Bool bUnmark )
 				}
 			}
 
-			X = Y > 0 ? Lines[Y-1].Text.Len()-1 : 0;
+			X = Y > 0 ? Lines[Y-1].Text.len()-1 : 0;
 		}
 	}
 }
@@ -2418,7 +2418,7 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 		for( Int32 Y=max(Y1, iVisFirst); Y<=min(Y2, iVisLast); Y++ )  
 		{
 			Int32 X1 = Y==Y1 ? BeginX : 0;
-			Int32 X2 = Y==Y2 ? EndX : Lines[Y].Text.Len();		
+			Int32 X2 = Y==Y2 ? EndX : Lines[Y].Text.len();		
 
 			Render->DrawRegion
 							( 
@@ -2479,7 +2479,7 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 	{
 		// Prepare.
 		TLine& Line			= Lines[iLine];
-		Int32 Len			= Line.Text.Len();
+		Int32 Len			= Line.Text.len();
 		Int32 RndChars	= 0;
 
 		// Walk through the chain of spans and render colored
@@ -2487,13 +2487,13 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 		for( TSpan* S=Line.First; S; S=S->Next )
 		{
 			// Draw substring if span fit.
-			if( RndChars < Line.Text.Len() )
+			if( RndChars < Line.Text.len() )
 				Render->DrawText
 							( 
 								TPoint(	Base.X + RndChars*CharSize.Width + 17, 
 										Base.Y + (iLine-ScrollTop)*CharSize.Height ),
 								&Line.Text[RndChars],
-								min( S->Length, Line.Text.Len()-RndChars ),
+								min<Int32>( S->Length, Line.Text.len()-RndChars ),
 								GHightlight[S->Type],
 								Root->Font2
 							);
@@ -2529,8 +2529,8 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 	// Output information into status bar.
 	if( !(GFrameStamp & 7) )
 	{
-		GEditor->StatusBar->Panels[0].Text	= String::Format( L"Ln %d", CaretYEnd+1 );
-		GEditor->StatusBar->Panels[1].Text	= String::Format( L"Col %d", CaretXEnd+1 );
+		GEditor->StatusBar->Panels[0].Text	= String::format( L"Ln %d", CaretYEnd+1 );
+		GEditor->StatusBar->Panels[1].Text	= String::format( L"Col %d", CaretXEnd+1 );
 	}
 }
 
@@ -2546,7 +2546,7 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 //
 Int32 FindInLine( const String& Needle, const String& HayStack, Int32 iStart )
 {
-	const Char* Gotten = wcsstr( &(*HayStack)[clamp(iStart, 0, HayStack.Len())], *Needle );
+	const Char* Gotten = wcsstr( &(*HayStack)[clamp<Int32>(iStart, 0, HayStack.len())], *Needle );
 	return Gotten ? ((Int32)Gotten - (Int32)*HayStack)/sizeof(Char) : -1;
 }
 
@@ -2566,14 +2566,14 @@ Bool WCodeEditor::FindText( String S, Bool bMatchCase )
 	{
 		Int32 iFound = bMatchCase ? 
 							FindInLine( S, Lines[iLine].Text, X ) :
-							FindInLine( String::UpperCase(S), String::UpperCase(Lines[iLine].Text), X );
+							FindInLine( String::upperCase(S), String::upperCase(Lines[iLine].Text), X );
 
 		if( iFound != -1 )
 		{
 			// Word found! Highlight it.
 			CaretXBegin	= iFound;
 			CaretYBegin	= iLine;
-			CaretXEnd	= iFound + S.Len();
+			CaretXEnd	= iFound + S.len();
 			CaretYEnd	= iLine;
 
 			// Scroll to show result.
@@ -2695,7 +2695,7 @@ void WCodeEditor::SaveToUndoStack( Int32 iSlot )
 	// Count how mush required memory.
 	UInt32 ReqMem = 32; // Stoke.
 	for( Int32 iLine=0; iLine<Lines.size(); iLine++ )
-		ReqMem	+= Lines[iLine].Text.Len() * sizeof(Char);
+		ReqMem	+= Lines[iLine].Text.len() * sizeof(Char);
 	ReqMem	+= Lines.size() * sizeof(Int32);
 
 	// Write all required data into buffer.
@@ -2713,9 +2713,9 @@ void WCodeEditor::SaveToUndoStack( Int32 iSlot )
 	{
 		TLine& Line	= Lines[iLine];
 
-		*(Int32*)Walk	= Line.Text.Len();	Walk += sizeof(Int32);
-		mem::copy( Walk, *Line.Text, Line.Text.Len()*sizeof(Char) );
-		Walk	+= Line.Text.Len()*sizeof(Char);
+		*(Int32*)Walk	= Line.Text.len();	Walk += sizeof(Int32);
+		mem::copy( Walk, *Line.Text, Line.Text.len()*sizeof(Char) );
+		Walk	+= Line.Text.len()*sizeof(Char);
 	}
 
 #if UNDO_TEXT_COMPRESS
@@ -2873,11 +2873,11 @@ void WCodeEditor::HighlightAll()
 		UInt8 Buffer[2048];
 
 		// Don't highlight too long line.
-		if( Line.Text.Len() > arraySize(Buffer) )
+		if( Line.Text.len() > arraySize(Buffer) )
 			continue;
 
 		// For each symbol.
-		for( Int32 i=0; i<Line.Text.Len();  )
+		for( Int32 i=0; i<Line.Text.len();  )
 		{
 			ThisChar = Line.Text(i);
 
@@ -2906,7 +2906,7 @@ void WCodeEditor::HighlightAll()
 				Buffer[i]		= HIGH_Comment;
 				Buffer[i-1]		= HIGH_Comment;
 				i++;
-				while( i<Line.Text.Len() )
+				while( i<Line.Text.len() )
 					Buffer[i++] = HIGH_Comment;
 				i++;
 			}
@@ -2914,7 +2914,7 @@ void WCodeEditor::HighlightAll()
 			{
 				// Quote.
 				Buffer[i++]	= HIGH_Quote;
-				for( ; i<Line.Text.Len(); i++ )
+				for( ; i<Line.Text.len(); i++ )
 				{
 					ThisChar	 = Line.Text(i);
 					Buffer[i]	 = HIGH_Quote;
@@ -2927,10 +2927,10 @@ void WCodeEditor::HighlightAll()
 			{
 				// Thread label.
 				Buffer[i++]	= HIGH_Label;
-				for( ; i<Line.Text.Len(); i++ )
+				for( ; i<Line.Text.len(); i++ )
 				{
 					ThisChar = Line.Text(i);
-					if( IsDigit(ThisChar) || IsLetter(ThisChar) )
+					if( cstr::isDigit(ThisChar) || cstr::isLetter(ThisChar) )
 						Buffer[i]	= HIGH_Label;
 					else
 						break;
@@ -2940,26 +2940,26 @@ void WCodeEditor::HighlightAll()
 			{
 				// Resource constant.
 				Buffer[i++]	= HIGH_Resource;
-				for( ; i<Line.Text.Len(); i++ )
+				for( ; i<Line.Text.len(); i++ )
 				{
 					ThisChar = Line.Text(i);
-					if( IsDigit(ThisChar) || IsLetter(ThisChar) )
+					if( cstr::isDigit(ThisChar) || cstr::isLetter(ThisChar) )
 						Buffer[i]	= HIGH_Resource;
 					else
 						break;
 				}
 			}
-			else if( IsLetter(ThisChar) )
+			else if( cstr::isLetter(ThisChar) )
 			{
 				// Parse the word, maybe its a keyword.
 				Char Word[64] = {};
 				Int32 iLetter = 0;
 
-				for( ; i<Line.Text.Len() && iLetter<arraySize(Word); i++ )
+				for( ; i<Line.Text.len() && iLetter<arraySize(Word); i++ )
 				{
 					ThisChar = Line.Text(i);
 
-					if( IsLetter(ThisChar) )
+					if( cstr::isLetter(ThisChar) )
 						Word[iLetter++] = ThisChar;
 					else
 						break;
@@ -2993,7 +2993,7 @@ void WCodeEditor::HighlightAll()
 		TSpan** Dest = &Line.First;
 		Line.First	= nullptr;
 
-		for( Int32 i=0; i<Line.Text.Len();  )
+		for( Int32 i=0; i<Line.Text.len();  )
 		{
 			// Maybe text too large to highlight.
 			if( !Pool.CanPush(sizeof(TSpan)) )
@@ -3007,7 +3007,7 @@ void WCodeEditor::HighlightAll()
 
 			// Compute the length of the span.
 			while	(	
-						i<Line.Text.Len() && 
+						i<Line.Text.len() && 
 						Buffer[i]==Span->Type 
 					)
 			{
@@ -3033,7 +3033,7 @@ void WFindDialog::ButtonFindClick( WWidget* Sender )
 		if( !CodeEditor->FindText( TextEdit->Text, CaseCheckBox->bChecked ) )
 			Root->ShowMessage
 			(
-				*String::Format( L"Text '%s' not found", *TextEdit->Text ),
+				*String::format( L"Text '%s' not found", *TextEdit->Text ),
 				L"Message",
 				true
 			);
@@ -3099,26 +3099,26 @@ void WCodeEditor::WAutoComplete::Accept()
 
 		Editor->BeginTransaction();
 		{
-			ThisLine	=	String::Delete( ThisLine, iX, Editor->CaretXEnd-iX  );
-			ThisLine	=	String::Copy
+			ThisLine	=	String::del( ThisLine, iX, Editor->CaretXEnd-iX  );
+			ThisLine	=	String::copy
 									( 
 										ThisLine, 
 										0, 
 										iX 
 									)
 					+ Chunk +
-							String::Copy
+							String::copy
 									( 
 										ThisLine, 
 										iX, 
-										ThisLine.Len()-iX 
+										ThisLine.len()-iX 
 									);	
 
 			// Update caret location.
 			if( Entry.Type!=AT_Method && Entry.Type!=AT_Function )
-				Editor->CaretXBegin	= Editor->CaretXEnd	= iX+Chunk.Len();
+				Editor->CaretXBegin	= Editor->CaretXEnd	= iX+Chunk.len();
 			else
-				Editor->CaretXBegin	= Editor->CaretXEnd	= iX+Chunk.Len()-1;
+				Editor->CaretXBegin	= Editor->CaretXEnd	= iX+Chunk.len()-1;
 		}
 		Editor->EndTransaction();
 	}
@@ -3134,9 +3134,9 @@ void WCodeEditor::WAutoComplete::Accept()
 //
 static Bool TestSubstring( String Needle, String HayStack )
 {
-	if( Needle.Len() > HayStack.Len() )
+	if( Needle.len() > HayStack.len() )
 		return false;
-	for( Int32 i=0; i<Needle.Len(); i++ )
+	for( Int32 i=0; i<Needle.len(); i++ )
 		if( toupper(Needle(i)) != toupper(HayStack(i)) )
 			return false;
 
@@ -3173,10 +3173,10 @@ void WCodeEditor::WAutoComplete::OnKeyDown( Int32 Key )
 void WCodeEditor::WAutoComplete::Filter()
 {
 	String ThisLine	= Editor->Lines[Editor->CaretYBegin].Text;
-	if( iX>ThisLine.Len() || Editor->CaretXBegin<iX )
+	if( iX>ThisLine.len() || Editor->CaretXBegin<iX )
 		return;
 
-	String	Test	= String::Copy( ThisLine, iX, Editor->CaretXBegin-iX );
+	String	Test	= String::copy( ThisLine, iX, Editor->CaretXBegin-iX );
 
 	// Refill database.
 	this->Empty();
@@ -3356,7 +3356,7 @@ void WCodeEditor::WAutoComplete::FillBy( CClass* Class )
 			AddEntry
 			(
 				AT_Property,
-				String::Format( L"%s %s", *Prop->TypeName(), *Prop->Name ),
+				String::format( L"%s %s", *Prop->TypeName(), *Prop->Name ),
 				Prop->Name
 			);
 		}
@@ -3412,7 +3412,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 				AddEntry
 				(
 					AT_Property,
-					String::Format( L"%s %s", *Prop->TypeName(), *Prop->Name ),
+					String::format( L"%s %s", *Prop->TypeName(), *Prop->Name ),
 					Prop->Name
 				);
 			}
@@ -3439,7 +3439,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 			AddEntry
 			(
 				AT_Property,
-				String::Format( L"%s %s", *Prop->TypeName(), *Prop->Name ),
+				String::format( L"%s %s", *Prop->TypeName(), *Prop->Name ),
 				Prop->Name
 			);
 		}
@@ -3463,7 +3463,7 @@ void WCodeEditor::WAutoComplete::FillBy( FScript* Script )
 		AddEntry
 		(
 			AT_Property,
-			String::Format( L"[s] %s %s", *Prop->TypeName(), *Prop->Name ),
+			String::format( L"[s] %s %s", *Prop->TypeName(), *Prop->Name ),
 			Prop->Name
 		);
 	}

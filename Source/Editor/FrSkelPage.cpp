@@ -674,17 +674,17 @@ void WSkeletonPage::ShowBoneProperties( Int32 iBone )
 	{
 		case SC_Bone:
 		{
-			Inspector->SetCustomCaption(String::Format(L"Inspector [Bone: %s]", *Info.Name));
+			Inspector->SetCustomCaption(String::format(L"Inspector [Bone: %s]", *Info.Name));
 			break;
 		}
 		case SC_Master:
 		{
-			Inspector->SetCustomCaption(String::Format(L"Inspector [Master: %s]", *Info.Name));
+			Inspector->SetCustomCaption(String::format(L"Inspector [Master: %s]", *Info.Name));
 			break;
 		}
 		case SC_IKSolver:
 		{
-			Inspector->SetCustomCaption(String::Format(L"Inspector [IK Solver: %s]", *Info.Name));
+			Inspector->SetCustomCaption(String::format(L"Inspector [IK Solver: %s]", *Info.Name));
 			Inspector->AddCustomProperty( L"Flip?",	 TYPE_Bool,		&Info.bFlipIK );
 			break;
 		}
@@ -712,7 +712,7 @@ String WSkeletonPage::MakeUniqueBoneName( String Prefix )
 	Int32 i = 0;
 	while( true )
 	{
-		String TestName = String::Format( L"%s%d", *Prefix, i++ );
+		String TestName = String::format( L"%s%d", *Prefix, i++ );
 		if( !Skeleton->FindBone(TestName) )
 			return TestName;
 	}
@@ -1754,7 +1754,7 @@ void WAnimationTrack::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 void WAnimationTrack::ButtonAddActionClick( WWidget* Sender )
 {
 	static Int32 gCounter = 0;
-	Skeleton->Actions.push(TSkeletonAction(String::Format(L"Action_%d", gCounter)));
+	Skeleton->Actions.push(TSkeletonAction(String::format(L"Action_%d", gCounter)));
 	gCounter++;
 
 	ActionsList->Empty();

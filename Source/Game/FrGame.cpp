@@ -219,7 +219,7 @@ void CGame::Init( HINSTANCE InhInstance )
 	if( ProjectFileName )
 	{
 		// Open Command-Line game.
-		String FileName	= String::Pos( L":\\", ProjectFileName ) != -1 ? 
+		String FileName	= String::pos( L":\\", ProjectFileName ) != -1 ? 
 							ProjectFileName : 
 							GDirectory+L"\\"+ProjectFileName;
 
@@ -256,7 +256,7 @@ void CGame::Init( HINSTANCE InhInstance )
 	{
 		// Try to find some file in directory.
 		Array<String> GameFiles;
-		GameFiles = GPlat->FindFiles(GDirectory, String::Format(L"*%s", PROJ_FILE_EXT));
+		GameFiles = GPlat->FindFiles(GDirectory, String::format( L"*%s", PROJ_FILE_EXT ));
 
 		if( GameFiles.size() == 0 )
 			fatal(L"Game file not found");
@@ -283,7 +283,7 @@ void CGame::Init( HINSTANCE InhInstance )
 		if( Entry )
 			RunLevel( Entry, true );
 		else
-			MessageBox( 0, *String::Format( L"No level's found in '%s'", *FileName ), 
+			MessageBox( 0, *String::format( L"No level's found in '%s'", *FileName ), 
 				L"Client", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
 	}
 }
@@ -805,8 +805,8 @@ void CGame::RunLevel( FLevel* Source, Bool bCopy )
 FLevel* CGame::FindLevel( String LevName )
 {
 	for( Int32 i=0; i<LevelList.size(); i++ )
-		if(	String::UpperCase(LevelList[i]->GetName()) == 
-			String::UpperCase(LevName) )
+		if(	String::upperCase(LevelList[i]->GetName()) == 
+			String::upperCase(LevName) )
 				return LevelList[i];
 
 	return nullptr;
@@ -824,12 +824,12 @@ static String GetFileName( String FileName )
 {
 	Int32 i, j;
 
-	for( i=FileName.Len()-1; i>=0; i-- )
+	for( i=FileName.len()-1; i>=0; i-- )
 		if( FileName[i] == L'\\' )
 			break;
 
-	j = String::Pos( L".", FileName );
-	return String::Copy( FileName, i+1, j-i-1 );
+	j = String::pos( L".", FileName );
+	return String::copy( FileName, i+1, j-i-1 );
 }
 
 
@@ -839,11 +839,11 @@ static String GetFileName( String FileName )
 static String GetFileDir( String FileName )
 { 
 	Int32 i;
-	for( i=FileName.Len()-1; i>=0; i-- )
+	for( i=FileName.len()-1; i>=0; i-- )
 		if( FileName[i] == L'\\' )
 			break;
 
-	return String::Copy( FileName, 0, i );
+	return String::copy( FileName, 0, i );
 }
 
 
@@ -854,28 +854,28 @@ void CGame::ConsoleExecute( String CmdLine )
 {
 	String Token = CCmdLineParser::ParseCommand(CmdLine);
 
-	if( String::CompareText(Token, L"Clr") == 0 )
+	if( String::insensitiveCompare(Token, L"Clr") == 0 )
 	{
 		// Clear console.
 		Console->Clear();
 	}
-	else if( String::CompareText(Token, L"BlockMan") == 0 )
+	else if( String::insensitiveCompare(Token, L"BlockMan") == 0 )
 	{
 		// Debug resource manager.
 		if( Project )
 			Project->BlockMan->DebugManager();
 	}
-	else if( String::CompareText(Token, L"Quit") == 0 )
+	else if( String::insensitiveCompare(Token, L"Quit") == 0 )
 	{
 		// Shutdown application.
 		SendMessage( hWnd, WM_CLOSE, 0, 0 );
 	}
-	else if( String::CompareText(Token, L"Flush") == 0 )
+	else if( String::insensitiveCompare(Token, L"Flush") == 0 )
 	{
 		// Unload cached data.
 		Flush();
 	}
-	else if( String::CompareText(Token, L"Run") == 0 )
+	else if( String::insensitiveCompare(Token, L"Run") == 0 )
 	{
 		// Run a level.
 
@@ -886,7 +886,7 @@ void CGame::ConsoleExecute( String CmdLine )
 		else
 			error( L"Game: Level '%s' not found.", *LevName );
 	}
-	else if( String::CompareText(Token, L"Restart") == 0 )
+	else if( String::insensitiveCompare(Token, L"Restart") == 0 )
 	{
 		// Restart a currect level.
 		if( Level && Level->IsTemporal() )
@@ -896,19 +896,19 @@ void CGame::ConsoleExecute( String CmdLine )
 		else
 			error( L"Game: Current level is not restartable" );
 	}
-	else if( String::CompareText(Token, L"Hash") == 0 )
+	else if( String::insensitiveCompare(Token, L"Hash") == 0 )
 	{
 		// Collision hash info.
 		if( Level )
 			Level->CollHash->DebugHash();
 	}
-	else if( String::CompareText(Token, L"Render") == 0 )
+	else if( String::insensitiveCompare(Token, L"Render") == 0 )
 	{
 		// Change render mode.
 		if( Level )
 			Level->RndFlags	= CCmdLineParser::ParseStringParam(CmdLine, L"mode")==L"editor" ? RND_Editor : RND_Game;
 	}
-	else if( String::CompareText(Token, L"Lighting") == 0 )
+	else if( String::insensitiveCompare(Token, L"Lighting") == 0 )
 	{
 		// Toggle lighting.
 		if( Level )
@@ -920,7 +920,7 @@ void CGame::ConsoleExecute( String CmdLine )
 				Level->RndFlags &= ~RND_Lighting;
 		}
 	}
-	else if( String::CompareText(Token, L"GFX") == 0 )
+	else if( String::insensitiveCompare(Token, L"GFX") == 0 )
 	{
 		// Toggle post effect.
 		if( Level )
@@ -932,7 +932,7 @@ void CGame::ConsoleExecute( String CmdLine )
 				Level->RndFlags &= ~RND_Effects;
 		}
 	}
-	else if( String::CompareText(Token, L"Pause") == 0 )
+	else if( String::insensitiveCompare(Token, L"Pause") == 0 )
 	{
 		// Toggle level pause.
 		if( Level )
@@ -941,7 +941,7 @@ void CGame::ConsoleExecute( String CmdLine )
 			info( L"%s", Level->bIsPause ? L"Pause On" : L"Pause Off" );
 		}
 	}
-	else if( String::CompareText(Token, L"GPF") == 0 )
+	else if( String::insensitiveCompare(Token, L"GPF") == 0 )
 	{
 		// Crash application!
 		*((Int32*)0)	= 1720;
@@ -1099,10 +1099,10 @@ void CGame::handleFatalMessage( const Char* message )
 {
 	Char buffer[4096] = {};
 
-	cstr::cat( buffer, arraySize(buffer), L"Fatal Error: \"" );
-	cstr::cat( buffer, arraySize(buffer), message );
-	cstr::cat( buffer, arraySize(buffer), L"\" in " );
-	cstr::cat( buffer, arraySize(buffer), flu::win::stackTrace( nullptr ) );
+	cstr::concat( buffer, arraySize(buffer), L"Fatal Error: \"" );
+	cstr::concat( buffer, arraySize(buffer), message );
+	cstr::concat( buffer, arraySize(buffer), L"\" in " );
+	cstr::concat( buffer, arraySize(buffer), flu::win::stackTrace( nullptr ) );
 
 
 	MessageBox( 0, buffer, L"Critical Error", MB_OK | MB_ICONERROR | MB_TASKMODAL );

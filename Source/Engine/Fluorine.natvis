@@ -14,17 +14,17 @@
   </Type>
   
   <!-- Fluorine String --> 
-  <Type Name="String">
-    <DisplayString Condition="Internal != nullptr">{{ Text[{Internal->Length}]={Internal->Data,su} }}</DisplayString>
-    <DisplayString Condition="Internal == nullptr"> empty </DisplayString>
+  <Type Name="flu::StringBase&lt;*, *&gt;">
+    <DisplayString Condition="m_data != nullptr">{{ Text[{m_data->length}]={m_data->data,su} }}</DisplayString>
+    <DisplayString Condition="m_data == nullptr"> empty </DisplayString>
     
-    <StringView Condition="Internal != nullptr"> Internal->Data,su </StringView>    
+    <StringView Condition="m_data != nullptr"> m_data->data,su </StringView>    
     
     <Expand> 
-      <Item Name="[Length]" Condition="Internal != nullptr"> Internal->Length </Item>
-      <Item Name="[RefsCount]" Condition="Internal != nullptr"> Internal->RefsCount </Item>   
-      <Item Name="[Data]" Condition="Internal != nullptr"> Internal->Data,su </Item> 
-    </Expand>  
+      <Item Name="[Length]" Condition="m_data != nullptr"> m_data->length </Item>
+      <Item Name="[RefsCount]" Condition="m_data != nullptr"> m_data->refsCount </Item>   
+      <Item Name="[Data]" Condition="m_data != nullptr"> m_data->data,su </Item> 
+    </Expand>
   </Type>
   
   <!-- Fluorine Array -->

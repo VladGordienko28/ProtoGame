@@ -240,7 +240,7 @@ public:
 		const math::Vector& Scale = math::Vector( 1.f, 1.f ) 
 	)
 	{
-		DrawText( *S, S.Len(), Font, Color, Start, Scale );
+		DrawText( *S, S.len(), Font, Color, Start, Scale );
 	}
 
 protected:

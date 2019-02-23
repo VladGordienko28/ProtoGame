@@ -280,8 +280,8 @@ void WTexturePage::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 				((FBitmap*)Texture)->MouseMove( Button, BitPos.X, BitPos.Y );
 
 		// Update status bar.
-		GEditor->StatusBar->Panels[0].Text	= String::Format( L"U: %d", BitPos.X );
-		GEditor->StatusBar->Panels[1].Text	= String::Format( L"V: %d", BitPos.Y );
+		GEditor->StatusBar->Panels[0].Text	= String::format( L"U: %d", BitPos.X );
+		GEditor->StatusBar->Panels[1].Text	= String::format( L"V: %d", BitPos.Y );
 	}
 	else
 	{
@@ -382,7 +382,7 @@ void WTexturePage::OnPaint( CGUIRenderBase* Render )
 	Render->DrawText
 				( 
 					TPoint( Base.X + 10, Base.Y + 38 ), 
-					String::Format( L"x%.2f", Scale ), 
+					String::format( L"x%.2f", Scale ), 
 					COLOR_White, 
 					Root->Font1 
 				);
@@ -416,7 +416,7 @@ WDemoEffectPanel::WDemoEffectPanel( FDemoBitmap* InBitmap, WContainer* InOwner, 
 		Bitmap( InBitmap )
 {
 	// Initialize form.
-	Caption = String::Format( L"%s Editor", *Bitmap->GetClass()->GetAltName() );
+	Caption = String::format( L"%s Editor", *Bitmap->GetClass()->GetAltName() );
 	SetSize( 355, 145 );
 	SetLocation( 0, 0 );
 
@@ -533,7 +533,7 @@ void WDemoEffectPanel::AnySliderChange( WWidget* Sender )
 		if( Params[i].Address && Sliders[i] == Sender )
 		{
 			*Params[i].Address = math::round(Sliders[i]->Value*255.f/100.f);
-			Labels[i]->Caption = String::Format( L"%s %d", *Params[i].Name, *Params[i].Address );
+			Labels[i]->Caption = String::format( L"%s %d", *Params[i].Name, *Params[i].Address );
 		}
 }
 

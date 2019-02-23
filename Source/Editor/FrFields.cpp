@@ -277,7 +277,7 @@ CPropertyItem::CPropertyItem
 											Inspector,
 											Depth + 1,
 											InCustomAddr + i*InnerType.TypeSize(),
-											String::Format( L"[%d]", i ),
+											String::format( L"[%d]", i ),
 											InnerType,
 											Flags
 										) );
@@ -421,7 +421,7 @@ CPropertyItem::CPropertyItem
 											Inspector,
 											Depth + 1,
 											InObjs,
-											String::Format( L"[%d]", i ),
+											String::format( L"[%d]", i ),
 											InnerType,
 											InAddrOffset + i*InnerType.TypeSize(),
 											Flags
@@ -572,7 +572,7 @@ void CPropertyItem::RebuildDynamicArrayList()
 				Inspector,
 				Depth + 1,
 				(UInt8*)Array->data + i*InnerType.TypeSize(),
-				String::Format( L"[%d]", i ),
+				String::format( L"[%d]", i ),
 				InnerType,
 				Flags
 			) );
@@ -590,7 +590,7 @@ void CPropertyItem::RebuildDynamicArrayList()
 				Inspector,
 				Depth + 1,
 				(UInt8*)Array->data + i*InnerType.TypeSize(),
-				String::Format( L"[%d]", i ),
+				String::format( L"[%d]", i ),
 				InnerType,
 				Flags
 			) );
@@ -1581,7 +1581,7 @@ void WObjectInspector::SetEditObjects( Array<FObject*>& Objs )
 			}
 
 			// Set caption.
-			Caption	= String::Format( L"Inspector [%s]", Objects.size()==1 ? *Bases[0]->Entity->GetName() : *Bases[0]->Entity->Script->GetName() );
+			Caption	= String::format( L"Inspector [%s]", Objects.size()==1 ? *Bases[0]->Entity->GetName() : *Bases[0]->Entity->Script->GetName() );
 		}
 		else if( Objs[0]->IsA(FScript::MetaClass) )
 		{
@@ -1650,7 +1650,7 @@ void WObjectInspector::SetEditObjects( Array<FObject*>& Objs )
 			}
 
 			// Set caption.
-			Caption	= String::Format( L"Inspector [%s: %s]", *TopClass->GetAltName(), *Objects[0]->GetName() );
+			Caption	= String::format( L"Inspector [%s: %s]", *TopClass->GetAltName(), *Objects[0]->GetName() );
 		}
 		else if( Objs[0]->IsA(FResource::MetaClass) )
 		{
@@ -1676,7 +1676,7 @@ void WObjectInspector::SetEditObjects( Array<FObject*>& Objs )
 			}
 
 			// Set caption.
-			Caption	= String::Format( L"Inspector [%s: %s]", *TopClass->GetAltName(), *Objects[0]->GetName() );
+			Caption	= String::format( L"Inspector [%s: %s]", *TopClass->GetAltName(), *Objects[0]->GetName() );
 		}
 		else if( Objs[0]->IsA(FModifier::MetaClass) )
 		{
@@ -1702,7 +1702,7 @@ void WObjectInspector::SetEditObjects( Array<FObject*>& Objs )
 			}
 			
 			// Set caption.
-			Caption	= String::Format( L"Inspector [%s: %s]", *TopClass->GetAltName(), *Objects[0]->GetName() );	
+			Caption	= String::format( L"Inspector [%s: %s]", *TopClass->GetAltName(), *Objects[0]->GetName() );	
 		}
 		else
 		{

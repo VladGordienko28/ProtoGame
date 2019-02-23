@@ -20,10 +20,8 @@
 
    
 // Partial classes tree.
-class String;
 class CStruct;
 class CClass;
-class CSerializer;
 class FObject;
 	class FEntity;
 	class FComponent;
@@ -77,7 +75,6 @@ namespace envi
 
 // Engine includes.
 #include "Core\FrBase.h"
-#include "Core\FrString.h"
 #include "Core\FrRand.h"
 #include "Core\FrMemory.h"
 #include "Core\FrMath.h"

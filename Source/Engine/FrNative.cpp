@@ -225,7 +225,7 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		case OP_CharAt:
 		{
 			String	S = POP_STRING;
-			Int32 i = clamp( POP_INTEGER, 0, S.Len()-1 );
+			Int32 i = clamp<Int32>( POP_INTEGER, 0, S.len()-1 );
 			Char Tmp[2] = { S[i], 0 };
 			*POPA_STRING	= String(Tmp);
 			break;
@@ -234,7 +234,7 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		{
 			String Needle	= POP_STRING;
 			String HayStack	= POP_STRING;
-			*POPA_INTEGER = String::Pos( Needle, HayStack );
+			*POPA_INTEGER = String::pos( Needle, HayStack );
 			break;
 		}
 		case OP_Execute:

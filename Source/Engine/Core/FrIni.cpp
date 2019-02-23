@@ -29,11 +29,11 @@ CConfigManager::CConfigManager( String WorkingDirectory )
 		IniFile.bDirty = false;
 		IniFile.FileName = FileList[iFile];
 
-		IniFile.Name = String::Copy
+		IniFile.Name = String::copy
 		( 
 			IniFile.FileName, 
-			Directory.Len()+1, 
-			IniFile.FileName.Len()-Directory.Len()-5 
+			Directory.len() + 1, 
+			IniFile.FileName.len() - Directory.len() - 5 
 		);
 
 		TSection* Section = nullptr;
@@ -114,12 +114,12 @@ void CConfigManager::Flush()
 			for( Int32 j=0; j<File.Sections.size(); j++ )
 			{
 				TSection& Section = File.Sections[j];
-				Writer.WriteString(String::Format(L"[%s]", *Section.Name));
+				Writer.WriteString(String::format(L"[%s]", *Section.Name));
 
 				for( Int32 k=0; k<Section.Pairs.Entries.size(); k++ )
 				{
 					TMap<String, String>::TEntry& Entry = Section.Pairs.Entries[k];
-					Writer.WriteString(String::Format(L"%s=%s", *Entry.Key, *Entry.Value ));
+					Writer.WriteString(String::format(L"%s=%s", *Entry.Key, *Entry.Value ));
 				}
 				Writer.WriteString(L"");
 			}
@@ -142,7 +142,7 @@ void CConfigManager::WriteBool( const Char* File, const Char* Section, const Cha
 //
 void CConfigManager::WriteInteger( const Char* File, const Char* Section, const Char* Key, Int32 Value )
 {
-	WriteString( File, Section, Key, String::FromInteger(Value) );
+	WriteString( File, Section, Key, String::fromInteger(Value) );
 }
 
 
@@ -151,7 +151,7 @@ void CConfigManager::WriteInteger( const Char* File, const Char* Section, const 
 //
 void CConfigManager::WriteFloat( const Char* File, const Char* Section, const Char* Key, Float Value )
 {
-	WriteString( File, Section, Key, String::FromFloat(Value) );
+	WriteString( File, Section, Key, String::fromFloat(Value) );
 }
 
 
@@ -192,7 +192,7 @@ void CConfigManager::WriteString( const Char* File, const Char* Section, const C
 		TIniFile NewFile;
 		NewFile.bDirty = true;
 		NewFile.Name = File;
-		NewFile.FileName = String::Format(L"%s\\%s.ini", *Directory, File);
+		NewFile.FileName = String::format(L"%s\\%s.ini", *Directory, File);
 		NewFile.Sections.push(NewSection);
 
 		Files.push(NewFile);
@@ -213,7 +213,7 @@ Bool CConfigManager::ReadBool( const Char* File, const Char* Section, const Char
 	{
 		Result = true;
 	}
-	else if( Value.ToInteger(TempInt, 0) )
+	else if( Value.toInteger(TempInt, 0) )
 	{
 		Result = TempInt == 0;
 	}
@@ -231,7 +231,7 @@ Int32 CConfigManager::ReadInteger( const Char* File, const Char* Section, const 
 	String Value = ReadString( File, Section, Key );
 	Int32 Result;
 
-	Value.ToInteger( Result, Default );
+	Value.toInteger( Result, Default );
 
 	return Result;
 }
@@ -245,7 +245,7 @@ Float CConfigManager::ReadFloat( const Char* File, const Char* Section, const Ch
 	String Value = ReadString( File, Section, Key );
 	Float Result;
 
-	Value.ToFloat( Result, Default );
+	Value.toFloat( Result, Default );
 
 	return Result;
 }

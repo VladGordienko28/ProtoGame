@@ -28,7 +28,7 @@ WPlayPage::WPlayPage( FLevel* InOrigianl, EPlayMode InPlayMode, WContainer* InOw
 {
 	// Initialize level's variables.
 	PageType		= PAGE_Play;
-	Caption			= String::Format( L"Play '%s'", *SourceLevel->GetName() );
+	Caption			= String::format( L"Play '%s'", *SourceLevel->GetName() );
 	Color			= PAGE_COLOR_PLAY;
 	TabWidth		= Root->Font1->TextWidth( *Caption ) + 30;
 
@@ -78,7 +78,7 @@ void WPlayPage::TickPage( Float Delta )
 	// travel, so just notify player about it.
 	if( GIncomingLevel )
 	{
-		LogManager::instance().handleScriptMessage( ELogLevel::Warning, *String::Format
+		LogManager::instance().handleScriptMessage( ELogLevel::Warning, *String::format
 		(
 			L"An attempt to travel to level '%s'. Teleportee is '%s'", 
 			*GIncomingLevel.Destination->GetName(), 
@@ -103,7 +103,7 @@ void WPlayPage::TickPage( Float Delta )
 	{
 		if( PlayMode == PLAY_Debug )
 		{
-			GEditor->StatusBar->Panels[0].Text	= String::Format( L"Play Time: %.4f", PlayTime );
+			GEditor->StatusBar->Panels[0].Text	= String::format( L"Play Time: %.4f", PlayTime );
 			GEditor->StatusBar->Panels[1].Text	= L"";
 		}
 		else
@@ -210,7 +210,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 	// FPS.
 	Canvas->DrawText
 				( 
-					String::Format( L"FPS: %d", GEditor->FPS ),
+					String::format( L"FPS: %d", GEditor->FPS ),
 					Root->Font1, 
 					COLOR_White, 
 					math::Vector( 10, 10 ) 
@@ -219,7 +219,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 #if FLU_PROFILE_MEMORY
 	Canvas->DrawText
 				( 
-					String::Format( L"Mem: %.2f kB", Double(mem::stats().totalAllocatedBytes) / 1024 ), 
+					String::format( L"Mem: %.2f kB", Double(mem::stats().totalAllocatedBytes) / 1024 ), 
 					Root->Font1, 
 					COLOR_White, 
 					math::Vector( 10.f, 30.f ) 
@@ -228,7 +228,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 
 	Canvas->DrawText
 				( 
-					String::Format( L"Game Time: %s", *PlayLevel->m_timeOfDay.toString() ), 
+					String::format( L"Game Time: %s", *PlayLevel->m_timeOfDay.toString() ), 
 					Root->Font1, 
 					COLOR_White, 
 					math::Vector( 10.f, 72.f ) 

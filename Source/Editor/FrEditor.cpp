@@ -512,7 +512,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 				int S	= MessageBox
 				(
 					HWnd,
-					*String::Format( L"Save changes to '%s'?", *GProject->ProjName ),
+					*String::format( L"Save changes to '%s'?", *GProject->ProjName ),
 					L"Fluorine Engine",
 					MB_YESNOCANCEL | MB_TASKMODAL | MB_ICONQUESTION
 				);
@@ -921,10 +921,10 @@ void CEditor::handleFatalMessage( const Char* message )
 {
 	Char buffer[4096] = {};
 
-	cstr::cat( buffer, arraySize(buffer), L"Fatal Error: \"" );
-	cstr::cat( buffer, arraySize(buffer), message );
-	cstr::cat( buffer, arraySize(buffer), L"\" in " );
-	cstr::cat( buffer, arraySize(buffer), flu::win::stackTrace( nullptr ) );
+	cstr::concat( buffer, arraySize(buffer), L"Fatal Error: \"" );
+	cstr::concat( buffer, arraySize(buffer), message );
+	cstr::concat( buffer, arraySize(buffer), L"\" in " );
+	cstr::concat( buffer, arraySize(buffer), flu::win::stackTrace( nullptr ) );
 
 
 	MessageBox( 0, buffer, L"Critical Error", MB_OK | MB_ICONERROR | MB_TASKMODAL );

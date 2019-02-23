@@ -454,7 +454,7 @@ FEntity* FLevel::CreateEntity( FScript* InScript, String InName, math::Vector In
 		// Generate new unique name.
 		for( Int32 iUniq=0; ; iUniq++ )
 		{
-			String TestName = String::Format( L"%s%d", *InScript->GetName(), iUniq );
+			String TestName = String::format( L"%s%d", *InScript->GetName(), iUniq );
 			if( !GObjectDatabase->FindObject( TestName, FEntity::MetaClass, this ) )
 			{
 				EntityName = TestName;
@@ -529,10 +529,10 @@ void FLevel::ReleaseEntity( Int32 iEntity )
 //
 FEntity* FLevel::FindEntity( String InName )
 {
-	String UpperName = String::UpperCase(InName);
+	String UpperName = String::upperCase( InName );
 
 	for( Int32 iEnt=0; iEnt<Entities.size(); iEnt++ )
-		if( UpperName == String::UpperCase(Entities[iEnt]->GetName()) )
+		if( UpperName == String::upperCase( Entities[iEnt]->GetName() ) )
 			return Entities[iEnt];
 
 	// Not found.

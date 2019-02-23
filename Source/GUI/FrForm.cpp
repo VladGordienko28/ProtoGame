@@ -238,7 +238,7 @@ WMessageBox::WMessageBox( WWindow* InRoot, String InText, String InCaption, Bool
 
 	// Break text into lines and resize dialog to
 	// fit lines.
-	Lines				= String::WrapText( InText, 320/WWindow::Font1->TextWidth(L"a") );
+	Lines = String::wrapText( InText, 320 / WWindow::Font1->TextWidth( L"a" ) );
 	SetSize( 340, 90+13*Lines.size() );
 	SetLocation( (Root->Size.Width-Size.Width)/2, (Root->Size.Height-Size.Height)/2 );
 

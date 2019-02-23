@@ -48,7 +48,7 @@ namespace flu
 	Char buffer[MAX_MESSAGE_LENGTH];\
 	va_list argsPtr;\
 	va_start( argsPtr, fmt );\
-	_vsnwprintf_s( buffer, MAX_MESSAGE_LENGTH, _TRUNCATE, fmt, argsPtr );\
+	cstr::format( buffer, MAX_MESSAGE_LENGTH, fmt, argsPtr );\
 	va_end( argsPtr );
 
 	void LogManagerImpl::handleMessage( ELogLevel level, const Char* fmt, ... )
@@ -127,10 +127,10 @@ namespace flu
 	{
 		assert( buffer );
 
-		cstr::cat( buffer, LogManager::MAX_MESSAGE_LENGTH, prefix );
-		cstr::cat( buffer, LogManager::MAX_MESSAGE_LENGTH, L": " );
-		cstr::cat( buffer, LogManager::MAX_MESSAGE_LENGTH, message );
-		cstr::cat( buffer, LogManager::MAX_MESSAGE_LENGTH, L"\n" );
+		cstr::concat( buffer, LogManager::MAX_MESSAGE_LENGTH, prefix );
+		cstr::concat( buffer, LogManager::MAX_MESSAGE_LENGTH, L": " );
+		cstr::concat( buffer, LogManager::MAX_MESSAGE_LENGTH, message );
+		cstr::concat( buffer, LogManager::MAX_MESSAGE_LENGTH, L"\n" );
 
 		return buffer;
 	}

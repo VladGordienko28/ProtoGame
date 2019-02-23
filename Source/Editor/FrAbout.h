@@ -34,10 +34,10 @@ public:
 
 		Root->SetFocused( this );
 
-		Lines[0]	= String::Format( FLUORINE_INFO );
-		Lines[1]	= String::Format( L"Version: %s", FLU_VERSION );
-		Lines[2]	= String::Format( L"Build on: %hs", __DATE__ );
-		Lines[3]	= String::Format( L"%s", FLU_COPYRIGHT );
+		Lines[0]	= String::format( FLUORINE_INFO );
+		Lines[1]	= String::format( L"Version: %s", FLU_VERSION );
+		Lines[2]	= String::format( L"Build on: %hs", __DATE__ );
+		Lines[3]	= String::format( L"%s", FLU_COPYRIGHT );
 	}
 	~WAboutPanel()
 	{

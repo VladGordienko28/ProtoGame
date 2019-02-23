@@ -65,7 +65,7 @@ Int32 WMenu::AddSubMenu( String Title, WMenu* SubMenu )
 	Item.SubMenu	= SubMenu;
 	Item.Text		= Title;
 	Item.Y			= Items.size() ? Items.last().Y+Items.last().Height : 1;
-	Item.Height		= Title.Len() ? MENU_ITEM_HEIGHT : 3;
+	Item.Height		= Title.len() ? MENU_ITEM_HEIGHT : 3;
 	Item.bEnabled	= true;
 	Item.bToggle	= false;
 	Item.bChecked	= false;
@@ -90,7 +90,7 @@ Int32 WMenu::AddItem( String Title, TNotifyEvent InEvent, Bool InbToggle )
 	Item.SubMenu	= nullptr;
 	Item.Text		= Title;
 	Item.Y			= Items.size() ? Items.last().Y+Items.last().Height : 1;
-	Item.Height		= Title.Len() ? MENU_ITEM_HEIGHT : 3;
+	Item.Height		= Title.len() ? MENU_ITEM_HEIGHT : 3;
 	Item.bEnabled	= true;
 	Item.bToggle	= InbToggle;
 	Item.bChecked	= false;
@@ -156,7 +156,7 @@ void WMenu::OnPaint( CGUIRenderBase* Render )
 		TMenuItem& Item = Items[i];
 
 		// Draw selection.
-		if( iSelected == i && Item.Text.Len() )
+		if( iSelected == i && Item.Text.len() )
 			Render->DrawRegion
 					( 
 						TPoint( Base.X + 2, Base.Y + Item.Y + 1 ), 
@@ -167,7 +167,7 @@ void WMenu::OnPaint( CGUIRenderBase* Render )
 					);
 
 		// Draw caption or divider.
-		if( Item.Text.Len() )
+		if( Item.Text.len() )
 			Render->DrawText
 					( 
 						TPoint( Base.X + 18, Item.Y + TextY ), 
@@ -186,7 +186,7 @@ void WMenu::OnPaint( CGUIRenderBase* Render )
 					);
 
 		// If checked - draw mark.
-		if( Item.bChecked && Item.Text.Len() )
+		if( Item.bChecked && Item.Text.len() )
 			Render->DrawPicture
 					( 
 						TPoint( Base.X + 3, Base.Y + Item.Y + 7 ), 

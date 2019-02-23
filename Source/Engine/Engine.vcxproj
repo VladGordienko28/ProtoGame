@@ -164,7 +164,6 @@
     <ClInclude Include="Core\FrObject.h" />
     <ClInclude Include="Core\FrRand.h" />
     <ClInclude Include="Core\FrMemory.h" />
-    <ClInclude Include="Core\FrString.h" />
     <ClInclude Include="Database.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Environment\Environment.h" />

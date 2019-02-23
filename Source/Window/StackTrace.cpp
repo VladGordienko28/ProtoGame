@@ -95,8 +95,8 @@ namespace win
 				cstr::multiByteToWide( fileName, MAX_SYMBOL_LENGTH, line.FileName );
 				cstr::multiByteToWide( funcName, MAX_SYMBOL_LENGTH, symbol->Name );
 
-				cstr::cat( history, MAX_STACK_TRACE_LENGTH, funcName );
-				cstr::cat( history, MAX_STACK_TRACE_LENGTH, L" <- " );
+				cstr::concat( history, MAX_STACK_TRACE_LENGTH, funcName );
+				cstr::concat( history, MAX_STACK_TRACE_LENGTH, L" <- " );
 			}
 		}
 

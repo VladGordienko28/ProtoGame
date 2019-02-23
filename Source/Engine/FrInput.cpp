@@ -144,9 +144,9 @@ void CInput::OnCharType( Char TypedChar )
 	// letters, digits, symbols.
 	static const Char Symbols[] = L"~!@#$%^& *()_+{}[]/-;.,:";
 	if	(
-			!IsLetter(TypedChar) &&
-			!IsDigit(TypedChar) &&
-			!wcschr( Symbols, TypedChar )
+			!cstr::isLetter( TypedChar ) &&
+			!cstr::isDigit( TypedChar ) &&
+			!cstr::findChar( Symbols, TypedChar )
 		)
 		return;
 
@@ -206,10 +206,10 @@ void CInput::CountRefs( CSerializer& S )
 //
 Bool CInput::MatchKeyCombo( String TestCombo ) const
 {
-	if( TestCombo.Len() >= MAX_COMBO_LENGTH )
+	if( TestCombo.len() >= MAX_COMBO_LENGTH )
 		return false;
 
-	for( Int32 i=TestCombo.Len()-1, j=MAX_COMBO_LENGTH-1; i>=0; i--, j-- )
+	for( Int32 i=TestCombo.len()-1, j=MAX_COMBO_LENGTH-1; i>=0; i--, j-- )
 		if( TestCombo[i] != KeysHistory[j] )
 			return false;
 

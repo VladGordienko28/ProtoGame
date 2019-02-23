@@ -71,10 +71,10 @@ public:
 			FEntity* Entity = Page->Level->Entities[iEnt];
 
 			if( NameEdit->Text )
-				if( String::Pos
+				if( String::pos
 							( 
-								String::UpperCase( NameEdit->Text ), 
-								String::UpperCase( Entity->GetName() )
+								String::upperCase( NameEdit->Text ), 
+								String::upperCase( Entity->GetName() )
 							) == -1 )
 					continue;
 
@@ -213,7 +213,7 @@ WLevelPage::WLevelPage( FLevel* InLevel, WContainer* InOwner, WWindow* InRoot )
 	DragSnapCombo->SetSize( 64, 22 );
 	ToolBar->AddElement( DragSnapCombo );
 	for( Float Scale=0.25f; Scale<=4.f; Scale *= 2.f )
-		DragSnapCombo->AddItem( String::Format( L"%.2f", Scale ), nullptr );
+		DragSnapCombo->AddItem( String::format( L"%.2f", Scale ), nullptr );
 	DragSnapCombo->SetItemIndex( 1, false );
 	ToolBar->AddElement( nullptr );
 
@@ -1193,14 +1193,14 @@ void WLevelPage::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 	{
 		FEntity* Entity = GetEntityAt( X, Y, false );
 		math::Vector Pen	= ScreenToWorld( X, Y );
-		GEditor->StatusBar->Panels[0].Text = Entity ? String::Format
+		GEditor->StatusBar->Panels[0].Text = Entity ? String::format
 																( 
 																	L"%s [%s]", 
 																	*Entity->GetName(), 
 																	*Entity->Script->GetName() 
 																) 
 																	: L"None";
-		GEditor->StatusBar->Panels[1].Text = String::Format
+		GEditor->StatusBar->Panels[1].Text = String::format
 														( 
 															L"[X=%.2f, Y=%.2f]", 
 															Pen.x, 
@@ -1414,7 +1414,7 @@ void WLevelPage::ClickEntity( FEntity* Entity, EMouseButton Button, Int32 X, Int
 			String Info		= Selector.GetSelectionInfo();
 			FScript* Script	= Selector.Selected[0]->Script;
 
-			EntityPopup->Items[0].Text	= String::Format( L"Select All %s", *Script->GetName() );
+			EntityPopup->Items[0].Text	= String::format( L"Select All %s", *Script->GetName() );
 
 			// Disable some items.
 			EntityPopup->Items[8].SubMenu->Items[0].bEnabled	=
@@ -1454,7 +1454,7 @@ void WLevelPage::ClickBackdrop( EMouseButton Button, Int32 X, Int32 Y )
 		FResource* Res	= GEditor->Browser->GetSelected();
 		FScript* Script = Res && Res->IsA(FScript::MetaClass) ? (FScript*)Res : nullptr;
 
-		BackdropPopup->Items[0].Text		= String::Format( L"Add %s here", Script ? *Script->GetName() : L"<Entity>" );
+		BackdropPopup->Items[0].Text		= String::format( L"Add %s here", Script ? *Script->GetName() : L"<Entity>" );
 		BackdropPopup->Items[0].bEnabled	= Script != nullptr;
 		BackdropPopup->Items[2].bEnabled	= GEntityClipboard.size()!=0 && GPlat->ClipboardPaste()==L"Entity";
 		BackdropPopup->Size.Width			= max( 60+Root->Font1->TextWidth(*BackdropPopup->Items[0].Text), 165 );
@@ -2100,7 +2100,7 @@ void WLevelPage::DrawKeyframe( CCanvas* Canvas, FEntity* Entity )
 
 		Canvas->DrawText
 					(	
-						String::Format( L"%d", i+1 ),
+						String::format( L"%d", i+1 ),
 						Root->Font2,
 						COLOR_White,
 						math::Vector( X-10, Y-25 )
@@ -2265,7 +2265,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 	// Draw stats.
 	Canvas->DrawText
 				( 
-					String::Format( L"FPS: %d", GEditor->FPS ), 
+					String::format( L"FPS: %d", GEditor->FPS ), 
 					Root->Font1, 
 					COLOR_White, 
 					math::Vector( 10.f, 38.f ) 
@@ -2274,7 +2274,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 #if FLU_PROFILE_MEMORY
 	Canvas->DrawText
 				( 
-					String::Format( L"Mem: %.2f kB", Double(mem::stats().totalAllocatedBytes) / 1024 ), 
+					String::format( L"Mem: %.2f kB", Double(mem::stats().totalAllocatedBytes) / 1024 ), 
 					Root->Font1, 
 					COLOR_White, 
 					math::Vector( 10.f, 55.f ) 
@@ -2283,7 +2283,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 
 	Canvas->DrawText
 				( 
-					String::Format( L"Game Time: %s", *Level->m_timeOfDay.toString() ), 
+					String::format( L"Game Time: %s", *Level->m_timeOfDay.toString() ), 
 					Root->Font1, 
 					COLOR_White, 
 					math::Vector( 10.f, 72.f ) 
@@ -2467,7 +2467,7 @@ void WLevelPage::PopPasteClick( WWidget* Sender )
 		
 		for( Int32 iUniq=0; ; iUniq++ )
 		{
-			String TestName = String::Format( L"%s%d", *Script->GetName(), iUniq );
+			String TestName = String::format( L"%s%d", *Script->GetName(), iUniq );
 			if( !GObjectDatabase->FindObject( TestName, FEntity::MetaClass, Level ) )
 			{
 					EntityName = TestName;
@@ -2775,7 +2775,7 @@ void WLevelPage::PopDuplicateClick( WWidget* Sender )
 			String EntityName;
 			for( Int32 iUniq=0; ; iUniq++ )
 			{
-				String TestName = String::Format( L"%s%d", *Source->Script->GetName(), iUniq );
+				String TestName = String::format( L"%s%d", *Source->Script->GetName(), iUniq );
 				if( !GObjectDatabase->FindObject( TestName, FEntity::MetaClass, Level ) )
 				{
 					EntityName = TestName;
@@ -2995,7 +2995,7 @@ String TSelector::GetSelectionInfo() const
 			break;
 		}
 
-	return String::Format( L"%i %s", Selected.size(), Shared ? *Shared->GetName() : L"Entity" );
+	return String::format( L"%i %s", Selected.size(), Shared ? *Shared->GetName() : L"Entity" );
 }
 
 

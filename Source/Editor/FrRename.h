@@ -118,7 +118,7 @@ private:
 	// Notifications.
 	void WRenameDialog::ButtonOkClick( WWidget* Sender )
 	{
-		if( NameEdit->Text.Len() == 0 )
+		if( NameEdit->Text.len() == 0 )
 		{
 			Root->ShowMessage( L"Please specify new name of resource", L"Rename Dialog", true );
 			return;
@@ -127,7 +127,7 @@ private:
 		{
 			Root->ShowMessage
 			(
-				String::Format( L"Object \"%s\" already exists", *NameEdit->Text ),
+				String::format( L"Object \"%s\" already exists", *NameEdit->Text ),
 				L"Rename Dialog",
 				true
 			);

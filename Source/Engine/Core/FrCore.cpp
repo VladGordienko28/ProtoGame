@@ -14,423 +14,6 @@ String				GDirectory	= L"";
 UInt32				GFrameStamp = 0;
 String				GCmdLine;
 
-
-/*-----------------------------------------------------------------------------
-	String implementation.
------------------------------------------------------------------------------*/
-
-// Internal pool of dead strings.
-String::TInternal* String::DeadPool[String::DEAD_POOL_MAX] = {};
-
-
-//
-// Format string.
-//
-String String::Format( String Fmt, ... )
-{
-	static Char Dest[4096] = {};
-	va_list ArgPtr;
-	va_start( ArgPtr, Fmt );
-	_vsnwprintf_s( Dest, 4096, *Fmt, ArgPtr );
-	va_end( ArgPtr );
-	return Dest;
-}
-
-
-//
-// Search needle in haystack :), of string
-// of course. If needle not found return -1.
-//
-Int32 String::Pos( String Needle, String HayStack, Int32 iFrom )
-{
-	const Char* P = wcsstr( &((*HayStack)[iFrom]), *Needle );
-	return P ? (Int32)(((SizeT)P - (SizeT)*HayStack)/sizeof(Char)) : -1;
-}
-
-
-//
-// Return string copy with upper case.
-//
-String String::UpperCase( String Str )
-{
-	if( !Str )
-		return L"";
-
-	String N;
-	Initialize( N.Internal, Str.Len() );
-	for( Int32 i=0; i<Str.Len(); i++ )
-	{
-		N.Internal->Data[i] = towupper(Str(i));
-	}
-	return N;
-}
-
-
-//
-// Return string copy with lower case.
-//
-String String::LowerCase( String Str )
-{
-	if( !Str )
-		return L"";
-
-	String N;
-	Initialize( N.Internal, Str.Len() );
-	for( Int32 i=0; i<Str.Len(); i++ )
-	{
-		N.Internal->Data[i] = towlower(Str(i));
-	}
-	return N;
-}
-
-
-//
-// Strings case-insensitive comparison.
-// Return:
-//   < 0: Str1 < Str2.
-//   = 0: Str1 = Str2.
-//	 > 0: Str1 > Str2.
-//
-Int32 String::CompareText( String Str1, String Str2 )
-{
-	return _wcsicmp( *Str1, *Str2 );
-}
-
-
-//
-// String comparison.
-//
-Int32 String::CompareStr( String Str1, String Str2 )
-{
-	return wcscmp( *Str1, *Str2 );
-}
-
-
-//
-// Return string filled with specified characters.
-//
-String String::OfChar( Char Repeat, Int32 Count )
-{
-	if( Count == 0 )
-		return L"";
-
-	String N;
-	Initialize( N.Internal, Count );
-	for( Int32 i=0; i<Count; i++ )
-		N.Internal->Data[i] = Repeat;
-	return N;
-}
-
-
-//
-// Convert integer value to string.
-//
-String String::FromInteger( Int32 Value )
-{
-	return String::Format( L"%i", Value );
-}
-
-
-//
-// Convert float value to string.
-//
-String String::FromFloat( Float Value )
-{
-	return String::Format( L"%.4f", Value );
-}
-
-
-//
-// Copy substring.
-//
-String String::Copy( String Source, Int32 StartChar, Int32 Count )
-{
-	StartChar = clamp<Int32>( StartChar, 0, Source.Len()-1 );
-	Count = clamp<Int32>( Count, 0, Source.Len()-StartChar );
-	return Count ? String( &Source.Internal->Data[StartChar], Count ) : String();
-}
-
-
-//
-// Remove Count symbols from StartChar position. 
-//
-String String::Delete( String Str, Int32 StartChar, Int32 Count )
-{
-	StartChar = clamp<Int32>( StartChar, 0, Str.Len()-1 );
-	Count = clamp<Int32>( Count, 0, Str.Len()-StartChar );
-	return Copy( Str, 0, StartChar ) + Copy( Str, StartChar+Count, Str.Len()-StartChar-Count );	
-}
-
-
-//
-// Convert string into integer value, return true if 
-// converted successfully, otherwise return false and out value
-// will be set default.
-//
-Bool String::ToInteger( Int32& Value, Int32 Default ) const
-{
-	if (!Len())
-		return false;
-
-	Int32		iChar	= 0;
-	Bool		bNeg	= false;
-	Value				= Default;
-
-	// Detect sign.
-	if( Internal->Data[0] == L'-' )
-	{
-		iChar++;
-		bNeg = true;
-	}
-	else if( Internal->Data[0] == L'+' )
-	{
-		iChar++;
-		bNeg = false;
-	}
-
-	// Parse digit by digit.
-	Int32 Result = 0;
-	for (Int32 i = iChar; i < Len(); i++)
-	if (Internal->Data[i] >= L'0' && Internal->Data[i] <= L'9')
-	{
-		Result *= 10;
-		Result += (Int32)(Internal->Data[i] - L'0');
-	}
-	else
-		return false;
-
-	Value = bNeg ? -Result : Result;
-	return true;
-}
-
-
-//
-// Convert string into float value, return true if 
-// converted successfully, otherwise return false and out value
-// will be set default.
-//
-Bool String::ToFloat( Float& Value, Float Default ) const
-{
-	if (!Len())
-		return false;
-
-	Int32		iChar	= 0;
-	Bool		bNeg	= false;
-	Float		Frac = 0.f, Ceil = 0.f;
-	Value				= Default;
-
-	// Detect sign.
-	if (Internal->Data[0] == L'-')
-	{
-		iChar++;
-		bNeg = true;
-	}
-	else if (Internal->Data[0] == L'+')
-	{
-		iChar++;
-		bNeg = false;
-	}
-
-	if( iChar < Len() )
-	{
-		if( Internal->Data[iChar] == L'.' )
-		{
-			// Parse fractional part.
-		ParseFrac:
-			iChar++;
-			Float m = 0.1f;
-			for( ; iChar < Len(); iChar++ )
-				if( Internal->Data[iChar] >= L'0' && Internal->Data[iChar] <= L'9' )
-				{
-					Frac += (Int32)(Internal->Data[iChar] - L'0') * m;
-					m /= 10.f;
-				}
-				else
-					return false;
-		}
-		else if( Internal->Data[iChar] >= L'0' && Internal->Data[iChar] <= L'9' )
-		{
-			// Parse ceil part.
-			for( ; iChar < Len(); iChar++ )
-				if( Internal->Data[iChar] >= L'0' && Internal->Data[iChar] <= L'9' )
-				{
-					Ceil *= 10.f;
-					Ceil += (Int32)(Internal->Data[iChar] - L'0');
-				}
-				else if( Internal->Data[iChar] == L'.' )
-				{
-					goto ParseFrac;
-				}
-				else
-					return false;
-		}
-		else
-			return false;
-	}
-	else
-		return false;
-
-	Value = bNeg ? -(Ceil+Frac) : +(Ceil+Frac);
-	return true;
-}
-
-
-//
-// String serialization.
-//
-void Serialize( CSerializer& S, String& V )
-{
-	if( S.GetMode() == SM_Load )
-	{
-		// Load string with compression.
-		Int32 Len;
-		Serialize( S, Len );
-
-		String::Deinitialize( V.Internal );
-
-		if( Len < 0 )
-		{
-			// Load Ansi string.
-			String::Initialize( V.Internal, -Len );
-			for( Int32 i=0; i<V.Len(); i++ )
-			{
-				AnsiChar AC;
-				Serialize( S, AC );
-				(*V)[i] = AC;
-			}
-		}
-		else if( Len > 0 )
-		{
-			// Load wide string.
-			String::Initialize( V.Internal, Len );
-			S.SerializeData( *V, sizeof(Char)*Len );
-		}
-	}
-	else if( S.GetMode() == SM_Save )
-	{
-		// Save string with compression.
-		Int32 Len	= IsAnsiOnly(*V) ? -(Int32)V.Len() : (Int32)V.Len();
-		Serialize( S, Len );
-
-		if( Len < 0 )
-		{
-			// Save Ansi string.
-			for( Int32 i=0; i<V.Len(); i++ )
-			{
-				AnsiChar AC = (AnsiChar)V(i);
-				Serialize( S, AC );
-			}
-		}
-		else if( Len > 0 )
-		{
-			// Save wide string.
-			S.SerializeData( *V, sizeof(Char)*Len );
-		}
-	}
-	else
-	{
-		// Investigate string without compression.
-		Int32 Len = V.Len();
-		Serialize( S, Len );
-
-		if( Len > 0 )
-			S.SerializeData( *V, sizeof(Char)*Len );
-	}
-}
-
-
-//
-// Wrap text and put lines into array of string.
-//
-Array<String> String::WrapText( String Text, Int32 MaxColumnSize )
-{
-	Array<String> Result;
-
-	Int32 i=0;
-	do
-	{
-		Int32 iCleanWordEnd	= 0;
-		Bool	bGotWord		= false;
-		Int32	iTestWord		= 0;
-
-		while	( 
-					( i+iTestWord < Text.Len() )&&
-					(Text(i+iTestWord) != '\n') 
-				)
-		{
-			if( iTestWord++ > MaxColumnSize )
-				break;
-
-			Bool bWordBreak = (Text(iTestWord+i)==' ')||(Text(iTestWord+i)=='\n')||(iTestWord+i>=Text.Len());
-			if( bWordBreak || !bGotWord )
-			{
-				iCleanWordEnd	= iTestWord;
-				bGotWord		= bGotWord || bWordBreak;
-			}
-		}
-
-		if( iCleanWordEnd == 0 )
-			break;
-
-		// Add to array.
-		Result.push(String::Copy( Text, i, iCleanWordEnd ));
-		i += iCleanWordEnd;
-
-		// Skip whitespace after word.
-		while( Text(i) == ' ' )
-			i++;
-
-	} while( i<Text.Len() );
-
-	return Result;
-}
-
-
-//
-// Cleanup dead pool of strings.
-//
-void String::Flush()
-{
-	// Counters for statistics.
-	Int32	SlotsUsed	= 0,
-			MaxDepth	= 0,
-			TotalLen	= 0,
-			NumStrs		= 0;
-
-	// Dive to pool.
-	for( Int32 i=0; i<DEAD_POOL_MAX; i++ )
-	{
-		TInternal* Item = DeadPool[i];
-
-		if( Item )
-		{
-			Int32 Depth = 0;
-			DeadPool[i]	= nullptr;
-
-			while( Item )
-			{
-				TotalLen += i;
-				NumStrs++;
-				Depth++;
-
-				TInternal* NextItem = Item->DeadNext;
-				mem::free(Item);
-				Item = NextItem;
-			}
-
-			if( Depth > MaxDepth )
-				MaxDepth	= Depth;
-			SlotsUsed++;
-		}
-	}
-
-	// Dump.
-	info( L"String DeadPool stats: " );
-	info( L"  SlotsInUse: %i; MaxDepth: %i", SlotsUsed, MaxDepth );
-	info( L"  TotalStrs: %i; TotalLen: %i", NumStrs, TotalLen );
-}
-
-
 /*-----------------------------------------------------------------------------
     TColor implementation.
 -----------------------------------------------------------------------------*/
@@ -596,10 +179,10 @@ TUrl::TUrl()
 TUrl::TUrl( String InUrl )
 {
 	// Parse protocol.
-	Int32 iProtocolEnd = String::Pos(L"://", InUrl);
+	Int32 iProtocolEnd = String::pos(L"://", InUrl);
 	if( iProtocolEnd != -1 )
 	{
-		Protocol = String::Copy( InUrl, 0, iProtocolEnd );
+		Protocol = String::copy( InUrl, 0, iProtocolEnd );
 		iProtocolEnd += 3;
 	}
 	else
@@ -609,19 +192,19 @@ TUrl::TUrl( String InUrl )
 	}
 
 	// Login and password.
-	Int32 iUserEnd = String::Pos(L"@", InUrl, iProtocolEnd);
+	Int32 iUserEnd = String::pos(L"@", InUrl, iProtocolEnd);
 	if( iUserEnd != -1 )
 	{
-		Int32 iPasswordBegin = String::Pos(L":", InUrl, iProtocolEnd);
+		Int32 iPasswordBegin = String::pos(L":", InUrl, iProtocolEnd);
 		if( iPasswordBegin != -1 && iPasswordBegin < iUserEnd )
 		{
-			Login = String::Copy( InUrl, iProtocolEnd, iPasswordBegin-iProtocolEnd );
-			Password = String::Copy( InUrl, iPasswordBegin+1, iUserEnd-iPasswordBegin-1 );
+			Login = String::copy( InUrl, iProtocolEnd, iPasswordBegin-iProtocolEnd );
+			Password = String::copy( InUrl, iPasswordBegin+1, iUserEnd-iPasswordBegin-1 );
 		}
 		else
 		{
 			// No password.
-			Login = String::Copy( InUrl, iProtocolEnd, iUserEnd-iProtocolEnd );
+			Login = String::copy( InUrl, iProtocolEnd, iUserEnd-iProtocolEnd );
 			Password = L"";
 		}
 	}
@@ -633,10 +216,10 @@ TUrl::TUrl( String InUrl )
 	}
 
 	// Fragment.
-	Int32 iFragmentBegin = String::Pos( L"#", InUrl );
+	Int32 iFragmentBegin = String::pos( L"#", InUrl );
 	if( iFragmentBegin != -1 )
 	{
-		Fragment = String::Copy( InUrl, iFragmentBegin+1, InUrl.Len()-iFragmentBegin-1 );
+		Fragment = String::copy( InUrl, iFragmentBegin+1, InUrl.len()-iFragmentBegin-1 );
 	}
 	else
 	{
@@ -644,14 +227,14 @@ TUrl::TUrl( String InUrl )
 	}
 
 	// Port.
-	Int32 iPortBegin = String::Pos( L":", InUrl, max(iUserEnd, iProtocolEnd) );
+	Int32 iPortBegin = String::pos( L":", InUrl, max(iUserEnd, iProtocolEnd) );
 	Int32 iPortEnd = iPortBegin+1;
 	if( iPortBegin != -1 )
 	{
-		while(iPortEnd < InUrl.Len() && IsDigit(InUrl[iPortEnd]))
+		while(iPortEnd < InUrl.len() && cstr::isDigit( InUrl[iPortEnd] ))
 			iPortEnd++;
 
-		String::Copy(InUrl, iPortBegin+1, iPortEnd-iPortBegin-1).ToInteger(Port, 0);
+		String::copy(InUrl, iPortBegin+1, iPortEnd-iPortBegin-1).toInteger( Port, 0 );
 	}
 	else
 		Port = 0;
@@ -659,27 +242,27 @@ TUrl::TUrl( String InUrl )
 
 	// Host.
 	Int32 iHostBegin = max( iUserEnd+1, iProtocolEnd );
-	Int32 iHostEnd = iPortBegin != -1 ? iPortBegin : String::Pos(L"/", InUrl, iHostBegin);
-	Host = String::Copy( InUrl, iHostBegin, iHostEnd-iHostBegin );
+	Int32 iHostEnd = iPortBegin != -1 ? iPortBegin : String::pos(L"/", InUrl, iHostBegin);
+	Host = String::copy( InUrl, iHostBegin, iHostEnd-iHostBegin );
 
 	// Query.
-	Int32 iQueryBegin = String::Pos(L"?", InUrl)+1;
+	Int32 iQueryBegin = String::pos(L"?", InUrl)+1;
 	if( iQueryBegin != -1 )
 	{
 		Int32 iPairBegin = iQueryBegin;
 		
 		do 
 		{
-			Int32 iPairEnd = String::Pos(L"&", InUrl, iPairBegin);
+			Int32 iPairEnd = String::pos(L"&", InUrl, iPairBegin);
 			if( iPairEnd == -1 )
-				iPairEnd = iFragmentBegin != -1 ? iFragmentBegin : InUrl.Len();
-			if( iPairEnd == -1 || iPairEnd > InUrl.Len() || iPairBegin >= iPairEnd )
+				iPairEnd = iFragmentBegin != -1 ? iFragmentBegin : InUrl.len();
+			if( iPairEnd == -1 || iPairEnd > InUrl.len() || iPairBegin >= iPairEnd )
 				break;
 
-			Int32 iMiddle = String::Pos( L"=", InUrl, iPairBegin )+1;
+			Int32 iMiddle = String::pos( L"=", InUrl, iPairBegin )+1;
 
-			String Key = String::Copy( InUrl, iPairBegin, iMiddle-iPairBegin-1 );
-			String Value = String::Copy( InUrl, iMiddle, iPairEnd-iMiddle );
+			String Key = String::copy( InUrl, iPairBegin, iMiddle-iPairBegin-1 );
+			String Value = String::copy( InUrl, iMiddle, iPairEnd-iMiddle );
 			Query.Add( Key, Value );
 
 			iPairBegin = iPairEnd+1;
@@ -688,8 +271,8 @@ TUrl::TUrl( String InUrl )
 
 	// Path.
 	Int32 iPathBegin = max(iHostEnd+1, iPortEnd+1);
-	Int32 iPathEnd = iQueryBegin != -1 ? iQueryBegin-1 : iFragmentBegin != -1 ? iFragmentBegin : InUrl.Len();
-	Path = String::Copy( InUrl, iPathBegin, iPathEnd-iPathBegin );
+	Int32 iPathEnd = iQueryBegin != -1 ? iQueryBegin-1 : iFragmentBegin != -1 ? iFragmentBegin : InUrl.len();
+	Path = String::copy( InUrl, iPathBegin, iPathEnd-iPathBegin );
 }
 
 
@@ -711,15 +294,15 @@ String TUrl::ToString() const
 	String Result = L"";
 
 	if( Protocol )
-		Result += String::Format(L"%s://", *Protocol);
+		Result += String::format(L"%s://", *Protocol);
 
 	if( Login )
-		Result += Password ? String::Format(L"%s:%s@", *Login, *Password) : String::Format(L"%s@", *Login);
+		Result += Password ? String::format(L"%s:%s@", *Login, *Password) : String::format(L"%s@", *Login);
 
 	Result += Host;
 
 	if( Port != 0 )
-		Result += String::Format(L":%d", Port);
+		Result += String::format(L":%d", Port);
 
 	Result += String(L"/") + Path;
 
@@ -727,11 +310,11 @@ String TUrl::ToString() const
 	{
 		Result += L"?";
 		for( Int32 i=0; i<Query.Entries.size(); i++ )
-			Result += String::Format(L"%s%s=%s", i>0 ? L"&" : L"", *Query.Entries[i].Key, *Query.Entries[i].Value );
+			Result += String::format(L"%s%s=%s", i>0 ? L"&" : L"", *Query.Entries[i].Key, *Query.Entries[i].Value );
 	}
 
 	if( Fragment )
-		Result += String::Format(L"#%s", *Fragment);
+		Result += String::format(L"#%s", *Fragment);
 
 	return Result;
 }
@@ -742,11 +325,11 @@ String TUrl::ToString() const
 //
 Bool TUrl::operator==( const TUrl& Other ) const
 {
-	return	String::CompareText(Protocol, Other.Protocol) == 0 &&
-			String::CompareText(Host, Other.Host) == 0 &&
+	return	String::insensitiveCompare( Protocol, Other.Protocol ) == 0 &&
+			String::insensitiveCompare( Host, Other.Host ) == 0 &&
 			Port == Other.Port &&
-			String::CompareText(Path, Other.Path) == 0 &&
-			String::CompareText(Fragment, Other.Fragment) == 0;
+			String::insensitiveCompare( Path, Other.Path ) == 0 &&
+			String::insensitiveCompare( Fragment, Other.Fragment ) == 0;
 }
 
 
@@ -831,7 +414,7 @@ UInt32 MurmurHash( const UInt8* Data, SizeT Size )
 //
 Bool CCmdLineParser::ParseBoolParam( String Line, String Name, Bool Default )
 {
-	String Value = String::LowerCase(ParseStringParam( Line, Name ));
+	String Value = String::lowerCase(ParseStringParam( Line, Name ));
 
 	if( Value==L"true" || Value==L"on" || Value==L"1" )		
 		return true;
@@ -850,7 +433,7 @@ Int32 CCmdLineParser::ParseIntParam( String Line, String Name, Int32 Default )
 {
 	Int32 Result = 0;
 	String Value = ParseStringParam( Line, Name );
-	Value.ToInteger( Result, Default );
+	Value.toInteger( Result, Default );
 	return Result;
 }
 
@@ -862,7 +445,7 @@ Float CCmdLineParser::ParseFloatParam( String Line, String Name, Float Default )
 {
 	Float Result = 0.f;
 	String Value = ParseStringParam( Line, Name );
-	Value.ToFloat( Result, Default );
+	Value.toFloat( Result, Default );
 	return Result;
 }
 
@@ -876,14 +459,14 @@ String CCmdLineParser::ParseCommand( String Line, Int32 iArgNum )
 
 	for( ; ; )
 	{
-		while( iCommandBegin < Line.Len() && Line[iCommandBegin] == ' ' )
+		while( iCommandBegin < Line.len() && Line[iCommandBegin] == ' ' )
 			iCommandBegin++;
 
 		Int32 iCommandEnd = iCommandBegin;
-		while( iCommandEnd < Line.Len() && IsDigitLetter(Line[iCommandEnd]) )
+		while( iCommandEnd < Line.len() && cstr::isDigitLetter( Line[iCommandEnd] ) )
 			iCommandEnd++;
 
-		if( iCommandBegin != iCommandEnd && iCommandBegin < Line.Len() )
+		if( iCommandBegin != iCommandEnd && iCommandBegin < Line.len() )
 		{
 			if( iArgNum != 0 )
 			{
@@ -892,7 +475,7 @@ String CCmdLineParser::ParseCommand( String Line, Int32 iArgNum )
 			}
 			else
 			{
-				return String::Copy( Line, iCommandBegin, iCommandEnd-iCommandBegin );
+				return String::copy( Line, iCommandBegin, iCommandEnd-iCommandBegin );
 			}
 		}
 		else
@@ -906,39 +489,39 @@ String CCmdLineParser::ParseCommand( String Line, Int32 iArgNum )
 //
 String CCmdLineParser::ParseStringParam( String Line, String Name, String Default )
 {
-	Int32 iNameBegin = String::Pos
+	Int32 iNameBegin = String::pos
 	(
-		String::LowerCase(Name),
-		String::LowerCase(Line)
+		String::lowerCase( Name ),
+		String::lowerCase( Line )
 	);
 	if( iNameBegin == -1 )
 		return Default;
 	
-	Int32 iNameEnd = iNameBegin + Name.Len();
-	if( iNameEnd >= Line.Len() || Line[iNameEnd] != '=' )
+	Int32 iNameEnd = iNameBegin + Name.len();
+	if( iNameEnd >= Line.len() || Line[iNameEnd] != '=' )
 		return Default;
 
 	Int32 iValueBegin = iNameEnd + 1;
-	if( iValueBegin >= Line.Len() || Line[iValueBegin] == ' ' )
+	if( iValueBegin >= Line.len() || Line[iValueBegin] == ' ' )
 		return Default;
 
 	if( Line[iValueBegin] == '"' )
 	{
-		Int32 iQuoteEnd = String::Pos( L"\"", Line, iValueBegin+1 );
+		Int32 iQuoteEnd = String::pos( L"\"", Line, iValueBegin+1 );
 		if( iQuoteEnd != -1 )
 		{
-			return String::Copy( Line, iValueBegin+1, iQuoteEnd-iValueBegin-1 );
+			return String::copy( Line, iValueBegin+1, iQuoteEnd-iValueBegin-1 );
 		}
 		else
 			return Default;
 	}
-	else if( IsDigitLetter(Line[iValueBegin]) )
+	else if( cstr::isDigitLetter( Line[iValueBegin] ) )
 	{
 		Int32 iValueEnd = iValueBegin;
-		while( iValueEnd < Line.Len() && IsDigitLetter(Line[iValueEnd]) )
+		while( iValueEnd < Line.len() && cstr::isDigitLetter( Line[iValueEnd] ) )
 			iValueEnd++;
 
-		return String::Copy( Line, iValueBegin, iValueEnd-iValueBegin );
+		return String::copy( Line, iValueBegin, iValueEnd-iValueBegin );
 	}
 	else
 		return Default;
@@ -953,16 +536,16 @@ Bool CCmdLineParser::ParseOption( String Line, String Option )
 	if( !Option )
 		return false;
 
-	String LowLine = String::LowerCase(Line);
-	String LowOption = String::LowerCase(Option);
+	String LowLine = String::lowerCase(Line);
+	String LowOption = String::lowerCase(Option);
 
 	String LongOpt = String(L"--") + LowOption;
-	if( String::Pos( LongOpt, LowLine ) != -1 )
+	if( String::pos( LongOpt, LowLine ) != -1 )
 		return true;
 
 	Char Tmp[2] = { **LowOption, '\0' };
 	String ShortOpt = String(L"-") + Tmp;
-	if( String::Pos( ShortOpt, LowLine ) != -1 )
+	if( String::pos( ShortOpt, LowLine ) != -1 )
 		return true;
 
 	return false;

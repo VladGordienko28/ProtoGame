@@ -114,7 +114,7 @@ CClass::CClass( const Char* InName, TConstructor InCnstr, CClass* InSuper, UInt3
 
 	// Generate friendly class name.
 	assert(Name(0) == L'F');
-	AltName = String::Copy( Name, 1, Name.Len()-1 );
+	AltName = String::copy( Name, 1, Name.len()-1 );
 
 	// Prevent classes duplication.
 	assert(!CClassDatabase::StaticFindClass(InName));
@@ -284,7 +284,7 @@ String CNativeFunction::GetSignature() const
 			Args += L", ";
 	}
 
-	return String::Format
+	return String::format
 	(
 		L"%s %s(%s)",
 		ResultType.Type != TYPE_None ? *ResultType.TypeName() : L"fn",
@@ -485,7 +485,7 @@ void CStruct::ImportValues( void* Addr, CImporterBase& Im, String Prefix ) const
 {
 	for( auto& P : Members )
 	{
-		P->ImportValue( (UInt8*)Addr + P->Offset, Im, String::Format(L"%s.%s", *Prefix, *P->Name) );
+		P->ImportValue( (UInt8*)Addr + P->Offset, Im, String::format(L"%s.%s", *Prefix, *P->Name) );
 	}
 }
 
@@ -497,7 +497,7 @@ void CStruct::ExportValues( const void* Addr, CExporterBase& Ex, String Prefix )
 {
 	for( auto& P : Members )
 	{
-		P->ExportValue( (UInt8*)Addr + P->Offset, Ex, String::Format(L"%s.%s", *Prefix, *P->Name) );
+		P->ExportValue( (UInt8*)Addr + P->Offset, Ex, String::format(L"%s.%s", *Prefix, *P->Name) );
 	}
 }
 
@@ -595,7 +595,7 @@ String CProperty::GetAliasName() const
 {
 #ifdef USE_ALIASES
 	// Alias.
-	if( String::Pos( L"_", Name ) != -1 )
+	if( String::pos( L"_", Name ) != -1 )
 	{
 		// Something crazy.
 		return Name;
@@ -604,11 +604,11 @@ String CProperty::GetAliasName() const
 	{
 		// Should be valid property.
 		Char Buffer[64] = {}, *Walk = Buffer;
-		assert(Name.Len() < arraySize(Buffer));
+		assert(Name.len() < arraySize(Buffer));
 		Bool bBool = Name(0) == 'b';
 		Int32 i = (Int32)bBool;
 		Char PrevChar = '\0';
-		while( i < Name.Len() )
+		while( i < Name.len() )
 		{
 			Char ThisChar = Name(i);
 			if( (ThisChar>='A'&&ThisChar<='Z')&&(PrevChar>='a'&&PrevChar<='z')&&(Name(i+1)!='\0') )
@@ -726,7 +726,7 @@ String CTypeInfo::TypeName() const
 					( Type == TYPE_Byte && Enum ) ? Enum->Name :	BasicNames[Type];
 
 	return	ArrayDim == 1 ?	Base :
-			ArrayDim == -1 ? Base + L"[]" : String::Format( L"%s[%d]", *Base, ArrayDim );
+			ArrayDim == -1 ? Base + L"[]" : String::format( L"%s[%d]", *Base, ArrayDim );
 }
 
 
@@ -954,7 +954,7 @@ String CTypeInfo::ToString( const void* Addr ) const
 			if( Enum )
 				return Value < Enum->Elements.size() ? *Enum->GetAliasOf(Value) : L"BAD_INDEX";
 			else
-				return String::FromInteger(Value);
+				return String::fromInteger( Value );
 		}
 		case TYPE_Bool:
 		{
@@ -962,20 +962,20 @@ String CTypeInfo::ToString( const void* Addr ) const
 		}
 		case TYPE_Integer:
 		{
-			return String::FromInteger(*(Int32*)Addr);
+			return String::fromInteger( *(Int32*)Addr );
 		}
 		case TYPE_Float:
 		{
-			return String::FromFloat(*(Float*)Addr);
+			return String::fromFloat( *(Float*)Addr );
 		}
 		case TYPE_Angle:
 		{
-			return String::Format( L"%.2f deg.", (*(math::Angle*)Addr).toDegs() );
+			return String::format( L"%.2f deg.", (*(math::Angle*)Addr).toDegs() );
 		}
 		case TYPE_Color:
 		{
 			TColor Value = *(TColor*)Addr;
-			return String::Format( L"#%02x%02x%02x", Value.R, Value.G, Value.B );
+			return String::format( L"#%02x%02x%02x", Value.R, Value.G, Value.B );
 		}
 		case TYPE_String:
 		{
@@ -984,12 +984,12 @@ String CTypeInfo::ToString( const void* Addr ) const
 		case TYPE_Vector:
 		{
 			math::Vector Value = *(math::Vector*)Addr;
-			return String::Format( L"[%.2f, %.2f]", Value.x, Value.y );
+			return String::format( L"[%.2f, %.2f]", Value.x, Value.y );
 		}
 		case TYPE_AABB:
 		{
 			math::Rect Value = *(math::Rect*)Addr;
-			return String::Format( L"(%2.f, %2.f, %2.f, %2.f )", Value.min.x, Value.min.y, Value.max.x, Value.max.y );
+			return String::format( L"(%2.f, %2.f, %2.f, %2.f )", Value.min.x, Value.min.y, Value.max.x, Value.max.y );
 		}
 		case TYPE_Resource:
 		{
@@ -1003,11 +1003,11 @@ String CTypeInfo::ToString( const void* Addr ) const
 		}
 		case TYPE_Delegate:
 		{
-			return String::Format( L"0x%x", Addr );
+			return String::format( L"0x%x", Addr );
 		}
 		default:
 		{
-			return String::Format( L"Bad property type %d", Type );
+			return String::format( L"Bad property type %d", Type );
 		}
 	}
 }
@@ -1160,7 +1160,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 				*(UInt8*)Addr = Im.ImportByte( *Prefix );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					((UInt8*)Addr)[i] = Im.ImportByte( *String::Format( L"%s[%d]", *Prefix, i ) );
+					((UInt8*)Addr)[i] = Im.ImportByte( *String::format( L"%s[%d]", *Prefix, i ) );
 			break;
 
 		case TYPE_Bool:
@@ -1169,7 +1169,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 				*(Bool*)Addr = Im.ImportBool( *Prefix );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					((Bool*)Addr)[i] = Im.ImportBool( *String::Format( L"%s[%d]", *Prefix, i ) );
+					((Bool*)Addr)[i] = Im.ImportBool( *String::format( L"%s[%d]", *Prefix, i ) );
 			break;
 
 		case TYPE_Integer:
@@ -1178,7 +1178,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 				*(Int32*)Addr = Im.ImportInteger( *Prefix );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					((Int32*)Addr)[i] = Im.ImportInteger( *String::Format( L"%s[%d]", *Prefix, i ) );
+					((Int32*)Addr)[i] = Im.ImportInteger( *String::format( L"%s[%d]", *Prefix, i ) );
 			break;
 
 		case TYPE_Float:
@@ -1187,7 +1187,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 				*(Float*)Addr = Im.ImportFloat( *Prefix );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					((Float*)Addr)[i] = Im.ImportFloat( *String::Format( L"%s[%d]", *Prefix, i ) );
+					((Float*)Addr)[i] = Im.ImportFloat( *String::format( L"%s[%d]", *Prefix, i ) );
 			break;
 
 		case TYPE_Angle:
@@ -1196,7 +1196,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 				*(math::Angle*)Addr = Im.ImportAngle( *Prefix );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					((math::Angle*)Addr)[i] = Im.ImportAngle( *String::Format( L"%s[%d]", *Prefix, i ) );
+					((math::Angle*)Addr)[i] = Im.ImportAngle( *String::format( L"%s[%d]", *Prefix, i ) );
 			break;
 
 		case TYPE_Color:
@@ -1205,7 +1205,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 				*(TColor*)Addr = Im.ImportColor( *Prefix );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					((TColor*)Addr)[i] = Im.ImportColor( *String::Format( L"%s[%d]", *Prefix, i ) );
+					((TColor*)Addr)[i] = Im.ImportColor( *String::format( L"%s[%d]", *Prefix, i ) );
 			break;
 
 		case TYPE_String:
@@ -1214,7 +1214,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 				*(String*)Addr = Im.ImportString( *Prefix );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					((String*)Addr)[i] = Im.ImportString( *String::Format( L"%s[%d]", *Prefix, i ) );
+					((String*)Addr)[i] = Im.ImportString( *String::format( L"%s[%d]", *Prefix, i ) );
 			break;
 
 		case TYPE_Vector:
@@ -1223,7 +1223,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 				*(math::Vector*)Addr = Im.ImportVector( *Prefix );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					((math::Vector*)Addr)[i] = Im.ImportVector( *String::Format( L"%s[%d]", *Prefix, i ) );
+					((math::Vector*)Addr)[i] = Im.ImportVector( *String::format( L"%s[%d]", *Prefix, i ) );
 			break;
 
 		case TYPE_AABB:
@@ -1232,7 +1232,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 				*(math::Rect*)Addr = Im.ImportAABB( *Prefix );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					((math::Rect*)Addr)[i] = Im.ImportAABB( *String::Format( L"%s[%d]", *Prefix, i ) );
+					((math::Rect*)Addr)[i] = Im.ImportAABB( *String::format( L"%s[%d]", *Prefix, i ) );
 			break;
 
 		case TYPE_Resource:
@@ -1242,7 +1242,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 				*(FObject**)Addr = Im.ImportObject( *Prefix );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					((FObject**)Addr)[i] = Im.ImportObject( *String::Format( L"%s[%d]", *Prefix, i ) );
+					((FObject**)Addr)[i] = Im.ImportObject( *String::format( L"%s[%d]", *Prefix, i ) );
 			break;
 
 		case TYPE_Delegate:
@@ -1260,7 +1260,7 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 					(
 						(UInt8*)Addr + Struct->Size * i,
 						Im,
-						String::Format( L"%s[%d]", *Prefix, i )
+						String::format( L"%s[%d]", *Prefix, i )
 					);
 			break;
 
@@ -1297,7 +1297,7 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 				Ex.ExportByte( *Prefix, *(UInt8*)Addr );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					Ex.ExportByte( *String::Format( L"%s[%d]", *Prefix, i ), ((UInt8*)Addr)[i] );
+					Ex.ExportByte( *String::format( L"%s[%d]", *Prefix, i ), ((UInt8*)Addr)[i] );
 			break;
 
 		case TYPE_Bool:
@@ -1306,7 +1306,7 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 				Ex.ExportBool( *Prefix, *(Bool*)Addr );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					Ex.ExportBool( *String::Format( L"%s[%d]", *Prefix, i ), ((Bool*)Addr)[i] );
+					Ex.ExportBool( *String::format( L"%s[%d]", *Prefix, i ), ((Bool*)Addr)[i] );
 			break;
 
 		case TYPE_Integer:
@@ -1315,7 +1315,7 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 				Ex.ExportInteger( *Prefix, *(Int32*)Addr );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					Ex.ExportInteger( *String::Format( L"%s[%d]", *Prefix, i ), ((Int32*)Addr)[i] );
+					Ex.ExportInteger( *String::format( L"%s[%d]", *Prefix, i ), ((Int32*)Addr)[i] );
 			break;
 
 		case TYPE_Float:
@@ -1324,7 +1324,7 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 				Ex.ExportFloat( *Prefix, *(Float*)Addr );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					Ex.ExportFloat( *String::Format( L"%s[%d]", *Prefix, i ), ((Float*)Addr)[i] );
+					Ex.ExportFloat( *String::format( L"%s[%d]", *Prefix, i ), ((Float*)Addr)[i] );
 			break;
 
 		case TYPE_Angle:
@@ -1333,7 +1333,7 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 				Ex.ExportAngle( *Prefix, *(math::Angle*)Addr );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					Ex.ExportAngle( *String::Format( L"%s[%d]", *Prefix, i ), ((math::Angle*)Addr)[i] );
+					Ex.ExportAngle( *String::format( L"%s[%d]", *Prefix, i ), ((math::Angle*)Addr)[i] );
 			break;
 
 		case TYPE_Color:
@@ -1342,7 +1342,7 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 				Ex.ExportColor( *Prefix, *(TColor*)Addr );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					Ex.ExportColor( *String::Format( L"%s[%d]", *Prefix, i ), ((TColor*)Addr)[i] );
+					Ex.ExportColor( *String::format( L"%s[%d]", *Prefix, i ), ((TColor*)Addr)[i] );
 			break;
 
 		case TYPE_String:
@@ -1351,7 +1351,7 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 				Ex.ExportString( *Prefix, *(String*)Addr );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					Ex.ExportString( *String::Format( L"%s[%d]", *Prefix, i ), ((String*)Addr)[i] );
+					Ex.ExportString( *String::format( L"%s[%d]", *Prefix, i ), ((String*)Addr)[i] );
 			break;
 
 		case TYPE_Vector:
@@ -1360,7 +1360,7 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 				Ex.ExportVector( *Prefix, *(math::Vector*)Addr );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					Ex.ExportVector( *String::Format( L"%s[%d]", *Prefix, i ), ((math::Vector*)Addr)[i] );
+					Ex.ExportVector( *String::format( L"%s[%d]", *Prefix, i ), ((math::Vector*)Addr)[i] );
 			break;
 
 		case TYPE_AABB:
@@ -1369,7 +1369,7 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 				Ex.ExportAABB( *Prefix, *(math::Rect*)Addr );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					Ex.ExportAABB( *String::Format( L"%s[%d]", *Prefix, i ), ((math::Rect*)Addr)[i] );
+					Ex.ExportAABB( *String::format( L"%s[%d]", *Prefix, i ), ((math::Rect*)Addr)[i] );
 			break;
 
 		case TYPE_Resource:
@@ -1379,7 +1379,7 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 				Ex.ExportObject( *Prefix, *(FObject**)Addr );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					Ex.ExportObject( *String::Format( L"%s[%d]", *Prefix, i ), ((FObject**)Addr)[i] );
+					Ex.ExportObject( *String::format( L"%s[%d]", *Prefix, i ), ((FObject**)Addr)[i] );
 			break;
 
 		case TYPE_Delegate:
@@ -1397,7 +1397,7 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 					(
 						(UInt8*)Addr + Struct->Size * i,
 						Ex,
-						String::Format( L"%s[%d]", *Prefix, i )
+						String::format( L"%s[%d]", *Prefix, i )
 					);
 			break;
 	}
@@ -1485,17 +1485,17 @@ String CEnum::GetAliasOf( Int32 i )
 #if USE_ALIASES
 	// Parse name.
 	String SourceName = Elements[i];
-	if( !(Flags & ENUM_NoAliases) && String::Pos( L"_", SourceName ) != -1 )
+	if( !(Flags & ENUM_NoAliases) && String::pos( L"_", SourceName ) != -1 )
 	{
 		// Regular enum name.
 		Int32 i = 0;
 		Char Buffer[64] = {}, *Walk = Buffer;
-		assert(SourceName.Len() < arraySize(Buffer));
+		assert(SourceName.len() < arraySize(Buffer));
 		while( SourceName(i) != '_' )
 			i++;
 		i++;
 		Char PrevChar = '\0';
-		while( i < SourceName.Len() )
+		while( i < SourceName.len() )
 		{
 			Char ThisChar = SourceName(i);
 			if( (ThisChar>='A'&&ThisChar<='Z')&&(PrevChar>='a'&&PrevChar<='z') )

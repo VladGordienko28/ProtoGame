@@ -16,12 +16,12 @@ String GetFileName( String FileName )
 {
 	Int32 i, j;
 
-	for( i=FileName.Len()-1; i>=0; i-- )
+	for( i=FileName.len()-1; i>=0; i-- )
 		if( FileName[i] == L'\\' )
 			break;
 
-	j = String::Pos( L".", FileName );
-	return String::Copy( FileName, i+1, j-i-1 );
+	j = String::pos( L".", FileName );
+	return String::copy( FileName, i+1, j-i-1 );
 }
 
 
@@ -31,11 +31,11 @@ String GetFileName( String FileName )
 String GetFileDir( String FileName )
 { 
 	Int32 i;
-	for( i=FileName.Len()-1; i>=0; i-- )
+	for( i=FileName.len()-1; i>=0; i-- )
 		if( FileName[i] == L'\\' )
 			break;
 
-	return String::Copy( FileName, 0, i );
+	return String::copy( FileName, 0, i );
 }
 
 
@@ -57,7 +57,7 @@ FBitmap* ImportBMP( String Filename, String ResName )
 
 	if( BmpHeader.bfType != 0x4d42 )
 	{
-		MessageBox( 0, *String::Format( L"\"%s\" is not BMP file.", *Filename ), 
+		MessageBox( 0, *String::format( L"\"%s\" is not BMP file.", *Filename ), 
 			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
 
 		return nullptr;
@@ -65,7 +65,7 @@ FBitmap* ImportBMP( String Filename, String ResName )
 
 	if( !(((BmpInfo.biWidth)&(BmpInfo.biWidth-1)) == 0 && ((BmpInfo.biHeight)&(BmpInfo.biHeight-1)) == 0) )
 	{
-		MessageBox( 0, *String::Format( L"Bitmap size should be power of two" ), 
+		MessageBox( 0, *String::format( L"Bitmap size should be power of two" ), 
 			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
 
 		return nullptr;
@@ -128,7 +128,7 @@ FBitmap* ImportBMP( String Filename, String ResName )
 		// Bad bitmap format.
 		delete[] TempData;
 
-		MessageBox( 0, *String::Format( L"Bad bit count %d", BmpInfo.biBitCount ), 
+		MessageBox( 0, *String::format( L"Bad bit count %d", BmpInfo.biBitCount ), 
 			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
 
 		return nullptr;
@@ -215,7 +215,7 @@ FBitmap* ImportTGA( String Filename, String ResName )
 	// Only 24 and 32 bits supported.
 	if( TgaHeader.ImageType!=2 && TgaHeader.ImageType!=10 )
 	{
-		MessageBox( 0, *String::Format( L"Only 24 and 32 bit TGA supported" ), 
+		MessageBox( 0, *String::format( L"Only 24 and 32 bit TGA supported" ), 
 			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
 
 		return nullptr;
@@ -224,7 +224,7 @@ FBitmap* ImportTGA( String Filename, String ResName )
 	// Doesn't allow color map.
 	if( TgaHeader.ColorMapType != 0 )
 	{
-		MessageBox( 0, *String::Format( L"Color-mapped TGA doesn't supported" ), 
+		MessageBox( 0, *String::format( L"Color-mapped TGA doesn't supported" ), 
 			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
 
 		return nullptr;
@@ -238,14 +238,14 @@ FBitmap* ImportTGA( String Filename, String ResName )
 
 	if( !(((Width)&(Width-1)) == 0 && ((Height)&(Height-1)) == 0) )
 	{
-		MessageBox( 0, *String::Format( L"Image size should be power of two" ), 
+		MessageBox( 0, *String::format( L"Image size should be power of two" ), 
 			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
 
 		return nullptr;
 	}
 	if( ColorDepth < 24 )
 	{
-		MessageBox( 0, *String::Format( L"Only 24 and 32 bit TGA supported" ), 
+		MessageBox( 0, *String::format( L"Only 24 and 32 bit TGA supported" ), 
 			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
 
 		return nullptr;
@@ -385,7 +385,7 @@ FBitmap* ImportPNG( String Filename, String ResName )
 	PngError = lodepng_decode32_file( &PngImage, &PngWidth, &PngHeight, file_name );
 	if( PngError )
 	{
-		MessageBox( 0, *String::Format( L"Png: Failed error png. %u: %hs", PngError, lodepng_error_text(PngError) ), 
+		MessageBox( 0, *String::format( L"Png: Failed error png. %u: %hs", PngError, lodepng_error_text(PngError) ), 
 			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
 
 		free(PngImage);
@@ -393,7 +393,7 @@ FBitmap* ImportPNG( String Filename, String ResName )
 	}
 	if( !(isPowerOfTwo(PngWidth) && isPowerOfTwo(PngHeight)) )
 	{
-		MessageBox( 0, *String::Format( L"Png size should be power of two" ), 
+		MessageBox( 0, *String::format( L"Png size should be power of two" ), 
 			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
 
 		free(PngImage);
@@ -496,14 +496,14 @@ FMusic* ImportOGG( String Filename, String ResName )
 	FMusic*	Music	= NewObject<FMusic>( ResName, nullptr );
 
 	// Figure out Music directory.
-	if( String::Pos( String::UpperCase(GDirectory), String::UpperCase(Filename) ) != -1 )
+	if( String::pos( String::upperCase(GDirectory), String::upperCase(Filename) ) != -1 )
 	{
 		// In directory of exe.
-		Music->FileName	=	String::Copy
+		Music->FileName	=	String::copy
 							( 
 								Filename, 
-								GDirectory.Len()+1, 
-								Filename.Len()-GDirectory.Len()-1 
+								GDirectory.len()+1, 
+								Filename.len()-GDirectory.len()-1 
 							);
 	}
 	else
@@ -564,9 +564,9 @@ FFont* ImportFLF( String Filename, String ResName )
 		// Test all pages, they are exists?
 		String Dir = GetFileDir( Filename );
 		for( Int32 i=0; i<NumPages; i++ )
-			if( !GPlat->FileExists(Dir+String::Format(L"\\%s%d_%d.bmp", Name, Height, i)) )
+			if( !GPlat->FileExists(Dir+String::format(L"\\%s%d_%d.bmp", Name, Height, i)) )
 			{
-				MessageBox( 0, *String::Format( L"Font page %i not found", i ), 
+				MessageBox( 0, *String::format( L"Font page %i not found", i ), 
 					L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
 
 				fclose(File);
@@ -582,7 +582,7 @@ FFont* ImportFLF( String Filename, String ResName )
 
 		for( Int32 i=0; i<NumPages; i++ )
 		{
-			String		BitFile = Dir  + String::Format(L"\\%s%d_%d.bmp", Name, Height, i);
+			String		BitFile = Dir  + String::format(L"\\%s%d_%d.bmp", Name, Height, i);
 			FBitmap*	Page	= ImportBMP( BitFile, GetFileName(BitFile) );
 			Page->BlendMode		= BLEND_Translucent;
 			Page->Group			= L"";
@@ -625,32 +625,32 @@ FResource* CEditor::ImportResource( String Filename, String ResName )
 	assert(GPlat->FileExists(Filename));
 
 	// Try all formats.
-	if( String::Pos( L".bmp", String::LowerCase(Filename) ) != -1 )
+	if( String::pos( L".bmp", String::lowerCase(Filename) ) != -1 )
 	{
 		// Simple bmp file.
 		return ImportBMP( Filename, ResName ? ResName : GetFileName(Filename) );
 	}
-	if( String::Pos( L".tga", String::LowerCase(Filename) ) != -1 )
+	if( String::pos( L".tga", String::lowerCase(Filename) ) != -1 )
 	{
 		// Simple tga file.
 		return ImportTGA( Filename, ResName ? ResName : GetFileName(Filename) );
 	}
-	if( String::Pos( L".png", String::LowerCase(Filename) ) != -1 )
+	if( String::pos( L".png", String::lowerCase(Filename) ) != -1 )
 	{
 		// Advanced png file.
 		return ImportPNG( Filename, ResName ? ResName : GetFileName(Filename) );
 	}
-	else if( String::Pos( L".wav", String::LowerCase(Filename) ) != -1 )
+	else if( String::pos( L".wav", String::lowerCase(Filename) ) != -1 )
 	{
 		// wav file.
 		return ImportWAV( Filename, ResName ? ResName : GetFileName(Filename) );
 	}
-	else if( String::Pos( L".ogg", String::LowerCase(Filename) ) != -1 )
+	else if( String::pos( L".ogg", String::lowerCase(Filename) ) != -1 )
 	{
 		// Ogg file.
 		return ImportOGG( Filename, ResName ? ResName : GetFileName(Filename) );
 	}
-	else if( String::Pos( L".flf", String::LowerCase(Filename) ) != -1 )
+	else if( String::pos( L".flf", String::lowerCase(Filename) ) != -1 )
 	{
 		// Flf file.
 		return ImportFLF( Filename, ResName ? ResName : GetFileName(Filename) );
@@ -658,7 +658,7 @@ FResource* CEditor::ImportResource( String Filename, String ResName )
 	else
 	{
 		// Bad format.
-		MessageBox( 0, *String::Format( L"Failed load '%s'. Unsupported file format", *Filename ), 
+		MessageBox( 0, *String::format( L"Failed load '%s'. Unsupported file format", *Filename ), 
 			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
 
 		return nullptr;

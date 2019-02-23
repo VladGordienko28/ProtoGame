@@ -747,7 +747,7 @@ String CFunction::GetSignature() const
 			Args += L", ";
 	}
 
-	return	String::Format
+	return	String::format
 	(
 		L"%s %s(%s)",
 		ResultVar ? *ResultVar->TypeName() : L"fn",

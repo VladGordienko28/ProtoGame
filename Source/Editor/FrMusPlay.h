@@ -85,9 +85,9 @@ public:
 #endif
 			PlayButton->bEnabled	= bExists;
 			StopButton->bEnabled	= bExists;
-			FNValue->Caption		= String::Format( L"..%s", *FN );
-			FSValue->Caption		= String::Format( L"%i Kb", MusicSize/1024 );
-			Caption					= String::Format( L"Music Player [%s]", *Music->GetName() );
+			FNValue->Caption		= String::format( L"..%s", *FN );
+			FSValue->Caption		= String::format( L"%i Kb", MusicSize/1024 );
+			Caption					= String::format( L"Music Player [%s]", *Music->GetName() );
 		}
 		else
 		{

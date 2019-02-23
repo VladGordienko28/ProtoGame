@@ -17,9 +17,9 @@ namespace Net
 //
 String IPToString( const TNetAddress& Address )
 {
-	String Result = String::Format( L"%d.%d.%d.%d", Address.Numbers[0], Address.Numbers[1], Address.Numbers[2], Address.Numbers[3] );
+	String Result = String::format( L"%d.%d.%d.%d", Address.Numbers[0], Address.Numbers[1], Address.Numbers[2], Address.Numbers[3] );
 	if( Address.Port != 0 && Address.Port != NETWORK_ANY_PORT )
-		Result += String::Format( L":%d", Address.Port );
+		Result += String::format( L":%d", Address.Port );
 	return Result;
 }
 
@@ -81,13 +81,13 @@ Bool WSAInitialize( String* Error )
 		if( WSAError )
 		{
 			if( Error )
-				*Error	= String::Format( L"WSA initialization failed with code %d", WSAError );
+				*Error	= String::format( L"WSA initialization failed with code %d", WSAError );
 			return false;
 		}
 		if( WSAData.wVersion != 0x0202 )
 		{
 			if( Error )
-				*Error	= String::Format( L"Bad WSA version %d", WSAData.wVersion );
+				*Error	= String::format( L"Bad WSA version %d", WSAData.wVersion );
 			WSACleanup();
 			return false;
 		}

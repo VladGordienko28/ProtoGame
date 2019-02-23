@@ -637,26 +637,26 @@ template<class E> inline CTypeInfo _Cpp2FluType( E* Value )
 	Char TypeName[64];
 	SizeT UnusedSize;
 	mbstowcs_s( &UnusedSize, TypeName, arraySize(TypeName), typeid(E).name(), arraySize(TypeName) );
-	if( String::Copy(TypeName, 0, 5) == L"enum " )
+	if( String::copy(TypeName, 0, 5) == L"enum " )
 	{
 		// This is enum.
-		String EnumName = String::Delete(TypeName, 0, 5);
+		String EnumName = String::del( TypeName, 0, 5 );
 		CEnum* Enum = CClassDatabase::StaticFindEnum(*EnumName);
 		if( !Enum )
 			fatal( L"Enumeration \"%s\" is not registered", *EnumName );
 
 		return CTypeInfo( TYPE_Byte, 1, Enum );
 	}
-	else if( String::Copy(TypeName, 0, 7) == L"struct " || String::Copy(TypeName, 0, 6) == L"class " )
+	else if( String::copy(TypeName, 0, 7) == L"struct " || String::copy(TypeName, 0, 6) == L"class " )
 	{
 		// This is struct.
-		String StructName = String::Delete(TypeName, 0, String::Copy(TypeName, 0, 6) == L"class " ? 6 : 7);
+		String StructName = String::del( TypeName, 0, String::copy( TypeName, 0, 6 ) == L"class " ? 6 : 7 );
 		CStruct* Struct = CClassDatabase::StaticFindStruct(*StructName);	
 
 		// Freaky way to ignore namespace prefix.
 		if( !Struct )
 			for( Int32 i=0; i<CClassDatabase::GStructs.size(); i++ )
-				if( String::Pos(CClassDatabase::GStructs[i]->Name, StructName) != -1 )
+				if( String::pos(CClassDatabase::GStructs[i]->Name, StructName) != -1 )
 				{
 					Struct = CClassDatabase::GStructs[i];
 					break;

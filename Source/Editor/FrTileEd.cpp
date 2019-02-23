@@ -302,9 +302,9 @@ void WTileEditor::SetModel( FModelComponent* InModel )
 
 	// Change form caption according to model.
 	if( Model && Model->Entity )
-		Caption = String::Format( L"Model Editor [%s]", *Model->Entity->GetName() );
+		Caption = String::format( L"Model Editor [%s]", *Model->Entity->GetName() );
 	else
-		Caption = String::Format( L"Model Editor" );
+		Caption = String::format( L"Model Editor" );
 
 	SetButtonsEnabled( Model != nullptr ); 
 }

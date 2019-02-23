@@ -34,7 +34,7 @@ WHelloPage::WHelloPage( WContainer* InOwner, WWindow* InRoot )
 
 	// Links to recent projects.
 	for( Int32 i=0; i<arraySize(Recent); i++ )
-		RecentFiles[i]	= GEditor->Config->ReadString( L"Editor", L"Recent", *String::Format(L"Recent[%i]", i), L"" );
+		RecentFiles[i]	= GEditor->Config->ReadString( L"Editor", L"Recent", *String::format(L"Recent[%i]", i), L"" );
 
 	// Allocate links.
 	mem::zero( Recent, sizeof(Recent) );
@@ -185,7 +185,7 @@ void WHelloPage::LinkRecentClick( WWidget* Sender )
 	{
 		Root->ShowMessage
 		(
-			String::Format( L"Unable to load project '%s'. File not found.", *FileName ),
+			String::format( L"Unable to load project '%s'. File not found.", *FileName ),
 			L"Error",
 			true
 		);

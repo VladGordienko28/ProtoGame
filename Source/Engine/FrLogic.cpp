@@ -147,22 +147,22 @@ void FLogicComponent::Import( CImporterBase& Im )
 	IMPORT_INTEGER( NumJacks );
 
 	for( Int32 i=0; i<MAX_LOGIC_PLUGS; i++ )
-		PlugsName[i] = Im.ImportString( *String::Format( L"PlugsName[%d]", i ) );
+		PlugsName[i] = Im.ImportString( *String::format( L"PlugsName[%d]", i ) );
 
 	for( Int32 i=0; i<MAX_LOGIC_JACKS; i++ )
-		JacksName[i] = Im.ImportString( *String::Format( L"JacksName[%d]", i ) );
+		JacksName[i] = Im.ImportString( *String::format( L"JacksName[%d]", i ) );
 
 	// Import all connections.
 	for( Int32 i=0; i<MAX_LOGIC_PLUGS; i++ )
 		if( PlugsName[i] )
 		{
-			Plugs[i].setSize(Im.ImportInteger(*String::Format( L"Plugs[%i].Num" , i )));
+			Plugs[i].setSize(Im.ImportInteger(*String::format( L"Plugs[%i].Num" , i )));
 			for( Int32 j=0; j<Plugs[i].size(); j++ )
 			{
 				TLogicConnector& Conn = Plugs[i][j];
 
-				Conn.iJack	= Im.ImportInteger(*String::Format( L"Plugs[%i][%i].iJack" , i, j ));
-				Conn.Target	= As<FLogicComponent>(Im.ImportObject(*String::Format( L"Plugs[%i][%i].Target" , i, j )));
+				Conn.iJack	= Im.ImportInteger(*String::format( L"Plugs[%i][%i].iJack" , i, j ));
+				Conn.Target	= As<FLogicComponent>(Im.ImportObject(*String::format( L"Plugs[%i][%i].Target" , i, j )));
 			}
 		}
 }
@@ -180,24 +180,24 @@ void FLogicComponent::Export( CExporterBase& Ex )
 
 	for( Int32 i=0; i<MAX_LOGIC_PLUGS; i++ )
 		if( PlugsName[i] )
-			Ex.ExportString( *String::Format( L"PlugsName[%d]", i ), PlugsName[i] );
+			Ex.ExportString( *String::format( L"PlugsName[%d]", i ), PlugsName[i] );
 
 	for( Int32 i=0; i<MAX_LOGIC_JACKS; i++ )
 		if( JacksName[i] )
-			Ex.ExportString( *String::Format( L"JacksName[%d]", i ), JacksName[i] );
+			Ex.ExportString( *String::format( L"JacksName[%d]", i ), JacksName[i] );
 
 	// This way sucks! To store connectors and
 	// plugs! But works well.
 	for( Int32 i=0; i<MAX_LOGIC_PLUGS; i++ )
 		if( PlugsName[i] )
 		{
-			Ex.ExportInteger( *String::Format( L"Plugs[%i].Num" , i ), Plugs[i].size() );
+			Ex.ExportInteger( *String::format( L"Plugs[%i].Num" , i ), Plugs[i].size() );
 			for( Int32 j=0; j<Plugs[i].size(); j++ )
 			{
 				TLogicConnector& Conn = Plugs[i][j];
 
-				Ex.ExportInteger( *String::Format( L"Plugs[%i][%i].iJack" , i, j ), Conn.iJack );
-				Ex.ExportObject( *String::Format( L"Plugs[%i][%i].Target" , i, j ), Conn.Target );
+				Ex.ExportInteger( *String::format( L"Plugs[%i][%i].iJack" , i, j ), Conn.iJack );
+				Ex.ExportObject( *String::format( L"Plugs[%i][%i].Target" , i, j ), Conn.Target );
 			}
 		}
 }

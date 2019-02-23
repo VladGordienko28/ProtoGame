@@ -32,7 +32,7 @@ namespace flu
 		m_helpString = L"Press appropriate key to toggle groups: ";
 		for( Int32 i = 0; i < static_cast<Int32>(EProfilerGroup::MAX); ++i )
 		{
-			m_helpString += String::Format( L"[%d] %s; ", i, getGroupName( static_cast<EProfilerGroup>( i ) ) );
+			m_helpString += String::format( L"[%d] %s; ", i, getGroupName( static_cast<EProfilerGroup>( i ) ) );
 		}
 
 		// turn on at least one group
@@ -131,7 +131,7 @@ namespace flu
 				metricItem.Color = drawColor;
 				canvas->DrawRect( metricItem );
 
-				canvas->DrawText( *String::Format( L"%s: %s (avg %.2f)", 
+				canvas->DrawText( *String::format( L"%s: %s (avg %.2f)", 
 					getGroupName(static_cast<EProfilerGroup>( groupId )), it.name, ( cumulativeValue / it.samples.size() ) ), 
 					font, COLOR_White, { 40.f, metricItem.Bounds.min.y + 2.f } );
 

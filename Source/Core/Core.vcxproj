@@ -147,6 +147,7 @@
     <ClInclude Include="Array.h" />
     <ClInclude Include="Build.h" />
     <ClInclude Include="Core.h" />
+    <ClInclude Include="CString.h" />
     <ClInclude Include="FrSerial.h" />
     <ClInclude Include="Heap.h" />
     <ClInclude Include="LogCallback.h" />
@@ -154,6 +155,8 @@
     <ClInclude Include="Namespace.h" />
     <ClInclude Include="Profiler.h" />
     <ClInclude Include="Stack.h" />
+    <ClInclude Include="String.h" />
+    <ClInclude Include="StringManager.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
@@ -169,6 +172,7 @@
     <ClCompile Include="LogManager.cpp" />
     <ClCompile Include="Namespace.cpp" />
     <ClCompile Include="Profiler.cpp" />
+    <ClCompile Include="StringManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

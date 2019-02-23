@@ -224,7 +224,7 @@ void WGameBuilderDialog::BuildGame()
 		GPlat->Launch
 		(
 			*ExeDir,
-			*String::Format( L"project=\"%s\" %s", *(Directory+L"\\"+GProject->ProjName+PROJ_FILE_EXT), *ParmsEdit->Text )
+			*String::format( L"project=\"%s\" %s", *(Directory+L"\\"+GProject->ProjName+PROJ_FILE_EXT), *ParmsEdit->Text )
 		);
 	}
 	else

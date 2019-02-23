@@ -59,7 +59,8 @@ void CApplication::Flush()
 	}
 
 	// Cleanup strings sometimes.
-	String::Flush();
+	g_ansiStringManager.cleanupPool( true );
+	g_wideStringManager.cleanupPool( true );
 
 	// Flush singletons.
 	CDebugDrawHelper::Instance().Reset();

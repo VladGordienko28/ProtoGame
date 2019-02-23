@@ -38,7 +38,7 @@ public:
 	{
 		Font		= NewFont;
 		if( Font )
-			Caption	= String::Format( L"Font Viewer [%s]", *Font->GetName() );
+			Caption	= String::format( L"Font Viewer [%s]", *Font->GetName() );
 		else
 			Caption	= L"Font Viewer";
 	}

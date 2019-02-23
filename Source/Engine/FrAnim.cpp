@@ -110,9 +110,9 @@ void FAnimation::Import( CImporterBase& Im )
 	{
 		TAnimSequence& S = Sequences[iSeq];
 
-		S.Name	= Im.ImportString(*String::Format( L"Sequences[%d].Name", iSeq ));
-		S.Start	= Im.ImportInteger(*String::Format( L"Sequences[%d].Start", iSeq ));
-		S.Count	= Im.ImportInteger(*String::Format( L"Sequences[%d].Count", iSeq ));
+		S.Name	= Im.ImportString(*String::format( L"Sequences[%d].Name", iSeq ));
+		S.Start	= Im.ImportInteger(*String::format( L"Sequences[%d].Start", iSeq ));
+		S.Count	= Im.ImportInteger(*String::format( L"Sequences[%d].Count", iSeq ));
 	}
 }
 
@@ -129,9 +129,9 @@ void FAnimation::Export( CExporterBase& Ex )
 	{
 		TAnimSequence& S = Sequences[iSeq];
 
-		Ex.ExportString( *String::Format( L"Sequences[%d].Name", iSeq ), S.Name );
-		Ex.ExportInteger( *String::Format( L"Sequences[%d].Start", iSeq ), S.Start );
-		Ex.ExportInteger( *String::Format( L"Sequences[%d].Count", iSeq ), S.Count );
+		Ex.ExportString( *String::format( L"Sequences[%d].Name", iSeq ), S.Name );
+		Ex.ExportInteger( *String::format( L"Sequences[%d].Start", iSeq ), S.Start );
+		Ex.ExportInteger( *String::format( L"Sequences[%d].Count", iSeq ), S.Count );
 	}
 }
 

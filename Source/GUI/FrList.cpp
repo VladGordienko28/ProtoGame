@@ -543,7 +543,7 @@ void WList::AlphabetSort()
 {
 	Items.sort([]( const TListItem& A, const TListItem& B )->Bool
 		{
-			return String::CompareText( A.Name, B.Name ) < 0;
+			return String::insensitiveCompare( A.Name, B.Name ) < 0;
 		});
 }
 

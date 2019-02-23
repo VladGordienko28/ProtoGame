@@ -86,7 +86,7 @@ String CFrame::StackTrace()
 
 	while( Walk )
 	{
-		Result += String::Format
+		Result += String::format
 							( 
 								L"<- %s::%s", 
 								*Walk->Script->GetName(),
@@ -702,7 +702,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				String Fmt = ReadString();
 				Char Out[256], *Str = Out;
 
-				for( Int32 i=0; i<Fmt.Len(); i++ )
+				for( Int32 i=0; i<Fmt.len(); i++ )
 				{
 					if( Fmt[i] != L'%' )
 					{
@@ -714,7 +714,7 @@ void CFrame::ProcessCode( TRegister* Result )
 						UInt8 iReg = ReadByte();
 						String Value = Info.Type == TYPE_String ? Regs[iReg].StrValue : Info.ToString( Regs[iReg].Value );
 
-						for( Int32 j=0; j<Value.Len(); j++ )
+						for( Int32 j=0; j<Value.len(); j++ )
 							*Str++ = Value[j];
 						i++;
 					}
@@ -759,7 +759,7 @@ void CFrame::ProcessCode( TRegister* Result )
 			{
 				// String length.
 				UInt8 iReg = ReadByte();
-				*(Int32*)(Regs[iReg].Value) = Regs[iReg].StrValue.Len();
+				*(Int32*)(Regs[iReg].Value) = Regs[iReg].StrValue.len();
 				break;
 			}
 			case CODE_New:
@@ -884,7 +884,7 @@ void CFrame::ProcessCode( TRegister* Result )
 			{
 				// Byte to string cast.
 				UInt8 iReg = ReadByte();
-				Regs[iReg].StrValue = String::FromInteger(*(UInt8*)Regs[iReg].Value);
+				Regs[iReg].StrValue = String::fromInteger(*(UInt8*)Regs[iReg].Value);
 				break;
 			}
 			case CAST_BoolToInteger:
@@ -940,7 +940,7 @@ void CFrame::ProcessCode( TRegister* Result )
 			{
 				// Integer to string cast.
 				UInt8 iReg = ReadByte();
-				Regs[iReg].StrValue = String::FromInteger(*(Int32*)Regs[iReg].Value);
+				Regs[iReg].StrValue = String::fromInteger(*(Int32*)Regs[iReg].Value);
 				break;
 			}
 			case CAST_FloatToByte:
@@ -975,7 +975,7 @@ void CFrame::ProcessCode( TRegister* Result )
 			{
 				// Float to string cast.
 				UInt8 iReg = ReadByte();
-				Regs[iReg].StrValue = String::FromFloat(*(Float*)Regs[iReg].Value);
+				Regs[iReg].StrValue = String::fromFloat(*(Float*)Regs[iReg].Value);
 				break;
 			}
 			case CAST_AngleToInteger:
@@ -996,7 +996,7 @@ void CFrame::ProcessCode( TRegister* Result )
 			{
 				// Angle to string cast.
 				UInt8 iReg = ReadByte();
-				Regs[iReg].StrValue = String::FromFloat((*(math::Angle*)Regs[iReg].Value).toDegs());
+				Regs[iReg].StrValue = String::fromFloat((*(math::Angle*)Regs[iReg].Value).toDegs());
 				break;
 			}
 			case CAST_AngleToVector:
@@ -1018,7 +1018,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				// Color to string cast.
 				UInt8 iReg = ReadByte();
 				TColor Value = *(TColor*)Regs[iReg].Value;
-				Regs[iReg].StrValue = String::Format( L"#%02x%02x%02x", Value.R, Value.G, Value.B );
+				Regs[iReg].StrValue = String::format( L"#%02x%02x%02x", Value.R, Value.G, Value.B );
 				break;
 			}
 			case CAST_StringToByte:
@@ -1026,7 +1026,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				// Color to byte cast.
 				UInt8 iReg = ReadByte();
 				Int32 i;
-				Regs[iReg].StrValue.ToInteger( i, 0 );
+				Regs[iReg].StrValue.toInteger( i, 0 );
 				*(UInt8*)Regs[iReg].Value = i;
 				break;
 			}
@@ -1041,14 +1041,14 @@ void CFrame::ProcessCode( TRegister* Result )
 			{
 				// String to integer cast.
 				UInt8 iReg = ReadByte();
-				Regs[iReg].StrValue.ToInteger( *(Int32*)Regs[iReg].Value, 0 );
+				Regs[iReg].StrValue.toInteger( *(Int32*)Regs[iReg].Value, 0 );
 				break;
 			}
 			case CAST_StringToFloat:
 			{
 				// String to float cast.
 				UInt8 iReg = ReadByte();
-				Regs[iReg].StrValue.ToFloat( *(Float*)Regs[iReg].Value, 0.f );
+				Regs[iReg].StrValue.toFloat( *(Float*)Regs[iReg].Value, 0.f );
 				break;
 			}
 			case CAST_VectorToBool:
@@ -1070,7 +1070,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				// Vector to string cast.
 				UInt8 iReg = ReadByte();
 				math::Vector Value = *(math::Vector*)Regs[iReg].Value;
-				Regs[iReg].StrValue = String::Format( L"[%.2f, %.2f]", Value.x, Value.y );
+				Regs[iReg].StrValue = String::format( L"[%.2f, %.2f]", Value.x, Value.y );
 				break;
 			}
 			case CAST_AabbToBool:
@@ -1086,7 +1086,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				// Aabb to string cast.
 				UInt8 iReg = ReadByte();
 				math::Rect Value = *(math::Rect*)Regs[iReg].Value;
-				Regs[iReg].StrValue = String::Format( L"(%2.f, %2.f, %2.f, %2.f )", Value.min.x, Value.min.y, Value.max.x, Value.max.y );
+				Regs[iReg].StrValue = String::format( L"(%2.f, %2.f, %2.f, %2.f )", Value.min.x, Value.min.y, Value.max.x, Value.max.y );
 				break;
 			}
 			case CAST_ResourceToBool:
@@ -1131,7 +1131,7 @@ void CFrame::ProcessCode( TRegister* Result )
 				// Delegate to string cast.
 				UInt8 iReg = ReadByte();
 				TDelegate Delegate = *(TDelegate*)Regs[iReg].Value;
-				Regs[iReg].StrValue = Delegate ? String::Format(L"%s[%s]", *Delegate.Script->GetName(), *Delegate.Context->GetName()) : L"nowhere";
+				Regs[iReg].StrValue = Delegate ? String::format(L"%s[%s]", *Delegate.Script->GetName(), *Delegate.Context->GetName()) : L"nowhere";
 				break;
 			}
 			case CODE_Context:

@@ -278,7 +278,7 @@ void FBitmap::Import( CImporterBase& Im )
 		Palette.Allocate( Im.ImportInteger( L"NumColors" ) );
 
 		for( Int32 iColor=0; iColor<Palette.Colors.size(); iColor++ )
-			Palette.Colors[iColor]	= Im.ImportColor( *String::Format( L"Colors[%d]", iColor ) );
+			Palette.Colors[iColor]	= Im.ImportColor( *String::format( L"Colors[%d]", iColor ) );
 	}
 }
 
@@ -300,7 +300,7 @@ void FBitmap::Export( CExporterBase& Ex )
 	{
 		Ex.ExportInteger( L"NumColors", Palette.Colors.size() );
 		for( Int32 iColor=0; iColor<Palette.Colors.size(); iColor++ )
-			Ex.ExportColor( *String::Format( L"Colors[%d]", iColor ), Palette.Colors[iColor] );
+			Ex.ExportColor( *String::format( L"Colors[%d]", iColor ), Palette.Colors[iColor] );
 	}
 }
 

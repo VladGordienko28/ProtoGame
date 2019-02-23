@@ -630,8 +630,8 @@ void FFireBitmap::Import( CImporterBase& Im )
 	// Import each spark as two integers.
 	for( Int32 i=0; i<NumSparks; i++ )
 	{
-		*(Int32*)(&Sparks[i].Type)	=	Im.ImportInteger( *String::Format( L"Sparks[%d].A", i ) );
-		*(Int32*)(&Sparks[i].ParamA)	=	Im.ImportInteger( *String::Format( L"Sparks[%d].B", i ) );
+		*(Int32*)(&Sparks[i].Type)	=	Im.ImportInteger( *String::format( L"Sparks[%d].A", i ) );
+		*(Int32*)(&Sparks[i].ParamA)	=	Im.ImportInteger( *String::format( L"Sparks[%d].B", i ) );
 	}
 }		
 
@@ -659,8 +659,8 @@ void FFireBitmap::Export( CExporterBase& Ex )
 	// Export each spark as two integers.
 	for( Int32 i=0; i<NumSparks; i++ )
 	{
-		Ex.ExportInteger( *String::Format( L"Sparks[%d].A", i ), *(Int32*)(&Sparks[i].Type) );
-		Ex.ExportInteger( *String::Format( L"Sparks[%d].B", i ), *(Int32*)(&Sparks[i].ParamA) );
+		Ex.ExportInteger( *String::format( L"Sparks[%d].A", i ), *(Int32*)(&Sparks[i].Type) );
+		Ex.ExportInteger( *String::format( L"Sparks[%d].B", i ), *(Int32*)(&Sparks[i].ParamA) );
 	}
 }
 
@@ -1559,8 +1559,8 @@ void FWaterBitmap::Export( CExporterBase& Ex )
 	// Export each drop as two integers.
 	for( Int32 i=0; i<NumDrops; i++ )
 	{
-		Ex.ExportInteger( *String::Format( L"Drops[%d].A", i ), *(Int32*)(&Drops[i].Type) );
-		Ex.ExportInteger( *String::Format( L"Drops[%d].B", i ), *(Int32*)(&Drops[i].ParamA) );
+		Ex.ExportInteger( *String::format( L"Drops[%d].A", i ), *(Int32*)(&Drops[i].Type) );
+		Ex.ExportInteger( *String::format( L"Drops[%d].B", i ), *(Int32*)(&Drops[i].ParamA) );
 	}
 }
 
@@ -1576,8 +1576,8 @@ void FWaterBitmap::Import( CImporterBase& Im )
 	// Import each drop as two integers.
 	for( Int32 i=0; i<NumDrops; i++ )
 	{
-		*(Int32*)(&Drops[i].Type)		=	Im.ImportInteger( *String::Format( L"Drops[%d].A", i ) );
-		*(Int32*)(&Drops[i].ParamA)	=	Im.ImportInteger( *String::Format( L"Drops[%d].B", i ) );
+		*(Int32*)(&Drops[i].Type)		=	Im.ImportInteger( *String::format( L"Drops[%d].A", i ) );
+		*(Int32*)(&Drops[i].ParamA)	=	Im.ImportInteger( *String::format( L"Drops[%d].B", i ) );
 	}
 }
 
@@ -2119,8 +2119,8 @@ void FTechBitmap::Import( CImporterBase& Im )
 	// Import each spark as two integers.
 	for( Int32 i=0; i<NumPanels; i++ )
 	{
-		*(Int32*)(&Panels[i].Type)	=	Im.ImportInteger( *String::Format( L"Panels[%d].A", i ) );
-		*(Int32*)(&Panels[i].ParamA)	=	Im.ImportInteger( *String::Format( L"Panels[%d].B", i ) );
+		*(Int32*)(&Panels[i].Type)	=	Im.ImportInteger( *String::format( L"Panels[%d].A", i ) );
+		*(Int32*)(&Panels[i].ParamA)	=	Im.ImportInteger( *String::format( L"Panels[%d].B", i ) );
 	}
 }
 
@@ -2136,8 +2136,8 @@ void FTechBitmap::Export( CExporterBase& Ex )
 	// Export each panel as two integers.
 	for( Int32 i=0; i<NumPanels; i++ )
 	{
-		Ex.ExportInteger( *String::Format( L"Panels[%d].A", i ), *(Int32*)(&Panels[i].Type) );
-		Ex.ExportInteger( *String::Format( L"Panels[%d].B", i ), *(Int32*)(&Panels[i].ParamA) );
+		Ex.ExportInteger( *String::format( L"Panels[%d].A", i ), *(Int32*)(&Panels[i].Type) );
+		Ex.ExportInteger( *String::format( L"Panels[%d].B", i ), *(Int32*)(&Panels[i].ParamA) );
 	}
 }
 

@@ -162,12 +162,12 @@ Array<String> CWinPlatform::FindFiles( String Directory, String Wildcard )
 	Array<String> Result;
 	WIN32_FIND_DATA FindData;
 
-	HANDLE hFind = FindFirstFile( *String::Format(L"%s\\%s", *Directory, *Wildcard), &FindData );
+	HANDLE hFind = FindFirstFile( *String::format( L"%s\\%s", *Directory, *Wildcard ), &FindData );
 	if( hFind != INVALID_HANDLE_VALUE )
 	{
 		do
 		{
-			Result.push(String::Format(L"%s\\%s", *Directory, FindData.cFileName));
+			Result.push(String::format( L"%s\\%s", *Directory, FindData.cFileName ) );
 
 		} while( FindNextFile(hFind, &FindData) );
 

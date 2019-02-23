@@ -50,21 +50,21 @@ void FFont::Export( CExporterBase& Ex )
 	EXPORT_INTEGER( Height );
 	EXPORT_INTEGER( NumBitmaps );
 	for( Int32 i=0; i<NumBitmaps; i++ )
-		Ex.ExportObject( *String::Format(L"Bitmaps[%i]", i), Bitmaps[i] );
+		Ex.ExportObject( *String::format(L"Bitmaps[%i]", i), Bitmaps[i] );
 
 	// Remap table.
 	Int32 NumRemap = Remap.size();
 	EXPORT_INTEGER( NumRemap );
 	for( Int32 i=0; i<NumRemap; i++ )
-		Ex.ExportByte( *String::Format(L"Remap[%i]", i), Remap[i] );
+		Ex.ExportByte( *String::format(L"Remap[%i]", i), Remap[i] );
 
 	// All glyphs.
 	Int32 NumGlyphs = Glyphs.size();
 	EXPORT_INTEGER( NumGlyphs );
 	for( Int32 i=0; i<NumGlyphs; i++ )
 	{
-		Ex.ExportInteger( *String::Format( L"Glyphs[%d].A", i ), *(Int32*)(&Glyphs[i].iBitmap) );
-		Ex.ExportInteger( *String::Format( L"Glyphs[%d].B", i ), *(Int32*)(&Glyphs[i].X) );
+		Ex.ExportInteger( *String::format( L"Glyphs[%d].A", i ), *(Int32*)(&Glyphs[i].iBitmap) );
+		Ex.ExportInteger( *String::format( L"Glyphs[%d].B", i ), *(Int32*)(&Glyphs[i].X) );
 	}
 }	
 
@@ -82,14 +82,14 @@ void FFont::Import( CImporterBase& Im )
 	IMPORT_INTEGER( Height );
 	Bitmaps.setSize( NumBitmaps );
 	for( Int32 i=0; i<NumBitmaps; i++ )
-		Bitmaps[i] = (FBitmap*)Im.ImportObject( *String::Format(L"Bitmaps[%i]", i) );
+		Bitmaps[i] = (FBitmap*)Im.ImportObject( *String::format(L"Bitmaps[%i]", i) );
 
 	// Remap table.
 	Int32 NumRemap;
 	IMPORT_INTEGER( NumRemap );
 	Remap.setSize( NumRemap );
 	for( Int32 i=0; i<NumRemap; i++ )
-		Remap[i] = Im.ImportByte( *String::Format(L"Remap[%i]", i) );
+		Remap[i] = Im.ImportByte( *String::format(L"Remap[%i]", i) );
 
 	// All glyphs.
 	Int32 NumGlyphs;
@@ -97,8 +97,8 @@ void FFont::Import( CImporterBase& Im )
 	Glyphs.setSize( NumGlyphs );
 	for( Int32 i=0; i<NumGlyphs; i++ )
 	{
-		*(Int32*)(&Glyphs[i].iBitmap)	=	Im.ImportInteger( *String::Format( L"Glyphs[%d].A", i ) );
-		*(Int32*)(&Glyphs[i].X)		=	Im.ImportInteger( *String::Format( L"Glyphs[%d].B", i ) );
+		*(Int32*)(&Glyphs[i].iBitmap)	=	Im.ImportInteger( *String::format( L"Glyphs[%d].A", i ) );
+		*(Int32*)(&Glyphs[i].X)		=	Im.ImportInteger( *String::format( L"Glyphs[%d].B", i ) );
 	}
 }
 

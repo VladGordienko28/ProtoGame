@@ -20,7 +20,7 @@ WWatchListDialog::WWatchListDialog( WPlayPage* InPage, WWindow* InRoot )
 		Watches()
 {
 	// Initialize own variables.
-	Caption				= String::Format( L"Watch List [%s]", *Page->SourceLevel->GetName() );
+	Caption				= String::format( L"Watch List [%s]", *Page->SourceLevel->GetName() );
 	Padding				= TArea( FORM_HEADER_SIZE+1, 12, 0, 0 );
 	bSizeableW			= false;
 	bSizeableH			= true;
@@ -300,7 +300,7 @@ void WWatchListDialog::UpdateWatches()
 					CProperty*	P	= C->Properties[i];
 					if( P->ArrayDim == 1 )
 						if( !PublicOnlyCheck->bChecked || (P->Flags & PROP_Editable) )
-							Watches.push(TWatch( String::Format( L"$%s.%s", *Extra->GetName(), *P->Name ), P, ((UInt8*)Extra)+P->Offset ));
+							Watches.push(TWatch( String::format( L"$%s.%s", *Extra->GetName(), *P->Name ), P, ((UInt8*)Extra)+P->Offset ));
 				}
 			}
 		}

@@ -311,7 +311,7 @@ public:
 	// CGUIRenderBase utility.
 	void DrawText( TPoint P, String Text, TColor Color, FFont* Font )
 	{
-		DrawText( P, *Text, Text.Len(), Color, Font );
+		DrawText( P, *Text, Text.len(), Color, Font );
 	}
 };
 

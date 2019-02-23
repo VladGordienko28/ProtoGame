@@ -100,7 +100,7 @@ public:
 				goto Undefined;
 
 			iFrame		= -1;
-			Caption		= String::Format( L"Keyframe [%s]", *Entity->GetName() );
+			Caption		= String::format( L"Keyframe [%s]", *Entity->GetName() );
 			UpdateLabel();
 			SetButtonEnabled( true );
 		}
@@ -118,7 +118,7 @@ public:
 	}
 	void UpdateLabel()
 	{
-		FrameLabel->Caption	= String::Format
+		FrameLabel->Caption	= String::format
 										( 
 											L"%02d/%02d", 
 											iFrame+1, 

@@ -372,9 +372,9 @@ void FKeyframeComponent::Import( CImporterBase& Im )
 	Points.setSize( Im.ImportInteger(L"NumPoints") );
 	for( Int32 i=0; i<Points.size(); i++ )
 	{
-		Points[i].Location	= Im.ImportVector( *String::Format( L"Points[%d].Location", i ) );
-		Points[i].Rotation	= Im.ImportAngle( *String::Format( L"Points[%d].Rotation", i ) );
-		Points[i].bCCW		= Im.ImportBool( *String::Format( L"Points[%d].bCCW", i ) );
+		Points[i].Location	= Im.ImportVector( *String::format( L"Points[%d].Location", i ) );
+		Points[i].Rotation	= Im.ImportAngle( *String::format( L"Points[%d].Rotation", i ) );
+		Points[i].bCCW		= Im.ImportBool( *String::format( L"Points[%d].bCCW", i ) );
 	}
 }
 
@@ -389,9 +389,9 @@ void FKeyframeComponent::Export( CExporterBase& Ex )
 	Ex.ExportInteger( L"NumPoints", Points.size() );
 	for( Int32 i=0; i<Points.size(); i++ )
 	{
-		Ex.ExportVector( *String::Format( L"Points[%d].Location", i ), Points[i].Location );
-		Ex.ExportAngle( *String::Format( L"Points[%d].Rotation", i ), Points[i].Rotation );
-		Ex.ExportBool( *String::Format( L"Points[%d].bCCW", i ), Points[i].bCCW );
+		Ex.ExportVector( *String::format( L"Points[%d].Location", i ), Points[i].Location );
+		Ex.ExportAngle( *String::format( L"Points[%d].Rotation", i ), Points[i].Rotation );
+		Ex.ExportBool( *String::format( L"Points[%d].bCCW", i ), Points[i].bCCW );
 	}
 }
 

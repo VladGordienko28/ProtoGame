@@ -250,7 +250,7 @@ void WAnimationPage::EditStartChange( WWidget* Sender )
 	if( SeqsList->ItemIndex != -1 )
 	{
 		TAnimSequence* Seq = (TAnimSequence*)SeqsList->Items[SeqsList->ItemIndex].Data;
-		StartFrmEdit->Text.ToInteger( Seq->Start, 0 );
+		StartFrmEdit->Text.toInteger( Seq->Start, 0 );
 		Seq->Start	= clamp( Seq->Start, 0, 255 );
 	}
 }
@@ -265,7 +265,7 @@ void WAnimationPage::EditCountChange( WWidget* Sender )
 	if( SeqsList->ItemIndex != -1 )
 	{
 		TAnimSequence* Seq = (TAnimSequence*)SeqsList->Items[SeqsList->ItemIndex].Data;
-		CountFrmsEdit->Text.ToInteger( Seq->Count, 0 );
+		CountFrmsEdit->Text.toInteger( Seq->Count, 0 );
 		Seq->Count	= clamp( Seq->Count, 1, 255 );
 	}
 }
@@ -295,8 +295,8 @@ void WAnimationPage::ListSequencesChange( WWidget* Sender )
 		TAnimSequence* Selected = (TAnimSequence*)SeqsList->Items[SeqsList->ItemIndex].Data;
 
 		SeqNameEdit->Text			= Selected->Name;
-		StartFrmEdit->Text			= String::Format( L"%i", Selected->Start );
-		CountFrmsEdit->Text			= String::Format( L"%i", Selected->Count );
+		StartFrmEdit->Text			= String::format( L"%i", Selected->Start );
+		CountFrmsEdit->Text			= String::format( L"%i", Selected->Count );
 
 		SeqNameEdit->bEnabled		= true;
 		StartFrmEdit->bEnabled		= true;
@@ -334,7 +334,7 @@ void WAnimationPage::ButtonNewClick( WWidget* Sender )
 	String SeqName = L"";
 	for( Int32 i=0; ; i++ )
 	{
-		String TestName = String::Format( L"Sequence_%d", i );
+		String TestName = String::format( L"Sequence_%d", i );
 		if( Animation->FindSequence(TestName) == -1 )
 		{
 			SeqName	= TestName;
@@ -475,7 +475,7 @@ void WAnimationPage::OnPaint( CGUIRenderBase* Render )
 								Y + iY*(Animation->FrameH+Animation->SpaceY) * Scale + 3
 							);
 
-			Render->DrawText( Pos, String::Format(L"%i", iTile), GUI_COLOR_TEXT, Root->Font2 );
+			Render->DrawText( Pos, String::format(L"%i", iTile), GUI_COLOR_TEXT, Root->Font2 );
 		}
 	}
 
@@ -483,7 +483,7 @@ void WAnimationPage::OnPaint( CGUIRenderBase* Render )
 	Render->DrawText
 				( 
 					TPoint( Base.X + 10, Base.Y + 38 ), 
-					String::Format( L"x%.2f", Scale ), 
+					String::format( L"x%.2f", Scale ), 
 					COLOR_White, 
 					Root->Font1 
 				);
@@ -654,7 +654,7 @@ void WAnimationPlayer::OnPaint( CGUIRenderBase* Render )
 	Render->DrawText
 				(
 					TPoint( Base.X+4, Base.Y+4 ),
-					String::Format( L"Frame = %i", Frame ),
+					String::format( L"Frame = %i", Frame ),
 					COLOR_White,
 					Root->Font1
 				);

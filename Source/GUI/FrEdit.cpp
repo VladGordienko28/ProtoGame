@@ -62,11 +62,11 @@ Int32 WEdit::CaretToPixel( Int32 C )
 //
 Int32 WEdit::PixelToCaret( Int32 X )
 {
-	return clamp
+	return clamp<Int32>
 			( 
 				math::round((Float)X / (Float)CharSize.Width)+ScrollX, 
 				0, 
-				Text.Len() 
+				Text.len() 
 			);	
 }
 
@@ -77,7 +77,7 @@ Int32 WEdit::PixelToCaret( Int32 X )
 void WEdit::SelectAll()
 {
 	CaretBegin = 0;
-	CaretEnd = Text.Len();	
+	CaretEnd = Text.len();	
 }
 
 
@@ -90,8 +90,8 @@ void WEdit::ClearSelected()
 		return;
 
 	Store();
-	Text = String::Delete( Text, CaretBegin, CaretEnd-CaretBegin );
-	CaretEnd = CaretBegin = clamp( CaretBegin, 0, Text.Len() );
+	Text = String::del( Text, CaretBegin, CaretEnd-CaretBegin );
+	CaretEnd = CaretBegin = clamp<Int32>( CaretBegin, 0, Text.len() );
 	//ScrollX -= 2;
 	ScrollToCaret();
 	OnChange();
@@ -112,9 +112,9 @@ void WEdit::OnDeactivate()
 		{
 			// Fix Int32.
 			Int32 V;
-			if( !Text.ToInteger( V ) )
+			if( !Text.toInteger( V ) )
 			{
-				Text = String::Format( L"%d", OldInt32 );
+				Text = String::format( L"%d", OldInt32 );
 				OnChange();
 			}
 		}
@@ -122,9 +122,9 @@ void WEdit::OnDeactivate()
 		{
 			// Fix float.
 			Float V;
-			if( !Text.ToFloat( V ) )
+			if( !Text.toFloat( V ) )
 			{
-				Text = String::Format( L"%f", OldFloat );
+				Text = String::format( L"%f", OldFloat );
 				OnChange();	
 			}
 		}	
@@ -196,21 +196,21 @@ void WEdit::OnKeyDown( Int32 Key )
 	if( Key == 0x25 )
 	{
 		// <Left> button.
-		CaretBegin = CaretEnd = clamp
+		CaretBegin = CaretEnd = clamp<Int32>
 								( 
 									CaretBegin == CaretEnd ? CaretBegin-1 : CaretBegin,
 									0,
-									Text.Len() 
+									Text.len() 
 								);
 	} 
 	else if( Key == 0x27 )
 	{
 		// <Right> button.
-		CaretBegin = CaretEnd = clamp
+		CaretBegin = CaretEnd = clamp<Int32>
 								( 
 									CaretBegin == CaretEnd ? CaretEnd+1 : CaretEnd,
 									0,
-									Text.Len() 
+									Text.len() 
 								);
 	}
 	else if( Key == 0x2e )
@@ -222,10 +222,10 @@ void WEdit::OnKeyDown( Int32 Key )
 			{
 				ClearSelected();
 			}
-			else if( CaretEnd < Text.Len() )
+			else if( CaretEnd < Text.len() )
 			{
 				Store();
-				Text = String::Delete( Text, CaretEnd, 1 );
+				Text = String::del( Text, CaretEnd, 1 );
 				CaretBegin = CaretEnd = CaretEnd + 0;
 				OnChange();
 			}	
@@ -266,11 +266,11 @@ void WEdit::OnKeyDown( Int32 Key )
 			return;
 
 		// Store rest of the line.
-		String Rest = String::Copy( Text, CaretBegin, Text.Len()-CaretBegin );
-		Text	= String::Delete( Text, CaretBegin, Text.Len()-CaretBegin );
+		String Rest = String::copy( Text, CaretBegin, Text.len()-CaretBegin );
+		Text	= String::del( Text, CaretBegin, Text.len()-CaretBegin );
 
 		// Insert it.
-		for( Int32 i=0; i<ClipTxt.Len(); i++ )
+		for( Int32 i=0; i<ClipTxt.len(); i++ )
 		{
 			Char C[2] = { ClipTxt[i], 0 };
 
@@ -281,7 +281,7 @@ void WEdit::OnKeyDown( Int32 Key )
 			Text += C;
 		}
 
-		CaretEnd	= CaretBegin	= Text.Len();
+		CaretEnd	= CaretBegin	= Text.len();
 
 		// Insert the rest.
 		Text += Rest;
@@ -317,11 +317,11 @@ void WEdit::OnCharType( Char TypedChar )
 		else if( CaretBegin > 0 )
 		{
 			Store();
-			Text = String::Delete( Text, CaretBegin-1, 1 );
+			Text = String::del( Text, CaretBegin-1, 1 );
 			CaretBegin = CaretEnd = CaretBegin - 1;
 			OnChange();
 
-			if( Text.Len() >= Size.Width/CharSize.Width )
+			if( Text.len() >= Size.Width/CharSize.Width )
 				ScrollX--;
 		}	
 	}
@@ -349,7 +349,7 @@ void WEdit::OnCharType( Char TypedChar )
 
 		// Append.
 		Char tmp[2] = { TypedChar, '\0' };
-		Text = String::Copy( Text, 0, CaretBegin ) + tmp + String::Copy( Text, CaretBegin, Text.Len()-CaretBegin );
+		Text = String::copy( Text, 0, CaretBegin ) + tmp + String::copy( Text, CaretBegin, Text.len()-CaretBegin );
 		CaretBegin = CaretEnd = CaretBegin + 1;
 
 		OnChange();
@@ -448,13 +448,13 @@ void WEdit::Store()
 	if( EditType == EDIT_Integer )
 	{
 		Int32 V;
-		if( Text.ToInteger( V, 0 ) )
+		if( Text.toInteger( V, 0 ) )
 			OldInt32	= V;
 	}
 	else if( EditType == EDIT_Float )
 	{
 		Float V;
-		if( Text.ToFloat( V, 0.f ) )
+		if( Text.toFloat( V, 0.f ) )
 			OldFloat = V;
 	}
 }
@@ -635,7 +635,7 @@ void WSpinner::OnPaint( CGUIRenderBase* Render )
 void WSpinner::SetValue( Int32 InValue, Bool bNotify )
 {
 	InValue = clamp( InValue, IMin, IMax );
-	SetText( String::FromInteger(InValue), bNotify );
+	SetText( String::fromInteger(InValue), bNotify );
 }
 
 
@@ -645,7 +645,7 @@ void WSpinner::SetValue( Int32 InValue, Bool bNotify )
 void WSpinner::SetValue( Float InValue, Bool bNotify )
 {
 	InValue = clamp( InValue, FMin, FMax );
-	SetText( String::FromFloat(InValue), bNotify );
+	SetText( String::fromFloat(InValue), bNotify );
 }
 
 
@@ -714,10 +714,10 @@ void WSpinner::Increment( bool bDown, Int32 Multiplier )
 		Float Inc = bDown ? -FScale : FScale;
 		Float Value;
 
-		Text.ToFloat( Value, OldFloat );
+		Text.toFloat( Value, OldFloat );
 		Value	= clamp( Value+Inc*Multiplier, FMin, FMax );
 
-		SetText(String::FromFloat(Value));
+		SetText(String::fromFloat(Value));
 	}
 	else
 	{
@@ -725,10 +725,10 @@ void WSpinner::Increment( bool bDown, Int32 Multiplier )
 		Int32 Inc = bDown ? -IScale : IScale;
 		Int32 Value;
 
-		Text.ToInteger( Value, OldInt32 );
+		Text.toInteger( Value, OldInt32 );
 		Value	= clamp( Value+Inc*Multiplier, IMin, IMax );
 
-		SetText(String::FromInteger(Value));
+		SetText(String::fromInteger(Value));
 	}
 }
 
@@ -753,20 +753,20 @@ void WSpinner::FixValue()
 		// Float spinner.
 		Float Value;
 
-		Text.ToFloat( Value, OldFloat );
+		Text.toFloat( Value, OldFloat );
 		Value	= clamp( Value, FMin, FMax );
 
-		Text = String::FromFloat(Value);
+		Text = String::fromFloat(Value);
 	}
 	else
 	{
 		// Int32 spinner.
 		Int32 Value;
 
-		Text.ToInteger( Value, OldInt32 );
+		Text.toInteger( Value, OldInt32 );
 		Value	= clamp( Value, IMin, IMax );
 
-		Text = String::FromInteger(Value);
+		Text = String::fromInteger(Value);
 	}
 }
 
@@ -791,13 +791,13 @@ void WSpinner::OnAccept()
 Int32 WSpinner::GetIntValue() const
 {
 	Int32 i;
-	Text.ToInteger( i, OldInt32 );
+	Text.toInteger( i, OldInt32 );
 	return clamp( i, IMin, IMax );
 }
 Float WSpinner::GetFloatValue() const
 {
 	Float f;
-	Text.ToFloat( f, OldFloat );
+	Text.toFloat( f, OldFloat );
 	return clamp( f, FMin, FMax );
 }
 

@@ -334,7 +334,7 @@ FObject* CObjectDatabase::CreateObject( CClass* InCls, String InName, FObject* I
 //
 void CObjectDatabase::HashObject( FObject* Obj )
 {
-	Int32 iHash	= 2047 & Obj->GetName().HashCode();
+	Int32 iHash	= 2047 & Obj->GetName().hashCode();
 	Obj->HashNext	= GHash[iHash];
 	GHash[iHash]	= Obj;
 }
@@ -345,7 +345,7 @@ void CObjectDatabase::HashObject( FObject* Obj )
 //
 void CObjectDatabase::UnhashObject( FObject* Obj )
 {
-	Int32 iHash	= 2047 & Obj->GetName().HashCode();
+	Int32 iHash	= 2047 & Obj->GetName().hashCode();
 	FObject** Link	= &GHash[iHash];
 	while( *Link )
 	{
@@ -391,7 +391,7 @@ FObject* CObjectDatabase::FindObject( String InName, CClass* InCls, FObject* InO
 	if( InOwner )
 	{
 		// Search in the InOwner scope.
-		Int32 iHash = 2047 & InName.HashCode();
+		Int32 iHash = 2047 & InName.hashCode();
 		FObject* Obj = GHash[iHash];
 
 		while( Obj )
@@ -408,7 +408,7 @@ FObject* CObjectDatabase::FindObject( String InName, CClass* InCls, FObject* InO
 	else
 	{
 		// Search in the global scope.
-		Int32 iHash = 2047 & InName.HashCode();
+		Int32 iHash = 2047 & InName.hashCode();
 		FObject* Obj = GHash[iHash];
 
 		while( Obj )
@@ -436,7 +436,7 @@ String CObjectDatabase::MakeName( CClass* InClass, FObject* InOwner )
 
 	for( Int32 iUniq = 0;; iUniq++ )
 	{
-		String TestName = String::Format( L"%s%d", *InClass->GetAltName(), iUniq );
+		String TestName = String::format( L"%s%d", *InClass->GetAltName(), iUniq );
 		
 		// Test for unique.
 		if( !FindObject( TestName, InClass, InOwner ) )

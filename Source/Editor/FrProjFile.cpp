@@ -24,7 +24,7 @@ Bool CEditor::CloseProject( Bool bAsk )
 		int S = MessageBox
 		( 
 			hWnd, 
-			*String::Format( L"Save changes to project '%s'?", *Project->ProjName ), 
+			*String::format( L"Save changes to project '%s'?", *Project->ProjName ), 
 			L"Confirm", 
 			MB_YESNOCANCEL | MB_ICONASTERISK | MB_TASKMODAL 
 		);
@@ -96,7 +96,7 @@ Bool CEditor::NewProject()
 		( 
 			L"Editor",
 			L"Project", 
-			*String::Format( L"Res[%d]", iDef ) 
+			*String::format( L"Res[%d]", iDef ) 
 		);
 
 		if( !ResName )
@@ -106,7 +106,7 @@ Bool CEditor::NewProject()
 	}
 
 	// Update caption.
-	SetCaption(String::Format(L"%s - Fluorine Engine", *Project->ProjName));
+	SetCaption(String::format(L"%s - Fluorine Engine", *Project->ProjName));
 
 	// Refresh an editor panels.
 	Array<FObject*> EmptyArr;
@@ -153,7 +153,7 @@ public:
 	void ExportByte( const Char* FieldName, UInt8 Value )
 	{
 		if( Value )
-			Writer.WriteString(String::Format
+			Writer.WriteString(String::format
 			( 
 				L"%s%s = %d", 
 				Whitespace, 
@@ -166,7 +166,7 @@ public:
 	void ExportInteger( const Char* FieldName, Int32 Value )
 	{
 		if( Value )
-			Writer.WriteString(String::Format
+			Writer.WriteString(String::format
 			( 
 				L"%s%s = %d", 
 				Whitespace, 
@@ -179,7 +179,7 @@ public:
 	void ExportFloat( const Char* FieldName, Float Value )
 	{
 		if( Value != 0.f )
-			Writer.WriteString(String::Format
+			Writer.WriteString(String::format
 			( 
 				L"%s%s = %.4f", 
 				Whitespace, 
@@ -192,7 +192,7 @@ public:
 	void ExportString( const Char* FieldName, String Value )
 	{
 		if( Value )
-			Writer.WriteString(String::Format
+			Writer.WriteString(String::format
 			( 
 				L"%s%s = \"%s\"", 
 				Whitespace, 
@@ -205,7 +205,7 @@ public:
 	void ExportBool( const Char* FieldName, Bool Value ) 
 	{
 		if( Value )
-			Writer.WriteString(String::Format
+			Writer.WriteString(String::format
 			( 
 				L"%s%s = %s", 
 				Whitespace, 
@@ -218,7 +218,7 @@ public:
 	void ExportColor( const Char* FieldName, TColor Value ) 
 	{
 		if( Value != COLOR_Black )
-			Writer.WriteString(String::Format
+			Writer.WriteString(String::format
 			( 
 				L"%s%s = #%02x%02x%02x%02x", 
 				Whitespace, 
@@ -231,7 +231,7 @@ public:
 	void ExportVector( const Char* FieldName, math::Vector Value ) 
 	{
 		if( Value.x!=0.f || Value.y!=0.f )
-			Writer.WriteString(String::Format
+			Writer.WriteString(String::format
 			( 
 				L"%s%s = [%.4f; %.4f]", 
 				Whitespace, 
@@ -243,7 +243,7 @@ public:
 	// Rect export.
 	void ExportAABB( const Char* FieldName, math::Rect Value ) 
 	{
-		Writer.WriteString(String::Format
+		Writer.WriteString(String::format
 		( 
 			L"%s%s = (%.4f; %.4f; %.4f; %.4f)", 
 			Whitespace, 
@@ -257,7 +257,7 @@ public:
 	void ExportAngle( const Char* FieldName, math::Angle Value ) 
 	{
 		if( Value )
-			Writer.WriteString(String::Format
+			Writer.WriteString(String::format
 			( 
 				L"%s%s = %d", 
 				Whitespace, 
@@ -270,7 +270,7 @@ public:
 	void ExportObject( const Char* FieldName, FObject* Value ) 
 	{
 		if( Value )
-			Writer.WriteString(String::Format
+			Writer.WriteString(String::format
 			( 
 				L"%s%s = %s::%s", 
 				Whitespace, 
@@ -290,12 +290,12 @@ void SaveResource( FResource* R, String Directory )
 	assert(R != nullptr);
 
 	// Open file.
-	CTextWriter Writer(String::Format( L"%s\\Objects\\%s.fr", *Directory, *R->GetName()));
+	CTextWriter Writer(String::format( L"%s\\Objects\\%s.fr", *Directory, *R->GetName()));
 	CExporter Exporter(Writer);
 	Exporter.SetNestLevel(0);
 
 	// File header.
-	Writer.WriteString( String::Format( L"BEGIN_RESOURCE %s %s", *R->GetClass()->Name, *R->GetName() ) );
+	Writer.WriteString( String::format( L"BEGIN_RESOURCE %s %s", *R->GetClass()->Name, *R->GetName() ) );
 	{
 		if( R->IsA(FLevel::MetaClass) )
 		{
@@ -310,7 +310,7 @@ void SaveResource( FResource* R, String Directory )
 			for( Int32 iEntity=0; iEntity<Level->Entities.size(); iEntity++ )
 			{
 				FEntity* Entity = Level->Entities[iEntity];
-				Writer.WriteString( String::Format
+				Writer.WriteString( String::format
 				( 
 					L"    BEGIN_ENTITY %s %s", 
 					*Entity->Script->GetName(), 
@@ -324,7 +324,7 @@ void SaveResource( FResource* R, String Directory )
 					Exporter.SetNestLevel(3);
 
 					// Base
-					Writer.WriteString( String::Format
+					Writer.WriteString( String::format
 					( 
 						L"        BEGIN_COMPONENT %s %s", 
 						*Entity->Base->GetClass()->Name, 
@@ -337,7 +337,7 @@ void SaveResource( FResource* R, String Directory )
 					for( Int32 iCom=0; iCom<Entity->Components.size(); iCom++ )
 					{
 						FComponent* Component = Entity->Components[iCom];
-						Writer.WriteString( String::Format
+						Writer.WriteString( String::format
 						( 
 							L"        BEGIN_COMPONENT %s %s", 
 							*Component->GetClass()->Name, 
@@ -352,7 +352,7 @@ void SaveResource( FResource* R, String Directory )
 				assert(!Entity->Script->IsStatic());
 				if( Entity->Script->IsScriptable() )
 				{
-					Writer.WriteString( String::Format( L"        BEGIN_INSTANCE" ) );
+					Writer.WriteString( String::format( L"        BEGIN_INSTANCE" ) );
 						Entity->InstanceBuffer->ExportValues( Exporter );
 					Writer.WriteString( L"        END_INSTANCE" );
 				}
@@ -376,7 +376,7 @@ void SaveResource( FResource* R, String Directory )
 				if( !Script->IsStatic() )
 				{
 					// Base
-					Writer.WriteString( String::Format
+					Writer.WriteString( String::format
 					( 
 						L"    BEGIN_COMPONENT %s %s", 
 						*Script->Base->GetClass()->Name, 
@@ -389,7 +389,7 @@ void SaveResource( FResource* R, String Directory )
 					for( Int32 iCom=0; iCom<Script->Components.size(); iCom++ )
 					{
 						FComponent* Component = Script->Components[iCom];
-						Writer.WriteString( String::Format
+						Writer.WriteString( String::format
 						( 
 							L"    BEGIN_COMPONENT %s %s", 
 							*Component->GetClass()->Name, 
@@ -404,7 +404,7 @@ void SaveResource( FResource* R, String Directory )
 			// Instance buffer.
 			if( Script->IsScriptable() && !Script->IsStatic() )
 			{
-				Writer.WriteString( String::Format( L"    BEGIN_INSTANCE" ) );
+				Writer.WriteString( String::format( L"    BEGIN_INSTANCE" ) );
 				Script->InstanceBuffer->ExportValues( Exporter );
 				Writer.WriteString( L"    END_INSTANCE" );
 			}
@@ -428,7 +428,7 @@ void SaveResource( FResource* R, String Directory )
 			{
 				FMaterialLayer* Layer = Material->Layers[iLayer];
 
-				Writer.WriteString( String::Format
+				Writer.WriteString( String::format
 				( 
 					L"    BEGIN_LAYER %s %s", 
 					*Layer->GetClass()->Name, 
@@ -503,7 +503,7 @@ Bool CEditor::SaveProject()
 				// Save to file.
 				if( Obj->IsA(FScript::MetaClass) )
 				{
-					ProjFile.WriteString(String::Format( L"    %s.fr", *Obj->GetName() ));
+					ProjFile.WriteString(String::format( L"    %s.fr", *Obj->GetName() ));
 					SaveResource( (FResource*)Obj, Directory ); 
 				}
 			}
@@ -519,7 +519,7 @@ Bool CEditor::SaveProject()
 				// Save to file.
 				if( Obj->IsA(FBitmap::MetaClass) )
 				{
-					ProjFile.WriteString(String::Format( L"    %s.fr", *Obj->GetName() ));
+					ProjFile.WriteString(String::format( L"    %s.fr", *Obj->GetName() ));
 					SaveResource( (FResource*)Obj, Directory ); 
 				}
 			}
@@ -540,7 +540,7 @@ Bool CEditor::SaveProject()
 						!(Obj->IsA(FLevel::MetaClass) && ((FLevel*)Obj)->IsTemporal()) 
 					)
 				{
-					ProjFile.WriteString(String::Format( L"    %s.fr", *Obj->GetName() ));
+					ProjFile.WriteString(String::format( L"    %s.fr", *Obj->GetName() ));
 					SaveResource( (FResource*)Obj, Directory ); 
 				}
 			}
@@ -561,7 +561,7 @@ Bool CEditor::SaveProject()
 				Res	= Page->GetResource();
 
 			if( Res )
-				ProjFile.WriteString(String::Format( L"    %s", *Res->GetName() ) );
+				ProjFile.WriteString(String::format( L"    %s", *Res->GetName() ) );
 		}
 	}
 	ProjFile.WriteString( L"END_PAGES" );
@@ -591,7 +591,7 @@ Bool CEditor::SaveAsProject()
 			return false;
 
 	// Append extension, if it missing.
-	if( String::Pos( L".fluproj", String::LowerCase(FileName) ) == -1 )
+	if( String::pos( L".fluproj", String::lowerCase(FileName) ) == -1 )
 		FileName += L".fluproj";
 
 	// Whether override?
@@ -602,7 +602,7 @@ Bool CEditor::SaveAsProject()
 			int	S	= MessageBox
 			(
 				hWnd,
-				*String::Format( L"%s already exists.\nOverride?", *FileName ), 
+				*String::format( L"%s already exists.\nOverride?", *FileName ), 
 				L"Saving", 
 				MB_YESNO | MB_ICONWARNING | MB_TASKMODAL 
 			);
@@ -621,7 +621,7 @@ Bool CEditor::SaveAsProject()
 		return false;
 
 	// Update caption.
-	SetCaption(String::Format(L"%s - Fluorine Engine", *Project->ProjName));
+	SetCaption(String::format(L"%s - Fluorine Engine", *Project->ProjName));
 
 	return true;
 }
@@ -720,10 +720,10 @@ public:
 	TColor ToColor()
 	{
 		UInt8 R, G, B, A;
-		R = FromHex(Value[1])*16 + FromHex(Value[2]);
-		G = FromHex(Value[3])*16 + FromHex(Value[4]);
-		B = FromHex(Value[5])*16 + FromHex(Value[6]);
-		A = FromHex(Value[7])*16 + FromHex(Value[8]);
+		R = cstr::fromHex(Value[1])*16 + cstr::fromHex(Value[2]);
+		G = cstr::fromHex(Value[3])*16 + cstr::fromHex(Value[4]);
+		B = cstr::fromHex(Value[5])*16 + cstr::fromHex(Value[6]);
+		A = cstr::fromHex(Value[7])*16 + cstr::fromHex(Value[8]);
 		return TColor( R, G, B, A );
 	}
 
@@ -799,12 +799,12 @@ public:
 //
 String ParseWord( String Source, Int32& iFirst )
 {
-	while( Source[iFirst]==' ' && iFirst<Source.Len() )
+	while( Source[iFirst]==' ' && iFirst<Source.len() )
 		++iFirst;
 
 	Char Buffer[64] = {};
 	Char* Walk = Buffer;
-	while( iFirst<Source.Len() && Source[iFirst]!=' ' )
+	while( iFirst<Source.len() && Source[iFirst]!=' ' )
 	{
 		*Walk = Source[iFirst];
 		Walk++;
@@ -877,7 +877,7 @@ struct TLoadObject
 				return &Props[i];
 
 		if( bMandatory )	
-			throw String::Format( L"Property '%s' not found", *PropName );
+			throw String::format( L"Property '%s' not found", *PropName );
 
 		return nullptr;
 	}
@@ -891,26 +891,26 @@ struct TLoadObject
 		Int32 iPos = 0;
 		Char *NameWalk = Prop.Name, *ValueWalk = Prop.Value;
 
-		while( Line[iPos]==' ' && iPos<Line.Len() )
+		while( Line[iPos]==' ' && iPos<Line.len() )
 			++iPos;
 
-		while( Line[iPos]!=' ' && iPos<Line.Len() )
+		while( Line[iPos]!=' ' && iPos<Line.len() )
 		{
 			*NameWalk = Line[iPos];
 			NameWalk++;
 			iPos++;
 		}
 
-		while( Line[iPos]==' ' && iPos<Line.Len() )
+		while( Line[iPos]==' ' && iPos<Line.len() )
 			++iPos;
 
 		if( Line[iPos++] != '=' )
 			throw String(L"Missing assignment");
 
-		while( Line[iPos]==' ' && iPos<Line.Len() )
+		while( Line[iPos]==' ' && iPos<Line.len() )
 			++iPos;
 
-		while( iPos<Line.Len() )
+		while( iPos<Line.len() )
 		{
 			*ValueWalk = Line[iPos];
 			ValueWalk++;
@@ -947,7 +947,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 		Int32 iPos = 0;
 
 		if( ParseWord( Header, iPos ) != L"BEGIN_RESOURCE" )
-			throw String::Format( L"Bad resource file: '%s'", *FileName );
+			throw String::format( L"Bad resource file: '%s'", *FileName );
 
 		ObjClass = ParseWord( Header, iPos );
 		ObjName	= ParseWord( Header, iPos );
@@ -957,7 +957,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 		Resource->Class		= CClassDatabase::StaticFindClass( *ObjClass );
 		Resource->Name		= ObjName;
 		if( !Resource->Class )
-			throw String::Format( L"Class '%s' not found", *ObjClass );
+			throw String::format( L"Class '%s' not found", *ObjClass );
 	}
 
 	// Read resource data.
@@ -970,7 +970,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 		{
 			String Line = Reader.ReadLine();
 
-			if( String::Pos( L"END_RESOURCE", Line ) != -1 )
+			if( String::pos( L"END_RESOURCE", Line ) != -1 )
 			{
 				// End of text.
 				break;
@@ -999,9 +999,9 @@ TLoadObject* LoadResource( String FileName, String Directory )
 			// Import bitmap from the file.
 			String BitFile, FullFn;
 			BitFile	= Resource->FindProperty( L"FileName", true )->ToString();
-			FullFn	= String::Format( L"%s\\Bitmaps\\%s", *Directory, *BitFile );
+			FullFn	= String::format( L"%s\\Bitmaps\\%s", *Directory, *BitFile );
 			if( !GPlat->FileExists(FullFn) ) 
-				throw String::Format( L"File '%s' not found", *FullFn );
+				throw String::format( L"File '%s' not found", *FullFn );
 			Resource->Object	= GEditor->ImportResource( FullFn );
 		}
 	}
@@ -1014,7 +1014,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 		{
 			String Line = Reader.ReadLine();
 
-			if( String::Pos( L"END_RESOURCE", Line ) != -1 )
+			if( String::pos( L"END_RESOURCE", Line ) != -1 )
 			{
 				// End of text.
 				break;
@@ -1030,9 +1030,9 @@ TLoadObject* LoadResource( String FileName, String Directory )
 			// Import sound from file.
 			String SndFile, FullFn;
 			SndFile = Resource->FindProperty( L"FileName", true )->ToString();
-			FullFn	= String::Format( L"%s\\Sounds\\%s", *Directory, *SndFile );
+			FullFn	= String::format( L"%s\\Sounds\\%s", *Directory, *SndFile );
 			if( !GPlat->FileExists(FullFn) ) 
-				throw String::Format( L"File '%s' not found", *FullFn );
+				throw String::format( L"File '%s' not found", *FullFn );
 			Resource->Object	= GEditor->ImportResource( FullFn );
 		}
 	}
@@ -1045,12 +1045,12 @@ TLoadObject* LoadResource( String FileName, String Directory )
 		{
 			String Line = Reader.ReadLine();
 
-			if( String::Pos( L"END_RESOURCE", Line ) != -1 )
+			if( String::pos( L"END_RESOURCE", Line ) != -1 )
 			{
 				// End of text.
 				break;
 			}
-			else if( String::Pos( L"BEGIN_COMPONENT", Line ) != -1 )
+			else if( String::pos( L"BEGIN_COMPONENT", Line ) != -1 )
 			{
 				// Read component.
 				TLoadObject* Component = new TLoadObject();
@@ -1063,7 +1063,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 					Int32 iPos = 0;
 
 					if( ParseWord( Header, iPos ) != L"BEGIN_COMPONENT" )
-						throw String::Format( L"Bad resource file: '%s'", *FileName );
+						throw String::format( L"Bad resource file: '%s'", *FileName );
 
 					ObjClass = ParseWord( Header, iPos );
 					ObjName	= ParseWord( Header, iPos );
@@ -1073,13 +1073,13 @@ TLoadObject* LoadResource( String FileName, String Directory )
 					Component->Class	= CClassDatabase::StaticFindClass( *ObjClass );
 					Component->Name		= ObjName;
 					if( !Component->Class )
-						throw String::Format( L"Class '%s' not found", *ObjClass );
+						throw String::format( L"Class '%s' not found", *ObjClass );
 				}
 				for( ; ; )
 				{
 					String Line = Reader.ReadLine();
 
-					if( String::Pos( L"END_COMPONENT", Line ) != -1 )
+					if( String::pos( L"END_COMPONENT", Line ) != -1 )
 					{
 						// End of text.
 						break;
@@ -1091,20 +1091,20 @@ TLoadObject* LoadResource( String FileName, String Directory )
 					}
 				}
 			}
-			else if( String::Pos( L"BEGIN_INSTANCE", Line ) != -1 )
+			else if( String::pos( L"BEGIN_INSTANCE", Line ) != -1 )
 			{
 				// Instance buffer.
 				TLoadObject* Instance = new TLoadObject();
 				Resource->Nodes.push( Instance );
 				Instance->Type	= LOB_Instance;
 				if( !(Resource->FindProperty( L"ScriptFlags" )? Resource->FindProperty( L"ScriptFlags" )->ToInteger() & SCRIPT_Scriptable : false) )
-					throw String::Format( L"Script '%s' has no instance buffer", *Resource->Name );
+					throw String::format( L"Script '%s' has no instance buffer", *Resource->Name );
 
 				for( ; ; )
 				{
 					String Line = Reader.ReadLine();
 
-					if( String::Pos( L"END_INSTANCE", Line ) != -1 )
+					if( String::pos( L"END_INSTANCE", Line ) != -1 )
 					{
 						// End of text.
 						break;
@@ -1133,9 +1133,9 @@ TLoadObject* LoadResource( String FileName, String Directory )
 		// Load script text.
 		if( Script->IsScriptable() )
 		{
-			String FullFileName = String::Format( L"%s\\Scripts\\%s", *Directory, *Script->FileName );
+			String FullFileName = String::format( L"%s\\Scripts\\%s", *Directory, *Script->FileName );
 			if( !GPlat->FileExists(FullFileName) )
-				throw String::Format( L"File '%s' not found", *FullFileName );
+				throw String::format( L"File '%s' not found", *FullFileName );
 			CTextReader TextReader(FullFileName);
 			while( !TextReader.IsEOF() )
 				Script->Text.push( TextReader.ReadLine() );
@@ -1171,12 +1171,12 @@ TLoadObject* LoadResource( String FileName, String Directory )
 		{
 			String Line = Reader.ReadLine();
 
-			if( String::Pos( L"END_RESOURCE", Line ) != -1 )
+			if( String::pos( L"END_RESOURCE", Line ) != -1 )
 			{
 				// End of text.
 				break;
 			}
-			else if( String::Pos( L"BEGIN_LAYER", Line ) != -1 )
+			else if( String::pos( L"BEGIN_LAYER", Line ) != -1 )
 			{
 				// Material layer.
 				TLoadObject* Layer = new TLoadObject();
@@ -1190,7 +1190,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 					Int32 iPos = 0;
 
 					if( ParseWord( Header, iPos ) != L"BEGIN_LAYER" )
-						throw String::Format( L"Bad resource file: '%s'", *FileName );
+						throw String::format( L"Bad resource file: '%s'", *FileName );
 
 					ObjClass = ParseWord( Header, iPos );
 					ObjName	= ParseWord( Header, iPos );
@@ -1199,7 +1199,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 					Layer->Class	= CClassDatabase::StaticFindClass( *ObjClass );
 					Layer->Name		= ObjName;
 					if( !Layer->Class )
-						throw String::Format( L"Class '%s' not found", *ObjClass );
+						throw String::format( L"Class '%s' not found", *ObjClass );
 
 				}
 
@@ -1207,7 +1207,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 				{
 					String Line = Reader.ReadLine();
 
-					if( String::Pos( L"END_LAYER", Line ) != -1 )
+					if( String::pos( L"END_LAYER", Line ) != -1 )
 					{
 						// End of text.
 						break;
@@ -1250,12 +1250,12 @@ TLoadObject* LoadResource( String FileName, String Directory )
 		{
 			String Line = Reader.ReadLine();
 
-			if( String::Pos( L"END_RESOURCE", Line ) != -1 )
+			if( String::pos( L"END_RESOURCE", Line ) != -1 )
 			{
 				// End of text.
 				break;
 			}
-			else if( String::Pos( L"BEGIN_ENTITY", Line ) != -1 )
+			else if( String::pos( L"BEGIN_ENTITY", Line ) != -1 )
 			{
 				// Read entity.
 				TLoadObject* Entity = new TLoadObject();
@@ -1268,7 +1268,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 					Int32 iPos = 0;
 
 					if( ParseWord( Header, iPos ) != L"BEGIN_ENTITY" )
-						throw String::Format( L"Bad resource file: '%s'", *FileName );
+						throw String::format( L"Bad resource file: '%s'", *FileName );
 
 					ObjScript	= ParseWord( Header, iPos );
 					ObjName		= ParseWord( Header, iPos );
@@ -1279,18 +1279,18 @@ TLoadObject* LoadResource( String FileName, String Directory )
 					Entity->Name		= ObjName;
 					Entity->Script		= (FScript*)GObjectDatabase->FindObject( ObjScript, FScript::MetaClass, nullptr );
 					if( !Entity->Script )
-						throw String::Format( L"Script '%s' not found", *ObjScript );
+						throw String::format( L"Script '%s' not found", *ObjScript );
 				}
 				for( ; ; )
 				{
 					String Line = Reader.ReadLine();
 
-					if( String::Pos( L"END_ENTITY", Line ) != -1 )
+					if( String::pos( L"END_ENTITY", Line ) != -1 )
 					{
 						// End of text.
 						break;
 					}
-					else if( String::Pos( L"BEGIN_COMPONENT", Line ) != -1 )
+					else if( String::pos( L"BEGIN_COMPONENT", Line ) != -1 )
 					{
 						// Read component.
 						TLoadObject* Component = new TLoadObject();
@@ -1303,7 +1303,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 							Int32 iPos = 0;
 
 							if( ParseWord( Header, iPos ) != L"BEGIN_COMPONENT" )
-								throw String::Format( L"Bad resource file: '%s'", *FileName );
+								throw String::format( L"Bad resource file: '%s'", *FileName );
 
 							ObjClass = ParseWord( Header, iPos );
 							ObjName	= ParseWord( Header, iPos );
@@ -1313,13 +1313,13 @@ TLoadObject* LoadResource( String FileName, String Directory )
 							Component->Class	= CClassDatabase::StaticFindClass( *ObjClass );
 							Component->Name		= ObjName;
 							if( !Component->Class )
-								throw String::Format( L"Class '%s' not found", *ObjClass );
+								throw String::format( L"Class '%s' not found", *ObjClass );
 						}
 						for( ; ; )
 						{
 							String Line = Reader.ReadLine();
 
-							if( String::Pos( L"END_COMPONENT", Line ) != -1 )
+							if( String::pos( L"END_COMPONENT", Line ) != -1 )
 							{
 								// End of text.
 								break;
@@ -1331,20 +1331,20 @@ TLoadObject* LoadResource( String FileName, String Directory )
 							}
 						}
 					}
-					else if( String::Pos( L"BEGIN_INSTANCE", Line ) != -1 )
+					else if( String::pos( L"BEGIN_INSTANCE", Line ) != -1 )
 					{
 						// Instance buffer.
 						TLoadObject* Instance = new TLoadObject();
 						Entity->Nodes.push( Instance );
 						Instance->Type	= LOB_Instance;
 						if( !Entity->Script->IsScriptable() || Entity->Script->IsStatic() )
-							throw String::Format( L"Script '%s' has no instance buffer", *Resource->Name );
+							throw String::format( L"Script '%s' has no instance buffer", *Resource->Name );
 
 						for( ; ; )
 						{
 							String Line = Reader.ReadLine();
 
-							if( String::Pos( L"END_INSTANCE", Line ) != -1 )
+							if( String::pos( L"END_INSTANCE", Line ) != -1 )
 							{
 								// End of text.
 								break;
@@ -1408,7 +1408,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 		{
 			String Line = Reader.ReadLine();
 
-			if( String::Pos( L"END_RESOURCE", Line ) != -1 )
+			if( String::pos( L"END_RESOURCE", Line ) != -1 )
 			{
 				// End of text.
 				break;
@@ -1599,12 +1599,12 @@ Bool CEditor::OpenProjectFrom( String FileName )
 		{	
 			// Delete leading whitespace.
 			//!!Find other way!
-			while( ObjName.Len()>0 && ObjName[0]==' ' )
-				ObjName = String::Delete( ObjName, 0, 1 );
+			while( ObjName.len()>0 && ObjName[0]==' ' )
+				ObjName = String::del( ObjName, 0, 1 );
 
 			if( ObjName )
 			{
-				TLoadObject* Obj = LoadResource( String::Format( L"%s\\Objects\\%s", *Directory, *ObjName ), Directory );
+				TLoadObject* Obj = LoadResource( String::format( L"%s\\Objects\\%s", *Directory, *ObjName ), Directory );
 				ResObjs.push( Obj );
 			}
 		}
@@ -1639,7 +1639,7 @@ Bool CEditor::OpenProjectFrom( String FileName )
 		// Failure with message.
 		warn( L"Failed load project '%s' with message: '%s'", *ProjName, *Message );
 
-		MessageBox( 0, *String::Format( L"Failed load project '%s' with message: '%s'", *ProjName, *Message ), 
+		MessageBox( 0, *String::format( L"Failed load project '%s' with message: '%s'", *ProjName, *Message ), 
 			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
 
 		CloseProject( false );
@@ -1650,7 +1650,7 @@ Bool CEditor::OpenProjectFrom( String FileName )
 		// Unhandled failure.
 		warn( L"Failed load project '%s'.", *ProjName );
 
-		MessageBox( 0, *String::Format( L"Failed load project '%s'", *ProjName ), 
+		MessageBox( 0, *String::format( L"Failed load project '%s'", *ProjName ), 
 			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
 
 		CloseProject( false );
@@ -1684,8 +1684,8 @@ Bool CEditor::OpenProjectFrom( String FileName )
 		{
 			// Delete leading whitespace.
 			//!!Find other way!
-			while( PageName.Len()>0 && PageName[0]==' ' )
-				PageName = String::Delete( PageName, 0, 1 );
+			while( PageName.len()>0 && PageName[0]==' ' )
+				PageName = String::del( PageName, 0, 1 );
 
 			FResource* Res = nullptr;
 			if( PageName && (Res = (FResource*)Project->FindObject( PageName, FResource::MetaClass )) )
@@ -1699,8 +1699,8 @@ Bool CEditor::OpenProjectFrom( String FileName )
 	{
 		Int32 i;
 		for( i=0; i<5; i++ )
-			if(	String::UpperCase(Config->ReadString( L"Editor", L"Recent", *String::Format(L"Recent[%i]", i), L"" )) == 
-				String::UpperCase(FileName) )
+			if(	String::upperCase(Config->ReadString( L"Editor", L"Recent", *String::format(L"Recent[%i]", i), L"" )) == 
+				String::upperCase(FileName) )
 			{
 				// Yes, it found in list.
 				break;
@@ -1712,8 +1712,8 @@ Bool CEditor::OpenProjectFrom( String FileName )
 			// So shift list and add new one.
 			for( Int32 j=4; j>0; j-- )
 			{
-				String Prev	= Config->ReadString( L"Editor", L"Recent", *String::Format(L"Recent[%i]", j-1), L"" );
-				Config->WriteString( L"Editor", L"Recent", *String::Format(L"Recent[%i]", j), Prev );
+				String Prev	= Config->ReadString( L"Editor", L"Recent", *String::format(L"Recent[%i]", j-1), L"" );
+				Config->WriteString( L"Editor", L"Recent", *String::format(L"Recent[%i]", j), Prev );
 			}
 
 			// Add new.
@@ -1723,7 +1723,7 @@ Bool CEditor::OpenProjectFrom( String FileName )
 
 	// Update caption.
 	if( Project )
-		SetCaption(String::Format(L"%s - Fluorine Engine", *Project->ProjName));
+		SetCaption(String::format(L"%s - Fluorine Engine", *Project->ProjName));
 
 	return Result;
 }

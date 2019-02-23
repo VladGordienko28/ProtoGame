@@ -380,7 +380,7 @@ void FModelComponent::Import( CImporterBase& Im )
 
 	Map.setSize( MapXSize*MapYSize );
 	for( Int32 iTile=0; iTile<Map.size(); iTile++ )
-		Map[iTile] = Im.ImportInteger( *String::Format( L"Map[%i]", iTile ) );
+		Map[iTile] = Im.ImportInteger( *String::format( L"Map[%i]", iTile ) );
 }
 
 
@@ -395,7 +395,7 @@ void FModelComponent::Export( CExporterBase& Ex )
 	// it's safe about 70% of memory.
 	for( Int32 iTile=0; iTile<Map.size(); iTile++ )
 		if( Map[iTile] )
-			Ex.ExportInteger( *String::Format( L"Map[%i]", iTile ), Map[iTile] );
+			Ex.ExportInteger( *String::format( L"Map[%i]", iTile ), Map[iTile] );
 }
 
 

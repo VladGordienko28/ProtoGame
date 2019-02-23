@@ -69,7 +69,7 @@ namespace envi
 
 		String toString() const
 		{
-			return String::Format( L"%02d:%02d:%02d %s", 
+			return String::format( L"%02d:%02d:%02d %s", 
 				getHour(), getMinute(), getSecond(), getPeriod() == EDayPeriod::Am ? L"Am" : L"Pm" );
 		}
 

@@ -189,7 +189,7 @@ void FPainterComponent::nativeTextOut( CFrame& Frame )
 	Float	S	= POP_FLOAT;
 
 	if( Canvas && Font )
-		Canvas->DrawText( *T, T.Len(), Font, Color, P, math::Vector( S, S ) );
+		Canvas->DrawText( *T, T.len(), Font, Color, P, math::Vector( S, S ) );
 }
 
 

@@ -74,7 +74,7 @@ void CConsole::CharType( Char C )
 	{
 		// <Backspace> - erase last char.
 		if( Command )
-			Command	= String::Delete( Command, Command.Len()-1, 1 );
+			Command	= String::del( Command, Command.len()-1, 1 );
 		return;
 	}
 
@@ -83,9 +83,9 @@ void CConsole::CharType( Char C )
 	// letters, digits, symbols.
 	static const Char Symbols[] = L"~!@#$ %^&*()_+{}[]/-;.,:=";
 	if	(
-			!IsLetter(C) &&
-			!IsDigit(C) &&
-			!wcschr( Symbols, C )
+			!cstr::isLetter( C ) &&
+			!cstr::isDigit( C ) &&
+			!cstr::findChar( Symbols, C )
 		)
 		return;
 

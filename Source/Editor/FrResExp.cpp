@@ -16,7 +16,7 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 {
 	assert(Bitmap && Bitmap->IsValidBlock());
 
-	if( String::Pos( L".bmp", String::LowerCase(Bitmap->FileName) ) != -1 )
+	if( String::pos( L".bmp", String::lowerCase(Bitmap->FileName) ) != -1 )
 	{
 		//
 		// Export bmp file.
@@ -79,7 +79,7 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 			}
 		}
 	}
-	else if( String::Pos( L".tga", String::LowerCase(Bitmap->FileName) ) != -1 )
+	else if( String::pos( L".tga", String::lowerCase(Bitmap->FileName) ) != -1 )
 	{
 		//
 		// Export tga file.
@@ -131,7 +131,7 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 			}
 		}
 	}
-	if( String::Pos( L".png", String::LowerCase(Bitmap->FileName) ) != -1 )
+	if( String::pos( L".png", String::lowerCase(Bitmap->FileName) ) != -1 )
 	{
 		//
 		// Export png file.
@@ -161,7 +161,7 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 		);
 		if( PngError )
 		{
-			MessageBox( 0, *String::Format( L"Png: Failed save png. %u: %hs", PngError, lodepng_error_text(PngError) ), 
+			MessageBox( 0, *String::format( L"Png: Failed save png. %u: %hs", PngError, lodepng_error_text(PngError) ), 
 				L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
 		}
 
@@ -253,7 +253,7 @@ Bool CEditor::ExportResource( FResource* Res, String Directory, Bool bOverride )
 	else
 	{
 		// Unsupported type.
-		MessageBox( 0, *String::Format( L"Failed save '%s'. Unsupported resource type '%s'", *Res->GetName(), *Res->GetClass()->Name ), 
+		MessageBox( 0, *String::format( L"Failed save '%s'. Unsupported resource type '%s'", *Res->GetName(), *Res->GetClass()->Name ), 
 			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
 
 		return false;

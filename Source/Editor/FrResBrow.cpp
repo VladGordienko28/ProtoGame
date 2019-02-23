@@ -215,7 +215,7 @@ private:
 	}
 	void ButtonOkClick( WWidget* Sender )
 	{
-		if( NameEdit->Text.Len() == 0 )
+		if( NameEdit->Text.len() == 0 )
 		{
 			Root->ShowMessage
 			(
@@ -229,7 +229,7 @@ private:
 		{
 			Root->ShowMessage
 			(
-				String::Format( L"Object '%s' already exists", *NameEdit->Text ),
+				String::format( L"Object '%s' already exists", *NameEdit->Text ),
 				L"Level Constructor",
 				true
 			);	
@@ -478,7 +478,7 @@ void WLevelsPage::ButtonDeleteLevelClick( WWidget* Sender )
 
 		Root->AskYesNo
 		(
-			*String::Format( L"Do you really want to destroy level '%s'?", *Level->GetName() ),
+			*String::format( L"Do you really want to destroy level '%s'?", *Level->GetName() ),
 			L"Project Explorer",
 			true,
 			WIDGET_EVENT(WLevelsPage::MessageDeleteYesClick)
@@ -623,8 +623,8 @@ private:
 				}
 			Root->ShowMessage
 			(
-				String::Format( L"%i entities being to '%s' script.", NumEntity, *Script->GetName() ),
-				String::Format( L"Scipt '%s' Info: ", *Script->GetName() ),
+				String::format( L"%i entities being to '%s' script.", NumEntity, *Script->GetName() ),
+				String::format( L"Scipt '%s' Info: ", *Script->GetName() ),
 				true
 			);
 		}
@@ -942,7 +942,7 @@ void WResourcePane::Refresh()
 	}
 
 	// Precompute.
-	String	NameFil	= String::UpperCase( Page->NameFilter->Text );
+	String	NameFil	= String::upperCase( Page->NameFilter->Text );
 	Icons.empty();
 
 
@@ -959,7 +959,7 @@ void WResourcePane::Refresh()
 			// Apply name filter.
 			if( NameFil )
 			{						
-				if( String::Pos(NameFil, String::UpperCase(Res->GetName())) == -1 )
+				if( String::pos(NameFil, String::upperCase(Res->GetName())) == -1 )
 					continue;
 			}
 
@@ -1185,7 +1185,7 @@ void WResourcePane::Refresh()
 	// Alphabet sorting.
 	Icons.sort([]( const TIcon& A, const TIcon& B )->Bool
 	{
-		return String::CompareText
+		return String::insensitiveCompare
 		( 
 			A.Resource->GetName(), 
 			B.Resource->GetName() 
@@ -1547,7 +1547,7 @@ public:
 	}
 	void ButtonOkClick( WWidget* Sender )
 	{
-		if( NameEdit->Text.Len() == 0 )
+		if( NameEdit->Text.len() == 0 )
 		{
 			Root->ShowMessage( L"Please specify the name of resource", L"Importer", true );
 			return;
@@ -1556,7 +1556,7 @@ public:
 		{
 			Root->ShowMessage
 			(
-				String::Format( L"Object '%s' already exists", *NameEdit->Text ),
+				String::format( L"Object '%s' already exists", *NameEdit->Text ),
 				L"Resource Importer",
 				true
 			);
@@ -1672,8 +1672,8 @@ public:
 
 		for( Int32 i=5; i<=8; i++ )
 		{
-			WidthCombo->AddItem( String::Format( L"%d", 1 << i ), nullptr );
-			HeightCombo->AddItem( String::Format( L"%d", 1 << i ), nullptr );
+			WidthCombo->AddItem( String::format( L"%d", 1 << i ), nullptr );
+			HeightCombo->AddItem( String::format( L"%d", 1 << i ), nullptr );
 		}
 
 		WidthCombo->ItemIndex	= 3;
@@ -1706,7 +1706,7 @@ public:
 	}
 	void ButtonOkClick( WWidget* Sender )
 	{
-		if( NameEdit->Text.Len() == 0 )
+		if( NameEdit->Text.len() == 0 )
 		{
 			Root->ShowMessage( L"Please specify the name of effect", L"Effect Builder", true );
 			return;
@@ -1715,7 +1715,7 @@ public:
 		{
 			Root->ShowMessage
 			(
-				String::Format( L"Object \"%s\" already exists", *NameEdit->Text ),
+				String::format( L"Object \"%s\" already exists", *NameEdit->Text ),
 				L"Effect Builder",
 				true
 			);	
@@ -1948,8 +1948,8 @@ public:
 			CClass* ComClass = (CClass*)ExtraList->Items[ExtraList->ItemIndex].Data;
 
 			// Make friendly name.
-			assert(String::Pos( L"Component", ComClass->GetAltName() ) != -1);
-			ExtraUsedList->AddItem( String::Copy( ComClass->GetAltName(), 0, ComClass->GetAltName().Len()-9 ), ComClass );
+			assert(String::pos( L"Component", ComClass->GetAltName() ) != -1);
+			ExtraUsedList->AddItem( String::copy( ComClass->GetAltName(), 0, ComClass->GetAltName().len()-9 ), ComClass );
 			UpdateSingleCompFlags();
 		}
 	}
@@ -1981,7 +1981,7 @@ public:
 	}
 	void ButtonOkClick( WWidget* Sender )
 	{
-		if( NameEdit->Text.Len() == 0 )
+		if( NameEdit->Text.len() == 0 )
 		{
 			Root->ShowMessage( L"Please specify the name of script", L"Script Builder", true );
 			return;
@@ -1990,7 +1990,7 @@ public:
 		{
 			Root->ShowMessage
 			(
-				String::Format( L"Object \"%s\" already exists", *NameEdit->Text ),
+				String::format( L"Object \"%s\" already exists", *NameEdit->Text ),
 				L"Script Builder",
 				true
 			);
@@ -2008,11 +2008,11 @@ public:
 				CClass* Class = (CClass*)ExtraUsedList->Items[i].Data;
 				String  Name  = ExtraUsedList->Items[i].Name;
 
-				if( Name.Len() == 0 )
+				if( Name.len() == 0 )
 				{
 					Root->ShowMessage
 					(
-						String::Format( L"Please specify the name of %d extra component", i ),
+						String::format( L"Please specify the name of %d extra component", i ),
 						L"Script Builder",
 						true
 					);
@@ -2024,7 +2024,7 @@ public:
 					{
 						Root->ShowMessage
 						(
-							String::Format( L"Component name '%s' redefined", *Name ),
+							String::format( L"Component name '%s' redefined", *Name ),
 							L"Script Builder",
 							true
 						);
@@ -2042,7 +2042,7 @@ public:
 		Script->StaticsBuffer	= new CInstanceBuffer(Script->Statics); 
 		Script->ScriptFlags		|= HasTextCheck->bChecked ? SCRIPT_Scriptable : SCRIPT_None;
 		Script->ScriptFlags		|= StaticCheck->bChecked ? SCRIPT_Static : SCRIPT_None;
-		Script->FileName		= Script->IsScriptable() ? String::Format( L"%s.flu", *Script->GetName() ) : L"";
+		Script->FileName		= Script->IsScriptable() ? String::format( L"%s.flu", *Script->GetName() ) : L"";
 
 		if( !Script->IsStatic() )
 		{
@@ -2070,26 +2070,26 @@ public:
 			if( Script->IsStatic() )
 			{
 				// Default script for static script;
-				Script->Text.push(String::Format( L"/**" ));
-				Script->Text.push(String::Format( L" * static @%s: ...", *Script->GetName() ));
-				Script->Text.push(String::Format( L" * @Author: ..." ));
-				Script->Text.push(String::Format( L" */" ));
-				Script->Text.push(String::Format( L"static script %s", *Script->GetName() ));
-				Script->Text.push(String::Format( L"{" ));
-				Script->Text.push(String::Format( L" " ));
-				Script->Text.push(String::Format( L"}" ));
+				Script->Text.push(String::format( L"/**" ));
+				Script->Text.push(String::format( L" * static @%s: ...", *Script->GetName() ));
+				Script->Text.push(String::format( L" * @Author: ..." ));
+				Script->Text.push(String::format( L" */" ));
+				Script->Text.push(String::format( L"static script %s", *Script->GetName() ));
+				Script->Text.push(String::format( L"{" ));
+				Script->Text.push(String::format( L" " ));
+				Script->Text.push(String::format( L"}" ));
 			}
 			else
 			{
 				// Default script for regular script;
-				Script->Text.push(String::Format( L"/**" ));
-				Script->Text.push(String::Format( L" * @%s: ...", *Script->GetName() ));
-				Script->Text.push(String::Format( L" * @Author: ..." ));
-				Script->Text.push(String::Format( L" */" ));
-				Script->Text.push(String::Format( L"script %s", *Script->GetName() ));
-				Script->Text.push(String::Format( L"{" ));
-				Script->Text.push(String::Format( L" " ));
-				Script->Text.push(String::Format( L"}" ));
+				Script->Text.push(String::format( L"/**" ));
+				Script->Text.push(String::format( L" * @%s: ...", *Script->GetName() ));
+				Script->Text.push(String::format( L" * @Author: ..." ));
+				Script->Text.push(String::format( L" */" ));
+				Script->Text.push(String::format( L"script %s", *Script->GetName() ));
+				Script->Text.push(String::format( L"{" ));
+				Script->Text.push(String::format( L" " ));
+				Script->Text.push(String::format( L"}" ));
 			}
 		}
 
@@ -2223,7 +2223,7 @@ public:
 	}
 	void ButtonOkClick( WWidget* Sender )
 	{
-		if( NameEdit->Text.Len() == 0 )
+		if( NameEdit->Text.len() == 0 )
 		{
 			Root->ShowMessage( L"Please specify the name of animation", L"Animation Builder", true );
 			return;
@@ -2232,7 +2232,7 @@ public:
 		{
 			Root->ShowMessage
 			(
-				String::Format( L"Object \"%s\" already exists", *NameEdit->Text ),
+				String::format( L"Object \"%s\" already exists", *NameEdit->Text ),
 				L"Rename Dialog",
 				true
 			);
@@ -2338,7 +2338,7 @@ public:
 	}
 	void ButtonOkClick( WWidget* Sender )
 	{
-		if( NameEdit->Text.Len() == 0 )
+		if( NameEdit->Text.len() == 0 )
 		{
 			Root->ShowMessage( L"Please specify the name of skeleton", L"Skeleton Builder", true );
 			return;
@@ -2347,7 +2347,7 @@ public:
 		{
 			Root->ShowMessage
 			(
-				String::Format( L"Object \"%s\" already exists", *NameEdit->Text ),
+				String::format( L"Object \"%s\" already exists", *NameEdit->Text ),
 				L"Rename Dialog",
 				true
 			);
@@ -2453,7 +2453,7 @@ public:
 	}
 	void ButtonOkClick( WWidget* Sender )
 	{
-		if( NameEdit->Text.Len() == 0 )
+		if( NameEdit->Text.len() == 0 )
 		{
 			Root->ShowMessage( L"Please specify the name of material", L"Material Builder", true );
 			return;
@@ -2462,7 +2462,7 @@ public:
 		{
 			Root->ShowMessage
 			(
-				String::Format( L"Object \"%s\" already exists", *NameEdit->Text ),
+				String::format( L"Object \"%s\" already exists", *NameEdit->Text ),
 				L"Rename Dialog",
 				true
 			);
@@ -2785,7 +2785,7 @@ void WAssetsPage::ButtonRemoveClick( WWidget* Sender )
 		Int32 S	= MessageBox
 		(
 			GEditor->hWnd,
-			*String::Format( L"Do you really want to destroy resource '%s'?", *Res->GetName() ),
+			*String::format( L"Do you really want to destroy resource '%s'?", *Res->GetName() ),
 			L"Resource Browser",
 			MB_YESNO | MB_ICONQUESTION
 		);
@@ -2832,7 +2832,7 @@ void WAssetsPage::ButtonRemoveClick( WWidget* Sender )
 		Int32 S	= MessageBox
 		(
 			GEditor->hWnd,
-			*String::Format( L"Do you really want to destroy script '%s' and %d entities being it?", *Script->GetName(), NumEnts ),
+			*String::format( L"Do you really want to destroy script '%s' and %d entities being it?", *Script->GetName(), NumEnts ),
 			L"Resource Browser",
 			MB_YESNO | MB_ICONQUESTION
 		);
@@ -3134,7 +3134,7 @@ void WResourceList::Refresh()
 	}
 
 	// Precompute.
-	String	NameFil = String::UpperCase( Page->NameFilter->Text );
+	String	NameFil = String::upperCase( Page->NameFilter->Text );
 	Page->Browser->Selected = nullptr;
 
 	// Build list of all matching resources.
@@ -3153,7 +3153,7 @@ void WResourceList::Refresh()
 			// Apply name filter.
 			if( NameFil )
 			{						
-				if( String::Pos(NameFil, String::UpperCase(Res->GetName())) == -1 )
+				if( String::pos(NameFil, String::upperCase(Res->GetName())) == -1 )
 					continue;
 			}
 

@@ -573,7 +573,7 @@ static void Serialize( CCompiler* Compiler, CSerializer& S, FScript* Owner, TTok
 			break;	
 
 		case TYPE_String:
-			if( Const.cString.Len() >= STRING_ARRAY_MAX )
+			if( Const.cString.len() >= STRING_ARRAY_MAX )
 				Compiler->Error( L"Too long literal string" );
 
 			Serialize( S, CODE_ConstString );
@@ -743,8 +743,8 @@ Bool CCompiler::CompileAll()
 
 		// Add to compilation log.
 		Warnings.push( L"---" );
-		Warnings.push(String::Format( L"%d scripts compiled", Storage.size() ));
-		Warnings.push(String::Format( L"%d lines compiled", NumLines ));
+		Warnings.push(String::format( L"%d scripts compiled", Storage.size() ));
+		Warnings.push(String::format( L"%d lines compiled", NumLines ));
 
 		return true;
 	}
@@ -1195,12 +1195,12 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 		// Parse each arg.
 		do
 		{
-			Int32 i = String::Pos( L"%", Text );
+			Int32 i = String::pos( L"%", Text );
 			if( i == -1 )
 				break;
 
 			RequireSymbol( L",", L"log arguments" );
-			Text = String::Delete( Text, i, 1 );
+			Text = String::del( Text, i, 1 );
 			Char Symbol = Text(i);
 			EPropType ArgType;
 
@@ -1949,7 +1949,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 			else if( ExprRes.Type.Type == TYPE_Vector )
 			{
 				// Vector member.
-				String Elem = String::LowerCase(GetIdentifier( L"vector member" ));
+				String Elem = String::lowerCase( GetIdentifier( L"vector member" ) );
 				UInt8 Offset = 0xff;
 				Offset = Elem == L"x" ? PROPERTY_OFFSET(math::Vector, x) : Elem == L"y" ? PROPERTY_OFFSET(math::Vector, y) : 0xff;
 				if( Offset == 0xff )
@@ -1962,7 +1962,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 			else if( ExprRes.Type.Type == TYPE_AABB )
 			{
 				// TRect member.
-				String Elem = String::LowerCase(GetIdentifier( L"aabb member" ));
+				String Elem = String::lowerCase( GetIdentifier( L"aabb member" ) );
 				UInt8 Offset = 0xff;
 				Offset = Elem == L"min" ? PROPERTY_OFFSET(math::Rect, min) : Elem == L"max" ? PROPERTY_OFFSET(math::Rect, max) : 0xff;
 				if( Offset == 0xff )
@@ -1975,7 +1975,7 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 			else if( ExprRes.Type.Type == TYPE_Color )
 			{
 				// Color member.
-				String Elem = String::LowerCase(GetIdentifier( L"color member" ));
+				String Elem = String::lowerCase( GetIdentifier( L"color member" ) );
 				UInt8 Offset = 0xff;
 				Offset =	Elem == L"r" ? PROPERTY_OFFSET(TColor, R) : 
 							Elem == L"g" ? PROPERTY_OFFSET(TColor, G) :  
@@ -5422,11 +5422,11 @@ void CCompiler::GetToken( TToken& T, Bool bAllowNeg, Bool bAllowVect )
 	T.iPos				= PrevPos;
 	T.TypeInfo.ArrayDim	= 1;
 
-	if( IsDigit( C ) )
+	if( cstr::isDigit( C ) )
 	{
 		// It's a numeric constant.
 		Bool bGotDot = false;
-		while( IsDigit(C) || C == L'.' )
+		while( cstr::isDigit( C ) || C == L'.' )
 		{
 			*Walk = C;
 			Walk++;
@@ -5447,20 +5447,20 @@ void CCompiler::GetToken( TToken& T, Bool bAllowNeg, Bool bAllowVect )
 			// Float constant.
 			T.Type			= TOK_Const;
 			T.TypeInfo.Type	= TYPE_Float;
-			T.Text.ToFloat( T.cFloat, 0.f );	
+			T.Text.toFloat( T.cFloat, 0.f );	
 		}
 		else
 		{
 			// Integer constant.
 			T.Type			= TOK_Const;
 			T.TypeInfo.Type	= TYPE_Integer;
-			T.Text.ToInteger( T.cInteger, 0 );		
+			T.Text.toInteger( T.cInteger, 0 );		
 		}
 	}
-	else if( IsLetter( C ) )
+	else if( cstr::isLetter( C ) )
 	{
 		// Its an identifier or keyword.
-		while( IsLetter(C) || IsDigit(C) )
+		while( cstr::isLetter( C ) || cstr::isDigit( C ) )
 		{
 			*Walk = C;
 			Walk++;
@@ -5612,7 +5612,7 @@ void CCompiler::GetToken( TToken& T, Bool bAllowNeg, Bool bAllowVect )
 			} while( true );
 
 			// String constant.
-			T.Text					= String::Format( L"\"%s\"", Buffer );
+			T.Text					= String::format( L"\"%s\"", Buffer );
 			T.cString				= Buffer;
 			T.Type					= TOK_Const;
 			T.TypeInfo.Type			= TYPE_String;				
@@ -5726,7 +5726,7 @@ Char CCompiler::_GetChar()
 
 	// If end of line, goto next line and return
 	// separator whitespace.
-	if( TextPos >= Script->Text[TextLine].Len() )
+	if( TextPos >= Script->Text[TextLine].len() )
 	{
 		TextPos		= 0;
 		TextLine++;
@@ -5758,7 +5758,7 @@ void CCompiler::Error( const Char* Fmt, ... )
 	FatalError.ErrorLine	= TextLine + 1;
 	FatalError.ErrorPos		= TextPos + 1;
 	FatalError.Script		= Script;
-	FatalError.Message		= String::Format
+	FatalError.Message		= String::format
 	( 
 		L"[Error] %s(%d): %s", 
 		Script ? *Script->GetName() : L"", 
@@ -5782,7 +5782,7 @@ void CCompiler::Warn( const Char* Fmt, ... )
 	_vsnwprintf( Msg, arraySize(Msg), Fmt, ArgPtr );
 	va_end( ArgPtr );
 
-	Warnings.push( String::Format
+	Warnings.push( String::format
 	( 
 		L"[Warning] %s(%d): %s", 
 		*Script->GetName(), 

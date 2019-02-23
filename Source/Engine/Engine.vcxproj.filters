@@ -48,9 +48,6 @@
     <ClInclude Include="Core\FrRand.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\FrString.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="FrCode.h" />
     <ClInclude Include="FrCollHash.h" />
     <ClInclude Include="FrCom.h" />
