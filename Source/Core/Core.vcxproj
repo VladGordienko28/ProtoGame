@@ -154,6 +154,7 @@
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="Namespace.h" />
     <ClInclude Include="Profiler.h" />
+    <ClInclude Include="SmartPointer.h" />
     <ClInclude Include="Stack.h" />
     <ClInclude Include="String.h" />
     <ClInclude Include="StringManager.h" />

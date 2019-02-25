@@ -44,22 +44,22 @@ namespace math
 
 	inline Int32 round( Float f )
 	{
-		return roundf( f );
+		return static_cast<Int32>( roundf( f ) );
 	}
 
 	inline Int32 floor( Float f )
 	{
-		return floorf( f );
+		return static_cast<Int32>( floorf( f ) );
 	}
 
 	inline Int32 ceil( Float f )
 	{
-		return ceilf( f );
+		return static_cast<Int32>( ceilf( f ) );
 	}
 
 	inline Int32 trunc( Float f )
 	{
-		return truncf( f );
+		return static_cast<Int32>( truncf( f ) );
 	}
 
 	inline Float frac( Float f )

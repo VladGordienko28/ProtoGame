@@ -9,12 +9,6 @@
 #pragma warning(disable : 4244)
 
 // C++ includes.
-#include <math.h>			// to be removed!!
-#include <stdlib.h>
-#include <string.h>
-#include <tchar.h>
-#include <stdarg.h>
-#include <stdio.h>
 #include <type_traits>
 #include <typeinfo.h> 
 

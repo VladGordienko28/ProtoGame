@@ -13,6 +13,7 @@
 #include "Heap.h"
 #include "LogCallback.h"
 #include "LogManager.h"
+#include "SmartPointer.h"
 
 // legacy include
 #include "FrSerial.h"

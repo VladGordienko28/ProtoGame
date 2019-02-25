@@ -38,6 +38,7 @@
     <ClInclude Include="CString.h">
       <Filter>String</Filter>
     </ClInclude>
+    <ClInclude Include="SmartPointer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp" />

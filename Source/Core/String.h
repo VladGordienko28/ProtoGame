@@ -121,7 +121,8 @@ namespace flu
 
 		const CHAR_TYPE& operator[]( SizeT i ) const
 		{
-			return m_data ? m_data->data[i] : 0;
+			static CHAR_TYPE tmp = 0;
+			return m_data ? m_data->data[i] : tmp;
 		}
 
 		CHAR_TYPE& operator[]( SizeT i )
@@ -141,7 +142,7 @@ namespace flu
 			}
 			else
 			{
-				Char junk;
+				static CHAR_TYPE junk;
 				return junk;
 			}
 		}
@@ -395,16 +396,16 @@ namespace flu
 			return true;
 		}
 
-		static Array<StringBase<MANAGER_TYPE, MANAGER>> wrapText( StringBase<MANAGER_TYPE, MANAGER> text, Int32 maxColumnSize )
+		static Array<StringBase<MANAGER_TYPE, MANAGER>> wrapText( StringBase<MANAGER_TYPE, MANAGER> text, UInt32 maxColumnSize )
 		{
 			Array<StringBase<MANAGER_TYPE, MANAGER>> result;
 
-			Int32 i = 0;
+			SizeT i = 0;
 			do
 			{
-				Int32 cleanWordEnd = 0;
+				SizeT cleanWordEnd = 0;
 				Bool gotWord = false;
-				Int32 testWord = 0;
+				SizeT testWord = 0;
 
 				while( ( i + testWord < text.len() ) && ( text(i + testWord) != '\n' ) )
 				{
@@ -622,7 +623,7 @@ namespace flu
 
 					for( SizeT i = 0; i < v.len(); ++i )
 					{
-						AnsiChar tmp = v(i);
+						AnsiChar tmp = static_cast<AnsiChar>( v(i) );
 						Serialize( s, tmp );
 					}
 				}
