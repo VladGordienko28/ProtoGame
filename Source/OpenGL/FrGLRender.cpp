@@ -1814,6 +1814,7 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 			*/
 
 		// Temporary render sky
+		if( Level->RndFlags & RND_Backdrop )
 		{
 			Canvas->PushTransform( TViewInfo( math::Vector(0, 0), 0, math::Vector(1, 1), 1, true, X,
 				Y, 

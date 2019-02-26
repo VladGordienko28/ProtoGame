@@ -1,0 +1,30 @@
+BEGIN_INCLUDE
+    Brush.fr
+    Light.fr
+    Mirror.fr
+    Model.fr
+    Warp.fr
+    Note.fr
+    AmbSound.fr
+    Deco.fr
+    Emitter.fr
+    Parallax.fr
+    BSystem.fr
+    BForestTiles.fr
+    BDaySky.fr
+    BTree1.fr
+    BTree3.fr
+    BSunsetSky.fr
+    BMidnightSky.fr
+    BDawnSky.fr
+    BLeafs1.fr
+    BHills2.fr
+    BHills1.fr
+    BSkyTest.fr
+    BHills3.fr
+    ProjectInfo0.fr
+    Forest.fr
+END_INCLUDE
+BEGIN_PAGES
+    Forest
+END_PAGES

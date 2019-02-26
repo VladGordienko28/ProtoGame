@@ -1,0 +1,9 @@
+BEGIN_RESOURCE FBitmap BLeafs1
+    BlendMode = 4
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    Group = "<unused>"
+    FileName = "BLeafs1.bmp"
+    UBits = 4
+    VBits = 4
+END_RESOURCE

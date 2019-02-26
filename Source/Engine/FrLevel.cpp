@@ -123,6 +123,15 @@ void FLevel::SerializeThis( CSerializer& S )
 	Serialize( S, BlurIntensity );
 	S.SerializeData( Effect, sizeof(Effect) );
 
+	Serialize( S, m_vignetteIntensity );
+	Serialize( S, m_vignetteInnerRadius );
+	Serialize( S, m_vignetteOuterRadius );
+
+	Serialize( S, m_dawnBitmap );
+	Serialize( S, m_noonBitmap );
+	Serialize( S, m_duskBitmap );
+	Serialize( S, m_midnightBitmap );
+
 	// Warning: Don't serialize level databases of
 	// entities or components, because it
 	// already serialized in the FComponent or

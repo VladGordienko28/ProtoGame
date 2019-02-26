@@ -1,0 +1,23 @@
+BEGIN_RESOURCE FScript Light
+    Group = "System"
+    BEGIN_COMPONENT FRectComponent Base
+            Size = [3.0000; 3.0000]
+            Layer = 0.5000
+            bFixedSize = true
+    END_COMPONENT
+    BEGIN_COMPONENT FLightComponent Light
+            bEnabled = true
+            LightFunc = 1
+            Color = #ffffffff
+            Radius = 16.0000
+            Brightness = 1.0000
+    END_COMPONENT
+    BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.2500; 1.2500]
+            TexCoords = (0.0000; 0.0000; 32.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+    END_COMPONENT
+END_RESOURCE

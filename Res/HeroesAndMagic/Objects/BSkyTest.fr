@@ -1,0 +1,9 @@
+BEGIN_RESOURCE FBitmap BSkyTest
+    Format = 1
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    Group = "<unused>"
+    FileName = "BSkyTest.png"
+    UBits = 9
+    VBits = 8
+END_RESOURCE

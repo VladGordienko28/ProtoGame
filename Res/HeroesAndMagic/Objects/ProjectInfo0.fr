@@ -1,0 +1,9 @@
+BEGIN_RESOURCE FProjectInfo ProjectInfo0
+    GameName = "Heroes And Magic"
+    Author = "Vlad"
+    bNoPause = true
+    WindowType = 1
+    bQuitByEsc = true
+    DefaultWidth = 1280
+    DefaultHeight = 720
+END_RESOURCE

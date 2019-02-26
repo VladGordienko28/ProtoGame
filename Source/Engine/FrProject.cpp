@@ -237,6 +237,10 @@ FLevel* CProject::DuplicateLevel( FLevel* Source )
 	Result->m_noonBitmap = Source->m_noonBitmap;
 	Result->m_duskBitmap = Source->m_duskBitmap;
 
+	Result->m_vignetteIntensity = Source->m_vignetteIntensity;
+	Result->m_vignetteInnerRadius = Source->m_vignetteInnerRadius;
+	Result->m_vignetteOuterRadius = Source->m_vignetteOuterRadius;
+
 	warn( L"World: Level \"%s\" duplicated", *Source->GetName() );
 	return Result;
 }
