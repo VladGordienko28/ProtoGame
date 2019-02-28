@@ -98,6 +98,9 @@ namespace envi
 // Physics engine
 #include "Physics/PhysicsUtils.h"
 
+// Post processing
+#include "PostFX/FXTypes.h"
+
 #include "FrCom.h"
 #include "FrBlock.h"
 #include "FrRes.h"

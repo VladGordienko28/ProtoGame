@@ -14,6 +14,7 @@ BEGIN_RESOURCE FLevel Forest
     m_dawnBitmap = FBitmap::BDawnSky
     m_noonBitmap = FBitmap::BDaySky
     m_duskBitmap = FBitmap::BSunsetSky
+    m_vignette.outerRadius = 1.0000
     RndFlags = 15295
     BEGIN_ENTITY Model Model0
         BEGIN_COMPONENT FModelComponent Base

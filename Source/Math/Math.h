@@ -23,6 +23,8 @@
 #include "Functions.h"
 #include "Angle.h"
 #include "Vector.h"
+#include "Vector3.h"
+#include "Vector4.h"
 #include "Coords.h"
 #include "Polygon.h"
 #include "Circle.h"

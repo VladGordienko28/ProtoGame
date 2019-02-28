@@ -47,6 +47,14 @@ public:
 	{
 		SetValue( iUniform, 2, &Value.x );
 	}
+	inline void SetValue3f( Int32 iUniform, const math::Vector3& Value )
+	{
+		SetValue( iUniform, 3, &Value.x );
+	}
+	inline void SetValue4f( Int32 iUniform, const math::Vector4& Value )
+	{
+		SetValue( iUniform, 4, &Value.x );
+	}
 	inline void SetValue1i( Int32 iUniform, Int32 Value )
 	{
 		SetValue( iUniform, 0, &Value );
@@ -188,11 +196,19 @@ public:
 		SetValue1f( idAberrationIntensity, intensity );
 	}
 
-	void setVignette( Float intensity, Float innerRadius, Float outerRadius )
+	void setVignette( const fx::Vignette& vignette )
 	{
-		SetValue1f( idvignetteIntensity, intensity );
-		SetValue1f( idvignetteInnerRadius, innerRadius );
-		SetValue1f( idvignetteOuterRadius, outerRadius );
+		SetValue3f( idVignette, { vignette.intensity, vignette.innerRadius, vignette.outerRadius } );
+	}
+
+	void setEnableFXAA( Bool enable )
+	{
+		SetValue1i( idEnableFXAA, enable );
+	}
+
+	void setRTSize( Float width, Float height )
+	{
+		SetValue4f( idRTSize, { width, height, 1.f / width, 1.f / height } );
 	}
 
 private:
@@ -203,11 +219,12 @@ private:
 	Int32 idMidTones;
 	Int32 idShadows;
 	Int32 idBWScale;
-	Int32 idAberrationIntensity;
+	Int32 idVignette;
+	Int32 idEnableFXAA;
 
-	Int32 idvignetteIntensity;
-	Int32 idvignetteInnerRadius;
-	Int32 idvignetteOuterRadius;
+	Int32 idRTSize;
+
+	Int32 idAberrationIntensity;
 };
 
 

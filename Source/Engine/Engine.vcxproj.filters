@@ -13,6 +13,9 @@
     <Filter Include="Physics">
       <UniqueIdentifier>{3586a329-1e28-42e3-b7e6-defa4504171a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PostFX">
+      <UniqueIdentifier>{32f2e1f7-fd39-4120-91f7-c19aa1f55efb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\FrBase.h">
@@ -112,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="Physics\PhysicsUtils.h">
       <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="PostFX\FXTypes.h">
+      <Filter>PostFX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

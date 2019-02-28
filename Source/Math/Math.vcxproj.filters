@@ -10,6 +10,8 @@
     <ClInclude Include="Coords.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Rect.h" />
+    <ClInclude Include="Vector3.h" />
+    <ClInclude Include="Vector4.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math.cpp" />

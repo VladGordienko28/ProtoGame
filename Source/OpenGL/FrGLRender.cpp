@@ -2016,7 +2016,9 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 		}
 
 		Canvas->FinalShader.setAberrationIntensity( Level->AberrationIntensity );
-		Canvas->FinalShader.setVignette( Level->m_vignetteIntensity, Level->m_vignetteInnerRadius, Level->m_vignetteOuterRadius );
+		Canvas->FinalShader.setVignette( Level->m_vignette );
+		Canvas->FinalShader.setEnableFXAA( Level->m_enableFXAA );
+		Canvas->FinalShader.setRTSize( Canvas->ScreenWidth, Canvas->ScreenHeight );
 
 		// Render FBO to screen.
 		glBindTexture( GL_TEXTURE_2D, Canvas->MasterFBO->GetTextureId() );
@@ -2347,10 +2349,9 @@ bool CGLFinalShader::Init( String ShaderName )
 
 	idAberrationIntensity = RegisterUniform( "aberrationIntensity" );
 
-	idvignetteIntensity	= RegisterUniform( "m_vignetteIntensity" );
-	idvignetteInnerRadius	= RegisterUniform( "m_vignetteInnerRadius" );
-	idvignetteOuterRadius	= RegisterUniform( "m_vignetteOuterRadius" );
-
+	idVignette = RegisterUniform( "m_vignette" );
+	idEnableFXAA = RegisterUniform( "m_enableFXAA" );
+	idRTSize = RegisterUniform( "m_RTSize" );
 
 	// Only one bitmap supported.
 	idTexture = RegisterUniform( "texture" );

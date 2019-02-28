@@ -122,11 +122,8 @@ public:
 	FBitmap* m_noonBitmap = nullptr;
 	FBitmap* m_duskBitmap = nullptr;
 
-
-
-	Float m_vignetteIntensity = 1.f;
-	Float m_vignetteInnerRadius = 0.1f;
-	Float m_vignetteOuterRadius = 0.5f;
+	fx::Vignette m_vignette;
+	Bool m_enableFXAA = true;  // not here, but in config;
 
 
 	// -----------

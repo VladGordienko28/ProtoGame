@@ -159,6 +159,8 @@
     <ClInclude Include="Polygon.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Vector.h" />
+    <ClInclude Include="Vector3.h" />
+    <ClInclude Include="Vector4.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Angle.cpp" />

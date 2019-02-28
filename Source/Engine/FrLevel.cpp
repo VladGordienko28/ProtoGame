@@ -123,9 +123,11 @@ void FLevel::SerializeThis( CSerializer& S )
 	Serialize( S, BlurIntensity );
 	S.SerializeData( Effect, sizeof(Effect) );
 
-	Serialize( S, m_vignetteIntensity );
-	Serialize( S, m_vignetteInnerRadius );
-	Serialize( S, m_vignetteOuterRadius );
+	Serialize( S, m_vignette.intensity );
+	Serialize( S, m_vignette.innerRadius );
+	Serialize( S, m_vignette.outerRadius );
+
+	Serialize( S, m_enableFXAA );
 
 	Serialize( S, m_dawnBitmap );
 	Serialize( S, m_noonBitmap );
@@ -964,6 +966,13 @@ REGISTER_CLASS_CPP( FLevel, FResource, CLASS_Sterile )
 		STRUCT_MEMBER(ScrollBound);
 	END_STRUCT;
 
+	using namespace fx;
+	BEGIN_STRUCT(Vignette)
+		STRUCT_MEMBER( intensity );
+		STRUCT_MEMBER( innerRadius );
+		STRUCT_MEMBER( outerRadius );
+	END_STRUCT;
+
 	ADD_PROPERTY( bIsPlaying, PROP_Const );
 	ADD_PROPERTY( bIsPause, PROP_Editable );
 	ADD_PROPERTY( Original, PROP_Const|PROP_Editable|PROP_NoImEx );
@@ -980,10 +989,8 @@ REGISTER_CLASS_CPP( FLevel, FResource, CLASS_Sterile )
 	ADD_PROPERTY( m_noonBitmap, PROP_Editable );
 	ADD_PROPERTY( m_duskBitmap, PROP_Editable );
 
-	ADD_PROPERTY( m_vignetteIntensity, PROP_Editable );
-	ADD_PROPERTY( m_vignetteInnerRadius, PROP_Editable );
-	ADD_PROPERTY( m_vignetteOuterRadius, PROP_Editable );
-
+	ADD_PROPERTY( m_vignette, PROP_Editable );
+	ADD_PROPERTY( m_enableFXAA, PROP_Editable );
 
 	// Engine functions.
 	DECLARE_EX_FUNCTION( DebugLine, TYPE_None, ARG(a, TYPE_Vector, ARG(b, TYPE_Vector, ARG(color, TYPE_Color, ARG(time, TYPE_Float, END)))));
