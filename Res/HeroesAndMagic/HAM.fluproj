@@ -9,6 +9,8 @@ BEGIN_INCLUDE
     Deco.fr
     Emitter.fr
     Parallax.fr
+    Richy.fr
+    Barrel.fr
     BSystem.fr
     BForestTiles.fr
     BDaySky.fr
@@ -22,9 +24,15 @@ BEGIN_INCLUDE
     BHills1.fr
     BSkyTest.fr
     BHills3.fr
+    BRichy.fr
+    BBarrel.fr
     ProjectInfo0.fr
     Forest.fr
+    ARichy.fr
+    ABarrel.fr
 END_INCLUDE
 BEGIN_PAGES
+    Richy
+    Barrel
     Forest
 END_PAGES

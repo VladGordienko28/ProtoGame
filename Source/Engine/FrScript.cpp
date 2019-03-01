@@ -547,7 +547,7 @@ void FScript::SerializeThis( CSerializer& S )
 			Serialize( S, Text );
 
 		// Family only for non-static scripts.
-		if( !IsScriptable() )
+		if( !IsStatic() )
 			Serialize( S, iFamily );
 
 		// Generic stuff.

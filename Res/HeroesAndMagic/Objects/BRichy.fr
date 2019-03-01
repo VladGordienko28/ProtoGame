@@ -1,0 +1,10 @@
+BEGIN_RESOURCE FBitmap BRichy
+    Format = 1
+    BlendMode = 1
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    Group = "<unused>"
+    FileName = "BRichy.png"
+    UBits = 9
+    VBits = 9
+END_RESOURCE

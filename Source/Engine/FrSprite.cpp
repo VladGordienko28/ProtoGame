@@ -517,6 +517,15 @@ void FAnimatedSpriteComponent::nativePauseAnim( CFrame& Frame )
 }
 
 
+//
+// Return true, if animation is currently playing
+//
+void FAnimatedSpriteComponent::nativeIsPlaying( CFrame& Frame )
+{
+	*POPA_BOOL = Rate != 0.f;
+}
+
+
 /*-----------------------------------------------------------------------------
     FParallaxLayerComponent implementation.
 -----------------------------------------------------------------------------*/
@@ -746,6 +755,7 @@ REGISTER_CLASS_CPP( FAnimatedSpriteComponent, FExtraComponent, CLASS_None )
 	DECLARE_METHOD( PlayAnim, TYPE_None, ARG(name, TYPE_String, ARG(rate, TYPE_Float, ARG(type, TYPE_Byte, END))) );
 	DECLARE_METHOD( GetAnimName, TYPE_String, END );
 	DECLARE_METHOD( PauseAnim, TYPE_None, END );
+	DECLARE_METHOD( IsPlaying, TYPE_Bool, END );
 }
 
 

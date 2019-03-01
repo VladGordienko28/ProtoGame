@@ -243,7 +243,7 @@ namespace flu
 
 		StringBase<MANAGER_TYPE, MANAGER>& operator+=( const StringBase<MANAGER_TYPE, MANAGER>& other )
 		{
-			if( SizeT len2 = other.m_data->length )
+			if( SizeT len2 = other.len() )
 			{
 				if( m_data )
 				{

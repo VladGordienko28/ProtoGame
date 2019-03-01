@@ -1,0 +1,37 @@
+/**
+ * @Barrel: A simple non-movable barrel
+ * @Author: vlad
+ */
+script Barrel: family Destroyable
+{
+public:
+    integer lifesLeft;
+
+    fn TakeDamage( integer amount ) unified
+    {
+        if( lifesLeft > 0 )
+        {
+            string animName = "Crack" + string( 4 - lifesLeft );
+            $Sprite.PlayAnim( animName, 1.0, ANIM_Once );
+            lifesLeft -= 1;
+            
+            if( lifesLeft == 0 )
+                goto @Smashed;
+        }
+    }
+
+
+    thread
+    {
+        @Dull:
+            $Sprite.PlayAnim( "Dull", 1.0, ANIM_Once );
+            lifesLeft = 4;
+            stop;
+        
+        @Smashed:
+            $Sprite.PlayAnim( "Smashed", 7.0, ANIM_Once );
+            wait !$Sprite.IsPlaying();
+            wait !base.IsShown();
+            delete this;
+     }
+}

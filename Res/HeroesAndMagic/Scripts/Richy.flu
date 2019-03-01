@@ -1,0 +1,89 @@
+/**
+ * @Richy: A first playable guy
+ * @Author: vlad
+ */
+script Richy
+{
+    const WALK_SPEED = 10.0;
+
+
+    event OnPreTick( float delta )
+    {
+        float walkSpeed = WALK_SPEED;
+        if( label == @Attack ) walkSpeed *= 0.6;
+    
+        if( KeyIsPressed( KEY_A ) )
+        {
+            Velocity.x = -walkSpeed;
+            $Sprite.bFlipH = true;
+        }
+        else if( KeyIsPressed( KEY_D ) )
+        {
+            Velocity.x = walkSpeed;
+            $Sprite.bFlipH = false;   
+        }
+        else
+        {
+            Velocity.x = 0.0;
+        }
+    }
+
+    event OnKeyDown( integer key )
+    {
+        if( label != @Attack && key == KEY_K )
+        {
+            goto @Attack;
+        }
+    }
+
+    
+    fn AttackWithDamage()
+    {
+        aabb rect;
+        entity e;
+        
+        if( !$Sprite.bFlipH )
+        {
+            rect.min = [ Location.x, Location.y - Size.y * 0.3 ];
+            rect.max = [ Location.x + 2.5, Location.y + Size.y * 0.3 ];
+        }
+        else
+        {
+            rect.min = [ Location.x - 2.5, Location.y - Size.y * 0.3 ];
+            rect.max = [ Location.x, Location.y + Size.y * 0.3 ];
+        }
+        
+        //DebugLine( rect.min, rect.max, rgba(255, 255, 255, 255), 0.8 );
+        
+        foreach( e : RectEntities( null, rect ) )
+        {
+            if( e in Destroyable )
+            {
+                Destroyable d = Destroyable(e);
+                d.TakeDamage( 1 );                
+            }
+        }
+    }
+
+    thread
+    {
+        @Dull:
+            if( Velocity.X != 0.0 )
+            {
+                 $Sprite.PlayAnim( "Run", 10.0, ANIM_Loop );
+            }
+            else
+            {
+                $Sprite.PlayAnim( "Idle", 7.0, ANIM_Loop );
+            }
+
+            goto @Dull;
+            
+        @Attack:
+            $Sprite.PlayAnim( "Attack", 19.0, ANIM_Once );
+            sleep 0.3;
+            AttackWithDamage();
+            wait !$Sprite.IsPlaying();
+            goto @Dull;
+    }
+}

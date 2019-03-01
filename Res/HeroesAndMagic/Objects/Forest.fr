@@ -1,6 +1,6 @@
 BEGIN_RESOURCE FLevel Forest
     GameSpeed = 1.0000
-    Camera.Location = [10.3912; 11.7803]
+    Camera.Location = [14.4068; 11.7492]
     Camera.FOV = [64.0000; 32.0000]
     Camera.Zoom = 1.0000
     Camera.ScrollBound = (-2048.0000; -2048.0000; 2048.0000; 2048.0000)
@@ -15,7 +15,7 @@ BEGIN_RESOURCE FLevel Forest
     m_noonBitmap = FBitmap::BDaySky
     m_duskBitmap = FBitmap::BSunsetSky
     m_vignette.outerRadius = 1.0000
-    RndFlags = 15295
+    RndFlags = 15359
     BEGIN_ENTITY Model Model0
         BEGIN_COMPONENT FModelComponent Base
             MapXSize = 30
@@ -256,18 +256,79 @@ BEGIN_RESOURCE FLevel Forest
             Texture = FBitmap::BHills3
         END_COMPONENT
     END_ENTITY
-    BEGIN_ENTITY Deco Deco2
-        BEGIN_COMPONENT FRectComponent Base
-            Location = [10.5000; 16.5000]
-            Size = [64.0000; 32.0000]
-            Layer = 0.0140
+    BEGIN_ENTITY Richy Richy0
+        BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Location = [-1.5000; 6.5000]
+            Size = [2.2000; 5.0000]
+            Layer = 0.5232
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
         END_COMPONENT
-        BEGIN_COMPONENT FDecoComponent Deco
-            Frequency = 1.0000
-            Amplitude = 1.0000
-            TexCoords = (0.0000; 0.0000; 512.0000; 256.0000)
+        BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
             Color = #ffffffff
-            Texture = FBitmap::BSkyTest
+            Animation = FAnimation::ARichy
+            Offset = [0.0000; 1.5000]
+            Scale = [8.0000; 8.0000]
         END_COMPONENT
+        BEGIN_COMPONENT FInputComponent Input
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Barrel Barrel0
+        BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Location = [22.5000; 5.2500]
+            Size = [2.6000; 3.0000]
+            Layer = 0.4525
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            Animation = FAnimation::ABarrel
+            Scale = [4.0000; 4.0000]
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Barrel Barrel1
+        BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Location = [30.0000; 5.2500]
+            Size = [2.6000; 3.0000]
+            Layer = 0.4525
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            Animation = FAnimation::ABarrel
+            Scale = [4.0000; 4.0000]
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Barrel Barrel2
+        BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Location = [-14.0000; 5.2500]
+            Size = [2.6000; 3.0000]
+            Layer = 0.4525
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            Animation = FAnimation::ABarrel
+            Scale = [4.0000; 4.0000]
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
     END_ENTITY
 END_RESOURCE

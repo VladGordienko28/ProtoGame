@@ -191,6 +191,7 @@ private:
 	void nativePlayAnim( CFrame& Frame );
 	void nativePauseAnim( CFrame& Frame );
 	void nativeGetAnimName( CFrame& Frame );
+	void nativeIsPlaying( CFrame& Frame );
 };
 
 
