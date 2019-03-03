@@ -1,6 +1,6 @@
 BEGIN_RESOURCE FLevel Forest
     GameSpeed = 1.0000
-    Camera.Location = [14.4068; 11.7492]
+    Camera.Location = [13.4537; 11.9550]
     Camera.FOV = [64.0000; 32.0000]
     Camera.Zoom = 1.0000
     Camera.ScrollBound = (-2048.0000; -2048.0000; 2048.0000; 2048.0000)
@@ -147,7 +147,7 @@ BEGIN_RESOURCE FLevel Forest
         BEGIN_COMPONENT FRectComponent Base
             Location = [12.5000; 16.5000]
             Size = [3.0000; 3.0000]
-            Layer = 0.7708
+            Layer = 0.2851
         END_COMPONENT
         BEGIN_COMPONENT FSpriteComponent Sprite
             Scale = [1.0000; 1.0000]
@@ -316,7 +316,7 @@ BEGIN_RESOURCE FLevel Forest
     BEGIN_ENTITY Barrel Barrel2
         BEGIN_COMPONENT FArcadeBodyComponent Base
             Mass = 1.0000
-            Location = [-14.0000; 5.2500]
+            Location = [-10.2500; 5.2500]
             Size = [2.6000; 3.0000]
             Layer = 0.4525
             bFixedAngle = true
@@ -330,5 +330,37 @@ BEGIN_RESOURCE FLevel Forest
         END_COMPONENT
         BEGIN_INSTANCE
         END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco2
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [36.0000; 8.0000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.4155
+            bFrozen = true
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 2
+            Frequency = 0.8000
+            Amplitude = 0.1200
+            TexCoords = (0.0000; 0.0000; 64.0000; 64.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BBushes
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco3
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [-15.0000; 8.0000]
+            Size = [8.0000; 8.0000]
+            Layer = 0.4155
+            bFrozen = true
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 2
+            Frequency = 0.8000
+            Amplitude = 0.2700
+            TexCoords = (64.0000; 64.0000; 128.0000; 128.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BBushes
+        END_COMPONENT
     END_ENTITY
 END_RESOURCE

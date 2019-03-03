@@ -4,13 +4,15 @@
  */
 script Richy
 {
+public:
     const WALK_SPEED = 10.0;
+    const DAMAGE_AREA = 3.5;
 
+    float xSpeedRescaler;
 
     event OnPreTick( float delta )
     {
-        float walkSpeed = WALK_SPEED;
-        if( label == @Attack ) walkSpeed *= 0.6;
+        float walkSpeed = WALK_SPEED * xSpeedRescaler;
     
         if( KeyIsPressed( KEY_A ) )
         {
@@ -34,8 +36,19 @@ script Richy
         {
             goto @Attack;
         }
+        else if( key == KEY_L )
+        {
+            goto @EnterBlock;
+        }
     }
 
+    event OnKeyUp( integer key )
+    {
+        if( key == KEY_L && label == @Block )
+        {
+            goto @Normal;
+        }
+    }
     
     fn AttackWithDamage()
     {
@@ -45,15 +58,16 @@ script Richy
         if( !$Sprite.bFlipH )
         {
             rect.min = [ Location.x, Location.y - Size.y * 0.3 ];
-            rect.max = [ Location.x + 2.5, Location.y + Size.y * 0.3 ];
+            rect.max = [ Location.x + DAMAGE_AREA, Location.y + Size.y * 0.3 ];
         }
         else
         {
-            rect.min = [ Location.x - 2.5, Location.y - Size.y * 0.3 ];
+            rect.min = [ Location.x - DAMAGE_AREA, Location.y - Size.y * 0.3 ];
             rect.max = [ Location.x, Location.y + Size.y * 0.3 ];
         }
         
-        //DebugLine( rect.min, rect.max, rgba(255, 255, 255, 255), 0.8 );
+        //DebugLine( [rect.min.x, rect.min.y], [rect.max.x, rect.max.y], rgba(255, 255, 255, 255), 0.8 );
+        //DebugLine( [rect.min.x, rect.max.y], [rect.max.x, rect.min.y], rgba(255, 255, 255, 255), 0.8 );
         
         foreach( e : RectEntities( null, rect ) )
         {
@@ -67,7 +81,9 @@ script Richy
 
     thread
     {
-        @Dull:
+        @Normal:
+            xSpeedRescaler = 1.0;
+        
             if( Velocity.X != 0.0 )
             {
                  $Sprite.PlayAnim( "Run", 10.0, ANIM_Loop );
@@ -77,13 +93,33 @@ script Richy
                 $Sprite.PlayAnim( "Idle", 7.0, ANIM_Loop );
             }
 
-            goto @Dull;
+            goto @Normal;
             
         @Attack:
+            xSpeedRescaler = 0.5;
             $Sprite.PlayAnim( "Attack", 19.0, ANIM_Once );
             sleep 0.3;
             AttackWithDamage();
             wait !$Sprite.IsPlaying();
-            goto @Dull;
+            goto @Normal;
+            
+        @EnterBlock:
+            xSpeedRescaler = 0.0;
+            $Sprite.PlayAnim( "EnterBlock", 10.0, ANIM_Once );    
+            wait !$Sprite.IsPlaying();
+            goto @Block;
+            
+        @Block:
+            xSpeedRescaler = 0.5;
+            if( Velocity.X != 0.0 )
+            {
+                 $Sprite.PlayAnim( "RunAndBlock", 6.0, ANIM_Loop );
+            }
+            else
+            {
+                $Sprite.PlayAnim( "Block", 10.0, ANIM_Loop );
+            }
+            
+            goto @Block;
     }
 }

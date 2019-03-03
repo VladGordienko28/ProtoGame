@@ -1,0 +1,10 @@
+BEGIN_RESOURCE FBitmap BBushes
+    Format = 1
+    BlendMode = 1
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    Group = "<unused>"
+    FileName = "BBushes.png"
+    UBits = 7
+    VBits = 7
+END_RESOURCE

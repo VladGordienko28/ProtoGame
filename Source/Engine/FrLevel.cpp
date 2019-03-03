@@ -57,7 +57,7 @@ FLevel::FLevel()
 void FLevel::EditChange()
 {
 	FResource::EditChange();
-
+/*
 	static const Float scale = 1.5f;
 
 	if( m_midnightBitmap )
@@ -79,7 +79,7 @@ void FLevel::EditChange()
 	{
 		m_ambientColors.Samples[3].Output =  m_duskBitmap->getAverageColor() * scale;
 	}
-
+	*/
 }
 
 

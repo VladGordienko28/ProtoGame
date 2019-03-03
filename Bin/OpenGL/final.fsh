@@ -94,18 +94,18 @@ void main()
 
 	if( aberrationIntensity > 0.0 )
 	{
-		sampleColor.r = texture2D( texture, textureUV + vec2(0.001, 0.0007) * aberrationIntensity ).r;
-		sampleColor.g = texture2D( texture, textureUV + vec2(-0.0007, 0.001) * aberrationIntensity ).g;
-		sampleColor.b = texture2D( texture, textureUV + vec2(-0.001, -0.001) * aberrationIntensity ).b;
+		sampleColor.r = texture2D( texture, textureUV.xy + vec2(0.001, 0.0007) * aberrationIntensity ).r;
+		sampleColor.g = texture2D( texture, textureUV.xy + vec2(-0.0007, 0.001) * aberrationIntensity ).g;
+		sampleColor.b = texture2D( texture, textureUV.xy + vec2(-0.001, -0.001) * aberrationIntensity ).b;
 
-		sampleColor.a = texture2D( texture, textureUV ).a;		
+		sampleColor.a = texture2D( texture, textureUV.xy ).a;		
 	}
 	else
 	{
 		if( m_enableFXAA != 0 )
-			sampleColor = PostFX( texture, textureUV, 0.0 );
+			sampleColor = PostFX( texture, textureUV.xyzw, 0.0 );
 		else
-			sampleColor = texture2D( texture, textureUV );
+			sampleColor = texture2D( texture, textureUV.xy );
 	}
 
 	vec3 result = pow( max( vec3(0,0,0), (sampleColor.rgb-shadows) )*(highlights), midTones );

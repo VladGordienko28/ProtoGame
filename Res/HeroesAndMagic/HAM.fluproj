@@ -26,13 +26,15 @@ BEGIN_INCLUDE
     BHills3.fr
     BRichy.fr
     BBarrel.fr
+    BBushes.fr
     ProjectInfo0.fr
     Forest.fr
     ARichy.fr
     ABarrel.fr
 END_INCLUDE
 BEGIN_PAGES
-    Richy
     Barrel
+    ARichy
+    Richy
     Forest
 END_PAGES

@@ -2,13 +2,22 @@ BEGIN_RESOURCE FAnimation ARichy
     Sheet = FBitmap::BRichy
     FrameW = 64
     FrameH = 64
-    NumSeqs = 3
+    NumSeqs = 6
     Sequences[0].Name = "Idle"
-    Sequences[0].Start = 24
+    Sequences[0].Start = 40
     Sequences[0].Count = 5
     Sequences[1].Name = "Run"
-    Sequences[1].Start = 16
+    Sequences[1].Start = 32
     Sequences[1].Count = 6
     Sequences[2].Name = "Attack"
     Sequences[2].Count = 13
+    Sequences[3].Name = "EnterBlock"
+    Sequences[3].Start = 24
+    Sequences[3].Count = 3
+    Sequences[4].Name = "RunAndBlock"
+    Sequences[4].Start = 16
+    Sequences[4].Count = 5
+    Sequences[5].Name = "Block"
+    Sequences[5].Start = 26
+    Sequences[5].Count = 1
 END_RESOURCE
