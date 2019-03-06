@@ -29,8 +29,6 @@
 //
 static LRESULT CALLBACK WndProc( HWND hWnd, UINT Message, WPARAM WParam, LPARAM LParam );
 static Int32 handleException( LPEXCEPTION_POINTERS exception );
-static String GetFileName( String FileName );
-static String GetFileDir( String FileName );
 
 
 //
@@ -75,11 +73,6 @@ CGame::CGame()
 	// Initialize global variables.
 	GIsEditor			= false;
 	GGame				= this;
-
-	// Exe-directory.
-	Char Directory[256];
-	_wgetcwd( Directory, arraySize(Directory) );
-	GDirectory	= Directory;
 
 	// Parse command line.
 	GCmdLine = GetCommandLine();
@@ -180,7 +173,7 @@ void CGame::Init( HINSTANCE InhInstance )
 	assert(hWnd);
 
 	// Load ini-file.
-	Config		= new CConfigManager(GDirectory);
+	Config		= new CConfigManager( fm::getCurrentDirectory() );
 
 	// Allocate subsystems.
 	GRender		= new COpenGLRender( hWnd );
@@ -221,15 +214,15 @@ void CGame::Init( HINSTANCE InhInstance )
 		// Open Command-Line game.
 		String FileName	= String::pos( L":\\", ProjectFileName ) != -1 ? 
 							ProjectFileName : 
-							GDirectory+L"\\"+ProjectFileName;
+							fm::getCurrentDirectory() + L"\\" + ProjectFileName;
 
 		info( L"Game: Loading game from '%s'", *FileName );
 
-		if( !GPlat->FileExists(FileName) )
+		if( !fm::fileExists( *FileName ) )
 			fatal(L"Game file '%s' not found", *FileName);
 
-		String Directory	= GetFileDir(ProjectFileName);
-		String Name			= GetFileName(ProjectFileName);
+		String Directory	= fm::getFilePath( *ProjectFileName );
+		String Name			= fm::getFileName( *ProjectFileName );
 
 		// Load it.
 		LoadGame( Directory, Name );
@@ -256,7 +249,7 @@ void CGame::Init( HINSTANCE InhInstance )
 	{
 		// Try to find some file in directory.
 		Array<String> GameFiles;
-		GameFiles = GPlat->FindFiles(GDirectory, String::format( L"*%s", PROJ_FILE_EXT ));
+		GameFiles = fm::findFiles( *fm::getCurrentDirectory(), *String::format( L"*%s", PROJ_FILE_EXT ) );
 
 		if( GameFiles.size() == 0 )
 			fatal(L"Game file not found");
@@ -264,8 +257,8 @@ void CGame::Init( HINSTANCE InhInstance )
 		String FileName = GameFiles[0];
 		info( L"Game: Game file '%s' detected!", *FileName );
 
-		String Directory	= GetFileDir(FileName);
-		String Name			= GetFileName(FileName);
+		String Directory	= fm::getFilePath( *FileName );
+		String Name			= fm::getFileName( *FileName );
 
 		// Load it.
 		LoadGame( Directory, Name );
@@ -816,36 +809,6 @@ FLevel* CGame::FindLevel( String LevName )
 /*-----------------------------------------------------------------------------
     Console commands execution.
 -----------------------------------------------------------------------------*/
-	
-//
-// Retrieve the name of the file.
-//
-static String GetFileName( String FileName )
-{
-	Int32 i, j;
-
-	for( i=FileName.len()-1; i>=0; i-- )
-		if( FileName[i] == L'\\' )
-			break;
-
-	j = String::pos( L".", FileName );
-	return String::copy( FileName, i+1, j-i-1 );
-}
-
-
-//
-// Retrieve the directory of the file.
-//
-static String GetFileDir( String FileName )
-{ 
-	Int32 i;
-	for( i=FileName.len()-1; i>=0; i-- )
-		if( FileName[i] == L'\\' )
-			break;
-
-	return String::copy( FileName, 0, i );
-}
-
 
 //
 // Main console command execution function.

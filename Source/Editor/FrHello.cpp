@@ -44,7 +44,7 @@ WHelloPage::WHelloPage( WContainer* InOwner, WWindow* InRoot )
 			break;
 
 		Recent[i]				= new WLinkLabel( this, Root );
-		Recent[i]->Caption		= GetFileName(RecentFiles[i]) + L".fluproj";
+		Recent[i]->Caption		= fm::getFileName( *RecentFiles[i] ) + L".fluproj";
 		Recent[i]->Tooltip		= RecentFiles[i];
 		Recent[i]->EventClick	= WIDGET_EVENT(WHelloPage::LinkRecentClick);
 		Recent[i]->SetSize( WWindow::Font1->TextWidth(*Recent[i]->Caption), WWindow::Font1->Height );
@@ -181,7 +181,7 @@ void WHelloPage::LinkRecentClick( WWidget* Sender )
 			break;
 		}
 
-	if( !GPlat->FileExists(FileName) )
+	if( !fm::fileExists( *FileName ) )
 	{
 		Root->ShowMessage
 		(

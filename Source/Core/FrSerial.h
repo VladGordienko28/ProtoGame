@@ -25,6 +25,8 @@ enum ESerMode
 class CSerializer
 {
 public:
+	virtual ~CSerializer() = default;
+
 	// Functions.
 	virtual void SerializeData( void* Mem, SizeT Count ) = 0;
 	virtual void SerializeRef( class FObject*& Obj ) = 0;

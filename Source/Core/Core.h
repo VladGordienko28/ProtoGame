@@ -14,6 +14,7 @@
 #include "LogCallback.h"
 #include "LogManager.h"
 #include "SmartPointer.h"
+#include "Stream.h"
 
 // legacy include
 #include "FrSerial.h"
@@ -25,6 +26,7 @@
 #include "StringManager.h"
 #include "String.h"
 #include "Namespace.h"
+#include "FileManager.h"
 
 /*-----------------------------------------------------------------------------
 	The End.

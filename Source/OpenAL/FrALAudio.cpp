@@ -541,7 +541,7 @@ void COggMusicStream::LoadFromFile( const String& FileName )
 	alSourceUnqueueBuffers( iALSource, AUDIO_MAX_STREAM_BUFFERS, &Buffers[0] );
 
 	// Open the file.
-	if( !GPlat->FileExists(FileName) )
+	if( !fm::fileExists( *FileName ) )
 	{
 		debug( L"MusicStream: File '%s' not found for '%s'", *FileName, *ThisMusic->GetName() );
 		return;
@@ -747,7 +747,7 @@ void COggMusicStream::PlayMusic( FMusic* InMusic, Float FadeTime )
 			FadeInTime	= FadeTime;
 			FadeOutTime	= 0.f;
 			Gain		= 0.f;
-			LoadFromFile( GDirectory+L"\\"+InMusic->FileName );
+			LoadFromFile( fm::getCurrentDirectory() + L"\\"+InMusic->FileName );
 		}
 	}
 }

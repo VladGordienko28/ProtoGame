@@ -21,7 +21,7 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 		//
 		// Export bmp file.
 		//
-		CFileSaver Saver(Directory+L"\\"+Bitmap->FileName);
+		fm::IBinaryFileWriter::Ptr saver = fm::writeBinaryFile( *( Directory + L"\\" + Bitmap->FileName ) );
 
 		BITMAPFILEHEADER BmpHeader;
 		BITMAPINFOHEADER BmpInfo;
@@ -44,8 +44,8 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 		BmpInfo.biClrUsed		= 0;
 		BmpInfo.biClrImportant	= 0;
 
-		Saver.SerializeData( &BmpHeader, sizeof(BITMAPFILEHEADER) );
-		Saver.SerializeData( &BmpInfo, sizeof(BITMAPINFOHEADER) );
+		saver->writeData( &BmpHeader, sizeof( BITMAPFILEHEADER ) );
+		saver->writeData( &BmpInfo, sizeof( BITMAPINFOHEADER ) );
 
 		if( Bitmap->Format == BF_Palette8 )
 		{
@@ -59,7 +59,7 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 				{
 					TColor	C			= Bitmap->Palette.Colors[Line[U]];
 					UInt8	Buffer[3]	= { C.B, C.G, C.R };
-					Saver.SerializeData( Buffer, 3 );
+					saver->writeData( Buffer, sizeof( Buffer ) );
 				}
 			}
 		}
@@ -74,7 +74,7 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 				for( Int32 U=0; U<Bitmap->USize; U++ )
 				{
 					UInt8 Buffer[3] = { Line[U].B, Line[U].G, Line[U].R };
-					Saver.SerializeData( Buffer, 3 );
+					saver->writeData( Buffer, sizeof( Buffer ) );
 				}
 			}
 		}
@@ -99,7 +99,8 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 		UInt8		ImageInfo;
 	};
 #pragma pack(pop)
-		CFileSaver Saver(Directory+L"\\"+Bitmap->FileName);
+		fm::IBinaryFileWriter::Ptr saver = fm::writeBinaryFile( *( Directory + L"\\" + Bitmap->FileName ) );
+
 		TGAHeader	TgaHeader;
 
 		TgaHeader.FileType			= 0;
@@ -116,7 +117,7 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 		TgaHeader.BPP				= 32;
 		TgaHeader.ImageInfo			= 0;
 
-		Saver.SerializeData( &TgaHeader, sizeof(TGAHeader) );
+		saver->writeData( &TgaHeader, sizeof( TGAHeader ) );
 
 		// Save as RGBA.
 		TColor* Data	= (TColor*)Bitmap->GetData();
@@ -127,7 +128,7 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 			for( Int32 U=0; U<Bitmap->USize; U++ )
 			{
 				UInt8 Buffer[4] = { Line[U].B, Line[U].G, Line[U].R, Line[U].A };
-				Saver.SerializeData( Buffer, 4 );
+				saver->writeData( Buffer, sizeof( Buffer ) );
 			}
 		}
 	}
@@ -149,8 +150,8 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 		}
 
 		// Save to file.
-		char file_name[1024];
-		wcstombs( file_name, *(Directory+L"\\"+Bitmap->FileName), arraySize(file_name) );	// It's not good.
+		AnsiChar file_name[1024];
+		cstr::wideToMultiByte( file_name, arraySize( file_name ), *(Directory + L"\\" + Bitmap->FileName) );
 		
 		PngError = lodepng_encode32_file
 		( 
@@ -209,8 +210,8 @@ Bool ExportSound( FSound* Sound, String Directory )
 {
 	assert(Sound && Sound->IsValidBlock());
 
-	CFileSaver Saver(Directory+L"\\"+Sound->FileName);
-	Saver.SerializeData( Sound->GetData(), Sound->GetBlockSize() );
+	fm::IBinaryFileWriter::Ptr saver = fm::writeBinaryFile( *(Directory + L"\\" + Sound->FileName) );
+	saver->writeData( Sound->GetData(), Sound->GetBlockSize() );
 
 	return true;
 }
@@ -232,7 +233,7 @@ Bool CEditor::ExportResource( FResource* Res, String Directory, Bool bOverride )
 	assert(Res && Directory);
 
 	// File already exists.
-	if( !bOverride && GPlat->FileExists(Directory+L"\\"+Res->FileName) )
+	if( !bOverride && fm::fileExists( *(Directory+L"\\"+Res->FileName) ) )
 		return false;
 
 	if( Res->IsA(FSound::MetaClass) )

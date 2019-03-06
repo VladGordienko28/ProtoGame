@@ -10,7 +10,6 @@
 //
 Bool				GIsEditor	= false;
 CPlatformBase*		GPlat		= nullptr;
-String				GDirectory	= L"";
 UInt32				GFrameStamp = 0;
 String				GCmdLine;
 

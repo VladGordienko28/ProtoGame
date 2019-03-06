@@ -84,7 +84,7 @@ namespace flu
 
 		CHAR_TYPE* operator*() const
 		{
-			return m_data ? m_data->data : reinterpret_cast<CHAR_TYPE*>( L"" );
+			return m_data ? m_data->data : const_cast<CHAR_TYPE*>( L"" );
 		}
 
 		StringBase<MANAGER_TYPE, MANAGER>& operator=( const StringBase<MANAGER_TYPE, MANAGER>& other )

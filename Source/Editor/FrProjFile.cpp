@@ -479,7 +479,7 @@ Bool CEditor::SaveProject()
 	// Use dialog to show processing.
 	IProgressIndicator::THolder Ind( TaskDialog, L"Project Saving" );
 
-	String	Directory	= GetFileDir(Project->FileName);
+	String	Directory	= fm::getFilePath( *Project->FileName );
 	CTextWriter ProjFile( Project->FileName );
 
 	// Create directories for imported resources.
@@ -584,7 +584,7 @@ Bool CEditor::SaveAsProject()
 			( 
 				hWnd,
 				FileName, 
-				Project->FileName ? Project->FileName :	GDirectory, 
+				Project->FileName ? Project->FileName :	fm::getCurrentDirectory(), 
 				L"Fluorine Project (*.fluproj)\0*.fluproj\0" 
 			) 
 		)
@@ -595,7 +595,7 @@ Bool CEditor::SaveAsProject()
 		FileName += L".fluproj";
 
 	// Whether override?
-	if( GPlat->FileExists(FileName) )
+	if( fm::fileExists( *FileName ) )
 	{
 		if( FileName != Project->FileName )
 		{
@@ -614,7 +614,7 @@ Bool CEditor::SaveAsProject()
 
 	// Set as project file name and save it.
 	Project->FileName		= FileName;
-	Project->ProjName		= GetFileName(FileName);
+	Project->ProjName		= fm::getFileName( *FileName );
 
 	// Save to file.
 	if( !SaveProject() )
@@ -1000,7 +1000,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 			String BitFile, FullFn;
 			BitFile	= Resource->FindProperty( L"FileName", true )->ToString();
 			FullFn	= String::format( L"%s\\Bitmaps\\%s", *Directory, *BitFile );
-			if( !GPlat->FileExists(FullFn) ) 
+			if( !fm::fileExists( *FullFn ) ) 
 				throw String::format( L"File '%s' not found", *FullFn );
 			Resource->Object	= GEditor->ImportResource( FullFn );
 		}
@@ -1031,7 +1031,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 			String SndFile, FullFn;
 			SndFile = Resource->FindProperty( L"FileName", true )->ToString();
 			FullFn	= String::format( L"%s\\Sounds\\%s", *Directory, *SndFile );
-			if( !GPlat->FileExists(FullFn) ) 
+			if( !fm::fileExists( *FullFn ) ) 
 				throw String::format( L"File '%s' not found", *FullFn );
 			Resource->Object	= GEditor->ImportResource( FullFn );
 		}
@@ -1134,7 +1134,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 		if( Script->IsScriptable() )
 		{
 			String FullFileName = String::format( L"%s\\Scripts\\%s", *Directory, *Script->FileName );
-			if( !GPlat->FileExists(FullFileName) )
+			if( !fm::fileExists( *FullFileName ) )
 				throw String::format( L"File '%s' not found", *FullFileName );
 			CTextReader TextReader(FullFileName);
 			while( !TextReader.IsEOF() )
@@ -1568,8 +1568,8 @@ Bool CEditor::OpenProjectFrom( String FileName )
 	assert(!GProject);
 
 	// Allocate the project.
-	String	Directory	= GetFileDir( FileName );
-	String	ProjName	= GetFileName( FileName );
+	String	Directory	= fm::getFilePath( *FileName );
+	String	ProjName	= fm::getFileName( *FileName );
 	Project				= new CProject();
 	Project->BlockMan	= new CBlockManager();
 	Project->FileName	= FileName;
@@ -1745,7 +1745,7 @@ Bool CEditor::OpenProject()
 			( 
 				hWnd,
 				FileName, 
-				GDirectory, 
+				fm::getCurrentDirectory(), 
 				L"Fluorine Project (*.fluproj)\0*.fluproj\0" 
 			) 
 		)
@@ -1766,9 +1766,9 @@ FResource* CEditor::PreloadResource( String Name )
 		return nullptr;
 
 	FResource*	Res			= nullptr;
-	String		FileName	= GDirectory + Name;
-	String		Directory	= GetFileDir(FileName);
-	assert(GPlat->FileExists(FileName));
+	String		FileName	= fm::getCurrentDirectory() + Name;
+	String		Directory	= fm::getFilePath( *FileName );
+	assert( fm::fileExists( *FileName ) );
 
 	// Let loading wrap into try-catch.
 	try

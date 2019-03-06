@@ -39,6 +39,10 @@
       <Filter>String</Filter>
     </ClInclude>
     <ClInclude Include="SmartPointer.h" />
+    <ClInclude Include="FileManager.h">
+      <Filter>FileManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Stream.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp" />
@@ -59,6 +63,9 @@
     </ClCompile>
     <ClCompile Include="StringManager.cpp">
       <Filter>String</Filter>
+    </ClCompile>
+    <ClCompile Include="FileManager.cpp">
+      <Filter>FileManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -82,6 +89,9 @@
     </Filter>
     <Filter Include="String">
       <UniqueIdentifier>{3b8d669b-3596-431f-9e31-c180fc55661d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FileManager">
+      <UniqueIdentifier>{cea095a8-9cab-4c40-b1d8-4d10cfc7171f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -38,7 +38,7 @@ public:
 	{
 		return Data;
 	}
-	inline SizeT GetSize() const
+	inline UInt64 GetSize() const
 	{
 		return Size;
 	}
@@ -49,7 +49,7 @@ private:
 	UInt32			Flags;
 	SizeT			Size;
 	Double			Cost;
-	UInt32			FileRecord;
+	UInt64			FileRecord;
 };
 
 
@@ -87,9 +87,9 @@ public:
 
 private:
 	// Internal.
-	Array<TDataBlock*>		Blocks;
-	String					FileName;
-	CSerializer*			ResFile;
+	Array<TDataBlock*>			Blocks;
+	String						FileName;
+	fm::IBinaryFileReader::Ptr	ResFile;
 };
 
 

@@ -67,6 +67,16 @@ namespace cstr
 		return wcschr( string, ch );
 	}
 
+	inline const AnsiChar* findRevChar( const AnsiChar* string, AnsiChar ch )
+	{
+		return strrchr( string, ch );
+	}
+
+	inline const WideChar* findRevChar( const WideChar* string, WideChar ch )
+	{
+		return wcsrchr( string, ch );
+	}
+
 	inline AnsiChar toUpper( AnsiChar ch )
 	{
 		return toupper( ch );
@@ -96,6 +106,18 @@ namespace cstr
 	inline WideChar* concat( WideChar* destBuffer, SizeT bufferSize, const WideChar* other )
 	{
 		wcscat_s( destBuffer, bufferSize, other );
+		return destBuffer;
+	}
+
+	inline AnsiChar* copy( AnsiChar* destBuffer, SizeT destSize, const AnsiChar* srcBuffer, SizeT numSymbs )
+	{
+		strncpy_s( destBuffer, destSize, srcBuffer, numSymbs );
+		return destBuffer;
+	}
+
+	inline WideChar* copy( WideChar* destBuffer, SizeT destSize, const WideChar* srcBuffer, SizeT numSymbs )
+	{
+		wcsncpy_s( destBuffer, destSize, srcBuffer, numSymbs );
 		return destBuffer;
 	}
 

@@ -65,33 +65,6 @@ UInt32 CWinPlatform::Cycles()
 
 
 //
-// Whether file exists?
-//
-Bool CWinPlatform::FileExists( String FileName )
-{
-	FILE* File = _wfopen( *FileName, L"rb" );
-	if( File )
-	{
-		fclose(File);
-		return true;
-	}
-	else
-		return false;
-}
-
-
-//
-// Whether directory exists?
-//
-Bool CWinPlatform::DirectoryExists( String Dir )
-{
-	UInt32 Type	= GetFileAttributes(*Dir);
-	return	!(Type & INVALID_FILE_ATTRIBUTES) && 
-			(Type & FILE_ATTRIBUTE_DIRECTORY);
-}
-
-
-//
 // Copy text to clipboard.
 //
 void CWinPlatform::ClipboardCopy( Char* Str ) 
@@ -152,31 +125,6 @@ envi::TimeOfDay CWinPlatform::GetTimeOfDay()
 	GetLocalTime(&Time);
 	return envi::TimeOfDay(Time.wHour, Time.wMinute, Time.wSecond);
 };
-
-
-//
-// Find files in specified directory with wildcard.
-//
-Array<String> CWinPlatform::FindFiles( String Directory, String Wildcard )
-{
-	Array<String> Result;
-	WIN32_FIND_DATA FindData;
-
-	HANDLE hFind = FindFirstFile( *String::format( L"%s\\%s", *Directory, *Wildcard ), &FindData );
-	if( hFind != INVALID_HANDLE_VALUE )
-	{
-		do
-		{
-			Result.push(String::format( L"%s\\%s", *Directory, FindData.cFileName ) );
-
-		} while( FindNextFile(hFind, &FindData) );
-
-		FindClose(hFind);
-	}
-
-	return Result;
-}
-
 
 /*-----------------------------------------------------------------------------
     The End.

@@ -158,7 +158,8 @@ Bool CApplication::SaveGame( String Directory, String Name )
 	
 	String RealDir = Directory + L"\\";
 	String ProjFile = Name + PROJ_FILE_EXT;
-	CFileSaver	Saver(RealDir+ProjFile);
+
+	FileSaverAdapter Saver( fm::writeBinaryFile( *(RealDir + ProjFile) ) );
 
 	// Save general file information.
 	{
@@ -250,7 +251,8 @@ Bool CApplication::LoadGame( String Directory, String Name )
 
 	String RealDir = Directory + L"\\";
 	String ProjFile = Name + PROJ_FILE_EXT;
-	CFileLoader	Loader(RealDir+ProjFile);
+
+	FileLoaderAdapter Loader( fm::readBinaryFile( *(RealDir + ProjFile) ) );
 
 	// Load general file information.
 	{
@@ -258,7 +260,7 @@ Bool CApplication::LoadGame( String Directory, String Name )
 		Serialize( Loader, Info );
 
 		if( Info.Control != 2528 )
-			fatal( L"File '%s' is not a Fluorine Game", *Loader.FileName );
+			fatal( L"File '%s' is not a Fluorine Game", *(RealDir + ProjFile) );
 
 		if( Info.EngineVer != FLU_VERSION )
 			fatal( L"Old Fluorine File" );

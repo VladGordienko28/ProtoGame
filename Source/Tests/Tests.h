@@ -55,12 +55,14 @@ namespace tests
 	extern void test_Array();
 	//extern void test_Set();
 	//extern void test_String();
+	extern void test_File();
 
 	static const TestFunction g_tests[] = 
 	{
 		test_Array,
 		//test_Set,
-		//test_String
+		//test_String,
+		test_File
 	};
 } // namespace tests
 } // namespace flu

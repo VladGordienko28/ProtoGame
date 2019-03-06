@@ -1527,7 +1527,7 @@ public:
 			( 
 				GEditor->hWnd,
 				FileName, 
-				GDirectory, 
+				fm::getCurrentDirectory(), 
 				L"Any Resource File\0*.bmp;*.tga;*.png;*.wav;*.ogg;*.flf\0\0" 
 			) )
 		{
@@ -1535,7 +1535,7 @@ public:
 			WForm::Show( X, Y );
 
 			// Fill fields.
-			NameEdit->Text		= GetFileName(FileName);
+			NameEdit->Text		= fm::getFileName( *FileName );
 			GroupEdit->Text		= L"<unused>";
 		}
 	}

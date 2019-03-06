@@ -20,14 +20,11 @@ public:
 	Double TimeStamp();
 	Double Now();
 	UInt32 Cycles();
-	Bool FileExists( String FileName );
-	Bool DirectoryExists( String Dir );
 	void ClipboardCopy( Char* Str );
 	String ClipboardPaste();
 	void Launch( const Char* Target, const Char* Parms );
 	envi::TimeOfDay GetTimeOfDay();
 	void SetNow( Double InNow );
-	Array<String> FindFiles( String Directory, String Wildcard );
 
 private:
 	// Internal variables.

@@ -10,54 +10,55 @@
 //
 // Serializer to load data from disc.
 //
-class CFileLoader: public CSerializer
+// Legacy, and will be removed soon
+//
+class FileLoaderAdapter: public CSerializer
 {
 public:
-	String	FileName;
-	FILE*	File;
+	FileLoaderAdapter( fm::IBinaryFileReader::Ptr inFile )
+	{
+		m_file = inFile;
+		Mode = SM_Load;
 
-	// CFileLoader interface.
-	CFileLoader( String InFileName )
-		: FileName( InFileName )
-	{
-		Mode	= SM_Load;
-		_wfopen_s( &File, *FileName, L"rb" );
-		if( !File )
-			fatal( L"File \"%s\" not found", *FileName );
-	}
-	~CFileLoader()
-	{
-		fclose( File );
+		if( !m_file )
+		{
+			fatal( L"File not found" );
+		}
 	}
 
-	// CSerializer interface.
-	void SerializeData( void* Mem, SizeT Count )
+	void SerializeData( void* Mem, SizeT Count ) override
 	{
-		fread( Mem, Count, 1, File );
+		m_file->readData( Mem, Count );
 	}
-	void SerializeRef( FObject*& Obj )
+
+	void SerializeRef( FObject*& Obj ) override
 	{
 		Int32 Id;
 		Serialize( *this, Id );
 		Obj	= Id != -1 ? GObjectDatabase->GObjects[Id] : nullptr;
 	}
-	SizeT TotalSize()
+
+	SizeT TotalSize() override
 	{
-		SizeT OldPos = ftell( File );
-		fseek( File, 0, SEEK_END );
-		SizeT Size = ftell( File );
-		fseek( File, OldPos, SEEK_SET );
-		return Size;
+		return m_file->totalSize();
 	}
-	void Seek( SizeT NewPos )
+
+	void Seek( SizeT NewPos ) override
 	{
-		if( fseek( File, NewPos, SEEK_SET ) )
-			fatal( L"Seek failed %d in \"%s\"", NewPos, *FileName );
+		m_file->seek( NewPos );
 	}
-	SizeT Tell()
+
+	SizeT Tell() override
 	{
-		return ftell( File );
+		return m_file->tell();
 	}
+
+private:
+	fm::IBinaryFileReader::Ptr m_file;
+
+	FileLoaderAdapter() = delete;
+	FileLoaderAdapter( const FileLoaderAdapter& ) = delete;
+	FileLoaderAdapter( FileLoaderAdapter&& ) = delete;
 };
 
 
@@ -68,53 +69,55 @@ public:
 //
 // Serializer to write data to disc.
 //
-class CFileSaver: public CSerializer
+// Legacy, and will be removed soon
+//
+class FileSaverAdapter: public CSerializer
 {
 public:
-	String	FileName;
-	FILE*	File;
+	FileSaverAdapter( fm::IBinaryFileWriter::Ptr inFile )
+	{
+		m_file = inFile;
+		Mode = SM_Save;
 
-	// CFileSaver interface.
-	CFileSaver( String InFileName )
-		: FileName( InFileName )
-	{
-		Mode	= SM_Save;
-		_wfopen_s( &File, *FileName, L"wb" );
-		if( !File )
-			fatal( L"File \"%s\" not found", *FileName );
-	}
-	~CFileSaver()
-	{
-		fclose( File );
+		if( !m_file )
+		{
+			fatal( L"File not found" );
+		}
 	}
 
-	// CSerializer interface.
-	void SerializeData( void* Mem, SizeT Count )
+	void SerializeData( void* Mem, SizeT Count ) override
 	{
-		fwrite( Mem, Count, 1, File );
+		m_file->writeData( Mem, Count );
 	}
-	void SerializeRef( FObject*& Obj )
+
+	void SerializeRef( FObject*& Obj ) override
 	{
 		Int32 Id	= Obj ? Obj->GetId() : -1;
 		Serialize( *this, Id );
 	}
+
 	SizeT TotalSize()
 	{
-		SizeT OldPos = ftell( File );
-		fseek( File, 0, SEEK_END );
-		SizeT Size = ftell( File );
-		fseek( File, OldPos, SEEK_SET );
-		return Size;
+		assert( false && "Is not implemented" );
+		return 0;
 	}
-	void Seek( SizeT NewPos )
+
+	void Seek( SizeT NewPos ) override
 	{
-		if( fseek( File, NewPos, SEEK_SET ) )
-			fatal( L"Seek failed %d in \"%s\"", NewPos, *FileName );
+		assert( false && "Is not implemented" );
 	}
-	SizeT Tell()
+
+	SizeT Tell() override
 	{
-		return ftell( File );
+		return m_file->tell();
 	}
+
+private:
+	fm::IBinaryFileWriter::Ptr m_file;
+
+	FileSaverAdapter() = delete;
+	FileSaverAdapter( const FileSaverAdapter& ) = delete;
+	FileSaverAdapter( FileSaverAdapter&& ) = delete;
 };
 
 

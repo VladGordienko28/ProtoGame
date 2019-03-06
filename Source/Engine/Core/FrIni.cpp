@@ -18,7 +18,7 @@ CConfigManager::CConfigManager( String WorkingDirectory )
 {
 	info(L"ConfigMan: Directory: '%s'", *Directory);
 
-	Array<String> FileList = GPlat->FindFiles( Directory, L"*.ini" );
+	Array<String> FileList = fm::findFiles( *Directory, L"*.ini" );
 	info(L"ConfigMan: %d configuration files found", FileList.size());
 
 	for( Int32 iFile=0; iFile<FileList.size(); iFile++ )

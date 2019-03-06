@@ -36,10 +36,10 @@ CBlockManager::CBlockManager( String InFileName )
 		FileName( InFileName )
 {
 	// Allocate loader.
-	if( !GPlat->FileExists(InFileName) )
+	if( !fm::fileExists( *InFileName ) )
 		fatal( L"Resource file '%s' not found", *FileName );
 
-	ResFile	= new CFileLoader( InFileName );
+	ResFile = fm::readBinaryFile( *InFileName );
 }
 
 
@@ -50,7 +50,9 @@ CBlockManager::~CBlockManager()
 {
 	// Close file if any.
 	if( !GIsEditor )
-		freeandnil(ResFile);
+	{
+		ResFile = nullptr;
+	}
 
 	// Destroy blocks.
 	for( Int32 i=0; i<Blocks.size(); i++ )
@@ -159,7 +161,9 @@ void CBlockManager::SaveAllBlocks( String InFileName )
 	// Don't save resources in game.
 	assert(GIsEditor);
 
-	CFileSaver Saver(InFileName);
+	fm::IBinaryFileWriter::Ptr saver = fm::writeBinaryFile( *InFileName );
+	assert( saver.hasObject() );
+
 
 	// Count resources info.
 	{
@@ -170,8 +174,9 @@ void CBlockManager::SaveAllBlocks( String InFileName )
 				NumRes++;
 				DbSize	= i+1;
 			}
-		Serialize( Saver, DbSize );
-		Serialize( Saver, NumRes );
+
+		saver->writeData( &DbSize, sizeof( DbSize ) );
+		saver->writeData( &NumRes, sizeof( NumRes ) );
 	}
 
 	// Save header of each resource, and store
@@ -223,15 +228,15 @@ void CBlockManager::SaveAllBlocks( String InFileName )
 			}
 
 			// Save block info.
-			Serialize( Saver, i );
-			Serialize( Saver, B->Flags );
-			Serialize( Saver, B->Size );
+			saver->writeData( &i, sizeof( i ) );
+			saver->writeData( &B->Flags, sizeof( B->Flags ) );
+			saver->writeData( &B->Size, sizeof( B->Size ) );
 
 			// Temporary serialize stuff, next time it will be 
 			// offset to block's data.
 			B->FileRecord	= -1;
-			OffsetMap[i]	= Saver.Tell();
-			Serialize( Saver, B->FileRecord );
+			OffsetMap[i]	= saver->tell();
+			saver->writeData( &B->FileRecord, sizeof( B->FileRecord ) );
 		}
 
 	// Save all block's data.
@@ -242,10 +247,10 @@ void CBlockManager::SaveAllBlocks( String InFileName )
 			TDataBlock*	B	= Blocks[i];
 
 			// Update FileRecord.
-			B->FileRecord = Saver.Tell();
-			Saver.Seek( OffsetMap[i] );
-			Serialize( Saver, B->FileRecord );
-			Saver.Seek( B->FileRecord );
+			B->FileRecord = saver->tell();
+			saver->seek( OffsetMap[i] );
+			saver->writeData( &B->FileRecord, sizeof( B->FileRecord ) );
+			saver->seek( B->FileRecord );
 
 			if( B->Flags & BLOCK_LZW )
 			{
@@ -253,9 +258,9 @@ void CBlockManager::SaveAllBlocks( String InFileName )
 				CLZWCompressor LZW;
 				void* OutBuffer;
 				SizeT OutSize;
-				LZW.Encode( B->Data, B->Size, OutBuffer, OutSize );		
-				Serialize( Saver, OutSize );
-				Saver.SerializeData( OutBuffer, OutSize );
+				LZW.Encode( B->Data, B->Size, OutBuffer, OutSize );	
+				saver->writeData( &OutSize, sizeof( OutSize ) );
+				saver->writeData( OutBuffer, OutSize );
 				mem::free( OutBuffer );
 			}
 			else if( B->Flags & BLOCK_RLE )
@@ -264,15 +269,15 @@ void CBlockManager::SaveAllBlocks( String InFileName )
 				CRLECompressor RLE;
 				void* OutBuffer;
 				SizeT OutSize;
-				RLE.Encode( B->Data, B->Size, OutBuffer, OutSize );		
-				Serialize( Saver, OutSize );
-				Saver.SerializeData( OutBuffer, OutSize );
+				RLE.Encode( B->Data, B->Size, OutBuffer, OutSize );
+				saver->writeData( &OutSize, sizeof( OutSize ) );
+				saver->writeData( OutBuffer, OutSize );
 				mem::free( OutBuffer );
 			}
 			else
 			{
 				// Save without compression.
-				Saver.SerializeData( B->Data, B->Size );
+				saver->writeData( B->Data, B->Size );
 			}
 		}
 }
@@ -286,12 +291,12 @@ void CBlockManager::LoadAllBlocks( String InFileName )
 	// Don't load all resources in game.
 	assert(GIsEditor);
 
-	CFileLoader Loader(InFileName);
+	fm::IBinaryFileReader::Ptr loader = fm::readBinaryFile( *InFileName );
 
 	// Resources count.
 	Int32 NumRes, DbSize;
-	Serialize( Loader, DbSize );
-	Serialize( Loader, NumRes );
+	loader->readData( &DbSize, sizeof( DbSize ) );
+	loader->readData( &NumRes, sizeof( NumRes ) );
 
 	// Allocate slots for blocks.
 	Blocks.setSize( DbSize );
@@ -303,10 +308,10 @@ void CBlockManager::LoadAllBlocks( String InFileName )
 		Int32 iSlot;
 		
 		// Load.
-		Serialize( Loader, iSlot );
-		Serialize( Loader, B->Flags );
-		Serialize( Loader, B->Size );
-		Serialize( Loader, B->FileRecord );
+		loader->readData( &iSlot, sizeof( iSlot ) );
+		loader->readData( &B->Flags, sizeof( B->Flags ) );
+		loader->readData( &B->Size, sizeof( B->Size ) );
+		loader->readData( &B->FileRecord, sizeof( B->FileRecord ) );
 
 		// Add to list.
 		Blocks[iSlot]	= B;
@@ -319,16 +324,16 @@ void CBlockManager::LoadAllBlocks( String InFileName )
 			TDataBlock* B	= Blocks[i];
 
 			// Goto data.
-			Loader.Seek( B->FileRecord );
+			loader->seek( B->FileRecord );
 			
 			// Load and uncompress data.
 			if( B->Flags & BLOCK_LZW )
 			{
 				// Load LZW data and uncompress it.
 				UInt32 InSize;
-				Serialize( Loader, InSize );
+				loader->readData( &InSize, sizeof( InSize ) );
 				void* InBuffer	= mem::malloc( InSize );
-				Loader.SerializeData( InBuffer, InSize );
+				loader->readData( InBuffer, InSize );
 				CLZWCompressor LZW;
 				LZW.Decode( InBuffer, InSize, B->Data, B->Size );
 				mem::free( InBuffer );
@@ -338,9 +343,9 @@ void CBlockManager::LoadAllBlocks( String InFileName )
 			{
 				// Load RLE data and uncompress it.
 				UInt32 InSize;
-				Serialize( Loader, InSize );
+				loader->readData( &InSize, sizeof( InSize ) );
 				void* InBuffer	= mem::malloc( InSize );
-				Loader.SerializeData( InBuffer, InSize );
+				loader->readData( InBuffer, InSize );
 				CRLECompressor RLE;
 				RLE.Decode( InBuffer, InSize, B->Data, B->Size );
 				mem::free( InBuffer );
@@ -348,8 +353,8 @@ void CBlockManager::LoadAllBlocks( String InFileName )
 			else
 			{
 				// Load not compressed data.
-				B->Data	= mem::malloc(B->Size);
-				Loader.SerializeData( B->Data, B->Size );
+				B->Data	= mem::malloc( B->Size );
+				loader->readData( B->Data, B->Size );
 			}
 		}
 
@@ -397,8 +402,8 @@ void CBlockManager::LoadMetadata()
 
 	// Resources count.
 	Int32 NumRes, DbSize;
-	Serialize( *ResFile, DbSize );
-	Serialize( *ResFile, NumRes );
+	ResFile->readData( &DbSize, sizeof( DbSize ) );
+	ResFile->readData( &NumRes, sizeof( NumRes ) );
 
 	// Allocate slots for blocks.
 	Blocks.setSize( DbSize );
@@ -410,10 +415,10 @@ void CBlockManager::LoadMetadata()
 		Int32 iSlot;
 		
 		// Load.
-		Serialize( *ResFile, iSlot );
-		Serialize( *ResFile, B->Flags );
-		Serialize( *ResFile, B->Size );
-		Serialize( *ResFile, B->FileRecord );
+		ResFile->readData( &iSlot, sizeof( iSlot ) );
+		ResFile->readData( &B->Flags, sizeof( B->Flags ) );
+		ResFile->readData( &B->Size, sizeof( B->Size ) );
+		ResFile->readData( &B->FileRecord, sizeof( B->FileRecord ) );
 
 		// Add to list.
 		Blocks[iSlot]	= B;
@@ -444,16 +449,16 @@ void CBlockManager::UploadBlock( Int32 iBlock )
 
 	// Load it.
 	TDataBlock* B		= Blocks[iBlock];
-	ResFile->Seek(B->FileRecord);
+	ResFile->seek( B->FileRecord );
 
 	// Load and uncompress data.
 	if( B->Flags & BLOCK_LZW )
 	{
 		// Load LZW data and uncompress it.
 		UInt32 InSize;
-		Serialize( *ResFile, InSize );
+		ResFile->readData( &InSize, sizeof( InSize ) );
 		void* InBuffer	= mem::malloc( InSize );
-		ResFile->SerializeData( InBuffer, InSize );
+		ResFile->readData( InBuffer, InSize );
 		CLZWCompressor LZW;
 		LZW.Decode( InBuffer, InSize, B->Data, B->Size );
 		mem::free( InBuffer );
@@ -462,9 +467,9 @@ void CBlockManager::UploadBlock( Int32 iBlock )
 	{
 		// Load RLE data and uncompress it.
 		UInt32 InSize;
-		Serialize( *ResFile, InSize );
+		ResFile->readData( &InSize, sizeof( InSize ) );
 		void* InBuffer	= mem::malloc( InSize );
-		ResFile->SerializeData( InBuffer, InSize );
+		ResFile->readData( InBuffer, InSize );
 		CRLECompressor RLE;
 		RLE.Decode( InBuffer, InSize, B->Data, B->Size );
 		mem::free( InBuffer );
@@ -473,7 +478,7 @@ void CBlockManager::UploadBlock( Int32 iBlock )
 	{
 		// Load not compressed data.
 		B->Data	= mem::malloc(B->Size);
-		ResFile->SerializeData( B->Data, B->Size );
+		ResFile->readData( B->Data, B->Size );
 	}
 
 	// Mark block as loaded. And let it live 

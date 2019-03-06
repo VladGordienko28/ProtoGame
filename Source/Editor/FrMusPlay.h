@@ -66,15 +66,13 @@ public:
 		Music	= NewMusic;
 		if( NewMusic )
 		{
-			String RealFN	= GDirectory + L"\\" + Music->FileName;
-			Bool bExists	= GPlat->FileExists(RealFN);
-			UInt32 MusicSize	= 0;
+			String RealFN	= fm::getCurrentDirectory() + L"\\" + Music->FileName;
+			Bool bExists	= fm::fileExists( *RealFN );
 			String FN		= Music->FileName;
-			if( bExists )
-			{
-				CFileLoader Loader(RealFN);
-				MusicSize	= Loader.TotalSize();
-			}
+
+			fm::IBinaryFileReader::Ptr loader = fm::readBinaryFile( *RealFN );
+			UInt32 MusicSize = loader.hasObject() ? loader->totalSize() : 0;
+
 #if 0
 			{
 				// Replace '\' to '/' in file name.

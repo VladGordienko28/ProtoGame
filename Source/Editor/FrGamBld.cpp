@@ -182,7 +182,7 @@ void WGameBuilderDialog::BuildGame()
 			return;
 
 	// Allocate target directory.
-	String Directory = GetFileDir(GProject->FileName) + L"\\Release";
+	String Directory = fm::getFilePath( *GProject->FileName ) + L"\\Release";
 	CreateDirectory( *Directory, nullptr );
 
 	// Shutdown play pages.
@@ -214,9 +214,9 @@ void WGameBuilderDialog::BuildGame()
 	// Launch game!
 	if( LaunchCheck->bChecked )
 	{
-		String ExeDir = GDirectory+L"\\"+CLIENT_EXE_NAME;
+		String ExeDir = fm::getCurrentDirectory() + L"\\" + CLIENT_EXE_NAME;
 
-		if( !GPlat->FileExists(ExeDir) )
+		if( !fm::fileExists( *ExeDir ) )
 		{
 			Root->ShowMessage( L"Couldn't run game. '" CLIENT_EXE_NAME L"' not found.", L"Fluorine", true );
 			return;

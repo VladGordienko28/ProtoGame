@@ -65,18 +65,20 @@ Bool ExecuteOpenFileDialog( HWND hWnd, String& FileName, String Directory, const
 	OPN.lpstrInitialDir	= *Directory;
 	OPN.Flags			= OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
+	String oldCWD = fm::getCurrentDirectory();
+
 	if( GetOpenFileName( &OPN ) == TRUE )
 	{
 		// File opened.
 		FileName	= File;
-		SetCurrentDirectory(*GDirectory);
+		SetCurrentDirectory( *oldCWD );
 		return true;
 	}
 	else
 	{
 		// Failed.
 		FileName	= L"";
-		SetCurrentDirectory(*GDirectory);
+		SetCurrentDirectory( *oldCWD );
 		return false;
 	}
 }
@@ -103,18 +105,20 @@ Bool ExecuteSaveFileDialog( HWND hWnd, String& FileName, String Directory, const
 	SAV.lpstrInitialDir	= *Directory;
 	SAV.Flags			= OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
+	String oldCWD = fm::getCurrentDirectory();
+
 	if( GetSaveFileName( &SAV ) == TRUE )
 	{
 		// File saved.
 		FileName	= File;
-		SetCurrentDirectory(*GDirectory);
+		SetCurrentDirectory( *oldCWD );
 		return true;
 	}
 	else
 	{
 		// Failed.
 		FileName	= L"";
-		SetCurrentDirectory(*GDirectory);
+		SetCurrentDirectory( *oldCWD );
 		return false;
 	}
 }

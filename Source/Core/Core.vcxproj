@@ -148,6 +148,7 @@
     <ClInclude Include="Build.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="CString.h" />
+    <ClInclude Include="FileManager.h" />
     <ClInclude Include="FrSerial.h" />
     <ClInclude Include="Heap.h" />
     <ClInclude Include="LogCallback.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Profiler.h" />
     <ClInclude Include="SmartPointer.h" />
     <ClInclude Include="Stack.h" />
+    <ClInclude Include="Stream.h" />
     <ClInclude Include="String.h" />
     <ClInclude Include="StringManager.h" />
     <ClInclude Include="Types.h" />
@@ -169,6 +171,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="Heap.cpp" />
     <ClCompile Include="LogManager.cpp" />
     <ClCompile Include="Namespace.cpp" />

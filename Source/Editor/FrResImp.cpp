@@ -6,40 +6,6 @@
 #include "Editor.h"
 
 /*-----------------------------------------------------------------------------
-    Utility.
------------------------------------------------------------------------------*/
-
-//
-// Retrieve the name of the file.
-//
-String GetFileName( String FileName )
-{
-	Int32 i, j;
-
-	for( i=FileName.len()-1; i>=0; i-- )
-		if( FileName[i] == L'\\' )
-			break;
-
-	j = String::pos( L".", FileName );
-	return String::copy( FileName, i+1, j-i-1 );
-}
-
-
-//
-// Retrieve the directory of the file.
-//
-String GetFileDir( String FileName )
-{ 
-	Int32 i;
-	for( i=FileName.len()-1; i>=0; i-- )
-		if( FileName[i] == L'\\' )
-			break;
-
-	return String::copy( FileName, 0, i );
-}
-
-
-/*-----------------------------------------------------------------------------
     Image importers.
 -----------------------------------------------------------------------------*/
 
@@ -48,12 +14,12 @@ String GetFileDir( String FileName )
 //
 FBitmap* ImportBMP( String Filename, String ResName )
 {
-	CFileLoader Loader( Filename );
+	fm::IBinaryFileReader::Ptr loader = fm::readBinaryFile( *Filename );
 
 	BITMAPFILEHEADER BmpHeader;
 	BITMAPINFOHEADER BmpInfo;
-	Loader.SerializeData( &BmpHeader, sizeof(BITMAPFILEHEADER) );
-	Loader.SerializeData( &BmpInfo, sizeof(BITMAPINFOHEADER) );
+	loader->readData( &BmpHeader, sizeof( BITMAPFILEHEADER ) );
+	loader->readData( &BmpInfo, sizeof( BITMAPINFOHEADER ) );
 
 	if( BmpHeader.bfType != 0x4d42 )
 	{
@@ -76,7 +42,7 @@ FBitmap* ImportBMP( String Filename, String ResName )
 	if( BmpInfo.biClrUsed )
 	{
 		BmpInfo.biClrUsed = min( BmpInfo.biClrUsed, (DWORD)256 );
-		Loader.SerializeData( BmpPalette, sizeof(RGBQUAD)*BmpInfo.biClrUsed );
+		loader->readData( BmpPalette, sizeof( RGBQUAD ) * BmpInfo.biClrUsed );
 	}
 
 	TColor* TempData = new TColor[BmpInfo.biWidth * BmpInfo.biHeight];
@@ -86,14 +52,14 @@ FBitmap* ImportBMP( String Filename, String ResName )
 	Int32 VMask = (BmpInfo.biHeight-1) << UBits;
 
 	// Load entire bmp data.
-	Loader.Seek( BmpHeader.bfOffBits );	
+	loader->seek( BmpHeader.bfOffBits );
 	if( BmpInfo.biBitCount == 24 )
 	{
 		// 24 - bit.
 		for( Int32 i=0; i<BmpInfo.biWidth*BmpInfo.biHeight; i++ )
 		{
 			UInt8 RawPix[4];
-			Loader.SerializeData( RawPix, 3*sizeof(UInt8) );
+			loader->readData( RawPix, 3 * sizeof(UInt8) );
 			TColor Source( RawPix[2], RawPix[1], RawPix[0], 0xff );
 			if( Source == MASK_COLOR )	Source.A = 0x00;
 			TempData[(VMask&~i)|(i&UMask)] = Source;		// Flip image here.
@@ -105,7 +71,7 @@ FBitmap* ImportBMP( String Filename, String ResName )
 		for( Int32 i=0; i<BmpInfo.biWidth*BmpInfo.biHeight; i++ )
 		{
 			UInt8 RawPix[4];
-			Loader.SerializeData( RawPix, 4*sizeof(UInt8) );
+			loader->readData( RawPix, 4 * sizeof( UInt8 ) );
 			TColor Source( RawPix[2], RawPix[1], RawPix[0], 0xff );
 			if( Source == MASK_COLOR )	Source.A = 0x00;
 			TempData[(VMask&~i)|(i&UMask)] = Source;		// Flip image here.
@@ -117,7 +83,7 @@ FBitmap* ImportBMP( String Filename, String ResName )
 		for( Int32 i=0; i<BmpInfo.biWidth*BmpInfo.biHeight; i++ )
 		{
 			UInt8 iColor;
-			Serialize( Loader, iColor );
+			loader->readData( &iColor, sizeof( UInt8 ) );
 			TColor Source( BmpPalette[iColor].rgbRed, BmpPalette[iColor].rgbGreen, BmpPalette[iColor].rgbBlue, 0xff );
 			if( Source == MASK_COLOR )	Source.A = 0x00;
 			TempData[(VMask&~i)|(i&UMask)] = Source;		// Flip image here.
@@ -153,7 +119,7 @@ FBitmap* ImportBMP( String Filename, String ResName )
 	// Allocate bitmap and initialize it.
 	FBitmap*	Bitmap	= NewObject<FBitmap>( ResName, nullptr );
 	Bitmap->Init( BmpInfo.biWidth, BmpInfo.biHeight );
-	Bitmap->FileName	= GetFileName(Filename) + L".bmp";
+	Bitmap->FileName	= fm::getFileName( *Filename ) + L".bmp";
 
 	// Load data into bitmap.
 	if( Palette.size() <= 256 )
@@ -208,12 +174,12 @@ FBitmap* ImportTGA( String Filename, String ResName )
 	};
 #pragma pack(pop)
 
-	CFileLoader Loader( Filename );
+	fm::IBinaryFileReader::Ptr loader = fm::readBinaryFile( *Filename );
 	TGAHeader	TgaHeader;
-	Loader.SerializeData( &TgaHeader, sizeof(TGAHeader) );
+	loader->readData( &TgaHeader, sizeof( TGAHeader ) );
 
 	// Only 24 and 32 bits supported.
-	if( TgaHeader.ImageType!=2 && TgaHeader.ImageType!=10 )
+	if( TgaHeader.ImageType != 2 && TgaHeader.ImageType != 10 )
 	{
 		MessageBox( 0, *String::format( L"Only 24 and 32 bit TGA supported" ), 
 			L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
@@ -257,12 +223,12 @@ FBitmap* ImportTGA( String Filename, String ResName )
 	{
 		// Standard uncompressed tga.
 		UInt8* TmpImage	= new UInt8[ImageSize];
-		Loader.SerializeData( TmpImage, ImageSize );
+		loader->readData( TmpImage, ImageSize );
 
 		// Allocate bitmap and initialize it.
 		Bitmap				= NewObject<FBitmap>( ResName, nullptr );
 		Bitmap->Init( Width, Height );
-		Bitmap->FileName	= GetFileName(Filename) + L".tga";
+		Bitmap->FileName	= fm::getFileName( *Filename ) + L".tga";
 		Bitmap->Format		= BF_RGBA;
 		Bitmap->AllocateBlock( sizeof(TColor)*Bitmap->USize*Bitmap->VSize );
 		TColor* Dest		= (TColor*)Bitmap->GetData();
@@ -302,13 +268,13 @@ FBitmap* ImportTGA( String Filename, String ResName )
 				WalkBuffer	= 0;
 
 		// Load remain of file to buffer.
-		UInt8*	Compressed	= new UInt8[Loader.TotalSize()-sizeof(TGAHeader)];
-		Loader.SerializeData( Compressed, Loader.TotalSize()-sizeof(TGAHeader) );
+		UInt8*	Compressed	= new UInt8[ loader->totalSize() - sizeof( TGAHeader ) ];
+		loader->readData( Compressed, loader->totalSize() - sizeof( TGAHeader ) );
 
 		// Allocate bitmap and initialize it.
 		Bitmap				= NewObject<FBitmap>( ResName, nullptr );
 		Bitmap->Init( Width, Height );
-		Bitmap->FileName	= GetFileName(Filename) + L".tga";
+		Bitmap->FileName	= fm::getFileName( *Filename ) + L".tga";
 		Bitmap->Format		= BF_RGBA;
 		Bitmap->AllocateBlock( sizeof(TColor)*Bitmap->USize*Bitmap->VSize );
 		TColor* Image		= (TColor*)Bitmap->GetData();
@@ -408,7 +374,7 @@ FBitmap* ImportPNG( String Filename, String ResName )
 	// Allocate bitmap and initialize it.
 	FBitmap* Bitmap = NewObject<FBitmap>( ResName, nullptr );
 	Bitmap->Init( PngWidth, PngHeight );
-	Bitmap->FileName = GetFileName(Filename) + L".png";
+	Bitmap->FileName = fm::getFileName( *Filename ) + L".png";
 
 	// Figure out it's a palette or not.
 	Array<TColor> Palette;
@@ -472,13 +438,14 @@ FBitmap* ImportPNG( String Filename, String ResName )
 //
 FSound* ImportWAV( String Filename, String ResName )
 {
-	CFileLoader Loader( Filename );
+	fm::IBinaryFileReader::Ptr loader = fm::readBinaryFile( *Filename );
+
 	FSound*	Sound = NewObject<FSound>( ResName, nullptr );
-	UInt32 FileSize = Loader.TotalSize();
+	SizeT FileSize = loader->totalSize();
 
 	Sound->AllocateBlock( FileSize );
-	Sound->FileName = GetFileName(Filename) + L".wav";
-	Loader.SerializeData( Sound->GetData(), FileSize );
+	Sound->FileName = fm::getFileName( *Filename ) + L".wav";
+	loader->readData( Sound->GetData(), FileSize );
 
 	return Sound;
 }
@@ -496,20 +463,20 @@ FMusic* ImportOGG( String Filename, String ResName )
 	FMusic*	Music	= NewObject<FMusic>( ResName, nullptr );
 
 	// Figure out Music directory.
-	if( String::pos( String::upperCase(GDirectory), String::upperCase(Filename) ) != -1 )
+	if( String::pos( String::upperCase(fm::getCurrentDirectory()), String::upperCase(Filename) ) != -1 )
 	{
 		// In directory of exe.
 		Music->FileName	=	String::copy
 							( 
 								Filename, 
-								GDirectory.len()+1, 
-								Filename.len()-GDirectory.len()-1 
+								fm::getCurrentDirectory().len()+1, 
+								Filename.len()-fm::getCurrentDirectory().len()-1 
 							);
 	}
 	else
 	{
 		// External directory.
-		Music->FileName	=	GetFileName(Filename) + L".ogg";
+		Music->FileName	=	fm::getFileName( *Filename ) + L".ogg";
 	}
 
 	return Music;
@@ -562,9 +529,9 @@ FFont* ImportFLF( String Filename, String ResName )
 		}
 
 		// Test all pages, they are exists?
-		String Dir = GetFileDir( Filename );
+		String Dir = fm::getFilePath( *Filename );
 		for( Int32 i=0; i<NumPages; i++ )
-			if( !GPlat->FileExists(Dir+String::format(L"\\%s%d_%d.bmp", Name, Height, i)) )
+			if( !fm::fileExists(*(Dir+String::format(L"\\%s%d_%d.bmp", Name, Height, i))) )
 			{
 				MessageBox( 0, *String::format( L"Font page %i not found", i ), 
 					L"Editor", MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL );
@@ -578,12 +545,12 @@ FFont* ImportFLF( String Filename, String ResName )
 		Font->Glyphs	= Glyphs;
 		Font->Remap		= Remap;
 		Font->Remap.setSize( iMaxChar+1 );
-		Font->FileName	= GetFileName(Filename) + L".flf";
+		Font->FileName	= fm::getFileName( *Filename ) + L".flf";
 
 		for( Int32 i=0; i<NumPages; i++ )
 		{
 			String		BitFile = Dir  + String::format(L"\\%s%d_%d.bmp", Name, Height, i);
-			FBitmap*	Page	= ImportBMP( BitFile, GetFileName(BitFile) );
+			FBitmap*	Page	= ImportBMP( BitFile, fm::getFileName( *Filename ));
 			Page->BlendMode		= BLEND_Translucent;
 			Page->Group			= L"";
 
@@ -622,38 +589,38 @@ FFont* ImportFLF( String Filename, String ResName )
 //
 FResource* CEditor::ImportResource( String Filename, String ResName )
 {
-	assert(GPlat->FileExists(Filename));
+	assert( fm::getFileName( *Filename ) );
 
 	// Try all formats.
 	if( String::pos( L".bmp", String::lowerCase(Filename) ) != -1 )
 	{
 		// Simple bmp file.
-		return ImportBMP( Filename, ResName ? ResName : GetFileName(Filename) );
+		return ImportBMP( Filename, ResName ? ResName : fm::getFileName( *Filename ) );
 	}
 	if( String::pos( L".tga", String::lowerCase(Filename) ) != -1 )
 	{
 		// Simple tga file.
-		return ImportTGA( Filename, ResName ? ResName : GetFileName(Filename) );
+		return ImportTGA( Filename, ResName ? ResName : fm::getFileName( *Filename ) );
 	}
 	if( String::pos( L".png", String::lowerCase(Filename) ) != -1 )
 	{
 		// Advanced png file.
-		return ImportPNG( Filename, ResName ? ResName : GetFileName(Filename) );
+		return ImportPNG( Filename, ResName ? ResName : fm::getFileName( *Filename ) );
 	}
 	else if( String::pos( L".wav", String::lowerCase(Filename) ) != -1 )
 	{
 		// wav file.
-		return ImportWAV( Filename, ResName ? ResName : GetFileName(Filename) );
+		return ImportWAV( Filename, ResName ? ResName : fm::getFileName( *Filename ) );
 	}
 	else if( String::pos( L".ogg", String::lowerCase(Filename) ) != -1 )
 	{
 		// Ogg file.
-		return ImportOGG( Filename, ResName ? ResName : GetFileName(Filename) );
+		return ImportOGG( Filename, ResName ? ResName : fm::getFileName( *Filename ) );
 	}
 	else if( String::pos( L".flf", String::lowerCase(Filename) ) != -1 )
 	{
 		// Flf file.
-		return ImportFLF( Filename, ResName ? ResName : GetFileName(Filename) );
+		return ImportFLF( Filename, ResName ? ResName : fm::getFileName( *Filename ) );
 	}
 	else
 	{

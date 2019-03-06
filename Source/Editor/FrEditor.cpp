@@ -67,11 +67,6 @@ CEditor::CEditor()
 	GIsEditor			= true;
 	GEditor				= this;
 
-	// Exe-directory.
-	Char Directory[256];
-	_wgetcwd( Directory, arraySize(Directory) );
-	GDirectory	= Directory;
-
 	// Parse command line.
 	GCmdLine = GetCommandLine();
 
@@ -143,7 +138,7 @@ void CEditor::Init( HINSTANCE InhInstance )
 	assert(hWnd);
 
 	// Load configure file.
-	Config			= new CConfigManager(GDirectory);
+	Config			= new CConfigManager( fm::getCurrentDirectory() );
 
 	// Create render & audio.
 	GRender		= new COpenGLRender( hWnd );
@@ -229,7 +224,7 @@ void CEditor::Init( HINSTANCE InhInstance )
 			OpenProjectFrom( Path );
 
 			// Allocate target directory.
-			String Directory = GetFileDir(GProject->FileName) + L"\\Release";
+			String Directory = fm::getFilePath( *GProject->FileName ) + L"\\Release";
 			CreateDirectory( *Directory, nullptr );
 
 

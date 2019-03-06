@@ -34,7 +34,7 @@ void FMusic::PostLoad()
 	FResource::PostLoad();
 
 	// Track file is exists?
-	if( !GPlat->FileExists(GDirectory+L"\\"+FileName) )
+	if( !fm::fileExists( *(fm::getCurrentDirectory()+L"\\"+FileName) ) )
 		debug( L"Music: Track '%s' not found", *FileName );
 }
 

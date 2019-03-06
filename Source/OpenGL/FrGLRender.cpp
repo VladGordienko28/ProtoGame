@@ -2137,13 +2137,13 @@ bool CompileShader( String FileName, GLenum ShaderType, GLuint& iShader )
 bool CGLShaderBase::Init( String ShaderName )
 {
 	// Real shader filename.
-	String VertShaderFile	= GDirectory + SHADER_DIR + ShaderName + VERT_SHADER_EXT;
-	String FragShaderFile	= GDirectory + SHADER_DIR + ShaderName + FRAG_SHADER_EXT;
+	String VertShaderFile	= fm::getCurrentDirectory() + SHADER_DIR + ShaderName + VERT_SHADER_EXT;
+	String FragShaderFile	= fm::getCurrentDirectory() + SHADER_DIR + ShaderName + FRAG_SHADER_EXT;
 
 	// Test files.
-	if( !GPlat->FileExists(VertShaderFile) )
+	if( !fm::fileExists( *VertShaderFile ) )
 		fatal( L"Vertex shader '%s' not found", *VertShaderFile );
-	if( !GPlat->FileExists(FragShaderFile) )
+	if( !fm::fileExists( *FragShaderFile ) )
 		fatal( L"Fragment shader '%s' not found", *FragShaderFile );
 
 	// Compile shaders.
