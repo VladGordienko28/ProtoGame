@@ -11,6 +11,7 @@ BEGIN_INCLUDE
     Parallax.fr
     Richy.fr
     Barrel.fr
+    Wolf.fr
     BSystem.fr
     BForestTiles.fr
     BDaySky.fr
@@ -27,14 +28,17 @@ BEGIN_INCLUDE
     BRichy.fr
     BBarrel.fr
     BBushes.fr
+    BWolf.fr
     ProjectInfo0.fr
     Forest.fr
     ARichy.fr
     ABarrel.fr
+    AWolf.fr
 END_INCLUDE
 BEGIN_PAGES
     Barrel
     ARichy
     Richy
+    Wolf
     Forest
 END_PAGES

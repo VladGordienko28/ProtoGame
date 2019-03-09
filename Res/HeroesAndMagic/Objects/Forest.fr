@@ -1,6 +1,6 @@
 BEGIN_RESOURCE FLevel Forest
     GameSpeed = 1.0000
-    Camera.Location = [13.4537; 11.9550]
+    Camera.Location = [9.6849; 10.0322]
     Camera.FOV = [64.0000; 32.0000]
     Camera.Zoom = 1.0000
     Camera.ScrollBound = (-2048.0000; -2048.0000; 2048.0000; 2048.0000)
@@ -259,9 +259,9 @@ BEGIN_RESOURCE FLevel Forest
     BEGIN_ENTITY Richy Richy0
         BEGIN_COMPONENT FArcadeBodyComponent Base
             Mass = 1.0000
-            Location = [-1.5000; 6.5000]
+            Location = [-5.2500; 6.5000]
             Size = [2.2000; 5.0000]
-            Layer = 0.5232
+            Layer = 0.6956
             bFixedAngle = true
             bFixedSize = true
             bHashable = true
@@ -273,6 +273,13 @@ BEGIN_RESOURCE FLevel Forest
             Scale = [8.0000; 8.0000]
         END_COMPONENT
         BEGIN_COMPONENT FInputComponent Input
+        END_COMPONENT
+        BEGIN_COMPONENT FPuppetComponent Puppet
+            Health = 100
+            MoveSpeed = 5.0000
+            JumpHeight = 8.0000
+            GravityScale = 10.0000
+            LookRadius = 16.0000
         END_COMPONENT
         BEGIN_INSTANCE
         END_INSTANCE
@@ -362,5 +369,32 @@ BEGIN_RESOURCE FLevel Forest
             Color = #ffffffff
             Texture = FBitmap::BBushes
         END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Wolf Wolf0
+        BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Location = [19.0000; 5.2500]
+            Size = [4.0000; 2.5000]
+            Layer = 0.5023
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            Animation = FAnimation::AWolf
+            Offset = [0.2000; 2.7500]
+            Scale = [8.0000; 8.0000]
+        END_COMPONENT
+        BEGIN_COMPONENT FPuppetComponent Puppet
+            Health = 3
+            MoveSpeed = 15.0000
+            JumpHeight = 8.0000
+            GravityScale = 10.0000
+            LookRadius = 16.0000
+            LookPeriod = 0.2000
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
     END_ENTITY
 END_RESOURCE

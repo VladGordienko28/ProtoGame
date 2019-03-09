@@ -1,0 +1,125 @@
+/**
+ * @Wolf: Psina Sutulay
+ * @Author: 
+ */
+script Wolf: family Enemies
+{
+public:
+    const CAMP_RADIUS = 30.0;
+    const MIN_CAMP_RADIUS = 10.0;
+    const CAMP_SPEED_FACTOR = 0.7;
+    
+    event OnBeginPlay()
+    {
+        $Puppet.GoalReach = PATH_Walk;
+    }
+    
+    fn TakeDamage( integer amount, entity instigator, string type ) unified
+    {
+        $Puppet.Health -= amount;
+    
+        if( $Puppet.Health <= 0 && label != @Die )
+        {
+            goto @Die;        
+        }
+    }
+    
+    event OnLookAt( entity other )
+    {
+        if( label == @Normal && other is #Richy )
+        {
+            enemy = other;
+            goto @Chase;                   
+        }
+    }
+    
+    event OnBeginTouch( entity other )
+    {
+        if( label == @Chase && other is #Richy )
+        {
+            goto @Attack;
+        }
+    }
+
+    // pick a some random nearset point for camping
+    vector pickCampDestination()
+    {
+        float resultX;
+        
+        do
+        {
+            resultX = Location.x - CAMP_RADIUS * 0.5 + CAMP_RADIUS * randomf();
+        } 
+        while( abs( Location.x - resultX ) < MIN_CAMP_RADIUS )
+        
+        return [ resultX, Location.y ];
+    }
+
+    // setup wolf's movement
+    fn setupMovement( vector goal, float speedScale, float lookPeriod )
+    {
+        $Sprite.bFlipH = goal.x > Location.x;    
+        $Puppet.LookDirection = $Sprite.bFlipH ? LOOK_Right : LOOK_Left;
+        $Puppet.LookPeriod = lookPeriod;        
+
+        Velocity.x = speedScale * ( $Puppet.Goal.x > Location.x ? $Puppet.MoveSpeed : -$Puppet.MoveSpeed );
+    }
+
+    thread
+    {
+    @Normal:
+        // Move to the randomly picked point
+        $Puppet.Goal = pickCampDestination();
+        //DebugPoint( $Puppet.Goal, rgba(255, 0, 0, 255), 5.0, 2.0 );  // temp        
+        $Sprite.PlayAnim( "Run", 9.0, ANIM_Loop );
+
+        setupMovement( $Puppet.Goal, CAMP_SPEED_FACTOR, 0.1 );
+        wait abs( Location.x - $Puppet.Goal.x ) <= 1.0;
+        
+        // This point reached, have a some rest
+        Velocity.x = 0.0;
+        $Sprite.PlayAnim( "Idle", 3.0, ANIM_Loop );        
+        sleep 1.0 + 2.0 * randomf();
+        
+        // Return to the normal state
+        goto @Normal;
+    
+    @Chase:
+        assert( enemy != undefined );
+        $Sprite.PlayAnim( "Run", 10.0, ANIM_Loop ); 
+        //$Sprite.Color = rgba(0, 255, 0, 255); 
+        
+        $Puppet.Goal = pickBitePosition( enemy );
+        //DebugPoint( $Puppet.Goal, rgba(0, 255, 0, 255), 5.0, 2.0 );  // temp 
+        setupMovement( $Puppet.Goal, 1.0, 0.0 );
+        sleep 0.01;
+        goto @Chase;
+    
+    @Attack:
+        $Sprite.PlayAnim( "Attack", 5.0, ANIM_Once ); 
+        //$Sprite.Color = rgba(255, 0, 0, 255); 
+        
+        Velocity.x = 0.0;
+        wait !$Sprite.IsPlaying();
+        
+        sleep 0.5;
+        $Sprite.PlayAnim( "Idle", 3.0, ANIM_Loop );   
+        goto @Chase;
+        
+    @Die:
+        $Sprite.PlayAnim( "Die", 4.0, ANIM_Once );
+        Velocity.x = 0.0;
+        sleep 5.0;
+        //delete this;
+    }
+
+    // select an stand point for bite
+    vector pickBitePosition( entity other )
+    {
+        float side = other.Location.x > Location.x ? -1.0 : 1.0;
+        return [ other.Location.x + side * 0.5 * other.Size.x + Size.x * 0.5 * side, Location.y ];
+    }
+
+private:
+    entity enemy;
+}

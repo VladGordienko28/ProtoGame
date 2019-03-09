@@ -172,7 +172,7 @@ void FPuppetComponent::LookAtPuppets()
 				continue;
 
 		// Yes! Other is visible for this.
-		if( iLookee >= MAX_WATCHED )
+		if( iLookee < MAX_WATCHED )
 		{
 			LookList[iLookee] = Other;
 			iLookee++;
