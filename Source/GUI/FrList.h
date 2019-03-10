@@ -164,9 +164,9 @@ public:
 	struct TLine
 	{
 	public:
-		String		Text;
-		TColor		Color;
-		void*		Data;
+		String			Text;
+		math::Color		Color;
+		void*			Data;
 	};
 
 	// Variables.
@@ -179,7 +179,7 @@ public:
 	WLog( WContainer* InOwner, WWindow* InRoot );
 	~WLog();
 	void Clear();
-	Int32 AddLine( String InText, void* InData=nullptr, TColor InColor=COLOR_White );
+	Int32 AddLine( String InText, void* InData=nullptr, math::Color InColor = math::colors::WHITE );
 	void* DataOf( Int32 i );
 	virtual void OnChange();
 	virtual void OnGoto( Int32 i );

@@ -47,7 +47,7 @@ namespace flu
 		Float m_invTimelineMaxValue;
 		Bool m_enabled;
 
-		TColor m_colorSet[COLOR_SET_SIZE];
+		math::Color m_colorSet[COLOR_SET_SIZE];
 		String m_helpString;
 	};
 

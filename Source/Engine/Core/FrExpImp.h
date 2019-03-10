@@ -19,7 +19,7 @@ public:
 	virtual void ExportFloat	( const Char* FieldName, Float Value	) = 0;
 	virtual void ExportString	( const Char* FieldName, String Value	) = 0;
 	virtual void ExportBool		( const Char* FieldName, Bool Value		) = 0;
-	virtual void ExportColor	( const Char* FieldName, TColor Value	) = 0;
+	virtual void ExportColor	( const Char* FieldName, math::Color Value	) = 0;
 	virtual void ExportVector	( const Char* FieldName, math::Vector Value	) = 0;
 	virtual void ExportAABB		( const Char* FieldName, math::Rect Value	) = 0;
 	virtual void ExportAngle	( const Char* FieldName, math::Angle Value	) = 0;
@@ -43,7 +43,7 @@ public:
 	virtual Float			ImportFloat		( const Char* FieldName ) = 0;
 	virtual String			ImportString	( const Char* FieldName ) = 0;
 	virtual Bool			ImportBool		( const Char* FieldName ) = 0;
-	virtual TColor			ImportColor		( const Char* FieldName ) = 0;
+	virtual math::Color		ImportColor		( const Char* FieldName ) = 0;
 	virtual math::Vector	ImportVector	( const Char* FieldName ) = 0;
 	virtual math::Rect		ImportAABB		( const Char* FieldName ) = 0;
 	virtual math::Angle		ImportAngle		( const Char* FieldName ) = 0;

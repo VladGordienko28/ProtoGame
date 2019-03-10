@@ -60,7 +60,7 @@ void CGUIRender::EndPaint()
 //
 // Draw a rectangle.
 //
-void CGUIRender::DrawRegion( TPoint P, TSize S, TColor Color, TColor BorderColor, EBrushPattern Pattern )
+void CGUIRender::DrawRegion( TPoint P, TSize S, math::Color Color, math::Color BorderColor, EBrushPattern Pattern )
 {		
 	// Pattern flag remap.
 	static const UInt32 PatternFlag[BPAT_MAX] =
@@ -172,8 +172,8 @@ void CGUIRender::DrawPicture( TPoint P, TSize S, TPoint BP, TSize BS, FTexture* 
 	Rect.Texture	= Texture;
 	Rect.Bounds.min	= math::Vector( P.X, P.Y );
 	Rect.Bounds.max	= math::Vector( P.X + S.Width, P.Y + S.Height );
-	Rect.Color		= Brightness != 1.f ? COLOR_White*Brightness : COLOR_White;
-	Rect.Color.A	= 0xff;
+	Rect.Color		= Brightness != 1.f ? math::colors::WHITE*Brightness : math::colors::WHITE;
+	Rect.Color.a	= 0xff;
 	Rect.Flags		= POLY_Unlit;	
 	Rect.Rotation	= 0;	
 	
@@ -210,7 +210,7 @@ void CGUIRender::DrawPicture( TPoint P, TSize S, TPoint BP, TSize BS, FTexture* 
 //
 // Draw a GUI text.
 //
-void CGUIRender::DrawText( TPoint P, const Char* Text, Int32 Len, TColor Color, FFont* Font )
+void CGUIRender::DrawText( TPoint P, const Char* Text, Int32 Len, math::Color Color, FFont* Font )
 {
 	if( Brightness != 1.f )
 		Color *= Brightness;

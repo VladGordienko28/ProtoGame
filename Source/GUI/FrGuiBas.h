@@ -302,14 +302,14 @@ class CGUIRenderBase
 {
 public:
 	// CGUIRenderBase abstract interface.
-	virtual void DrawRegion( TPoint P, TSize S, TColor Color, TColor BorderColor, EBrushPattern Pattern ) = 0;
+	virtual void DrawRegion( TPoint P, TSize S, math::Color Color, math::Color BorderColor, EBrushPattern Pattern ) = 0;
 	virtual void SetClipArea( TPoint P, TSize S ) = 0;
 	virtual void DrawPicture( TPoint P, TSize S, TPoint BP, TSize BS, FTexture* Texture ) = 0;
-	virtual void DrawText( TPoint P, const Char* Text, Int32 Len, TColor Color, FFont* Font ) = 0;
+	virtual void DrawText( TPoint P, const Char* Text, Int32 Len, math::Color Color, FFont* Font ) = 0;
 	virtual void SetBrightness( Float Brig ) = 0;
 
 	// CGUIRenderBase utility.
-	void DrawText( TPoint P, String Text, TColor Color, FFont* Font )
+	void DrawText( TPoint P, String Text, math::Color Color, FFont* Font )
 	{
 		DrawText( P, *Text, Text.len(), Color, Font );
 	}

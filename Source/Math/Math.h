@@ -29,3 +29,6 @@
 #include "Polygon.h"
 #include "Circle.h"
 #include "Rect.h"
+#include "Color.h"
+#include "FloatColor.h"
+#include "Colors.h"

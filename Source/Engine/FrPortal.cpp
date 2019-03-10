@@ -169,7 +169,7 @@ void FMirrorComponent::Render( CCanvas* Canvas )
 	if( Canvas->View.bMirage || !(Level->RndFlags & RND_Other) )
 		return;
 
-	TColor DrawColor = COLOR_DodgerBlue;
+	math::Color DrawColor = math::colors::DODGER_BLUE;
 	if( bSelected )
 		DrawColor *= 1.5f;
 
@@ -304,7 +304,7 @@ void FWarpComponent::Render( CCanvas* Canvas )
 	math::Vector V1 = math::transformPointBy( math::Vector( 0.f, -Width*0.5f ), C );
 	math::Vector V2 = math::transformPointBy( math::Vector( 0.f, +Width*0.5f ), C );
 
-	TColor DrawColor = Other ? COLOR_Green : COLOR_Crimson;
+	math::Color DrawColor = Other ? math::colors::GREEN : math::colors::CRIMSON;
 	if( bSelected )
 		DrawColor *= 2.f;
 

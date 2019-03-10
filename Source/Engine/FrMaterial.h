@@ -99,7 +99,7 @@ public:
 	Bool				bFlipH;
 	Bool				bFlipV;
 	Bool				bTurn90;
-	TColor				OverlayColor;
+	math::Color			OverlayColor;
 
 	// Params.
 	TPannerParam		Panner;

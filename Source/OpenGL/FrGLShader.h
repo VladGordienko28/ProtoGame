@@ -124,7 +124,7 @@ public:
 	bool Init( String ShaderName ) override;
 
 	// CGLFluShader setters.
-	void SetAmbientLight( const TColor& InAmbient );
+	void SetAmbientLight( const math::Color& InAmbient );
 	Bool AddLight( FLightComponent* Light, const math::Vector& Location, math::Angle Rotation );
 	void ResetLights();
 

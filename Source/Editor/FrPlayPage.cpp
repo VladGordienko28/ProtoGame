@@ -212,7 +212,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 				( 
 					String::format( L"FPS: %d", GEditor->FPS ),
 					Root->Font1, 
-					COLOR_White, 
+					math::colors::WHITE, 
 					math::Vector( 10, 10 ) 
 				);
 
@@ -221,7 +221,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 				( 
 					String::format( L"Mem: %.2f kB", Double(mem::stats().totalAllocatedBytes) / 1024 ), 
 					Root->Font1, 
-					COLOR_White, 
+					math::colors::WHITE, 
 					math::Vector( 10.f, 30.f ) 
 				);
 #endif
@@ -230,7 +230,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 				( 
 					String::format( L"Game Time: %s", *PlayLevel->m_timeOfDay.toString() ), 
 					Root->Font1, 
-					COLOR_White, 
+					math::colors::WHITE, 
 					math::Vector( 10.f, 72.f ) 
 				);
 
@@ -240,7 +240,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 					(
 						L"Pause",
 						Root->Font1, 
-						COLOR_White, 
+						math::colors::WHITE, 
 						math::Vector( Size.Width/2.f, Size.Height/2.f )
 					);
 
@@ -252,7 +252,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 					( 
 						Messages[iMsg], 
 						Root->Font2, 
-						COLOR_White, 
+						math::colors::WHITE, 
 						math::Vector( 10.f, Size.Height - (Root->Font2->Height+2)*(iMsg+1) )
 					);
 	}

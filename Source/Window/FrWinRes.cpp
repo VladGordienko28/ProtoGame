@@ -106,8 +106,8 @@ TStaticBitmap* LoadBitmapFromResource( HINSTANCE hInstance, LPCTSTR ResID )
 	Bitmap->Palette.Allocate(Info.biClrUsed);
 	for( Int32 i=0; i<Info.biClrUsed; i++ )
 	{
-		TColor Col( RawPalette[i].rgbRed, RawPalette[i].rgbGreen, RawPalette[i].rgbBlue, 0xff );
-		if( Col == MASK_COLOR )	Col.A	= 0x00;
+		math::Color Col( RawPalette[i].rgbRed, RawPalette[i].rgbGreen, RawPalette[i].rgbBlue, 0xff );
+		if( Col == MASK_COLOR )	Col.a	= 0x00;
 		Bitmap->Palette.Colors[i]	= Col;
 	}
 
@@ -199,8 +199,8 @@ TStaticFont* LoadFontFromResource( HINSTANCE hInstance, LPCTSTR FontID, LPCTSTR 
 
 		for( Int32 i=0; i<Page->Palette.Colors.size(); i++ )
 		{
-			TColor Ent = Page->Palette.Colors[i];
-			Page->Palette.Colors[i] = TColor( 0xff, 0xff, 0xff, Int32(Ent.R + Ent.G + Ent.B)/3 );
+			math::Color Ent = Page->Palette.Colors[i];
+			Page->Palette.Colors[i] = math::Color( 0xff, 0xff, 0xff, Int32(Ent.r + Ent.g + Ent.b)/3 );
 		}
 	
 		Page->BlendMode = BLEND_Alpha;

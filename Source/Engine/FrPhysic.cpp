@@ -63,7 +63,7 @@ void FJointComponent::Render( CCanvas* Canvas )
 						(
 							Point1,
 							Point2,
-							COLOR_LimeGreen,
+							math::colors::LIME_GREEN,
 							false
 						);
 		}
@@ -121,7 +121,7 @@ void FSpringComponent::Render( CCanvas* Canvas )
 		// Setup spring rectangle.
 		TRenderRect Rect;
 		Rect.Texture			= Segment;
-		Rect.Color				= bSelected ? TColor( 0x80, 0xe6, 0x80, 0xff ) : COLOR_White;
+		Rect.Color				= bSelected ? math::Color( 0x80, 0xe6, 0x80, 0xff ) : math::colors::WHITE;
 		Rect.Flags				= POLY_Unlit;
 		Rect.Rotation			= math::vectorToAngle((Point1-Point2).cross());
 		Rect.TexCoords			= math::Rect( math::Vector( 0.5f, 0.f ), 1.f, NumSegs );
@@ -244,16 +244,16 @@ void FHingeComponent::Render( CCanvas* Canvas )
 		if( Body1 )
 		{
 			math::Vector Pin = math::transformPointBy( Hook1, Body1->Base->ToWorld() );
-			Canvas->DrawLineStar( Pin, Body1->Base->Rotation, 2.f, COLOR_LightCoral, false );
-			Canvas->DrawPoint( Pin, 5.f, COLOR_LightCoral );
+			Canvas->DrawLineStar( Pin, Body1->Base->Rotation, 2.f, math::colors::LIGHT_CORAL, false );
+			Canvas->DrawPoint( Pin, 5.f, math::colors::LIGHT_CORAL );
 		}
 
 		// Render Body2.
 		if( Body2 )
 		{
 			math::Vector Pin = math::transformPointBy( Hook2, Body2->Base->ToWorld() );
-			Canvas->DrawLineStar( Pin, Body2->Base->Rotation, 2.f, COLOR_LightBlue, false );
-			Canvas->DrawPoint( Pin, 5.f, COLOR_LightBlue );
+			Canvas->DrawLineStar( Pin, Body2->Base->Rotation, 2.f, math::colors::LIGHT_BLUE, false );
+			Canvas->DrawPoint( Pin, 5.f, math::colors::LIGHT_BLUE );
 		}
 	}
 }

@@ -638,8 +638,8 @@ void CFrame::ProcessCode( TRegister* Result )
 			case CODE_ConstColor:
 			{
 				// Color constant.
-				TColor Value = ReadColor();
-				*(TColor*)(Regs[ReadByte()].Value) = Value;
+				math::Color Value = ReadColor();
+				*(math::Color*)(Regs[ReadByte()].Value) = Value;
 				break;
 			}
 			case CODE_ConstString:
@@ -933,7 +933,7 @@ void CFrame::ProcessCode( TRegister* Result )
 			{
 				// Integer to angle cast.
 				UInt8 iReg = ReadByte();
-				(*(TColor*)Regs[iReg].Value).D = *(UInt32*)Regs[iReg].Value;
+				(*(math::Color*)Regs[iReg].Value).d = *(UInt32*)Regs[iReg].Value;
 				break;
 			}
 			case CAST_IntegerToString:
@@ -1010,15 +1010,15 @@ void CFrame::ProcessCode( TRegister* Result )
 			{
 				// Color to integer cast.
 				UInt8 iReg = ReadByte();
-				*(Int32*)Regs[iReg].Value = (*(TColor*)Regs[iReg].Value).D;
+				*(Int32*)Regs[iReg].Value = (*(math::Color*)Regs[iReg].Value).d;
 				break;
 			}
 			case CAST_ColorToString:
 			{
 				// Color to string cast.
 				UInt8 iReg = ReadByte();
-				TColor Value = *(TColor*)Regs[iReg].Value;
-				Regs[iReg].StrValue = String::format( L"#%02x%02x%02x", Value.R, Value.G, Value.B );
+				math::Color Value = *(math::Color*)Regs[iReg].Value;
+				Regs[iReg].StrValue = String::format( L"#%02x%02x%02x", Value.r, Value.g, Value.b );
 				break;
 			}
 			case CAST_StringToByte:

@@ -12,14 +12,14 @@
 //
 // A simple ramp palette.
 //
-void paletteSimple( TColor* Palette )
+void paletteSimple( math::Color* Palette )
 {
 	for( Int32 i=0; i<256; i++ )
 	{
-		Palette[i].R	= i;
-		Palette[i].G	= i;
-		Palette[i].B	= i;
-		Palette[i].A	= 0xff;
+		Palette[i].r	= i;
+		Palette[i].g	= i;
+		Palette[i].b	= i;
+		Palette[i].a	= 0xff;
 	}
 }
 
@@ -27,12 +27,11 @@ void paletteSimple( TColor* Palette )
 //
 // A plasma rainbow palette.
 //
-void palettePlasma( TColor* Palette )
+void palettePlasma( math::Color* Palette )
 {
 	for( Int32 i=0; i<256; i++ )
 	{
-		Palette[i]		= TColor::HSLToRGB( ~i, 0xff, 0x80 );
-		Palette[i].A	= 0xff;
+		Palette[i]		= math::Color::hsl2rgb( ~i, 0xff, 0x80, 0xff );
 	}
 }
 
@@ -40,12 +39,11 @@ void palettePlasma( TColor* Palette )
 //
 // A nice fire palette.
 //
-void paletteFire( TColor* Palette )
+void paletteFire( math::Color* Palette )
 {
 	for( Int32 i=0; i<256; i++ )
 	{
-		Palette[i]		= TColor::HSLToRGB( i/0x03, 0xff, min( 0xff, i*0x02 ) );
-		Palette[i].A	= 0xff;
+		Palette[i]		= math::Color::hsl2rgb( i/0x03, 0xff, min( 0xff, i*0x02 ), 255 );
 	}
 }
 
@@ -53,14 +51,14 @@ void paletteFire( TColor* Palette )
 //
 // A temporal tech palette.
 //
-void paletteTech( TColor* Palette )
+void paletteTech( math::Color* Palette )
 {
 	for( Int32 i=0; i<256; i++ )
 	{
-		Palette[i].R	= i >> 1;
-		Palette[i].G	= i;
-		Palette[i].B	= i >> 1;
-		Palette[i].A	= 0xff;
+		Palette[i].r	= i >> 1;
+		Palette[i].g	= i;
+		Palette[i].b	= i >> 1;
+		Palette[i].a	= 0xff;
 	}
 }
 
@@ -223,7 +221,7 @@ void FDemoBitmap::EditChange()
 		{
 			// Copy via other palette.
 			UInt8* Inds = (UInt8*)PaletteRef->GetData();
-			TColor* Pal	= (TColor*)&PaletteRef->Palette.Colors[0];
+			math::Color* Pal	= (math::Color*)&PaletteRef->Palette.Colors[0];
 
 			for( Int32 i=0; i<256; i++ )
 				Palette.Colors[i] = Pal[Inds[i]];
@@ -231,7 +229,7 @@ void FDemoBitmap::EditChange()
 		else
 		{
 			// Copy directly from other's data.
-			TColor* Other = (TColor*)PaletteRef->GetData();
+			math::Color* Other = (math::Color*)PaletteRef->GetData();
 
 			for( Int32 i=0; i<256; i++ )
 				Palette.Colors[i] = Other[i];
@@ -428,7 +426,7 @@ void FPlasmaBitmap::MouseMove( Int32 Button, Int32 X, Int32 Y )
 			// Shift palette leftward.
 			while( Delta-- > 0 )
 			{
-				TColor C	= Palette.Colors[0];
+				math::Color C	= Palette.Colors[0];
 
 				for( Int32 i=0; i<255; i++ )
 					Palette.Colors[i] = Palette.Colors[i+1];
@@ -441,7 +439,7 @@ void FPlasmaBitmap::MouseMove( Int32 Button, Int32 X, Int32 Y )
 			// Shift palette rightward.
 			while( Delta++ < 0 )
 			{
-				TColor C	= Palette.Colors[255];
+				math::Color C	= Palette.Colors[255];
 
 				for( Int32 i=254; i>=0; i-- )
 					Palette.Colors[i+1]	= Palette.Colors[i];
@@ -1368,7 +1366,7 @@ void FFireBitmap::SetFireTable()
 	{
 		// Pretty strange formula, but it's works well.
 		Float Value = ((Float)iHeat/2.f - 16.f * RandomF());
-		Value		*= Lerp( 10.f/128.f, 150.f/128.f, (Float)FireHeat/255.f ); 
+		Value		*= lerp( 10.f/128.f, 150.f/128.f, (Float)FireHeat/255.f ); 
 		FireTable[iHeat]	= clamp( math::round(Value), 0x00, 0xff );
 	}
 }
@@ -1812,7 +1810,7 @@ void FWaterBitmap::EditChange()
 			( 
 				&Palette.Colors[0], 
 				&Image->Palette.Colors[0], 
-				sizeof(TColor)*Image->Palette.Colors.size() 
+				sizeof(math::Color)*Image->Palette.Colors.size() 
 			);
 
 	// Update the dispersion table.
@@ -2476,7 +2474,7 @@ void FTechBitmap::EditChange()
 		{
 			// Copy via other palette.
 			UInt8* Inds = (UInt8*)PaletteRef->GetData();
-			TColor* Pal	= (TColor*)&PaletteRef->Palette.Colors[0];
+			math::Color* Pal	= (math::Color*)&PaletteRef->Palette.Colors[0];
 
 			for( Int32 i=0; i<256; i++ )
 				Palette.Colors[i] = Pal[Inds[i]];
@@ -2484,7 +2482,7 @@ void FTechBitmap::EditChange()
 		else
 		{
 			// Copy directly from other's data.
-			TColor* Other = (TColor*)PaletteRef->GetData();
+			math::Color* Other = (math::Color*)PaletteRef->GetData();
 
 			for( Int32 i=0; i<256; i++ )
 				Palette.Colors[i] = Other[i];
@@ -2657,7 +2655,7 @@ void FGlassBitmap::EditChange()
 			( 
 				&Palette.Colors[0], 
 				&Image->Palette.Colors[0], 
-				sizeof(TColor)*Image->Palette.Colors.size() 
+				sizeof(math::Color)*Image->Palette.Colors.size() 
 			);
 }
 
@@ -2860,7 +2858,7 @@ void FHarmonicBitmap::EditChange()
 			( 
 				&Palette.Colors[0], 
 				&Image->Palette.Colors[0], 
-				sizeof(TColor)*Image->Palette.Colors.size() 
+				sizeof(math::Color)*Image->Palette.Colors.size() 
 			);
 }
 

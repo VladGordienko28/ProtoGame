@@ -18,7 +18,7 @@
 //
 WTabPage::WTabPage( WContainer* InOwner, WWindow* InRoot )
 	:	WContainer( InOwner, InRoot ),
-		Color( COLOR_SteelBlue ),
+		Color( math::colors::STEEL_BLUE ),
 		TabWidth( 70 ),
 		TabControl( nullptr ),
 		bCanClose( true )
@@ -136,7 +136,7 @@ void WTabControl::OnPaint( CGUIRenderBase* Render )
 
 
 	// Draw headers.
-	TColor	ActiveColor;
+	math::Color	ActiveColor;
 	Int32 iPage;
 	for( iPage=0; iPage<Pages.size(); iPage++ )
 	{
@@ -149,8 +149,8 @@ void WTabControl::OnPaint( CGUIRenderBase* Render )
 		// Special highlight required?
 		if( iPage == iActive || iPage == iHighlight )
 		{
-			TColor DrawColor	= iPage == iActive ? Page->Color : TColor( 0x1d, 0x1d, 0x1d, 0xff ) + Page->Color;
-			TColor DarkColor	= DrawColor * TColor( 0xdd, 0xdd, 0xdd, 0xff );
+			math::Color DrawColor	= iPage == iActive ? Page->Color : math::Color( 0x1d, 0x1d, 0x1d, 0xff ) + Page->Color;
+			math::Color DarkColor	= DrawColor * math::Color( 0xdd, 0xdd, 0xdd, 0xff );
 
 			// Fade color, if not in focus.
 			if( iPage == iActive )

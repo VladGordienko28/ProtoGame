@@ -40,7 +40,7 @@ public:
 	// General variables.
 	ESkelCntrl		Type;
 	String			Name;
-	TColor			Color;
+	math::Color		Color;
 	UInt32			Flags;
 	Int32			iPosCtrl;
 	Int32			iRotCtrl;
@@ -55,7 +55,7 @@ public:
 
 	// Constructors.
 	TBoneInfo();
-	TBoneInfo( ESkelCntrl InType, String InName, TColor InColor );
+	TBoneInfo( ESkelCntrl InType, String InName, math::Color InColor );
 
 	// Friends.
 	friend void Serialize( CSerializer& S, TBoneInfo& V );

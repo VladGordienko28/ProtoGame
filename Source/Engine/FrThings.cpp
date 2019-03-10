@@ -23,7 +23,7 @@ FLightComponent::FLightComponent()
 	LightFunc	= LF_Multiplicative;
 	Radius		= 8.f;
 	Brightness	= 1.f;
-	Color		= COLOR_White;
+	Color		= math::colors::WHITE;
 }
 
 
@@ -80,7 +80,7 @@ void FLightComponent::SerializeThis( CSerializer& S )
 void FLightComponent::Render( CCanvas* Canvas )
 {
 	if( Base->bSelected )
-		Canvas->DrawCircle( Base->Location, Radius, COLOR_Yellow, false, 48 );
+		Canvas->DrawCircle( Base->Location, Radius, math::colors::YELLOW, false, 48 );
 }
 
 
@@ -186,8 +186,8 @@ void FSkyComponent::Render( CCanvas* Canvas )
 		Eye.y	= clamp( Eye.y, Skydome.min.y+Side2, Skydome.max.y-Side2 );
 
 		math::Angle Roll = math::Angle(fmodf(RollSpeed*(Float)GPlat->Now(), 2.f*math::PI ));		
-		Canvas->DrawLineRect( Eye, ViewArea, Roll, COLOR_Red, false );
-		Canvas->DrawLineStar( Eye, Roll, 1.f * Canvas->View.Zoom, COLOR_Red, false );
+		Canvas->DrawLineRect( Eye, ViewArea, Roll, math::colors::RED, false );
+		Canvas->DrawLineStar( Eye, Roll, 1.f * Canvas->View.Zoom, math::colors::RED, false );
 	}
 }	
 
@@ -219,11 +219,11 @@ void FZoneComponent::Render( CCanvas* Canvas )
 		return;
 
 	// Choose colors.
-	TColor Color1 = COLOR_Crimson;
-	TColor Color2 = bSelected ? COLOR_Crimson + COLOR_Highlight1 : COLOR_Crimson;
+	math::Color Color1 = math::colors::CRIMSON;
+	math::Color Color2 = bSelected ? math::colors::CRIMSON + math::colors::HIGHLIGHT_1 : math::colors::CRIMSON;
 
 	if( bFrozen )
-		Color2	= COLOR_Gray + Color2 * 0.5f;
+		Color2	= math::colors::GRAY + Color2 * 0.5f;
 
 	// Draw wire bounds.
 	Canvas->DrawLineRect
@@ -340,7 +340,7 @@ void FRectComponent::Render( CCanvas* Canvas )
 				YAxis = Coords.yAxis * Size2.y;
 
 		// Draw wire border.
-		Canvas->DrawLineRect( Location, Size, Rotation, COLOR_White, false );
+		Canvas->DrawLineRect( Location, Size, Rotation, math::colors::WHITE, false );
 
 		// Draw points.
 		if( !bFixedSize )
@@ -358,7 +358,7 @@ void FRectComponent::Render( CCanvas* Canvas )
 			};
 
 			for( Int32 i=0; i<8; i++ )
-				Canvas->DrawCoolPoint( Points[i], 8.f, COLOR_White );
+				Canvas->DrawCoolPoint( Points[i], 8.f, math::colors::WHITE );
 		}
 	}
 }
@@ -384,7 +384,7 @@ FBrushComponent::FBrushComponent()
 	:	bUnlit( false ),
 		bFlipH( false ),
 		bFlipV( false ),
-		Color( COLOR_White ),
+		Color( math::colors::WHITE ),
 		Texture( nullptr ),
 		Type( BRUSH_Solid ),
 		Vertices(),
@@ -443,11 +443,11 @@ math::Rect FBrushComponent::GetAABB()
 void FBrushComponent::Render( CCanvas* Canvas )
 {
 	// All brushes colors.
-	static const TColor BrushColors[BRUSH_MAX] =
+	static const math::Color BrushColors[BRUSH_MAX] =
 	{			
-  		TColor( 0x40, 0x80, 0x00, 0xff ),	/* BRUSH_NotSolid */
-  		TColor( 0x80, 0x60, 0x20, 0xff ),	/* BRUSH_SemiSolid */
-  		TColor( 0x40, 0x40, 0x80, 0xff )	/* BRUSH_Solid */
+  		math::Color( 0x40, 0x80, 0x00, 0xff ),	/* BRUSH_NotSolid */
+  		math::Color( 0x80, 0x60, 0x20, 0xff ),	/* BRUSH_SemiSolid */
+  		math::Color( 0x40, 0x40, 0x80, 0xff )	/* BRUSH_Solid */
 	};
 
 	// Is visible?
@@ -456,7 +456,7 @@ void FBrushComponent::Render( CCanvas* Canvas )
 		return;
 
 	// Pick wire color.
-	TColor Color1, Color2;
+	math::Color Color1, Color2;
 	if( math::isConvexPoly( Vertices, NumVerts ) )
 	{
 		// A valid brush.
@@ -466,8 +466,8 @@ void FBrushComponent::Render( CCanvas* Canvas )
 	else
 	{
 		// An invalid brush.
-		Color1 = COLOR_Red;
-		Color2 = COLOR_Red;
+		Color1 = math::colors::RED;
+		Color2 = math::colors::RED;
 	}
 
 	// Transform and store vertices in TRenderPoly.
@@ -505,7 +505,7 @@ void FBrushComponent::Render( CCanvas* Canvas )
 		Poly.Color	 = bSelected ? Color2 : Color1;
 
 		if( bFrozen )
-			Poly.Color	= COLOR_Gray + Poly.Color*0.5f;
+			Poly.Color	= math::colors::GRAY + Poly.Color*0.5f;
 
 		Canvas->DrawPoly( Poly );
 	}
@@ -513,7 +513,7 @@ void FBrushComponent::Render( CCanvas* Canvas )
 	// Draw a wire.
 	if( bSelected || (Level->RndFlags & RND_Other) )
 	{
-		TColor WireColor;
+		math::Color WireColor;
 		math::Vector V1, V2;
 
 		if( !Texture )
@@ -522,7 +522,7 @@ void FBrushComponent::Render( CCanvas* Canvas )
 			WireColor = bSelected ? Color2 : Color1;
 
 		if( bFrozen )
-			WireColor	= COLOR_Gray + WireColor*0.5f;
+			WireColor	= math::colors::GRAY + WireColor*0.5f;
 
 		V1 = Poly.Vertices[Poly.NumVerts-1];
 		for( Int32 i=0; i<Poly.NumVerts; i++ )

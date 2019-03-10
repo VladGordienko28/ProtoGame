@@ -11,9 +11,9 @@
 -----------------------------------------------------------------------------*/
 
 // Page colors.
-#define COLOR_ASSETS_PAGE				TColor( 0x32, 0x52, 0x78, 0xff )
-#define COLOR_SCRIPTS_PAGE				TColor( 0x32, 0x78, 0x32, 0xff )
-#define COLOR_LEVELS_PAGE				TColor( 0x72, 0x56, 0x38, 0xff )
+#define COLOR_ASSETS_PAGE				math::Color( 0x32, 0x52, 0x78, 0xff )
+#define COLOR_SCRIPTS_PAGE				math::Color( 0x32, 0x78, 0x32, 0xff )
+#define COLOR_LEVELS_PAGE				math::Color( 0x72, 0x56, 0x38, 0xff )
 
 
 /*-----------------------------------------------------------------------------
@@ -83,7 +83,7 @@ void WResourceBrowser::OnPaint( CGUIRenderBase* Render )
 	(
 		Base, 
 		TSize( Size.Width, FORM_HEADER_SIZE ),
-		TColor( 0x33, 0x33, 0x33, 0xff ),
+		math::Color( 0x33, 0x33, 0x33, 0xff ),
 		GUI_COLOR_FORM_BORDER,
 		BPAT_Diagonal
 	);
@@ -893,10 +893,10 @@ void WScriptsPage::OnOpen()
 -----------------------------------------------------------------------------*/
 
 // Pane color preferences.
-#define COLOR_RESPANE_ICON				TColor( 0x25, 0xff, 0xff, 0xff )
-#define COLOR_RESPANE_ICON_PAD			TColor( 0x30, 0x30, 0x30, 0xff )
-#define COLOR_RESPANE_ICON_BORDER		TColor( 0xc8, 0xc8, 0xc8, 0xff )
-#define COLOR_RESPANE_HIGHLIGHT			TColor( 0x32, 0xa4, 0xf0, 0xff )
+#define COLOR_RESPANE_ICON				math::Color( 0x25, 0xff, 0xff, 0xff )
+#define COLOR_RESPANE_ICON_PAD			math::Color( 0x30, 0x30, 0x30, 0xff )
+#define COLOR_RESPANE_ICON_BORDER		math::Color( 0xc8, 0xc8, 0xc8, 0xff )
+#define COLOR_RESPANE_HIGHLIGHT			math::Color( 0x32, 0xa4, 0xf0, 0xff )
 
 // Pane constants.
 #define PANE_ICONS_BORDER_SIZE			(1)

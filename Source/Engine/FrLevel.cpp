@@ -24,7 +24,7 @@ FLevel::FLevel()
 		CollHash( nullptr ),
 		GFXManager( nullptr ),
 		Navigator( nullptr ),
-		AmbientLight( COLOR_Black ),
+		AmbientLight( math::colors::BLACK ),
 		BlurIntensity( 0.f )
 {
 	Effect[0] = Effect[1] = Effect[2] = 1.f;
@@ -45,13 +45,13 @@ FLevel::FLevel()
 
 	m_timeOfDay = envi::TimeOfDay( 12, 0 );
 
-	m_ambientColors.AddSample( envi::TimeOfDay( 0, 0 ).toPercent(), TColor( 60, 87, 144, 255 ) );
-	m_ambientColors.AddSample( envi::TimeOfDay( 8, 0 ).toPercent(), TColor( 186, 152, 140, 255 ) );
-	m_ambientColors.AddSample( envi::TimeOfDay( 15, 0 ).toPercent(), TColor( 159, 159, 190, 255 ) );
-	m_ambientColors.AddSample( envi::TimeOfDay( 21, 0 ).toPercent(), TColor( 250, 100, 145, 255 ) );
+	m_ambientColors.AddSample( envi::TimeOfDay( 0, 0 ).toPercent(), math::Color( 60, 87, 144, 255 ) );
+	m_ambientColors.AddSample( envi::TimeOfDay( 8, 0 ).toPercent(), math::Color( 186, 152, 140, 255 ) );
+	m_ambientColors.AddSample( envi::TimeOfDay( 15, 0 ).toPercent(), math::Color( 159, 159, 190, 255 ) );
+	m_ambientColors.AddSample( envi::TimeOfDay( 21, 0 ).toPercent(), math::Color( 250, 100, 145, 255 ) );
 
 
-	m_ambientColors.AddSample( 1.f, TColor( 60, 87, 144, 255 ) );
+	m_ambientColors.AddSample( 1.f, math::Color( 60, 87, 144, 255 ) );
 }
 
 void FLevel::EditChange()
@@ -796,7 +796,7 @@ void fluDebugLine( CFrame& Frame )
 {
 	math::Vector A = POP_VECTOR;
 	math::Vector B = POP_VECTOR;
-	TColor Color = POP_COLOR;
+	math::Color Color = POP_COLOR;
 	Float Time = POP_FLOAT;
 
 	CDebugDrawHelper::Instance().DrawLine( A, B, Color, Time );
@@ -809,13 +809,28 @@ void fluDebugLine( CFrame& Frame )
 void fluDebugPoint( CFrame& Frame )
 {
 	math::Vector P = POP_VECTOR;
-	TColor Color = POP_COLOR;
+	math::Color Color = POP_COLOR;
 	Float Size = POP_FLOAT;
 	Float Time = POP_FLOAT;
 
 	CDebugDrawHelper::Instance().DrawPoint( P, Color, Size, Time );
 }
 
+
+//
+// Draw debug rect.
+//
+void fluDebugRect( CFrame& Frame )
+{
+	math::Rect R = POP_AABB;
+	math::Color Color = POP_COLOR;
+	Float Time = POP_FLOAT;
+
+	CDebugDrawHelper::Instance().DrawLine( { R.min.x, R.min.y }, { R.min.x, R.max.y }, Color, Time );
+	CDebugDrawHelper::Instance().DrawLine( { R.min.x, R.max.y }, { R.max.x, R.max.y }, Color, Time );
+	CDebugDrawHelper::Instance().DrawLine( { R.max.x, R.max.y }, { R.max.x, R.min.y }, Color, Time );
+	CDebugDrawHelper::Instance().DrawLine( { R.max.x, R.min.y }, { R.min.x, R.min.y }, Color, Time );
+}
 
 /*-----------------------------------------------------------------------------
     Registration.
@@ -995,6 +1010,7 @@ REGISTER_CLASS_CPP( FLevel, FResource, CLASS_Sterile )
 	// Engine functions.
 	DECLARE_EX_FUNCTION( DebugLine, TYPE_None, ARG(a, TYPE_Vector, ARG(b, TYPE_Vector, ARG(color, TYPE_Color, ARG(time, TYPE_Float, END)))));
 	DECLARE_EX_FUNCTION( DebugPoint, TYPE_None, ARG(a, TYPE_Vector, ARG(color, TYPE_Color, ARG(size, TYPE_Float, ARG(time, TYPE_Float, END)))));
+	DECLARE_EX_FUNCTION( DebugRect, TYPE_None, ARG(rect, TYPE_AABB, ARG(color, TYPE_Color, ARG(time, TYPE_Float, END))) );
 }
 
 

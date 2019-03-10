@@ -58,6 +58,11 @@ namespace flu
 		return ( value < T(0) ) ? -value : value;
 	}
 
+	template<class T> inline T lerp( T x, T y, Float alpha )
+	{
+		return x + ( y - x ) * alpha;
+	}
+
 	template<class T> inline void exchange( T& a, T& b )
 	{
 		T c = a;

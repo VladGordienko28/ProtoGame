@@ -161,8 +161,8 @@ void WMenu::OnPaint( CGUIRenderBase* Render )
 					( 
 						TPoint( Base.X + 2, Base.Y + Item.Y + 1 ), 
 						TSize( Size.Width - 4, Item.Height - 2 ), 
-						Item.bEnabled ? GUI_COLOR_MENU_HIGH : GUI_COLOR_MENU_HIGH - TColor( 0x23, 0x23, 0x23, 0x00 ), 
-						Item.bEnabled ? GUI_COLOR_MENU_HIGH : GUI_COLOR_MENU_HIGH - TColor( 0x23, 0x23, 0x23, 0x00 ), 
+						Item.bEnabled ? GUI_COLOR_MENU_HIGH : GUI_COLOR_MENU_HIGH - math::Color( 0x23, 0x23, 0x23, 0x00 ), 
+						Item.bEnabled ? GUI_COLOR_MENU_HIGH : GUI_COLOR_MENU_HIGH - math::Color( 0x23, 0x23, 0x23, 0x00 ), 
 						BPAT_Solid  
 					);
 

@@ -53,7 +53,7 @@ void TPalette::Release()
 // Find the most close color from palette.
 // Don't compare alpha channel.
 //
-UInt8 TPalette::FindMatched( TColor InColor )
+UInt8 TPalette::FindMatched( math::Color InColor )
 {
 #define R_FACTOR	30
 #define G_FACTOR	59
@@ -64,9 +64,9 @@ UInt8 TPalette::FindMatched( TColor InColor )
 
 	for( Int32 i=0; i < Colors.size(); i++ )
 	{
-		Cost	= R_FACTOR * sqr( (Int32)InColor.R - (Int32)Colors[i].R ) +
-			      G_FACTOR * sqr( (Int32)InColor.G - (Int32)Colors[i].G ) +
-				  B_FACTOR * sqr( (Int32)InColor.B - (Int32)Colors[i].B );
+		Cost	= R_FACTOR * sqr( (Int32)InColor.r - (Int32)Colors[i].r ) +
+			      G_FACTOR * sqr( (Int32)InColor.g - (Int32)Colors[i].g ) +
+				  B_FACTOR * sqr( (Int32)InColor.b - (Int32)Colors[i].b );
 
 		if( Cost < BestCost )
 		{
@@ -392,7 +392,7 @@ class CDefaultBitmap: public FBitmap
 {
 public:
 	// Variables.
-	TColor		ChessPattern[16][16];
+	math::Color		ChessPattern[16][16];
 
 	// CDefaultBitmap interface.
 	CDefaultBitmap()
@@ -416,10 +416,10 @@ public:
 		for( Int32 v=0; v<16; v++ )
 		for( Int32 u=0; u<16; u++ )
 		{
-			ChessPattern[v][u].R	= (( u ^ v ) << 3) + 32;
-			ChessPattern[v][u].G	= (( u ^ v ) << 3) + 32;
-			ChessPattern[v][u].B	= (( u ^ v ) << 3) + 32;
-			ChessPattern[v][u].A	= 0xff;
+			ChessPattern[v][u].r	= (( u ^ v ) << 3) + 32;
+			ChessPattern[v][u].g	= (( u ^ v ) << 3) + 32;
+			ChessPattern[v][u].b	= (( u ^ v ) << 3) + 32;
+			ChessPattern[v][u].a	= 0xff;
 		}
 	}
 	~CDefaultBitmap()

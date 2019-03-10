@@ -152,7 +152,6 @@
     <ClInclude Include="Core\FrBase.h" />
     <ClInclude Include="Core\FrBuff.h" />
     <ClInclude Include="Core\FrClass.h" />
-    <ClInclude Include="Core\FrColor.h" />
     <ClInclude Include="Core\FrCorUtils.h" />
     <ClInclude Include="Core\FrEncode.h" />
     <ClInclude Include="Core\FrExpImp.h" />

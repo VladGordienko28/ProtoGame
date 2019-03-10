@@ -127,8 +127,8 @@ void WWatchListDialog::OnPaint( CGUIRenderBase* Render )
 	(
 		TPoint( Base.X, Base.Y+TopPanel->Size.Height+FORM_HEADER_SIZE ),
 		TSize( Size.Width-11, ScrollBar->Size.Height ),
-		TColor( 0x33, 0x33, 0x33, 0xff ),
-		TColor( 0x66, 0x66, 0x66, 0xff ),
+		math::Color( 0x33, 0x33, 0x33, 0xff ),
+		math::Color( 0x66, 0x66, 0x66, 0xff ),
 		BPAT_Solid
 	);
 
@@ -160,8 +160,8 @@ void WWatchListDialog::OnPaint( CGUIRenderBase* Render )
 			(
 				TPoint( Base.X+1, YWalk ),
 				TSize( Size.Width-11, 18 ),
-				TColor( 0x44, 0x44, 0x44, 0xff ),
-				TColor( 0x33, 0x33, 0x33, 0xff ),
+				math::Color( 0x44, 0x44, 0x44, 0xff ),
+				math::Color( 0x33, 0x33, 0x33, 0xff ),
 				BPAT_Solid
 			);
 
@@ -192,8 +192,8 @@ void WWatchListDialog::OnPaint( CGUIRenderBase* Render )
 	(
 		TPoint( Base.X+Divider, Base.Y+TopPanel->Size.Height+FORM_HEADER_SIZE+2 ),
 		TSize( 0, Size.Height-12-TopPanel->Size.Height-FORM_HEADER_SIZE-3 ),
-		TColor( 0x33, 0x33, 0x33, 0xff ),
-		TColor( 0x33, 0x33, 0x33, 0xff ),
+		math::Color( 0x33, 0x33, 0x33, 0xff ),
+		math::Color( 0x33, 0x33, 0x33, 0xff ),
 		BPAT_None
 	);
 }

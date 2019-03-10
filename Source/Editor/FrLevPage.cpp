@@ -2066,7 +2066,7 @@ void WLevelPage::DrawKeyframe( CCanvas* Canvas, FEntity* Entity )
 					( 
 						Keyframe->Points[i-1].Location,
 						Keyframe->Points[i].Location,
-						COLOR_Pink,
+						math::colors::PINK,
 						false
 					);
 
@@ -2077,7 +2077,7 @@ void WLevelPage::DrawKeyframe( CCanvas* Canvas, FEntity* Entity )
 						(
 							Keyframe->Points[i].Location,
 							5.f,
-							COLOR_Pink
+							math::colors::PINK
 						);
 
 		Canvas->DrawLineStar
@@ -2085,7 +2085,7 @@ void WLevelPage::DrawKeyframe( CCanvas* Canvas, FEntity* Entity )
 							Keyframe->Points[i].Location,
 							Keyframe->Points[i].Rotation,
 							1.f,
-							COLOR_Pink,
+							math::colors::PINK,
 							false
 						);
 	}
@@ -2102,7 +2102,7 @@ void WLevelPage::DrawKeyframe( CCanvas* Canvas, FEntity* Entity )
 					(	
 						String::format( L"%d", i+1 ),
 						Root->Font2,
-						COLOR_White,
+						math::colors::WHITE,
 						math::Vector( X-10, Y-25 )
 					);
 	}
@@ -2138,7 +2138,7 @@ void WLevelPage::DrawLogicCircuit( CCanvas* Canvas )
 				(
 					Logic->PlugsName[i],
 					Root->Font2,
-					COLOR_White,
+					math::colors::WHITE,
 					math::Vector( X-Root->Font2->TextWidth(*Logic->PlugsName[i])-4, Y-8 )
 				);
 			}
@@ -2153,7 +2153,7 @@ void WLevelPage::DrawLogicCircuit( CCanvas* Canvas )
 				(
 					Logic->JacksName[i],
 					Root->Font2,
-					COLOR_White,
+					math::colors::WHITE,
 					math::Vector( X+4, Y-8 )
 				);
 			}
@@ -2173,7 +2173,7 @@ void WLevelPage::DrawScrollClamp( CCanvas* Canvas )
 		Level->Camera.ScrollBound.center(),
 		Level->Camera.ScrollBound.size(),
 		0,
-		COLOR_LimeGreen,
+		math::colors::LIME_GREEN,
 		false
 	);
 }
@@ -2240,14 +2240,14 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 			// Highlight drag vertex.
 			FBrushComponent* B = DragInfo.VBrush;
 			Int32 i = DragInfo.ViVert;
-			Canvas->DrawCoolPoint( B->Vertices[i] + B->Location, 10.f, COLOR_DeepPink );
+			Canvas->DrawCoolPoint( B->Vertices[i] + B->Location, 10.f, math::colors::DEEP_PINK );
 			break;
 		}
 		case DRAG_LogicLink:
 		{
 			// Draw active link line.
 			math::Vector Pen = ScreenToWorld( LLastPos.X, LLastPos.Y );
-			Canvas->DrawSmoothLine( DragInfo.LSource->GetPlugPos(DragInfo.LPlug), Pen, COLOR_LightBlue, false );
+			Canvas->DrawSmoothLine( DragInfo.LSource->GetPlugPos(DragInfo.LPlug), Pen, math::colors::LIGHT_BLUE, false );
 		}
 	}
 
@@ -2267,7 +2267,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 				( 
 					String::format( L"FPS: %d", GEditor->FPS ), 
 					Root->Font1, 
-					COLOR_White, 
+					math::colors::WHITE, 
 					math::Vector( 10.f, 38.f ) 
 				);
 
@@ -2276,7 +2276,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 				( 
 					String::format( L"Mem: %.2f kB", Double(mem::stats().totalAllocatedBytes) / 1024 ), 
 					Root->Font1, 
-					COLOR_White, 
+					math::colors::WHITE, 
 					math::Vector( 10.f, 55.f ) 
 				);
 #endif
@@ -2285,7 +2285,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 				( 
 					String::format( L"Game Time: %s", *Level->m_timeOfDay.toString() ), 
 					Root->Font1, 
-					COLOR_White, 
+					math::colors::WHITE, 
 					math::Vector( 10.f, 72.f ) 
 				);
 }
@@ -3085,7 +3085,7 @@ void WLevelPage::TRoller::Draw( CCanvas* Canvas, Bool bHighlight )
 							( 
 								Position, 
 								ROLLER_RADIUS * Canvas->View.Zoom, 
-								COLOR_Gold, 
+								math::colors::GOLD, 
 								false 
 							);
 
@@ -3094,7 +3094,7 @@ void WLevelPage::TRoller::Draw( CCanvas* Canvas, Bool bHighlight )
 								Position,
 								Angle,
 								ROLLER_RADIUS * Canvas->View.Zoom * 0.75f,
-								COLOR_Gold,
+								math::colors::GOLD,
 								false
 							);
 		}
@@ -3105,7 +3105,7 @@ void WLevelPage::TRoller::Draw( CCanvas* Canvas, Bool bHighlight )
 							( 
 								Position, 
 								ROLLER_RADIUS * Canvas->View.Zoom, 
-								COLOR_Blue, 
+								math::colors::BLUE, 
 								false 
 							);
 		}	

@@ -133,23 +133,23 @@ template<class T> inline T TInterpCurve<T>::SampleAt( Float Input, const T& Defa
 			switch( A.Type )
 			{
 				case EIT_Stepped:	ASample = A.Output; break;
-				case EIT_Linear:	ASample = Lerp( A.Output, B.Output, Alpha ); break;
-				case EIT_Fast:		ASample = Lerp( A.Output, B.Output, Alpha*Alpha*Alpha ); break;
-				case EIT_Slow:		ASample = Lerp( A.Output, B.Output, 1.f-sqr(1.f-Alpha) ); break;
-				case EIT_Smooth:	ASample = Lerp( A.Output, B.Output, 3.f*Alpha*Alpha - 2.f*Alpha*Alpha*Alpha ); break;
+				case EIT_Linear:	ASample = lerp( A.Output, B.Output, Alpha ); break;
+				case EIT_Fast:		ASample = lerp( A.Output, B.Output, Alpha*Alpha*Alpha ); break;
+				case EIT_Slow:		ASample = lerp( A.Output, B.Output, 1.f-sqr(1.f-Alpha) ); break;
+				case EIT_Smooth:	ASample = lerp( A.Output, B.Output, 3.f*Alpha*Alpha - 2.f*Alpha*Alpha*Alpha ); break;
 			}
 
 			switch( B.Type )
 			{
 				case EIT_Stepped:	BSample = A.Output; break;
-				case EIT_Linear:	BSample = Lerp( A.Output, B.Output, Alpha ); break;
-				case EIT_Fast:		BSample = Lerp( A.Output, B.Output, Alpha*Alpha*Alpha ); break;
-				case EIT_Slow:		BSample = Lerp( A.Output, B.Output, 1.f-sqr(1.f-Alpha) ); break;
-				case EIT_Smooth:	BSample = Lerp( A.Output, B.Output, 3.f*Alpha*Alpha - 2.f*Alpha*Alpha*Alpha ); break;
+				case EIT_Linear:	BSample = lerp( A.Output, B.Output, Alpha ); break;
+				case EIT_Fast:		BSample = lerp( A.Output, B.Output, Alpha*Alpha*Alpha ); break;
+				case EIT_Slow:		BSample = lerp( A.Output, B.Output, 1.f-sqr(1.f-Alpha) ); break;
+				case EIT_Smooth:	BSample = lerp( A.Output, B.Output, 3.f*Alpha*Alpha - 2.f*Alpha*Alpha*Alpha ); break;
 			}
 
 			// Mix samples.
-			return Lerp( ASample, BSample, Alpha );
+			return lerp( ASample, BSample, Alpha );
 		}
 	}
 
@@ -178,7 +178,7 @@ template<class T> inline T TInterpCurve<T>::SampleLinearAt( Float Input, const T
 		if( B.Input >= Input )
 		{
 			Float Alpha = (Input-A.Input)/(B.Input-A.Input);
-			return Lerp( A.Output, B.Output, Alpha );
+			return lerp( A.Output, B.Output, Alpha );
 		}
 	}
 
@@ -210,18 +210,6 @@ template<class T> inline T TInterpCurve<T>::SampleSteppedAt( Float Input, const 
 	return Default;
 }
 
-
-/*-----------------------------------------------------------------------------
-    Math templates.
------------------------------------------------------------------------------*/
-
-//
-// General purpose.
-//
-template<class T> inline T Lerp( T A, T B, Float Alpha )
-{
-	return A + ( B - A ) * Alpha;
-}
 
 /*-----------------------------------------------------------------------------
     Math functions.

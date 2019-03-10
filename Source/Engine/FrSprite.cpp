@@ -39,7 +39,7 @@ FSpriteComponent::FSpriteComponent()
 		bUnlit( false ),
 		bFlipH( false ),
 		bFlipV( false ),
-		Color( COLOR_White ),
+		Color( math::colors::WHITE ),
 		Texture( nullptr )
 {
 	bRenderable		= true;
@@ -93,7 +93,7 @@ void FSpriteComponent::Render( CCanvas* Canvas )
 	TRenderRect Rect;
 	Rect.Flags			= POLY_Unlit * (bUnlit | !(Level->RndFlags & RND_Lighting));
 	Rect.Rotation		= Base->Rotation + Rotation;		
-	Rect.Color			= Base->bSelected ? TColor( 0x80, 0xe6, 0x80, 0xff ) : Color;
+	Rect.Color			= Base->bSelected ? math::Color( 0x80, 0xe6, 0x80, 0xff ) : Color;
 	Rect.Texture		= Texture ? Texture : FBitmap::NullBitmap();
 	Rect.Bounds			= Bounds;
 	
@@ -129,7 +129,7 @@ FDecoComponent::FDecoComponent()
 		bUnlit( false ),
 		bFlipH( false ),
 		bFlipV( false ),
-		Color( COLOR_White ),
+		Color( math::colors::WHITE ),
 		Texture( nullptr ),
 		DecoType( DECO_Shrub ),
 		Frequency( 1.f ),
@@ -189,7 +189,7 @@ void FDecoComponent::Render( CCanvas* Canvas )
 	// Initialize polygon.
 	TRenderPoly Poly;
 	Poly.Texture		= Texture ? Texture : FBitmap::NullBitmap();
-	Poly.Color			= Base->bSelected ? TColor( 0x80, 0xe6, 0x80, 0xff ) : Color;
+	Poly.Color			= Base->bSelected ? math::Color( 0x80, 0xe6, 0x80, 0xff ) : Color;
 	Poly.Flags			= POLY_Unlit * (bUnlit | !(Level->RndFlags & RND_Lighting));
 	Poly.NumVerts		= 4;
 
@@ -277,7 +277,7 @@ FAnimatedSpriteComponent::FAnimatedSpriteComponent()
 		bFlipH( false ),
 		bFlipV( false ),
 		Animation( nullptr ),
-		Color( COLOR_White ),
+		Color( math::colors::WHITE ),
 		Offset( 0.f, 0.f ),
 		Scale( 1.f, 1.f ),
 		Rotation( 0 ),
@@ -391,7 +391,7 @@ void FAnimatedSpriteComponent::Render( CCanvas* Canvas )
 
 	Rect.Flags			= POLY_Unlit * (bUnlit | !(Level->RndFlags & RND_Lighting));
 	Rect.Rotation		= Base->Rotation + Rotation;
-	Rect.Color			= Base->bSelected ? TColor( 0x80, 0xe6, 0x80, 0xff ) : Color;
+	Rect.Color			= Base->bSelected ? math::Color( 0x80, 0xe6, 0x80, 0xff ) : Color;
 	Rect.Bounds			= Bounds;
 
 	// Is animation valid?
@@ -538,7 +538,7 @@ FParallaxLayerComponent::FParallaxLayerComponent()
 		bUnlit( false ),
 		bFlipH( false ),
 		bFlipV( false ),
-		Color( COLOR_White ),
+		Color( math::colors::WHITE ),
 		Texture( nullptr )		
 {
 	bRenderable		= true;
@@ -606,7 +606,7 @@ void FParallaxLayerComponent::Render( CCanvas* Canvas )
 	// Setup render rect.
 	TRenderRect Rect;
 	Rect.Texture		= Texture ? Texture : FBitmap::NullBitmap();
-	Rect.Color			= Base->bSelected ? TColor( 0x80, 0xe6, 0x80, 0xff ) : Color;
+	Rect.Color			= Base->bSelected ? math::Color( 0x80, 0xe6, 0x80, 0xff ) : Color;
 	Rect.Flags			= POLY_Unlit * (bUnlit | !(Level->RndFlags & RND_Lighting));
 	Rect.Rotation		= 0;
 
@@ -643,7 +643,7 @@ FLabelComponent::FLabelComponent()
 	:	FExtraComponent()
 {
 	bRenderable	= true;
-	Color		= COLOR_White;
+	Color		= math::colors::WHITE;
 	Font		= nullptr;
 	Scale		= 1.f;
 	Text		= L"Text";

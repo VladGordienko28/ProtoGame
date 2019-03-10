@@ -72,7 +72,6 @@ namespace envi
 #include "Core\FrRand.h"
 #include "Core\FrMemory.h"
 #include "Core\FrMath.h"
-#include "Core\FrColor.h"
 #include "Core\FrExpImp.h"
 #include "Core\FrMap.h"
 #include "Core\FrEncode.h"

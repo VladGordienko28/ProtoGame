@@ -8,7 +8,7 @@
 namespace flu
 {
 	static const Double DEFAULT_TIMELINE_TIME = 7.0;
-	static const TColor TIMELINE_PANEL_COLOR = TColor( 16, 16, 16, 200 );
+	static const math::Color TIMELINE_PANEL_COLOR = { 16, 16, 16, 200 };
 
 	EngineChart::EngineChart()
 		:	m_profiler( static_cast<Int32>(EProfilerGroup::MAX) ),
@@ -21,7 +21,7 @@ namespace flu
 		// generate color set
 		for( Int32 i = 0; i < arraySize(m_colorSet); ++i )
 		{
-			m_colorSet[i] = TColor::HSLToRGB( i * ( 256 / COLOR_SET_SIZE ), 200, 128 );
+			m_colorSet[i] = math::Color::hsl2rgb( i * ( 256 / COLOR_SET_SIZE ), 200, 128 );
 		}
 		for( Int32 i = 0; i < arraySize(m_colorSet); ++i )
 		{
@@ -102,7 +102,7 @@ namespace flu
 
 				// choose color
 				const Int32 colorIndex = COLOR_SET_MASK & ( groupId * 17 + reinterpret_cast<Int32>( it.name ) );
-				const TColor drawColor = m_colorSet[colorIndex];
+				const math::Color drawColor = m_colorSet[colorIndex];
 
 				Double maxMetricValue = it.samples[0].value;
 				Double cumulativeValue = it.samples[0].value;
@@ -133,7 +133,7 @@ namespace flu
 
 				canvas->DrawText( *String::format( L"%s: %s (avg %.2f)", 
 					getGroupName(static_cast<EProfilerGroup>( groupId )), it.name, ( cumulativeValue / it.samples.size() ) ), 
-					font, COLOR_White, { 40.f, metricItem.Bounds.min.y + 2.f } );
+					font, math::colors::WHITE, { 40.f, metricItem.Bounds.min.y + 2.f } );
 
 				metricItem.Bounds.min.y += metricDrawStep;
 				metricItem.Bounds.max.y += metricDrawStep;
@@ -145,7 +145,7 @@ namespace flu
 		m_invTimelineMaxValue = 1.f / maxValue;
 
 		// draw help string
-		canvas->DrawText( m_helpString, font, COLOR_White, { 10.f, screenH - 20.f } );
+		canvas->DrawText( m_helpString, font, math::colors::WHITE, { 10.f, screenH - 20.f } );
 	}
 
 	void EngineChart::setTimelineLength( Float newLength )

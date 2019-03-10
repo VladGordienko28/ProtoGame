@@ -32,7 +32,7 @@ WTaskDialog::WTaskDialog( WWindow* InRoot )
 	// ProgressBar.
 	ProgressBar				= new WProgressBar( this, Root );
 	ProgressBar->Location	= TPoint( 10, 50 );
-	ProgressBar->Color		= COLOR_CornflowerBlue/*COLOR_DodgerBlue*/;
+	ProgressBar->Color		= math::colors::CORNFLOWER_BLUE/*COLOR_DodgerBlue*/;
 	ProgressBar->SetSize( 370, 25 );	
 	ProgressBar->SetValue( 50 );
 

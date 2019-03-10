@@ -609,8 +609,8 @@ WScriptPage::WScriptPage( FScript* InScript, WContainer* InOwner, WWindow* InRoo
 	
 	// Compiler messages output widget.
 	Output			= new WCompilerOutput( SplitBox, Root );
-	Output->AddMessage( L"--- FluScript 1.0. ---",	nullptr, -1,	COLOR_LightSteelBlue );
-	Output->AddMessage( L"---",						nullptr, -1,	COLOR_LightSteelBlue );
+	Output->AddMessage( L"--- FluScript 1.0. ---",	nullptr, -1,	math::colors::LIGHT_STEEL_BLUE );
+	Output->AddMessage( L"---",						nullptr, -1,	math::colors::LIGHT_STEEL_BLUE );
 	
 	// Find dialog.
 	FindDialog			= new WFindDialog( CodeEditor, this, Root );
@@ -818,14 +818,14 @@ enum EHighlightType
 };
 
 
-static const TColor GHightlight[HIGH_MAX] =
+static const math::Color GHightlight[HIGH_MAX] =
 {
-	TColor( 0xff, 0xff, 0xff, 0xff ),	//	HIGH_Text.
-	TColor( 0x87, 0xce, 0xeb, 0xff ),	//	HIGH_Keyword.
-	TColor( 0x00, 0xfa, 0x9a, 0xff ),	//	HIGH_Comment.
-	TColor( 0xff, 0xa0, 0x7a, 0xff ),	//	HIGH_Quote.
-	TColor( 0xda, 0x70, 0xd6, 0xff ),	//	HIGH_Label.
-	TColor( 0xeb, 0xde, 0x87, 0xff )	//	HIGH_Resource.
+	math::Color( 0xff, 0xff, 0xff, 0xff ),	//	HIGH_Text.
+	math::Color( 0x87, 0xce, 0xeb, 0xff ),	//	HIGH_Keyword.
+	math::Color( 0x00, 0xfa, 0x9a, 0xff ),	//	HIGH_Comment.
+	math::Color( 0xff, 0xa0, 0x7a, 0xff ),	//	HIGH_Quote.
+	math::Color( 0xda, 0x70, 0xd6, 0xff ),	//	HIGH_Label.
+	math::Color( 0xeb, 0xde, 0x87, 0xff )	//	HIGH_Resource.
 };
 
 
@@ -2338,7 +2338,7 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 					(
 						Base,
 						Size,
-						TColor( 0x1e, 0x1e, 0x1e, 0xff ),
+						math::Color( 0x1e, 0x1e, 0x1e, 0xff ),
 						GUI_COLOR_SLIDER_BORDER,
 						BPAT_Solid
 					);
@@ -2349,8 +2349,8 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 					(
 						TPoint( Base.X+1, Base.Y+1 ),
 						TSize( 15, Size.Height-2 ),
-						TColor( 0x33, 0x33, 0x33, 0xff ),
-						TColor( 0x33, 0x33, 0x33, 0xff ),
+						math::Color( 0x33, 0x33, 0x33, 0xff ),
+						math::Color( 0x33, 0x33, 0x33, 0xff ),
 						BPAT_Solid
 					);	
 
@@ -2375,8 +2375,8 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 							(
 								TPoint( Base.X + 16, TextY + 1 ),
 								TSize( Size.Width - 28, CharSize.Height - 1 ),
-								bFlashy ? COLOR_IndianRed : TColor( 0x0f, 0x0f, 0x0f, 0xff ),
-								TColor( 0x40, 0x40, 0x40, 0xff ),
+								bFlashy ? math::colors::INDIAN_RED : math::Color( 0x0f, 0x0f, 0x0f, 0xff ),
+								math::Color( 0x40, 0x40, 0x40, 0xff ),
 								BPAT_Solid
 							);
 
@@ -2386,7 +2386,7 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 								TPoint( Base.X + ColumnToX(CaretXBegin) - 2, TextY ), 
 								L"|", 
 								1,
-								COLOR_White, 
+								math::colors::WHITE, 
 								Root->Font2 
 							);
 		}
@@ -2395,9 +2395,9 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 	{
 		// Draw selection area.
 		Int32 Y1, Y2, BeginX, EndX;
-		TColor	DrawColor	= IsFocused() ? 
-									TColor( 0x26, 0x4f, 0x78, 0xff ) : 
-									TColor( 0x34, 0x34, 0x34, 0xff );
+		math::Color	DrawColor	= IsFocused() ? 
+									math::Color( 0x26, 0x4f, 0x78, 0xff ) : 
+									math::Color( 0x34, 0x34, 0x34, 0xff );
 		
 		// Get sorted bounds.
 		if( CaretYBegin <= CaretYEnd )
@@ -2439,7 +2439,7 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 						TPoint( Base.X + ColumnToX(DragX) - 2, Base.Y + LineToY(DragY) ), 
 						L"|", 
 						1,
-						COLOR_White, 
+						math::colors::WHITE, 
 						Root->Font2 
 					);
 	}
@@ -2449,15 +2449,15 @@ void WCodeEditor::OnPaint( CGUIRenderBase* Render )
 	(
 		TPoint( Base.X+CharSize.Width*120+16, Base.Y+1 ),
 		TSize( 0, Size.Height-2 ),
-		TColor( 0x40, 0x40, 0x40, 0xff ),
-		TColor( 0x40, 0x40, 0x40, 0xff ),
+		math::Color( 0x40, 0x40, 0x40, 0xff ),
+		math::Color( 0x40, 0x40, 0x40, 0xff ),
 		BPAT_None
 	);	
 
 	// Highlight brackets.
 	if( EnclosingBrackets[0].Y != -1 && EnclosingBrackets[1].Y != -1 )
 	{
-		const TColor BRACKET_COLOR = TColor( 0x0e, 0x3a, 0x6c, 0xff );
+		const math::Color BRACKET_COLOR = math::Color( 0x0e, 0x3a, 0x6c, 0xff );
 		
 		for( Int32 i=0; i<arraySize(EnclosingBrackets); i++ )
 			Render->DrawRegion
@@ -3215,7 +3215,7 @@ void WCodeEditor::WAutoComplete::OnPaint( CGUIRenderBase* Render )
 	Render->DrawRegion
 	( 
 		Base, Size,
-		TColor( 0x30, 0x30, 0x30, 0xff ), 
+		math::Color( 0x30, 0x30, 0x30, 0xff ), 
 		GUI_COLOR_LIST_BORDER,
 		BPAT_Solid 
 	);
@@ -3244,8 +3244,8 @@ void WCodeEditor::WAutoComplete::OnPaint( CGUIRenderBase* Render )
 						( 
 							TPoint( Base.X + 1, Base.Y+i * ItemsHeight + 1 ),
 							TSize( Size.Width - 2, ItemsHeight ),
-							TColor( 0x50, 0x50, 0x50, 0xff ),
-							TColor( 0x50, 0x50, 0x50, 0xff ),
+							math::Color( 0x50, 0x50, 0x50, 0xff ),
+							math::Color( 0x50, 0x50, 0x50, 0xff ),
 							BPAT_Solid 
 						);
 
@@ -3260,15 +3260,15 @@ void WCodeEditor::WAutoComplete::OnPaint( CGUIRenderBase* Render )
 						);
 
 			// Draw items text and it type.
-			static const TColor AutoColors[AT_MAX] =
+			static const math::Color AutoColors[AT_MAX] =
 			{
-				TColor( 0x39, 0x39, 0xc1, 0xff ),	// AT_Property. 
-				TColor( 0xc1, 0x39, 0x39, 0xff ),	// AT_Method.
-				TColor( 0xc1, 0x70, 0x39, 0xff ),	// AT_Component.
-				TColor( 0xc1, 0x39, 0x39, 0xff ),	// AT_Function. 
-				TColor( 0x70, 0xc1, 0x39, 0xff ),	// AT_Script. 
-				TColor( 0x70, 0xc1, 0x39, 0xff ),	// AT_Resource. 
-				TColor( 0x39, 0x9f, 0x70, 0xff )	// AT_Keyword.
+				math::Color( 0x39, 0x39, 0xc1, 0xff ),	// AT_Property. 
+				math::Color( 0xc1, 0x39, 0x39, 0xff ),	// AT_Method.
+				math::Color( 0xc1, 0x70, 0x39, 0xff ),	// AT_Component.
+				math::Color( 0xc1, 0x39, 0x39, 0xff ),	// AT_Function. 
+				math::Color( 0x70, 0xc1, 0x39, 0xff ),	// AT_Script. 
+				math::Color( 0x70, 0xc1, 0x39, 0xff ),	// AT_Resource. 
+				math::Color( 0x39, 0x9f, 0x70, 0xff )	// AT_Keyword.
 			};
 			static const String AutoNames[AT_MAX] =
 			{
@@ -3575,7 +3575,7 @@ void WCompilerOutput::Clear()
 //
 // Add a new record.
 //
-void WCompilerOutput::AddMessage( String InText, FScript* Script, Int32 iLine, TColor InColor )
+void WCompilerOutput::AddMessage( String InText, FScript* Script, Int32 iLine, math::Color InColor )
 {
 	TMessage Msg;
 	Msg.Script = Script;
@@ -3600,7 +3600,7 @@ void WCompilerOutput::OnPaint( CGUIRenderBase* Render )
 	(
 		Base,
 		Size,
-		TColor( 0x45, 0x45, 0x45, 0xff ),
+		math::Color( 0x45, 0x45, 0x45, 0xff ),
 		GUI_COLOR_FORM_BORDER,
 		BPAT_Solid
 	);
@@ -3610,7 +3610,7 @@ void WCompilerOutput::OnPaint( CGUIRenderBase* Render )
 	(
 		Base, 
 		TSize( Size.Width, FORM_HEADER_SIZE ),
-		TColor( 0x33, 0x33, 0x33, 0xff ),
+		math::Color( 0x33, 0x33, 0x33, 0xff ),
 		GUI_COLOR_FORM_BORDER,
 		BPAT_Diagonal
 	);

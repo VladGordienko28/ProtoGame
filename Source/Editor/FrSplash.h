@@ -64,10 +64,10 @@ CSplash::CSplash( LPCTSTR BitmapID )
 		// Flip palette RGBA -> BGR.
 		for( Int32 i=0; i<Bitmap->Palette.Colors.size(); i++ )
 		{
-			TColor Col = Bitmap->Palette.Colors[i];
-			Info->bmiColors[i].rgbBlue		= Col.B;
-			Info->bmiColors[i].rgbGreen		= Col.G;
-			Info->bmiColors[i].rgbRed		= Col.R;
+			math::Color Col = Bitmap->Palette.Colors[i];
+			Info->bmiColors[i].rgbBlue		= Col.b;
+			Info->bmiColors[i].rgbGreen		= Col.g;
+			Info->bmiColors[i].rgbRed		= Col.r;
 			Info->bmiColors[i].rgbReserved	= 0;
 		}
 

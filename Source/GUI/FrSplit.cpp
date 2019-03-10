@@ -85,7 +85,7 @@ void WHSplitBox::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 void WHSplitBox::OnPaint( CGUIRenderBase* Render )
 {
 	TPoint Base = ClientToWindow(TPoint::Zero);
-	TColor FillColor = bMoveSeparator ? GUI_COLOR_SPLITTER_MOVE : GUI_COLOR_SPLITTER;
+	math::Color FillColor = bMoveSeparator ? GUI_COLOR_SPLITTER_MOVE : GUI_COLOR_SPLITTER;
 
 	Render->DrawRegion
 	(
@@ -242,7 +242,7 @@ void WVSplitBox::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 void WVSplitBox::OnPaint( CGUIRenderBase* Render )
 {
 	TPoint Base = ClientToWindow(TPoint::Zero);
-	TColor FillColor = bMoveSeparator ? GUI_COLOR_SPLITTER_MOVE : GUI_COLOR_SPLITTER;
+	math::Color FillColor = bMoveSeparator ? GUI_COLOR_SPLITTER_MOVE : GUI_COLOR_SPLITTER;
 
 	Render->DrawRegion
 	(

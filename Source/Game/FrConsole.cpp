@@ -118,22 +118,22 @@ void CConsole::Render( CCanvas* Canvas )
 		R.Texture		= nullptr;
 		R.Bounds.min	= math::Vector( 0.f, 0.f );
 		R.Bounds.max	= math::Vector( Canvas->ScreenWidth, 16.f*(MAX_CON_HISTORY+1)+16 );
-		R.Color			= COLOR_Black;
+		R.Color			= math::colors::BLACK;
 		R.Flags			= POLY_FlatShade;
 		R.Rotation		= 0;
 		Canvas->DrawRect( R );
 
 		// Console colors.
-		static const TColor ConsoleClrs[TCR_MAX] =
+		static const math::Color ConsoleClrs[TCR_MAX] =
 		{
-			TColor( 0xff, 0xff, 0xff, 0xff ),	// TCR_White.
-			TColor( 0xc0, 0xc0, 0xc0, 0xff ),	// TCR_Gray.
-			TColor( 0x80, 0x00, 0x00, 0xff ),	// TCR_Red.
-			TColor( 0x00, 0x80, 0x00, 0xff ),	// TCR_Green.
-			TColor( 0x00, 0x00, 0x80, 0xff ),	// TCR_Blue.
-			TColor( 0x80, 0x00, 0x80, 0xff ),	// TCR_Magenta.
-			TColor( 0x00, 0x80, 0x80, 0xff ),	// TCR_Cyan.
-			TColor( 0x80, 0x80, 0x00, 0xff )	// TCR_Yellow.
+			math::Color( 0xff, 0xff, 0xff, 0xff ),	// TCR_White.
+			math::Color( 0xc0, 0xc0, 0xc0, 0xff ),	// TCR_Gray.
+			math::Color( 0x80, 0x00, 0x00, 0xff ),	// TCR_Red.
+			math::Color( 0x00, 0x80, 0x00, 0xff ),	// TCR_Green.
+			math::Color( 0x00, 0x00, 0x80, 0xff ),	// TCR_Blue.
+			math::Color( 0x80, 0x00, 0x80, 0xff ),	// TCR_Magenta.
+			math::Color( 0x00, 0x80, 0x80, 0xff ),	// TCR_Cyan.
+			math::Color( 0x80, 0x80, 0x00, 0xff )	// TCR_Yellow.
 		};
 
 		// History.
@@ -151,7 +151,7 @@ void CConsole::Render( CCanvas* Canvas )
 		(
 			String(L"<> ") + Command + String(L"_"),
 			CConsole::Font,
-			TColor( 0xc0, 0xc0, 0xc0, 0xc0 ),
+			math::Color( 0xc0, 0xc0, 0xc0, 0xc0 ),
 			math::Vector( 8.f, 8.f+16.f*MAX_CON_HISTORY)
 		);
 	}

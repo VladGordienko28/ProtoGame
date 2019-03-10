@@ -44,7 +44,7 @@ public:
 	
 	// TPathNode interface.
 	TPathNode();
-	TColor GetDrawColor() const;
+	math::Color GetDrawColor() const;
 	friend void Serialize( CSerializer& S, TPathNode& V );
 };
 
@@ -64,7 +64,7 @@ public:
 	
 	// TPathEdge interface.
 	TPathEdge();
-	TColor GetDrawColor() const;
+	math::Color GetDrawColor() const;
 	friend void Serialize( CSerializer& S, TPathEdge& V );
 };
 

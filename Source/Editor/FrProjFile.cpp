@@ -215,15 +215,15 @@ public:
 	}
 
 	// Color export.
-	void ExportColor( const Char* FieldName, TColor Value ) 
+	void ExportColor( const Char* FieldName, math::Color Value ) 
 	{
-		if( Value != COLOR_Black )
+		if( Value != math::colors::BLACK )
 			Writer.WriteString(String::format
 			( 
 				L"%s%s = #%02x%02x%02x%02x", 
 				Whitespace, 
 				FieldName, 
-				Value.R, Value.G, Value.B, Value.A 
+				Value.r, Value.g, Value.b, Value.a 
 			));
 	}
 
@@ -717,14 +717,14 @@ public:
 	}
 
 	// Parse color value.
-	TColor ToColor()
+	math::Color ToColor()
 	{
 		UInt8 R, G, B, A;
 		R = cstr::fromHex(Value[1])*16 + cstr::fromHex(Value[2]);
 		G = cstr::fromHex(Value[3])*16 + cstr::fromHex(Value[4]);
 		B = cstr::fromHex(Value[5])*16 + cstr::fromHex(Value[6]);
 		A = cstr::fromHex(Value[7])*16 + cstr::fromHex(Value[8]);
-		return TColor( R, G, B, A );
+		return math::Color( R, G, B, A );
 	}
 
 	// Parse object value.
@@ -1494,10 +1494,10 @@ public:
 	}
 
 	// Color import.
-	TColor ImportColor( const Char* FieldName )
+	math::Color ImportColor( const Char* FieldName )
 	{
 		TLoadProperty* Prop = Object->FindProperty( FieldName, false );
-		return Prop ? Prop->ToColor() : COLOR_Black;
+		return Prop ? Prop->ToColor() : math::colors::BLACK;
 	}
 
 	// Vector import.

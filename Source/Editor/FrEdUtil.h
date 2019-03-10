@@ -23,8 +23,8 @@ public:
 	void EndPaint();
 
 	// CGUIRenderBase interface.
-	void DrawRegion( TPoint P, TSize S, TColor Color, TColor BorderColor, EBrushPattern Pattern );
-	void DrawText( TPoint P, const Char* Text, Int32 Len, TColor Color, FFont* Font );
+	void DrawRegion( TPoint P, TSize S, math::Color Color, math::Color BorderColor, EBrushPattern Pattern );
+	void DrawText( TPoint P, const Char* Text, Int32 Len, math::Color Color, FFont* Font );
 	void SetClipArea( TPoint P, TSize S );
 	void DrawPicture( TPoint P, TSize S, TPoint BP, TSize BS, FTexture* Texture );
 	void SetBrightness( Float Brig );

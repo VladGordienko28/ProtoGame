@@ -103,7 +103,7 @@ public:
 	Float					GameSpeed;
 	FMusic*					Soundtrack;
 	Float					Effect[10];
-	TColor					AmbientLight;
+	math::Color				AmbientLight;
 	Float					BlurIntensity;
 
 
@@ -115,7 +115,7 @@ public:
 
 	envi::TimeOfDay m_timeOfDay;
 	Float m_daySpeed;
-	TInterpCurve<TColor> m_ambientColors;
+	TInterpCurve<math::Color> m_ambientColors;
 
 	FBitmap* m_midnightBitmap = nullptr;
 	FBitmap* m_dawnBitmap = nullptr;

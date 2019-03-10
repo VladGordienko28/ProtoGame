@@ -42,15 +42,15 @@ public:
 	// CCanvas interface.
 	void SetTransform( const TViewInfo& Info );
 	void SetClip( const TClipArea& Area );
-	void DrawPoint( const math::Vector& P, Float Size, TColor Color );
-	void DrawLine( const math::Vector& A, const math::Vector& B, TColor Color, Bool bStipple );
+	void DrawPoint( const math::Vector& P, Float Size, math::Color Color );
+	void DrawLine( const math::Vector& A, const math::Vector& B, math::Color Color, Bool bStipple );
 	void DrawPoly( const TRenderPoly& Poly );
 	void DrawRect( const TRenderRect& Rect );
 	void DrawList( const TRenderList& List );
 
 	// COpenGLCanvas interface.
 	void SetBlend( EBitmapBlend Blend );
-	void SetColor( TColor Color );
+	void SetColor( math::Color Color );
 	void SetBitmap( FBitmap* Bitmap, Bool bUnlit=true );
 	void SetStipple( UInt32 Stipple );
 	void RenderLightmap();
@@ -76,7 +76,7 @@ private:
 	math::Vector		BitmapPan;
 	EBitmapBlend		OldBlend;
 	FBitmap*			OldBitmap;
-	TColor				OldColor;
+	math::Color			OldColor;
 	UInt32				OldStipple;
 	Float				LockTime;
 	CGLShaderBase*		ActiveShader;

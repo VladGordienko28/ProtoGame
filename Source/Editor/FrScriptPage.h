@@ -256,7 +256,7 @@ public:
 		String InText, 
 		FScript* Script = nullptr, 
 		Int32 iLine = -1, 
-		TColor InColor = COLOR_White
+		math::Color InColor = math::colors::WHITE
 	);
 	void Clear();
 

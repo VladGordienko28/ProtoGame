@@ -625,17 +625,17 @@ TPathEdge::TPathEdge()
 // Return color of edge for rendering.
 // Depend on path type only.
 //
-TColor TPathEdge::GetDrawColor() const
+math::Color TPathEdge::GetDrawColor() const
 {
-	static const TColor PathColors[PATH_MAX]	=
+	static const math::Color PathColors[PATH_MAX]	=
 	{
 
-		TColor( 0x4e, 0x4e, 0x4e, 0xff ),		// PATH_None.
-		TColor( 0x4e, 0x6c, 0x31, 0xff ),		// PATH_Walk.
-		TColor( 0x31, 0x40, 0x6c, 0xff ),		// PATH_Jump.
-		TColor( 0x6c, 0x5d, 0x31, 0xff ),		// PATH_Ladder.
-		TColor( 0x5d, 0x31, 0x6c, 0xff ),		// PATH_Teleport.
-		TColor( 0x6c, 0x31, 0x31, 0xff )		// PATH_Other.
+		math::Color( 0x4e, 0x4e, 0x4e, 0xff ),		// PATH_None.
+		math::Color( 0x4e, 0x6c, 0x31, 0xff ),		// PATH_Walk.
+		math::Color( 0x31, 0x40, 0x6c, 0xff ),		// PATH_Jump.
+		math::Color( 0x6c, 0x5d, 0x31, 0xff ),		// PATH_Ladder.
+		math::Color( 0x5d, 0x31, 0x6c, 0xff ),		// PATH_Teleport.
+		math::Color( 0x6c, 0x31, 0x31, 0xff )		// PATH_Other.
 	};
 
 	return PathColors[PathType];
@@ -678,9 +678,9 @@ TPathNode::TPathNode()
 // Return color for path node rendering,
 // also useful in debugging.
 //
-TColor TPathNode::GetDrawColor() const
+math::Color TPathNode::GetDrawColor() const
 {
-	return TColor( 0x10, 0x10, 0x77, 0xff );
+	return math::Color( 0x10, 0x10, 0x77, 0xff );
 }
 
 

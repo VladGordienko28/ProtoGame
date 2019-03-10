@@ -19,7 +19,7 @@ public:
 	// WColorRibbon interface.
 	WColorRibbon( WContainer* InOwner, WWindow* InRoot );
 	~WColorRibbon();
-	void SetCurve( TInterpCurve<TColor>* InCurve );
+	void SetCurve( TInterpCurve<math::Color>* InCurve );
 	virtual void OnChange();
 
 	// WWidget interface.
@@ -32,9 +32,9 @@ public:
 
 private:
 	// Internal.
-	TInterpCurve<TColor>*	Curve;
-	TStaticBitmap*			Ribbon;
-	Int32					iSelected;
+	TInterpCurve<math::Color>*	Curve;
+	TStaticBitmap*				Ribbon;
+	Int32						iSelected;
 
 	// Helper functions.
 	void UpdateRibbon();

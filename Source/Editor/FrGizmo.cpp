@@ -298,15 +298,15 @@ EGizmoAxis CGizmo::AxisAt( const TViewInfo& ViewInfo, Int32 Cx, Int32 Cy )
 //
 // Gizmo colors.
 //
-#define GIZMO_X_COLOR		COLOR_Blue
-#define GIZMO_Y_COLOR		COLOR_Red
-#define GIZMO_BOTH_COLOR	COLOR_Gold
+#define GIZMO_X_COLOR		math::colors::BLUE
+#define GIZMO_Y_COLOR		math::colors::RED
+#define GIZMO_BOTH_COLOR	math::colors::GOLD
 
 
 //
 // Draw a gizmo arrow.
 //
-static void DrawArrow( CCanvas* Canvas, const math::Vector& From, const math::Vector& Dir, Float Length, Float Size, TColor Color )
+static void DrawArrow( CCanvas* Canvas, const math::Vector& From, const math::Vector& Dir, Float Length, Float Size, math::Color Color )
 {
 	math::Vector End = From + Dir * (Length * Canvas->View.Zoom);
 	math::Coords ToWorld = math::Coords( End, Dir ).transpose();
@@ -332,7 +332,7 @@ static void DrawArrow( CCanvas* Canvas, const math::Vector& From, const math::Ve
 //
 // Draw a gizmo stick.
 //
-static void DrawStick( CCanvas* Canvas, const math::Vector& From, const math::Vector& Dir, Float Length, TColor Color )
+static void DrawStick( CCanvas* Canvas, const math::Vector& From, const math::Vector& Dir, Float Length, math::Color Color )
 {
 	// Line.
 	math::Vector End = From + Dir * (Length * Canvas->View.Zoom);

@@ -45,8 +45,8 @@ FBitmap* ImportBMP( String Filename, String ResName )
 		loader->readData( BmpPalette, sizeof( RGBQUAD ) * BmpInfo.biClrUsed );
 	}
 
-	TColor* TempData = new TColor[BmpInfo.biWidth * BmpInfo.biHeight];
-	Array<TColor> Palette;
+	math::Color* TempData = new math::Color[BmpInfo.biWidth * BmpInfo.biHeight];
+	Array<math::Color> Palette;
 	Int32 UMask = BmpInfo.biWidth-1;
 	Int32 UBits = IntLog2( BmpInfo.biWidth );
 	Int32 VMask = (BmpInfo.biHeight-1) << UBits;
@@ -60,8 +60,8 @@ FBitmap* ImportBMP( String Filename, String ResName )
 		{
 			UInt8 RawPix[4];
 			loader->readData( RawPix, 3 * sizeof(UInt8) );
-			TColor Source( RawPix[2], RawPix[1], RawPix[0], 0xff );
-			if( Source == MASK_COLOR )	Source.A = 0x00;
+			math::Color Source( RawPix[2], RawPix[1], RawPix[0], 0xff );
+			if( Source == MASK_COLOR )	Source.a = 0x00;
 			TempData[(VMask&~i)|(i&UMask)] = Source;		// Flip image here.
 		}
 	}
@@ -72,8 +72,8 @@ FBitmap* ImportBMP( String Filename, String ResName )
 		{
 			UInt8 RawPix[4];
 			loader->readData( RawPix, 4 * sizeof( UInt8 ) );
-			TColor Source( RawPix[2], RawPix[1], RawPix[0], 0xff );
-			if( Source == MASK_COLOR )	Source.A = 0x00;
+			math::Color Source( RawPix[2], RawPix[1], RawPix[0], 0xff );
+			if( Source == MASK_COLOR )	Source.a = 0x00;
 			TempData[(VMask&~i)|(i&UMask)] = Source;		// Flip image here.
 		}
 	}
@@ -84,8 +84,8 @@ FBitmap* ImportBMP( String Filename, String ResName )
 		{
 			UInt8 iColor;
 			loader->readData( &iColor, sizeof( UInt8 ) );
-			TColor Source( BmpPalette[iColor].rgbRed, BmpPalette[iColor].rgbGreen, BmpPalette[iColor].rgbBlue, 0xff );
-			if( Source == MASK_COLOR )	Source.A = 0x00;
+			math::Color Source( BmpPalette[iColor].rgbRed, BmpPalette[iColor].rgbGreen, BmpPalette[iColor].rgbBlue, 0xff );
+			if( Source == MASK_COLOR )	Source.a = 0x00;
 			TempData[(VMask&~i)|(i&UMask)] = Source;		// Flip image here.
 		}
 	}
@@ -125,9 +125,9 @@ FBitmap* ImportBMP( String Filename, String ResName )
 	if( Palette.size() <= 256 )
 	{
 		// Palette.
-		Palette.sort( []( const TColor& A, const TColor& B )->Bool
+		Palette.sort( []( const math::Color& A, const math::Color& B )->Bool
 		{
-			return A.D < B.D;
+			return A.d < B.d;
 		} );
 
 		Bitmap->Format	= BF_Palette8;
@@ -144,8 +144,8 @@ FBitmap* ImportBMP( String Filename, String ResName )
 	{
 		// RGBA.
 		Bitmap->Format	= BF_RGBA;
-		Bitmap->AllocateBlock( sizeof(TColor)*Bitmap->USize*Bitmap->VSize );
-		mem::copy( Bitmap->GetData(), TempData, sizeof(TColor)*Bitmap->USize*Bitmap->VSize );
+		Bitmap->AllocateBlock( sizeof(math::Color)*Bitmap->USize*Bitmap->VSize );
+		mem::copy( Bitmap->GetData(), TempData, sizeof(math::Color)*Bitmap->USize*Bitmap->VSize );
 	}
 
 	delete[] TempData;
@@ -230,8 +230,8 @@ FBitmap* ImportTGA( String Filename, String ResName )
 		Bitmap->Init( Width, Height );
 		Bitmap->FileName	= fm::getFileName( *Filename ) + L".tga";
 		Bitmap->Format		= BF_RGBA;
-		Bitmap->AllocateBlock( sizeof(TColor)*Bitmap->USize*Bitmap->VSize );
-		TColor* Dest		= (TColor*)Bitmap->GetData();
+		Bitmap->AllocateBlock( sizeof(math::Color)*Bitmap->USize*Bitmap->VSize );
+		math::Color* Dest		= (math::Color*)Bitmap->GetData();
 
 		Int32 UMask = Width-1;
 		Int32 UBits = IntLog2( Width );
@@ -242,8 +242,8 @@ FBitmap* ImportTGA( String Filename, String ResName )
 			// 24-bit uncompressed.
 			for( Int32 i=0; i<Width*Height; i++ )
 			{
-				TColor Source( TmpImage[i*3+2], TmpImage[i*3+1], TmpImage[i*3+0], 0xff );
-				if( Source == MASK_COLOR )	Source.A = 0x00;
+				math::Color Source( TmpImage[i*3+2], TmpImage[i*3+1], TmpImage[i*3+0], 0xff );
+				if( Source == MASK_COLOR )	Source.a = 0x00;
 				Dest[(VMask&~i)|(i&UMask)]	= Source;
 			}
 		}
@@ -252,7 +252,7 @@ FBitmap* ImportTGA( String Filename, String ResName )
 			// 32-bit uncompressed.
 			for( Int32 i=0; i<Width*Height; i++ )
 			{
-				TColor Source( TmpImage[i*4+2], TmpImage[i*4+1], TmpImage[i*4+0], TmpImage[i*4+3] );
+				math::Color Source( TmpImage[i*4+2], TmpImage[i*4+1], TmpImage[i*4+0], TmpImage[i*4+3] );
 				Dest[(VMask&~i)|(i&UMask)]	= Source;
 			}
 		}
@@ -276,8 +276,8 @@ FBitmap* ImportTGA( String Filename, String ResName )
 		Bitmap->Init( Width, Height );
 		Bitmap->FileName	= fm::getFileName( *Filename ) + L".tga";
 		Bitmap->Format		= BF_RGBA;
-		Bitmap->AllocateBlock( sizeof(TColor)*Bitmap->USize*Bitmap->VSize );
-		TColor* Image		= (TColor*)Bitmap->GetData();
+		Bitmap->AllocateBlock( sizeof(math::Color)*Bitmap->USize*Bitmap->VSize );
+		math::Color* Image		= (math::Color*)Bitmap->GetData();
 
 		Int32 UMask = Width-1;
 		Int32 UBits = IntLog2( Width );
@@ -291,10 +291,10 @@ FBitmap* ImportTGA( String Filename, String ResName )
 			{
 				for( Int32 i=0; i<=Front; i++ )
 				{
-					Image[(VMask&~WalkColor)|(WalkColor&UMask)].R	= Compressed[WalkBuffer+i*Stride+2];
-					Image[(VMask&~WalkColor)|(WalkColor&UMask)].G	= Compressed[WalkBuffer+i*Stride+1];
-					Image[(VMask&~WalkColor)|(WalkColor&UMask)].B	= Compressed[WalkBuffer+i*Stride+0];
-					Image[(VMask&~WalkColor)|(WalkColor&UMask)].A	= Compressed[WalkBuffer+i*Stride+3];
+					Image[(VMask&~WalkColor)|(WalkColor&UMask)].r	= Compressed[WalkBuffer+i*Stride+2];
+					Image[(VMask&~WalkColor)|(WalkColor&UMask)].g	= Compressed[WalkBuffer+i*Stride+1];
+					Image[(VMask&~WalkColor)|(WalkColor&UMask)].b	= Compressed[WalkBuffer+i*Stride+0];
+					Image[(VMask&~WalkColor)|(WalkColor&UMask)].a	= Compressed[WalkBuffer+i*Stride+3];
 
 					WalkColor++;
 					WalkPixel++;
@@ -306,10 +306,10 @@ FBitmap* ImportTGA( String Filename, String ResName )
 			{
 				for( Int32 i=0; i<=Front-128; i++ )
 				{
-					Image[(VMask&~WalkColor)|(WalkColor&UMask)].R	= Compressed[WalkBuffer+2];
-					Image[(VMask&~WalkColor)|(WalkColor&UMask)].G	= Compressed[WalkBuffer+1];
-					Image[(VMask&~WalkColor)|(WalkColor&UMask)].B	= Compressed[WalkBuffer+0];
-					Image[(VMask&~WalkColor)|(WalkColor&UMask)].A	= Compressed[WalkBuffer+3];
+					Image[(VMask&~WalkColor)|(WalkColor&UMask)].r	= Compressed[WalkBuffer+2];
+					Image[(VMask&~WalkColor)|(WalkColor&UMask)].g	= Compressed[WalkBuffer+1];
+					Image[(VMask&~WalkColor)|(WalkColor&UMask)].b	= Compressed[WalkBuffer+0];
+					Image[(VMask&~WalkColor)|(WalkColor&UMask)].a	= Compressed[WalkBuffer+3];
 
 					WalkColor++;
 					WalkPixel++;
@@ -325,9 +325,9 @@ FBitmap* ImportTGA( String Filename, String ResName )
 		if( TgaHeader.BPP == 24 )
 			for( Int32 i=0; i<Width*Height; i++ )
 			{
-				Image[i].A	= 0xff;
+				Image[i].a	= 0xff;
 				if( Image[i] == MASK_COLOR )
-					Image[i].A	= 0x00;
+					Image[i].a	= 0x00;
 			}
 
 		delete[] Compressed;
@@ -369,7 +369,7 @@ FBitmap* ImportPNG( String Filename, String ResName )
 	Int32 UMask = PngWidth-1;
 	Int32 UBits = IntLog2(PngWidth);
 	Int32 VMask = (PngHeight-1) << UBits;
-	TColor*	SourceData = (TColor*)PngImage;
+	math::Color*	SourceData = (math::Color*)PngImage;
 
 	// Allocate bitmap and initialize it.
 	FBitmap* Bitmap = NewObject<FBitmap>( ResName, nullptr );
@@ -377,7 +377,7 @@ FBitmap* ImportPNG( String Filename, String ResName )
 	Bitmap->FileName = fm::getFileName( *Filename ) + L".png";
 
 	// Figure out it's a palette or not.
-	Array<TColor> Palette;
+	Array<math::Color> Palette;
 	for( Int32 i=0; i<PngWidth*PngHeight; i++ )
 		if( Palette.addUnique(SourceData[i]) > 255 )
 			break;
@@ -386,9 +386,9 @@ FBitmap* ImportPNG( String Filename, String ResName )
 	if( Palette.size() <= 256 )
 	{
 		// Palette.
-		Palette.sort( []( const TColor& A, const TColor& B )->Bool
+		Palette.sort( []( const math::Color& A, const math::Color& B )->Bool
 		{
-			return A.D < B.D;
+			return A.d < B.d;
 		} );
 		Bitmap->Format	= BF_Palette8;
 		Bitmap->Palette.Allocate( Palette.size() );
@@ -404,16 +404,16 @@ FBitmap* ImportPNG( String Filename, String ResName )
 	{
 		// RGBA.
 		Bitmap->Format	= BF_RGBA;
-		Bitmap->AllocateBlock( sizeof(TColor)*Bitmap->USize*Bitmap->VSize );
-		mem::copy( Bitmap->GetData(), SourceData, sizeof(TColor)*Bitmap->USize*Bitmap->VSize );
+		Bitmap->AllocateBlock( sizeof(math::Color)*Bitmap->USize*Bitmap->VSize );
+		mem::copy( Bitmap->GetData(), SourceData, sizeof(math::Color)*Bitmap->USize*Bitmap->VSize );
 	}
 
 	// Turn on alpha or not?
 	Bool bMaskOnly = true;
 	Bitmap->BlendMode = BLEND_Regular;
 	for( Int32 i=0; i<PngWidth*PngHeight; i++ )
-		if( SourceData[i].A != 255 )
-			if( SourceData[i].A != 0 )
+		if( SourceData[i].a != 255 )
+			if( SourceData[i].a != 0 )
 			{
 				Bitmap->BlendMode = BLEND_Alpha;
 				break;
@@ -568,8 +568,8 @@ FFont* ImportFLF( String Filename, String ResName )
 
 		for( Int32 i=0; i<Page->Palette.Colors.size(); i++ )
 		{
-			TColor Ent = Page->Palette.Colors[i];
-			Page->Palette.Colors[i] = TColor( 0xff, 0xff, 0xff, Int32(Ent.R + Ent.G + Ent.B)/3 );
+			math::Color Ent = Page->Palette.Colors[i];
+			Page->Palette.Colors[i] = math::Color( 0xff, 0xff, 0xff, Int32(Ent.r + Ent.g + Ent.b)/3 );
 		}
 	
 		Page->BlendMode = BLEND_Alpha;

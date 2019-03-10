@@ -59,8 +59,8 @@ public:
 		(
 			TPoint( Base.X+1, Base.Y+1 ),
 			TSize( Size.Width-2, 78 ),
-			TColor( 0x22, 0x22, 0x22, 0xff ),
-			TColor( 0x22, 0x22, 0x22, 0xff ),
+			math::Color( 0x22, 0x22, 0x22, 0xff ),
+			math::Color( 0x22, 0x22, 0x22, 0xff ),
 			BPAT_Solid
 		);
 		Render->DrawPicture
@@ -83,7 +83,7 @@ public:
 		(
 			TPoint( Base.X+55, Base.Y+145 ),
 			L"Thank you for your interest :)",
-			TColor::HSLToRGB( GFrameStamp/2, 0xff, 0x80 ),
+			math::Color::hsl2rgb( GFrameStamp/2, 0xff, 0x80 ),
 			WWindow::Font1
 		);
 #endif

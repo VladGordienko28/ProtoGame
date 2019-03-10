@@ -29,7 +29,7 @@ public:
 	math::Rect		Bounds;
 	math::Angle		Rotation;
 	FTexture*		Texture;
-	TColor			Color;
+	math::Color		Color;
 	math::Rect		TexCoords;
 };
 
@@ -45,7 +45,7 @@ public:
 	math::Vector	TexCoords[16];
 	Int32			NumVerts;
 	FTexture*		Texture;
-	TColor			Color;
+	math::Color		Color;
 };
 
 
@@ -60,12 +60,12 @@ public:
 	Int32			NumRects;
 	math::Vector*	Vertices;
 	math::Vector*	TexCoords;
-	TColor*			Colors;
-	TColor			DrawColor;
+	math::Color*	Colors;
+	math::Color		DrawColor;
 
 	// TRenderList interface.
 	TRenderList( Int32 InNumRcts );
-	TRenderList( Int32 InNumRcts, TColor InColor );
+	TRenderList( Int32 InNumRcts, math::Color InColor );
 	~TRenderList();
 };
 
@@ -167,8 +167,8 @@ public:
 	// CCanvas interface.
 	virtual void SetTransform( const TViewInfo& Info ) = 0;
 	virtual void SetClip( const TClipArea& Area ) = 0;
-	virtual void DrawPoint( const math::Vector& P, Float Size, TColor Color ) = 0;
-	virtual void DrawLine( const math::Vector& A, const math::Vector& B, TColor Color, Bool bStipple ) = 0;
+	virtual void DrawPoint( const math::Vector& P, Float Size, math::Color Color ) = 0;
+	virtual void DrawLine( const math::Vector& A, const math::Vector& B, math::Color Color, Bool bStipple ) = 0;
 	virtual void DrawPoly( const TRenderPoly& Poly ) = 0;
 	virtual void DrawRect( const TRenderRect& Rect ) = 0;
 	virtual void DrawList( const TRenderList& List ) = 0;
@@ -182,7 +182,7 @@ public:
 	( 
 		const math::Vector& Center,
 		Float Radius,
-		TColor Color,
+		math::Color Color,
 		Bool bStipple,
 		Int32 Detail = 32 
 	);
@@ -191,14 +191,14 @@ public:
 	( 
 		const math::Vector& P,
 		Float Size,
-		TColor Color 
+		math::Color Color 
 	);
 
 	void DrawSmoothLine
 	( 
 		const math::Vector& A,
 		const math::Vector& B,
-		TColor Color,
+		math::Color Color,
 		Bool bStipple,
 		Int32 Detail = 16 
 	);
@@ -208,7 +208,7 @@ public:
 		const math::Vector& Center,
 		math::Angle Rotation,
 		Float Size,
-		TColor Color,
+		math::Color Color,
 		Bool bStipple 
 	);
 
@@ -217,7 +217,7 @@ public:
 		const math::Vector& Center,
 		const math::Vector& Size,
 		math::Angle Rotation,
-		TColor Color,
+		math::Color Color,
 		Bool bStipple 
 	);
 
@@ -226,7 +226,7 @@ public:
 		const Char* Text,
 		Int32 Len,
 		FFont* Font, 
-		TColor Color,
+		math::Color Color,
 		const math::Vector& Start, 
 		const math::Vector& Scale = math::Vector( 1.f, 1.f )  
 	);
@@ -235,7 +235,7 @@ public:
 	(	
 		const String& S,
 		FFont* Font, 
-		TColor Color,
+		math::Color Color,
 		const math::Vector& Start, 
 		const math::Vector& Scale = math::Vector( 1.f, 1.f ) 
 	)

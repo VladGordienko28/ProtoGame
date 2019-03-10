@@ -57,8 +57,8 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 
 				for( Int32 U=0; U<Bitmap->USize; U++ )
 				{
-					TColor	C			= Bitmap->Palette.Colors[Line[U]];
-					UInt8	Buffer[3]	= { C.B, C.G, C.R };
+					math::Color	C		= Bitmap->Palette.Colors[Line[U]];
+					UInt8	Buffer[3]	= { C.b, C.g, C.r };
 					saver->writeData( Buffer, sizeof( Buffer ) );
 				}
 			}
@@ -66,14 +66,14 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 		else
 		{
 			// Save as RGB.
-			TColor* Data	= (TColor*)Bitmap->GetData();
+			math::Color* Data	= (math::Color*)Bitmap->GetData();
 			for( Int32 V=0; V<Bitmap->VSize; V++ )
 			{
-				TColor* Line	= &Data[(Bitmap->VSize-V-1) << Bitmap->UBits];
+				math::Color* Line	= &Data[(Bitmap->VSize-V-1) << Bitmap->UBits];
 
 				for( Int32 U=0; U<Bitmap->USize; U++ )
 				{
-					UInt8 Buffer[3] = { Line[U].B, Line[U].G, Line[U].R };
+					UInt8 Buffer[3] = { Line[U].b, Line[U].g, Line[U].r };
 					saver->writeData( Buffer, sizeof( Buffer ) );
 				}
 			}
@@ -120,14 +120,14 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 		saver->writeData( &TgaHeader, sizeof( TGAHeader ) );
 
 		// Save as RGBA.
-		TColor* Data	= (TColor*)Bitmap->GetData();
+		math::Color* Data	= (math::Color*)Bitmap->GetData();
 		for( Int32 V=0; V<Bitmap->VSize; V++ )
 		{
-			TColor* Line	= &Data[(Bitmap->VSize-V-1) << Bitmap->UBits];
+			math::Color* Line	= &Data[(Bitmap->VSize-V-1) << Bitmap->UBits];
 
 			for( Int32 U=0; U<Bitmap->USize; U++ )
 			{
-				UInt8 Buffer[4] = { Line[U].B, Line[U].G, Line[U].R, Line[U].A };
+				UInt8 Buffer[4] = { Line[U].b, Line[U].g, Line[U].r, Line[U].a };
 				saver->writeData( Buffer, sizeof( Buffer ) );
 			}
 		}
@@ -138,12 +138,12 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 		// Export png file.
 		//
 		unsigned PngError;
-		TColor* Depalettized = nullptr;
+		math::Color* Depalettized = nullptr;
 
 		// Depalettize if required.
 		if( Bitmap->Format == BF_Palette8 )
 		{
-			Depalettized = new TColor[Bitmap->USize * Bitmap->VSize];
+			Depalettized = new math::Color[Bitmap->USize * Bitmap->VSize];
 			UInt8* Pixels = (UInt8*)Bitmap->GetData();
 			for( Int32 i=0; i<Bitmap->USize*Bitmap->VSize; i++ )
 				Depalettized[i] = Bitmap->Palette.Colors[Pixels[i]];

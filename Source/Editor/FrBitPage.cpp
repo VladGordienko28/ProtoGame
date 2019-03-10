@@ -336,8 +336,8 @@ void WTexturePage::OnPaint( CGUIRenderBase* Render )
 				( 
 					Base, 
 					TSize( Size.Width, Size.Height ), 
-					TColor( 0x30, 0x30, 0x30, 0xff ), 
-					TColor( 0x30, 0x30, 0x30, 0xff ), 
+					math::Color( 0x30, 0x30, 0x30, 0xff ), 
+					math::Color( 0x30, 0x30, 0x30, 0xff ), 
 					BPAT_Solid 
 				);
 
@@ -345,8 +345,8 @@ void WTexturePage::OnPaint( CGUIRenderBase* Render )
 				( 
 					Base, 
 					TSize( Size.Width, Size.Height ), 
-					TColor( 0x3f, 0x3f, 0x3f, 0xff ), 
-					TColor( 0x3f, 0x3f, 0x3f, 0xff ), 
+					math::Color( 0x3f, 0x3f, 0x3f, 0xff ), 
+					math::Color( 0x3f, 0x3f, 0x3f, 0xff ), 
 					BPAT_PolkaDot 
 				);
 
@@ -362,8 +362,8 @@ void WTexturePage::OnPaint( CGUIRenderBase* Render )
 					( 
 						TPoint( X, Y-1 ), 
 						TSize( W+1, H+1 ), 
-						COLOR_Black, 
-						COLOR_Black, 
+						math::colors::BLACK, 
+						math::colors::BLACK, 
 						BPAT_None 
 					);
 
@@ -383,7 +383,7 @@ void WTexturePage::OnPaint( CGUIRenderBase* Render )
 				( 
 					TPoint( Base.X + 10, Base.Y + 38 ), 
 					String::format( L"x%.2f", Scale ), 
-					COLOR_White, 
+					math::colors::WHITE, 
 					Root->Font1 
 				);
 }
@@ -551,7 +551,7 @@ void WDemoEffectPanel::OnPaint( CGUIRenderBase* Render )
 	(
 		TPoint( Base.X+1, Base.Y ),
 		TSize( Size.Width-1, FORM_HEADER_SIZE ),
-		TColor( 0x33, 0x33, 0x33, 0xff ),
+		math::Color( 0x33, 0x33, 0x33, 0xff ),
 		GUI_COLOR_FORM_BORDER,
 		BPAT_Diagonal
 	);
@@ -821,7 +821,7 @@ void WMaterialPanel::OnPaint( CGUIRenderBase* Render )
 	(
 		TPoint( Base.X+1, Base.Y ),
 		TSize( Size.Width-1, FORM_HEADER_SIZE ),
-		TColor( 0x33, 0x33, 0x33, 0xff ),
+		math::Color( 0x33, 0x33, 0x33, 0xff ),
 		GUI_COLOR_FORM_BORDER,
 		BPAT_Diagonal
 	);

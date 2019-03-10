@@ -12,6 +12,9 @@
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Vector4.h" />
+    <ClInclude Include="Color.h" />
+    <ClInclude Include="Colors.h" />
+    <ClInclude Include="FloatColor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math.cpp" />
@@ -19,5 +22,6 @@
     <ClCompile Include="Angle.cpp" />
     <ClCompile Include="Coords.cpp" />
     <ClCompile Include="Rect.cpp" />
+    <ClCompile Include="Color.cpp" />
   </ItemGroup>
 </Project>

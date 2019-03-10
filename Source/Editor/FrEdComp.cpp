@@ -90,9 +90,9 @@ Bool CEditor::CompileAllScripts( IProgressIndicator* Indicator )
 			Pages[i]->Output->Clear();
 
 			for( Int32 w=0; w<Warns.size(); w++ )
-				Pages[i]->Output->AddMessage( Warns[w], nullptr, -1, COLOR_Goldenrod );
+				Pages[i]->Output->AddMessage( Warns[w], nullptr, -1, math::colors::GOLDENROD );
 
-			Pages[i]->Output->AddMessage( L"Compilation successfully", nullptr, -1, COLOR_Green );
+			Pages[i]->Output->AddMessage( L"Compilation successfully", nullptr, -1, math::colors::GREEN );
 		}
 	}
 	else
@@ -125,10 +125,10 @@ Bool CEditor::CompileAllScripts( IProgressIndicator* Indicator )
 			Pages[i]->Output->Clear();
 
 			for( Int32 w=0; w<Warns.size(); w++ )
-				Pages[i]->Output->AddMessage( Warns[w], nullptr, -1, COLOR_Goldenrod );
+				Pages[i]->Output->AddMessage( Warns[w], nullptr, -1, math::colors::GOLDENROD );
 
-			Pages[i]->Output->AddMessage( L"Compilation aborted", Err.Script, Err.ErrorLine, TColor( 0xf0, 0x30, 0x30, 0xff ) );
-			Pages[i]->Output->AddMessage( Err.Message, Err.Script, Err.ErrorLine, TColor( 0xf0, 0x30, 0x30, 0xff ) );
+			Pages[i]->Output->AddMessage( L"Compilation aborted", Err.Script, Err.ErrorLine, math::Color( 0xf0, 0x30, 0x30, 0xff ) );
+			Pages[i]->Output->AddMessage( Err.Message, Err.Script, Err.ErrorLine, math::Color( 0xf0, 0x30, 0x30, 0xff ) );
 		}
 	}
 

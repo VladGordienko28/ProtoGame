@@ -247,14 +247,14 @@ void FLogicComponent::Render( CCanvas* Canvas )
 	math::Rect Rect = Base->GetAABB();
 
 	// Pick a colors.
-	TColor WireColor = bEnabled ? COLOR_PaleVioletRed : COLOR_LightSlateGray;
+	math::Color WireColor = bEnabled ? math::colors::PALE_VIOLET_RED : math::colors::LIGHT_SLATE_GRAY;
 	if( Base->bSelected )
 		WireColor *= 1.5f;
 
 	// Draw a gray pad.
 	TRenderRect Pad;
 	Pad.Flags		= POLY_Unlit | POLY_FlatShade | POLY_Ghost;
-	Pad.Color		= bEnabled ? TColor( 0x20, 0x20, 0x20, 0xff ) : TColor( 0x40, 0x40, 0x40, 0xff );
+	Pad.Color		= bEnabled ? math::Color( 0x20, 0x20, 0x20, 0xff ) : math::Color( 0x40, 0x40, 0x40, 0xff );
 	Pad.Bounds		= Rect;
 	Pad.Texture		= nullptr;
 	Pad.Rotation	= 0;

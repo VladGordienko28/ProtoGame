@@ -316,7 +316,7 @@ void WRadioButton::OnClick()
 //
 WLinkLabel::WLinkLabel( WContainer* InOwner, WWindow* InRoot )
 	:	WWidget( InOwner, InRoot ),
-		Color( COLOR_SteelBlue )
+		Color( math::colors::STEEL_BLUE )
 {
 	Caption = L"LinkLabel";
 	Cursor	= CR_HandPoint;
@@ -335,7 +335,7 @@ void WLinkLabel::OnPaint( CGUIRenderBase* Render )
 			( 
 				ClientToWindow(TPoint(0, 0)),
 				Caption,
-				Root->Highlight == this ? Color + COLOR_Highlight1 : Color, 
+				Root->Highlight == this ? Color + math::colors::HIGHLIGHT_1 : Color, 
 				Root->Font1 
 			);
 }

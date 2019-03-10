@@ -15,7 +15,7 @@
 //
 FModelComponent::FModelComponent()
 	:	bUnlit( false ),
-		Color( COLOR_White ),
+		Color( math::colors::WHITE ),
 		Texture( nullptr ),
 		MapXSize( 30 ),
 		MapYSize( 15 ),
@@ -188,7 +188,7 @@ void FModelComponent::Render( CCanvas* Canvas )
 		TRenderRect Pad;
 		Pad.Flags			= POLY_Unlit | POLY_FlatShade | POLY_Ghost;
 		Pad.Bounds			= ModelBounds;
-		Pad.Color			= TColor( 0x20, 0x20, 0x30, 0xff );
+		Pad.Color			= math::Color( 0x20, 0x20, 0x30, 0xff );
 		Pad.Rotation		= 0;
 		Pad.Texture			= nullptr;
 		Canvas->DrawRect( Pad );
@@ -287,9 +287,9 @@ void FModelComponent::Render( CCanvas* Canvas )
 	if( !( Level->RndFlags & RND_Other ) )
 		return;
 
-	TColor GridColor = bSelected ? COLOR_LightBlue : COLOR_CadetBlue;
+	math::Color GridColor = bSelected ? math::colors::LIGHT_BLUE : math::colors::CADET_BLUE;
 	if( bFrozen )
-		GridColor	= COLOR_Gray;
+		GridColor	= math::colors::GRAY;
 
 	// Vertical lines.
 	for( Int32 X=XMin; X<=XMax; X++ )
@@ -320,7 +320,7 @@ void FModelComponent::Render( CCanvas* Canvas )
 			TRenderRect Tile;
 			Tile.Flags				= POLY_Unlit | POLY_FlatShade | POLY_Ghost;
 			Tile.Rotation			= 0;
-			Tile.Color				= COLOR_FireBrick;
+			Tile.Color				= math::colors::FIRE_BRICK;
 			Tile.Texture			= nullptr;
 			
 			Tile.Bounds.min.x		= (X + 0.f)*TileSize.x + Location.x;
@@ -343,7 +343,7 @@ void FModelComponent::Render( CCanvas* Canvas )
 			Tile.Flags				= POLY_Unlit | POLY_Ghost;
 			Tile.Rotation			= 0;
 			Tile.Texture			= Texture;
-			Tile.Color				= TColor( 0xa0, 0xa0, 0xa0, 0xff );
+			Tile.Color				= math::Color( 0xa0, 0xa0, 0xa0, 0xff );
 
 			for( Int32 i=0; i<Selected.size(); i++ )
 			{

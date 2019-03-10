@@ -34,9 +34,9 @@ FEmitterComponent::FEmitterComponent()
 	SizeRange[0]		= 0.5f;
 	SizeRange[1]		= 1.5f;
 
-	Colors[0]			= TColor( 0xff, 0xff, 0xff, 0xff );
-	Colors[1]			= TColor( 0xff, 0xff, 0xff, 0xff );
-	Colors[2]			= TColor( 0xff, 0xff, 0xff, 0xff );
+	Colors[0]			= math::Color( 0xff, 0xff, 0xff, 0xff );
+	Colors[1]			= math::Color( 0xff, 0xff, 0xff, 0xff );
+	Colors[2]			= math::Color( 0xff, 0xff, 0xff, 0xff );
 
 	SpinRange[0]		= 0.f;
 	SpinRange[1]		= 0.f;
@@ -600,13 +600,13 @@ void FPhysEmitterComponent::UpdateEmitter( Float Delta )
 // Keep calm, this take about 8 cycles for 256 palette!!
 // even table usage cost about 16 cycles.
 //
-inline TColor ColorLerp( TColor Color1, TColor Color2, UInt8 Alpha )
+inline math::Color ColorLerp( math::Color Color1, math::Color Color2, UInt8 Alpha )
 {
-	TColor Result;
-	Result.R = (Int32)(Color1.R) + (((Int32)(Color2.R)-(Int32)(Color1.R))*Alpha >> 8); 
-	Result.G = (Int32)(Color1.G) + (((Int32)(Color2.G)-(Int32)(Color1.G))*Alpha >> 8); 
-	Result.B = (Int32)(Color1.B) + (((Int32)(Color2.B)-(Int32)(Color1.B))*Alpha >> 8); 
-	Result.A = (Int32)(Color1.A) + (((Int32)(Color2.A)-(Int32)(Color1.A))*Alpha >> 8); 
+	math::Color Result;
+	Result.r = (Int32)(Color1.r) + (((Int32)(Color2.r)-(Int32)(Color1.r))*Alpha >> 8); 
+	Result.g = (Int32)(Color1.g) + (((Int32)(Color2.g)-(Int32)(Color1.g))*Alpha >> 8); 
+	Result.b = (Int32)(Color1.b) + (((Int32)(Color2.b)-(Int32)(Color1.b))*Alpha >> 8); 
+	Result.a = (Int32)(Color1.a) + (((Int32)(Color2.a)-(Int32)(Color1.a))*Alpha >> 8); 
 	return Result;
 }
 
@@ -696,7 +696,7 @@ void FEmitterComponent::Render( CCanvas* Canvas )
 		TParticle&	P = Particles[i];
 		Float		Side = P.Size * 0.5f;
 		Float		Alpha = 1.f - P.Life * P.MaxLifeInv;
-		TColor		Color;
+		math::Color	Color;
 
 		// Interpolate color.
 		if( Alpha < 0.5f )
@@ -738,7 +738,7 @@ void FEmitterComponent::Render( CCanvas* Canvas )
 							Cloud.center(), 
 							Cloud.size(), 
 							0, 
-							COLOR_Orange, 
+							math::colors::ORANGE, 
 							false 
 						);
 }

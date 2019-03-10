@@ -172,7 +172,7 @@ void CEditor::Init( HINSTANCE InhInstance )
 
 	// Editor status bar.
 	StatusBar			= new WStatusBar( GUIWindow, GUIWindow );
-	StatusBar->Color	= TColor( 0x00, 0x5b, 0xae, 0xff );
+	StatusBar->Color	= math::Color( 0x00, 0x5b, 0xae, 0xff );
 	StatusBar->AddPanel( L"", 150, SPS_Left );
 	StatusBar->AddPanel( L"", 150, SPS_Left );
 

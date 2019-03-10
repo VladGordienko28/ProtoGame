@@ -14,7 +14,7 @@ class WTabPage: public WContainer
 {
 public:
 	// Variables.
-	TColor			Color;
+	math::Color		Color;
 	Int32			TabWidth;
 	WTabControl*	TabControl;
 	Bool			bCanClose;

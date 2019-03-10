@@ -16,11 +16,11 @@
 #define SKEL_SCENE_SIZE_HALF	(SKEL_SCENE_SIZE / 2.f)
 #define FRAMES_PER_SECOND		25
 
-#define SKEL_SCENE_BG_COLOR				TColor( 0x10, 0x10, 0x10, 0xff )
-#define SKEL_SCENE_GRID_COLOR			TColor( 0x50, 0x6e, 0x6e, 0xff )
-#define SKEL_SCENE_CENTER_COLOR			TColor( 0x6e, 0x6e, 0x50, 0xff )
-#define SKEL_SCENE_RECORD_CENTER_COLOR	TColor( 0x6e, 0x50, 0x50, 0xff )
-#define DEFAULT_IK_COLOR				TColor( 0x63, 0x96, 0xe0, 0xff )
+#define SKEL_SCENE_BG_COLOR				math::Color( 0x10, 0x10, 0x10, 0xff )
+#define SKEL_SCENE_GRID_COLOR			math::Color( 0x50, 0x6e, 0x6e, 0xff )
+#define SKEL_SCENE_CENTER_COLOR			math::Color( 0x6e, 0x6e, 0x50, 0xff )
+#define SKEL_SCENE_RECORD_CENTER_COLOR	math::Color( 0x6e, 0x50, 0x50, 0xff )
+#define DEFAULT_IK_COLOR				math::Color( 0x63, 0x96, 0xe0, 0xff )
 
 	
 //
@@ -509,7 +509,7 @@ void WSkeletonPage::OnOpen()
 //
 // Draw a controls linking arrow.
 //
-static void DrawArrow( CCanvas* Canvas, const math::Vector& From, const math::Vector& To, TColor Color )
+static void DrawArrow( CCanvas* Canvas, const math::Vector& From, const math::Vector& To, math::Color Color )
 {
 	// Draw straight line.
 	Canvas->DrawLine( From, To, Color, false );
@@ -559,7 +559,7 @@ math::Vector WSkeletonPage::GetBoneCenter( Int32 iBone )
 //
 // Draw a link from the i'th bone to the j-th.
 //
-void WSkeletonPage::DrawLink( CCanvas* Canvas, Int32 i, Int32 j, TColor Color )
+void WSkeletonPage::DrawLink( CCanvas* Canvas, Int32 i, Int32 j, math::Color Color )
 {
 	DrawArrow( Canvas, GetBoneCenter(i), GetBoneCenter(j), Color );
 }
@@ -1189,7 +1189,7 @@ void WSkeletonPage::OnMouseBeginDrag( EMouseButton Button, Int32 X, Int32 Y )
 				( 
 					Tool==SKT_AddBone ? SC_Bone : SC_Master, 
 					MakeUniqueBoneName(Tool==SKT_AddBone ? L"Bone" : L"Master"), 
-					TColor(174, 186, 203, 255) 
+					math::Color(174, 186, 203, 255) 
 				));	// constants to define!
 			Skeleton->RefPose.BonesPose.push(TBonePose( Pivot, 0 ));
 			Skeleton->BuildTransformationTable();
@@ -1340,9 +1340,9 @@ void WSkeletonPage::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 }
 
 
-#define LINK_POS_COLOR	TColor( 181, 201, 237, 255 )
-#define LINK_ROT_COLOR	TColor( 223, 153, 153, 255 )
-#define LINK_BOTH_COLOR	TColor( 152, 203, 102, 255 )
+#define LINK_POS_COLOR	math::Color( 181, 201, 237, 255 )
+#define LINK_ROT_COLOR	math::Color( 223, 153, 153, 255 )
+#define LINK_BOTH_COLOR	math::Color( 152, 203, 102, 255 )
 
 
 
@@ -1397,7 +1397,7 @@ void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 
 
 		// Draw centroid.
-		TColor CentroidColor = AnimationTrack->IsRecording() ? SKEL_SCENE_RECORD_CENTER_COLOR : SKEL_SCENE_CENTER_COLOR;
+		math::Color CentroidColor = AnimationTrack->IsRecording() ? SKEL_SCENE_RECORD_CENTER_COLOR : SKEL_SCENE_CENTER_COLOR;
 		Canvas->DrawLine( math::Vector(0.f, -SKEL_SCENE_SIZE_HALF), math::Vector(0.f, +SKEL_SCENE_SIZE_HALF), CentroidColor, false );
 		Canvas->DrawLine( math::Vector(-SKEL_SCENE_SIZE_HALF, 0.f), math::Vector(+SKEL_SCENE_SIZE_HALF, 0.f), CentroidColor, false );
 		Canvas->DrawLineRect( math::Vector(0.f, 0.f), math::Vector(SKEL_SCENE_SIZE, SKEL_SCENE_SIZE), 0, CentroidColor, false );
@@ -1435,7 +1435,7 @@ void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 
 		Skeleton->Render( Canvas, math::Vector(0,0), math::Vector(1, 1), Skeleton->RefPose );
 
-		Canvas->DrawLineStar( math::Vector(5, 5), (Float)GPlat->Now()*65536.f, 3, COLOR_Gold, true );
+		Canvas->DrawLineStar( math::Vector(5, 5), (Float)GPlat->Now()*65536.f, 3, math::colors::GOLD, true );
 
 
 		// Draw a links if need.
@@ -1468,7 +1468,7 @@ void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 			(
 				SceneView.Deproject( LLastPos.X, LLastPos.Y ),
 				GetBoneCenter(DragInfo.iFromBone),
-				COLOR_White,
+				math::colors::WHITE,
 				false
 			);
 		}
@@ -1629,7 +1629,7 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 	(
 		Base,
 		Size,
-		TColor( 0x45, 0x45, 0x45, 0xff ),
+		math::Color( 0x45, 0x45, 0x45, 0xff ),
 		GUI_COLOR_FORM_BORDER,
 		BPAT_Solid
 	);
@@ -1639,7 +1639,7 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 	(
 		Base, 
 		TSize( Size.Width, FORM_HEADER_SIZE ),
-		TColor( 0x33, 0x33, 0x33, 0xff ),
+		math::Color( 0x33, 0x33, 0x33, 0xff ),
 		GUI_COLOR_FORM_BORDER,
 		BPAT_Diagonal
 	);
@@ -1656,8 +1656,8 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 	(
 		TPoint( Base.X+1, Base.Y+48 ),
 		TSize( 128-1, Size.Height-49 ),
-		TColor( 0x22, 0x22, 0x22, 0xff ),
-		TColor( 0x22, 0x22, 0x22, 0xff ),
+		math::Color( 0x22, 0x22, 0x22, 0xff ),
+		math::Color( 0x22, 0x22, 0x22, 0xff ),
 		BPAT_Solid
 	);
 
@@ -1666,8 +1666,8 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 	(
 		TPoint( Base.X+128 + CurrentFrame*256/FRAMES_PER_SECOND, Base.Y + 48 ),
 		TSize( 1, Size.Height-49 ),
-		COLOR_Yellow,
-		COLOR_Yellow,
+		math::colors::YELLOW,
+		math::colors::YELLOW,
 		BPAT_Solid
 	);
 
@@ -1699,8 +1699,8 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 			(
 				TPoint( Base.X + TrackX1, TrackY+8 ),
 				TSize( Size.Width-TrackX1-1, 2 ),
-				TColor( 0x58, 0x58, 0x58, 0xff ),
-				TColor( 0x58, 0x58, 0x58, 0xff ),
+				math::Color( 0x58, 0x58, 0x58, 0xff ),
+				math::Color( 0x58, 0x58, 0x58, 0xff ),
 				BPAT_Solid
 			);
 
@@ -1713,8 +1713,8 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 				(
 					TPoint( Base.X - 3 + 128 + Track.PosKeys.Samples[i].Input * 256.f, TrackY+6 ),		// 1 sec = 256 pxs.
 					TSize( 6, 6 ),
-					COLOR_Blue,
-					COLOR_Blue,
+					math::colors::BLUE,
+					math::colors::BLUE,
 					BPAT_Solid
 				);
 			}
@@ -1725,8 +1725,8 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 				(
 					TPoint( Base.X - 3 + 128 + Track.RotKeys.Samples[i].Input * 256.f, TrackY+6 ),		// 1 sec = 256 pxs.
 					TSize( 6, 6 ),
-					COLOR_Red,
-					COLOR_Red,
+					math::colors::RED,
+					math::colors::RED,
 					BPAT_Solid
 				);
 			}

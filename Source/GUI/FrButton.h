@@ -117,7 +117,7 @@ class WLinkLabel: public WWidget
 public:
 	// Variables.
 	TNotifyEvent        EventClick;
-	TColor				Color;
+	math::Color			Color;
 
 	// WWidget interface.
 	WLinkLabel( WContainer* InOwner, WWindow* InRoot );

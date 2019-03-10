@@ -37,14 +37,14 @@ struct TPalette
 {
 public:
 	// Variable.
-	Array<TColor>		Colors;
+	Array<math::Color>		Colors;
 
 	// Functions.
 	TPalette();
 	TPalette( const TPalette& Other );
 	void Allocate( UInt32 NumCols );
 	void Release();
-	UInt8 FindMatched( TColor InColor );
+	UInt8 FindMatched( math::Color InColor );
 	friend void Serialize( CSerializer& S, TPalette& V );
 };
 
@@ -54,7 +54,7 @@ public:
 -----------------------------------------------------------------------------*/
 
 // Masking.
-#define MASK_COLOR		TColor( 0xff, 0x00, 0xff, 0xff )
+static const math::Color MASK_COLOR = { 0xff, 0x00, 0xff, 0xff };
 
 
 // Bitmap formats.
@@ -138,14 +138,14 @@ public:
 	void Import( CImporterBase& Im );
 	void Export( CExporterBase& Ex );
 
-	TColor getAverageColor()
+	math::Color getAverageColor()
 	{
 		Int32 r = 0, g = 0, b = 0, a = 0;
 		Int32 n = USize * VSize;
 
 		for( Int32 i = 0; i < n; i++ )
 		{
-			TColor c;
+			math::Color c;
 
 			if( Format == EBitmapFormat::BF_Palette8 )
 			{
@@ -153,16 +153,16 @@ public:
 			}
 			else
 			{
-				c = ((TColor*)GetData())[i];
+				c = ((math::Color*)GetData())[i];
 			}
 
-			r += c.R;
-			g += c.G;
-			b += c.B;
-			a += c.A;
+			r += c.r;
+			g += c.g;
+			b += c.b;
+			a += c.a;
 		}
 
-		return TColor( r / n, g / n, b / n, a / n );
+		return math::Color( r / n, g / n, b / n, a / n );
 	}
 };
 

@@ -58,7 +58,7 @@ public:
 			(
 				ClientToWindow(TPoint::Zero) + TPoint( (Size.Width-Font->TextWidth(*Edit->Text))/2, 40+(Size.Height-80+Font->Height)/2 ),
 				*Edit->Text,
-				COLOR_White,
+				math::colors::WHITE,
 				Font
 			);
 	}

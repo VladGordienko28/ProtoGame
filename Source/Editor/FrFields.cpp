@@ -21,14 +21,14 @@
     Inspector colors.
 -----------------------------------------------------------------------------*/
 
-#define COLOR_INSPECTOR_BACKDROP		TColor( 0x3f, 0x3f, 0x3f, 0xff )
-#define COLOR_INSPECTOR_BORDER			TColor( 0x66, 0x66, 0x66, 0xff )
-#define COLOR_INSPECTOR_ITEM			TColor( 0x30, 0x30, 0x30, 0xff )
-#define COLOR_INSPECTOR_ITEM_COMPON		TColor( 0x25, 0x25, 0x25, 0xff )
-#define COLOR_INSPECTOR_ITEM_BORDER		TColor( 0x3f, 0x3f, 0x3f, 0xff )
-#define COLOR_INSPECTOR_ITEM_SEL		TColor( 0x22, 0x22, 0x22, 0xff )
-#define COLOR_INSPECTOR_ITEM_WAIT		COLOR_IndianRed
-#define COLOR_INSPECTOR_ITEM_NOEDIT		TColor( 0x37, 0x37, 0x37, 0xff )
+#define COLOR_INSPECTOR_BACKDROP		math::Color( 0x3f, 0x3f, 0x3f, 0xff )
+#define COLOR_INSPECTOR_BORDER			math::Color( 0x66, 0x66, 0x66, 0xff )
+#define COLOR_INSPECTOR_ITEM			math::Color( 0x30, 0x30, 0x30, 0xff )
+#define COLOR_INSPECTOR_ITEM_COMPON		math::Color( 0x25, 0x25, 0x25, 0xff )
+#define COLOR_INSPECTOR_ITEM_BORDER		math::Color( 0x3f, 0x3f, 0x3f, 0xff )
+#define COLOR_INSPECTOR_ITEM_SEL		math::Color( 0x22, 0x22, 0x22, 0xff )
+#define COLOR_INSPECTOR_ITEM_WAIT		math::colors::INDIAN_RED
+#define COLOR_INSPECTOR_ITEM_NOEDIT		math::Color( 0x37, 0x37, 0x37, 0xff )
 
 
 /*-----------------------------------------------------------------------------
@@ -303,7 +303,7 @@ CPropertyItem::CPropertyItem
 											(
 												Inspector,
 												Depth + 1,
-												CustomAddr + (SizeT)((UInt8*)&(&((TColor*)nullptr)->R)[i] -(UInt8*)nullptr),
+												CustomAddr + (SizeT)((UInt8*)&(&((math::Color*)nullptr)->r)[i] -(UInt8*)nullptr),
 												MemNames[i],
 												TYPE_Byte,
 												Flags
@@ -454,7 +454,7 @@ CPropertyItem::CPropertyItem
 												InObjs,
 												MemNames[i],
 												TYPE_Byte,
-												InAddrOffset + (SizeT)((UInt8*)&(&((TColor*)nullptr)->R)[i] -(UInt8*)nullptr),
+												InAddrOffset + (SizeT)((UInt8*)&(&((math::Color*)nullptr)->r)[i] -(UInt8*)nullptr),
 												Flags
 											) );
 
@@ -913,7 +913,7 @@ void CPropertyItem::MouseDown( EMouseButton MouseButton, Int32 X, Int32 Y )
 			// Color dialog.
 			if( TypeInfo.Type == TYPE_Color && TypeInfo.ArrayDim==1 && X > Inspector->Size.Width-54 )
 			{
-				WColorChooser::SharedColor	= *(TColor*)GetAddress(0);
+				WColorChooser::SharedColor	= *(math::Color*)GetAddress(0);
 				Inspector->WaitColor		= this;
 				new WColorChooser( Inspector->Root, false, TNotifyEvent( Inspector, (TNotifyEvent::TEvent)&WObjectInspector::ColorSelected ) );
 			}
@@ -1199,8 +1199,8 @@ void CPropertyItem::Paint( TPoint Base, CGUIRenderBase* Render )
 						( 
 							TPoint( Base.X + Inspector->Size.Width - 34, Top + Base.Y + 2 ),
 							TSize( 20, INSPECTOR_ITEM_HEIGHT-4 ),
-							*(TColor*)GetAddress(0),
-							COLOR_Black,
+							*(math::Color*)GetAddress(0),
+							math::colors::BLACK,
 							BPAT_Solid
 						);
 	}
@@ -2061,10 +2061,10 @@ void WObjectInspector::ColorSelected( WWidget* Sender )
 	if( LevelPage )	LevelPage->Transactor->TrackEnter();
 	{
 		if( Item->CustomAddr )
-			*(TColor*)Item->CustomAddr	= WColorChooser::SharedColor;
+			*(math::Color*)Item->CustomAddr	= WColorChooser::SharedColor;
 
 		for( Int32 i=0; i<Item->Objects.size(); i++ )
-			*(TColor*)Item->GetAddress(i)	= WColorChooser::SharedColor;
+			*(math::Color*)Item->GetAddress(i)	= WColorChooser::SharedColor;
 	}
 	if( LevelPage )	LevelPage->Transactor->TrackLeave();
 

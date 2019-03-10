@@ -355,10 +355,10 @@ CVariant::CVariant( math::Angle InAngle )
 {
 	*((math::Angle*)(&Value[0])) = InAngle;
 }
-CVariant::CVariant( TColor InColor )
+CVariant::CVariant( math::Color InColor )
 	:	Type( TYPE_Color )
 {
-	*((TColor*)(&Value[0])) = InColor;
+	*((math::Color*)(&Value[0])) = InColor;
 }
 CVariant::CVariant( String InString )
 	:	Type( TYPE_String )
@@ -675,7 +675,7 @@ SizeT CTypeInfo::TypeSize( Bool bNoArray ) const
 			sizeof( Int32 ),		//	TYPE_Integer
 			sizeof( Float ),		//	TYPE_Float
 			sizeof( math::Angle ),	//	TYPE_Angle
-			sizeof( TColor ),		//	TYPE_Color	
+			sizeof( math::Color ),	//	TYPE_Color	
 			sizeof( String ),		//	TYPE_String
 			sizeof( math::Vector ),	//	TYPE_Vector
 			sizeof( math::Rect ),	//	TYPE_AABB
@@ -974,8 +974,8 @@ String CTypeInfo::ToString( const void* Addr ) const
 		}
 		case TYPE_Color:
 		{
-			TColor Value = *(TColor*)Addr;
-			return String::format( L"#%02x%02x%02x", Value.R, Value.G, Value.B );
+			math::Color Value = *(math::Color*)Addr;
+			return String::format( L"#%02x%02x%02x", Value.r, Value.g, Value.b );
 		}
 		case TYPE_String:
 		{
@@ -1202,10 +1202,10 @@ void CTypeInfo::ImportValue( void* Addr, CImporterBase& Im, String Prefix ) cons
 		case TYPE_Color:
 			// Import color.
 			if( ArrayDim == 1 )
-				*(TColor*)Addr = Im.ImportColor( *Prefix );
+				*(math::Color*)Addr = Im.ImportColor( *Prefix );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					((TColor*)Addr)[i] = Im.ImportColor( *String::format( L"%s[%d]", *Prefix, i ) );
+					((math::Color*)Addr)[i] = Im.ImportColor( *String::format( L"%s[%d]", *Prefix, i ) );
 			break;
 
 		case TYPE_String:
@@ -1339,10 +1339,10 @@ void CTypeInfo::ExportValue( const void* Addr, CExporterBase& Ex, String Prefix 
 		case TYPE_Color:
 			// Export color.
 			if( ArrayDim == 1 )
-				Ex.ExportColor( *Prefix, *(TColor*)Addr );
+				Ex.ExportColor( *Prefix, *(math::Color*)Addr );
 			else
 				for( Int32 i=0; i<ArrayDim; i++ )
-					Ex.ExportColor( *String::format( L"%s[%d]", *Prefix, i ), ((TColor*)Addr)[i] );
+					Ex.ExportColor( *String::format( L"%s[%d]", *Prefix, i ), ((math::Color*)Addr)[i] );
 			break;
 
 		case TYPE_String:

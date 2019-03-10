@@ -28,7 +28,7 @@ public:
 	void OnClose();
 
 	// Static color instance.
-	static	TColor		SharedColor;
+	static	math::Color		SharedColor;
 
 private:
 	// Controls.
@@ -43,7 +43,7 @@ private:
 	TNotifyEvent	EventOk;
 	WForm*			OldModal;
 	Bool			bMoveSL, bMoveH;
-	TColor			Selected;
+	math::Color		Selected;
 
 	// Internal interface.
 	void UpdateFromRGB( WWidget* Sender );

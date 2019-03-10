@@ -220,7 +220,7 @@ Int32 FSkeleton::FindAction( String InName )
 //
 // Draw a wire bone.
 //
-static inline void DrawBone( CCanvas* Canvas, const math::Vector& Origin, math::Angle Rotation, Float Size, Float Length, TColor Color )
+static inline void DrawBone( CCanvas* Canvas, const math::Vector& Origin, math::Angle Rotation, Float Size, Float Length, math::Color Color )
 {
 	Float	Size2 = Size * 0.5f;
 	math::Coords BoneLocal( Origin, Rotation );
@@ -253,7 +253,7 @@ static inline void DrawBone( CCanvas* Canvas, const math::Vector& Origin, math::
 //
 // Draw a wire master control.
 //
-static inline void DrawMaster( CCanvas* Canvas, const math::Vector& Origin, math::Angle Rotation, Float Size, TColor Color )
+static inline void DrawMaster( CCanvas* Canvas, const math::Vector& Origin, math::Angle Rotation, Float Size, math::Color Color )
 {
 	TRenderPoly P;
 	P.Texture		= nullptr;
@@ -299,7 +299,7 @@ void FSkeleton::Render
 		TBoneInfo& Info = Bones[i];
 		const TBonePose& P = Pose.BonesPose[i];
 
-		TColor RenderColor = (Info.Flags & BONE_Selected) ? Info.Color*2.f : Info.Color;
+		math::Color RenderColor = (Info.Flags & BONE_Selected) ? Info.Color*2.f : Info.Color;
 
 		switch(Info.Type)
 		{
@@ -832,7 +832,7 @@ void FSkeleton::BuildTransformationTable()
 TBoneInfo::TBoneInfo()
 	:	Type( SC_Bone ),
 		Name( L"" ),
-		Color( COLOR_Tomato ),
+		Color( math::colors::TOMATO ),
 		Flags( BONE_None ),
 		iPosCtrl( -1 ),
 		iRotCtrl( -1 ),
@@ -844,7 +844,7 @@ TBoneInfo::TBoneInfo()
 //
 // In-editor bone constructor.
 //
-TBoneInfo::TBoneInfo( ESkelCntrl InType, String InName, TColor InColor )
+TBoneInfo::TBoneInfo( ESkelCntrl InType, String InName, math::Color InColor )
 	:	Type( InType ),
 		Name( InName ),
 		Color( InColor ),

@@ -156,7 +156,7 @@ public:
 	Bool			bFlipH;
 	Bool			bFlipV;
 	FAnimation*		Animation;
-	TColor			Color;
+	math::Color		Color;
 	math::Vector	Offset;
 	math::Vector	Scale;
 	math::Angle		Rotation;
@@ -225,7 +225,7 @@ public:
 	Bool				bUnlit;
 	Bool				bFlipH;
 	Bool				bFlipV;
-	TColor				Color;	
+	math::Color			Color;	
 	FTexture*			Texture;
 	EBrushType			Type;
 	math::Vector		Vertices[MAX_BRUSH_VERTS];
@@ -359,7 +359,7 @@ public:
 
 	// Variables.
 	Bool				bUnlit;
-	TColor				Color;	
+	math::Color			Color;	
 	FTexture*			Texture;
 
 	// Tilemap.
@@ -434,7 +434,7 @@ public:
 	Bool			bUnlit;
 	Bool			bFlipH;
 	Bool			bFlipV;
-	TColor			Color;	
+	math::Color		Color;	
 	FTexture*		Texture;
 	EDecoType		DecoType;
 	Float			Frequency;
@@ -469,7 +469,7 @@ public:
 	Bool				bUnlit;
 	Bool				bFlipH;
 	Bool				bFlipV;
-	TColor				Color;	
+	math::Color			Color;	
 	FTexture*			Texture;
 	math::Vector		Offset;
 	math::Vector		Scale;
@@ -499,7 +499,7 @@ class FLabelComponent: public FExtraComponent
 REGISTER_CLASS_H(FLabelComponent);
 public:
 	// Variables.
-	TColor			Color;	
+	math::Color		Color;	
 	String			Text;
 	FFont*			Font;
 	Float			Scale;
@@ -710,7 +710,7 @@ class FLightComponent: public FExtraComponent
 REGISTER_CLASS_H(FLightComponent);
 public:
 	// Variables.
-	TColor			Color;
+	math::Color		Color;
 	Bool			bEnabled;
 	ELightType		LightType;
 	ELightFunc		LightFunc;
@@ -750,7 +750,7 @@ public:
 	Bool			bUnlit;
 	Bool			bFlipH;
 	Bool			bFlipV;
-	TColor			Color;	
+	math::Color		Color;	
 	FTexture*		Texture;
 	math::Vector	Scale;
 	math::Vector	Parallax;
@@ -845,7 +845,7 @@ public:
 	EParticleParam			SizeParam;
 	Float					SizeRange[2];
 	Bool					bUnlit;
-	TColor					Colors[3];
+	math::Color				Colors[3];
 	Float					SpinRange[2];
 	FTexture*				Texture;
 	UInt8					NumUTiles;
@@ -1163,7 +1163,7 @@ private:
 	CCanvas*		Canvas;
 	Float			Width;
 	Float			Height;
-	TColor			Color;
+	math::Color		Color;
 	FFont*			Font;
 	FTexture*		Texture;
 	Float			Effect[10];
@@ -1286,7 +1286,7 @@ REGISTER_CLASS_H(FSkeletonComponent);
 public:
 	// Variables.
 	Bool			bHidden;
-	TColor			Color;
+	math::Color		Color;
 	FSkeleton*		Skeleton;
 	math::Vector	Scale;
 	//	+offset and rotation.

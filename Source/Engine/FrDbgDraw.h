@@ -18,8 +18,8 @@ public:
 	enum{ MAX_POINTS = 512 };
 
 	// CDebugDrawHelper interface.
-	Bool DrawLine( const math::Vector& A, const math::Vector& B, TColor Color, Float LifeTime=0.f );
-	Bool DrawPoint( const math::Vector& P, TColor Color, Float Size, Float LifeTime=0.f );
+	Bool DrawLine( const math::Vector& A, const math::Vector& B, math::Color Color, Float LifeTime=0.f );
+	Bool DrawPoint( const math::Vector& P, math::Color Color, Float Size, Float LifeTime=0.f );
 	void Render( CCanvas* Canvas );
 	void Tick( Float Delta );
 	void Reset();
@@ -35,7 +35,7 @@ private:
 	struct TTempPoint
 	{
 		math::Vector Position;
-		TColor Color;
+		math::Color Color;
 		Float Size;
 		Float Life;
 	};
@@ -43,7 +43,7 @@ private:
 	{
 		math::Vector PFrom;
 		math::Vector PTo;
-		TColor Color;
+		math::Color Color;
 		Float Life;
 	};
 

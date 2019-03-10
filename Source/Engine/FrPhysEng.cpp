@@ -1445,7 +1445,7 @@ void CPhysics::PhysicKeyframe( FKeyframeComponent* Object, Float Delta )
 						Float PathLen = max( math::distance( Object->Points[iPrevKey].Location, Object->Points[iDestKey].Location ), 0.01f );
 						Object->Progress += (Object->Speed / PathLen) * Delta;
 						Float Alpha	  = Interpolate(Object->Progress-iPrevKey);
-						Base->Location	= Lerp
+						Base->Location	= lerp
 											( 
 												Object->Points[iPrevKey].Location, 
 												Object->Points[iDestKey].Location, 
@@ -1490,7 +1490,7 @@ void CPhysics::PhysicKeyframe( FKeyframeComponent* Object, Float Delta )
 						Float PathLen = max( math::distance( Object->Points[iDestKey].Location, Object->Points[iPrevKey].Location ), 0.01f );
 						Object->Progress += (Object->Speed / PathLen) * Delta;
 						Float Alpha	  = Interpolate(Object->Progress-iDestKey);
-						Base->Location	= Lerp
+						Base->Location	= lerp
 											( 
 												Object->Points[iDestKey].Location, 
 												Object->Points[iPrevKey].Location, 
@@ -1543,7 +1543,7 @@ void CPhysics::PhysicKeyframe( FKeyframeComponent* Object, Float Delta )
 				{
 					// Continue glide.
 					Float Alpha		= Interpolate( Object->Progress );
-					Base->Location	= Lerp( MoveFrom, Object->Points[iTarget].Location, Alpha );
+					Base->Location	= lerp( MoveFrom, Object->Points[iTarget].Location, Alpha );
 				}
 				else
 				{

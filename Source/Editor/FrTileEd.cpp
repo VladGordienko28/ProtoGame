@@ -158,7 +158,7 @@ void WTileEditor::WTilesGrid::OnPaint( CGUIRenderBase* Render )
 		// Draw selection marks.
 		for( Int32 i=0; i<Model->Selected.size(); i++ )
 		{
-			TColor MarkColor = Model->Selected[0] == 0 ? COLOR_DeepPink : COLOR_DeepSkyBlue;
+			math::Color MarkColor = Model->Selected[0] == 0 ? math::colors::DEEP_PINK : math::colors::DEEP_SKY_BLUE;
 
 			Int32 X = Model->Selected[i] % Model->TilesPerU;
 			Int32 Y = Model->Selected[i] / Model->TilesPerU;
@@ -170,12 +170,12 @@ void WTileEditor::WTilesGrid::OnPaint( CGUIRenderBase* Render )
 		// Draw grid.
 		for( Int32 i=0; i<Model->TilesPerU; i+=2 )
 		{
-			Render->DrawRegion( TPoint( Base.X+X, Base.Y ), TSize( Dx, Size.Height ), COLOR_White, TColor( 0x31, 0x31, 0x31, 0xff ), BPAT_None );
+			Render->DrawRegion( TPoint( Base.X+X, Base.Y ), TSize( Dx, Size.Height ), math::colors::WHITE, math::Color( 0x31, 0x31, 0x31, 0xff ), BPAT_None );
 			X += Dx * 2;
 		}
 		for( Int32 i=0; i<Model->TilesPerV; i+=2 )
 		{
-			Render->DrawRegion( TPoint( Base.X, Base.Y+Y ), TSize( Size.Width, Dy ), COLOR_White, TColor( 0x31, 0x31, 0x31, 0xff ), BPAT_None );
+			Render->DrawRegion( TPoint( Base.X, Base.Y+Y ), TSize( Size.Width, Dy ), math::colors::WHITE, math::Color( 0x31, 0x31, 0x31, 0xff ), BPAT_None );
 			Y += Dy * 2;
 		}
 
@@ -184,8 +184,8 @@ void WTileEditor::WTilesGrid::OnPaint( CGUIRenderBase* Render )
 					( 
 						Base, 
 						Size, 
-						COLOR_White, 
-						TColor( 0x31, 0x31, 0x31, 0xff ), 
+						math::colors::WHITE, 
+						math::Color( 0x31, 0x31, 0x31, 0xff ), 
 						BPAT_None 
 					);
 	}
@@ -199,8 +199,8 @@ void WTileEditor::WTilesGrid::OnPaint( CGUIRenderBase* Render )
 					( 
 						Base, 
 						Size, 
-						TColor( 0x53, 0x53, 0x53, 0xff ), 
-						TColor( 0x31, 0x31, 0x31, 0xff ), 
+						math::Color( 0x53, 0x53, 0x53, 0xff ), 
+						math::Color( 0x31, 0x31, 0x31, 0xff ), 
 						BPAT_Solid 
 					);
 	}

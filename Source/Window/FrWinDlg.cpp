@@ -13,26 +13,26 @@
 // Open a color pick dialog, set its default
 // color as default, return true.
 //
-Bool ExecuteColorDialog( HWND hWnd, TColor& PickedColor, const TColor Default )
+Bool ExecuteColorDialog( HWND hWnd, math::Color& PickedColor, const math::Color Default )
 {
 	static COLORREF CustomColors[16] = {};
 	CHOOSECOLOR CC;
 	mem::zero( &CC, sizeof(CHOOSECOLOR) );
 	CC.lStructSize	= sizeof(CHOOSECOLOR);
 	CC.hwndOwner	= hWnd;
-	CC.rgbResult	= RGB( Default.R, Default.G, Default.B );
+	CC.rgbResult	= RGB( Default.r, Default.g, Default.b );
 	CC.Flags		= CC_FULLOPEN | CC_RGBINIT;
 	CC.lpCustColors = CustomColors;
 
 	if( ChooseColor(&CC) == TRUE )
 	{
 		// Pick some color.
-		PickedColor	= TColor
+		PickedColor	= math::Color
 						( 
 							GetRValue(CC.rgbResult), 
 							GetGValue(CC.rgbResult), 
 							GetBValue(CC.rgbResult), 
-							PickedColor.A 
+							PickedColor.a 
 						);
 		return true;
 	}

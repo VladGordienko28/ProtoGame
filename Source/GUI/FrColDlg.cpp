@@ -40,11 +40,11 @@ void InitHSLBitmaps()
 		HBitmap->AnimSpeed		= 0.f;
 		HBitmap->bDynamic		= false;
 		HBitmap->bRedrawn		= false;
-		HBitmap->Data.setSize(256*sizeof(TColor));
+		HBitmap->Data.setSize(256*sizeof(math::Color));
 
-		TColor* Data = (TColor*)HBitmap->GetData();
+		math::Color* Data = (math::Color*)HBitmap->GetData();
 		for( Int32 i=0; i<256; i++ )
-			Data[i]	= TColor::HSLToRGB( i, 0xff, 0x80 );
+			Data[i]	= math::Color::hsl2rgb( i, 0xff, 0x80 );
 	}
 
 	// ABitmap.
@@ -65,12 +65,12 @@ void InitHSLBitmaps()
 		ABitmap->AnimSpeed		= 0.f;
 		ABitmap->bDynamic		= true;
 		ABitmap->bRedrawn		= false;
-		ABitmap->Data.setSize(4*4*sizeof(TColor));
+		ABitmap->Data.setSize(4*4*sizeof(math::Color));
 
-		TColor* Data = (TColor*)ABitmap->GetData();
-		mem::set( Data, 4*4*sizeof(TColor), 0xff );
+		math::Color* Data = (math::Color*)ABitmap->GetData();
+		mem::set( Data, 4*4*sizeof(math::Color), 0xff );
 		Data[0] = Data[1] = Data[14] = Data[15] =
-		Data[10] = Data[11] = Data[4] = Data[5] = TColor( 0x80, 0x80, 0x80, 0xff );
+		Data[10] = Data[11] = Data[4] = Data[5] = math::Color( 0x80, 0x80, 0x80, 0xff );
 	}
 
 	// SLBitmap.
@@ -91,7 +91,7 @@ void InitHSLBitmaps()
 		SLBitmap->AnimSpeed		= 0.f;
 		SLBitmap->bDynamic		= true;
 		SLBitmap->bRedrawn		= true;
-		SLBitmap->Data.setSize(256*256*sizeof(TColor));
+		SLBitmap->Data.setSize(256*256*sizeof(math::Color));
 	}
 }
 
@@ -103,7 +103,7 @@ void InitHSLBitmaps()
 //
 // Globals.
 //
-TColor		WColorChooser::SharedColor	= COLOR_White;
+math::Color		WColorChooser::SharedColor	= math::colors::WHITE;
 
 
 //
@@ -202,13 +202,13 @@ WColorChooser::WColorChooser( WWindow* InRoot, Bool InbUseAlpha, TNotifyEvent In
 	Selected	= SharedColor;
 	bMoveSL		= false;
 	bMoveH		= false;
-	RSpinner->SetValue(Selected.R, false);
-	GSpinner->SetValue(Selected.G, false);
-	BSpinner->SetValue(Selected.B, false);
+	RSpinner->SetValue(Selected.r, false);
+	GSpinner->SetValue(Selected.g, false);
+	BSpinner->SetValue(Selected.b, false);
 	UpdateFromRGB( this );
 
 	if( bUseAlpha )
-		ASpinner->SetValue(Selected.A, false);
+		ASpinner->SetValue(Selected.a, false);
 
 	// Store old modal, and current modal.
 	OldModal		= Root->Modal;
@@ -347,9 +347,9 @@ void WColorChooser::OnPaint( CGUIRenderBase* Render )
 		GUI_COLOR_TEXT, 
 		WWindow::Font1 
 	);
-	if( bUseAlpha && Selected.A != 255 )
+	if( bUseAlpha && Selected.a != 255 )
 	{
-		SetAlphaBlend(255-Selected.A);
+		SetAlphaBlend(255-Selected.a);
 		Render->DrawPicture
 		(
 			TPoint( Base.X+298, Base.Y+45 ),
@@ -376,9 +376,9 @@ void WColorChooser::OnPaint( CGUIRenderBase* Render )
 		GUI_COLOR_TEXT, 
 		WWindow::Font1 
 	);
-	if( bUseAlpha && SharedColor.A != 255 )
+	if( bUseAlpha && SharedColor.a != 255 )
 	{
-		SetAlphaBlend(255-SharedColor.A);
+		SetAlphaBlend(255-SharedColor.a);
 		Render->DrawPicture
 		(
 			TPoint( Base.X+348, Base.Y+45 ),
@@ -467,16 +467,16 @@ void WColorChooser::UpdateFromRGB( WWidget* Sender )
 	G	= GSpinner->GetIntValue();
 	B	= BSpinner->GetIntValue();
 
-	Selected	= TColor
+	Selected	= math::Color
 	(
 		clamp( R, 0x00, 0xff ),
 		clamp( G, 0x00, 0xff ),
 		clamp( B, 0x00, 0xff ),
-		Selected.A
+		Selected.a
 	);
 
 	UInt8 H, S, L;
-	TColor::RGBToHSL( Selected, H, S, L );
+	math::Color::rgb2hsl( Selected, H, S, L );
 	HSpinner->SetValue( H, false );
 	SSpinner->SetValue( S, false );
 	LSpinner->SetValue( L, false );
@@ -496,18 +496,18 @@ void WColorChooser::UpdateFromHSL( WWidget* Sender )
 	S = SSpinner->GetIntValue();
 	L = LSpinner->GetIntValue();
 
-	UInt8 Alpha = Selected.A;
-	Selected	= TColor::HSLToRGB
+	UInt8 Alpha = Selected.a;
+	Selected	= math::Color::hsl2rgb
 	(
 		clamp( H, 0x00, 0xff ),
 		clamp( S, 0x00, 0xff ),
 		clamp( L, 0x00, 0xff )
 	);
-	Selected.A	= Alpha;
+	Selected.a	= Alpha;
 
-	RSpinner->SetValue(Selected.R, false);
-	GSpinner->SetValue(Selected.G, false);
-	BSpinner->SetValue(Selected.B, false);
+	RSpinner->SetValue(Selected.r, false);
+	GSpinner->SetValue(Selected.g, false);
+	BSpinner->SetValue(Selected.b, false);
 
 	RefreshSL();
 }
@@ -518,7 +518,7 @@ void WColorChooser::UpdateFromHSL( WWidget* Sender )
 //
 void WColorChooser::UpdateFromA( WWidget* Sender )
 {
-	Selected.A	= ASpinner->GetIntValue();
+	Selected.a	= ASpinner->GetIntValue();
 }
 
 
@@ -527,7 +527,7 @@ void WColorChooser::UpdateFromA( WWidget* Sender )
 //
 void WColorChooser::RefreshSL()
 {
-	TColor*	Data	= (TColor*)SLBitmap->GetData();
+	math::Color*	Data	= (math::Color*)SLBitmap->GetData();
 
 	// Decompose selected color.
 	Int32	Hue;
@@ -535,22 +535,22 @@ void WColorChooser::RefreshSL()
 
 	for( Int32 L=0; L<256; L++ )
 	{
-		TColor	Col1	= TColor( L, L, L, 0xff );
-		TColor	Col2	= TColor::HSLToRGB( Hue, 255, L );
+		math::Color	Col1	= math::Color( L, L, L, 0xff );
+		math::Color	Col2	= math::Color::hsl2rgb( Hue, 255, L );
 
-		TColor*	Line	= &Data[L*256];
+		math::Color*	Line	= &Data[L*256];
 
 		// Use some fixed math 16:16 magic :3
-		Int32	RWalk	= Col1.R * 65536,
-				GWalk	= Col1.G * 65536,
-				BWalk	= Col1.B * 65536,
-				RStep	= (Col2.R-Col1.R) * 65536 / 256,
-				GStep	= (Col2.G-Col1.G) * 65536 / 256,
-				BStep	= (Col2.B-Col1.B) * 65536 / 256;
+		Int32	RWalk	= Col1.r * 65536,
+				GWalk	= Col1.g * 65536,
+				BWalk	= Col1.b * 65536,
+				RStep	= (Col2.r-Col1.r) * 65536 / 256,
+				GStep	= (Col2.g-Col1.g) * 65536 / 256,
+				BStep	= (Col2.b-Col1.b) * 65536 / 256;
 
 		for( Int32 S=0; S<256; S++ )
 		{
-			Line[S]	= TColor( RWalk>>16, GWalk>>16, BWalk>>16, 0xff );
+			Line[S]	= math::Color( RWalk>>16, GWalk>>16, BWalk>>16, 0xff );
 
 			RWalk	+= RStep;
 			GWalk	+= GStep;
@@ -569,14 +569,14 @@ void WColorChooser::RefreshSL()
 void WColorChooser::SetAlphaBlend( UInt8 Alpha )
 {
 	assert(bUseAlpha);
-	TColor*	Data	= (TColor*)ABitmap->GetData();
+	math::Color*	Data	= (math::Color*)ABitmap->GetData();
 
 	// Don't redraw, if not required.
-	if( Alpha == Data[0].A )
+	if( Alpha == Data[0].a )
 		return;
 
 	for( Int32 i=0; i<ABitmap->USize*ABitmap->VSize; i++ )
-		Data[i].A = Alpha;
+		Data[i].a = Alpha;
 
 	// Force to reload.
 	ABitmap->bRedrawn	= true;

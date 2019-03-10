@@ -38,7 +38,7 @@ WColorRibbon::WColorRibbon( WContainer* InOwner, WWindow* InRoot )
 	Ribbon->AnimSpeed		= 0.f;
 	Ribbon->bDynamic		= true;
 	Ribbon->bRedrawn		= false;
-	Ribbon->Data.setSize(256*sizeof(TColor));
+	Ribbon->Data.setSize(256*sizeof(math::Color));
 }
 
 
@@ -54,7 +54,7 @@ WColorRibbon::~WColorRibbon()
 //
 // Set editor curve.
 //
-void WColorRibbon::SetCurve( TInterpCurve<TColor>* InCurve )
+void WColorRibbon::SetCurve( TInterpCurve<math::Color>* InCurve )
 {
 	Curve = InCurve;
 	iSelected = -1;
@@ -90,7 +90,7 @@ void WColorRibbon::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 	if( Button == MB_Left && iSelected != -1 )
 	{
 		// Move sample.
-		TColor OldOutput = Curve->Samples[iSelected].Output;
+		math::Color OldOutput = Curve->Samples[iSelected].Output;
 		Curve->Samples.removeShift(iSelected);
 		iSelected = Curve->AddSample( Float(clamp(X-5, 0, Size.Width-11))/Float(Size.Width), OldOutput );
 
@@ -123,7 +123,7 @@ void WColorRibbon::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 		{
 			// Add a new sample.
 			Float Input = Float(clamp(X-5, 0, Size.Width-11))/Float(Size.Width);
-			iSelected = Curve->AddSample( Input, Curve->SampleLinearAt(Input, COLOR_Black) );
+			iSelected = Curve->AddSample( Input, Curve->SampleLinearAt(Input, math::colors::BLACK) );
 			OnChange();
 			UpdateRibbon();
 		}
@@ -206,9 +206,9 @@ void WColorRibbon::UpdateRibbon()
 	if( Curve )
 	{
 		// Very expensive calculations.
-		TColor* Dest = (TColor*)Ribbon->GetData();
+		math::Color* Dest = (math::Color*)Ribbon->GetData();
 		for( Int32 u=0; u<Ribbon->USize; u++ )
-			Dest[u] = Curve->SampleLinearAt( (Float)u / (Float)Ribbon->USize, COLOR_Black );
+			Dest[u] = Curve->SampleLinearAt( (Float)u / (Float)Ribbon->USize, math::colors::BLACK );
 	}
 	else
 	{
@@ -233,8 +233,8 @@ void WColorRibbon::OnPaint( CGUIRenderBase* Render )
 	(
 		TPoint( Base.X, Base.Y ),
 		TSize( Size.Width, Size.Height-17 ),
-		TColor( 0x30, 0x30, 0x30, 0xff ),
-		TColor( 0x30, 0x30, 0x30, 0xff ),
+		math::Color( 0x30, 0x30, 0x30, 0xff ),
+		math::Color( 0x30, 0x30, 0x30, 0xff ),
 		BPAT_Solid
 	);
 	Render->DrawPicture
@@ -269,7 +269,7 @@ void WColorRibbon::OnPaint( CGUIRenderBase* Render )
 				TPoint( Base.X + Sample.Input*Size.Width, Base.Y + Size.Height-11 ),
 				TSize( 11, 11 ),
 				Sample.Output,
-				i == iSelected ? TColor( 0x87, 0x87, 0x87, 0xff ) : TColor( 0x30, 0x30, 0x30, 0xff ),
+				i == iSelected ? math::Color( 0x87, 0x87, 0x87, 0xff ) : math::Color( 0x30, 0x30, 0x30, 0xff ),
 				BPAT_Solid
 			);
 		}

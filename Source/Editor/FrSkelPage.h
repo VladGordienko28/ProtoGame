@@ -82,7 +82,7 @@ private:
 	TSkelPose& GetCurrentPose();
 	Int32 GetBoneAt( Int32 X, Int32 Y );
 	void ShowBoneProperties( Int32 iBone );
-	void DrawLink( CCanvas* Canvas, Int32 i, Int32 j, TColor Color );
+	void DrawLink( CCanvas* Canvas, Int32 i, Int32 j, math::Color Color );
 	void UnselectAll();
 	math::Vector GetBoneCenter( Int32 iBone );
 	String MakeUniqueBoneName( String Prefix );

@@ -132,7 +132,7 @@ FDiffuseLayer::FDiffuseLayer()
 		bFlipH(false),
 		bFlipV(false),
 		bTurn90(false),
-		OverlayColor(COLOR_White),
+		OverlayColor(math::colors::WHITE),
 		Panner(),
 		Scaler(),
 		Rotator(),

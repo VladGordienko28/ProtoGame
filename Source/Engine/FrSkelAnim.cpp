@@ -16,7 +16,7 @@
 FSkeletonComponent::FSkeletonComponent()
 	:	FExtraComponent(),
 		bHidden( false ),
-		Color( COLOR_White )
+		Color( math::colors::WHITE )
 {
 
 	bRenderable		= true;

@@ -251,7 +251,7 @@ public:
 	CVariant( Int32 InInteger );
 	CVariant( Float InFloat );
 	CVariant( math::Angle InAngle );
-	CVariant( TColor InColor );
+	CVariant( math::Color InColor );
 	CVariant( String InString );
 	CVariant( const math::Vector& InVector );
 	CVariant( const math::Rect& InRect );
@@ -534,15 +534,15 @@ inline CTypeInfo _Cpp2FluType( Array<math::Angle>* Value )
 }
 
 // [TYPE_Color]
-inline CTypeInfo _Cpp2FluType( TColor* Value )
+inline CTypeInfo _Cpp2FluType( math::Color* Value )
 {
 	return CTypeInfo(TYPE_Color, 1, nullptr);
 }
-template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( TColor(*Value)[ArrLen] )
+template<SizeT ArrLen> inline CTypeInfo _Cpp2FluType( math::Color(*Value)[ArrLen] )
 {
 	return CTypeInfo( TYPE_Color, ArrLen, nullptr );
 }
-inline CTypeInfo _Cpp2FluType( Array<TColor>* Value )
+inline CTypeInfo _Cpp2FluType( Array<math::Color>* Value )
 {
 	return CTypeInfo( TYPE_Color, -1, nullptr );
 }

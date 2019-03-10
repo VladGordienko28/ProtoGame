@@ -105,7 +105,7 @@ public:
 	// Not really simple types.
 	math::Vector& cVector(){ return *(math::Vector*)_Payload; }
 	math::Angle& cAngle(){ return *(math::Angle*)_Payload; }
-	TColor& cColor(){ return *(TColor*)_Payload; }
+	math::Color& cColor(){ return *(math::Color*)_Payload; }
 	math::Rect& cAABB(){ return *(math::Rect*)_Payload; }
 	TDelegate& cDelegate(){ return *(TDelegate*)_Payload; }
 };
@@ -1977,10 +1977,10 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 				// Color member.
 				String Elem = String::lowerCase( GetIdentifier( L"color member" ) );
 				UInt8 Offset = 0xff;
-				Offset =	Elem == L"r" ? PROPERTY_OFFSET(TColor, R) : 
-							Elem == L"g" ? PROPERTY_OFFSET(TColor, G) :  
-							Elem == L"b" ? PROPERTY_OFFSET(TColor, B) : 
-							Elem == L"a" ? PROPERTY_OFFSET(TColor, A) : 0xff;
+				Offset =	Elem == L"r" ? PROPERTY_OFFSET(math::Color, r) : 
+							Elem == L"g" ? PROPERTY_OFFSET(math::Color, g) :  
+							Elem == L"b" ? PROPERTY_OFFSET(math::Color, b) : 
+							Elem == L"a" ? PROPERTY_OFFSET(math::Color, a) : 0xff;
 
 				if( Offset == 0xff )
 					Error( L"Unknown color member '%s'", *Elem );

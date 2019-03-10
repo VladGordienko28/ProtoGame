@@ -909,7 +909,7 @@ Int32 WLog::YToIndex( Int32 Y ) const
 //
 // Add a new item to log.
 //
-Int32 WLog::AddLine( String InText, void* InData, TColor InColor )
+Int32 WLog::AddLine( String InText, void* InData, math::Color InColor )
 {
 	TLine Line;
 

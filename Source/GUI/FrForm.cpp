@@ -393,8 +393,8 @@ void WMessageBox::OnPaint( CGUIRenderBase* Render )
 	(
 		TPoint( Base.X+1, Base.Y+Size.Height-50 ),
 		TSize( Size.Width-2, 49 ),
-		TColor( 0x55, 0x55, 0x55, 0xff ),
-		TColor( 0x55, 0x55, 0x55, 0xff ),
+		math::Color( 0x55, 0x55, 0x55, 0xff ),
+		math::Color( 0x55, 0x55, 0x55, 0xff ),
 		BPAT_Solid
 	);
 

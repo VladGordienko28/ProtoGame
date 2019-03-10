@@ -24,7 +24,7 @@ void CCanvas::DrawCircle
 ( 
 	const math::Vector& Center,
 	Float Radius,
-	TColor Color,
+	math::Color Color,
 	Bool bStipple,
 	Int32 Detail 
 )
@@ -53,7 +53,7 @@ void CCanvas::DrawSmoothLine
 ( 
 	const math::Vector& A,
 	const math::Vector& B,
-	TColor Color,
+	math::Color Color,
 	Bool bStipple,
 	Int32 Detail 
 )
@@ -94,7 +94,7 @@ void CCanvas::DrawLineRect
 	const math::Vector& Center,
 	const math::Vector& Size,
 	math::Angle Rotation,
-	TColor Color,
+	math::Color Color,
 	Bool bStipple 
 )
 {
@@ -124,7 +124,7 @@ void CCanvas::DrawLineStar
 	const math::Vector& Center,
 	math::Angle Rotation,
 	Float Size,
-	TColor Color,
+	math::Color Color,
 	Bool bStipple 
 )
 {
@@ -144,9 +144,9 @@ void CCanvas::DrawLineStar
 //
 // Draw a point with border.
 //
-void CCanvas::DrawCoolPoint( const math::Vector& P, Float Size, TColor Color )
+void CCanvas::DrawCoolPoint( const math::Vector& P, Float Size, math::Color Color )
 {
-	DrawPoint( P, Size + 2.0f, COLOR_Black );
+	DrawPoint( P, Size + 2.0f, math::colors::BLACK );
 	DrawPoint( P, Size, Color );
 
 }
@@ -159,7 +159,7 @@ void CCanvas::DrawText
 	const Char* Text,
 	Int32 Len,
 	FFont* Font, 
-	TColor Color,
+	math::Color Color,
 	const math::Vector& Start, 
 	const math::Vector& Scale
 )
@@ -385,7 +385,7 @@ TRenderList::TRenderList( Int32 InNumRcts )
 	NumRects	= InNumRcts;
 	Vertices	= (math::Vector*)CCanvas::GPool.Push(NumRects*4*sizeof(math::Rect));
 	TexCoords	= (math::Vector*)CCanvas::GPool.Push(NumRects*4*sizeof(math::Rect));
-	Colors		= (TColor*)CCanvas::GPool.Push(NumRects*4*sizeof(TColor));
+	Colors		= (math::Color*)CCanvas::GPool.Push(NumRects*4*sizeof(math::Color));
 }
 
 
@@ -393,7 +393,7 @@ TRenderList::TRenderList( Int32 InNumRcts )
 // Initialize render list for rectangles
 // with shared color.
 //
-TRenderList::TRenderList( Int32 InNumRcts, TColor InColor )
+TRenderList::TRenderList( Int32 InNumRcts, math::Color InColor )
 {
 	Flags		= POLY_None;
 	Texture		= nullptr;

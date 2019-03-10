@@ -72,11 +72,11 @@ void CGFXManager::Tick( Float Delta )
 		// Interpolate all.
 		for( Int32 i=0; i<3; i++ )
 		{
-			ResultEffect.Highlights[i]	= Lerp( OldEffect.Highlights[i],	NewEffect.Highlights[i],	Alpha );
-			ResultEffect.MidTones[i]	= Lerp( OldEffect.MidTones[i],		NewEffect.MidTones[i],		Alpha );
-			ResultEffect.Shadows[i]		= Lerp( OldEffect.Shadows[i],		NewEffect.Shadows[i],		Alpha );
+			ResultEffect.Highlights[i]	= lerp( OldEffect.Highlights[i],	NewEffect.Highlights[i],	Alpha );
+			ResultEffect.MidTones[i]	= lerp( OldEffect.MidTones[i],		NewEffect.MidTones[i],		Alpha );
+			ResultEffect.Shadows[i]		= lerp( OldEffect.Shadows[i],		NewEffect.Shadows[i],		Alpha );
 		}
-		ResultEffect.BWScale			= Lerp( OldEffect.BWScale,			NewEffect.BWScale,			Alpha );
+		ResultEffect.BWScale			= lerp( OldEffect.BWScale,			NewEffect.BWScale,			Alpha );
 
 		// Update alpha.
 		Alpha	+= Delta/Fade;

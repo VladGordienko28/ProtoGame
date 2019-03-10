@@ -164,7 +164,7 @@ COpenGLCanvas::COpenGLCanvas( COpenGLRender* InRender )
 	ScreenWidth		= ScreenHeight = 0.f;
 	OldBlend		= BLEND_MAX;
 	OldBitmap		= nullptr;
-	OldColor		= COLOR_White;
+	OldColor		= math::colors::WHITE;
 	BitmapPan		= { 0.f, 0.f };
 	OldStipple		= POLY_None;
 	ActiveShader	= nullptr;
@@ -298,7 +298,7 @@ COpenGLCanvas::~COpenGLCanvas()
 //
 // Draw a simple colored point.
 //
-void COpenGLCanvas::DrawPoint( const math::Vector& P, Float Size, TColor Color )
+void COpenGLCanvas::DrawPoint( const math::Vector& P, Float Size, math::Color Color )
 {
 	glPointSize( Size );
 	SetColor( Color );
@@ -316,7 +316,7 @@ void COpenGLCanvas::DrawPoint( const math::Vector& P, Float Size, TColor Color )
 //
 // Draw a simple colored line.
 //
-void COpenGLCanvas::DrawLine( const math::Vector& A, const math::Vector& B, TColor Color, Bool bStipple )
+void COpenGLCanvas::DrawLine( const math::Vector& A, const math::Vector& B, math::Color Color, Bool bStipple )
 {
 	SetColor( Color );
 	SetBitmap( nullptr );
@@ -654,9 +654,9 @@ void COpenGLCanvas::DrawPoly( const TRenderPoly& Poly )
 //
 // Convert a paletted image to 32-bit image.
 //
-static void* Palette8ToRGBA( UInt8* SourceData, TColor* Palette, Int32 USize, Int32 VSize )
+static void* Palette8ToRGBA( UInt8* SourceData, math::Color* Palette, Int32 USize, Int32 VSize )
 {
-	static TColor Buffer512[512*512];
+	static math::Color Buffer512[512*512];
 	Int32 i, n;
 
     // Doesn't allow palette image with dimension > 512.
@@ -926,7 +926,7 @@ void COpenGLCanvas::SetBlend( EBitmapBlend Blend )
 //
 // Set color to draw objects.
 //
-void COpenGLCanvas::SetColor( TColor Color )
+void COpenGLCanvas::SetColor( math::Color Color )
 {
 	// Don't overuse OpenGL.
 	if( OldColor == Color )
@@ -1164,16 +1164,16 @@ bool CGLFluShader::Init( String ShaderName )
 //
 // Set an scene ambient color.
 //
-void CGLFluShader::SetAmbientLight( const TColor& InAmbient )
+void CGLFluShader::SetAmbientLight( const math::Color& InAmbient )
 {
 	// Really need to update?
-	static TColor	OldAmbient = COLOR_AliceBlue;
+	static math::Color	OldAmbient = math::colors::ALICE_BLUE;
 	if( InAmbient == OldAmbient )
 		return;
 	OldAmbient	= InAmbient;
 
 	// Send data to shader.
-	GLfloat Ambient[3] = { InAmbient.R/255.f, InAmbient.G/255.f, InAmbient.B/255.f };
+	GLfloat Ambient[3] = { InAmbient.r/255.f, InAmbient.g/255.f, InAmbient.b/255.f };
 	SetValue3f( idAmbientLight, Ambient );
 }
 
@@ -1227,9 +1227,9 @@ Bool CGLFluShader::AddLight( FLightComponent* Light, const math::Vector& Locatio
 	// Setup lightsource params.
 	GLfloat	LightColor[4]	=
 	{
-		Light->Color.R / 255.f,
-		Light->Color.G / 255.f,
-		Light->Color.B / 255.f,
+		Light->Color.r / 255.f,
+		Light->Color.g / 255.f,
+		Light->Color.b / 255.f,
 		1.f
 	};
 
@@ -1310,8 +1310,8 @@ void drawGrid( COpenGLCanvas* Canvas )
 	Int32 CMaxY = math::trunc(min<Float>( Canvas->View.Bounds.max.y, +math::WORLD_HALF ));
 
 	// Pick colors.
-	TColor GridColor0 = TColor( 0x40, 0x40, 0x40, 0xff );
-	TColor GridColor1 = TColor( 0x80, 0x80, 0x80, 0xff );
+	math::Color GridColor0 = math::Color( 0x40, 0x40, 0x40, 0xff );
+	math::Color GridColor1 = math::Color( 0x80, 0x80, 0x80, 0xff );
 	
 	// Vertical lines.
 	for( Int32 i=CMinX; i<=CMaxX; i++ )
@@ -1376,7 +1376,7 @@ void drawSafeFrame( COpenGLCanvas* Canvas, TCamera& Observer )
 		Observer.Location, 
 		Observer.FOV, 
 		Observer.Rotation, 
-		COLOR_Peru, 
+		math::colors::PERU, 
 		false 
 	);
 }
@@ -1744,7 +1744,7 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 	Canvas->EnableShader( &Canvas->FluShader );
 	Canvas->FluShader.SetModeComplex();
 	Canvas->FluShader.SetValue1f( Canvas->FluShader.idGameTime, Canvas->LockTime );
-	Canvas->FluShader.SetAmbientLight(COLOR_Black);
+	Canvas->FluShader.SetAmbientLight( math::colors::BLACK );
 
 	// Clamp level scrolling when we play.
 	if( Level->bIsPlaying )
@@ -1805,7 +1805,7 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 		// Set ambient light in level.
 		if( Level->RndFlags & RND_Lighting )
 			//Canvas->FluShader.SetAmbientLight(Level->AmbientLight);
-			Canvas->FluShader.SetAmbientLight( Level->m_ambientColors.SampleLinearAt( Level->m_timeOfDay.toPercent(), COLOR_Black ) );
+			Canvas->FluShader.SetAmbientLight( Level->m_ambientColors.SampleLinearAt( Level->m_timeOfDay.toPercent(), math::colors::BLACK ) );
 
 		/*
 		// Render sky zone if any.
@@ -1867,11 +1867,11 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 
 
 			rect.Texture = first;
-			rect.Color = TColor( 255, 255, 255, 255 );
+			rect.Color = math::Color( 255, 255, 255, 255 );
 			Canvas->DrawRect( rect );
 
 			rect.Texture = second;
-			rect.Color = TColor( 255, 255, 255, 255 * (1-alpha) );
+			rect.Color = math::Color( 255, 255, 255, 255 * (1-alpha) );
 			Canvas->DrawRect( rect );
 
 

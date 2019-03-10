@@ -28,7 +28,7 @@
 //
 // Window dialogs functions.
 //
-extern Bool ExecuteColorDialog( HWND hWnd, TColor& PickedColor, const TColor Default = COLOR_Black );
+extern Bool ExecuteColorDialog( HWND hWnd, math::Color& PickedColor, const math::Color Default = math::colors::BLACK );
 extern Bool ExecuteOpenFileDialog( HWND hWnd, String& FileName, String Directory, const Char* Filters );
 extern Bool ExecuteSaveFileDialog( HWND hWnd, String& FileName, String Directory, const Char* Filters );
 

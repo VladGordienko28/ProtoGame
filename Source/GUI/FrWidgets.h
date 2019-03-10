@@ -68,13 +68,13 @@ public:
 
 	// Variables.
 	Array<TStatusPanel>		Panels;
-	TColor					Color;
+	math::Color				Color;
 
 	// WStatusBar interface.
 	WStatusBar( WContainer* InOwner, WWindow* InRoot )
 		:	WWidget( InOwner, InRoot ),
 			Panels(),
-			Color( COLOR_SteelBlue )
+			Color( math::colors::STEEL_BLUE )
 	{
 		SetSize( 100, 23 );
 		Align	= AL_Bottom;
@@ -314,7 +314,7 @@ class WProgressBar: public WWidget
 public:
 	// Variables.
 	Int32		Value;
-	TColor		Color;
+	math::Color	Color;
 
 	// WProgressBar interface.
 	WProgressBar( WContainer* InOwner, WWindow* InRoot )

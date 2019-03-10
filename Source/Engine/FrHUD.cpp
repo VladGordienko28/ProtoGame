@@ -19,7 +19,7 @@ FPainterComponent::FPainterComponent()
 	Width			= 0.f;
 	Height			= 0.f;
 	Canvas			= nullptr;
-	Color			= COLOR_White;
+	Color			= math::colors::WHITE;
 	Font			= nullptr;
 	Texture			= nullptr;
 	mem::zero( Effect, sizeof(Effect) );

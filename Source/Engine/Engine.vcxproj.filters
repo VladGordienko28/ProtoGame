@@ -24,9 +24,6 @@
     <ClInclude Include="Core\FrClass.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\FrColor.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Core\FrEncode.h">
       <Filter>Core</Filter>
     </ClInclude>

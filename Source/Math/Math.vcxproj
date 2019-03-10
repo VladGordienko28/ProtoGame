@@ -152,8 +152,11 @@
   <ItemGroup>
     <ClInclude Include="Angle.h" />
     <ClInclude Include="Circle.h" />
+    <ClInclude Include="Color.h" />
+    <ClInclude Include="Colors.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Coords.h" />
+    <ClInclude Include="FloatColor.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Polygon.h" />
@@ -164,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Angle.cpp" />
+    <ClCompile Include="Color.cpp" />
     <ClCompile Include="Coords.cpp" />
     <ClCompile Include="Math.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
