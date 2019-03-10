@@ -9,18 +9,24 @@ public:
     const MIN_CAMP_RADIUS = 10.0;
     const CAMP_SPEED_FACTOR = 0.7;
     
-    event OnBeginPlay()
-    {
-        $Puppet.GoalReach = PATH_Walk;
-    }
-    
     fn TakeDamage( integer amount, entity instigator, string type ) unified
     {
         $Puppet.Health -= amount;
-    
-        if( $Puppet.Health <= 0 && label != @Die )
+        
+        if( label != @Die )
         {
-            goto @Die;        
+            Move( [instigator.Location.x < Location.x ? 0.7 : -0.7, 0.0] );
+            
+            if( $Puppet.Health <= 0 )
+            {
+                goto @Die;
+            }         
+        }
+        
+        if( label == @Normal )
+        {
+            enemy = instigator;
+            goto @Chase;
         }
     }
     
@@ -91,18 +97,18 @@ public:
         
         $Puppet.Goal = pickBitePosition( enemy );
         //DebugPoint( $Puppet.Goal, rgba(0, 255, 0, 255), 5.0, 2.0 );  // temp 
-        setupMovement( $Puppet.Goal, 1.0, 0.0 );
+        setupMovement( $Puppet.Goal, 0.9 + 0.2 * randomf(), 0.0 );
         sleep 0.01;
         goto @Chase;
     
     @Attack:
-        $Sprite.PlayAnim( "Attack", 5.0, ANIM_Once ); 
+        $Sprite.PlayAnim( "Attack", 8.0, ANIM_Once ); 
         //$Sprite.Color = rgba(255, 0, 0, 255); 
         
         Velocity.x = 0.0;
         wait !$Sprite.IsPlaying();
         
-        sleep 0.5;
+        sleep 0.2 + 0.5 * randomf();
         $Sprite.PlayAnim( "Idle", 3.0, ANIM_Loop );   
         goto @Chase;
         

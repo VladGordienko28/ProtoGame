@@ -1,6 +1,6 @@
 BEGIN_RESOURCE FLevel Forest
     GameSpeed = 1.0000
-    Camera.Location = [9.6849; 10.0322]
+    Camera.Location = [12.0425; 11.5835]
     Camera.FOV = [64.0000; 32.0000]
     Camera.Zoom = 1.0000
     Camera.ScrollBound = (-2048.0000; -2048.0000; 2048.0000; 2048.0000)
@@ -373,9 +373,9 @@ BEGIN_RESOURCE FLevel Forest
     BEGIN_ENTITY Wolf Wolf0
         BEGIN_COMPONENT FArcadeBodyComponent Base
             Mass = 1.0000
-            Location = [19.0000; 5.2500]
+            Location = [11.5000; 5.2500]
             Size = [4.0000; 2.5000]
-            Layer = 0.5023
+            Layer = 0.7090
             bFixedAngle = true
             bFixedSize = true
             bHashable = true
@@ -383,8 +383,89 @@ BEGIN_RESOURCE FLevel Forest
         BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
             Color = #ffffffff
             Animation = FAnimation::AWolf
-            Offset = [0.2000; 2.7500]
-            Scale = [8.0000; 8.0000]
+            Offset = [0.2000; 0.7500]
+            Scale = [8.0000; 4.0000]
+        END_COMPONENT
+        BEGIN_COMPONENT FPuppetComponent Puppet
+            Health = 3
+            MoveSpeed = 15.0000
+            JumpHeight = 8.0000
+            GravityScale = 10.0000
+            LookRadius = 16.0000
+            LookPeriod = 0.2000
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Wolf Wolf1
+        BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Location = [-12.0000; 5.2500]
+            Size = [4.0000; 2.5000]
+            Layer = 0.7808
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            Animation = FAnimation::AWolf
+            Offset = [0.2000; 0.7500]
+            Scale = [8.0000; 4.0000]
+        END_COMPONENT
+        BEGIN_COMPONENT FPuppetComponent Puppet
+            Health = 3
+            MoveSpeed = 15.0000
+            JumpHeight = 8.0000
+            GravityScale = 10.0000
+            LookRadius = 16.0000
+            LookPeriod = 0.2000
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Wolf Wolf2
+        BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Location = [-2.2500; 5.2500]
+            Size = [4.0000; 2.5000]
+            Layer = 0.6998
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            Animation = FAnimation::AWolf
+            Offset = [0.2000; 0.7500]
+            Scale = [8.0000; 4.0000]
+        END_COMPONENT
+        BEGIN_COMPONENT FPuppetComponent Puppet
+            Health = 3
+            MoveSpeed = 15.0000
+            JumpHeight = 8.0000
+            GravityScale = 10.0000
+            LookRadius = 16.0000
+            LookPeriod = 0.2000
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Wolf Wolf3
+        BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Location = [4.5000; 5.2500]
+            Size = [4.0000; 2.5000]
+            Layer = 0.6909
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            Animation = FAnimation::AWolf
+            Offset = [0.2000; 0.7500]
+            Scale = [8.0000; 4.0000]
         END_COMPONENT
         BEGIN_COMPONENT FPuppetComponent Puppet
             Health = 3

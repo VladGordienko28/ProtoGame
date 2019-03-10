@@ -1,4 +1,5 @@
 BEGIN_RESOURCE FBitmap BWolf
+    Format = 1
     BlendMode = 1
     Saturation = 1.0000
     AnimSpeed = 30.0000

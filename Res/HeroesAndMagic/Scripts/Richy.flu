@@ -44,7 +44,7 @@ public:
 
     event OnKeyUp( integer key )
     {
-        if( key == KEY_L && label == @Block )
+        if( key == KEY_L && (label == @Block || label == @EnterBlock) )
         {
             goto @Normal;
         }
