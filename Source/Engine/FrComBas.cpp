@@ -480,10 +480,16 @@ REGISTER_CLASS_CPP( FComponent, FObject, CLASS_Abstract )
 {
 	// to be fixed
 	using namespace math;
-	BEGIN_STRUCT(Coords);
-		STRUCT_MEMBER(origin);
-		STRUCT_MEMBER(xAxis);
-		STRUCT_MEMBER(yAxis);
+
+	BEGIN_STRUCT( Coords );
+		STRUCT_MEMBER( origin );
+		STRUCT_MEMBER( xAxis );
+		STRUCT_MEMBER( yAxis );
+	END_STRUCT;
+
+	BEGIN_STRUCT( Circle )
+		STRUCT_MEMBER( center );
+		STRUCT_MEMBER( radius );
 	END_STRUCT;
 }
 

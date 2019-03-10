@@ -6,5 +6,5 @@ BEGIN_RESOURCE FBitmap BWolf
     Group = "<unused>"
     FileName = "BWolf.png"
     UBits = 8
-    VBits = 8
+    VBits = 9
 END_RESOURCE

@@ -73,6 +73,12 @@ namespace envi
 				getHour(), getMinute(), getSecond(), getPeriod() == EDayPeriod::Am ? L"Am" : L"Pm" );
 		}
 
+		// legacy
+		friend void Serialize( CSerializer& s, TimeOfDay& v )
+		{
+			Serialize( s, v.m_seconds );
+		}
+
 	private:
 		static const constexpr Float SECS_PER_DAY = 60.f * 60.f * 24.f;
 

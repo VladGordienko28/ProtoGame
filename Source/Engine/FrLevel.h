@@ -113,9 +113,9 @@ public:
 
 	Float					AberrationIntensity = 0.f;
 
-	envi::TimeOfDay m_timeOfDay;
-	Float m_daySpeed;
 	TInterpCurve<math::Color> m_ambientColors;
+
+
 
 	FBitmap* m_midnightBitmap = nullptr;
 	FBitmap* m_dawnBitmap = nullptr;
@@ -127,6 +127,11 @@ public:
 
 
 	// -----------
+
+	// -------
+
+	envi::Environment m_environment;
+	envi::EnvironmentContext m_environmentContext;
 
 	// FLevel interface.
 	FLevel();

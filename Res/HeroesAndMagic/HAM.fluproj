@@ -12,6 +12,7 @@ BEGIN_INCLUDE
     Richy.fr
     Barrel.fr
     Wolf.fr
+    Hare.fr
     BSystem.fr
     BForestTiles.fr
     BDaySky.fr
@@ -29,16 +30,22 @@ BEGIN_INCLUDE
     BBarrel.fr
     BBushes.fr
     BWolf.fr
+    BSun.fr
+    BMoon.fr
+    BHare.fr
     ProjectInfo0.fr
     Forest.fr
     ARichy.fr
     ABarrel.fr
     AWolf.fr
+    AHare.fr
 END_INCLUDE
 BEGIN_PAGES
     Barrel
     ARichy
     Richy
     Wolf
+    AHare
+    Hare
     Forest
 END_PAGES

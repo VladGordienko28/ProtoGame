@@ -43,6 +43,30 @@ void CCanvas::DrawCircle
 	}
 }
 
+void CCanvas::DrawEllipse
+( 
+	const math::Vector& Center,
+	Float XSize,
+	Float YSize,
+	math::Color Color,
+	Bool bStipple,
+	Int32 Detail
+)
+{
+	math::Vector P1, P2;
+	P1.x = Center.x + XSize * math::sin( 2.f * 0 * math::PI / Detail );
+	P1.y = Center.y + YSize * math::cos( 2.f * 0 * math::PI / Detail );
+
+	for( Int32 i=1; i<=Detail; i++ )
+	{
+		P2.x = Center.x + XSize * math::sin( 2.f * i * math::PI / Detail );
+		P2.y = Center.y + YSize * math::cos( 2.f * i * math::PI / Detail );
+
+		DrawLine( P1, P2, Color, bStipple );
+		P1 = P2;
+	}
+}
+
 
 //
 // Draw a smooth line. It's amazing,

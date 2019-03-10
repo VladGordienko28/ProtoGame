@@ -2,7 +2,7 @@ BEGIN_RESOURCE FAnimation AWolf
     Sheet = FBitmap::BWolf
     FrameW = 64
     FrameH = 32
-    NumSeqs = 4
+    NumSeqs = 5
     Sequences[0].Name = "Attack"
     Sequences[0].Start = 16
     Sequences[0].Count = 8
@@ -12,6 +12,9 @@ BEGIN_RESOURCE FAnimation AWolf
     Sequences[2].Name = "Idle"
     Sequences[2].Count = 3
     Sequences[3].Name = "Die"
-    Sequences[3].Start = 12
-    Sequences[3].Count = 3
+    Sequences[3].Start = 28
+    Sequences[3].Count = 10
+    Sequences[4].Name = "Eating"
+    Sequences[4].Start = 40
+    Sequences[4].Count = 11
 END_RESOURCE

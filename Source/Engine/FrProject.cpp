@@ -240,6 +240,9 @@ FLevel* CProject::DuplicateLevel( FLevel* Source )
 	Result->m_enableFXAA = Source->m_enableFXAA;
 	Result->m_vignette = Source->m_vignette;
 
+	Result->m_environment = Source->m_environment;
+	Result->m_environmentContext = Source->m_environmentContext;
+
 	warn( L"World: Level \"%s\" duplicated", *Source->GetName() );
 	return Result;
 }

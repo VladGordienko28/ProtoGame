@@ -40,11 +40,9 @@ FLevel::FLevel()
 	FirstLogicElement	= nullptr;
 	FirstPainter		= nullptr;
 
+	m_environmentContext.setDaySpeed( 1200.f );
+
 	// -----------------
-	m_daySpeed = 1200.f;
-
-	m_timeOfDay = envi::TimeOfDay( 12, 0 );
-
 	m_ambientColors.AddSample( envi::TimeOfDay( 0, 0 ).toPercent(), math::Color( 60, 87, 144, 255 ) );
 	m_ambientColors.AddSample( envi::TimeOfDay( 8, 0 ).toPercent(), math::Color( 186, 152, 140, 255 ) );
 	m_ambientColors.AddSample( envi::TimeOfDay( 15, 0 ).toPercent(), math::Color( 159, 159, 190, 255 ) );
@@ -134,6 +132,8 @@ void FLevel::SerializeThis( CSerializer& S )
 	Serialize( S, m_duskBitmap );
 	Serialize( S, m_midnightBitmap );
 
+	Serialize( S, m_environment );
+
 	// Warning: Don't serialize level databases of
 	// entities or components, because it
 	// already serialized in the FComponent or
@@ -214,6 +214,9 @@ void FLevel::BeginPlay()
 	for( Int32 i=0; i<Entities.size(); i++ )
 		if( Entities[i]->Script->IsScriptable() )
 			Entities[i]->OnBeginPlay();
+
+	// tmp
+	m_environmentContext.syncWithComputerTime(0.f);
 }
 
 
@@ -386,8 +389,7 @@ void FLevel::Tick( Float Delta )
 	Delta		*= GameSpeed;
 
 	// update game time
-	m_timeOfDay.advance( Delta * m_daySpeed );
-	//m_timeOfDay = GPlat->GetTimeOfDay();
+	m_environmentContext.tick( Delta );
 
 	// Are we play now?
 	if( bIsPlaying && !bIsPause )
@@ -988,6 +990,21 @@ REGISTER_CLASS_CPP( FLevel, FResource, CLASS_Sterile )
 		STRUCT_MEMBER( outerRadius );
 	END_STRUCT;
 
+	using namespace envi;
+	BEGIN_STRUCT( Satellite );
+		STRUCT_MEMBER( m_bitmap );
+		STRUCT_MEMBER( m_size );
+		//STRUCT_MEMBER( m_zenithTime );
+		STRUCT_MEMBER( m_orbitCenter );
+		STRUCT_MEMBER( m_orbitWidth );
+		STRUCT_MEMBER( m_orbitHeight );
+	END_STRUCT;
+
+	BEGIN_STRUCT( Environment );
+		STRUCT_MEMBER( m_sun );
+		STRUCT_MEMBER( m_moon );
+	END_STRUCT;
+
 	ADD_PROPERTY( bIsPlaying, PROP_Const );
 	ADD_PROPERTY( bIsPause, PROP_Editable );
 	ADD_PROPERTY( Original, PROP_Const|PROP_Editable|PROP_NoImEx );
@@ -1006,6 +1023,8 @@ REGISTER_CLASS_CPP( FLevel, FResource, CLASS_Sterile )
 
 	ADD_PROPERTY( m_vignette, PROP_Editable );
 	ADD_PROPERTY( m_enableFXAA, PROP_Editable );
+
+	ADD_PROPERTY( m_environment, PROP_Editable );
 
 	// Engine functions.
 	DECLARE_EX_FUNCTION( DebugLine, TYPE_None, ARG(a, TYPE_Vector, ARG(b, TYPE_Vector, ARG(color, TYPE_Color, ARG(time, TYPE_Float, END)))));

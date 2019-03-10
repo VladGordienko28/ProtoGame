@@ -2283,7 +2283,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 
 	Canvas->DrawText
 				( 
-					String::format( L"Game Time: %s", *Level->m_timeOfDay.toString() ), 
+					String::format( L"Game Time: %s", *Level->m_environmentContext.getCurrentTime().toString() ), 
 					Root->Font1, 
 					math::colors::WHITE, 
 					math::Vector( 10.f, 72.f ) 

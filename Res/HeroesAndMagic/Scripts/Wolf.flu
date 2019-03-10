@@ -73,6 +73,11 @@ public:
 
     thread
     {
+    @Eating:
+        $Sprite.PlayAnim( "Eating", 6.0, ANIM_Once );
+        wait !$Sprite.IsPlaying();
+        goto @Normal;
+    
     @Normal:
         // Move to the randomly picked point
         $Puppet.Goal = pickCampDestination();
@@ -113,7 +118,7 @@ public:
         goto @Chase;
         
     @Die:
-        $Sprite.PlayAnim( "Die", 4.0, ANIM_Once );
+        $Sprite.PlayAnim( "Die", 10.0, ANIM_Once );
         Velocity.x = 0.0;
         sleep 5.0;
         //delete this;

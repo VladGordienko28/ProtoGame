@@ -184,6 +184,9 @@
     <ClCompile Include="Environment\EnvironmentContext.cpp">
       <Filter>Environment</Filter>
     </ClCompile>
+    <ClCompile Include="Environment\Satellite.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Fluorine.natvis" />

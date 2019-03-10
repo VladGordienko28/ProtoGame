@@ -1,0 +1,24 @@
+/**
+ * @Hare: Hare
+ * @Author: Vlad
+ */
+script Hare: family Enemies
+{
+
+
+    // pick and play random graze anim
+    fn playGrazeAnim()
+    {
+        float rand = randomf();
+        $Sprite.PlayAnim( rand < 0.33 ? "Idle0" : rand < 0.66 ? "Idle1" : "Idle2", 4.0 + 2.0 * randomf(), ANIM_Once );        
+           
+    }
+
+    thread
+    {
+    @Graze:
+        playGrazeAnim();
+        wait !$Sprite.IsPlaying();
+        goto @Graze;
+    }
+}

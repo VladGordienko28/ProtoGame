@@ -1805,7 +1805,7 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 		// Set ambient light in level.
 		if( Level->RndFlags & RND_Lighting )
 			//Canvas->FluShader.SetAmbientLight(Level->AmbientLight);
-			Canvas->FluShader.SetAmbientLight( Level->m_ambientColors.SampleLinearAt( Level->m_timeOfDay.toPercent(), math::colors::BLACK ) );
+			Canvas->FluShader.SetAmbientLight( Level->m_ambientColors.SampleLinearAt( Level->m_environmentContext.getCurrentTime().toPercent(), math::colors::BLACK ) );
 
 		/*
 		// Render sky zone if any.
@@ -1830,7 +1830,7 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 			rect.Texture = Level->m_duskBitmap;
 
 
-			Float progress = Level->m_timeOfDay.toPercent();
+			Float progress = Level->m_environmentContext.getCurrentTime().toPercent();
 			FBitmap* first = nullptr;
 			FBitmap* second = nullptr;
 			Float alpha = 0.5f;
@@ -1874,13 +1874,13 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 			rect.Color = math::Color( 255, 255, 255, 255 * (1-alpha) );
 			Canvas->DrawRect( rect );
 
-
-
-			
-
-
 			Canvas->PopTransform();
 		}
+
+		if( !Level->bIsPlaying )
+			Level->m_environment.renderInfo( Canvas );
+			
+		Level->m_environment.render( Canvas, &Level->m_environmentContext );
 
 
 		// Draw editor grid.

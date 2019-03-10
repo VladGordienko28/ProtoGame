@@ -187,6 +187,16 @@ public:
 		Int32 Detail = 32 
 	);
 
+	void DrawEllipse
+	( 
+		const math::Vector& Center,
+		Float XSize,
+		Float YSize,
+		math::Color Color,
+		Bool bStipple,
+		Int32 Detail = 32 
+	);
+
 	void DrawCoolPoint
 	( 
 		const math::Vector& P,
