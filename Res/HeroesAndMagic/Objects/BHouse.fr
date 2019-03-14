@@ -1,0 +1,10 @@
+BEGIN_RESOURCE FBitmap BHouse
+    Format = 1
+    BlendMode = 4
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    Group = "<unused>"
+    FileName = "BHouse.png"
+    UBits = 8
+    VBits = 8
+END_RESOURCE

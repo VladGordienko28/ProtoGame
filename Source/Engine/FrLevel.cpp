@@ -40,7 +40,7 @@ FLevel::FLevel()
 	FirstLogicElement	= nullptr;
 	FirstPainter		= nullptr;
 
-	m_environmentContext.setDaySpeed( 1200.f );
+	m_environmentContext.setDaySpeed( /*1200.f*/1.f );
 
 	// -----------------
 	m_ambientColors.AddSample( envi::TimeOfDay( 0, 0 ).toPercent(), math::Color( 60, 87, 144, 255 ) );
@@ -216,7 +216,7 @@ void FLevel::BeginPlay()
 			Entities[i]->OnBeginPlay();
 
 	// tmp
-	m_environmentContext.syncWithComputerTime(0.f);
+	m_environmentContext.setTimeOfDay( Random(24), 0, 0.f );
 }
 
 

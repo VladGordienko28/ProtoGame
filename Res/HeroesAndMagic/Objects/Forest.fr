@@ -1,6 +1,6 @@
 BEGIN_RESOURCE FLevel Forest
     GameSpeed = 1.0000
-    Camera.Location = [14.8572; 11.7303]
+    Camera.Location = [15.0240; 11.7303]
     Camera.FOV = [64.0000; 32.0000]
     Camera.Zoom = 1.0000
     Camera.ScrollBound = (-2048.0000; -2048.0000; 2048.0000; 2048.0000)
@@ -192,7 +192,7 @@ BEGIN_RESOURCE FLevel Forest
         BEGIN_COMPONENT FRectComponent Base
             Location = [8.5000; 28.0000]
             Size = [5.0000; 5.0000]
-            Layer = 0.2608
+            Layer = 0.2322
             bFixedAngle = true
             bFixedSize = true
         END_COMPONENT
@@ -207,7 +207,7 @@ BEGIN_RESOURCE FLevel Forest
         BEGIN_COMPONENT FParallaxLayerComponent ParallaxLayer
             Parallax = [0.1000; 0.1000]
             Scale = [32.0000; 32.0000]
-            Offset = [-12.2100; 22.3500]
+            Offset = [-11.7000; 18.6200]
             Gap = [20.0000; 20.0000]
             TexCoords = (0.0000; 0.0000; 256.0000; 256.0000)
             Color = #ffffffff
@@ -218,7 +218,7 @@ BEGIN_RESOURCE FLevel Forest
         BEGIN_COMPONENT FRectComponent Base
             Location = [13.5000; 28.0000]
             Size = [5.0000; 5.0000]
-            Layer = 0.1994
+            Layer = 0.2851
             bFixedAngle = true
             bFixedSize = true
         END_COMPONENT
@@ -244,7 +244,7 @@ BEGIN_RESOURCE FLevel Forest
         BEGIN_COMPONENT FRectComponent Base
             Location = [19.0000; 28.0000]
             Size = [5.0000; 5.0000]
-            Layer = 0.0808
+            Layer = 0.2665
             bFixedAngle = true
             bFixedSize = true
         END_COMPONENT
@@ -297,9 +297,9 @@ BEGIN_RESOURCE FLevel Forest
     BEGIN_ENTITY Barrel Barrel0
         BEGIN_COMPONENT FArcadeBodyComponent Base
             Mass = 1.0000
-            Location = [22.5000; 5.2500]
+            Location = [39.2500; 5.5000]
             Size = [2.6000; 3.0000]
-            Layer = 0.4525
+            Layer = 0.4239
             bFixedAngle = true
             bFixedSize = true
             bHashable = true
@@ -315,7 +315,7 @@ BEGIN_RESOURCE FLevel Forest
     BEGIN_ENTITY Barrel Barrel1
         BEGIN_COMPONENT FArcadeBodyComponent Base
             Mass = 1.0000
-            Location = [30.0000; 5.2500]
+            Location = [36.7500; 5.5000]
             Size = [2.6000; 3.0000]
             Layer = 0.4525
             bFixedAngle = true
@@ -350,18 +350,17 @@ BEGIN_RESOURCE FLevel Forest
     END_ENTITY
     BEGIN_ENTITY Deco Deco2
         BEGIN_COMPONENT FRectComponent Base
-            Location = [36.0000; 8.0000]
-            Size = [8.0000; 8.0000]
+            Location = [37.0000; 20.0000]
+            Size = [32.0000; 32.0000]
             Layer = 0.4155
             bFrozen = true
         END_COMPONENT
         BEGIN_COMPONENT FDecoComponent Deco
-            DecoType = 2
             Frequency = 0.8000
             Amplitude = 0.1200
-            TexCoords = (0.0000; 0.0000; 64.0000; 64.0000)
+            TexCoords = (0.0000; 0.0000; 256.0000; 256.0000)
             Color = #ffffffff
-            Texture = FBitmap::BBushes
+            Texture = FBitmap::BHouse
         END_COMPONENT
     END_ENTITY
     BEGIN_ENTITY Deco Deco3
@@ -369,7 +368,6 @@ BEGIN_RESOURCE FLevel Forest
             Location = [-15.0000; 8.0000]
             Size = [8.0000; 8.0000]
             Layer = 0.4155
-            bFrozen = true
         END_COMPONENT
         BEGIN_COMPONENT FDecoComponent Deco
             DecoType = 2
