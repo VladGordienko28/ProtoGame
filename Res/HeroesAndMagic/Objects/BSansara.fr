@@ -1,0 +1,10 @@
+BEGIN_RESOURCE FBitmap BSansara
+    Format = 1
+    BlendMode = 4
+    Saturation = 1.0000
+    AnimSpeed = 30.0000
+    Group = "<unused>"
+    FileName = "BSansara.png"
+    UBits = 10
+    VBits = 10
+END_RESOURCE

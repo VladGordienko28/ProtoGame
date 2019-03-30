@@ -1,0 +1,16 @@
+/**
+ * @Dagger: ...
+ * @Author: ...
+ */
+script Dagger
+{
+
+    thread
+    {
+    @Begin:
+        $Sprite.PlayAnim( "Fly", 10.0, ANIM_Loop );
+        sleep 2.0;
+        delete this;
+    }
+ 
+}

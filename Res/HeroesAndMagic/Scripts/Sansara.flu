@@ -1,0 +1,77 @@
+/**
+ * @Sansara: ...
+ * @Author: ...
+ */
+script Sansara
+{
+public:
+    const DAGGER_SPEED = 30.0;
+    const ATTACK_SPEED = 35.0;
+
+    vector startLocation;
+    vector tempGoal;
+    
+    event OnBeginPlay()
+    {
+        startLocation = Location;
+    }
+
+    fn throwDagger( float speed )
+    {
+        Dagger d = new Dagger;
+        d.SetLocation( Location + [$Sprite.bFlipH ? Size.x : -Size.x, 0.0] );
+        d.Velocity.x = $Sprite.bFlipH ? speed : -speed;
+    }
+
+    fn setupMovement( vector goal, float speedScale )
+    {
+        $Sprite.bFlipH = goal.x > Location.x;    
+        Velocity.x = speedScale * ( goal.x > Location.x ? 1.0 : -1.0 );
+    }
+    // pick a some random nearset point for camping
+    vector pickCampDestination()
+    {
+        float resultX;
+        
+        do
+        {
+            resultX = Location.x - CAMP_RADIUS * 0.5 + CAMP_RADIUS * randomf();
+        } 
+        while( abs( Location.x - resultX ) < MIN_CAMP_RADIUS )
+        
+        return [ resultX, Location.y ];
+    }
+    
+
+    thread
+    {
+    @Normal:
+        $Sprite.PlayAnim( "Run", 30.0, ANIM_Loop );   
+    
+        tempGoal = pickCampDestination();
+        setupMovement( tempGoal, 11.0 );
+        wait abs( Location.x - tempGoal.x ) <= 1.0;
+        
+        // This point reached, have a some rest
+        Velocity.x = 0.0;
+    
+
+        //sleep 1.0 + randomf() * 2.0;
+        goto @Attack;
+    
+    @Attack:
+        //sleep 2.0;
+        $Sprite.PlayAnim( "Attack", ATTACK_SPEED, ANIM_Once );        
+        
+        sleep 10.0 * (1.0 / ATTACK_SPEED); // 10
+        throwDagger( DAGGER_SPEED );
+        
+        sleep 8.0 * (1.0 / ATTACK_SPEED); // 18
+        throwDagger( DAGGER_SPEED );
+
+        sleep 13.0 * (1.0 / ATTACK_SPEED); // 31
+        throwDagger( DAGGER_SPEED );              
+        
+        goto @Normal;
+    } 
+}

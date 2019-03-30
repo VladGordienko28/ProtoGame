@@ -8,7 +8,15 @@ public:
     const WALK_SPEED = 10.0;
     const DAMAGE_AREA = 3.5;
 
+    const LEVEL_VIEW_AREA = 5.0;
+
     float xSpeedRescaler;
+
+    event OnBeginPlay()
+    {
+        Level.Camera.Zoom = 1.0;
+        //Level.Camera.Location = Location;
+    }
 
     event OnPreTick( float delta )
     {
@@ -81,6 +89,14 @@ public:
                 enemy.TakeDamage( 1, this, "unknown" );
             }
         }
+    }
+
+    event OnTick( float delta )
+    {
+        if( Level.Camera.Location.X < Location.X - LEVEL_VIEW_AREA ) Level.Camera.Location.X = Location.X - LEVEL_VIEW_AREA;
+        if( Level.Camera.Location.X > Location.X + LEVEL_VIEW_AREA ) Level.Camera.Location.X = Location.X + LEVEL_VIEW_AREA;             
+        if( Level.Camera.Location.Y < Location.Y - LEVEL_VIEW_AREA ) Level.Camera.Location.Y = Location.Y - LEVEL_VIEW_AREA;
+        if( Level.Camera.Location.Y > Location.Y + LEVEL_VIEW_AREA ) Level.Camera.Location.Y = Location.Y + LEVEL_VIEW_AREA;                                                               
     }
 
     thread

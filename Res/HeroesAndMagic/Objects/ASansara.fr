@@ -1,0 +1,11 @@
+BEGIN_RESOURCE FAnimation ASansara
+    Sheet = FBitmap::BSansara
+    FrameW = 64
+    FrameH = 64
+    NumSeqs = 2
+    Sequences[0].Name = "Attack"
+    Sequences[0].Count = 40
+    Sequences[1].Name = "Run"
+    Sequences[1].Start = 48
+    Sequences[1].Count = 18
+END_RESOURCE

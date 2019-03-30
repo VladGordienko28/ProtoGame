@@ -1,9 +1,9 @@
 BEGIN_RESOURCE FLevel Forest
     GameSpeed = 1.0000
-    Camera.Location = [15.0240; 11.7303]
+    Camera.Location = [84.2775; 18.8041]
     Camera.FOV = [64.0000; 32.0000]
-    Camera.Zoom = 1.0000
-    Camera.ScrollBound = (-2048.0000; -2048.0000; 2048.0000; 2048.0000)
+    Camera.Zoom = 0.7600
+    Camera.ScrollBound = (-24.0000; -8.0000; 164.0000; 2048.0000)
     Effect[0] = 1.0000
     Effect[1] = 1.0000
     Effect[2] = 1.0000
@@ -28,7 +28,7 @@ BEGIN_RESOURCE FLevel Forest
     RndFlags = 15359
     BEGIN_ENTITY Model Model0
         BEGIN_COMPONENT FModelComponent Base
-            MapXSize = 30
+            MapXSize = 47
             MapYSize = 15
             TileSize = [4.0000; 4.0000]
             TilesPerU = 8
@@ -60,66 +60,174 @@ BEGIN_RESOURCE FLevel Forest
             Map[17] = 6
             Map[18] = 6
             Map[19] = 5
+            Map[20] = 5
+            Map[21] = 5
+            Map[22] = 5
+            Map[23] = 6
+            Map[24] = 5
+            Map[25] = 5
+            Map[26] = 6
+            Map[27] = 5
+            Map[28] = 6
+            Map[29] = 5
             Map[30] = 5
             Map[31] = 6
-            Map[32] = 5
+            Map[32] = 6
             Map[33] = 6
             Map[34] = 5
             Map[35] = 5
-            Map[36] = 6
+            Map[36] = 5
             Map[37] = 5
             Map[38] = 5
             Map[39] = 6
             Map[40] = 5
-            Map[41] = 5
-            Map[42] = 6
+            Map[41] = 6
+            Map[42] = 5
             Map[43] = 5
             Map[44] = 5
             Map[45] = 6
-            Map[46] = 5
-            Map[47] = 6
+            Map[46] = 6
+            Map[47] = 5
             Map[48] = 6
             Map[49] = 5
-            Map[60] = 4
-            Map[61] = 3
-            Map[62] = 4
-            Map[63] = 3
-            Map[64] = 4
-            Map[65] = 3
-            Map[66] = 4
-            Map[67] = 3
-            Map[68] = 4
-            Map[69] = 3
-            Map[70] = 4
-            Map[71] = 3
-            Map[72] = 4
-            Map[73] = 3
-            Map[74] = 4
-            Map[75] = 3
-            Map[76] = 4
-            Map[77] = 3
-            Map[78] = 4
-            Map[79] = 3
-            Map[90] = 1
-            Map[91] = 2
-            Map[92] = 1
-            Map[93] = 2
-            Map[94] = 1
-            Map[95] = 265
-            Map[96] = 266
-            Map[97] = 263
-            Map[98] = 2817
-            Map[99] = 2
-            Map[100] = 1
-            Map[101] = 2
-            Map[102] = 2049
-            Map[103] = 2
-            Map[104] = 1
-            Map[105] = 2
-            Map[106] = 3073
-            Map[107] = 2306
-            Map[108] = 1
-            Map[109] = 2
+            Map[50] = 6
+            Map[51] = 5
+            Map[52] = 5
+            Map[53] = 6
+            Map[54] = 5
+            Map[55] = 5
+            Map[56] = 6
+            Map[57] = 5
+            Map[58] = 5
+            Map[59] = 6
+            Map[60] = 5
+            Map[61] = 5
+            Map[62] = 6
+            Map[63] = 5
+            Map[64] = 6
+            Map[65] = 6
+            Map[66] = 5
+            Map[67] = 5
+            Map[68] = 6
+            Map[69] = 5
+            Map[70] = 5
+            Map[71] = 6
+            Map[72] = 5
+            Map[73] = 5
+            Map[74] = 5
+            Map[75] = 6
+            Map[76] = 5
+            Map[77] = 5
+            Map[78] = 5
+            Map[79] = 5
+            Map[80] = 5
+            Map[81] = 5
+            Map[82] = 6
+            Map[83] = 5
+            Map[84] = 5
+            Map[85] = 5
+            Map[86] = 5
+            Map[87] = 5
+            Map[88] = 6
+            Map[89] = 5
+            Map[90] = 6
+            Map[91] = 5
+            Map[92] = 6
+            Map[93] = 6
+            Map[94] = 4
+            Map[95] = 3
+            Map[96] = 4
+            Map[97] = 3
+            Map[98] = 4
+            Map[99] = 3
+            Map[100] = 4
+            Map[101] = 3
+            Map[102] = 4
+            Map[103] = 3
+            Map[104] = 4
+            Map[105] = 3
+            Map[106] = 4
+            Map[107] = 3
+            Map[108] = 4
+            Map[109] = 3
+            Map[110] = 4
+            Map[111] = 3
+            Map[112] = 4
+            Map[113] = 3
+            Map[114] = 3
+            Map[115] = 4
+            Map[116] = 3
+            Map[117] = 4
+            Map[118] = 3
+            Map[119] = 4
+            Map[120] = 4
+            Map[121] = 3
+            Map[122] = 4
+            Map[123] = 3
+            Map[124] = 3
+            Map[125] = 4
+            Map[126] = 3
+            Map[127] = 4
+            Map[128] = 3
+            Map[129] = 3
+            Map[130] = 4
+            Map[131] = 3
+            Map[132] = 4
+            Map[133] = 3
+            Map[134] = 4
+            Map[135] = 3
+            Map[136] = 3
+            Map[137] = 4
+            Map[138] = 3
+            Map[139] = 3
+            Map[140] = 4
+            Map[141] = 1
+            Map[142] = 2
+            Map[143] = 1
+            Map[144] = 2
+            Map[145] = 1
+            Map[146] = 265
+            Map[147] = 266
+            Map[148] = 263
+            Map[149] = 2817
+            Map[150] = 2
+            Map[151] = 1
+            Map[152] = 2
+            Map[153] = 2049
+            Map[154] = 2
+            Map[155] = 1
+            Map[156] = 2
+            Map[157] = 3073
+            Map[158] = 258
+            Map[159] = 513
+            Map[160] = 267
+            Map[161] = 512
+            Map[162] = 256
+            Map[163] = 512
+            Map[164] = 266
+            Map[165] = 256
+            Map[166] = 256
+            Map[167] = 265
+            Map[168] = 267
+            Map[169] = 256
+            Map[170] = 256
+            Map[171] = 256
+            Map[172] = 256
+            Map[173] = 256
+            Map[174] = 256
+            Map[175] = 256
+            Map[176] = 266
+            Map[177] = 512
+            Map[178] = 267
+            Map[179] = 256
+            Map[180] = 256
+            Map[181] = 256
+            Map[182] = 256
+            Map[183] = 256
+            Map[184] = 256
+            Map[185] = 265
+            Map[186] = 512
+            Map[187] = 256
         END_COMPONENT
     END_ENTITY
     BEGIN_ENTITY Deco Deco0
@@ -127,7 +235,6 @@ BEGIN_RESOURCE FLevel Forest
             Location = [14.0000; 20.0000]
             Size = [32.0000; 32.0000]
             Layer = 0.4195
-            bFrozen = true
         END_COMPONENT
         BEGIN_COMPONENT FDecoComponent Deco
             DecoType = 2
@@ -143,7 +250,6 @@ BEGIN_RESOURCE FLevel Forest
             Location = [-6.5000; 20.0000]
             Size = [32.0000; 32.0000]
             Layer = 0.4195
-            bFrozen = true
         END_COMPONENT
         BEGIN_COMPONENT FDecoComponent Deco
             Frequency = 0.3900
@@ -205,7 +311,7 @@ BEGIN_RESOURCE FLevel Forest
             Texture = FBitmap::BSystem
         END_COMPONENT
         BEGIN_COMPONENT FParallaxLayerComponent ParallaxLayer
-            Parallax = [0.1000; 0.1000]
+            Parallax = [0.0300; 0.0300]
             Scale = [32.0000; 32.0000]
             Offset = [-11.7000; 18.6200]
             Gap = [20.0000; 20.0000]
@@ -231,7 +337,7 @@ BEGIN_RESOURCE FLevel Forest
             Texture = FBitmap::BSystem
         END_COMPONENT
         BEGIN_COMPONENT FParallaxLayerComponent ParallaxLayer
-            Parallax = [0.0700; 0.0700]
+            Parallax = [0.1000; 0.1000]
             Scale = [32.0000; 32.0000]
             Offset = [-13.6500; 20.1700]
             Gap = [20.0000; 20.0000]
@@ -257,7 +363,7 @@ BEGIN_RESOURCE FLevel Forest
             Texture = FBitmap::BSystem
         END_COMPONENT
         BEGIN_COMPONENT FParallaxLayerComponent ParallaxLayer
-            Parallax = [0.0300; 0.0300]
+            Parallax = [0.0700; 0.0700]
             Scale = [32.0000; 32.0000]
             Offset = [14.2300; 18.3600]
             Gap = [25.0000; 20.0000]
@@ -269,7 +375,7 @@ BEGIN_RESOURCE FLevel Forest
     BEGIN_ENTITY Richy Richy0
         BEGIN_COMPONENT FArcadeBodyComponent Base
             Mass = 1.0000
-            Location = [-5.2500; 6.5000]
+            Location = [56.5000; 6.5000]
             Size = [2.2000; 5.0000]
             Layer = 0.6956
             bFixedAngle = true
@@ -353,7 +459,6 @@ BEGIN_RESOURCE FLevel Forest
             Location = [37.0000; 20.0000]
             Size = [32.0000; 32.0000]
             Layer = 0.4155
-            bFrozen = true
         END_COMPONENT
         BEGIN_COMPONENT FDecoComponent Deco
             Frequency = 0.8000
@@ -462,5 +567,125 @@ BEGIN_RESOURCE FLevel Forest
         END_COMPONENT
         BEGIN_INSTANCE
         END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Sansara Sansara0
+        BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Location = [68.5000; 6.5000]
+            Size = [2.2000; 5.0000]
+            Layer = 0.5063
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            Animation = FAnimation::ASansara
+            Offset = [0.0000; 1.5000]
+            Scale = [8.0000; 8.0000]
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco4
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [102.5000; 20.0000]
+            Size = [32.0000; 32.0000]
+            Layer = 0.4195
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            Frequency = 0.3900
+            Amplitude = 1.3800
+            TexCoords = (0.0000; 0.0000; 256.0000; 256.0000)
+            Color = #ffffffff
+            Texture = FBitmap::BTree3
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Sansara Sansara1
+        BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Location = [53.0000; 6.5000]
+            Size = [2.2000; 5.0000]
+            Layer = 0.5063
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            bFlipH = true
+            Animation = FAnimation::ASansara
+            Offset = [0.0000; 1.5000]
+            Scale = [8.0000; 8.0000]
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco5
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [140.5000; 20.0000]
+            Size = [32.0000; 32.0000]
+            Layer = 0.3869
+            bFrozen = true
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            Frequency = 0.8000
+            Amplitude = 0.1200
+            TexCoords = (0.0000; 0.0000; 256.0000; 256.0000)
+            bFlipH = true
+            Color = #ffffffff
+            Texture = FBitmap::BHouse2
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Deco Deco6
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [153.5000; 20.0000]
+            Size = [32.0000; 32.0000]
+            Layer = 0.3338
+        END_COMPONENT
+        BEGIN_COMPONENT FDecoComponent Deco
+            DecoType = 2
+            Frequency = 0.5000
+            Amplitude = 0.5000
+            TexCoords = (0.0000; 0.0000; 256.0000; 256.0000)
+            bFlipH = true
+            Color = #ffffffff
+            Texture = FBitmap::BTree1
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Emitter Emitter1
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [155.0000; 16.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.2851
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 0.0000; 64.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_COMPONENT FPhysEmitterComponent Emitter
+            SpeedRange[0] = [-1.5000; -1.0000]
+            SpeedRange[1] = [1.5000; 0.0000]
+            Acceleration = [0.0000; -0.5000]
+            MaxParticles = 100
+            LifeRange[0] = 10.0000
+            LifeRange[1] = 10.0000
+            SpawnArea = [7.0000; 7.0000]
+            EmitPerSec = 2
+            SizeRange[0] = 1.0000
+            SizeRange[1] = 1.0000
+            Colors[0] = #ffffff80
+            Colors[1] = #ffffffff
+            Colors[2] = #ffffff00
+            Texture = FBitmap::BLeafs1
+            SpinRange[0] = -1.0000
+            SpinRange[1] = 1.0000
+            NumUTiles = 4
+            NumVTiles = 4
+        END_COMPONENT
     END_ENTITY
 END_RESOURCE

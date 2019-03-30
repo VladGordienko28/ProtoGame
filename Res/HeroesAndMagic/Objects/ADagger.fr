@@ -1,0 +1,11 @@
+BEGIN_RESOURCE FAnimation ADagger
+    Sheet = FBitmap::BDagger
+    FrameW = 8
+    FrameH = 8
+    NumSeqs = 2
+    Sequences[0].Name = "Fly"
+    Sequences[0].Count = 8
+    Sequences[1].Name = "Hit"
+    Sequences[1].Start = 8
+    Sequences[1].Count = 5
+END_RESOURCE

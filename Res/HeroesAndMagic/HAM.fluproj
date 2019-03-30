@@ -13,6 +13,8 @@ BEGIN_INCLUDE
     Barrel.fr
     Wolf.fr
     Hare.fr
+    Dagger.fr
+    Sansara.fr
     BSystem.fr
     BForestTiles.fr
     BDaySky.fr
@@ -34,19 +36,24 @@ BEGIN_INCLUDE
     BMoon.fr
     BHare.fr
     BHouse.fr
+    BDagger.fr
+    BSansara.fr
+    BHouse2.fr
     ProjectInfo0.fr
     Forest.fr
     ARichy.fr
     ABarrel.fr
     AWolf.fr
     AHare.fr
+    ADagger.fr
+    ASansara.fr
 END_INCLUDE
 BEGIN_PAGES
     Barrel
     ARichy
-    Richy
+    Dagger
+    ASansara
     Wolf
-    AHare
-    Hare
+    Sansara
     Forest
 END_PAGES

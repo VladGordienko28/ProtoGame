@@ -41,6 +41,7 @@ FLevel::FLevel()
 	FirstPainter		= nullptr;
 
 	m_environmentContext.setDaySpeed( /*1200.f*/1.f );
+	m_environmentContext.setTimeOfDay( 13, 0, 0.f ); // remove this!!
 
 	// -----------------
 	m_ambientColors.AddSample( envi::TimeOfDay( 0, 0 ).toPercent(), math::Color( 60, 87, 144, 255 ) );
