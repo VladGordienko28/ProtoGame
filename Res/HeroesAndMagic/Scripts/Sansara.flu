@@ -7,7 +7,8 @@ script Sansara
 public:
     const DAGGER_SPEED = 30.0;
     const ATTACK_SPEED = 35.0;
-
+    const MELEE_SPEED = 20.0;
+    
     vector startLocation;
     vector tempGoal;
     
@@ -57,7 +58,10 @@ public:
     
 
         //sleep 1.0 + randomf() * 2.0;
-        goto @Attack;
+        if( randomf() > 0.5 )
+            goto @Attack;
+        else
+            goto @Melee;
     
     @Attack:
         //sleep 2.0;
@@ -72,6 +76,11 @@ public:
         sleep 13.0 * (1.0 / ATTACK_SPEED); // 31
         throwDagger( DAGGER_SPEED );              
         
+        goto @Normal;
+        
+    @Melee:
+        $Sprite.PlayAnim( "Melee", MELEE_SPEED, ANIM_Once );
+        wait !$Sprite.IsPlaying();
         goto @Normal;
     } 
 }

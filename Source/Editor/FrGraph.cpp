@@ -6,6 +6,11 @@
 
 #include "Editor.h"
 
+namespace flu
+{
+namespace navi
+{
+
 /*-----------------------------------------------------------------------------
     Magic numbers.
 -----------------------------------------------------------------------------*/
@@ -52,7 +57,7 @@ public:
 	math::Vector		Location;
 	math::Vector		Normal;
 	FBrushComponent*	Floor;
-	Int32				iEdges[TPathNode::NUM_EDGES];
+	Int32				iEdges[MAX_EDGES_PER_NODE];
 	Int32				iGroup;
 
 	// Pin initialization.
@@ -63,17 +68,16 @@ public:
 		Normal		= math::Vector( 0.f, 1.f );
 		Floor		= nullptr;
 		iGroup		= -1;
-		for( Int32 i=0; i<TPathNode::NUM_EDGES; i++ )
-			iEdges[i]	= -1;
+		for( Int32 i=0; i<MAX_EDGES_PER_NODE; i++ )
+			iEdges[i]	= INVALID_EDGE;
 	}
 
 	// Pin to Node convertation.
-	TPathNode ToPathNode() const
+	PathNode ToPathNode() const
 	{
-		TPathNode Node;
-		Node.Location		= Location;
-		Node.Weight			= 0;
-		Node.Marker			= nullptr;
+		PathNode Node;
+		Node.location		= Location;
+		Node.marker			= nullptr;
 		mem::copy( Node.iEdges, iEdges, sizeof(iEdges) );
 		return Node;
 	}
@@ -81,8 +85,8 @@ public:
 	// Return true, if we can link this node.
 	Bool CanAddEdge() const
 	{
-		for( Int32 i=0; i<TPathNode::NUM_EDGES; i++ )
-			if( iEdges[i] == -1 )
+		for( Int32 i=0; i<MAX_EDGES_PER_NODE; i++ )
+			if( iEdges[i] == INVALID_EDGE )
 				return true;
 		return false;
 	}
@@ -90,8 +94,8 @@ public:
 	// Add a new edge from the pin.
 	Bool AddEdge( Int32 iEdge )
 	{
-		for( Int32 i=0; i<TPathNode::NUM_EDGES; i++ )
-			if( iEdges[i] == -1 )
+		for( Int32 i=0; i<MAX_EDGES_PER_NODE; i++ )
+			if( iEdges[i] == INVALID_EDGE )
 			{
 				iEdges[i]	= iEdge;
 				return true;
@@ -135,7 +139,7 @@ class CPathBuilder
 public:
 	// Variables.
 	FLevel*						Level;
-	CNavigator*					Navigator;
+	Navigator*					Navigator;
 	Array<FBrushComponent*>		BrushList;		
 	Array<TPin>					Pins;
 	Array<TPinGroup>			Groups;
@@ -144,6 +148,7 @@ public:
 	CPathBuilder( FLevel* InLevel );
 	~CPathBuilder();
 	void BuildNetwork( IProgressIndicator* Indicator );
+	void DestroyNetwork();
 
 	// Pins functions.
 	void CreateSurfacePins();
@@ -271,16 +276,16 @@ void CPathBuilder::LinkWalkable()
 		{
 			// Floor detected along entire path. Path is
 			// walkable.
-			TPathEdge	Edge;
-			Edge.iStart		= iBest1;
-			Edge.iFinish	= iBest2;
-			Edge.PathType	= PATH_Walk;
-			Edge.Cost		= math::floor(abs(Best1.Location.x-Best2.Location.x));
+			PathEdge	Edge;
+			Edge.iStartNode	= iBest1;
+			Edge.iEndNode	= iBest2;
+			Edge.type		= EPathType::Walk;
+			Edge.cost		= math::floor(abs(Best1.Location.x-Best2.Location.x));
 
 			// Add to navigator.
-			if( Best1.CanAddEdge() ) Best1.AddEdge(Navigator->Edges.push(Edge));
-			exchange( Edge.iStart, Edge.iFinish );
-			if( Best2.CanAddEdge() ) Best2.AddEdge(Navigator->Edges.push(Edge));
+			if( Best1.CanAddEdge() ) Best1.AddEdge(Navigator->m_edges.push(Edge));
+			exchange( Edge.iStartNode, Edge.iEndNode );
+			if( Best2.CanAddEdge() ) Best2.AddEdge(Navigator->m_edges.push(Edge));
 
 			// Link groups.
 			Group1.iLinked.push(g2);
@@ -288,16 +293,6 @@ void CPathBuilder::LinkWalkable()
 		}
 	}
 }
-
-
-//
-// Sort jump links by cost.
-//
-Bool JumpLinksCmp( const TPathEdge& A, const TPathEdge& B )
-{
-	return A.Cost < B.Cost;
-}
-
 
 //
 // Link pins that are jumpable and/or fallable.
@@ -317,7 +312,7 @@ void CPathBuilder::LinkJumpable()
 			continue;
 
 		// It's a list of edges to link groups.
-		Array<TPathEdge>	Links[2];
+		Array<PathEdge>	Links[2];
 
 		// Try each pair from both groups.
 		for( Int32 p1=0; p1<Group1.iPins.size(); p1++ )
@@ -377,11 +372,11 @@ void CPathBuilder::LinkJumpable()
 				// Add edge to temporal list of links.
 				if( !Obstacle )
 				{
-					TPathEdge	Edge;
-					Edge.iStart		= iUpper;
-					Edge.iFinish	= iLower;
-					Edge.PathType	= PATH_Jump;
-					Edge.Cost		= math::floor(JUMP_WEIGHT*(abs(Dir.x)+abs(Dir.y)));
+					PathEdge	Edge;
+					Edge.iStartNode	= iUpper;
+					Edge.iEndNode	= iLower;
+					Edge.type		= EPathType::Jump;
+					Edge.cost		= math::floor(JUMP_WEIGHT*(abs(Dir.x)+abs(Dir.y)));
 
 					Links[bLeft].push(Edge);
 				}
@@ -393,12 +388,16 @@ void CPathBuilder::LinkJumpable()
 			if( Links[d].size() > 0 )
 			{
 				// Sort links by distance.
-				Links[d].sort(JumpLinksCmp);
-				TPathEdge Edge	= Links[d][max( (Links[d].size())/2-1, 0 )];
+				Links[d].sort( []( const PathEdge& a, const PathEdge& b )->Bool
+				{
+					return a.cost < b.cost;
+				} );
 
-				if( Pins[Edge.iStart].CanAddEdge() ) Pins[Edge.iStart].AddEdge(Navigator->Edges.push(Edge));
-				exchange( Edge.iStart, Edge.iFinish );
-				if( Pins[Edge.iStart].CanAddEdge() ) Pins[Edge.iStart].AddEdge(Navigator->Edges.push(Edge));
+				PathEdge Edge	= Links[d][max( (Links[d].size())/2-1, 0 )];
+
+				if( Pins[Edge.iStartNode].CanAddEdge() ) Pins[Edge.iStartNode].AddEdge(Navigator->m_edges.push(Edge));
+				exchange( Edge.iStartNode, Edge.iEndNode );
+				if( Pins[Edge.iStartNode].CanAddEdge() ) Pins[Edge.iStartNode].AddEdge(Navigator->m_edges.push(Edge));
 			}
 
 		// Link groups.
@@ -420,19 +419,19 @@ void CPathBuilder::LinkJumpable()
 //
 void CPathBuilder::ExplorePaths()
 {
-	for( Int32 iEdge=0; iEdge<Navigator->Edges.size(); iEdge++ )
+	for( Int32 iEdge=0; iEdge<Navigator->m_edges.size(); iEdge++ )
 	{
-		TPathEdge& Edge = Navigator->Edges[iEdge];
+		PathEdge& Edge = Navigator->m_edges[iEdge];
 
 		// Explore only walkable, since jumping is to unpredictable, and
 		// others are available for all kind of AI.
-		if( Edge.PathType != PATH_Walk )
+		if( Edge.type != EPathType::Walk )
 			continue;
 
 		// Walk along the edge and trace line up.
-		Edge.Height			= MAX_HULL_HEIGHT;
-		math::Vector	A			= Navigator->Nodes[Edge.iStart].Location,
-				B			= Navigator->Nodes[Edge.iFinish].Location,
+		Edge.breadth		= MAX_HULL_HEIGHT;
+		math::Vector	A	= Navigator->m_nodes[Edge.iStartNode].location,
+				B			= Navigator->m_nodes[Edge.iEndNode].location,
 				Delta		= B - A,
 				Walk		= A;
 		Int32	NumSteps	= max( 1, math::floor(Delta.size()) );
@@ -453,8 +452,8 @@ void CPathBuilder::ExplorePaths()
 			{
 				Float	TestHeight = abs(HitPoint.y - Walk.y) + PIN_BASE;
 
-				if( Edge.Height > TestHeight )
-						Edge.Height	= TestHeight;
+				if( Edge.breadth > TestHeight )
+						Edge.breadth	= TestHeight;
 			}
 			Walk += Delta;
 		}
@@ -616,15 +615,6 @@ Bool PinXCmp( const Int32& A, const Int32& B )
 
 
 //
-// Groups sorting by ..Bounds.Min.X.
-//
-Bool GroupXCmp( const TPinGroup& A, const TPinGroup& B )
-{
-	return A.Bounds.min.x < B.Bounds.min.x;
-}
-
-
-//
 // Group pins into groups.
 //
 void CPathBuilder::GroupPins()
@@ -690,7 +680,10 @@ void CPathBuilder::GroupPins()
 
 	// Sort groupes to process pathbuilding from 
 	// left to right.
-	Groups.sort(GroupXCmp);
+	Groups.sort( []( const TPinGroup& a, const TPinGroup& b )->Bool
+	{
+		return a.Bounds.min.x < b.Bounds.min.x;
+	} );
 
 	// Assign to each pin it Group.
 	for( Int32 i=0; i<Groups.size(); i++ )
@@ -708,15 +701,15 @@ void CPathBuilder::GroupPins()
 
 			for( Int32 i=0; i<Group.iPins.size()-1; i++ )
 			{
-				TPathEdge	Edge;
-				Edge.iStart		= Group.iPins[i];
-				Edge.iFinish	= Group.iPins[i+1];
-				Edge.PathType	= PATH_Walk;
-				Edge.Cost		= math::floor(abs(Pins[Edge.iStart].Location.x-Pins[Edge.iFinish].Location.x));
+				PathEdge	Edge;
+				Edge.iStartNode	= Group.iPins[i];
+				Edge.iEndNode	= Group.iPins[i+1];
+				Edge.type		= EPathType::Walk;
+				Edge.cost		= math::floor(abs(Pins[Edge.iStartNode].Location.x-Pins[Edge.iEndNode].Location.x));
 
-				Pins[Edge.iStart].AddEdge(Navigator->Edges.push(Edge));
-				exchange( Edge.iStart, Edge.iFinish );
-				Pins[Edge.iStart].AddEdge(Navigator->Edges.push(Edge));
+				Pins[Edge.iStartNode].AddEdge(Navigator->m_edges.push(Edge));
+				exchange( Edge.iStartNode, Edge.iEndNode );
+				Pins[Edge.iStartNode].AddEdge(Navigator->m_edges.push(Edge));
 			}
 		}
 }
@@ -733,13 +726,35 @@ CPathBuilder::CPathBuilder( FLevel* InLevel )
 {
 	assert(InLevel);
 	Level	= InLevel;
+	Navigator = &Level->m_navigator;
+}
 
+
+//
+// Builder destructor.
+//
+CPathBuilder::~CPathBuilder()
+{
+}
+
+
+//
+// Path destructor
+//
+void CPathBuilder::DestroyNetwork()
+{
+	Navigator->m_edges.empty();
+	Navigator->m_nodes.empty();
+}
+
+
+//
+// Path Builder main function.
+//
+void CPathBuilder::BuildNetwork( IProgressIndicator* Indicator )
+{
 	// Destroy old navigator.
-	if( Level->Navigator )
-		freeandnil(Level->Navigator);
-
-	// Allocate new navigator.
-	Navigator			= new CNavigator( Level );
+	DestroyNetwork();
 
 	// Collect list of brushes.
 	for( Int32 i=0; i<Level->Entities.size(); i++ )
@@ -753,22 +768,7 @@ CPathBuilder::CPathBuilder( FLevel* InLevel )
 				BrushList.push( Brush );
 		}
 	}
-}
 
-
-//
-// Builder destructor.
-//
-CPathBuilder::~CPathBuilder()
-{
-}
-
-
-//
-// Path Builder main function.
-//
-void CPathBuilder::BuildNetwork( IProgressIndicator* Indicator )
-{
 	// Zero statistics.
 	Int32	PinsNoMerge		= 0,
 			NumEdges		= 0,
@@ -804,7 +804,7 @@ void CPathBuilder::BuildNetwork( IProgressIndicator* Indicator )
 
 		// Turn pins into nodes.
 		for( Int32 i=0; i<Pins.size(); i++ )
-			Navigator->Nodes.push(Pins[i].ToPathNode());
+			Navigator->m_nodes.push( Pins[i].ToPathNode() );
 
 		// Explore just created paths.
 		Ind.UpdateDetails(L"Exploration...");
@@ -812,12 +812,22 @@ void CPathBuilder::BuildNetwork( IProgressIndicator* Indicator )
 			ExplorePaths();
 	}
 
-	// Save our righteous works.
-	Level->Navigator	= Navigator;
+	// Validation
+	if( Navigator->getNodesCount() > MAX_NODES || Navigator->getEdgesCount() > MAX_EDGES )
+	{
+		String message = String::format( 
+			L"Failed to build navigation network, navigation graph is too large: %d/%d nodes, %d/%d edges",
+			Navigator->getNodesCount(), MAX_NODES, Navigator->getEdgesCount(), MAX_EDGES );
+
+		GEditor->GUIWindow->ShowMessage( *message, L"Path Builder" );
+		error( *message );
+		DestroyNetwork();
+		return;
+	}
 
 	// Count stats.
-	NumEdges		= Navigator->Edges.size();
-	NumNodes		= Navigator->Nodes.size();
+	NumEdges		= Navigator->getEdgesCount();
+	NumNodes		= Navigator->getNodesCount();
 	NumGroups		= Groups.size();
 
 	for( Int32 g=0; g<Groups.size(); g++ )
@@ -947,6 +957,9 @@ FBrushComponent* CPathBuilder::TestLine
 }
 
 
+} // namespace navi
+} // namespace flu
+
 /*-----------------------------------------------------------------------------
     Global path routines.
 -----------------------------------------------------------------------------*/
@@ -956,7 +969,7 @@ FBrushComponent* CPathBuilder::TestLine
 //
 void CEditor::BuildPaths( FLevel* Level )
 {
-	CPathBuilder Builder( Level );
+	navi::CPathBuilder Builder( Level );
 	Builder.BuildNetwork( TaskDialog );
 }
 
@@ -966,8 +979,8 @@ void CEditor::BuildPaths( FLevel* Level )
 //
 void CEditor::DestroyPaths( FLevel* Level )
 {
-	if( Level->Navigator )
-		freeandnil(Level->Navigator);
+	navi::CPathBuilder Builder( Level );
+	Builder.DestroyNetwork();
 }
 
 

@@ -49,7 +49,7 @@
 #define FLU_NAME		L"Fluorine"
 
 // Hello page copyright string.
-#define	FLU_COPYRIGHT	L"Copyright 2016-2018 Vlad Gordienko."
+#define	FLU_COPYRIGHT	L"Copyright 2016-2019 Vlad Gordienko."
 
 // Fluorine client name.
 #if FLU_DEBUG

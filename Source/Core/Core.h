@@ -13,14 +13,15 @@
 #include "Heap.h"
 #include "LogCallback.h"
 #include "LogManager.h"
-#include "SmartPointer.h"
-#include "Stream.h"
 
 // legacy include
 #include "FrSerial.h"
 
+#include "SmartPointer.h"
+#include "Stream.h"
 #include "Stack.h"
 #include "Array.h"
+#include "Queue.h"
 #include "Profiler.h"
 #include "CString.h"
 #include "StringManager.h"

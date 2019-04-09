@@ -591,7 +591,7 @@ void FParallaxLayerComponent::Render( CCanvas* Canvas )
 
 	// How much tiles draw.
 	math::Vector Period = Scale + Gap;
-	math::Vector Area = Canvas->View.Bounds.size();
+	math::Vector Area = Canvas->View.FOV;
 	Int32 NumX = math::ceil(Area.x / Period.x) + 1;
 	Int32 NumY = math::ceil(Area.y / Period.y) + 1;
 
@@ -625,7 +625,7 @@ void FParallaxLayerComponent::Render( CCanvas* Canvas )
 	for( Int32 Y=0; Y<NumY; Y++ )
 	for( Int32 X=0; X<NumX; X++ )		
 	{
-		math::Vector Origin = Canvas->View.Bounds.min - Bias + math::Vector( X*Period.x, Y*Period.y ) - Scale*0.5f;
+		math::Vector Origin = Canvas->View.Coords.origin - math::Vector(Canvas->View.FOV.x/2.f, 0.f) - /*Canvas->View.Bounds.min -*/ Bias + math::Vector( X*Period.x, Y*Period.y ) - Scale*0.5f;
 		Rect.Bounds	= math::Rect( Origin, Scale.x, Scale.y );
 		Canvas->DrawRect( Rect );
 	}

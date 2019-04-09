@@ -13,13 +13,15 @@ namespace flu
 		{
 			_setmode( _fileno(stdout), _O_U16TEXT );
 			AllocConsole();
-			freopen( "CONOUT$", "w", stdout );
+
+			freopen_s( &m_consoleFile, "CONOUT$", "w", stdout );
 			SetConsoleTitle( L"Fluorine Engine Output" );
 			m_handle = GetStdHandle( STD_OUTPUT_HANDLE );
 		}
 
 		~LogCallbackConsole()
 		{
+			fclose( m_consoleFile );
 			FreeConsole();
 		}
 
@@ -66,6 +68,7 @@ namespace flu
 		}
 
 	private:
+		FILE* m_consoleFile;
 		HANDLE m_handle;
 		Bool m_colored;
 	};

@@ -1495,9 +1495,20 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 		RequireSymbol( L"(", L"function call" );
 		for( Int32 i=0; i<Native->NumParams; i++ )
 		{
-			ArgRegs.push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
+			if( Native->Params[i].bOut )
+			{
+				TExprResult Out = CompileExpr( Native->Params[i].Type, false, false, 0 );
+				if( !Out.bLValue )
+					Error( L"The right-hand side of an assignment must be a variable" );
+				ArgRegs.push( Out.iReg );
+			}
+			else
+			{
+				ArgRegs.push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
+			}
+
 			if( i < Native->NumParams-1 )
-				RequireSymbol( L",", L"arguments" ); 
+				RequireSymbol( L",", L"arguments" );
 		}
 		RequireSymbol( L")", L"function call" );
 
@@ -2031,7 +2042,17 @@ TExprResult CCompiler::CompileExpr( const CTypeInfo& ReqType, Bool bForceR, Bool
 					RequireSymbol( L"(", L"resource native method" );
 					for( Int32 i=0; i<Native->NumParams; i++ )
 					{
-						ArgRegs.push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
+						if( Native->Params[i].bOut )
+						{
+							TExprResult Out = CompileExpr( Native->Params[i].Type, false, false, 0 );
+							if( !Out.bLValue )
+								Error( L"The right-hand side of an assignment must be a variable" );
+							ArgRegs.push( Out.iReg );
+						}
+						else
+						{
+							ArgRegs.push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
+						}
 
 						if( i < Native->NumParams-1 )
 							RequireSymbol( L",", L"arguments" ); 
@@ -2891,7 +2912,17 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, U
 			RequireSymbol( L"(", L"native method" );
 			for( Int32 i=0; i<Native->NumParams; i++ )
 			{
-				ArgRegs.push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
+				if( Native->Params[i].bOut )
+				{
+					TExprResult Out = CompileExpr( Native->Params[i].Type, false, false, 0 );
+					if( !Out.bLValue )
+						Error( L"The right-hand side of an assignment must be a variable" );
+					ArgRegs.push( Out.iReg );
+				}
+				else
+				{
+					ArgRegs.push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
+				}
 
 				if( i < Native->NumParams-1 )
 					RequireSymbol( L",", L"arguments" ); 
@@ -3084,7 +3115,17 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, U
 		RequireSymbol( L"(", L"native method" );
 		for( Int32 i=0; i<Native->NumParams; i++ )
 		{
-			ArgRegs.push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
+			if( Native->Params[i].bOut )
+			{
+				TExprResult Out = CompileExpr( Native->Params[i].Type, false, false, 0 );
+				if( !Out.bLValue )
+					Error( L"The right-hand side of an assignment must be a variable" );
+				ArgRegs.push( Out.iReg );
+			}
+			else
+			{
+				ArgRegs.push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
+			}
 
 			if( i < Native->NumParams-1 )
 				RequireSymbol( L",", L"arguments" ); 
@@ -3233,7 +3274,18 @@ Bool CCompiler::CompileEntityExpr( EEntityContext InContext, CTypeInfo Entity, U
 			RequireSymbol( L"(", L"native method" );
 			for( Int32 i=0; i<Native->NumParams; i++ )
 			{
-				ArgRegs.push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg  );
+				if( Native->Params[i].bOut )
+				{
+					TExprResult Out = CompileExpr( Native->Params[i].Type, false, false, 0 );
+					if( !Out.bLValue )
+						Error( L"The right-hand side of an assignment must be a variable" );
+					ArgRegs.push( Out.iReg );
+				}
+				else
+				{
+					ArgRegs.push( CompileExpr( Native->Params[i].Type, true, false, 0 ).iReg );
+				}
+
 				if( i < Native->NumParams-1 )
 					RequireSymbol( L",", L"arguments" ); 
 			}

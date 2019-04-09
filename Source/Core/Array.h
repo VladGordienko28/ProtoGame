@@ -444,4 +444,144 @@ namespace flu
 		extern void reallocate( void*& data, Int32& oldSize, Int32 newSize, SizeT elementSize );
 	}
 
+	/**
+	 *	A simple wrapper for static array
+	 *	template
+	 */
+	template<typename T, SizeT SIZE> class StaticArray
+	{
+	public:
+		StaticArray()
+		{
+		}
+
+		StaticArray( const StaticArray<T, SIZE>& other )
+			:	m_data( other.m_data )
+		{
+		}
+
+		StaticArray( StaticArray<T, SIZE>&& other )
+		{
+			mem::copy( m_data, other.m_data, sizeof( T ) * SIZE );
+			mem::zero( other.m_data, sizeof( T ) * SIZE );
+		}
+
+		StaticArray( const T( &initialData )[SIZE] )
+			:	m_data( initialData )
+		{
+		}
+
+		~StaticArray()
+		{
+		}
+
+		/**
+		 *	Swap an array's items using their indexes
+		 */
+		void swap( Int32 a, Int32 b )
+		{
+			assert( a >= 0 && a < SIZE );
+			assert( b >= 0 && b < SIZE );
+
+			T tmp = m_data[a];
+			m_data[a] = m_data[b];
+			m_data[b] = tmp;
+		}
+
+		using Iterator = T*;
+		using ConstIterator = const T*;
+
+		Iterator begin()
+		{
+			return m_data;
+		}
+
+		ConstIterator begin() const
+		{
+			return m_data;
+		}
+
+		Iterator end()
+		{
+			return m_data + SIZE;
+		}
+
+		ConstIterator end() const
+		{
+			return m_data + SIZE;
+		}
+
+		Int32 iteratorToIndex( Iterator it ) const
+		{
+			return ( it >= begin() && it < end() ) ? 
+				(Int32)( ((UInt8*)it - (UInt8*)m_data) / sizeof(T) ) : -1;
+		}
+
+		Iterator indexToIterator( Int32 i ) const
+		{
+			return ( i >= 0 && i < SIZE ) ? &m_data[i] : end();
+		}
+
+		T& operator[]( Int32 i )
+		{
+			assert( i >= 0 && i < SIZE );
+			return m_data[i];
+		}
+
+		const T& operator[]( Int32 i ) const
+		{
+			assert( i >= 0 && i < SIZE );
+			return m_data[i];
+		}
+
+		Bool operator==( const StaticArray<T, SIZE>& other ) const
+		{
+			for( Int32 i = 0; i < SIZE; ++i )
+			{
+				if( m_data[i] != other.m_data[i] )
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		Bool operator!=( const StaticArray<T, SIZE>& other ) const
+		{
+			for( Int32 i = 0; i < SIZE; ++i )
+			{
+				if( m_data[i] != other.m_data[i] )
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		StaticArray<T, SIZE>& operator=( const StaticArray<T, SIZE>& other )
+		{
+			for( Int32 i = 0; i < SIZE; ++i )
+			{
+				m_data[i] = other.m_data[i];
+			}
+
+			return *this;
+		}
+
+		StaticArray<T, SIZE>& operator=( const T( &initialData )[SIZE] )
+		{
+			for( Int32 i = 0; i < SIZE; ++i )
+			{
+				m_data[i] = initialData[i];
+			}
+
+			return *this;
+		}
+
+	private:
+		T m_data[SIZE];
+	};
+
 } // namespace flu

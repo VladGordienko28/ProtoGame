@@ -147,6 +147,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AI\AIPhysics.h" />
+    <ClInclude Include="AI\Navigator.h" />
     <ClInclude Include="Chart\EngineChart.h" />
     <ClInclude Include="Chart\EngineProfiler.h" />
     <ClInclude Include="Core\FrBase.h" />
@@ -201,6 +203,12 @@
     <ClInclude Include="PostFX\FXTypes.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AI\Navigator.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Engine/Engine.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="Chart\EngineChart.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Engine/Engine.h</PrecompiledHeaderFile>

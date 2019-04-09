@@ -109,6 +109,35 @@ namespace flu
 			return *this;
 		}
 
+#if 0
+		// legacy
+		friend void Serialize( CSerializer& s, UniquePtr<T>& v )
+		{
+			Bool hasObject;
+
+			if( s.GetMode() == SM_Load )
+			{
+				hasObject = v.hasObject();
+				Serialize( s, hasObject );
+
+				if( hasObject )
+				{
+					v.reset( new T() );
+					Serialize( s, *v.m_object );
+				}
+			}
+			else
+			{
+				Serialize( s, hasObject );
+
+				if( hasObject )
+				{
+					Serialize( s, *v.m_object );
+				}
+			}
+		}
+#endif
+
 	private:
 		T* m_object;
 

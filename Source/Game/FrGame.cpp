@@ -883,6 +883,18 @@ void CGame::ConsoleExecute( String CmdLine )
 				Level->RndFlags &= ~RND_Lighting;
 		}
 	}
+	else if( String::insensitiveCompare(Token, L"Paths") == 0 )
+	{
+		// Toggle paths.
+		if( Level )
+		{
+			Bool bOn = CCmdLineParser::ParseBoolParam(CmdLine, L"show");
+			if( bOn )
+				Level->RndFlags |= RND_Paths;
+			else
+				Level->RndFlags &= ~RND_Paths;
+		}
+	}
 	else if( String::insensitiveCompare(Token, L"GFX") == 0 )
 	{
 		// Toggle post effect.

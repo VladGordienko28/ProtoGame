@@ -19,11 +19,11 @@ namespace flu
 		setTimelineLength( DEFAULT_TIMELINE_TIME );
 
 		// generate color set
-		for( Int32 i = 0; i < arraySize(m_colorSet); ++i )
+		for( UInt8 i = 0; i < arraySize(m_colorSet); ++i )
 		{
 			m_colorSet[i] = math::Color::hsl2rgb( i * ( 256 / COLOR_SET_SIZE ), 200, 128 );
 		}
-		for( Int32 i = 0; i < arraySize(m_colorSet); ++i )
+		for( UInt8 i = 0; i < arraySize(m_colorSet); ++i )
 		{
 			exchange( m_colorSet[i], m_colorSet[Random( arraySize(m_colorSet) )] );
 		}

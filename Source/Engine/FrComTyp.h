@@ -1216,7 +1216,7 @@ public:
 
 	// Navigation.
 	math::Vector		Goal;
-	EPathType			GoalReach;
+	navi::EPathType		GoalReach;
 	Float				GoalHint;
 
 	// AI vision.
@@ -1241,11 +1241,6 @@ public:
 	friend class CNavigator;
 	friend class FLevel;
 
-	// Puppet static functions.
-	static Float SuggestJumpHeight( Float JumpSpeed, Float Gravity );
-	static Float SuggestJumpSpeed( Float DesiredHeight, Float Gravity );
-	static Float SpeedForJump( math::Vector From, math::Vector To, Float XSpeed, Float Gravity );
-
 private:
 	// Puppet internal.
 	FPuppetComponent*		NextPuppet;
@@ -1258,7 +1253,6 @@ private:
 
 	// Internal functions.
 	void LookAtPuppets();
-	Bool CanJumpTo( math::Vector From, math::Vector To, Float& SuggestedSpeed );
 	Bool MoveToGoal();
 
 	// Natives.
@@ -1269,7 +1263,27 @@ private:
 	void nativeIsVisible( CFrame& Frame );
 	void nativeCreatePathTo( CFrame& Frame );
 	void nativeCreateRandomPath( CFrame& Frame );
-	void nativeMoveToGoal( CFrame& Frame );
+	void nativeMoveToGoal( CFrame& Frame ); // target
+
+
+/*
+	enum EMoveStatus
+	{
+		None,
+		Aborted,
+		Complete,
+		InProgress
+	};
+
+	fn MoveToPoint( vector destination, float radius, float speedScale, float timeout );
+	fn MoveToEntity( entity victim, float radius, float speedScale );
+
+
+
+	EMoveStatus processMove();
+
+*/
+
 };
 
 

@@ -215,13 +215,8 @@ FLevel* CProject::DuplicateLevel( FLevel* Source )
 	}
 
 	// Copy navigator.
-	if( Source->Navigator )
-	{
-		Result->Navigator			= new CNavigator(Result);
-		Result->Navigator->Nodes	= Source->Navigator->Nodes;
-		Result->Navigator->Edges	= Source->Navigator->Edges;
-		Serialize( RefChanger, Result->Navigator );
-	}
+	Result->m_navigator = Source->m_navigator;
+	Serialize( RefChanger, Result->m_navigator );
 
 	// Copy level's variables.
 	Result->GameSpeed		= Source->GameSpeed;

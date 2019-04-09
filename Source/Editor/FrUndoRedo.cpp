@@ -477,8 +477,10 @@ void TTransaction::Restore()
 {
 	assert(Level);
 
+#if 0
 	// Anyway destroy navigator.
 	freeandnil(Level->Navigator);
+#endif
 
 	// Erase old level's objects.
 	for( Int32 i=0; i<Level->Entities.size(); i++ )

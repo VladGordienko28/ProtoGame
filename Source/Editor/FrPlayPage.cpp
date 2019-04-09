@@ -42,6 +42,10 @@ WPlayPage::WPlayPage( FLevel* InOrigianl, EPlayMode InPlayMode, WContainer* InOw
 	{
 		WatchList	= new WWatchListDialog( this, Root );
 		WatchList->SetLocation( Root->Size.Width-350, Root->Size.Height-200 );
+
+#if AI_DEBUG_DRAW
+		PlayLevel->RndFlags |= RND_Paths;
+#endif
 	}
 }
 
@@ -116,46 +120,6 @@ void WPlayPage::TickPage( Float Delta )
 
 
 //
-// Draw a paths network in the level.
-//
-#if AI_DEBUG_DRAW
-static void DrawPathNetwork( CCanvas* Canvas, CNavigator* Navig )
-{
-	// Draw all nodes.
-	for( Int32 iNode=0; iNode<Navig->Nodes.size(); iNode++ )
-	{
-		TPathNode& Node = Navig->Nodes[iNode];
-
-		Canvas->DrawPoint
-		(	 
-			Node.Location,
-			10.f,
-			Node.GetDrawColor()
-		);
-	}
-
-	// Draw all edges.
-	math::Vector Bias( 0.f, (5.f*Canvas->View.FOV.y*Canvas->View.Zoom)/(Canvas->View.Height) );
-	for( Int32 iEdge=0; iEdge<Navig->Edges.size(); iEdge++ )
-	{
-		TPathEdge& Edge = Navig->Edges[iEdge];
-
-		TPathNode& NodeA = Navig->Nodes[Edge.iStart];
-		TPathNode& NodeB = Navig->Nodes[Edge.iFinish];
-
-		Canvas->DrawLine
-		(
-			NodeA.Location,
-			NodeB.Location + Bias,
-			Edge.GetDrawColor(),
-			false
-		);
-	}
-}
-#endif
-
-
-//
 // Render played level.
 //
 void WPlayPage::RenderPageContent( CCanvas* Canvas )
@@ -172,31 +136,6 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 									Size.Width, 
 									Size.Height
 								);
-
-	// AI debug.
-#if AI_DEBUG_DRAW
-	if( PlayLevel->Navigator && PlayMode == PLAY_Debug )
-	{
-		// Set level transform, for editor stuff rendering.
-		TPoint Base = ClientToWindow(TPoint::Zero);
-		Canvas->SetTransform
-		( 
-			TViewInfo
-			( 
-				PlayLevel->Camera.Location, 
-				PlayLevel->Camera.Rotation, 
-				PlayLevel->Camera.GetFitFOV(Size.Width, Size.Height), 
-				PlayLevel->Camera.Zoom, 
-				false, 
-				Base.X, 
-				Base.Y, 
-				Size.Width, 
-				Size.Height
-			) 
-		);
-		DrawPathNetwork( Canvas, PlayLevel->Navigator );
-	}
-#endif
 
 	// Draw info.
 	Canvas->SetTransform( TViewInfo
@@ -295,9 +234,11 @@ void WPlayPage::RunLevel()
 	if( PlayMode == PLAY_Debug )
 		PlayLevel->RndFlags	|= RND_Logic;
 
+#if 0
 	// Test some level's errors.
 	if( !PlayLevel->Navigator )
 		AddScriptMessage( false, L"Level has no navigator" );
+#endif
 }
 
 

@@ -169,10 +169,10 @@ namespace math
 	}
 
 	Color::Color( const FloatColor& other )
-		:	r( clamp<Int32>( other.r * 255.f, 0, 255 ) ),
-			g( clamp<Int32>( other.g * 255.f, 0, 255 ) ),
-			b( clamp<Int32>( other.b * 255.f, 0, 255 ) ),
-			a( clamp<Int32>( other.a * 255.f, 0, 255 ) )
+		:	r( clamp<Int32>( Int32( other.r * 255.f ), 0, 255 ) ),
+			g( clamp<Int32>( Int32( other.g * 255.f ), 0, 255 ) ),
+			b( clamp<Int32>( Int32( other.b * 255.f ), 0, 255 ) ),
+			a( clamp<Int32>( Int32( other.a * 255.f ), 0, 255 ) )
 	{
 	}
 		

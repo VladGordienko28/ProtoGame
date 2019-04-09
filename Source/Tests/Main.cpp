@@ -64,7 +64,7 @@ int main( int nArgs, char* args[] )
 
 	info( L"------ Fluorine Unit Tests Framework ------" );
 
-	for( Int32 i = 0; i < arraySize( tests::g_tests ); i++ )
+	for( SizeT i = 0; i < arraySize( tests::g_tests ); i++ )
 	{
 		try
 		{

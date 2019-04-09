@@ -517,7 +517,7 @@ void WLevelPage::OnPaint( CGUIRenderBase* Render )
 	WEditorPage::OnPaint( Render );
 
 	// Turn on or turn off toolbar buttons.
-	DestroyPathsButton->bEnabled	= Level->Navigator != nullptr;
+	DestroyPathsButton->bEnabled	= Level->m_navigator.isValid();
 }
 
 
@@ -2005,45 +2005,6 @@ void WLevelPage::WorldToScreen( math::Vector V, Float& OutX, Float& OutY )
 -----------------------------------------------------------------------------*/
 
 //
-// Draw a paths network in the level.
-//
-void WLevelPage::DrawPathsNetwork( CCanvas* Canvas, CNavigator* Navigator )
-{
-	// Draw all nodes.
-	for( Int32 iNode=0; iNode<Navigator->Nodes.size(); iNode++ )
-	{
-		TPathNode& Node = Navigator->Nodes[iNode];
-
-		Canvas->DrawPoint
-						(	 
-							Node.Location,
-							10.f,
-							Node.GetDrawColor()
-						);
-	}
-
-	// Draw all edges.
-	math::Vector Bias( 0.f, (5.f*Canvas->View.FOV.y*Canvas->View.Zoom)/(Canvas->View.Height) );
-
-	for( Int32 iEdge=0; iEdge<Navigator->Edges.size(); iEdge++ )
-	{
-		TPathEdge& Edge = Navigator->Edges[iEdge];
-
-		TPathNode& NodeA = Navigator->Nodes[Edge.iStart];
-		TPathNode& NodeB = Navigator->Nodes[Edge.iFinish];
-
-		Canvas->DrawLine
-					(
-						NodeA.Location,
-						NodeB.Location + Bias,
-						Edge.GetDrawColor(),
-						false
-					);
-	}
-}
-
-
-//
 // Draw entity keyframe trajectory.
 //
 void WLevelPage::DrawKeyframe( CCanvas* Canvas, FEntity* Entity )
@@ -2216,10 +2177,6 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 
 	// Draw scroll bounds.
 	DrawScrollClamp( Canvas );
-
-	// Draw navigator.
-	if( (Level->RndFlags & RND_Paths) && Level->Navigator )
-		DrawPathsNetwork( Canvas, Level->Navigator );
 
 	// Draw roller.
 	Roller.Draw( Canvas, DragInfo.DragType == DRAG_Rotate );

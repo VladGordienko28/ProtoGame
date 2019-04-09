@@ -23,7 +23,6 @@ FLevel::FLevel()
 		Soundtrack( nullptr ),
 		CollHash( nullptr ),
 		GFXManager( nullptr ),
-		Navigator( nullptr ),
 		AmbientLight( math::colors::BLACK ),
 		BlurIntensity( 0.f )
 {
@@ -91,9 +90,6 @@ FLevel::~FLevel()
 	assert(CollHash == nullptr);
 	assert(GFXManager == nullptr);
 
-	// Kill navigator.
-	freeandnil(Navigator);
-
 	// Destroy all my entities.
 	for( Int32 i=0; i<Entities.size(); i++ )
 		if( Entities[i] )
@@ -117,7 +113,7 @@ void FLevel::SerializeThis( CSerializer& S )
 	Serialize( S, bIsPause );
 	Serialize( S, GameSpeed );
 	Serialize( S, Soundtrack );
-	Serialize( S, Navigator );
+	Serialize( S, m_navigator );
 	Serialize( S, AmbientLight );
 	Serialize( S, BlurIntensity );
 	S.SerializeData( Effect, sizeof(Effect) );
@@ -310,7 +306,7 @@ FBrushComponent* FLevel::TestPointGeom( const math::Vector& P )
 //
 // Test a line with a level geometry.
 //
-FBrushComponent* FLevel::TestLineGeom( const math::Vector& A, const math::Vector& B, Bool bFast, math::Vector& Hit, math::Vector& Normal )
+FBrushComponent* FLevel::TestLineGeom( const math::Vector& A, const math::Vector& B, Bool bFast, math::Vector* Hit, math::Vector* Normal )
 {
 	assert(bIsPlaying && CollHash);
 
@@ -356,8 +352,8 @@ FBrushComponent* FLevel::TestLineGeom( const math::Vector& A, const math::Vector
 					if( TestTime < BestTime )
 					{
 						// Least time.
-						Hit			= TestHit + Brush->Location;
-						Normal		= TestNormal;
+						if( Hit )		*Hit	= TestHit + Brush->Location;
+						if( Normal )	*Normal	= TestNormal;
 						BestTime	= TestTime;
 						Result		= Brush;
 
@@ -386,7 +382,7 @@ void FLevel::Tick( Float Delta )
 	Delta	= clamp( Delta, 1.f/500.f, 1.f/30.f );
 
 	// Modify delta according to game speed.
-	GameSpeed	= clamp( GameSpeed, 0.01f, 10.f );
+	//GameSpeed	= clamp( GameSpeed, 0.01f, 10.f );
 	Delta		*= GameSpeed;
 
 	// update game time
@@ -835,6 +831,22 @@ void fluDebugRect( CFrame& Frame )
 	CDebugDrawHelper::Instance().DrawLine( { R.max.x, R.min.y }, { R.min.x, R.min.y }, Color, Time );
 }
 
+
+// Experimental
+void fluTestOut( CFrame& Frame )
+{
+	UInt8 val = POP_BYTE;
+	String* str = POPO_STRING;
+	Int32* ival = POPO_INTEGER;
+
+	debug( L"Called in C++: %d, \"%s\" %d", val, **str, *ival );
+	*str = L"Vlad is C++ master";
+	*ival = 28;
+
+	*POPA_VECTOR = math::Vector( 123.f, 456.f );
+}
+
+
 /*-----------------------------------------------------------------------------
     Registration.
 -----------------------------------------------------------------------------*/
@@ -1031,6 +1043,22 @@ REGISTER_CLASS_CPP( FLevel, FResource, CLASS_Sterile )
 	DECLARE_EX_FUNCTION( DebugLine, TYPE_None, ARG(a, TYPE_Vector, ARG(b, TYPE_Vector, ARG(color, TYPE_Color, ARG(time, TYPE_Float, END)))));
 	DECLARE_EX_FUNCTION( DebugPoint, TYPE_None, ARG(a, TYPE_Vector, ARG(color, TYPE_Color, ARG(size, TYPE_Float, ARG(time, TYPE_Float, END)))));
 	DECLARE_EX_FUNCTION( DebugRect, TYPE_None, ARG(rect, TYPE_AABB, ARG(color, TYPE_Color, ARG(time, TYPE_Float, END))) );
+
+
+	DECLARE_EX_FUNCTION( TestOut, TYPE_Vector, ARG( val, TYPE_Byte, ARGOUT( str, TYPE_String, ARGOUT( ival, TYPE_Integer, END ) ) ) );
+/*
+void fluTestOut( CFrame& Frame )
+{
+	UInt8 val = POP_BYTE;
+	String* str = POPO_STRING;
+	Int32* ival = POPO_INTEGER;
+
+	debug( L"Called in C++: %d, \"%s\" %d", val, **str, *ival );
+	*str = L"Vlad is C++ master";
+	*ival = 28;
+
+	*POPA_VECTOR = math::Vector( 123.f, 456.f );
+}*/
 }
 
 

@@ -43,9 +43,7 @@ class CInstanceBuffer;
 class CFrame;
 class CThreadFrame;
 class CCollisionHash;
-class CNavigator;
 class CPhysics;
-enum EPathType;
 enum EEventName;
 struct TDelegate;
 struct TViewInfo;
@@ -99,6 +97,10 @@ namespace envi
 
 // Post processing
 #include "PostFX/FXTypes.h"
+
+// AI
+#include "AI/AIPhysics.h"
+#include "AI/Navigator.h"
 
 #include "FrCom.h"
 #include "FrBlock.h"

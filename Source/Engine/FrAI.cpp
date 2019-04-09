@@ -26,7 +26,7 @@ FPuppetComponent::FPuppetComponent()
 	GravityScale		= 10.f;
 	Goal				= 
 	GoalStart			= { 0.f, 0.f };
-	GoalReach			= PATH_None;
+	GoalReach			= navi::EPathType::None;
 	GoalHint			= 0.f;
 	iGoalNode			=
 	iHoldenNode			= -1;
@@ -159,14 +159,12 @@ void FPuppetComponent::LookAtPuppets()
 		if( Dir.x<0.f && LookDirection==LOOK_Right )	continue;
 
 		// Distance and LOS testing.
-		math::Vector UnusedHit, UnusedNormal;
 		if( Dir.sizeSquared() > Dist2 ) continue;
 		if	( Level->TestLineGeom
 				(
 					Base->Location + math::Vector( 0.f, Base->Size.y*0.5f ),
 					Other->Base->Location + math::Vector( 0.f, Other->Base->Size.y*0.5f ),
-					true,
-					UnusedHit, UnusedNormal
+					true
 				)
 			)
 				continue;
@@ -204,10 +202,10 @@ Bool FPuppetComponent::MoveToGoal()
 	}
 
 	// Did we have something to move?
-	if( GoalReach == PATH_None )
+	if( GoalReach == navi::EPathType::None )
 		return false;
 
-	if( GoalReach == PATH_Walk )
+	if( GoalReach == navi::EPathType::Walk )
 	{
 		//
 		// Walking.
@@ -241,7 +239,7 @@ Bool FPuppetComponent::MoveToGoal()
 			}
 		}
 	}
-	else if( GoalReach == PATH_Jump )
+	else if( GoalReach == navi::EPathType::Jump )
 	{
 		//
 		// Jumping.
@@ -277,65 +275,6 @@ Bool FPuppetComponent::MoveToGoal()
 	}
 }
 
-
-//
-// Returns true, if figure can make a jump from the 'From' to 'To' spot.
-// SuggestedSpeed - Recommended initial speed for jumping.
-//
-Bool FPuppetComponent::CanJumpTo( math::Vector From, math::Vector To, Float& SuggestedSpeed )
-{
-	Float Speed	= SpeedForJump( From, To, MoveSpeed, GravityScale );
-
-	if( Speed < SuggestJumpSpeed( JumpHeight, GravityScale ) )
-	{
-		// Possible.
-		SuggestedSpeed	= Speed;
-		return true;
-	}
-	else
-	{
-		// Impossible.
-		SuggestedSpeed	= 0.f;
-		return false;
-	}
-}
-
-
-//
-// Computes a maximum reached jump height with an initial velocity JumpSpeed
-// and Gravity.
-//
-Float FPuppetComponent::SuggestJumpHeight( Float JumpSpeed, Float Gravity )
-{
-	Float Time	= JumpSpeed / Gravity;
-	return JumpSpeed*Time - 0.5f*Time*Time*Gravity;
-}
-
-
-//
-// Computes a jump speed to reach Height height with
-// an given Gravity.
-//
-Float FPuppetComponent::SuggestJumpSpeed( Float DesiredHeight, Float Gravity )
-{
-	return math::sqrt(2.f * Gravity * DesiredHeight);
-}
-
-
-//
-// Returns the vertical speed to jump from the 'From' location to 
-// the 'To' location.
-//
-Float FPuppetComponent::SpeedForJump( math::Vector From, math::Vector To, Float XSpeed, Float Gravity )
-{
-	Float XTime	= abs(From.x - To.x) / XSpeed;
-	Float Speed = (To.y + 0.5f*XTime*XTime*Gravity - From.y) / XTime;
-
-	// Slightly modify speed to make unpredictable results.
-	return max( 0.f, Speed ) * 1.1f;
-}
-
-
 /*-----------------------------------------------------------------------------
     In-Script AI functions.
 -----------------------------------------------------------------------------*/
@@ -365,7 +304,7 @@ void FPuppetComponent::nativeMakeNoise( CFrame& Frame )
 void FPuppetComponent::nativeSuggestJumpHeight( CFrame& Frame )
 {
 	Float Speed = POP_FLOAT;
-	*POPA_FLOAT	= FPuppetComponent::SuggestJumpHeight
+	*POPA_FLOAT	= ai::suggestJumpHeight
 	(
 		Speed,
 		GravityScale
@@ -379,7 +318,7 @@ void FPuppetComponent::nativeSuggestJumpHeight( CFrame& Frame )
 void FPuppetComponent::nativeSuggestJumpSpeed( CFrame& Frame )
 {
 	Float Height = POP_FLOAT;
-	*POPA_FLOAT	= FPuppetComponent::SuggestJumpSpeed
+	*POPA_FLOAT	= ai::suggestJumpSpeed
 	(
 		Height,
 		GravityScale
@@ -449,7 +388,7 @@ void FPuppetComponent::nativeMoveToGoal( CFrame& Frame )
 // Tries to create a random path.
 //
 void FPuppetComponent::nativeCreateRandomPath( CFrame& Frame )
-{
+{/*
 	if( Level->Navigator )
 	{
 		*POPA_BOOL	= Level->Navigator->MakeRandomPath( this );
@@ -458,7 +397,7 @@ void FPuppetComponent::nativeCreateRandomPath( CFrame& Frame )
 	{
 		debug( L"AI: Level has no navigator" );
 		*POPA_BOOL	= false;
-	}
+	}*/
 }
 
 
@@ -467,7 +406,7 @@ void FPuppetComponent::nativeCreateRandomPath( CFrame& Frame )
 // if path was successfully created, otherwise returns false.
 //
 void FPuppetComponent::nativeCreatePathTo( CFrame& Frame )
-{
+{/*
 	math::Vector	Dest	= POP_VECTOR;
 	if( Level->Navigator )
 	{
@@ -477,7 +416,7 @@ void FPuppetComponent::nativeCreatePathTo( CFrame& Frame )
 	{
 		debug( L"AI: Level has no navigator" );
 		*POPA_BOOL	= false;
-	}
+	}*/
 }
 
 

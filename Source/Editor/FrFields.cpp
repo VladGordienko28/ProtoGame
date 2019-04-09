@@ -878,7 +878,7 @@ void CPropertyItem::OnSomethingChange( WWidget* Sender )
 //
 Bool CPropertyItem::IsAtSign( Int32 X ) const
 { 
-	return abs( X - (18+Depth*20) ) < 20;
+	return abs<Int32>( X - (18+Depth*20) ) < 20;
 }
 
 

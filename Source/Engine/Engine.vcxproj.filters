@@ -16,6 +16,9 @@
     <Filter Include="PostFX">
       <UniqueIdentifier>{32f2e1f7-fd39-4120-91f7-c19aa1f55efb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI">
+      <UniqueIdentifier>{e9e2383d-776d-4c38-ac8c-7989252e045b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\FrBase.h">
@@ -116,6 +119,12 @@
     <ClInclude Include="PostFX\FXTypes.h">
       <Filter>PostFX</Filter>
     </ClInclude>
+    <ClInclude Include="AI\Navigator.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\AIPhysics.h">
+      <Filter>AI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\FrClass.cpp">
@@ -186,6 +195,9 @@
     </ClCompile>
     <ClCompile Include="Environment\Satellite.cpp">
       <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\Navigator.cpp">
+      <Filter>AI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

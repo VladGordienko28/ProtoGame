@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010"> 
   
-  <!-- Fluorine TColor -->
-  <Type Name="TColor">
-    <DisplayString>{{ Hex={D, x} }}</DisplayString>   
-    
+  <!-- Fluorine math::Color -->
+  <Type Name="math::Color">
+    <DisplayString>{{ Hex={d, x} }}</DisplayString> 
     <Expand> 
-      <Item Name="R">(Byte)R, x</Item>
-      <Item Name="G">(Byte)G, x</Item>
-      <Item Name="B">(Byte)B, x</Item>
-      <Item Name="A">(Byte)A, x</Item>
+      <Item Name="R">(UInt8)r, x</Item>
+      <Item Name="G">(UInt8)g, x</Item>
+      <Item Name="B">(UInt8)b, x</Item>
+      <Item Name="A">(UInt8)a, x</Item>
     </Expand>   
   </Type>
   

@@ -1,8 +1,8 @@
 BEGIN_RESOURCE FLevel Forest
     GameSpeed = 1.0000
-    Camera.Location = [84.2775; 18.8041]
+    Camera.Location = [136.1956; 16.7891]
     Camera.FOV = [64.0000; 32.0000]
-    Camera.Zoom = 0.7600
+    Camera.Zoom = 1.0000
     Camera.ScrollBound = (-24.0000; -8.0000; 164.0000; 2048.0000)
     Effect[0] = 1.0000
     Effect[1] = 1.0000
@@ -235,6 +235,7 @@ BEGIN_RESOURCE FLevel Forest
             Location = [14.0000; 20.0000]
             Size = [32.0000; 32.0000]
             Layer = 0.4195
+            bFrozen = true
         END_COMPONENT
         BEGIN_COMPONENT FDecoComponent Deco
             DecoType = 2
@@ -250,6 +251,7 @@ BEGIN_RESOURCE FLevel Forest
             Location = [-6.5000; 20.0000]
             Size = [32.0000; 32.0000]
             Layer = 0.4195
+            bFrozen = true
         END_COMPONENT
         BEGIN_COMPONENT FDecoComponent Deco
             Frequency = 0.3900
@@ -313,7 +315,7 @@ BEGIN_RESOURCE FLevel Forest
         BEGIN_COMPONENT FParallaxLayerComponent ParallaxLayer
             Parallax = [0.0300; 0.0300]
             Scale = [32.0000; 32.0000]
-            Offset = [-11.7000; 18.6200]
+            Offset = [-13.1500; 45.3000]
             Gap = [20.0000; 20.0000]
             TexCoords = (0.0000; 0.0000; 256.0000; 256.0000)
             Color = #ffffffff
@@ -339,7 +341,7 @@ BEGIN_RESOURCE FLevel Forest
         BEGIN_COMPONENT FParallaxLayerComponent ParallaxLayer
             Parallax = [0.1000; 0.1000]
             Scale = [32.0000; 32.0000]
-            Offset = [-13.6500; 20.1700]
+            Offset = [-13.6500; 43.1800]
             Gap = [20.0000; 20.0000]
             TexCoords = (0.0000; 0.0000; 256.0000; 256.0000)
             Color = #ffffffff
@@ -365,7 +367,7 @@ BEGIN_RESOURCE FLevel Forest
         BEGIN_COMPONENT FParallaxLayerComponent ParallaxLayer
             Parallax = [0.0700; 0.0700]
             Scale = [32.0000; 32.0000]
-            Offset = [14.2300; 18.3600]
+            Offset = [14.2300; 42.3700]
             Gap = [25.0000; 20.0000]
             TexCoords = (0.0000; 0.0000; 256.0000; 256.0000)
             Color = #dfdfdfff
@@ -459,6 +461,7 @@ BEGIN_RESOURCE FLevel Forest
             Location = [37.0000; 20.0000]
             Size = [32.0000; 32.0000]
             Layer = 0.4155
+            bFrozen = true
         END_COMPONENT
         BEGIN_COMPONENT FDecoComponent Deco
             Frequency = 0.8000
@@ -642,6 +645,7 @@ BEGIN_RESOURCE FLevel Forest
             Location = [153.5000; 20.0000]
             Size = [32.0000; 32.0000]
             Layer = 0.3338
+            bFrozen = true
         END_COMPONENT
         BEGIN_COMPONENT FDecoComponent Deco
             DecoType = 2
@@ -686,6 +690,200 @@ BEGIN_RESOURCE FLevel Forest
             SpinRange[1] = 1.0000
             NumUTiles = 4
             NumVTiles = 4
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Brush Brush0
+        BEGIN_COMPONENT FBrushComponent Base
+            Type = 2
+            bUnlit = true
+            Color = #ffffffff
+            NumVerts = 4
+            Vertices[0] = [-4.0000; -8.0000]
+            Vertices[1] = [-4.0000; 4.0000]
+            Vertices[2] = [184.0000; 4.0000]
+            Vertices[3] = [184.0000; -8.0000]
+            TexCoords.xAxis = [0.2500; 0.0000]
+            TexCoords.yAxis = [0.0000; -0.2500]
+            Location = [-20.0000; 0.0000]
+            Size = [1.0000; 1.0000]
+            Layer = 0.4980
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Parallax Parallax3
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [30.0000; 29.0000]
+            Size = [5.0000; 5.0000]
+            Layer = 0.1951
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (64.0000; 32.0000; 96.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_COMPONENT FParallaxLayerComponent ParallaxLayer
+            Parallax = [0.0300; 0.0300]
+            Scale = [32.0000; 17.3400]
+            Offset = [-10.9100; 42.0300]
+            Gap = [13.2700; 8.2500]
+            TexCoords = (0.0000; 0.0000; 256.0000; 128.0000)
+            Color = #ffffffc4
+            Texture = FBitmap::BClouds
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Parallax Parallax4
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [35.0000; 29.0000]
+            Size = [5.0000; 5.0000]
+            Layer = 0.2336
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (64.0000; 32.0000; 96.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_COMPONENT FParallaxLayerComponent ParallaxLayer
+            Parallax = [0.0100; 0.0100]
+            Scale = [32.0000; 16.0000]
+            Offset = [-9.8100; 27.8200]
+            Gap = [19.4900; 8.2500]
+            TexCoords = (256.0000; 0.0000; 512.0000; 128.0000)
+            Color = #ffffffc4
+            Texture = FBitmap::BClouds
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Parallax Parallax5
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [40.5000; 29.0000]
+            Size = [5.0000; 5.0000]
+            Layer = 0.0865
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (64.0000; 32.0000; 96.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_COMPONENT FParallaxLayerComponent ParallaxLayer
+            Parallax = [0.0200; 0.0200]
+            Scale = [32.0000; 16.0000]
+            Offset = [22.8000; 33.4100]
+            Gap = [24.3900; 8.2500]
+            TexCoords = (0.0000; 128.0000; 256.0000; 256.0000)
+            Color = #ffffffc4
+            Texture = FBitmap::BClouds
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Parallax Parallax6
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [46.0000; 29.0000]
+            Size = [5.0000; 5.0000]
+            Layer = 0.0965
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (64.0000; 32.0000; 96.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_COMPONENT FParallaxLayerComponent ParallaxLayer
+            Parallax = [0.0280; 0.0280]
+            Scale = [32.0000; 16.0000]
+            Offset = [33.7100; 39.2200]
+            Gap = [24.3900; 8.2500]
+            TexCoords = (256.0000; 128.0000; 512.0000; 256.0000)
+            Color = #ffffffc4
+            Texture = FBitmap::BClouds
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Emitter Emitter3
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [44.0000; 18.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.4914
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 0.0000; 64.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_COMPONENT FPhysEmitterComponent Emitter
+            SpeedRange[0] = [-0.5000; 1.0000]
+            SpeedRange[1] = [0.5000; 2.0000]
+            Acceleration = [0.2000; 0.5000]
+            MaxParticles = 100
+            LifeRange[0] = 5.0000
+            LifeRange[1] = 10.0000
+            EmitPerSec = 20
+            SizeParam = 1
+            SizeRange[0] = 2.0000
+            SizeRange[1] = 10.0000
+            Colors[0] = #aeaeae00
+            Colors[1] = #ffffff64
+            Colors[2] = #ffffff00
+            Texture = FBitmap::BSmoke
+            SpinRange[0] = -0.5000
+            SpinRange[1] = 0.5000
+            NumUTiles = 2
+            NumVTiles = 2
+        END_COMPONENT
+    END_ENTITY
+    BEGIN_ENTITY Emitter Emitter2
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [146.5000; 16.5000]
+            Size = [3.0000; 3.0000]
+            Layer = 0.4914
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (32.0000; 0.0000; 64.0000; 32.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_COMPONENT FPhysEmitterComponent Emitter
+            SpeedRange[0] = [-0.5000; 1.0000]
+            SpeedRange[1] = [0.5000; 2.0000]
+            Acceleration = [0.2000; 0.5000]
+            MaxParticles = 100
+            LifeRange[0] = 5.0000
+            LifeRange[1] = 10.0000
+            EmitPerSec = 20
+            SizeParam = 1
+            SizeRange[0] = 2.0000
+            SizeRange[1] = 10.0000
+            Colors[0] = #aeaeae00
+            Colors[1] = #ffffff64
+            Colors[2] = #ffffff00
+            Texture = FBitmap::BSmoke
+            SpinRange[0] = -0.5000
+            SpinRange[1] = 0.5000
+            NumUTiles = 2
+            NumVTiles = 2
         END_COMPONENT
     END_ENTITY
 END_RESOURCE

@@ -32,7 +32,7 @@
 							RND_Environment
 
 
-#define RND_Game			RND_Backdrop | RND_Particles | RND_Portals | RND_Lighting | RND_Model | RND_HUD | RND_Paths|\
+#define RND_Game			RND_Backdrop | RND_Particles | RND_Portals | RND_Lighting | RND_Model | RND_HUD |\
 							RND_Effects | RND_Environment
 
 
@@ -95,7 +95,7 @@ public:
 	FSkyComponent*			Sky;
 	CCollisionHash*			CollHash;
 	CGFXManager*			GFXManager;
-	CNavigator*				Navigator;
+	navi::Navigator m_navigator;
 
 	// Level variables.
 	Bool					bIsPlaying;
@@ -159,7 +159,7 @@ public:
 
 	// Collisions.
 	FBrushComponent* TestPointGeom( const math::Vector& P );
-	FBrushComponent* TestLineGeom( const math::Vector& A, const math::Vector& B, Bool bFast, math::Vector& Hit, math::Vector& Normal );
+	FBrushComponent* TestLineGeom( const math::Vector& A, const math::Vector& B, Bool bFast, math::Vector* Hit = nullptr, math::Vector* Normal = nullptr );
 
 	// Accessors.
 	inline Bool IsTemporal()

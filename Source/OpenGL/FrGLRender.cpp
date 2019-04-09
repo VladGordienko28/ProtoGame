@@ -459,6 +459,8 @@ void COpenGLCanvas::DrawRect( const TRenderRect& Rect )
 			SetColor( Rect.Color );
 			if( Rect.Flags & POLY_Ghost )
 				SetBlend( BLEND_Brighten );
+			if( Rect.Flags & POLY_AlphaGhost )
+				SetBlend( BLEND_Alpha );
 
 			// Texture coords.
 			math::Vector T1	= Rect.TexCoords.min + BitmapPan;
@@ -1924,6 +1926,10 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 		// Draw debug stuff.
 		// !!todo: add special flag for level.
 		CDebugDrawHelper::Instance().Render(Canvas);
+
+		// Draw path if need
+		if( Level->RndFlags & RND_Paths )
+			Level->m_navigator.draw( Canvas );
 
 		// Draw safe frame area.
 		if( !Level->bIsPlaying )

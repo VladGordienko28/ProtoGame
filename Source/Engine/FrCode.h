@@ -328,6 +328,17 @@ inline EPropType CFrame::ReadPropType()
 #define POPA_RESOURCE		((FResource**)(Frame.Regs[Frame.ReadByte()].Value))
 #define POPA_ENTITY			((FEntity**)(Frame.Regs[Frame.ReadByte()].Value))
 
+#define POPO_BYTE			((Byte*)(Frame.Regs[Frame.ReadByte()].Addr))
+#define POPO_BOOL			((Bool*)(Frame.Regs[Frame.ReadByte()].Addr))		
+#define POPO_INTEGER		((Int32*)(Frame.Regs[Frame.ReadByte()].Addr))
+#define POPO_FLOAT			((Float*)(Frame.Regs[Frame.ReadByte()].Addr))
+#define POPO_ANGLE			((math::Angle*)(Frame.Regs[Frame.ReadByte()].Addr))
+#define POPO_COLOR			((math::Color*)(Frame.Regs[Frame.ReadByte()].Addr))
+#define POPO_STRING			((String*)Frame.Regs[Frame.ReadByte()].Addr)
+#define POPO_VECTOR			((math::Vector*)(Frame.Regs[Frame.ReadByte()].Addr))
+#define POPO_AABB			((math::Rect*)(Frame.Regs[Frame.ReadByte()].Addr))
+#define POPO_RESOURCE		((FResource**)(Frame.Regs[Frame.ReadByte()].Addr))
+#define POPO_ENTITY			((FEntity**)(Frame.Regs[Frame.ReadByte()].Addr))
 
 /*-----------------------------------------------------------------------------
     The End.

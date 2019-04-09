@@ -279,6 +279,7 @@ String CNativeFunction::GetSignature() const
 	String Args;
 	for( Int32 i=0; i<NumParams; i++ )
 	{
+		if( Params[i].bOut ) Args += L"out ";
 		Args += Params[i].Type.TypeName() + L" " + Params[i].Name;
 		if( i != NumParams-1 )
 			Args += L", ";
@@ -306,7 +307,7 @@ void CNativeFunction::SetResultType( const CTypeInfo& InResultType )
 //
 // Add a new parameter to native function and return it index.
 //
-Int32 CNativeFunction::AddParameter( const Char* ParamName, const CTypeInfo& ParamType )
+Int32 CNativeFunction::AddParameter( const Char* ParamName, const CTypeInfo& ParamType, Bool bOut )
 {
 	if( NumParams >= MAX_PARAMETERS )
 		fatal(L"Too many parameters in function \"%s\"", *Name);
@@ -318,6 +319,7 @@ Int32 CNativeFunction::AddParameter( const Char* ParamName, const CTypeInfo& Par
 
 	Params[NumParams].Name	= ParamName;
 	Params[NumParams].Type	= ParamType;
+	Params[NumParams].bOut	= bOut;
 
 	return NumParams++;
 }

@@ -297,6 +297,7 @@ public:
 	{
 		CTypeInfo	Type;
 		String		Name;
+		Bool		bOut;
 	};
 
 	enum{ MAX_PARAMETERS = 8 };
@@ -327,7 +328,7 @@ public:
 	CNativeFunction( const Char* InName, UInt32 InFlags, TNativeFunction InFunction );
 
 	// CNativeFunction interface.
-	Int32 AddParameter( const Char* ParamName, const CTypeInfo& ParamType );
+	Int32 AddParameter( const Char* ParamName, const CTypeInfo& ParamType, Bool bOut );
 	void SetResultType( const CTypeInfo& InResultType );
 
 	// Utils.
@@ -449,14 +450,23 @@ public:
 //
 // Native function parameters parsers.
 //
-#define _HELPER_PARAM7_ARG( name, type, ... ) Func->AddParameter( L#name, type ); 
-#define _HELPER_PARAM6_ARG( name, type, ... ) Func->AddParameter( L#name, type ); _HELPER_PARAM7_##__VA_ARGS__
-#define _HELPER_PARAM5_ARG( name, type, ... ) Func->AddParameter( L#name, type ); _HELPER_PARAM6_##__VA_ARGS__
-#define _HELPER_PARAM4_ARG( name, type, ... ) Func->AddParameter( L#name, type ); _HELPER_PARAM5_##__VA_ARGS__
-#define _HELPER_PARAM3_ARG( name, type, ... ) Func->AddParameter( L#name, type ); _HELPER_PARAM4_##__VA_ARGS__
-#define _HELPER_PARAM2_ARG( name, type, ... ) Func->AddParameter( L#name, type ); _HELPER_PARAM3_##__VA_ARGS__
-#define _HELPER_PARAM1_ARG( name, type, ... ) Func->AddParameter( L#name, type ); _HELPER_PARAM2_##__VA_ARGS__
-#define _HELPER_PARAM0_ARG( name, type, ... ) Func->AddParameter( L#name, type ); _HELPER_PARAM1_##__VA_ARGS__
+#define _HELPER_PARAM7_ARG( name, type, ... ) Func->AddParameter( L#name, type, false ); 
+#define _HELPER_PARAM6_ARG( name, type, ... ) Func->AddParameter( L#name, type, false ); _HELPER_PARAM7_##__VA_ARGS__
+#define _HELPER_PARAM5_ARG( name, type, ... ) Func->AddParameter( L#name, type, false ); _HELPER_PARAM6_##__VA_ARGS__
+#define _HELPER_PARAM4_ARG( name, type, ... ) Func->AddParameter( L#name, type, false ); _HELPER_PARAM5_##__VA_ARGS__
+#define _HELPER_PARAM3_ARG( name, type, ... ) Func->AddParameter( L#name, type, false ); _HELPER_PARAM4_##__VA_ARGS__
+#define _HELPER_PARAM2_ARG( name, type, ... ) Func->AddParameter( L#name, type, false ); _HELPER_PARAM3_##__VA_ARGS__
+#define _HELPER_PARAM1_ARG( name, type, ... ) Func->AddParameter( L#name, type, false ); _HELPER_PARAM2_##__VA_ARGS__
+#define _HELPER_PARAM0_ARG( name, type, ... ) Func->AddParameter( L#name, type, false ); _HELPER_PARAM1_##__VA_ARGS__
+
+#define _HELPER_PARAM7_ARGOUT( name, type, ... ) Func->AddParameter( L#name, type, true ); 
+#define _HELPER_PARAM6_ARGOUT( name, type, ... ) Func->AddParameter( L#name, type, true ); _HELPER_PARAM7_##__VA_ARGS__
+#define _HELPER_PARAM5_ARGOUT( name, type, ... ) Func->AddParameter( L#name, type, true ); _HELPER_PARAM6_##__VA_ARGS__
+#define _HELPER_PARAM4_ARGOUT( name, type, ... ) Func->AddParameter( L#name, type, true ); _HELPER_PARAM5_##__VA_ARGS__
+#define _HELPER_PARAM3_ARGOUT( name, type, ... ) Func->AddParameter( L#name, type, true ); _HELPER_PARAM4_##__VA_ARGS__
+#define _HELPER_PARAM2_ARGOUT( name, type, ... ) Func->AddParameter( L#name, type, true ); _HELPER_PARAM3_##__VA_ARGS__
+#define _HELPER_PARAM1_ARGOUT( name, type, ... ) Func->AddParameter( L#name, type, true ); _HELPER_PARAM2_##__VA_ARGS__
+#define _HELPER_PARAM0_ARGOUT( name, type, ... ) Func->AddParameter( L#name, type, true ); _HELPER_PARAM1_##__VA_ARGS__
 
 
 //
@@ -877,7 +887,7 @@ void cls::AutoRegisterFields()\
 #define DECLARE_UNARY_OP( iopcode, name, resulttype, arg1type )	\
 {	\
 	CNativeFunction* Func = new CNativeFunction( L#name, NFUN_UnaryOp, iopcode );	\
-	Func->AddParameter( L"a", arg1type ); \
+	Func->AddParameter( L"a", arg1type, false ); \
 	Func->SetResultType(resulttype);\
 	CClassDatabase::GFuncs.push(Func);\
 }	\
@@ -889,7 +899,7 @@ void cls::AutoRegisterFields()\
 #define DECLARE_SUFFIX_OP( iopcode, name, resulttype, arg1type )	\
 {	\
 	CNativeFunction* Func = new CNativeFunction( L#name, NFUN_UnaryOp | NFUN_SuffixOp, iopcode );	\
-	Func->AddParameter( L"a", arg1type ); \
+	Func->AddParameter( L"a", arg1type, false ); \
 	Func->SetResultType(resulttype);\
 	CClassDatabase::GFuncs.push(Func);\
 }\
@@ -902,8 +912,8 @@ void cls::AutoRegisterFields()\
 {	\
 	CNativeFunction* Func = new CNativeFunction( L#name, NFUN_BinaryOp | NFUN_AssignOp, iopcode );	\
 	Func->Priority = priority;	\
-	Func->AddParameter( L"a", arg1type ); \
-	Func->AddParameter( L"b", arg2type ); \
+	Func->AddParameter( L"a", arg1type, false ); \
+	Func->AddParameter( L"b", arg2type, false ); \
 	Func->SetResultType(resulttype);\
 	CClassDatabase::GFuncs.push(Func);	\
 }	\
@@ -916,8 +926,8 @@ void cls::AutoRegisterFields()\
 {	\
 	CNativeFunction* Func = new CNativeFunction( L#name, NFUN_BinaryOp, iopcode );	\
 	Func->Priority = priority;	\
-	Func->AddParameter( L"a", arg1type ); \
-	Func->AddParameter( L"b", arg2type ); \
+	Func->AddParameter( L"a", arg1type, false ); \
+	Func->AddParameter( L"b", arg2type, false ); \
 	Func->SetResultType(resulttype);\
 	CClassDatabase::GFuncs.push(Func);	\
 }	\
