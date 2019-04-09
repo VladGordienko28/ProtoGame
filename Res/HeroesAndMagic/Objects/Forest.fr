@@ -1,6 +1,6 @@
 BEGIN_RESOURCE FLevel Forest
     GameSpeed = 1.0000
-    Camera.Location = [136.1956; 16.7891]
+    Camera.Location = [41.8359; 18.4572]
     Camera.FOV = [64.0000; 32.0000]
     Camera.Zoom = 1.0000
     Camera.ScrollBound = (-24.0000; -8.0000; 164.0000; 2048.0000)

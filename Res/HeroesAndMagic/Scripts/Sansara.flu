@@ -8,6 +8,7 @@ public:
     const DAGGER_SPEED = 30.0;
     const ATTACK_SPEED = 35.0;
     const MELEE_SPEED = 20.0;
+    const FLIP_SPEED = 20.0;
     
     vector startLocation;
     vector tempGoal;
@@ -58,10 +59,12 @@ public:
     
 
         //sleep 1.0 + randomf() * 2.0;
-        if( randomf() > 0.5 )
+        if( randomf() < 0.33 )
             goto @Attack;
-        else
+        else if( randomf() > 0.5 )
             goto @Melee;
+        else
+            goto @Flip;
     
     @Attack:
         //sleep 2.0;
@@ -82,5 +85,19 @@ public:
         $Sprite.PlayAnim( "Melee", MELEE_SPEED, ANIM_Once );
         wait !$Sprite.IsPlaying();
         goto @Normal;
+        
+    @Flip:
+        $Sprite.PlayAnim( "Flip", FLIP_SPEED, ANIM_Once );
+        
+        sleep 3.0 * (1.0 / FLIP_SPEED); // 5
+        //Forces.x = 2000;
+        Velocity.x = $Sprite.bFlipH ? -40.0 : 40.0;
+        
+        sleep 6.0 * (1.0 / FLIP_SPEED); // 11
+        
+        Velocity.x = 0.0;      
+        
+        wait !$Sprite.IsPlaying();
+        goto @Normal;      
     } 
 }

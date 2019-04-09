@@ -39,6 +39,8 @@ BEGIN_INCLUDE
     BDagger.fr
     BSansara.fr
     BHouse2.fr
+    BClouds.fr
+    BSmoke.fr
     ProjectInfo0.fr
     Forest.fr
     ARichy.fr
@@ -47,8 +49,6 @@ BEGIN_INCLUDE
     AHare.fr
     ADagger.fr
     ASansara.fr
-    BClouds.fr
-    BSmoke.fr
 END_INCLUDE
 BEGIN_PAGES
     Barrel
