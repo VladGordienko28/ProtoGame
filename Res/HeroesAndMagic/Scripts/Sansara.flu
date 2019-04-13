@@ -4,18 +4,30 @@
  */
 script Sansara
 {
-public:
+private:
     const DAGGER_SPEED = 30.0;
     const ATTACK_SPEED = 35.0;
     const MELEE_SPEED = 20.0;
     const FLIP_SPEED = 20.0;
     
-    vector startLocation;
-    vector tempGoal;
+    aabb WalkArea;
     
     event OnBeginPlay()
     {
-        startLocation = Location;
+        float maxHeight;
+    
+        if( $Puppet.GetWalkArea( WalkArea.min.x, WalkArea.max.x, maxHeight ) )
+        {
+            WalkArea.min.y = Location.y;
+            WalkArea.max.y = Location.y + maxHeight;
+         
+            //DebugRect( WalkArea, rgba( 0, 255, 0, 255 ), 25.0 );  
+            info( "Sansara.$Puppet.GetWalkArea successed %a", WalkArea );
+        }
+        else
+        {
+            warn( "Sansara.$Puppet.GetWalkArea failed!" );
+        }   
     }
 
     fn throwDagger( float speed )
@@ -25,47 +37,25 @@ public:
         d.Velocity.x = $Sprite.bFlipH ? speed : -speed;
     }
 
-    fn setupMovement( vector goal, float speedScale )
-    {
-        $Sprite.bFlipH = goal.x > Location.x;    
-        Velocity.x = speedScale * ( goal.x > Location.x ? 1.0 : -1.0 );
-    }
-    // pick a some random nearset point for camping
-    vector pickCampDestination()
-    {
-        float resultX;
-        
-        do
-        {
-            resultX = Location.x - CAMP_RADIUS * 0.5 + CAMP_RADIUS * randomf();
-        } 
-        while( abs( Location.x - resultX ) < MIN_CAMP_RADIUS )
-        
-        return [ resultX, Location.y ];
-    }
-    
-
     thread
     {
-    @Normal:
-        $Sprite.PlayAnim( "Run", 30.0, ANIM_Loop );   
-    
-        tempGoal = pickCampDestination();
-        setupMovement( tempGoal, 11.0 );
-        wait abs( Location.x - tempGoal.x ) <= 1.0;
+    @Roam:
+        $Sprite.PlayAnim( "Run", 30.0, ANIM_Loop );
+        StartRoam( 8.0 );
+        wait $Puppet.MoveStatus() != MOVE_InProgress;
+        //info( "Roam completed!" );
         
-        // This point reached, have a some rest
-        Velocity.x = 0.0;
-    
 
-        //sleep 1.0 + randomf() * 2.0;
-        if( randomf() < 0.33 )
+        // --
+       if( randomf() < 0.33 )
             goto @Attack;
         else if( randomf() > 0.5 )
             goto @Melee;
         else
             goto @Flip;
+        // --
     
+ 
     @Attack:
         //sleep 2.0;
         $Sprite.PlayAnim( "Attack", ATTACK_SPEED, ANIM_Once );        
@@ -79,12 +69,12 @@ public:
         sleep 13.0 * (1.0 / ATTACK_SPEED); // 31
         throwDagger( DAGGER_SPEED );              
         
-        goto @Normal;
+        goto @Roam;
         
     @Melee:
         $Sprite.PlayAnim( "Melee", MELEE_SPEED, ANIM_Once );
         wait !$Sprite.IsPlaying();
-        goto @Normal;
+        goto @Roam;
         
     @Flip:
         $Sprite.PlayAnim( "Flip", FLIP_SPEED, ANIM_Once );
@@ -98,6 +88,23 @@ public:
         Velocity.x = 0.0;      
         
         wait !$Sprite.IsPlaying();
-        goto @Normal;      
+        goto @Roam;      
     } 
+    
+    // prepare Sansara for roaming step
+    fn StartRoam( float minDistance )
+    {
+        assert( Location.x >= WalkArea.min.x && Location.x <= WalkArea.max.x );
+        vector destination = Location;
+     
+        do
+        {
+            destination.x = WalkArea.min.x + randomf() * ( WalkArea.max.x - WalkArea.min.x );
+        } 
+        while( abs( Location.x - destination.x ) < minDistance )
+        
+        //DebugPoint( destination, rgba( 255, 255, 255, 255 ), 10.0, 20.0 );        
+        $Puppet.MoveToPoint( destination, Size.X * 0.5, 1.0, 0.0 );
+        $Sprite.bFlipH = destination.x > Location.x;  
+    }
 }

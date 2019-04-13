@@ -542,6 +542,7 @@ FParallaxLayerComponent::FParallaxLayerComponent()
 		Texture( nullptr )		
 {
 	bRenderable		= true;
+	DrawOrder		= -0.2;
 	Scale			= math::Vector( 20.f, 20.f );
 	Parallax		= math::Vector( 0.05f, 0.05f );
 	Gap				= math::Vector( 5.f, 5.f );

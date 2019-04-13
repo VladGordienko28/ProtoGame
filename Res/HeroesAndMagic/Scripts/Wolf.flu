@@ -9,6 +9,29 @@ public:
     const MIN_CAMP_RADIUS = 10.0;
     const CAMP_SPEED_FACTOR = 0.7;
     
+    event OnBeginPlay()
+    {
+        float minX, maxX, maxHeight;
+      /*  
+        if( $Puppet.GetWalkArea( minX, maxX, maxHeight ) )
+        {
+            aabb temp;
+            temp.min.x = minX;
+            temp.max.x = maxX;
+            temp.min.y = Location.y;
+            temp.max.y = Location.y + maxHeight;
+            
+            DebugRect( temp, rgba( 0, 255, 0, 255 ), 10.0 );
+            
+            
+            info( "Wolf.GetWalkArea successed" );
+        }
+        else
+        {
+            warn( "Wolf.GetWalkArea failed!" );
+        }*/
+    }
+    
     fn TakeDamage( integer amount, entity instigator, string type ) unified
     {
         $Puppet.Health -= amount;
@@ -61,15 +84,20 @@ public:
         return [ resultX, Location.y ];
     }
 
+    // foo!!!!!!
+    vector Goal;
+
     // setup wolf's movement
     fn setupMovement( vector goal, float speedScale, float lookPeriod )
     {
         $Sprite.bFlipH = goal.x > Location.x;    
-        $Puppet.LookDirection = $Sprite.bFlipH ? LOOK_Right : LOOK_Left;
-        $Puppet.LookPeriod = lookPeriod;        
+        $Puppet.SightDirection = $Sprite.bFlipH ? SIGHT_Right : SIGHT_Left;
+        $Puppet.SightPeriod = lookPeriod;
 
-        Velocity.x = speedScale * ( $Puppet.Goal.x > Location.x ? $Puppet.MoveSpeed : -$Puppet.MoveSpeed );
+        Velocity.x = speedScale * ( Goal.x > Location.x ? $Puppet.MoveSpeed : -$Puppet.MoveSpeed );
     }
+
+
 
     thread
     {
@@ -80,13 +108,13 @@ public:
     
     @Normal:
         // Move to the randomly picked point
-        $Puppet.Goal = pickCampDestination();
+        Goal = pickCampDestination();
         //DebugPoint( $Puppet.Goal, rgba(255, 0, 0, 255), 5.0, 2.0 );  // temp        
         $Sprite.PlayAnim( "Run", 9.0, ANIM_Loop );
 
-        setupMovement( $Puppet.Goal, CAMP_SPEED_FACTOR, 0.1 );
-        wait abs( Location.x - $Puppet.Goal.x ) <= 1.0;
-        
+        setupMovement( Goal, CAMP_SPEED_FACTOR, 0.1 );
+        wait abs( Location.x - Goal.x ) <= 1.0;
+ 
         // This point reached, have a some rest
         Velocity.x = 0.0;
         $Sprite.PlayAnim( "Idle", 3.0, ANIM_Loop );        
@@ -100,9 +128,9 @@ public:
         $Sprite.PlayAnim( "Run", 10.0, ANIM_Loop ); 
         //$Sprite.Color = rgba(0, 255, 0, 255); 
         
-        $Puppet.Goal = pickBitePosition( enemy );
+        Goal = pickBitePosition( enemy );
         //DebugPoint( $Puppet.Goal, rgba(0, 255, 0, 255), 5.0, 2.0 );  // temp 
-        setupMovement( $Puppet.Goal, 0.9 + 0.2 * randomf(), 0.0 );
+        setupMovement( Goal, 0.9 + 0.2 * randomf(), 0.0 );
         sleep 0.01;
         goto @Chase;
     

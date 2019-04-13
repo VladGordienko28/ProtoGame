@@ -207,6 +207,28 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 			*POPA_FLOAT = RandomF();
 			break;
 		}
+		case OP_MinF:
+		{
+			Float a = POP_FLOAT;
+			Float b = POP_FLOAT;
+			*POPA_FLOAT = min( a, b );
+			break;
+		}
+		case OP_MaxF:
+		{
+			Float a = POP_FLOAT;
+			Float b = POP_FLOAT;
+			*POPA_FLOAT = max( a, b );
+			break;
+		}
+		case OP_ClampF:
+		{
+			Float v = POP_FLOAT;
+			Float a = POP_FLOAT;
+			Float b = POP_FLOAT;
+			*POPA_FLOAT = clamp( v, a, b );
+			break;
+		}
 		case OP_VectorSize:
 		{
 			math::Vector A = POP_VECTOR;

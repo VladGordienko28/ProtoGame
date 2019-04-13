@@ -15,6 +15,15 @@ BEGIN_RESOURCE FScript Sansara
             Offset = [-0.2000; 1.5000]
             Scale = [8.0000; 8.0000]
     END_COMPONENT
+    BEGIN_COMPONENT FPuppetComponent Puppet
+            Health = 100
+            Team = -1
+            MoveSpeed = 11.0000
+            JumpHeight = 8.0000
+            GravityScale = 10.0000
+            SightRadius = 16.0000
+    END_COMPONENT
     BEGIN_INSTANCE
+            WalkArea = (0.0000; 0.0000; 0.0000; 0.0000)
     END_INSTANCE
 END_RESOURCE

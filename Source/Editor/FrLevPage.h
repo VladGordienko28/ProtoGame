@@ -204,7 +204,6 @@ private:
 	Int32 GetSocketAt( Int32 X, Int32 Y, ELogicSocket& SType, FLogicComponent*& L );
 	FEntity* AddEntityTo( FScript* Script, Int32 X, Int32 Y );
 	void DrawKeyframe( CCanvas* Canvas, FEntity* Entity );
-	void DrawPathsNetwork( CCanvas* Canvas, CNavigator* Navigator );
 	void DrawLogicCircuit( CCanvas* Canvas );
 	void DrawScrollClamp( CCanvas* Canvas );
 

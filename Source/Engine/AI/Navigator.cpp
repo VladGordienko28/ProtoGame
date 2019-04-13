@@ -19,11 +19,11 @@ namespace navi
 		m_nodes.empty();
 	}
 
-	Int32 Navigator::findNearbyNode( FLevel* level, const math::Vector& location, Float nearbyRadius, Bool traceLine ) const
+	Int32 Navigator::findNearestNode( FLevel* level, const math::Vector& location, Float searchRadius, Bool traceLine ) const
 	{
 		Int32 resultNode = INVALID_NODE;
 		Float bestDistanceSq = math::WORLD_SIZE * math::WORLD_SIZE;
-		const Float radiusSq = nearbyRadius * nearbyRadius;
+		const Float radiusSq = searchRadius * searchRadius;
 
 		for( Int32 i = 0; i < m_nodes.size(); ++i )
 		{
@@ -43,11 +43,11 @@ namespace navi
 		return resultNode;
 	}
 
-	Int32 Navigator::findNearbyEdge( FLevel* level, const math::Vector& location, Float nearbyRadius, Bool walkOnly ) const
+	Int32 Navigator::findNearestEdge( FLevel* level, const math::Vector& location, Float searchRadius, Bool walkOnly ) const
 	{
 		Int32 resultEdge = INVALID_EDGE;
-		const math::Rect seeker = math::Rect( location, nearbyRadius );
-		Float bestPriority = -math::WORLD_SIZE;
+		const math::Rect seeker = math::Rect( location, searchRadius );
+		Float bestPriority = -math::WORLD_HALF;
 
 		for( Int32 i = 0; i < m_edges.size(); ++i )
 		{
@@ -68,7 +68,7 @@ namespace navi
 
 			if( seeker.isOverlap( bounds ) )
 			{
-				const Float testPriority = bounds.sizeX() * 0.25f - abs( location.y - bounds.min.y );
+				const Float testPriority = min( seeker.max.x, bounds.max.x ) - max( seeker.min.x, bounds.min.x );
 
 				if( testPriority > bestPriority )
 				{
@@ -81,22 +81,80 @@ namespace navi
 		return resultEdge;
 	}
 
-
 	Bool Navigator::getWalkArea( FLevel* level, const SeekerInfo& seeker, Float& minX, Float& maxX, Float& maxHeight ) const
 	{
-		Int32 edgeIndex = findNearbyEdge( level, seeker.location, 32.f, true );////////////////////////
+		const Float maxSeekerSize = max( seeker.size.x, seeker.size.y );
+		Int32 firstEdgeIndex = findNearestEdge( level, seeker.location, maxSeekerSize, true );
 
-		if( edgeIndex != -1 )
+		if( firstEdgeIndex != -1 )
 		{
-			// !! warning no traversal now
+			const PathEdge& firstEdge = m_edges[firstEdgeIndex];
+			const PathNode& a = m_nodes[firstEdge.iStartNode];
+			const PathNode& b = m_nodes[firstEdge.iEndNode];
 
-			const PathEdge& edge = m_edges[edgeIndex];
-			const PathNode& a = m_nodes[edge.iStartNode];
-			const PathNode& b = m_nodes[edge.iEndNode];
+			if( firstEdge.breadth < seeker.size.y )
+			{
+				// too low ceiling
+				return false;
+			}
 
 			minX = min( a.location.x, b.location.x );
 			maxX = max( a.location.x, b.location.x );
-			maxHeight = edge.breadth;
+			maxHeight = firstEdge.breadth;
+
+			StaticArray<Bool, MAX_EDGES> markedEdges;
+			markedEdges[firstEdgeIndex] = true;
+			
+			RingQueue<Int32, MAX_NODES> nodesQueue;
+			StaticArray<Bool, MAX_NODES> markedNodes;
+
+			nodesQueue.enqueue( firstEdge.iStartNode );
+			nodesQueue.enqueue( firstEdge.iEndNode );
+			markedNodes[firstEdge.iStartNode] = true;
+			markedNodes[firstEdge.iEndNode] = true;
+
+			while( !nodesQueue.isEmpty() )
+			{
+				Int32 nodeIndex = nodesQueue.dequeue();
+				const PathNode& node = m_nodes[nodeIndex];
+
+				for( Int32 i = 0; i < MAX_EDGES_PER_NODE; ++i )
+				{
+					if( node.iEdges[i] != INVALID_EDGE )
+					{
+						Int32 edgeIndex = node.iEdges[i];
+						const PathEdge& edge = m_edges[edgeIndex];
+
+						if( edge.type == EPathType::Walk && markedEdges[edgeIndex] == false && 
+							edge.breadth > seeker.size.y )
+						{
+							// good edge, add to area
+							Int32 nodeNewIndex = edge.iStartNode;
+							Int32 nodeOldIndex = edge.iEndNode;
+							assert( nodeIndex == nodeNewIndex || nodeIndex == nodeOldIndex );
+
+							if( nodeNewIndex == nodeIndex )
+							{
+								exchange( nodeNewIndex, nodeOldIndex );
+							}
+
+							const PathNode& newNode = m_nodes[nodeNewIndex];
+
+							minX = min( minX, newNode.location.x );
+							maxX = max( maxX, newNode.location.x );
+							maxHeight = min( maxHeight, edge.breadth );
+
+							markedEdges[edgeIndex] = true;
+
+							if( markedNodes[nodeNewIndex] == false )
+							{
+								nodesQueue.enqueue( nodeNewIndex );
+								markedNodes[nodeNewIndex] = true;
+							}
+						}
+					}
+				}
+			}
 
 			return true;
 		}
@@ -112,10 +170,15 @@ namespace navi
 
 
 
+
+
+
+
+
 	Bool Navigator::makeRandomPath( FLevel* level, const SeekerInfo& seeker, TargetInfo& target )
 	{
 		// find a nearby node
-		Int32 iStartNode = findNearbyNode( level, seeker.location, 32.f );
+		Int32 iStartNode = findNearestNode( level, seeker.location, 32.f );
 		
 		if( iStartNode == INVALID_NODE )
 		{

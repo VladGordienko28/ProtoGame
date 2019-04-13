@@ -22,7 +22,6 @@ BEGIN_RESOURCE FScript Richy
             MoveSpeed = 5.0000
             JumpHeight = 8.0000
             GravityScale = 10.0000
-            LookRadius = 16.0000
     END_COMPONENT
     BEGIN_INSTANCE
     END_INSTANCE

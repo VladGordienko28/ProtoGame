@@ -122,7 +122,7 @@ void main()
 
 	if( m_vignette.x > 0.0 )
 	{
-		float centreDist = clamp( length( textureUV - vec2( 0.5, 0.5 ) ), m_vignette.y, m_vignette.z ) - m_vignette.y;
+		float centreDist = clamp( length( textureUV.xy - vec2( 0.5, 0.5 ) ), m_vignette.y, m_vignette.z ) - m_vignette.y;
 		float vignetteSize = m_vignette.z - m_vignette.y;
 
 		gl_FragColor *= 1.0 - centreDist * m_vignette.x / vignetteSize;

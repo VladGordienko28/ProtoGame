@@ -41,16 +41,16 @@ namespace flu
 
 		void enqueue( const T& item )
 		{
-			++m_currentSize;
 			Int32 headIndex = SIZE_MASK & ( m_tailIndex + m_currentSize );
+			++m_currentSize;
 
-			assert( headIndex != m_tailIndex && "RingQueue overflowed" );
+			//assert( headIndex - 1 != m_tailIndex && "RingQueue overflowed" );
 			m_buffer[headIndex] = item;
 		}
 
 		T dequeue()
 		{
-			assert( m_currentSize > 0 && "RingQueue underflowed" );
+			//assert( m_currentSize > 0 && "RingQueue underflowed" );
 			T temp = m_buffer[m_tailIndex];
 
 			--m_currentSize;

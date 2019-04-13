@@ -90,21 +90,37 @@ namespace navi
 		~Navigator();
 
 		/**
-		 *	Return the index of the nearby node. If no node found 
-		 *	return INVALID_NODE
-		 */
-		Int32 findNearbyNode( FLevel* level, const math::Vector& location, Float nearbyRadius = 8.f, Bool traceLine = false ) const;
-
-		/**
-		 *	Return the index of the nearby edge. If no edge found 
+		 *	Return the index of the nearest edge. If no edge found 
 		 *	return INVALID_EDGE
 		 */
-		Int32 findNearbyEdge( FLevel* level, const math::Vector& location, Float nearbyRadius = 8.f, Bool walkOnly = true ) const;
+		Int32 findNearestEdge( FLevel* level, const math::Vector& location, Float searchRadius = 8.f, Bool walkOnly = true ) const;
+
+		/**
+		 *	Return the index of the nearest node. If no node found 
+		 *	return INVALID_NODE
+		 */
+		Int32 findNearestNode( FLevel* level, const math::Vector& location, Float searchRadius = 8.f, Bool traceLine = false ) const;
+
+		/**
+		 *	Return a walking area along X-axis for the specified seeker. Depends on seeker location, size and
+		 *	abilities.
+		 */
+		Bool getWalkArea( FLevel* level, const SeekerInfo& seeker, Float& minX, Float& maxX, Float& maxHeight ) const;
+
+
+
+
+
+		///////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
 
 
 
 		//--------------------------------
-		Bool getWalkArea( FLevel* level, const SeekerInfo& seeker, Float& minX, Float& maxX, Float& maxHeight ) const;
+
 
 
 

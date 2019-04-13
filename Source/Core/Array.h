@@ -453,6 +453,7 @@ namespace flu
 	public:
 		StaticArray()
 		{
+			mem::zero( m_data, sizeof( T ) * SIZE );
 		}
 
 		StaticArray( const StaticArray<T, SIZE>& other )

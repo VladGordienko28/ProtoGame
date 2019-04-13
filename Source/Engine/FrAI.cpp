@@ -14,28 +14,27 @@
 //
 FPuppetComponent::FPuppetComponent()
 	:	FExtraComponent(),
-		NextPuppet(nullptr)
+		NextPuppet( nullptr )
 {
 	// This variables are vary for all puppets
 	// in scene, but here I set some initial 
 	// values, that the most often used.
-	Health				= 100;
-	Clan				= 0;
-	MoveSpeed			= 5.f;
-	JumpHeight			= 8.f;
-	GravityScale		= 10.f;
-	Goal				= 
-	GoalStart			= { 0.f, 0.f };
-	GoalReach			= navi::EPathType::None;
-	GoalHint			= 0.f;
-	iGoalNode			=
-	iHoldenNode			= -1;
-	Body				= nullptr;
-	LookDirection		= LOOK_None;
-	LookPeriod			= 0.f;
-	LookRadius			= 16.f;
-	LookCounter			= 0.f;
-	mem::zero( LookList, sizeof(LookList) );
+	Health = 100;
+	Team = -1;
+	MoveSpeed = 5.f; // cells per sec.
+	JumpHeight = 8.f; // cells
+	GravityScale = 10.f; // cells per sec ^ 2
+	SightDirection = ESightDirection::SIGHT_None;
+	SightPeriod = 0.f;
+	SightRadius = 16.f;
+
+	m_targetPoint = { 0.f, 0.f };
+	m_targetEntity = nullptr;
+	m_targetRadius = 0.f;
+	m_moveHint = 0.f;
+	m_moveStatus = EMoveStatus::MOVE_Unknown;
+	m_moveType = navi::EPathType::None;
+	m_sightTimer = 0.f;
 
 	bTickable	= true;
 }
@@ -46,7 +45,7 @@ FPuppetComponent::FPuppetComponent()
 //
 FPuppetComponent::~FPuppetComponent()
 {
-	com_remove(Puppet);
+	com_remove( Puppet );
 }
 
 
@@ -57,7 +56,7 @@ void FPuppetComponent::InitForEntity( FEntity* InEntity )
 {
 	FExtraComponent::InitForEntity(InEntity);
 
-	com_add(Puppet);
+	com_add( Puppet );
 }
 
 
@@ -70,18 +69,22 @@ void FPuppetComponent::SerializeThis( CSerializer& S )
 
 	// Serialize only savable/loadable variables.
 	Serialize( S, Health );
-	Serialize( S, Clan );
+	Serialize( S, Team );
 	Serialize( S, MoveSpeed );
 	Serialize( S, JumpHeight );
 	Serialize( S, GravityScale );
-	SerializeEnum( S, LookDirection );
-	Serialize( S, LookPeriod );
-	Serialize( S, LookRadius );
+	SerializeEnum( S, SightDirection );
+	Serialize( S, SightPeriod );
+	Serialize( S, SightRadius );
 
 	// Also serialize list of Watched for GC.
 	if( S.GetMode() == SM_Undefined )
-		for( Int32 i=0; i<MAX_WATCHED; i++ )
-			Serialize( S, LookList[i] );
+	{
+		for( auto& other : m_puppetsInSight )
+		{
+			Serialize( S, other );
+		}
+	}
 }
 
 
@@ -94,20 +97,15 @@ void FPuppetComponent::BeginPlay()
 
 	// Slightly modify a look time counter, to avoid all puppets 
 	// watching at the same time.
-	LookCounter	= LookPeriod * RandomF();
+	m_sightTimer = SightPeriod * RandomF();
 
 	// Get arcade body.
-	Body	= As<FArcadeBodyComponent>(Base);
-	if( !Body )
+	if( !Base->IsA( FArcadeBodyComponent::MetaClass ) )
 	{
 		// Suicide, if no arcade base.
-		debug( L"Puppet '%s' has no arcade body base!", *Entity->GetFullName() );
+		error( L"Puppet '%s' has no arcade body base!", *Entity->GetFullName() );
 		Level->DestroyEntity( Entity );
 	}
-
-	// Reset navi variables.
-	iGoalNode	=
-	iHoldenNode	= -1;
 }
 
 
@@ -120,270 +118,186 @@ void FPuppetComponent::BeginPlay()
 //
 void FPuppetComponent::Tick( Float Delta )
 {
-	if( !Body )
-		return;
-
-	// Did we want to watch puppets?
-	if( LookPeriod > 0.f && LookRadius > 0.f && LookDirection != LOOK_None )
+	// Do puppet wants to stare others?
+	if( SightDirection != SIGHT_None && 
+		SightRadius > 0.f && SightPeriod > 0.f )
 	{
-		// Update timer.
-		LookCounter += Delta;
+		processSight( Delta );
+	}
 
-		if( LookCounter > LookPeriod )
-		{
-			LookCounter	= 0.f;
-			LookAtPuppets();
-		}
+	// Do puppet wants to move?
+	if( MoveSpeed > 0.f )
+	{
+		processMove( Delta );
 	}
 }
 
-
-//
-// Look to the puppets.
-//
-void FPuppetComponent::LookAtPuppets()
+void FPuppetComponent::processSight( Float delta )
 {
-	// Prepare.
-	Int32	iLookee = 0;
-	Float	Dist2	= LookRadius*LookRadius; 
-	mem::zero( LookList, sizeof(LookList) );
+	assert( SightDirection != SIGHT_None );
+	assert( SightPeriod > 0.f );
+	assert( SightRadius > 0.f );
 
-	for( FPuppetComponent* Other=Level->FirstPuppet; Other; Other = Other->NextPuppet )
+	m_sightTimer -= delta;
+
+	if( m_sightTimer < 0.f )
 	{
-		if( Other == this )
-			continue;
+		Int32 otherIndex = 0;
+		Float sightRadiusSq = SightRadius * SightRadius;
 
-		// Look direction testing.
-		math::Vector	Dir	= Other->Base->Location - Base->Location;
-		if( Dir.x>0.f && LookDirection==LOOK_Left )		continue;
-		if( Dir.x<0.f && LookDirection==LOOK_Right )	continue;
+		mem::zero( &m_puppetsInSight, sizeof( m_puppetsInSight ) );
 
-		// Distance and LOS testing.
-		if( Dir.sizeSquared() > Dist2 ) continue;
-		if	( Level->TestLineGeom
-				(
-					Base->Location + math::Vector( 0.f, Base->Size.y*0.5f ),
-					Other->Base->Location + math::Vector( 0.f, Other->Base->Size.y*0.5f ),
-					true
-				)
-			)
+		for( auto other = Level->FirstPuppet; other; other = other->NextPuppet )
+		{
+			if( other == this )
+			{
 				continue;
+			}
 
-		// Yes! Other is visible for this.
-		if( iLookee < MAX_WATCHED )
-		{
-			LookList[iLookee] = Other;
-			iLookee++;
+			// direction test
+			math::Vector direction = other->Base->Location - Base->Location;
+			if( ( direction.x > 0.f && SightDirection == SIGHT_Left ) || 
+				( direction.x < 0.f && SightDirection == SIGHT_Right ) )
+			{
+				continue;
+			}
+
+			// radius test
+			if( direction.sizeSquared() > sightRadiusSq )
+			{
+				continue;
+			}
+
+			// LOS test
+			if( !Level->TestLineGeom( headPosition(), other->headPosition(), true ) )
+			{
+				if( otherIndex < MAX_PUPPETS_IN_SIGHT )
+				{
+					m_puppetsInSight[otherIndex++] = other;
+				}
+				else
+				{
+					break;
+				}
+
+				Entity->OnLookAt( other->Entity );
+			}
 		}
-		else
-			break;
 
-		Entity->OnLookAt( Other->Entity );
+		m_sightTimer = SightPeriod;
 	}
 }
 
-
-/*-----------------------------------------------------------------------------
-	Puppet movement functions.
------------------------------------------------------------------------------*/
-
-//
-// Moves puppet to the goal, just set velocity to reach it. Returns true, if
-// puppet hits the goal. If goal is unreachabled for now returns false. 
-//
-Bool FPuppetComponent::MoveToGoal()
+void FPuppetComponent::processMove( Float delta )
 {
-	if( !Body )
+	if( m_moveType != navi::EPathType::None && m_moveStatus == EMoveStatus::MOVE_InProgress )
 	{
-		LogManager::instance().handleScriptMessage( 
-			ELogLevel::Error, L"Puppet used without appropriate arcade body in '%s'", *Entity->Script->GetName() );
-
-		return false;
-	}
-
-	// Did we have something to move?
-	if( GoalReach == navi::EPathType::None )
-		return false;
-
-	if( GoalReach == navi::EPathType::Walk )
-	{
-		//
-		// Walking.
-		//
-		if( Goal.x > GoalStart.x )
+		switch( m_moveType )
 		{
-			// Walk rightward.
-			if( Body->Location.x < Goal.x+Body->Size.x*0.25f )
+			case navi::EPathType::Walk:
 			{
-				Body->Velocity.x	= MoveSpeed;
-				return false;
+				m_moveStatus = moveWalk( delta );
+				return;
 			}
-			else
+			case navi::EPathType::Jump:
 			{
-				Body->Velocity.x	= 0.f;
-				return true;
+				m_moveStatus = moveJump( delta );
+				return;
 			}
-		}
-		else
-		{
-			// Walk leftward.
-			if( Body->Location.x > Goal.x-Body->Size.x*0.25f )
+			default:
 			{
-				Body->Velocity.x	= -MoveSpeed;
-				return false;
-			}
-			else
-			{
-				Body->Velocity.x	= 0.f;
-				return true;
+				LogManager::instance().handleScriptMessage( ELogLevel::Error, 
+					L"Unimplemented move type %d in \"%s\"", m_moveType, *GetFullName() );
+				break;
 			}
 		}
 	}
-	else if( GoalReach == navi::EPathType::Jump )
+}
+
+EMoveStatus FPuppetComponent::moveWalk( Float delta )
+{
+	math::Vector destination;
+
+	FArcadeBodyComponent* body = As<FArcadeBodyComponent>( Base );
+	assert( body );
+
+	if( m_targetEntity )
 	{
-		//
-		// Jumping.
-		//
-		Bool bXOk	= false;
-		if( Goal.x > GoalStart.x )
+		const Float otherRadius = max( m_targetEntity->Base->Size.x, m_targetEntity->Base->Size.y );
+		const math::Vector& otherLocation = m_targetEntity->Base->Location;
+
+		if( abs( Base->Location.x - otherLocation.x ) < ( m_targetRadius + otherRadius ) )
 		{
-			// X move rightward.
-			Body->Velocity.x	= MoveSpeed;
-			bXOk				= Body->Location.x > Goal.x+Body->Size.x*0.25f;
-		}
-		else
-		{
-			// X move leftward.
-			Body->Velocity.x	= -MoveSpeed;	
-			bXOk				= Body->Location.x < Goal.x-Body->Size.x*0.25f;
+			body->Velocity.x = 0.f; // ??
+			return EMoveStatus::MOVE_Complete;
 		}
 
-		if( Body->Floor && !bXOk )
-			Body->Velocity.y	= GoalHint * 1.f;
-
-		if( bXOk )
-			Body->Velocity.x	= 0.f;
-
-		return bXOk && abs(Goal.y - Body->Location.y)<Body->Size.y*0.5f;
+		destination = m_targetEntity->Base->Location;
 	}
 	else
 	{
-		//
-		// Miscellaneous, handled by script, here we detect only ovelap.
-		//
-		return Body->GetAABB().isInside( Goal );
+		if( abs( m_targetPoint.x - Base->Location.x ) <= m_targetRadius )
+		{
+			body->Velocity.x = 0.f; // ??
+			return EMoveStatus::MOVE_Complete;
+		}
+
+		destination = m_targetPoint;
 	}
+
+	body->Velocity.x = destination.x > body->Location.x ? MoveSpeed : -MoveSpeed;
+	return EMoveStatus::MOVE_InProgress;
 }
+
+EMoveStatus FPuppetComponent::moveJump( Float delta )
+{
+	math::Vector destination;
+
+	FArcadeBodyComponent* body = As<FArcadeBodyComponent>( Base );
+	assert( body );
+
+	if( m_targetEntity )
+	{
+		const Float otherRadius = max( m_targetEntity->Base->Size.x, m_targetEntity->Base->Size.y );
+		const math::Vector& otherLocation = m_targetEntity->Base->Location;
+
+		if( ( Base->Location - otherLocation ).sizeSquared() <= sqr( m_targetRadius + otherRadius ) )
+		{
+			body->Velocity.x = 0.f; // ??
+			return EMoveStatus::MOVE_Complete;
+		}
+
+		destination = m_targetEntity->Base->Location;
+	}
+	else
+	{
+		if( ( m_targetPoint - Base->Location ).sizeSquared() <= sqr( m_targetRadius ) )
+		{
+			body->Velocity.x = 0.f; // ??
+			return EMoveStatus::MOVE_Complete;
+		}
+
+		destination = m_targetPoint;
+	}
+
+	// x movement
+	body->Velocity.x = destination.x > body->Location.x ? MoveSpeed : -MoveSpeed;
+
+	// y movement
+	if( body->Floor != nullptr )
+	{
+		body->Velocity.y = m_moveHint;
+	}
+
+	return EMoveStatus::MOVE_InProgress;
+}
+
 
 /*-----------------------------------------------------------------------------
     In-Script AI functions.
 -----------------------------------------------------------------------------*/
 
-//
-// Emit a noise, from the puppet.
-//
-void FPuppetComponent::nativeMakeNoise( CFrame& Frame )
-{
-	Float Radius2 = sqr(POP_FLOAT);
-	for( FPuppetComponent* Other=Level->FirstPuppet; Other; Other = Other->NextPuppet )
-	{
-		if	( 
-				(Base->Location-Other->Base->Location).sizeSquared() < Radius2 && 
-				Other != this 
-			)
-		{
-			Other->Entity->OnHearNoise(this->Entity);
-		}
-	}
-}
-
-
-//
-// Suggest a jump height using initial jump speed.
-//
-void FPuppetComponent::nativeSuggestJumpHeight( CFrame& Frame )
-{
-	Float Speed = POP_FLOAT;
-	*POPA_FLOAT	= ai::suggestJumpHeight
-	(
-		Speed,
-		GravityScale
-	);
-}
-
-
-//
-// Suggest a jump speed to reach height.
-//
-void FPuppetComponent::nativeSuggestJumpSpeed( CFrame& Frame )
-{
-	Float Height = POP_FLOAT;
-	*POPA_FLOAT	= ai::suggestJumpSpeed
-	(
-		Height,
-		GravityScale
-	);
-}
-
-
-//
-// Send an order to puppet's teammates in radius.
-//
-void FPuppetComponent::nativeSendOrder( CFrame& Frame )
-{
-	Int32	NumRecipients	= 0;
-	String	Order			= POP_STRING;
-	Float	Radius2			= sqr(POP_FLOAT);
-
-	for( FPuppetComponent* Testee=Level->FirstPuppet; Testee; Testee = Testee->NextPuppet )
-	{
-		if	(
-				Testee->Clan == Clan &&
-				(Base->Location-Testee->Base->Location).sizeSquared() < Radius2 &&
-				Testee != this
-			)
-		{
-			Testee->Entity->OnGetOrder( this->Entity, Order );
-			NumRecipients++;
-		}
-	}
-
-	*POPA_INTEGER	= NumRecipients;
-}
-
-
-//
-// Return true, if other is visible.
-//
-void FPuppetComponent::nativeIsVisible( CFrame& Frame )
-{
-	FEntity* Other	= POP_ENTITY;
-	if( !Other )
-	{
-		*POPA_BOOL	= false;
-		return;
-	}
-
-	for( Int32 i=0; i<MAX_WATCHED && LookList[i]; i++ )
-		if( LookList[i]->Entity == Other )
-		{
-			*POPA_BOOL	= true;
-			return;
-		}
-
-	*POPA_BOOL	= false;
-}
-
-
-//
-// Move puppet to the goal.
-//
-void FPuppetComponent::nativeMoveToGoal( CFrame& Frame )
-{
-	*POPA_BOOL	= MoveToGoal();
-}
-
-
+#if 0
 //
 // Tries to create a random path.
 //
@@ -419,6 +333,190 @@ void FPuppetComponent::nativeCreatePathTo( CFrame& Frame )
 	}*/
 }
 
+
+	//fn MoveToPoint( vector destination, float radius, float speedScale, float timeout );
+	//fn MoveToEntity( entity victim, float radius, float speedScale );
+#endif
+
+void FPuppetComponent::nativeMoveToPoint( CFrame& Frame )
+{
+	math::Vector destination = POP_VECTOR;
+	Float radius = POP_FLOAT;
+	Float speedScale = POP_FLOAT; // ??
+	Float timeout = POP_FLOAT; // ??
+
+	m_targetPoint = destination;
+	m_targetEntity = nullptr;
+	m_targetRadius = radius;
+	m_moveStatus = EMoveStatus::MOVE_InProgress;
+
+	m_moveType = navi::EPathType::Walk; // ??
+	m_moveHint = 0.f; // ??
+}
+
+void FPuppetComponent::nativeMoveToEntity( CFrame& Frame )
+{
+	FEntity* pursued = POP_ENTITY;
+	Float radius = POP_FLOAT;
+	Float speedScale = POP_FLOAT; // ??
+
+	if( !pursued )
+	{
+		LogManager::instance().handleScriptMessage( ELogLevel::Error, 
+			L"MoveToEntity called without entity in \"%s\"", *GetFullName() );
+		return;
+	}
+
+	m_targetPoint = pursued->Base->Location;
+	m_targetEntity = pursued;
+	m_targetRadius = radius;
+	m_moveStatus = EMoveStatus::MOVE_InProgress;
+
+	m_moveType = navi::EPathType::Walk; // ??
+	m_moveHint = 0.f; // ??
+}
+
+void FPuppetComponent::nativeAbortMove( CFrame& Frame )
+{
+	m_moveStatus = EMoveStatus::MOVE_Aborted;
+	m_moveType = navi::EPathType::None;
+}
+
+void FPuppetComponent::nativeMoveStatus( CFrame& Frame )
+{
+	*POPA_BYTE = m_moveStatus;
+}
+
+void FPuppetComponent::nativeGetWalkArea( CFrame& Frame )
+{
+	Float* minX = POPO_FLOAT;
+	Float* maxX = POPO_FLOAT;
+	Float* maxHeight = POPO_FLOAT;
+
+	*POPA_BOOL = Level->m_navigator.getWalkArea( Level, seekerInfo(), *minX, *maxX, *maxHeight );
+}
+
+void FPuppetComponent::nativeSendOrder( CFrame& Frame )
+{
+	Int32 numRecipient = 0;
+	String order = POP_STRING;
+	Float radiusSq = sqr( POP_FLOAT );
+
+	for( auto other = Level->FirstPuppet; other; other = other->NextPuppet )
+	{
+		if( other->Team == Team && other != this &&
+			( headPosition() - other->headPosition() ).sizeSquared() < radiusSq )
+		{
+			other->Entity->OnGetOrder( Entity, order );
+			numRecipient++;
+		}
+	}
+
+	*POPA_INTEGER = numRecipient;
+}
+
+void FPuppetComponent::nativeInSight( CFrame& Frame )
+{
+	FEntity* testee = POP_ENTITY;
+
+	if( testee )
+	{
+		for( const auto other : m_puppetsInSight )
+		{
+			if( other->Entity == testee )
+			{
+				*POPA_BOOL = true;
+				return;
+			}
+		}
+	}
+
+	*POPA_BOOL = false;
+}
+
+void FPuppetComponent::nativeMakeNoise( CFrame& Frame )
+{
+	Float radiusSq = sqr( POP_FLOAT );
+
+	for( auto other = Level->FirstPuppet; other; other = other->NextPuppet )
+	{
+		if( ( ( Base->Location - other->Base->Location ).sizeSquared() < radiusSq ) &&
+			( other != this ) )
+		{
+			other->Entity->OnHearNoise( this->Entity );
+		}
+	}
+}
+
+navi::SeekerInfo FPuppetComponent::seekerInfo() const
+{
+	navi::SeekerInfo info;
+
+	info.location = Base->Location;
+	info.size = Base->Size;
+	info.xSpeed = MoveSpeed;
+	info.jumpHeight = JumpHeight;
+	info.gravity = GravityScale; // ?? todo: move to some physics storage
+
+	return info;
+}
+
+math::Vector FPuppetComponent::headPosition() const
+{
+	return math::Vector( Base->Location.x, Base->Location.y + Base->Size.y * 0.45f );
+}
+
+math::Vector FPuppetComponent::footPosition() const
+{
+	return math::Vector( Base->Location.x, Base->Location.y - Base->Size.y * 0.45f );
+}
+
+REGISTER_CLASS_CPP( FPuppetComponent, FExtraComponent, CLASS_SingleComp )
+{
+	BEGIN_ENUM( ESightDirection );
+		ENUM_ELEM( SIGHT_None );
+		ENUM_ELEM( SIGHT_Left );
+		ENUM_ELEM( SIGHT_Right );
+		ENUM_ELEM( SIGHT_Both );
+	END_ENUM;
+
+	BEGIN_ENUM( EMoveStatus );
+		ENUM_ELEM( MOVE_Unknown );
+		ENUM_ELEM( MOVE_Complete );
+		ENUM_ELEM( MOVE_InProgress );
+		ENUM_ELEM( MOVE_Aborted );
+	END_ENUM;
+
+	ADD_PROPERTY( Health, PROP_Editable );
+	ADD_PROPERTY( Team, PROP_Editable );
+	ADD_PROPERTY( MoveSpeed, PROP_Editable );
+	ADD_PROPERTY( JumpHeight, PROP_Editable );
+	ADD_PROPERTY( GravityScale, PROP_Editable | PROP_Deprecated );
+	ADD_PROPERTY( SightDirection, PROP_Editable );
+	ADD_PROPERTY( SightPeriod, PROP_Editable );
+	ADD_PROPERTY( SightRadius, PROP_Editable );
+
+
+
+
+
+
+
+	/*
+	DECLARE_METHOD( CreatePathTo, TYPE_Bool, ARG(dest, TYPE_Vector, END) )
+	DECLARE_METHOD( CreateRandomPath, TYPE_Bool, END );
+	*/
+
+
+	DECLARE_METHOD( InSight, TYPE_Bool, ARG( testee, TYPE_Entity, END ) );
+	DECLARE_METHOD( SendOrder, TYPE_Integer, ARG( order, TYPE_String, ARG( radius, TYPE_Float, END ) ) );
+	DECLARE_METHOD( MakeNoise, TYPE_None, ARG( radius, TYPE_Float, END ) );
+	DECLARE_METHOD( GetWalkArea, TYPE_Bool, ARGOUT( minX, TYPE_Float, ARGOUT( maxX, TYPE_Float, ARGOUT( maxHeight, TYPE_Float, END ) ) ) );
+	DECLARE_METHOD( MoveStatus, TYPE_Byte, END );
+	DECLARE_METHOD( AbortMove, TYPE_None, END );
+	DECLARE_METHOD( MoveToPoint, TYPE_None, ARG( dest, TYPE_Vector, ARG( radius, TYPE_Float, ARG( speedScale, TYPE_Float, ARG( timeout, TYPE_Float, END ) ) ) ) );
+	DECLARE_METHOD( MoveToEntity, TYPE_None, ARG( pursued, TYPE_Entity, ARG( radius, TYPE_Float, ARG( speedScale, TYPE_Float, END ) ) ) );
+}
 
 /*-----------------------------------------------------------------------------
     The End.

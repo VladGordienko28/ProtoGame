@@ -831,22 +831,6 @@ void fluDebugRect( CFrame& Frame )
 	CDebugDrawHelper::Instance().DrawLine( { R.max.x, R.min.y }, { R.min.x, R.min.y }, Color, Time );
 }
 
-
-// Experimental
-void fluTestOut( CFrame& Frame )
-{
-	UInt8 val = POP_BYTE;
-	String* str = POPO_STRING;
-	Int32* ival = POPO_INTEGER;
-
-	debug( L"Called in C++: %d, \"%s\" %d", val, **str, *ival );
-	*str = L"Vlad is C++ master";
-	*ival = 28;
-
-	*POPA_VECTOR = math::Vector( 123.f, 456.f );
-}
-
-
 /*-----------------------------------------------------------------------------
     Registration.
 -----------------------------------------------------------------------------*/
@@ -1043,65 +1027,6 @@ REGISTER_CLASS_CPP( FLevel, FResource, CLASS_Sterile )
 	DECLARE_EX_FUNCTION( DebugLine, TYPE_None, ARG(a, TYPE_Vector, ARG(b, TYPE_Vector, ARG(color, TYPE_Color, ARG(time, TYPE_Float, END)))));
 	DECLARE_EX_FUNCTION( DebugPoint, TYPE_None, ARG(a, TYPE_Vector, ARG(color, TYPE_Color, ARG(size, TYPE_Float, ARG(time, TYPE_Float, END)))));
 	DECLARE_EX_FUNCTION( DebugRect, TYPE_None, ARG(rect, TYPE_AABB, ARG(color, TYPE_Color, ARG(time, TYPE_Float, END))) );
-
-
-	DECLARE_EX_FUNCTION( TestOut, TYPE_Vector, ARG( val, TYPE_Byte, ARGOUT( str, TYPE_String, ARGOUT( ival, TYPE_Integer, END ) ) ) );
-/*
-void fluTestOut( CFrame& Frame )
-{
-	UInt8 val = POP_BYTE;
-	String* str = POPO_STRING;
-	Int32* ival = POPO_INTEGER;
-
-	debug( L"Called in C++: %d, \"%s\" %d", val, **str, *ival );
-	*str = L"Vlad is C++ master";
-	*ival = 28;
-
-	*POPA_VECTOR = math::Vector( 123.f, 456.f );
-}*/
-}
-
-
-REGISTER_CLASS_CPP( FPuppetComponent, FExtraComponent, CLASS_SingleComp )
-{
-	BEGIN_ENUM(ELookDirection);
-		ENUM_ELEM(LOOK_None);
-		ENUM_ELEM(LOOK_Left);
-		ENUM_ELEM(LOOK_Right);
-		ENUM_ELEM(LOOK_Both);
-	END_ENUM;
-
-	BEGIN_ENUM(EPathType)
-		ENUM_ELEM(PATH_None);
-		ENUM_ELEM(PATH_Walk);
-		ENUM_ELEM(PATH_Jump);
-		ENUM_ELEM(PATH_Ladder);
-		ENUM_ELEM(PATH_Teleport);
-		ENUM_ELEM(PATH_Other);
-	END_ENUM;
-
-	ADD_PROPERTY( Health, PROP_Editable );
-	ADD_PROPERTY( Clan, PROP_Editable );
-	ADD_PROPERTY( MoveSpeed, PROP_None );
-	ADD_PROPERTY( JumpHeight, PROP_None );
-	ADD_PROPERTY( GravityScale, PROP_None );
-	ADD_PROPERTY( GoalReach, PROP_NoImEx );
-	ADD_PROPERTY( Goal, PROP_NoImEx );
-	ADD_PROPERTY( GoalHint, PROP_NoImEx );
-	ADD_PROPERTY( iGoalNode, PROP_NoImEx );
-	ADD_PROPERTY( iHoldenNode, PROP_NoImEx );
-	ADD_PROPERTY( LookDirection, PROP_None );
-	ADD_PROPERTY( LookRadius, PROP_None );
-	ADD_PROPERTY( LookPeriod, PROP_None );
-
-	DECLARE_METHOD( SendOrder, TYPE_Integer, ARG(order, TYPE_String, ARG(radius, TYPE_Float, END)) );
-	DECLARE_METHOD( SuggestJumpSpeed, TYPE_Float, ARG(height, TYPE_Float, END) );
-	DECLARE_METHOD( SuggestJumpHeight, TYPE_Float, ARG(speed, TYPE_Float, END) );
-	DECLARE_METHOD( MakeNoise, TYPE_None, ARG(radius, TYPE_Float, END) );
-	DECLARE_METHOD( IsVisible, TYPE_Bool, ARG(other, TYPE_Entity, END) );
-	DECLARE_METHOD( CreatePathTo, TYPE_Bool, ARG(dest, TYPE_Vector, END) )
-	DECLARE_METHOD( CreateRandomPath, TYPE_Bool, END );
-	DECLARE_METHOD( MoveToGoal, TYPE_Bool, END );
 }
 
 

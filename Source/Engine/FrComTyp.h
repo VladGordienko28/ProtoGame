@@ -1189,12 +1189,21 @@ private:
 //
 // A puppet watching side.
 //
-enum ELookDirection
+enum ESightDirection
 {
-	LOOK_None,		// Puppet has no eyes.
-	LOOK_Left,		// Puppet looks to left.
-	LOOK_Right,		// Puppet looks to right.
-	LOOK_Both		// Puppet looks to both sides.
+	SIGHT_None,		// Puppet has no eyes.
+	SIGHT_Left,		// Puppet looks to left.
+	SIGHT_Right,		// Puppet looks to right.
+	SIGHT_Both		// Puppet looks to both sides.
+};
+
+// result of polling movement
+enum EMoveStatus
+{
+	MOVE_Unknown,
+	MOVE_Complete,
+	MOVE_InProgress,
+	MOVE_Aborted
 };
 
 
@@ -1205,25 +1214,19 @@ class FPuppetComponent: public FExtraComponent
 {
 REGISTER_CLASS_H(FPuppetComponent);
 public:
-	// General.
-	Int32				Health;
-	Int32				Clan;
-	
-	// Movement.
-	Float				MoveSpeed;
-	Float				JumpHeight;	
-	Float				GravityScale;
+	// general
+	Int32 Health;
+	Int32 Team;
 
-	// Navigation.
-	math::Vector		Goal;
-	navi::EPathType		GoalReach;
-	Float				GoalHint;
+	// movement
+	Float MoveSpeed;
+	Float JumpHeight;
+	Float GravityScale; // todo: move to level's properties
 
-	// AI vision.
-	enum { MAX_WATCHED	= 8 };
-	ELookDirection		LookDirection;
-	Float				LookPeriod;
-	Float				LookRadius;
+	// sight
+	ESightDirection SightDirection;
+	Float SightPeriod;
+	Float SightRadius;
 
 	// FPuppetComponent interface.
 	FPuppetComponent();
@@ -1237,53 +1240,60 @@ public:
 	// FObject interface.
 	void SerializeThis( CSerializer& S );
 
-	// Friends.
-	friend class CNavigator;
-	friend class FLevel;
-
 private:
-	// Puppet internal.
-	FPuppetComponent*		NextPuppet;
-	FArcadeBodyComponent*	Body;
-	math::Vector			GoalStart;
-	Float					LookCounter;
-	FPuppetComponent*		LookList[MAX_WATCHED];
-	Int32					iHoldenNode;
-	Int32					iGoalNode;
+	// legacy
+	FPuppetComponent* NextPuppet;
 
-	// Internal functions.
-	void LookAtPuppets();
-	Bool MoveToGoal();
+	// navigation
+	math::Vector m_targetPoint;		// point which puppet want to reach
+	FEntity* m_targetEntity;		// entity which puppet want to reach
+	Float m_targetRadius;			// radius of a target
+	EMoveStatus m_moveStatus;		// current status of move
 
-	// Natives.
-	void nativeSendOrder( CFrame& Frame );
-	void nativeSuggestJumpHeight( CFrame& Frame );
-	void nativeSuggestJumpSpeed( CFrame& Frame );
-	void nativeMakeNoise( CFrame& Frame );
-	void nativeIsVisible( CFrame& Frame );
-	void nativeCreatePathTo( CFrame& Frame );
-	void nativeCreateRandomPath( CFrame& Frame );
-	void nativeMoveToGoal( CFrame& Frame ); // target
+	Float m_moveHint;				// some extra information about path, such as jump impulse
+	navi::EPathType m_moveType;		// move type, no move if EPathType::None
+
+	// sight
+	static const SizeT MAX_PUPPETS_IN_SIGHT = 8;
+	StaticArray<FPuppetComponent*, MAX_PUPPETS_IN_SIGHT> m_puppetsInSight;
+	Float m_sightTimer;
+
+	// private functions
+	void processSight( Float delta );
+	void processMove( Float delta );
+
+	// movement functions
+	EMoveStatus moveWalk( Float delta );
+	EMoveStatus moveJump( Float delta );
+
+
+
 
 
 /*
-	enum EMoveStatus
-	{
-		None,
-		Aborted,
-		Complete,
-		InProgress
-	};
 
-	fn MoveToPoint( vector destination, float radius, float speedScale, float timeout );
-	fn MoveToEntity( entity victim, float radius, float speedScale );
+	// Natives.
+
+	void nativeCreatePathTo( CFrame& Frame );
+	void nativeCreateRandomPath( CFrame& Frame );
+	*/
 
 
 
-	EMoveStatus processMove();
 
-*/
+	// New and experimental:
+	void nativeGetWalkArea( CFrame& Frame );
+	void nativeMoveToPoint( CFrame& Frame );
+	void nativeMoveToEntity( CFrame& Frame );
+	void nativeMoveStatus( CFrame& Frame );
+	void nativeAbortMove( CFrame& Frame );
+	void nativeSendOrder( CFrame& Frame );
+	void nativeInSight( CFrame& Frame );
+	void nativeMakeNoise( CFrame& Frame );
 
+	navi::SeekerInfo seekerInfo() const;
+	math::Vector headPosition() const;
+	math::Vector footPosition() const;
 };
 
 

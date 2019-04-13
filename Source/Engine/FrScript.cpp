@@ -956,6 +956,9 @@ REGISTER_CLASS_CPP( FScript, FResource, CLASS_Sterile )
 	DECLARE_FUNCTION( OP_Normalize, normalize, TYPE_Vector, ARG( v, TYPE_Vector, END ) );
 	DECLARE_FUNCTION( OP_Random, random, TYPE_Integer, ARG(limitPlusOne, TYPE_Integer, END) );
 	DECLARE_FUNCTION( OP_RandomF, randomf, TYPE_Float, END );
+	DECLARE_FUNCTION( OP_MinF, minf, TYPE_Float, ARG(a, TYPE_Float, ARG(b, TYPE_Float, END)) );
+	DECLARE_FUNCTION( OP_MaxF, maxf, TYPE_Float, ARG(a, TYPE_Float, ARG(b, TYPE_Float, END)) );
+	DECLARE_FUNCTION( OP_ClampF, clampf, TYPE_Float, ARG(v, TYPE_Float, ARG(a, TYPE_Float, ARG(b, TYPE_Float, END))) );
 	DECLARE_FUNCTION( OP_VectorSize, vsize, TYPE_Float, ARG(vect, TYPE_Vector, END) );
 	DECLARE_FUNCTION( OP_RGBA, rgba, TYPE_Color, ARG(r, TYPE_Byte, ARG(g, TYPE_Byte, ARG(b, TYPE_Byte, ARG(a, TYPE_Byte, END)))) );
 	DECLARE_FUNCTION( OP_CharAt, charAt, TYPE_String, ARG(str, TYPE_String, ARG(i, TYPE_Integer, END)) );
