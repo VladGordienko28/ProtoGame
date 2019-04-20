@@ -189,9 +189,9 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 	{
 		Canvas->DrawText
 					( 
-						Messages[iMsg], 
+						Messages[iMsg].message, 
 						Root->Font2, 
-						math::colors::WHITE, 
+						Messages[iMsg].color, 
 						math::Vector( 10.f, Size.Height - (Root->Font2->Height+2)*(iMsg+1) )
 					);
 	}
@@ -201,11 +201,11 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 //
 // Add a new message to the errors.
 //
-void WPlayPage::AddScriptMessage( Bool bImportant, String Message )
+void WPlayPage::AddScriptMessage( Bool bImportant, String Message, math::Color Color )
 {
 	if( PlayMode == PLAY_Debug || bImportant )
 	{
-		Messages.push( Message );
+		Messages.push( { Message, Color } );
 		LastPushTime	= GPlat->Now();
 
 		// Check for overflow.
@@ -388,12 +388,15 @@ void WPlayPage::OnMouseScroll( Int32 Delta )
 
 void WPlayPage::handleMessage( ELogLevel level, const Char* message )
 {
-	AddScriptMessage( false, message );
+	AddScriptMessage( false, message, math::colors::LIGHT_STEEL_BLUE );
 }
 
 void WPlayPage::handleScriptMessage( ELogLevel level, const Char* message )
 {
-	AddScriptMessage( level >= ELogLevel::Warning, message );
+	const auto color = level >= ELogLevel::Error ? math::colors::FIRE_BRICK : level == ELogLevel::Warning ? 
+		math::colors::GOLDENROD : math::colors::WHITE;
+
+	AddScriptMessage( level >= ELogLevel::Warning, message, color );
 }
 
 void WPlayPage::handleFatalMessage( const Char* message )
@@ -402,7 +405,7 @@ void WPlayPage::handleFatalMessage( const Char* message )
 
 void WPlayPage::handleFatalScriptMessage( const Char* message )
 {
-	AddScriptMessage( true, message );
+	AddScriptMessage( true, message, math::colors::RED );
 }
 
 /*-----------------------------------------------------------------------------

@@ -29,7 +29,7 @@ public:
 	// WPlayPage interface.
 	WPlayPage( FLevel* InOrigianl, EPlayMode InPlayMode, WContainer* InOwner, WWindow* InRoot );
 	~WPlayPage();
-	void AddScriptMessage( Bool bImportant, String Message );
+	void AddScriptMessage( Bool bImportant, String Message, math::Color Color );
 
 	// WTabPage interface.
 	void OnOpen();
@@ -67,10 +67,16 @@ private:
 	FLevel*				PlayLevel;
 	Float				PlayTime;
 
-	// Runtime script errors.
+	// Runtime script messages.
+	struct ScriptMessage
+	{
+		String message;
+		math::Color color;
+	};
+
 	enum { MAX_SCRIPT_MSG_LIST = 8 };
-	Array<String>	Messages;
-	Double			LastPushTime;
+	Array<ScriptMessage>	Messages;
+	Double					LastPushTime;
 
 	// Internal.
 	void RunLevel();

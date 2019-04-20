@@ -164,154 +164,321 @@ namespace navi
 		}
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-	Bool Navigator::makeRandomPath( FLevel* level, const SeekerInfo& seeker, TargetInfo& target )
+	Bool Navigator::makePathTo( FLevel* level, const SeekerInfo& seeker, const math::Vector& destination, TargetInfo& target )
 	{
-		// find a nearby node
-		Int32 iStartNode = findNearestNode( level, seeker.location, 32.f );
-		
-		if( iStartNode == INVALID_NODE )
+		// figure out seeker's edge
+		const Float seekerRadius = max( seeker.size.x, seeker.size.y );
+		Int32 firstEdgeIndex = findNearestEdge( level, seeker.location, seekerRadius, true );
+
+		if( firstEdgeIndex == INVALID_EDGE )
 		{
-			return false;
+			// unable to bound to network
+			goto NoPath;
 		}
 
-
-
-/*
-	// Get seeker's nearest node.
-	Int32	iStart	= FindNearestNode( Seeker->Body->Location, false, 32.f );
-	if( iStart == -1 )
-	{
-		// Failed to attach Seeker to navi network.
-		return false;
-	}
-	TPathNode&	Start	= Nodes[iStart];
-	math::Vector	Bottom	= Seeker->Base->Location - math::Vector( 0.f, Seeker->Base->Size.y*0.5f );
-
-	if( Seeker->Body->GetAABB().isInside( Start.Location ) )
-	{
-		// 
-		// A: Seeker actually hold node, make path to next in chain.
-		//
-		if	( 
-				(Seeker->iGoalNode == iStart) ||
-				(Seeker->iGoalNode == -1)
-			)
+		// figure our destination's edge
+		math::Vector projectedDestination = destination;
+		Int32 destinationEdgeIndex = findNearestEdge( level, destination, seekerRadius, true );
+		if( destinationEdgeIndex == INVALID_EDGE )
 		{
-			// End of chain reached, so make a new random path.
-			Int32 iPath = -1, iFinish = -1; 
-			enum{ NUM_RANDOM_SAMPLES = 8 };
-			for( Int32 i=0; i<NUM_RANDOM_SAMPLES; i++ )
+			// destination is too high, so try to drop it
+			math::Vector destinationFloor;
+			if( level->TestLineGeom( destination, 
+				{ destination.x, destination.y - seeker.jumpHeight - seeker.size.y * 0.5f }, false, &destinationFloor ) )
 			{
-				Int32 iTestPath, iTestFinish;
-				iTestFinish	= Random(Nodes.size());
-				ClearPaths();
-				iTestPath	= BreadthFirstSearch( Seeker, iStart, iTestFinish );
-				if( iTestPath != -1 )
+				destinationEdgeIndex = findNearestEdge( level, destinationFloor, seekerRadius, true );
+
+				if( destinationEdgeIndex == INVALID_EDGE )
 				{
-					iPath	= iTestPath;
-					iFinish	= iTestFinish;
-					break;
+					goto NoPath;
+				}
+				else
+				{
+					projectedDestination = destinationFloor;
 				}
 			}
-			if( iPath == -1 )
-				goto NoPath;
-
-			// Initialize new walking.
-			TPathEdge& Path		= Edges[iPath];
-			Seeker->GoalStart	= Seeker->Body->Location;
-			Seeker->Goal		= Nodes[Path.iFinish].Location;
-			Seeker->GoalReach	= Path.PathType;
-			Seeker->iHoldenNode	= iStart;
-			Seeker->iGoalNode	= iFinish;
-			if( Path.PathType == PATH_Jump )
-				Seeker->CanJumpTo( Bottom, Seeker->Goal, Seeker->GoalHint );
-			else
-				Seeker->GoalHint	= 0.f;	
-			return true;
 		}
-		else
-		{
-			// Follow the path next.
-			assert(Seeker->iGoalNode != -1);
-			ClearPaths();
-			Int32 iPath = BreadthFirstSearch( Seeker, iStart, Seeker->iGoalNode );
 
-			if( iPath != -1 )
+		if( destinationEdgeIndex == firstEdgeIndex )
+		{
+			// Seeker and the destination at the same edge
+			if( abs( seeker.location.x - destination.x ) > seeker.size.x * 0.5f )
 			{
-				// Goto next node.
-				TPathEdge& Path		= Edges[iPath];
-				Seeker->GoalStart	= Seeker->Body->Location;
-				Seeker->Goal		= Nodes[Path.iFinish].Location;
-				Seeker->GoalReach	= Path.PathType;
-				Seeker->iHoldenNode	= iStart;
-				if( Path.PathType == PATH_Jump )
-					Seeker->CanJumpTo( Bottom, Seeker->Goal, Seeker->GoalHint );
-				else
-					Seeker->GoalHint	= 0.f;	
+				// walk to destination 
+				// todo: add support of early jumps, before seeker reached floorProjection of destination
+				target.moveType = EPathType::Walk;
+				target.location = projectedDestination;
 				return true;
 			}
 			else
-				goto NoPath;
-		}
-	}
-	else
-	{
-		//
-		// B: Seeker don't actually hold any node, so attach to the nearest
-		// node and then pick a random node.
-		//
-		if( Seeker->Body->Floor )
-		{
-			// Seeker has a floor, so it ok.
-			Seeker->GoalStart	= Seeker->Body->Location;
-			Seeker->Goal		= Start.Location;
-			Seeker->GoalReach	= PATH_Walk;
-			Seeker->GoalHint	= 0.f;
-			Seeker->iGoalNode	= iStart;
-			Seeker->iHoldenNode	= -1;
-			return true;
+			{
+				// seeker is below destination, so make a jump
+				target.moveType = EPathType::Jump;
+				target.location = destination;
+				return true;
+			}
 		}
 		else
 		{
-			// Seeker has no floor, so give up.
-NoPath:
-			Seeker->GoalStart	= 
-			Seeker->Goal		= Seeker->Body->Location;
-			Seeker->GoalReach	= PATH_None;
-			Seeker->GoalHint	= 0.f;
-			Seeker->iGoalNode	= 
-			Seeker->iHoldenNode	= -1;
-			return false;
+			// Seeker and the destination at the different edges
+			StaticArray<Int32, MAX_ROUTE_SIZE> route;
+			Int32 routeSize;
+
+			if( breadthFirstSearch( seeker, firstEdgeIndex, destinationEdgeIndex, route, routeSize ) )
+			{
+				// follow the route
+				assert( routeSize > 0 );
+				
+				if( isNodeOccupiedBy( seeker, route[0] ) )
+				{
+					// find the edge from the route[0] to route[1]
+					assert( routeSize > 1 );
+					const PathNode& occupiedNode = m_nodes[route[0]];
+					const PathNode& nextNode = m_nodes[route[1]];
+
+					Int32 resultEdgeIndex = INVALID_EDGE;
+					for( Int32 i = 0; i < MAX_EDGES_PER_NODE; ++i )
+					{
+						Int32 tempEdge = occupiedNode.iEdges[i];
+						if( tempEdge != INVALID_EDGE && m_edges[tempEdge].iEndNode == route[1] )
+						{
+							resultEdgeIndex = tempEdge;
+							break;
+						}
+					}
+					assert( resultEdgeIndex != INVALID_EDGE );
+
+					const PathEdge& nextEdge = m_edges[resultEdgeIndex];
+
+					target.moveType = nextEdge.type;
+					target.location = nextNode.location;
+					return true;
+				}
+				else
+				{
+					// go to the first node at the path, which is belong to seeker's edge
+					target.moveType = m_edges[firstEdgeIndex].type;
+					target.location = m_nodes[route[0]].location;
+					return true;
+				}
+			}
+			else
+			{
+				// there is no path to destination
+				goto NoPath;
+			}
 		}
+
+
+	NoPath:
+		target.moveType = EPathType::None;
+		target.location = seeker.location;
+		return false;
 	}
-}
-*/
 
-	
+	Bool Navigator::makeRandomPath( FLevel* level, const SeekerInfo& seeker, TargetInfo& target )
+	{
+		// figure out seeker's edge
+		const Float seekerRadius = max( seeker.size.x, seeker.size.y );
+		Int32 seekerEdgeIndex = findNearestEdge( level, seeker.location, seekerRadius, true );
 
+		if( seekerEdgeIndex == INVALID_EDGE )
+		{
+			// unable to bound to network
+			goto NoPath;
+		}
+
+		const PathEdge& seekerEdge = m_edges[seekerEdgeIndex];
+		
+		Int32 firstNodeIndex = seekerEdge.iStartNode;
+		Int32 secondNodeIndex = seekerEdge.iEndNode;
+		assert( firstNodeIndex != INVALID_NODE && secondNodeIndex != INVALID_NODE );
+
+		Bool isFirstOccupied = isNodeOccupiedBy( seeker, firstNodeIndex );
+		Bool isSecondOccupied = isNodeOccupiedBy( seeker, secondNodeIndex );
+
+		if( isFirstOccupied || isSecondOccupied )
+		{
+			// select random edge for next movement
+			const PathNode& firstNode = m_nodes[isFirstOccupied ? firstNodeIndex : secondNodeIndex];
+
+			// seeker's edge is low priority
+			if( RandomF() < 0.75f * ( 1.f / MAX_EDGES_PER_NODE ) )
+			{
+				// ok, let's walk on seeker's edge to the other side
+			UseSeekerEdge:;
+				const PathNode& targetNode = m_nodes[!isFirstOccupied ? firstNodeIndex : secondNodeIndex];
+
+				target.location = targetNode.location;
+				target.moveType = seekerEdge.type;
+				return true;
+			}
+			else
+			{
+				// select random one
+				StaticArray<Int32, MAX_EDGES_PER_NODE> candidateEdges;
+				Int32 numCandidates = 0;
+
+				for( Int32 i = 0; i < MAX_EDGES_PER_NODE; ++i )
+				{
+					if( firstNode.iEdges[i] != INVALID_NODE && firstNode.iEdges[i] != seekerEdgeIndex &&
+						canPassThrough( seeker, m_edges[firstNode.iEdges[i]] ) )
+					{
+						candidateEdges[numCandidates++] = firstNode.iEdges[i];
+					}
+				}
+
+				if( numCandidates > 0 )
+				{
+					const PathEdge& bestEdge = m_edges[ candidateEdges[ Random( numCandidates ) ] ];
+
+					target.location = m_nodes[bestEdge.iEndNode].location;
+					target.moveType = bestEdge.type;
+					return true;
+				}
+				else
+				{
+					// no edges except seeker's one
+					goto UseSeekerEdge;
+				}
+			}
+		}
+		else
+		{
+			// tries to occupie first or second node
+			Int32 nodeToOccupyIndex = RandomBool() ? firstNodeIndex : secondNodeIndex;
+			const PathNode& node = m_nodes[nodeToOccupyIndex];
+
+			target.location = node.location;
+			target.moveType = seekerEdge.type;
+			return true;
+		}
+
+	NoPath:
+		target.moveType = EPathType::None;
+		target.location = seeker.location;
+		return false;
 	}
 
+	Bool Navigator::breadthFirstSearch( const SeekerInfo& seeker, Int32 firstEdgeIndex, Int32 goalEdgeIndex,
+		StaticArray<Int32, MAX_ROUTE_SIZE>& route, Int32& routeSize )
+	{
+		assert( firstEdgeIndex != INVALID_EDGE );
+		assert( goalEdgeIndex != INVALID_EDGE );
 
+		RingQueue<Int32, MAX_NODES> nodesQueue;
+		StaticArray<Float, MAX_NODES> nodesWeight;
+		StaticArray<Int32, MAX_NODES> parentLinks;
+		Int32 lastNodeInRoute = INVALID_NODE;
+		routeSize = 0;
 
+		// mark all nodes as far-far away
+		for( Int32 i = 0; i < m_nodes.size(); ++i )
+		{
+			nodesWeight[i] = sqr( math::WORLD_SIZE );
+			parentLinks[i] = INVALID_NODE;
+		}
 
+		// enqueue starting nodes
+		const PathEdge& firstEdge = m_edges[firstEdgeIndex];
 
+		nodesQueue.enqueue( firstEdge.iStartNode );
+		nodesQueue.enqueue( firstEdge.iEndNode );
+		nodesWeight[firstEdge.iStartNode] = 0.f;
+		nodesWeight[firstEdge.iEndNode] = 0.f;
 
+		while( !nodesQueue.isEmpty() )
+		{
+			Int32 currentNodeIndex = nodesQueue.dequeue();
+			const PathNode& currentNode = m_nodes[currentNodeIndex];
 
+			Int32 nodeEdgeIndex = 0;
+			while( currentNode.iEdges[nodeEdgeIndex] != -1 && nodeEdgeIndex < MAX_EDGES_PER_NODE )
+			{
+				Int32 currentEdgeIndex = currentNode.iEdges[nodeEdgeIndex];
 
+				if( currentEdgeIndex == goalEdgeIndex )
+				{
+					// found goal edge
+					lastNodeInRoute = currentNodeIndex;
+					goto PathFound;
+				}
 
-	//////////////////////////////////////////////////////////////////////////////
+				const PathEdge& currentEdge = m_edges[currentEdgeIndex];
+				Int32 nextNodeIndex = currentEdge.iEndNode;
+				const PathNode& nextNode = m_nodes[nextNodeIndex];
 
+				if( nodesWeight[nextNodeIndex] > nodesWeight[currentNodeIndex] + currentEdge.cost &&
+					canPassThrough( seeker, currentEdge ) )
+				{
+					nodesQueue.enqueue( nextNodeIndex );
+
+					nodesWeight[nextNodeIndex] = nodesWeight[currentNodeIndex] + currentEdge.cost;
+					parentLinks[nextNodeIndex] = currentNodeIndex;
+				}
+
+				++nodeEdgeIndex;
+			}
+		}
+
+	NoPath:
+		return false;
+
+	PathFound:
+		assert( lastNodeInRoute != INVALID_NODE );
+
+		for( Int32 i = lastNodeInRoute; i != INVALID_NODE; i = parentLinks[i] )
+		{
+			// shift route if it doesn't fit
+			if( routeSize >= MAX_ROUTE_SIZE )
+			{
+				for( Int32 j = 1; j < MAX_ROUTE_SIZE; ++j )
+				{
+					route[j-1] = route[j];
+				}
+
+				routeSize -= 1;
+			}
+
+			route[routeSize++] = i;
+		}
+
+		// flip nodes order
+		assert( routeSize > 0 );
+		for( Int32 i = 0; i < routeSize / 2; ++i )
+		{
+			route.swap( i, routeSize - 1 - i );
+		}
+
+		return true;
+	}
+
+	Bool Navigator::isEdgeOccupiedBy( const SeekerInfo& seeker, Int32 edgeIndex ) const
+	{
+		assert( edgeIndex != INVALID_EDGE );
+		const PathEdge& edge = m_edges[edgeIndex];
+
+		assert( edge.iStartNode != INVALID_NODE && edge.iEndNode != INVALID_NODE );
+		const math::Vector verts[] =
+		{
+			m_nodes[edge.iStartNode].location,
+			m_nodes[edge.iEndNode].location
+		};
+
+		const math::Rect seekerRect = math::Rect( seeker.location, seeker.size.x, seeker.size.y );
+		const math::Rect edgeRect = math::Rect( verts, arraySize( verts ) );
+
+		return seekerRect.isOverlap( edgeRect );
+	}
+
+	Bool Navigator::isNodeOccupiedBy( const SeekerInfo& seeker, Int32 nodeIndex ) const
+	{
+		assert( nodeIndex != INVALID_NODE );
+		const PathNode& node = m_nodes[nodeIndex];
+
+		const math::Rect seekerRect = math::Rect( seeker.location, seeker.size.x, seeker.size.y );
+		return seekerRect.isInside( node.location );
+	}
 
 	Bool Navigator::canPassThrough( const SeekerInfo& seeker, const PathEdge& edge ) const
 	{

@@ -31,7 +31,6 @@ FPuppetComponent::FPuppetComponent()
 	m_targetPoint = { 0.f, 0.f };
 	m_targetEntity = nullptr;
 	m_targetRadius = 0.f;
-	m_moveHint = 0.f;
 	m_moveStatus = EMoveStatus::MOVE_Unknown;
 	m_moveType = navi::EPathType::None;
 	m_sightTimer = 0.f;
@@ -256,8 +255,12 @@ EMoveStatus FPuppetComponent::moveJump( Float delta )
 	FArcadeBodyComponent* body = As<FArcadeBodyComponent>( Base );
 	assert( body );
 
+	Bool xReached = false;
+
 	if( m_targetEntity )
 	{
+#if 0
+		// broken
 		const Float otherRadius = max( m_targetEntity->Base->Size.x, m_targetEntity->Base->Size.y );
 		const math::Vector& otherLocation = m_targetEntity->Base->Location;
 
@@ -268,28 +271,47 @@ EMoveStatus FPuppetComponent::moveJump( Float delta )
 		}
 
 		destination = m_targetEntity->Base->Location;
+#else
+		return EMoveStatus::MOVE_Aborted;
+#endif
 	}
 	else
 	{
-		if( ( m_targetPoint - Base->Location ).sizeSquared() <= sqr( m_targetRadius ) )
+		if( abs( Base->Location.x - m_targetPoint.x ) <= m_targetRadius )
 		{
-			body->Velocity.x = 0.f; // ??
-			return EMoveStatus::MOVE_Complete;
+			xReached = true;
 		}
 
 		destination = m_targetPoint;
 	}
 
 	// x movement
-	body->Velocity.x = destination.x > body->Location.x ? MoveSpeed : -MoveSpeed;
+	if( !xReached )
+	{
+		body->Velocity.x = destination.x > body->Location.x ? MoveSpeed : -MoveSpeed;
+	}
+	else
+	{
+		body->Velocity.x = 0.f; // ??
+	}
 
 	// y movement
 	if( body->Floor != nullptr )
 	{
-		body->Velocity.y = m_moveHint;
+		const Float desiredHeight = max( 0.f, destination.y - footPosition().y );
+
+		if( xReached )
+		{
+			body->Velocity.y = ai::suggestJumpSpeed( desiredHeight, GravityScale );
+		}
+		else
+		{
+			body->Velocity.y = ai::verticalSpeedForJumping( footPosition(), destination, MoveSpeed, GravityScale );
+		}
 	}
 
-	return EMoveStatus::MOVE_InProgress;
+	Bool yReached = abs( Base->Location.y - m_targetPoint.y) < max( m_targetRadius, Base->Size.y * 0.5f );
+	return xReached && yReached ? EMoveStatus::MOVE_Complete : EMoveStatus::MOVE_InProgress;
 }
 
 
@@ -297,68 +319,47 @@ EMoveStatus FPuppetComponent::moveJump( Float delta )
     In-Script AI functions.
 -----------------------------------------------------------------------------*/
 
-#if 0
-//
-// Tries to create a random path.
-//
-void FPuppetComponent::nativeCreateRandomPath( CFrame& Frame )
-{/*
-	if( Level->Navigator )
-	{
-		*POPA_BOOL	= Level->Navigator->MakeRandomPath( this );
-	}
-	else
-	{
-		debug( L"AI: Level has no navigator" );
-		*POPA_BOOL	= false;
-	}*/
+void FPuppetComponent::nativeMakePathTo( CFrame& Frame )
+{
+	math::Vector destination = POP_VECTOR;
+	math::Vector* target = POPO_VECTOR;
+
+	navi::TargetInfo targetInfo;
+	Level->m_navigator.makePathTo( Level, seekerInfo(), destination, targetInfo );
+
+	*target = targetInfo.location;
+	*POPA_BYTE = static_cast<UInt8>( targetInfo.moveType );
 }
 
+void FPuppetComponent::nativeMakeRandomPath( CFrame& Frame )
+{
+	math::Vector* target = POPO_VECTOR;
 
-//
-// Tries to create a path to specified location, returns true
-// if path was successfully created, otherwise returns false.
-//
-void FPuppetComponent::nativeCreatePathTo( CFrame& Frame )
-{/*
-	math::Vector	Dest	= POP_VECTOR;
-	if( Level->Navigator )
-	{
-		*POPA_BOOL	= Level->Navigator->MakePathTo( this, Dest );
-	}
-	else
-	{
-		debug( L"AI: Level has no navigator" );
-		*POPA_BOOL	= false;
-	}*/
+	navi::TargetInfo targetInfo;
+	Level->m_navigator.makeRandomPath( Level, seekerInfo(), targetInfo );
+
+	*target = targetInfo.location;
+	*POPA_BYTE = static_cast<UInt8>( targetInfo.moveType );
 }
-
-
-	//fn MoveToPoint( vector destination, float radius, float speedScale, float timeout );
-	//fn MoveToEntity( entity victim, float radius, float speedScale );
-#endif
 
 void FPuppetComponent::nativeMoveToPoint( CFrame& Frame )
 {
 	math::Vector destination = POP_VECTOR;
 	Float radius = POP_FLOAT;
-	Float speedScale = POP_FLOAT; // ??
-	Float timeout = POP_FLOAT; // ??
+	navi::EPathType moveType = static_cast<navi::EPathType>( POP_BYTE );
 
 	m_targetPoint = destination;
 	m_targetEntity = nullptr;
 	m_targetRadius = radius;
 	m_moveStatus = EMoveStatus::MOVE_InProgress;
-
-	m_moveType = navi::EPathType::Walk; // ??
-	m_moveHint = 0.f; // ??
+	m_moveType = moveType;
 }
 
 void FPuppetComponent::nativeMoveToEntity( CFrame& Frame )
 {
 	FEntity* pursued = POP_ENTITY;
 	Float radius = POP_FLOAT;
-	Float speedScale = POP_FLOAT; // ??
+	navi::EPathType moveType = static_cast<navi::EPathType>( POP_BYTE );
 
 	if( !pursued )
 	{
@@ -371,9 +372,7 @@ void FPuppetComponent::nativeMoveToEntity( CFrame& Frame )
 	m_targetEntity = pursued;
 	m_targetRadius = radius;
 	m_moveStatus = EMoveStatus::MOVE_InProgress;
-
-	m_moveType = navi::EPathType::Walk; // ??
-	m_moveHint = 0.f; // ??
+	m_moveType = moveType;
 }
 
 void FPuppetComponent::nativeAbortMove( CFrame& Frame )
@@ -451,12 +450,11 @@ void FPuppetComponent::nativeMakeNoise( CFrame& Frame )
 navi::SeekerInfo FPuppetComponent::seekerInfo() const
 {
 	navi::SeekerInfo info;
-
 	info.location = Base->Location;
 	info.size = Base->Size;
 	info.xSpeed = MoveSpeed;
 	info.jumpHeight = JumpHeight;
-	info.gravity = GravityScale; // ?? todo: move to some physics storage
+	info.gravity = GravityScale;
 
 	return info;
 }
@@ -473,6 +471,8 @@ math::Vector FPuppetComponent::footPosition() const
 
 REGISTER_CLASS_CPP( FPuppetComponent, FExtraComponent, CLASS_SingleComp )
 {
+	using namespace navi;
+
 	BEGIN_ENUM( ESightDirection );
 		ENUM_ELEM( SIGHT_None );
 		ENUM_ELEM( SIGHT_Left );
@@ -487,6 +487,15 @@ REGISTER_CLASS_CPP( FPuppetComponent, FExtraComponent, CLASS_SingleComp )
 		ENUM_ELEM( MOVE_Aborted );
 	END_ENUM;
 
+	BEGIN_ENUM( EPathType )
+		ENUM_ELEM( PATH_None );
+		ENUM_ELEM( PATH_Walk );
+		ENUM_ELEM( PATH_Jump );
+		ENUM_ELEM( PATH_Ladder );
+		ENUM_ELEM( PATH_Teleport );
+		ENUM_ELEM( PATH_Other );
+	END_ENUM;
+
 	ADD_PROPERTY( Health, PROP_Editable );
 	ADD_PROPERTY( Team, PROP_Editable );
 	ADD_PROPERTY( MoveSpeed, PROP_Editable );
@@ -496,26 +505,16 @@ REGISTER_CLASS_CPP( FPuppetComponent, FExtraComponent, CLASS_SingleComp )
 	ADD_PROPERTY( SightPeriod, PROP_Editable );
 	ADD_PROPERTY( SightRadius, PROP_Editable );
 
-
-
-
-
-
-
-	/*
-	DECLARE_METHOD( CreatePathTo, TYPE_Bool, ARG(dest, TYPE_Vector, END) )
-	DECLARE_METHOD( CreateRandomPath, TYPE_Bool, END );
-	*/
-
-
 	DECLARE_METHOD( InSight, TYPE_Bool, ARG( testee, TYPE_Entity, END ) );
 	DECLARE_METHOD( SendOrder, TYPE_Integer, ARG( order, TYPE_String, ARG( radius, TYPE_Float, END ) ) );
 	DECLARE_METHOD( MakeNoise, TYPE_None, ARG( radius, TYPE_Float, END ) );
+	DECLARE_METHOD( MakePathTo, TYPE_Byte, ARG( destination, TYPE_Vector, ARGOUT( target, TYPE_Vector, END ) ) );
+	DECLARE_METHOD( MakeRandomPath, TYPE_Byte, ARGOUT( target, TYPE_Vector, END ) );
 	DECLARE_METHOD( GetWalkArea, TYPE_Bool, ARGOUT( minX, TYPE_Float, ARGOUT( maxX, TYPE_Float, ARGOUT( maxHeight, TYPE_Float, END ) ) ) );
 	DECLARE_METHOD( MoveStatus, TYPE_Byte, END );
 	DECLARE_METHOD( AbortMove, TYPE_None, END );
-	DECLARE_METHOD( MoveToPoint, TYPE_None, ARG( dest, TYPE_Vector, ARG( radius, TYPE_Float, ARG( speedScale, TYPE_Float, ARG( timeout, TYPE_Float, END ) ) ) ) );
-	DECLARE_METHOD( MoveToEntity, TYPE_None, ARG( pursued, TYPE_Entity, ARG( radius, TYPE_Float, ARG( speedScale, TYPE_Float, END ) ) ) );
+	DECLARE_METHOD( MoveToPoint, TYPE_None, ARG( dest, TYPE_Vector, ARG( radius, TYPE_Float, ARG( moveType, TYPE_Byte, END ) ) ) );
+	DECLARE_METHOD( MoveToEntity, TYPE_None, ARG( pursued, TYPE_Entity, ARG( radius, TYPE_Float, ARG( moveType, TYPE_Byte, END ) ) ) );
 }
 
 /*-----------------------------------------------------------------------------

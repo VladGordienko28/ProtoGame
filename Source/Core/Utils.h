@@ -48,7 +48,7 @@ namespace flu
 		return ( value >= a ) && ( value <= b );
 	}
 
-	template<class T> inline T sqr( T value )
+	template<class T> inline constexpr T sqr( T value )
 	{
 		return value * value;
 	}

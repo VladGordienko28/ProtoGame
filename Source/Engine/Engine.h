@@ -127,7 +127,6 @@ namespace envi
 #include "FrApp.h"
 #include "FrDemoEff.h"
 #include "FrPhysEng.h"
-#include "FrPath.h"
 
 // Database.
 #include "Database.h"

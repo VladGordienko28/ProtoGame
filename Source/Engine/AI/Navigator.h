@@ -41,12 +41,14 @@ namespace navi
 	 */
 	struct TargetInfo
 	{
-
+		math::Vector location;
+		EPathType moveType;
 	};
 
 	static const SizeT MAX_NODES = 4096;
 	static const SizeT MAX_EDGES = 8192;
 	static const SizeT MAX_EDGES_PER_NODE = 4;
+	static const SizeT MAX_ROUTE_SIZE = 4;
 	static const Int32 INVALID_NODE = -1;
 	static const Int32 INVALID_EDGE = -1;
 
@@ -107,63 +109,17 @@ namespace navi
 		 */
 		Bool getWalkArea( FLevel* level, const SeekerInfo& seeker, Float& minX, Float& maxX, Float& maxHeight ) const;
 
-
-
-
-
-		///////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-		//--------------------------------
-
-
-
-
-
-
+		/**
+		 *	Tries to make path from the seeker's location to the destination. Returns true if path was 
+		 *	successfully made and target contains some information of how to reach the destination. 
+		 */
+		Bool makePathTo( FLevel* level, const SeekerInfo& seeker, const math::Vector& destination, TargetInfo& target );
 
 		/**
-		 *	Make a path to the random node. Return true, if path was successfully created,
-		 *	otherwise return false
+		 *	Tries to make a random path from the seeker's location to the random node. Returns true if path was 
+		 *	successfully made and target contains some information of how to reach the destination. 
 		 */
 		Bool makeRandomPath( FLevel* level, const SeekerInfo& seeker, TargetInfo& target );
-
-
-
-
-
-
-
-		Bool makePathTo( FLevel* level, const SeekerInfo& seeker, TargetInfo& target );
-
-
-
-
-
-
-
-		//////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-#if 0
-
-private:
-	// BFS algorithm.
-	Int32 BreadthFirstSearch( FPuppetComponent* Seeker, Int32 iStart, Int32 iFinish );
-};
-
-#endif
-
-
-
 
 		/**
 		 *	Return true if seeker could pass through the edge
@@ -212,6 +168,17 @@ private:
 		Array<PathNode> m_nodes;
 		Array<PathEdge> m_edges;
 
+		/**
+		 *	Travers the graph and tryes to compute full path from the firstEdge to the goalEdge.
+		 *	Returns index to the first node in the graph in the long path if it exists.
+		 */
+		Bool breadthFirstSearch( const SeekerInfo& seeker, Int32 firstEdgeIndex, Int32 goalEdgeIndex,
+			StaticArray<Int32, MAX_ROUTE_SIZE>& route, Int32& routeSize );
+
+		Bool isNodeOccupiedBy( const SeekerInfo& seeker, Int32 nodeIndex ) const;
+		Bool isEdgeOccupiedBy( const SeekerInfo& seeker, Int32 edgeIndex ) const;
+
+		// todo: eliminate friends
 		friend class CPathBuilder;
 	};
 }

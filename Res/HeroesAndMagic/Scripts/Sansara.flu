@@ -104,7 +104,7 @@ private:
         while( abs( Location.x - destination.x ) < minDistance )
         
         //DebugPoint( destination, rgba( 255, 255, 255, 255 ), 10.0, 20.0 );        
-        $Puppet.MoveToPoint( destination, Size.X * 0.5, 1.0, 0.0 );
+        $Puppet.MoveToPoint( destination, Size.X * 0.5, PATH_Walk );
         $Sprite.bFlipH = destination.x > Location.x;  
     }
 }

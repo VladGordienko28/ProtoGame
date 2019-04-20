@@ -99,6 +99,10 @@ private:
         if( level.Camera.Location.Y > Location.Y+5.0 ) level.Camera.Location.Y = Location.Y + 5.0;                                                                
     }    
 
+private:
+    vector moveTarget;
+    EPathType moveType;
+
     thread
     {
     @Restart:
@@ -110,7 +114,8 @@ private:
             if( DesiredOrb != undefined )
             {
                 // Go to desired one.
-                if( !$Puppet.CreatePathTo(DesiredOrb.Location) )
+                moveType = $Puppet.MakePathTo( DesiredOrb.Location, moveTarget );
+                if( moveType == PATH_None )
                 {
                     Velocity    = [0.0, 0.0];
                     sleep 1.0;
@@ -121,7 +126,8 @@ private:
             else
             {
                 // No orbs, just waking around.
-                if( !$Puppet.CreateRandomPath() )
+                moveType = $Puppet.MakeRandomPath( moveTarget );
+                if( moveType == PATH_None )
                 {
                     Velocity    = [0.0, 0.0];
                     interrupt;
@@ -130,7 +136,8 @@ private:
             }
             
             // Walk to temporal goal in chain of nodes.
-            wait $Puppet.MoveToGoal();  
+            $Puppet.MoveToPoint( moveTarget, Size.x * 0.5, moveType );
+            wait $Puppet.MoveStatus() != MOVE_InProgress; 
         }
     }
 }

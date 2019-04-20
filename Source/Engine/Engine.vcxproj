@@ -192,7 +192,6 @@
     <ClInclude Include="FrMaterial.h" />
     <ClInclude Include="FrModi.h" />
     <ClInclude Include="FrOpCode.h" />
-    <ClInclude Include="FrPath.h" />
     <ClInclude Include="FrPhysEng.h" />
     <ClInclude Include="FrProject.h" />
     <ClInclude Include="FrRender.h" />
@@ -304,7 +303,6 @@
     <ClCompile Include="FrModel.cpp" />
     <ClCompile Include="FrModi.cpp" />
     <ClCompile Include="FrNative.cpp" />
-    <ClCompile Include="FrPath.cpp" />
     <ClCompile Include="FrPhysEng.cpp" />
     <ClCompile Include="FrPhysic.cpp" />
     <ClCompile Include="FrPortal.cpp" />

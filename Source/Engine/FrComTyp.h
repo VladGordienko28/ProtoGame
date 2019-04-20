@@ -1249,8 +1249,6 @@ private:
 	FEntity* m_targetEntity;		// entity which puppet want to reach
 	Float m_targetRadius;			// radius of a target
 	EMoveStatus m_moveStatus;		// current status of move
-
-	Float m_moveHint;				// some extra information about path, such as jump impulse
 	navi::EPathType m_moveType;		// move type, no move if EPathType::None
 
 	// sight
@@ -1265,23 +1263,10 @@ private:
 	// movement functions
 	EMoveStatus moveWalk( Float delta );
 	EMoveStatus moveJump( Float delta );
+	// ...
 
-
-
-
-
-/*
-
-	// Natives.
-
-	void nativeCreatePathTo( CFrame& Frame );
-	void nativeCreateRandomPath( CFrame& Frame );
-	*/
-
-
-
-
-	// New and experimental:
+	void nativeMakePathTo( CFrame& Frame );
+	void nativeMakeRandomPath( CFrame& Frame );
 	void nativeGetWalkArea( CFrame& Frame );
 	void nativeMoveToPoint( CFrame& Frame );
 	void nativeMoveToEntity( CFrame& Frame );

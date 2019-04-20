@@ -1,6 +1,6 @@
 BEGIN_RESOURCE FLevel Index
     GameSpeed = 1.0000
-    Camera.Location = [28.7211; -45.6116]
+    Camera.Location = [5.2007; -45.5560]
     Camera.FOV = [64.0000; 32.0000]
     Camera.Zoom = 1.0000
     Camera.ScrollBound = (-9999.0000; -9999.0000; 9999.0000; 9999.0000)
@@ -375,8 +375,6 @@ BEGIN_RESOURCE FLevel Index
             Vertices[1] = [-16.0000; 4.0000]
             Vertices[2] = [4.0000; 4.0000]
             Vertices[3] = [4.0000; -0.0000]
-            TexCoords.XAxis = [0.2500; 0.0000]
-            TexCoords.YAxis = [0.0000; -0.2500]
             Location = [-48.0000; -52.0000]
             Size = [1.0000; 1.0000]
             Layer = 0.3312
@@ -388,7 +386,7 @@ BEGIN_RESOURCE FLevel Index
     BEGIN_ENTITY Bot Bot0
         BEGIN_COMPONENT FArcadeBodyComponent Base
             Mass = 1.0000
-            Location = [-0.5000; -49.0000]
+            Location = [-1.5000; -37.0000]
             Size = [1.5000; 6.7500]
             Layer = 0.4909
             bFixedAngle = true
@@ -400,7 +398,6 @@ BEGIN_RESOURCE FLevel Index
             MoveSpeed = 5.0000
             JumpHeight = 8.0000
             GravityScale = 15.0000
-            LookRadius = 16.0000
         END_COMPONENT
         BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
             Color = #ffffffff
@@ -424,8 +421,6 @@ BEGIN_RESOURCE FLevel Index
             Vertices[1] = [-4.0000; 0.0000]
             Vertices[2] = [4.0000; -0.0000]
             Vertices[3] = [4.0000; -4.0000]
-            TexCoords.XAxis = [0.2500; 0.0000]
-            TexCoords.YAxis = [0.0000; -0.2500]
             Location = [26.0000; -52.0000]
             Size = [1.0000; 1.0000]
             Layer = 0.5026
@@ -444,8 +439,6 @@ BEGIN_RESOURCE FLevel Index
             Vertices[1] = [-4.0000; 4.0000]
             Vertices[2] = [18.0000; 4.0000]
             Vertices[3] = [18.0000; 0.0000]
-            TexCoords.XAxis = [0.2500; 0.0000]
-            TexCoords.YAxis = [0.0000; -0.2500]
             Location = [80.0000; -56.0000]
             Size = [1.0000; 1.0000]
             Layer = 0.5026
@@ -481,8 +474,6 @@ BEGIN_RESOURCE FLevel Index
             Vertices[1] = [-4.0000; 4.0000]
             Vertices[2] = [18.0000; 4.0000]
             Vertices[3] = [18.0000; -2.0000]
-            TexCoords.XAxis = [0.2500; 0.0000]
-            TexCoords.YAxis = [0.0000; -0.2500]
             Location = [54.0000; -54.0000]
             Size = [1.0000; 1.0000]
             Layer = 0.5026
@@ -501,8 +492,6 @@ BEGIN_RESOURCE FLevel Index
             Vertices[1] = [-4.0000; 4.0000]
             Vertices[2] = [4.0000; 4.0000]
             Vertices[3] = [4.0000; -4.0000]
-            TexCoords.XAxis = [0.2500; 0.0000]
-            TexCoords.YAxis = [0.0000; -0.2500]
             Location = [-36.0000; -56.0000]
             Size = [1.0000; 1.0000]
             Layer = 0.5026
@@ -521,8 +510,6 @@ BEGIN_RESOURCE FLevel Index
             Vertices[1] = [-4.0000; 2.0000]
             Vertices[2] = [4.0000; 2.0000]
             Vertices[3] = [4.0000; -20.0000]
-            TexCoords.XAxis = [0.2500; 0.0000]
-            TexCoords.YAxis = [0.0000; -0.2500]
             Location = [38.0000; -52.0000]
             Size = [1.0000; 1.0000]
             Layer = 0.5026
@@ -575,8 +562,6 @@ BEGIN_RESOURCE FLevel Index
             Vertices[1] = [-4.0000; 3.5000]
             Vertices[2] = [28.0000; 3.5000]
             Vertices[3] = [28.0000; -0.5000]
-            TexCoords.XAxis = [0.2500; 0.0000]
-            TexCoords.YAxis = [0.0000; -0.2500]
             Location = [-96.0000; -55.5000]
             Size = [1.0000; 1.0000]
             Layer = 0.5026
@@ -595,8 +580,6 @@ BEGIN_RESOURCE FLevel Index
             Vertices[1] = [-4.0000; -0.0000]
             Vertices[2] = [36.0000; -0.0000]
             Vertices[3] = [36.0000; -4.0000]
-            TexCoords.XAxis = [0.2500; 0.0000]
-            TexCoords.YAxis = [0.0000; -0.2500]
             Location = [-20.0000; -52.0000]
             Size = [1.0000; 1.0000]
             Layer = 0.5026
@@ -666,8 +649,6 @@ BEGIN_RESOURCE FLevel Index
             Vertices[1] = [-4.0000; 4.0000]
             Vertices[2] = [6.0000; 4.0000]
             Vertices[3] = [6.0000; -14.0000]
-            TexCoords.XAxis = [0.2500; 0.0000]
-            TexCoords.YAxis = [0.0000; -0.2500]
             Location = [114.0000; -58.0000]
             Size = [1.0000; 1.0000]
             Layer = 0.5015
@@ -686,8 +667,6 @@ BEGIN_RESOURCE FLevel Index
             Vertices[1] = [-4.0000; 4.0000]
             Vertices[2] = [8.0000; 4.0000]
             Vertices[3] = [8.0000; -6.0000]
-            TexCoords.XAxis = [0.2500; 0.0000]
-            TexCoords.YAxis = [0.0000; -0.2500]
             Location = [-128.0000; -58.0000]
             Size = [1.0000; 1.0000]
             Layer = 0.5087
@@ -706,8 +685,6 @@ BEGIN_RESOURCE FLevel Index
             Vertices[1] = [-4.0000; 4.0000]
             Vertices[2] = [6.0000; 4.0000]
             Vertices[3] = [6.0000; -2.0000]
-            TexCoords.XAxis = [0.2500; 0.0000]
-            TexCoords.YAxis = [0.0000; -0.2500]
             Location = [-112.0000; -54.0000]
             Size = [1.0000; 1.0000]
             Layer = 0.4923
@@ -726,8 +703,6 @@ BEGIN_RESOURCE FLevel Index
             Vertices[1] = [-4.0000; 4.0000]
             Vertices[2] = [24.0000; 4.0000]
             Vertices[3] = [24.0000; -0.0000]
-            TexCoords.XAxis = [0.2500; 0.0000]
-            TexCoords.YAxis = [0.0000; -0.2500]
             Location = [76.0000; -72.0000]
             Size = [1.0000; 1.0000]
             Layer = 0.4913
@@ -745,8 +720,6 @@ BEGIN_RESOURCE FLevel Index
             Vertices[0] = [-0.0000; -4.0000]
             Vertices[2] = [4.0000; -0.0000]
             Vertices[3] = [4.0000; -4.0000]
-            TexCoords.XAxis = [0.2500; 0.0000]
-            TexCoords.YAxis = [0.0000; -0.2500]
             Location = [102.0000; -62.0000]
             Size = [1.0000; 1.0000]
             Layer = 0.4988

@@ -36,4 +36,16 @@
      </Expand>  
   </Type> 
 
+  <!-- Fluorine StaticArray -->
+  <Type Name="flu::StaticArray&lt;*, *&gt;">
+     <DisplayString>{{ size={($T2)} }}</DisplayString>  
+     <Expand>
+      <Item Name="[size]"> ($T2) </Item>
+      <ArrayItems> 
+        <Size> ($T2) </Size> 
+        <ValuePointer> ($T1*)m_data </ValuePointer> 
+      </ArrayItems>  
+     </Expand>  
+  </Type> 
+
 </AutoVisualizer>

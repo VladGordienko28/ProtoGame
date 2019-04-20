@@ -14,7 +14,6 @@ BEGIN_RESOURCE FScript Bot
             MoveSpeed = 5.0000
             JumpHeight = 8.0000
             GravityScale = 15.0000
-            LookRadius = 16.0000
     END_COMPONENT
     BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
             Color = #ffffffff
