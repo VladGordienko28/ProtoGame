@@ -18,7 +18,7 @@ BEGIN_RESOURCE FScript Richy
     BEGIN_COMPONENT FInputComponent Input
     END_COMPONENT
     BEGIN_COMPONENT FPuppetComponent Puppet
-            Health = 100
+            Health = 3
             MoveSpeed = 5.0000
             JumpHeight = 8.0000
             GravityScale = 10.0000

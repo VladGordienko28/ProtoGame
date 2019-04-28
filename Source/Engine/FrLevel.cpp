@@ -258,7 +258,7 @@ void FLevel::EndPlay()
 // Incoming level global variable.
 //
 TIncomingLevel			GIncomingLevel;
-TMap<String, String>	GStaticBuffer;
+Map<String, String>	GStaticBuffer;
 
 
 /*-----------------------------------------------------------------------------

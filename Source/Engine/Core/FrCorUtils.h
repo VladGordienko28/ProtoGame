@@ -57,7 +57,7 @@ public:
 	Int32	Port;
 	String	Path;
 	String	Fragment;
-	TMap<String, String> Query;
+	Map<String, String> Query;
 
 	// TUrl interface.
 	TUrl();
@@ -66,7 +66,6 @@ public:
 	String ToString() const;
 	Bool operator==( const TUrl& Other ) const;
 	Bool operator!=( const TUrl& Other ) const;
-	friend void Serialize( CSerializer& S, TUrl& V );
 };
 
 

@@ -77,7 +77,7 @@ CConfigManager::CConfigManager( String WorkingDirectory )
 						*ValueWalk++ = *Walk++;
 
 					if( Section )
-						Section->Pairs.Add( KeyBuffer, ValueBuffer );
+						Section->Pairs.put( KeyBuffer, ValueBuffer );
 				}
 			}
 		}
@@ -116,10 +116,9 @@ void CConfigManager::Flush()
 				TSection& Section = File.Sections[j];
 				Writer.WriteString(String::format(L"[%s]", *Section.Name));
 
-				for( Int32 k=0; k<Section.Pairs.Entries.size(); k++ )
+				for( const auto& it : Section.Pairs )
 				{
-					TMap<String, String>::TEntry& Entry = Section.Pairs.Entries[k];
-					Writer.WriteString(String::format(L"%s=%s", *Entry.Key, *Entry.Value ));
+					Writer.WriteString( String::format( L"%s=%s", *it.key, *it.value ) );
 				}
 				Writer.WriteString(L"");
 			}
@@ -168,14 +167,14 @@ void CConfigManager::WriteString( const Char* File, const Char* Section, const C
 		if( Section )
 		{
 			// Just update values.
-			FSection->Pairs.Put( Key, Value );
+			FSection->Pairs.put( Key, Value );
 		}
 		else
 		{
 			// Section not found, so create new one.
 			TSection NewSection;
 			NewSection.Name = Section;
-			NewSection.Pairs.Add( Key, Value );
+			NewSection.Pairs.put( Key, Value );
 
 			IniFile->Sections.push(NewSection);
 		}
@@ -187,7 +186,7 @@ void CConfigManager::WriteString( const Char* File, const Char* Section, const C
 		// File not found, so create new one.
 		TSection NewSection;
 		NewSection.Name = Section;
-		NewSection.Pairs.Add( Key, Value );
+		NewSection.Pairs.put( Key, Value );
 
 		TIniFile NewFile;
 		NewFile.bDirty = true;
@@ -267,7 +266,7 @@ String CConfigManager::ReadString( const Char* File, const Char* Section, const 
 String* CConfigManager::FindValue( const Char* File, const Char* Section, const Char* Key )
 {
 	TSection* Found = FindSection( File, Section );
-	return Found ? Found->Pairs.Get(Key) : nullptr;
+	return Found ? Found->Pairs.get( Key ) : nullptr;
 }
 
 

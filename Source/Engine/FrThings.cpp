@@ -185,7 +185,7 @@ void FSkyComponent::Render( CCanvas* Canvas )
 		// Height of sky should be clamped.
 		Eye.y	= clamp( Eye.y, Skydome.min.y+Side2, Skydome.max.y-Side2 );
 
-		math::Angle Roll = math::Angle(fmodf(RollSpeed*(Float)GPlat->Now(), 2.f*math::PI ));		
+		math::Angle Roll = math::Angle( math::fMod( RollSpeed*(Float)GPlat->Now(), 2.f*math::PI ) );		
 		Canvas->DrawLineRect( Eye, ViewArea, Roll, math::colors::RED, false );
 		Canvas->DrawLineStar( Eye, Roll, 1.f * Canvas->View.Zoom, math::colors::RED, false );
 	}

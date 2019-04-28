@@ -143,7 +143,7 @@ TUrl::TUrl( String InUrl )
 
 			String Key = String::copy( InUrl, iPairBegin, iMiddle-iPairBegin-1 );
 			String Value = String::copy( InUrl, iMiddle, iPairEnd-iMiddle );
-			Query.Add( Key, Value );
+			Query.put( Key, Value );
 
 			iPairBegin = iPairEnd+1;
 		} while( true );
@@ -186,11 +186,11 @@ String TUrl::ToString() const
 
 	Result += String(L"/") + Path;
 
-	if( Query.Entries.size() )
+	if( !Query.isEmpty() )
 	{
 		Result += L"?";
-		for( Int32 i=0; i<Query.Entries.size(); i++ )
-			Result += String::format(L"%s%s=%s", i>0 ? L"&" : L"", *Query.Entries[i].Key, *Query.Entries[i].Value );
+		for( const auto& it : Query )
+			Result += String::format(L"%s%s=%s", &it != Query.begin() ? L"&" : L"", *it.key, *it.value );
 	}
 
 	if( Fragment )
@@ -220,23 +220,6 @@ Bool TUrl::operator!=( const TUrl& Other ) const
 {
 	return !operator==(Other);
 }
-
-
-//
-// Url serialization.
-//
-void Serialize( CSerializer& S, TUrl& V )
-{
-	Serialize( S, V.Protocol );
-	Serialize( S, V.Login );
-	Serialize( S, V.Password );
-	Serialize( S, V.Host );
-	Serialize( S, V.Port );
-	Serialize( S, V.Path );
-	Serialize( S, V.Fragment );
-	Serialize( S, V.Query );
-}
-
 
 /*-----------------------------------------------------------------------------
 	Hash functions.

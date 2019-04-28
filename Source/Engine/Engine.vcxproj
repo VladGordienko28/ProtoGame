@@ -152,14 +152,12 @@
     <ClInclude Include="Chart\EngineChart.h" />
     <ClInclude Include="Chart\EngineProfiler.h" />
     <ClInclude Include="Core\FrBase.h" />
-    <ClInclude Include="Core\FrBuff.h" />
     <ClInclude Include="Core\FrClass.h" />
     <ClInclude Include="Core\FrCorUtils.h" />
     <ClInclude Include="Core\FrEncode.h" />
     <ClInclude Include="Core\FrExpImp.h" />
     <ClInclude Include="Core\FrFile.h" />
     <ClInclude Include="Core\FrIni.h" />
-    <ClInclude Include="Core\FrMap.h" />
     <ClInclude Include="Core\FrMath.h" />
     <ClInclude Include="Core\FrNetBas.h" />
     <ClInclude Include="Core\FrObject.h" />

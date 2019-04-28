@@ -35,7 +35,7 @@ private:
 	struct TSection
 	{
 		String					Name;
-		TMap<String, String>	Pairs;
+		Map<String, String>		Pairs;
 	};
 	struct TIniFile
 	{

@@ -1416,7 +1416,7 @@ void drawSkyZone( COpenGLCanvas* Canvas, FLevel* Level, const TViewInfo& Parent 
 	Eye.y	= clamp( Eye.y, SkyDome.min.y+Side2, SkyDome.max.y-Side2 );
 
 	// Sky roll angle.
-	math::Angle Roll = math::Angle(fmodf( Sky->RollSpeed*(Float)GPlat->Now(), 2.f*math::PI ));	
+	math::Angle Roll = math::Angle( math::fMod( Sky->RollSpeed*(Float)GPlat->Now(), 2.f*math::PI ) );	
 
 	// Flags of sides renderings.
 	Bool	bDrawWest	= false;

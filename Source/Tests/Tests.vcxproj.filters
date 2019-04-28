@@ -5,6 +5,7 @@
     <ClCompile Include="Tests.cpp" />
     <ClCompile Include="Test_Array.cpp" />
     <ClCompile Include="Test_File.cpp" />
+    <ClCompile Include="Test_Map.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tests.h" />

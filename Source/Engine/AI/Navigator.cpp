@@ -167,6 +167,7 @@ namespace navi
 	Bool Navigator::makePathTo( FLevel* level, const SeekerInfo& seeker, const math::Vector& destination, TargetInfo& target )
 	{
 		// figure out seeker's edge
+		math::Vector projectedDestination = destination;
 		const Float seekerRadius = max( seeker.size.x, seeker.size.y );
 		Int32 firstEdgeIndex = findNearestEdge( level, seeker.location, seekerRadius, true );
 
@@ -177,7 +178,6 @@ namespace navi
 		}
 
 		// figure our destination's edge
-		math::Vector projectedDestination = destination;
 		Int32 destinationEdgeIndex = findNearestEdge( level, destination, seekerRadius, true );
 		if( destinationEdgeIndex == INVALID_EDGE )
 		{
@@ -421,7 +421,6 @@ namespace navi
 			}
 		}
 
-	NoPath:
 		return false;
 
 	PathFound:

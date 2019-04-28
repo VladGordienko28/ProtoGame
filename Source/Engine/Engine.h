@@ -47,7 +47,6 @@ class CPhysics;
 enum EEventName;
 struct TDelegate;
 struct TViewInfo;
-template<class K, class V> class TMap;
 
 
 // Flu includes.
@@ -71,11 +70,9 @@ namespace envi
 #include "Core\FrMemory.h"
 #include "Core\FrMath.h"
 #include "Core\FrExpImp.h"
-#include "Core\FrMap.h"
 #include "Core\FrEncode.h"
 #include "Core\FrClass.h"
 #include "Core\FrObject.h"
-#include "Core\FrBuff.h"
 #include "Core\FrFile.h"
 #include "Core\FrIni.h"
 #include "Core\FrCorUtils.h"

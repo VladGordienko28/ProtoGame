@@ -3,7 +3,7 @@ BEGIN_RESOURCE FBitmap BBarrel
     Saturation = 1.0000
     AnimSpeed = 30.0000
     Group = "<unused>"
-    FileName = "BBarrel.bmp"
+    FileName = "BBarrel.png"
     UBits = 7
     VBits = 7
 END_RESOURCE

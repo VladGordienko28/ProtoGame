@@ -23,6 +23,7 @@ namespace fm
 				m_file( inFile )
 		{
 			assert( m_file );
+			m_hasError = false;
 		}
 
 		~BinaryFileReader()
@@ -33,7 +34,14 @@ namespace fm
 		SizeT readData( void* buffer, SizeT size ) override
 		{
 			assert( buffer );
-			return fread( buffer, 1, size, m_file );
+			const SizeT bytesRead = fread( buffer, 1, size, m_file );
+
+			if( bytesRead != size )
+			{
+				m_hasError = true;
+			}
+
+			return bytesRead;
 		}
 
 		SizeT totalSize() override
@@ -51,6 +59,7 @@ namespace fm
 		{
 			if( fseek( m_file, newPosition, SEEK_SET ) )
 			{
+				m_hasError = true;
 				fatal( L"Seek to position %d failed in file \"%s\"", newPosition, *m_fileName );
 			}
 		}
@@ -112,17 +121,28 @@ namespace fm
 			fwrite( buffer, 1, size, m_file );
 		}
 
-		void seek( SizeT newPosition ) override
+		void* reserveData( SizeT numBytes ) override
 		{
-			if( fseek( m_file, newPosition, SEEK_SET ) )
-			{
-				fatal( L"Seek to position %d failed in file \"%s\"", newPosition, *m_fileName );
-			}
+			assert( false && "BinaryFileWriter::reserveData is not allowed" );
+			return nullptr;
 		}
 
-		SizeT tell() override
+		SizeT size() const override
 		{
 			return ftell( m_file );
+		}
+
+		SizeT tell() const override
+		{
+			return ftell( m_file );
+		}
+
+		void seek( SizeT offset ) override
+		{
+			if( fseek( m_file, offset, SEEK_SET ) )
+			{
+				fatal( L"Seek to position %d failed in file \"%s\"", offset, *m_fileName );
+			}
 		}
 
 		String fileName() const override

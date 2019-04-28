@@ -216,7 +216,7 @@ extern TIncomingLevel	GIncomingLevel;
 // had launched - new player restore this values
 // from here. Enjoy..
 //
-extern TMap<String, String>	GStaticBuffer;
+extern Map<String, String>	GStaticBuffer;
 
 
 /*-----------------------------------------------------------------------------

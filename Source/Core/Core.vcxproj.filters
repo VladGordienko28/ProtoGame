@@ -46,6 +46,23 @@
     <ClInclude Include="Queue.h">
       <Filter>Containers</Filter>
     </ClInclude>
+    <ClInclude Include="JSon\JSon.h">
+      <Filter>JSon</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h" />
+    <ClInclude Include="HandleArray.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Lexer\Token.h">
+      <Filter>Lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="Lexer\Lexer.h">
+      <Filter>Lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp" />
@@ -70,6 +87,19 @@
     <ClCompile Include="FileManager.cpp">
       <Filter>FileManager</Filter>
     </ClCompile>
+    <ClCompile Include="JSon\JSon.cpp">
+      <Filter>JSon</Filter>
+    </ClCompile>
+    <ClCompile Include="JSon\TextJSon.cpp">
+      <Filter>JSon</Filter>
+    </ClCompile>
+    <ClCompile Include="JSon\BinaryJSon.cpp">
+      <Filter>JSon</Filter>
+    </ClCompile>
+    <ClCompile Include="Lexer\Lexer.cpp">
+      <Filter>Lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Heap">
@@ -95,6 +125,12 @@
     </Filter>
     <Filter Include="FileManager">
       <UniqueIdentifier>{cea095a8-9cab-4c40-b1d8-4d10cfc7171f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JSon">
+      <UniqueIdentifier>{2cfafcaf-da63-404e-8958-a517b384ed17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lexer">
+      <UniqueIdentifier>{feb53eb7-7a22-4683-b8a5-e5d2a130e7a3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

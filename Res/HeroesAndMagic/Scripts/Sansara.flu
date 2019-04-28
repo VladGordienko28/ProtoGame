@@ -2,7 +2,7 @@
  * @Sansara: ...
  * @Author: ...
  */
-script Sansara
+script Sansara: family Enemies
 {
 private:
     const DAGGER_SPEED = 30.0;
@@ -37,6 +37,26 @@ private:
         d.Velocity.x = $Sprite.bFlipH ? speed : -speed;
     }
 
+    fn TakeDamage( integer amount, entity instigator, string type ) unified
+    {
+        if( label != @Died )
+        {
+            $Puppet.Health -= amount;
+        
+            if( label != @TakeHit )
+            {
+                if( $Puppet.Health <= 0 )
+                {
+                    goto @Died;
+                }
+                else
+                {
+                    goto @TakeHit;
+                }
+            }      
+        }
+    }
+
     thread
     {
     @Roam:
@@ -47,7 +67,7 @@ private:
         
 
         // --
-       if( randomf() < 0.33 )
+       if( randomf() < 0.8 )
             goto @Attack;
         else if( randomf() > 0.5 )
             goto @Melee;
@@ -88,7 +108,20 @@ private:
         Velocity.x = 0.0;      
         
         wait !$Sprite.IsPlaying();
-        goto @Roam;      
+        goto @Roam;   
+
+    @TakeHit:
+        $Sprite.PlayAnim( "Hit", 18.0 + randomf() * 4.0, ANIM_Once );
+        $Puppet.AbortMove();
+        Velocity = [0.0, 0.0];
+        wait !$Sprite.IsPlaying();
+        goto @Roam;
+
+    @Died:
+        $Sprite.PlayAnim( "Die", 10.0, ANIM_Once );
+        $Puppet.AbortMove();
+        Velocity = [0.0, 0.0];
+        stop;
     } 
     
     // prepare Sansara for roaming step

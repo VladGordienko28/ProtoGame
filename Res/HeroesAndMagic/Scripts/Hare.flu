@@ -4,7 +4,17 @@
  */
 script Hare: family Enemies
 {
+public:
+    const HARE_JUMPING_SPEED = 6.0;
 
+    event OnBeginTouch( entity other )
+    {
+        if( label != @Died && label != @JumpAway && randomf() < 0.75 )
+        {
+            if( other in Players || other in Enemies )
+                goto @JumpAway;
+        }
+    }
 
     // pick and play random graze anim
     fn playGrazeAnim()
@@ -14,11 +24,33 @@ script Hare: family Enemies
            
     }
 
+    fn TakeDamage( integer amount, entity instigator, string type ) unified
+    {
+        if( label != @Died )
+        {
+            goto @Died;
+        }
+    }
+
     thread
     {
     @Graze:
+        Velocity = [0.0, 0.0];     
         playGrazeAnim();
         wait !$Sprite.IsPlaying();
         goto @Graze;
+             
+    @JumpAway:
+        Velocity.x = randomf() > 0.5 ? - HARE_JUMPING_SPEED : HARE_JUMPING_SPEED;
+        $Sprite.bFlipH = Velocity.x < 0.0;
+        $Sprite.PlayAnim( "Jump", 10.0 + 2.0 * randomf(), ANIM_Loop );
+        sleep 1.0 + 2.0 * randomf();
+        goto @Graze;
+        
+    @Died:
+        Velocity = [0.0, 0.0]; 
+        $Sprite.PlayAnim( "Die", 8.0 + 4.0 * randomf(), ANIM_Once );
+        wait !$Sprite.IsPlaying();
+        stop;
     }
 }

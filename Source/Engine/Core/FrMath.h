@@ -215,10 +215,6 @@ template<class T> inline T TInterpCurve<T>::SampleSteppedAt( Float Input, const 
     Math functions.
 -----------------------------------------------------------------------------*/
 
-inline Float FMod( Float X, Float Y )
-{
-	return fmodf( X, Y );
-}
 inline Float InvPow2( Int32 A )
 {
 	static const Float GRescale[] =

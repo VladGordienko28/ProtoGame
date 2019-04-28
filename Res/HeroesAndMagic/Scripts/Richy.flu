@@ -2,7 +2,7 @@
  * @Richy: A first playable guy
  * @Author: vlad
  */
-script Richy
+script Richy: family Players
 {
 public:
     const WALK_SPEED = 10.0;
@@ -20,33 +20,45 @@ public:
 
     event OnPreTick( float delta )
     {
-        float walkSpeed = WALK_SPEED * xSpeedRescaler;
+        if( label != @TakeHit && label != @Died )
+        {   
+            float walkSpeed = WALK_SPEED * xSpeedRescaler;        
     
-        if( KeyIsPressed( KEY_A ) )
-        {
-            Velocity.x = -walkSpeed;
-            $Sprite.bFlipH = true;
-        }
-        else if( KeyIsPressed( KEY_D ) )
-        {
-            Velocity.x = walkSpeed;
-            $Sprite.bFlipH = false;   
-        }
-        else
-        {
-            Velocity.x = 0.0;
+            if( KeyIsPressed( KEY_A ) )
+            {
+                Velocity.x = -walkSpeed;
+                $Sprite.bFlipH = true;
+            }
+            else if( KeyIsPressed( KEY_D ) )
+            {
+                Velocity.x = walkSpeed;
+                $Sprite.bFlipH = false;   
+            }
+            else
+            {
+                Velocity.x = 0.0;
+            }
         }
     }
 
     event OnKeyDown( integer key )
     {
-        if( label != @Attack && key == KEY_K )
-        {
-            goto @Attack;
+        if( label != @TakeHit && label != @Died )
+        {  
+            if( label != @Attack && key == KEY_K )
+            {
+                goto @Attack;
+            }
+            else if( key == KEY_L )
+            {
+                goto @EnterBlock;
+            }
         }
-        else if( key == KEY_L )
+        
+        // temp!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if( key == KEY_Q )
         {
-            goto @EnterBlock;
+            TakeDamage( 1, this, "auto" );
         }
     }
 
@@ -99,6 +111,36 @@ public:
         if( Level.Camera.Location.Y > Location.Y + LEVEL_VIEW_AREA ) Level.Camera.Location.Y = Location.Y + LEVEL_VIEW_AREA;                                                               
     }
 
+    bool IsDied() unified
+    {
+        return label == @Died;
+    }
+
+    fn TakeDamage( integer amount, entity instigator, string type ) unified
+    {
+        if( label != @Died )
+        {
+            if( label == @Block )
+            {
+                bool enemyAtLeft = instigator.Location.x < Location.x;
+                
+                if( enemyAtLeft == $Sprite.bFlipH )
+                    return;   
+            }
+        
+            $Puppet.Health -= amount;
+        
+            if( $Puppet.Health <= 0 )
+            {
+                goto @Died;
+            }
+            else
+            {
+                goto @TakeHit;            
+            }        
+        }
+    }
+
     thread
     {
         @Normal:
@@ -141,5 +183,18 @@ public:
             }
             
             goto @Block;
+            
+        @TakeHit:
+            $Sprite.PlayAnim( "Hit", 10.0, ANIM_Once );
+            Velocity = [0.0, 0.0];
+            wait !$Sprite.IsPlaying();
+            goto @Normal;
+            
+        @Died:
+            $Sprite.PlayAnim( "Die", 10.0, ANIM_Once );
+            Velocity = [0.0, 0.0];
+            wait !$Sprite.IsPlaying();
+            sleep 5.0;
+            delete this;
     }
 }

@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Core">
-      <UniqueIdentifier>{36e49054-5c9c-4d3c-887e-eb078eb70e82}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Chart">
       <UniqueIdentifier>{5e664a5c-cced-49ac-9938-55079df1ea8b}</UniqueIdentifier>
     </Filter>
@@ -19,37 +16,37 @@
     <Filter Include="AI">
       <UniqueIdentifier>{e9e2383d-776d-4c38-ac8c-7989252e045b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core %28 legacy %29">
+      <UniqueIdentifier>{36e49054-5c9c-4d3c-887e-eb078eb70e82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\FrBase.h">
-      <Filter>Core</Filter>
+      <Filter>Core %28 legacy %29</Filter>
     </ClInclude>
     <ClInclude Include="Core\FrClass.h">
-      <Filter>Core</Filter>
+      <Filter>Core %28 legacy %29</Filter>
     </ClInclude>
     <ClInclude Include="Core\FrEncode.h">
-      <Filter>Core</Filter>
+      <Filter>Core %28 legacy %29</Filter>
     </ClInclude>
     <ClInclude Include="Core\FrExpImp.h">
-      <Filter>Core</Filter>
+      <Filter>Core %28 legacy %29</Filter>
     </ClInclude>
     <ClInclude Include="Core\FrFile.h">
-      <Filter>Core</Filter>
+      <Filter>Core %28 legacy %29</Filter>
     </ClInclude>
     <ClInclude Include="Core\FrIni.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\FrMap.h">
-      <Filter>Core</Filter>
+      <Filter>Core %28 legacy %29</Filter>
     </ClInclude>
     <ClInclude Include="Core\FrMath.h">
-      <Filter>Core</Filter>
+      <Filter>Core %28 legacy %29</Filter>
     </ClInclude>
     <ClInclude Include="Core\FrObject.h">
-      <Filter>Core</Filter>
+      <Filter>Core %28 legacy %29</Filter>
     </ClInclude>
     <ClInclude Include="Core\FrRand.h">
-      <Filter>Core</Filter>
+      <Filter>Core %28 legacy %29</Filter>
     </ClInclude>
     <ClInclude Include="FrCode.h" />
     <ClInclude Include="FrCollHash.h" />
@@ -76,19 +73,16 @@
     <ClInclude Include="FrBlock.h" />
     <ClInclude Include="Database.h" />
     <ClInclude Include="Core\FrMemory.h">
-      <Filter>Core</Filter>
+      <Filter>Core %28 legacy %29</Filter>
     </ClInclude>
     <ClInclude Include="FrSkelet.h" />
     <ClInclude Include="Core\FrCorUtils.h">
-      <Filter>Core</Filter>
+      <Filter>Core %28 legacy %29</Filter>
     </ClInclude>
     <ClInclude Include="FrModi.h" />
     <ClInclude Include="FrMaterial.h" />
-    <ClInclude Include="Core\FrBuff.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Core\FrNetBas.h">
-      <Filter>Core</Filter>
+      <Filter>Core %28 legacy %29</Filter>
     </ClInclude>
     <ClInclude Include="FrDbgDraw.h" />
     <ClInclude Include="Chart\EngineChart.h">
@@ -127,19 +121,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\FrClass.cpp">
-      <Filter>Core</Filter>
+      <Filter>Core %28 legacy %29</Filter>
     </ClCompile>
     <ClCompile Include="Core\FrCore.cpp">
-      <Filter>Core</Filter>
+      <Filter>Core %28 legacy %29</Filter>
     </ClCompile>
     <ClCompile Include="Core\FrEncode.cpp">
-      <Filter>Core</Filter>
+      <Filter>Core %28 legacy %29</Filter>
     </ClCompile>
     <ClCompile Include="Core\FrMath.cpp">
-      <Filter>Core</Filter>
+      <Filter>Core %28 legacy %29</Filter>
     </ClCompile>
     <ClCompile Include="Core\FrObject.cpp">
-      <Filter>Core</Filter>
+      <Filter>Core %28 legacy %29</Filter>
     </ClCompile>
     <ClCompile Include="FrCode.cpp" />
     <ClCompile Include="FrCollision.cpp" />
@@ -176,7 +170,7 @@
     <ClCompile Include="FrSkelAnim.cpp" />
     <ClCompile Include="FrMaterial.cpp" />
     <ClCompile Include="Core\FrIni.cpp">
-      <Filter>Core</Filter>
+      <Filter>Core %28 legacy %29</Filter>
     </ClCompile>
     <ClCompile Include="FrDbgDraw.cpp" />
     <ClCompile Include="Chart\EngineProfiler.cpp">

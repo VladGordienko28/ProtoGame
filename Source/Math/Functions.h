@@ -42,6 +42,11 @@ namespace math
 		return atan2f( y, x );
 	}
 
+	inline Float fMod( Float x, Float y )
+	{
+		return fmodf( x, y );
+	}
+
 	inline Int32 round( Float f )
 	{
 		return static_cast<Int32>( roundf( f ) );

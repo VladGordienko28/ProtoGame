@@ -54,6 +54,18 @@ namespace flu
 			}
 		}
 
+		StringBase( const CHAR_TYPE* firstSymbol, const CHAR_TYPE* lastSymbol )
+			:	m_data( nullptr )
+		{
+			if( firstSymbol && lastSymbol && *firstSymbol && *lastSymbol && 
+				lastSymbol > firstSymbol )
+			{
+				SizeT length = ( reinterpret_cast<SizeT>( lastSymbol ) - reinterpret_cast<SizeT>( firstSymbol ) ) / sizeof(CHAR_TYPE);
+				MANAGER.initializeString( m_data, length );
+				mem::copy( m_data->data, firstSymbol, length * sizeof(CHAR_TYPE) );
+			}
+		}
+
 		~StringBase()
 		{
 			MANAGER.deinitializeString( m_data );
@@ -202,22 +214,22 @@ namespace flu
 
 		Bool operator>( const StringBase<MANAGER_TYPE, MANAGER>& other ) const
 		{
-			return cstr::compare( m_data->data, other.m_data->data ) > 0;
+			return m_data && other.m_data ? cstr::compare( m_data->data, other.m_data->data ) > 0 : m_data != other.m_data;
 		}
 
 		Bool operator<( const StringBase<MANAGER_TYPE, MANAGER>& other ) const
 		{
-			return cstr::compare( m_data->data, other.m_data->data ) < 0;
+			return m_data && other.m_data ? cstr::compare( m_data->data, other.m_data->data ) < 0 : m_data != other.m_data;
 		}
 
 		Bool operator>=( const StringBase<MANAGER_TYPE, MANAGER>& other ) const
 		{
-			return cstr::compare( m_data->data, other.m_data->data ) >= 0;
+			return m_data && other.m_data ? cstr::compare( m_data->data, other.m_data->data ) >= 0 : m_data == other.m_data;
 		}
 
 		Bool operator<=( const StringBase<MANAGER_TYPE, MANAGER>& other ) const
 		{
-			return cstr::compare( m_data->data, other.m_data->data ) <= 0;
+			return m_data && other.m_data ? cstr::compare( m_data->data, other.m_data->data ) <= 0 : m_data == other.m_data;
 		}
 
 		StringBase<MANAGER_TYPE, MANAGER>& operator+=( const CHAR_TYPE* other )
@@ -573,6 +585,62 @@ namespace flu
 		static StringBase<MANAGER_TYPE, MANAGER> fromFloat( Float value )
 		{
 			return format( L"%.4f", value );
+		}
+
+		friend IOutputStream& operator<<( IOutputStream& stream, const StringBase<MANAGER_TYPE, MANAGER>& x )
+		{
+			const Bool saveAsBlob = sizeof( CHAR_TYPE ) == sizeof( AnsiChar ) || !cstr::isAnsiOnly( *x );
+
+			if( saveAsBlob )
+			{
+				Int32 length = static_cast<Int32>( x.len() );
+				stream << length;
+
+				if( length > 0 )
+				{
+					stream.writeData( *x, length * sizeof( CHAR_TYPE ) );
+				}
+			}
+			else
+			{
+				Int32 length = -static_cast<Int32>( x.len() );
+				stream << length;
+
+				for( SizeT i = 0; i < x.len(); ++i )
+				{
+					AnsiChar tmp = static_cast<AnsiChar>( x(i) );
+					stream << tmp;
+				}
+			}
+
+			return stream;
+		}
+
+		friend IInputStream& operator>>( IInputStream& stream, StringBase<MANAGER_TYPE, MANAGER>& x )
+		{
+			Int32 length;
+			stream >> length;
+
+			if( length > 0 )
+			{
+				MANAGER.deinitializeString( x.m_data );
+				MANAGER.initializeString( x.m_data, length );
+				stream.readData( *x, sizeof( CHAR_TYPE ) * length );
+			}
+			else
+			{
+				MANAGER.deinitializeString( x.m_data );
+				MANAGER.initializeString( x.m_data, -length );
+
+				for( SizeT i = 0; i < x.len(); ++i )
+				{
+					AnsiChar tmp;
+					stream >> tmp;
+					(*x)[i] = tmp;
+				}
+			}
+
+			return stream;
 		}
 
 		// legacy

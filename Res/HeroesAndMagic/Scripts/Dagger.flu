@@ -5,11 +5,28 @@
 script Dagger
 {
 
+    event OnBeginTouch( entity other )
+    {
+        if( other in Players )
+        {
+            Players player = Players(other);
+            
+            if( !player.IsDied() )
+            {
+                player.TakeDamage( 1, this, "poke" );            
+                goto @Die;
+            }
+        }
+    }
+
     thread
     {
     @Begin:
         $Sprite.PlayAnim( "Fly", 10.0, ANIM_Loop );
         sleep 2.0;
+
+    @Die:
+        // todo: add effect here
         delete this;
     }
  

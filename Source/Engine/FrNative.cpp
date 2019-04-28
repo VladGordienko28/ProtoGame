@@ -70,14 +70,14 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 		{
 			String	Key		= POP_STRING,
 					Value	= POP_STRING;
-			GStaticBuffer.Put( Key, Value );
+			GStaticBuffer.put( Key, Value );
 			break;
 		}
 		case OP_StaticPop:
 		{
 			String	Key		= POP_STRING,
 					Default	= POP_STRING;
-			String*	Value	= GStaticBuffer.Get( Key );
+			String*	Value	= GStaticBuffer.get( Key );
 			*POPA_STRING	= Value ? *Value : Default;
 			break;
 		}

@@ -1,8 +1,8 @@
 BEGIN_RESOURCE FLevel Forest
     GameSpeed = 1.0000
-    Camera.Location = [15.0348; 18.1236]
+    Camera.Location = [92.0016; 18.4405]
     Camera.FOV = [64.0000; 32.0000]
-    Camera.Zoom = 1.0000
+    Camera.Zoom = 0.8600
     Camera.ScrollBound = (-24.0000; -8.0000; 164.0000; 2048.0000)
     Effect[0] = 1.0000
     Effect[1] = 1.0000
@@ -377,7 +377,7 @@ BEGIN_RESOURCE FLevel Forest
     BEGIN_ENTITY Richy Richy0
         BEGIN_COMPONENT FArcadeBodyComponent Base
             Mass = 1.0000
-            Location = [-13.5000; 6.5000]
+            Location = [59.0000; 6.5000]
             Size = [2.2000; 5.0000]
             Layer = 0.6956
             bFixedAngle = true
@@ -393,7 +393,7 @@ BEGIN_RESOURCE FLevel Forest
         BEGIN_COMPONENT FInputComponent Input
         END_COMPONENT
         BEGIN_COMPONENT FPuppetComponent Puppet
-            Health = 100
+            Health = 2
             MoveSpeed = 5.0000
             JumpHeight = 8.0000
             GravityScale = 10.0000
@@ -511,31 +511,12 @@ BEGIN_RESOURCE FLevel Forest
         BEGIN_INSTANCE
         END_INSTANCE
     END_ENTITY
-    BEGIN_ENTITY Hare Hare0
+    BEGIN_ENTITY Sansara Sansara1
         BEGIN_COMPONENT FArcadeBodyComponent Base
             Mass = 1.0000
-            Location = [18.7500; 4.7500]
-            Size = [1.5000; 1.5000]
-            Layer = 0.7049
-            bFixedAngle = true
-            bFixedSize = true
-            bHashable = true
-        END_COMPONENT
-        BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
-            Color = #ffffffff
-            Animation = FAnimation::AHare
-            Offset = [0.0000; 0.2500]
-            Scale = [2.0000; 2.0000]
-        END_COMPONENT
-        BEGIN_INSTANCE
-        END_INSTANCE
-    END_ENTITY
-    BEGIN_ENTITY Hare Hare1
-        BEGIN_COMPONENT FArcadeBodyComponent Base
-            Mass = 1.0000
-            Location = [15.0000; 4.7500]
-            Size = [1.5000; 1.5000]
-            Layer = 0.8062
+            Location = [75.5000; 6.5000]
+            Size = [2.2000; 5.0000]
+            Layer = 0.5373
             bFixedAngle = true
             bFixedSize = true
             bHashable = true
@@ -543,31 +524,75 @@ BEGIN_RESOURCE FLevel Forest
         BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
             Color = #ffffffff
             bFlipH = true
-            Animation = FAnimation::AHare
-            Offset = [0.0000; 0.2500]
-            Scale = [2.0000; 2.0000]
+            Animation = FAnimation::ASansara
+            Offset = [-0.2000; 1.5000]
+            Scale = [8.0000; 8.0000]
+        END_COMPONENT
+        BEGIN_COMPONENT FPuppetComponent Puppet
+            Health = 2
+            Team = -1
+            MoveSpeed = 11.0000
+            JumpHeight = 8.0000
+            GravityScale = 10.0000
+            SightRadius = 16.0000
         END_COMPONENT
         BEGIN_INSTANCE
+            WalkArea = (0.0000; 0.0000; 0.0000; 0.0000)
         END_INSTANCE
     END_ENTITY
-    BEGIN_ENTITY Hare Hare2
+    BEGIN_ENTITY Sansara Sansara0
         BEGIN_COMPONENT FArcadeBodyComponent Base
             Mass = 1.0000
-            Location = [13.2500; 4.7500]
-            Size = [1.5000; 1.5000]
-            Layer = 0.7149
+            Location = [67.0000; 6.5000]
+            Size = [2.2000; 5.0000]
+            Layer = 0.5488
             bFixedAngle = true
             bFixedSize = true
             bHashable = true
         END_COMPONENT
         BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
             Color = #ffffffff
-            Animation = FAnimation::AHare
-            Offset = [0.0000; 0.2500]
-            Scale = [2.0000; 2.0000]
+            Animation = FAnimation::ASansara
+            Offset = [-0.2000; 1.5000]
+            Scale = [8.0000; 8.0000]
+        END_COMPONENT
+        BEGIN_COMPONENT FPuppetComponent Puppet
+            Health = 2
+            Team = -1
+            MoveSpeed = 11.0000
+            JumpHeight = 8.0000
+            GravityScale = 10.0000
+            SightRadius = 16.0000
         END_COMPONENT
         BEGIN_INSTANCE
+            WalkArea = (0.0000; 0.0000; 0.0000; 0.0000)
         END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Parallax Parallax6
+        BEGIN_COMPONENT FRectComponent Base
+            Location = [46.0000; 29.0000]
+            Size = [5.0000; 5.0000]
+            Layer = 0.1500
+            bFixedAngle = true
+            bFixedSize = true
+        END_COMPONENT
+        BEGIN_COMPONENT FSpriteComponent Sprite
+            Scale = [1.0000; 1.0000]
+            TexCoords = (64.0000; 32.0000; 96.0000; 64.0000)
+            bHidden = true
+            bUnlit = true
+            Color = #ffffffff
+            Texture = FBitmap::BSystem
+        END_COMPONENT
+        BEGIN_COMPONENT FParallaxLayerComponent ParallaxLayer
+            Parallax = [0.0280; 0.0280]
+            Scale = [32.0000; 16.0000]
+            Offset = [33.7100; 39.2200]
+            Gap = [24.3900; 8.2500]
+            TexCoords = (256.0000; 128.0000; 512.0000; 256.0000)
+            Color = #ffffffc4
+            Texture = FBitmap::BClouds
+        END_COMPONENT
     END_ENTITY
     BEGIN_ENTITY Emitter Emitter2
         BEGIN_COMPONENT FRectComponent Base
@@ -609,6 +634,7 @@ BEGIN_RESOURCE FLevel Forest
             Location = [102.5000; 20.0000]
             Size = [32.0000; 32.0000]
             Layer = 0.4195
+            bFrozen = true
         END_COMPONENT
         BEGIN_COMPONENT FDecoComponent Deco
             Frequency = 0.3900
@@ -819,66 +845,31 @@ BEGIN_RESOURCE FLevel Forest
             Texture = FBitmap::BClouds
         END_COMPONENT
     END_ENTITY
-    BEGIN_ENTITY Parallax Parallax6
-        BEGIN_COMPONENT FRectComponent Base
-            Location = [46.0000; 29.0000]
-            Size = [5.0000; 5.0000]
-            Layer = 0.1500
-            bFixedAngle = true
-            bFixedSize = true
-        END_COMPONENT
-        BEGIN_COMPONENT FSpriteComponent Sprite
-            Scale = [1.0000; 1.0000]
-            TexCoords = (64.0000; 32.0000; 96.0000; 64.0000)
-            bHidden = true
-            bUnlit = true
-            Color = #ffffffff
-            Texture = FBitmap::BSystem
-        END_COMPONENT
-        BEGIN_COMPONENT FParallaxLayerComponent ParallaxLayer
-            Parallax = [0.0280; 0.0280]
-            Scale = [32.0000; 16.0000]
-            Offset = [33.7100; 39.2200]
-            Gap = [24.3900; 8.2500]
-            TexCoords = (256.0000; 128.0000; 512.0000; 256.0000)
-            Color = #ffffffc4
-            Texture = FBitmap::BClouds
-        END_COMPONENT
-    END_ENTITY
-    BEGIN_ENTITY Sansara Sansara0
+    BEGIN_ENTITY Hare Hare0
         BEGIN_COMPONENT FArcadeBodyComponent Base
             Mass = 1.0000
-            Location = [67.0000; 6.5000]
-            Size = [2.2000; 5.0000]
-            Layer = 0.5488
+            Location = [19.0000; 4.7500]
+            Size = [1.5000; 1.5000]
+            Layer = 0.5016
             bFixedAngle = true
             bFixedSize = true
             bHashable = true
         END_COMPONENT
         BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
             Color = #ffffffff
-            Animation = FAnimation::ASansara
-            Offset = [-0.2000; 1.5000]
-            Scale = [8.0000; 8.0000]
-        END_COMPONENT
-        BEGIN_COMPONENT FPuppetComponent Puppet
-            Health = 100
-            Team = -1
-            MoveSpeed = 11.0000
-            JumpHeight = 8.0000
-            GravityScale = 10.0000
-            SightRadius = 16.0000
+            Animation = FAnimation::AHare
+            Offset = [0.0000; 0.2500]
+            Scale = [2.0000; 2.0000]
         END_COMPONENT
         BEGIN_INSTANCE
-            WalkArea = (0.0000; 0.0000; 0.0000; 0.0000)
         END_INSTANCE
     END_ENTITY
-    BEGIN_ENTITY Sansara Sansara1
+    BEGIN_ENTITY Hare Hare1
         BEGIN_COMPONENT FArcadeBodyComponent Base
             Mass = 1.0000
-            Location = [75.5000; 6.5000]
-            Size = [2.2000; 5.0000]
-            Layer = 0.5373
+            Location = [13.0000; 4.7500]
+            Size = [1.5000; 1.5000]
+            Layer = 0.5035
             bFixedAngle = true
             bFixedSize = true
             bHashable = true
@@ -886,20 +877,49 @@ BEGIN_RESOURCE FLevel Forest
         BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
             Color = #ffffffff
             bFlipH = true
-            Animation = FAnimation::ASansara
-            Offset = [-0.2000; 1.5000]
-            Scale = [8.0000; 8.0000]
-        END_COMPONENT
-        BEGIN_COMPONENT FPuppetComponent Puppet
-            Health = 100
-            Team = -1
-            MoveSpeed = 11.0000
-            JumpHeight = 8.0000
-            GravityScale = 10.0000
-            SightRadius = 16.0000
+            Animation = FAnimation::AHare
+            Offset = [0.0000; 0.2500]
+            Scale = [2.0000; 2.0000]
         END_COMPONENT
         BEGIN_INSTANCE
-            WalkArea = (0.0000; 0.0000; 0.0000; 0.0000)
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Hare Hare2
+        BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Location = [17.0000; 4.7500]
+            Size = [1.5000; 1.5000]
+            Layer = 0.5020
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            Animation = FAnimation::AHare
+            Offset = [0.0000; 0.2500]
+            Scale = [2.0000; 2.0000]
+        END_COMPONENT
+        BEGIN_INSTANCE
+        END_INSTANCE
+    END_ENTITY
+    BEGIN_ENTITY Hare Hare3
+        BEGIN_COMPONENT FArcadeBodyComponent Base
+            Mass = 1.0000
+            Location = [102.5000; 4.7500]
+            Size = [1.5000; 1.5000]
+            Layer = 0.6381
+            bFixedAngle = true
+            bFixedSize = true
+            bHashable = true
+        END_COMPONENT
+        BEGIN_COMPONENT FAnimatedSpriteComponent Sprite
+            Color = #ffffffff
+            Animation = FAnimation::AHare
+            Offset = [0.0000; 0.2500]
+            Scale = [2.0000; 2.0000]
+        END_COMPONENT
+        BEGIN_INSTANCE
         END_INSTANCE
     END_ENTITY
 END_RESOURCE

@@ -52,10 +52,12 @@ BEGIN_INCLUDE
 END_INCLUDE
 BEGIN_PAGES
     Barrel
-    ARichy
-    Dagger
-    ASansara
     Wolf
+    AHare
+    ASansara
+    Richy
+    Dagger
     Sansara
+    Hare
     Forest
 END_PAGES

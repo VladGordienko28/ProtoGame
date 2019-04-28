@@ -56,13 +56,20 @@ namespace tests
 	//extern void test_Set();
 	//extern void test_String();
 	extern void test_File();
+	extern void test_Map();
 
 	static const TestFunction g_tests[] = 
 	{
 		test_Array,
 		//test_Set,
 		//test_String,
-		test_File
+		test_File,
+		test_Map
+		//test_JSon,
+		//test_Lexer,
+		//test_HandleArray,
+		//test_RingQueue
+		//test_Text
 	};
 } // namespace tests
 } // namespace flu
