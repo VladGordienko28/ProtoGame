@@ -480,7 +480,6 @@ Bool CEditor::SaveProject()
 	IProgressIndicator::THolder Ind( TaskDialog, L"Project Saving" );
 
 	String	Directory	= fm::getFilePath( *Project->FileName );
-	CTextWriter ProjFile( Project->FileName );
 
 	// Create directories for imported resources.
 	CreateDirectory( *(Directory+L"\\Objects"), nullptr );
@@ -490,7 +489,10 @@ Bool CEditor::SaveProject()
 	CreateDirectory( *(Directory+L"\\Music"), nullptr );
 
 	// Wrap list of files in block.
-	ProjFile.WriteString( L"BEGIN_INCLUDE" );
+	JSon::Ptr projectFile = JSon::createObjectNode();
+
+	JSon::Ptr includeList = JSon::createArrayNode();
+	projectFile->addField( L"includes", includeList );
 	{
 		// Save all scripts.
 		Ind.UpdateDetails(L"Saving Scripts");
@@ -503,7 +505,7 @@ Bool CEditor::SaveProject()
 				// Save to file.
 				if( Obj->IsA(FScript::MetaClass) )
 				{
-					ProjFile.WriteString(String::format( L"    %s.fr", *Obj->GetName() ));
+					includeList->insertElement( JSon::createStringNode( Obj->GetName() + L".fr" ) );
 					SaveResource( (FResource*)Obj, Directory ); 
 				}
 			}
@@ -519,7 +521,7 @@ Bool CEditor::SaveProject()
 				// Save to file.
 				if( Obj->IsA(FBitmap::MetaClass) )
 				{
-					ProjFile.WriteString(String::format( L"    %s.fr", *Obj->GetName() ));
+					includeList->insertElement( JSon::createStringNode( Obj->GetName() + L".fr" ) );
 					SaveResource( (FResource*)Obj, Directory ); 
 				}
 			}
@@ -540,17 +542,18 @@ Bool CEditor::SaveProject()
 						!(Obj->IsA(FLevel::MetaClass) && ((FLevel*)Obj)->IsTemporal()) 
 					)
 				{
-					ProjFile.WriteString(String::format( L"    %s.fr", *Obj->GetName() ));
+					includeList->insertElement( JSon::createStringNode( Obj->GetName() + L".fr" ) );
 					SaveResource( (FResource*)Obj, Directory ); 
 				}
 			}
 	}
-	ProjFile.WriteString( L"END_INCLUDE" );
 
 	// Editor pages.
 	Ind.UpdateDetails(L"Saving Pages");
 	Ind.SetProgress( 4, 4 );
-	ProjFile.WriteString( L"BEGIN_PAGES" );
+
+	JSon::Ptr pagesList = JSon::createArrayNode();
+	projectFile->addField( L"editorPages", pagesList );
 	{
 		for( Int32 iPage=0; iPage<EditorPages->Pages.size(); iPage++ )
 		{
@@ -561,12 +564,22 @@ Bool CEditor::SaveProject()
 				Res	= Page->GetResource();
 
 			if( Res )
-				ProjFile.WriteString(String::format( L"    %s", *Res->GetName() ) );
+				pagesList->insertElement( JSon::createStringNode( Res->GetName() ) );
 		}
 	}
-	ProjFile.WriteString( L"END_PAGES" );
 
-	return true;
+	String saveError;
+	Text::Ptr projectFileText = JSon::saveToText( projectFile, &saveError );
+
+	if( projectFileText.hasObject() )
+	{
+		return fm::writeTextFile( *Project->FileName, projectFileText );
+	}
+	else
+	{
+		fatal( L"Unable to save project with error %s", *saveError );
+		return false;
+	}
 }
 
 
@@ -1577,8 +1590,11 @@ Bool CEditor::OpenProjectFrom( String FileName )
 
 	// Load project file.
 	Bool Result		= true;
-	CTextReader ProjFile( FileName );
 	Array<TLoadObject*>	ResObjs;
+
+	String projectFileError;
+	Text::Ptr projectFileText = fm::readTextFile( *FileName );
+	JSon::Ptr projectFile = JSon::loadFromText( projectFileText, &projectFileError );
 
 	// Use loaging dialog, for coolness.
 	IProgressIndicator::THolder Ind( TaskDialog, L"Project Loading" );
@@ -1589,18 +1605,17 @@ Bool CEditor::OpenProjectFrom( String FileName )
 		// Load all resources into temporal TLoadObject structs.
 		// And allocate all objects. All fields will be loaded
 		// later.
-		if( ProjFile.ReadLine() != L"BEGIN_INCLUDE" )
-			throw String(L"Bad project file");
+		if( !projectFile.hasObject() )
+			throw String( L"Bad project file" );
 
 		Ind.UpdateDetails(L"Loading Objects");
 		Ind.SetProgress( 0, 100 );
-		String ObjName;
-		while( (ObjName = ProjFile.ReadLine()) != L"END_INCLUDE" )
-		{	
-			// Delete leading whitespace.
-			//!!Find other way!
-			while( ObjName.len()>0 && ObjName[0]==' ' )
-				ObjName = String::del( ObjName, 0, 1 );
+
+		JSon::Ptr includesList = projectFile->getField( L"includes", JSon::EMissingPolicy::USE_STUB );
+
+		for( Int32 i = 0; i < includesList->arraySize(); ++i )
+		{
+			String ObjName = includesList->getElement( i )->asString();
 
 			if( ObjName )
 			{
@@ -1677,22 +1692,21 @@ Bool CEditor::OpenProjectFrom( String FileName )
 	// Restore pages.
 	Ind.UpdateDetails(L"Pages Restoring");
 	Ind.SetProgress( 90, 100 );
-	if( ProjFile.ReadLine() == L"BEGIN_PAGES" )
-	{
-		String PageName;
-		while( (PageName = ProjFile.ReadLine()) != L"END_PAGES" )
-		{
-			// Delete leading whitespace.
-			//!!Find other way!
-			while( PageName.len()>0 && PageName[0]==' ' )
-				PageName = String::del( PageName, 0, 1 );
 
+	if( projectFile.hasObject() )
+	{
+		JSon::Ptr pagesList = projectFile->getField( L"editorPages" );
+
+		for( Int32 i = 0; i < pagesList->arraySize(); ++i )
+		{
+			String PageName = pagesList->getElement( i )->asString();
+	
 			FResource* Res = nullptr;
 			if( PageName && (Res = (FResource*)Project->FindObject( PageName, FResource::MetaClass )) )
 			{
 				this->OpenPageWith( Res );
 			}
-		}
+		}	
 	}
 
 	// Update list of recent projects.

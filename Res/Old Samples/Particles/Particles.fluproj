@@ -1,18 +1,20 @@
-BEGIN_INCLUDE
-    Brush.fr
-    Flyby.fr
-    Emitter.fr
-    Lissajous.fr
-    BSystem.fr
-    BChecker.fr
-    BPuff.fr
-    BSparks.fr
-    BBeam.fr
-    BFlame.fr
-    BSpot.fr
-    ProjectInfo0.fr
-    Index.fr
-END_INCLUDE
-BEGIN_PAGES
-    Index
-END_PAGES
+{
+    editorPages: [
+        "Index"
+    ],
+    includes: [
+        "Brush.fr",
+        "Flyby.fr",
+        "Emitter.fr",
+        "Lissajous.fr",
+        "BSystem.fr",
+        "BChecker.fr",
+        "BPuff.fr",
+        "BSparks.fr",
+        "BBeam.fr",
+        "BFlame.fr",
+        "BSpot.fr",
+        "ProjectInfo0.fr",
+        "Index.fr"
+    ]
+}

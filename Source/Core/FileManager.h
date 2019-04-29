@@ -51,6 +51,16 @@ namespace fm
 	extern IBinaryFileWriter::Ptr writeBinaryFile( const Char* fileName );
 
 	/**
+	 *	Read a text file. Return null if file is not found.
+	 */
+	extern Text::Ptr readTextFile( const Char* fileName );
+
+	/**
+	 *	Write a text file. Return false if file wasn't created
+	 */
+	extern Bool writeTextFile( const Char* fileName, Text::Ptr text );
+
+	/**
 	 *	Returns the file path.
 	 *	For example:
 	 *		"F:\Amazing Fluorine\Res\HeroesAndMagic\Bitmaps\BMidnightSky.png" -> "F:\Amazing Fluorine\Res\HeroesAndMagic\Bitmaps"

@@ -1,25 +1,26 @@
-BEGIN_INCLUDE
-    Brush.fr
-    Light.fr
-    Mirror.fr
-    Model.fr
-    Warp.fr
-    Note.fr
-    AmbSound.fr
-    BSystem.fr
-    BlueLine.fr
-    Noise.fr
-    Dirt.fr
-    RedLine.fr
-    ProjectInfo0.fr
-    Hall.fr
-    MField.fr
-    MNoise.fr
-    MDirty.fr
-END_INCLUDE
-BEGIN_PAGES
-    Hall
-    MNoise
-    MDirty
-    RedLine
-END_PAGES
+{
+    editorPages: [
+        "Hall",
+        "MNoise",
+        "RedLine"
+    ],
+    includes: [
+        "Brush.fr",
+        "Light.fr",
+        "Mirror.fr",
+        "Model.fr",
+        "Warp.fr",
+        "Note.fr",
+        "AmbSound.fr",
+        "BSystem.fr",
+        "BlueLine.fr",
+        "Noise.fr",
+        "Dirt.fr",
+        "RedLine.fr",
+        "ProjectInfo0.fr",
+        "Hall.fr",
+        "MField.fr",
+        "MNoise.fr",
+        "MDirty.fr"
+    ]
+}

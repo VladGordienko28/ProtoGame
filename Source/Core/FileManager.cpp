@@ -171,6 +171,63 @@ namespace fm
 		}
 	}
 
+	Text::Ptr readTextFile( const Char* fileName )
+	{
+		FILE* file;
+		auto errorCode = _wfopen_s( &file, fileName, L"r" );
+
+		if( file )
+		{
+			Text::Ptr text = new Text();
+
+			while( feof( file ) == 0 )
+			{
+				Char buffer[2048] = {};
+
+				if( fgetws( buffer, arraySize( buffer ), file ) )
+				{
+					text->appendLine( buffer );
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			fclose( file );
+			return text;
+		}
+		else
+		{
+			error( L"Unable to open file \"%s\" with error %d", fileName, errorCode );
+			return nullptr;
+		}
+	}
+
+	Bool writeTextFile( const Char* fileName, Text::Ptr text )
+	{
+		assert( text.hasObject() );
+
+		FILE* file;
+		auto errorCode = _wfopen_s( &file, fileName, L"w" );
+
+		if( file )
+		{
+			for( Int32 i = 0; i < text->size(); ++i )
+			{
+				fwprintf( file, L"%s\n", *(*text)[i] );
+			}
+
+			fclose( file );
+			return true;
+		}
+		else
+		{
+			error( L"Unable to create file \"%s\" with error %d", fileName, errorCode );
+			return false;
+		}
+	}
+
 	String getFilePath( const Char* fileName )
 	{
 		const Char* lastSlashPtr = cstr::findRevChar( fileName, '\\' );

@@ -1,24 +1,26 @@
-BEGIN_INCLUDE
-    Brush.fr
-    Model.fr
-    Lamp.fr
-    Note.fr
-    Switch.fr
-    Player.fr
-    Schedule.fr
-    Counter.fr
-    Buzzer.fr
-    BoolOp.fr
-    BSystem.fr
-    BLight.fr
-    BSwitch.fr
-    BTiles.fr
-    BBot.fr
-    ProjectInfo0.fr
-    Index.fr
-    SClick.fr
-    ABot.fr
-END_INCLUDE
-BEGIN_PAGES
-    Index
-END_PAGES
+{
+    editorPages: [
+        "Index"
+    ],
+    includes: [
+        "Brush.fr",
+        "Model.fr",
+        "Lamp.fr",
+        "Note.fr",
+        "Switch.fr",
+        "Player.fr",
+        "Schedule.fr",
+        "Counter.fr",
+        "Buzzer.fr",
+        "BoolOp.fr",
+        "BSystem.fr",
+        "BLight.fr",
+        "BSwitch.fr",
+        "BTiles.fr",
+        "BBot.fr",
+        "ProjectInfo0.fr",
+        "Index.fr",
+        "SClick.fr",
+        "ABot.fr"
+    ]
+}

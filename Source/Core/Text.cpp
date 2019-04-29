@@ -82,7 +82,7 @@ namespace flu
 
 				if( lineEnd == nullptr )
 				{
-					if( buffer )
+					if( buffer && *buffer )
 					{
 						m_lines.push( buffer );
 					}

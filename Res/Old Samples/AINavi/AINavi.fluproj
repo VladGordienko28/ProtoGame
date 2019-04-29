@@ -1,21 +1,23 @@
-BEGIN_INCLUDE
-    Brush.fr
-    Light.fr
-    Model.fr
-    Note.fr
-    Bot.fr
-    Orb.fr
-    BSystem.fr
-    BOrbs.fr
-    BBot.fr
-    BTiles.fr
-    WascoSans32_0.fr
-    ProjectInfo0.fr
-    Index.fr
-    ABot.fr
-    Font1.fr
-END_INCLUDE
-BEGIN_PAGES
-    Bot
-    Index
-END_PAGES
+{
+    editorPages: [
+        "Bot",
+        "Index"
+    ],
+    includes: [
+        "Brush.fr",
+        "Light.fr",
+        "Model.fr",
+        "Note.fr",
+        "Bot.fr",
+        "Orb.fr",
+        "BSystem.fr",
+        "BOrbs.fr",
+        "BBot.fr",
+        "BTiles.fr",
+        "WascoSans32_0.fr",
+        "ProjectInfo0.fr",
+        "Index.fr",
+        "ABot.fr",
+        "Font1.fr"
+    ]
+}
