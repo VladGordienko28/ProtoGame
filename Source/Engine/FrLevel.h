@@ -113,7 +113,7 @@ public:
 
 	Float					AberrationIntensity = 0.f;
 
-	TInterpCurve<math::Color> m_ambientColors;
+	math::InterpCurve<math::Color> m_ambientColors;
 
 
 

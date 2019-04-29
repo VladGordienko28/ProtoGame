@@ -43,13 +43,13 @@ FLevel::FLevel()
 	m_environmentContext.setTimeOfDay( 13, 0, 0.f ); // remove this!!
 
 	// -----------------
-	m_ambientColors.AddSample( envi::TimeOfDay( 0, 0 ).toPercent(), math::Color( 60, 87, 144, 255 ) );
-	m_ambientColors.AddSample( envi::TimeOfDay( 8, 0 ).toPercent(), math::Color( 186, 152, 140, 255 ) );
-	m_ambientColors.AddSample( envi::TimeOfDay( 15, 0 ).toPercent(), math::Color( 159, 159, 190, 255 ) );
-	m_ambientColors.AddSample( envi::TimeOfDay( 21, 0 ).toPercent(), math::Color( 250, 100, 145, 255 ) );
+	m_ambientColors.addSample( envi::TimeOfDay( 0, 0 ).toPercent(), math::Color( 60, 87, 144, 255 ) );
+	m_ambientColors.addSample( envi::TimeOfDay( 8, 0 ).toPercent(), math::Color( 186, 152, 140, 255 ) );
+	m_ambientColors.addSample( envi::TimeOfDay( 15, 0 ).toPercent(), math::Color( 159, 159, 190, 255 ) );
+	m_ambientColors.addSample( envi::TimeOfDay( 21, 0 ).toPercent(), math::Color( 250, 100, 145, 255 ) );
 
 
-	m_ambientColors.AddSample( 1.f, math::Color( 60, 87, 144, 255 ) );
+	m_ambientColors.addSample( 1.f, math::Color( 60, 87, 144, 255 ) );
 }
 
 void FLevel::EditChange()

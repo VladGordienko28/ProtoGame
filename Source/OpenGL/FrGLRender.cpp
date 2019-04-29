@@ -1807,7 +1807,7 @@ void COpenGLRender::RenderLevel( CCanvas* InCanvas, FLevel* Level, Int32 X, Int3
 		// Set ambient light in level.
 		if( Level->RndFlags & RND_Lighting )
 			//Canvas->FluShader.SetAmbientLight(Level->AmbientLight);
-			Canvas->FluShader.SetAmbientLight( Level->m_ambientColors.SampleLinearAt( Level->m_environmentContext.getCurrentTime().toPercent(), math::colors::BLACK ) );
+			Canvas->FluShader.SetAmbientLight( Level->m_ambientColors.sampleLinear( Level->m_environmentContext.getCurrentTime().toPercent(), math::colors::BLACK ) );
 
 		/*
 		// Render sky zone if any.

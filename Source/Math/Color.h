@@ -146,15 +146,6 @@ namespace math
 			return *this;
 		}
 
-		friend Color lerp( Color x, Color y, Float alpha )
-		{
-			return Color(
-				static_cast<Int32>( Float( x.r ) + ( Float( y.r ) - Float( x.r ) ) * alpha ),
-				static_cast<Int32>( Float( x.g ) + ( Float( y.g ) - Float( x.g ) ) * alpha ),
-				static_cast<Int32>( Float( x.b ) + ( Float( y.b ) - Float( x.b ) ) * alpha ),
-				static_cast<Int32>( Float( x.a ) + ( Float( y.a ) - Float( x.a ) ) * alpha ) );
-		}
-
 		static void rgb2hsl( Color color, UInt8& h, UInt8& s, UInt8& l );
 		static Color hsl2rgb( UInt8 h, UInt8 s, UInt8 l, UInt8 a = 255 );
 
@@ -164,5 +155,14 @@ namespace math
 			Serialize( s, v.d );
 		}
 	};
+}
+
+inline math::Color lerp( math::Color x, math::Color y, Float alpha )
+{
+	return math::Color(
+		static_cast<Int32>( Float( x.r ) + ( Float( y.r ) - Float( x.r ) ) * alpha ),
+		static_cast<Int32>( Float( x.g ) + ( Float( y.g ) - Float( x.g ) ) * alpha ),
+		static_cast<Int32>( Float( x.b ) + ( Float( y.b ) - Float( x.b ) ) * alpha ),
+		static_cast<Int32>( Float( x.a ) + ( Float( y.a ) - Float( x.a ) ) * alpha ) );
 }
 }

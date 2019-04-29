@@ -158,6 +158,7 @@
     <ClInclude Include="Coords.h" />
     <ClInclude Include="FloatColor.h" />
     <ClInclude Include="Functions.h" />
+    <ClInclude Include="InterpCurve.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Polygon.h" />
     <ClInclude Include="Rect.h" />

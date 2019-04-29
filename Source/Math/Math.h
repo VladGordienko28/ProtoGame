@@ -32,3 +32,4 @@
 #include "Color.h"
 #include "FloatColor.h"
 #include "Colors.h"
+#include "InterpCurve.h"

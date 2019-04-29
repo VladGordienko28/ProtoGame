@@ -54,7 +54,7 @@ WColorRibbon::~WColorRibbon()
 //
 // Set editor curve.
 //
-void WColorRibbon::SetCurve( TInterpCurve<math::Color>* InCurve )
+void WColorRibbon::SetCurve( math::InterpCurve<math::Color>* InCurve )
 {
 	Curve = InCurve;
 	iSelected = -1;
@@ -90,9 +90,7 @@ void WColorRibbon::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 	if( Button == MB_Left && iSelected != -1 )
 	{
 		// Move sample.
-		math::Color OldOutput = Curve->Samples[iSelected].Output;
-		Curve->Samples.removeShift(iSelected);
-		iSelected = Curve->AddSample( Float(clamp(X-5, 0, Size.Width-11))/Float(Size.Width), OldOutput );
+		iSelected = Curve->moveSample( iSelected, Float(clamp(X-5, 0, Size.Width-11))/Float(Size.Width) );
 
 		OnChange();
 		UpdateRibbon();
@@ -123,7 +121,7 @@ void WColorRibbon::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 		{
 			// Add a new sample.
 			Float Input = Float(clamp(X-5, 0, Size.Width-11))/Float(Size.Width);
-			iSelected = Curve->AddSample( Input, Curve->SampleLinearAt(Input, math::colors::BLACK) );
+			iSelected = Curve->addSample( Input, Curve->sampleLinear( Input, math::colors::BLACK ) );
 			OnChange();
 			UpdateRibbon();
 		}
@@ -137,9 +135,9 @@ void WColorRibbon::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 	{
 		// Remove selected sample.
 		Int32 iSample = GetMarkerAt( X, Y );
-		if( iSample != -1 && Curve->Samples.size() > 1 )
+		if( iSample != -1 && Curve->numSamples() > 1 )
 		{
-			Curve->Samples.removeShift(iSample);
+			Curve->removeSample( iSample );
 			iSelected = -1;
 			UpdateRibbon();
 			OnChange();
@@ -157,7 +155,7 @@ void WColorRibbon::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 
 	if( Button == MB_Left && iSelected != -1 )
 	{
-		WColorChooser::SharedColor = Curve->Samples[iSelected].Output;
+		WColorChooser::SharedColor = Curve->getSample(iSelected).output;
 		new WColorChooser( Root, false, TNotifyEvent( this, (TNotifyEvent::TEvent)&WColorRibbon::ColorSelected ) );
 	}
 }
@@ -169,7 +167,7 @@ void WColorRibbon::OnDblClick( EMouseButton Button, Int32 X, Int32 Y )
 void WColorRibbon::ColorSelected( WWidget* Sender )
 {
 	assert(iSelected != -1);
-	Curve->Samples[iSelected].Output = WColorChooser::SharedColor;
+	Curve->getOutputOf(iSelected) = WColorChooser::SharedColor;
 	UpdateRibbon();
 	OnChange();
 }
@@ -185,9 +183,9 @@ Int32 WColorRibbon::GetMarkerAt( Int32 X, Int32 Y )
 		if( Y < Size.Height-17 )
 			return -1;
 
-		for( Int32 i=0; i<Curve->Samples.size(); i++ )
+		for( Int32 i=0; i<Curve->numSamples(); i++ )
 		{
-			Int32 MarkerX = Curve->Samples[i].Input * Size.Width + 5;
+			Int32 MarkerX = Curve->getSample(i).input * Size.Width + 5;
 			if( abs(X-MarkerX) <= 5 )
 				return i;
 		}
@@ -208,7 +206,7 @@ void WColorRibbon::UpdateRibbon()
 		// Very expensive calculations.
 		math::Color* Dest = (math::Color*)Ribbon->GetData();
 		for( Int32 u=0; u<Ribbon->USize; u++ )
-			Dest[u] = Curve->SampleLinearAt( (Float)u / (Float)Ribbon->USize, math::colors::BLACK );
+			Dest[u] = Curve->sampleLinear( (Float)u / (Float)Ribbon->USize, math::colors::BLACK );
 	}
 	else
 	{
@@ -249,14 +247,14 @@ void WColorRibbon::OnPaint( CGUIRenderBase* Render )
 	// Render markers.
 	if( Curve )
 	{
-		for( Int32 i=0; i<Curve->Samples.size(); i++ )
+		for( Int32 i=0; i<Curve->numSamples(); i++ )
 		{
-			auto Sample = Curve->Samples[i];
+			auto Sample = Curve->getSample(i);
 
 			// Triangle.
 			Render->DrawPicture
 			(
-				TPoint( Base.X + Sample.Input*Size.Width, Base.Y + Size.Height-17 ),
+				TPoint( Base.X + Sample.input*Size.Width, Base.Y + Size.Height-17 ),
 				TSize( 11, 6 ),
 				i == iSelected ? TPoint(11, 47) : TPoint(0, 47),
 				TSize( 11, 6 ),
@@ -266,9 +264,9 @@ void WColorRibbon::OnPaint( CGUIRenderBase* Render )
 			// Color.
 			Render->DrawRegion
 			(
-				TPoint( Base.X + Sample.Input*Size.Width, Base.Y + Size.Height-11 ),
+				TPoint( Base.X + Sample.input*Size.Width, Base.Y + Size.Height-11 ),
 				TSize( 11, 11 ),
-				Sample.Output,
+				Sample.output,
 				i == iSelected ? math::Color( 0x87, 0x87, 0x87, 0xff ) : math::Color( 0x30, 0x30, 0x30, 0xff ),
 				BPAT_Solid
 			);

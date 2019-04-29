@@ -15,6 +15,7 @@
     <ClInclude Include="Color.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="FloatColor.h" />
+    <ClInclude Include="InterpCurve.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math.cpp" />

@@ -1707,11 +1707,11 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 			// Draw keys.
 			///////////////////////////////////////////////////////
 
-			for( Int32 i=0; i<Track.PosKeys.Samples.size(); i++ )
+			for( Int32 i=0; i<Track.PosKeys.numSamples(); i++ )
 			{
 				Render->DrawRegion
 				(
-					TPoint( Base.X - 3 + 128 + Track.PosKeys.Samples[i].Input * 256.f, TrackY+6 ),		// 1 sec = 256 pxs.
+					TPoint( Base.X - 3 + 128 + Track.PosKeys.getSample(i).input * 256.f, TrackY+6 ),		// 1 sec = 256 pxs.
 					TSize( 6, 6 ),
 					math::colors::BLUE,
 					math::colors::BLUE,
@@ -1719,11 +1719,11 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 				);
 			}
 
-			for( Int32 i=0; i<Track.RotKeys.Samples.size(); i++ )
+			for( Int32 i=0; i<Track.RotKeys.numSamples(); i++ )
 			{
 				Render->DrawRegion
 				(
-					TPoint( Base.X - 3 + 128 + Track.RotKeys.Samples[i].Input * 256.f, TrackY+6 ),		// 1 sec = 256 pxs.
+					TPoint( Base.X - 3 + 128 + Track.RotKeys.getSample(i).input * 256.f, TrackY+6 ),		// 1 sec = 256 pxs.
 					TSize( 6, 6 ),
 					math::colors::RED,
 					math::colors::RED,
@@ -1811,12 +1811,12 @@ void WAnimationTrack::NoteMovement( Int32 iBone, Bool bOnlyRotation )
 	if( bOnlyRotation )
 	{
 		// Rotation key.
-		Track.RotKeys.AddSample( CurrentTime, math::vectorToAngle(BonePose.Coords.xAxis) );
+		Track.RotKeys.addSample( CurrentTime, math::vectorToAngle(BonePose.Coords.xAxis) );
 	}
 	else
 	{
 		// Translation key.
-		Track.PosKeys.AddSample( CurrentTime, BonePose.Coords.origin );
+		Track.PosKeys.addSample( CurrentTime, BonePose.Coords.origin );
 	}
 
 

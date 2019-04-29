@@ -128,9 +128,9 @@ class TBoneTrack
 {
 public:
 	// Variables.
-	Int32						iBone;
-	TInterpCurve<math::Vector>	PosKeys;
-	TInterpCurve<math::Angle>	RotKeys;
+	Int32							iBone;
+	math::InterpCurve<math::Vector>	PosKeys;
+	math::InterpCurve<math::Angle>	RotKeys;
 
 	// TBoneTrack interface.
 	TBoneTrack()
@@ -143,8 +143,9 @@ public:
 	friend void Serialize( CSerializer& S, TBoneTrack& V )
 	{
 		Serialize( S, V.iBone );
-		Serialize( S, V.PosKeys );
-		Serialize( S, V.RotKeys );
+		// todo: implement serialization!
+		//Serialize( S, V.PosKeys );
+		//Serialize( S, V.RotKeys );
 	}
 };
 

@@ -70,6 +70,7 @@ void FSkeleton::Import( CImporterBase& Im )
 	}
 
 	// Actions.
+	/*
 	Actions.setSize(Im.ImportInteger(L"Actions.Num"));
 	for( Int32 i=0; i<Actions.size(); i++ )
 	{
@@ -86,19 +87,18 @@ void FSkeleton::Import( CImporterBase& Im )
 
 			for( Int32 k=0; k<T.PosKeys.Samples.size(); k++ )
 			{
-				T.PosKeys.Samples[k].Type = (EInterpType)Im.ImportByte(*String::format(L"Actions[%i].BoneTracks[%i].PosKeys[%i].Type", i, j, k));
 				T.PosKeys.Samples[k].Input = Im.ImportFloat(*String::format(L"Actions[%i].BoneTracks[%i].PosKeys[%i].Input", i, j, k));
 				T.PosKeys.Samples[k].Output = Im.ImportVector(*String::format(L"Actions[%i].BoneTracks[%i].PosKeys[%i].Output", i, j, k));
 			}
 
 			for( Int32 k=0; k<T.RotKeys.Samples.size(); k++ )
 			{
-				T.RotKeys.Samples[k].Type = (EInterpType)Im.ImportByte(*String::format(L"Actions[%i].BoneTracks[%i].RotKeys[%i].Type", i, j, k));
 				T.RotKeys.Samples[k].Input = Im.ImportFloat(*String::format(L"Actions[%i].BoneTracks[%i].RotKeys[%i].Input", i, j, k));
 				T.RotKeys.Samples[k].Output = Im.ImportAngle(*String::format(L"Actions[%i].BoneTracks[%i].RotKeys[%i].Output", i, j, k));
 			}
 		}
 	}
+	*/
 }
 
 
@@ -142,6 +142,7 @@ void FSkeleton::Export( CExporterBase& Ex )
 	}
 
 	// Actions.
+	/*
 	Ex.ExportInteger( L"Actions.Num", Actions.size() );
 	for( Int32 i=0; i<Actions.size(); i++ )
 	{
@@ -158,19 +159,18 @@ void FSkeleton::Export( CExporterBase& Ex )
 
 			for( Int32 k=0; k<T.PosKeys.Samples.size(); k++ )
 			{
-				Ex.ExportByte( *String::format(L"Actions[%i].BoneTracks[%i].PosKeys[%i].Type", i, j, k), T.PosKeys.Samples[k].Type );
 				Ex.ExportFloat( *String::format(L"Actions[%i].BoneTracks[%i].PosKeys[%i].Input", i, j, k), T.PosKeys.Samples[k].Input );
 				Ex.ExportVector( *String::format(L"Actions[%i].BoneTracks[%i].PosKeys[%i].Output", i, j, k), T.PosKeys.Samples[k].Output );
 			}
 
 			for( Int32 k=0; k<T.RotKeys.Samples.size(); k++ )
 			{
-				Ex.ExportByte( *String::format(L"Actions[%i].BoneTracks[%i].RotKeys[%i].Type", i, j, k), T.RotKeys.Samples[k].Type );
 				Ex.ExportFloat( *String::format(L"Actions[%i].BoneTracks[%i].RotKeys[%i].Input", i, j, k), T.RotKeys.Samples[k].Input );
 				Ex.ExportAngle( *String::format(L"Actions[%i].BoneTracks[%i].RotKeys[%i].Output", i, j, k), T.RotKeys.Samples[k].Output );
 			}
 		}
 	}
+	*/
 }
 
 
@@ -381,12 +381,12 @@ void TSkelPose::CumputeAnimFrame( FSkeleton* Skel, TSkeletonAction& Action, Floa
 
 	// Apply animation transforms.
 	for( Int32 i=0; i<Action.BoneTracks.size(); i++ )
-	{
+	{	
 		TBoneTrack& Track = Action.BoneTracks[i];
-		GBones[Track.iBone].origin = Track.PosKeys.SampleAt( Time, GBones[Track.iBone].origin );
+		GBones[Track.iBone].origin = Track.PosKeys.sampleLinear( Time, GBones[Track.iBone].origin );
 		
 		math::Angle OldRotation = math::vectorToAngle(GBones[Track.iBone].xAxis); 
-		math::Angle NewRotation = Track.RotKeys.SampleAt( Time, OldRotation );
+		math::Angle NewRotation = Track.RotKeys.sampleLinear( Time, OldRotation );
 		if( OldRotation != NewRotation )
 		{
 			GBones[Track.iBone].xAxis = math::angleToVector(NewRotation);
