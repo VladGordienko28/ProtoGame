@@ -3,14 +3,6 @@
 //	Created by Vlad Gordienko, 2018
 //-----------------------------------------------------------------------------
 
-#ifdef min
-#undef min
-#endif
-
-#ifdef max
-#undef max
-#endif
-
 namespace flu
 {
 	template<class T> inline constexpr T alignValue( T value, T bound )

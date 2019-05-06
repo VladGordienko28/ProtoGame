@@ -63,6 +63,15 @@
       <Filter>Lexer</Filter>
     </ClInclude>
     <ClInclude Include="Buffer.h" />
+    <ClInclude Include="Concurrency.h">
+      <Filter>Multithreading</Filter>
+    </ClInclude>
+    <ClInclude Include="Atomic.h">
+      <Filter>Multithreading</Filter>
+    </ClInclude>
+    <ClInclude Include="Threading.h">
+      <Filter>Multithreading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp" />
@@ -100,6 +109,9 @@
       <Filter>Lexer</Filter>
     </ClCompile>
     <ClCompile Include="Text.cpp" />
+    <ClCompile Include="Threading.cpp">
+      <Filter>Multithreading</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Heap">
@@ -131,6 +143,9 @@
     </Filter>
     <Filter Include="Lexer">
       <UniqueIdentifier>{feb53eb7-7a22-4683-b8a5-e5d2a130e7a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Multithreading">
+      <UniqueIdentifier>{4ed4cd8e-de95-432a-a6c4-fba5537a4105}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

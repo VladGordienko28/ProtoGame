@@ -4,10 +4,30 @@
 =============================================================================*/
 #pragma once
 
+#include "Build.h"
+
+// platform specific include
+#if FLU_PLATFORM_WINDOWS
+#include <Windows.h>
+
+#ifdef min
+#undef min
+#endif
+
+#ifdef max
+#undef max
+#endif
+
+#ifdef DrawText
+#undef DrawText
+#endif
+#endif
+
+// std includes
 #include <string>
 #include <stdarg.h>
 
-#include "Build.h"
+// fluorine core includes
 #include "Types.h"
 #include "Utils.h"
 #include "Heap.h"
@@ -20,6 +40,9 @@
 #include "SmartPointer.h"
 #include "CString.h"
 #include "Stream.h"
+#include "Atomic.h"
+#include "Concurrency.h"
+#include "Threading.h"
 #include "Stack.h"
 #include "Array.h"
 #include "Queue.h"

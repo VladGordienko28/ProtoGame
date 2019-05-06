@@ -5,9 +5,6 @@
 
 #include "Core.h"
 
-#include <stdarg.h>
-#include <string.h>
-
 namespace flu
 {
 	class LogManagerImpl: public LogManager

@@ -149,8 +149,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Array.h" />
+    <ClInclude Include="Atomic.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Build.h" />
+    <ClInclude Include="Concurrency.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="CString.h" />
     <ClInclude Include="FileManager.h" />
@@ -172,6 +174,7 @@
     <ClInclude Include="String.h" />
     <ClInclude Include="StringManager.h" />
     <ClInclude Include="Text.h" />
+    <ClInclude Include="Threading.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
@@ -214,6 +217,7 @@
     <ClCompile Include="Profiler.cpp" />
     <ClCompile Include="StringManager.cpp" />
     <ClCompile Include="Text.cpp" />
+    <ClCompile Include="Threading.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
