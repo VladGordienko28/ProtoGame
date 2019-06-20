@@ -72,6 +72,12 @@
     <ClInclude Include="Threading.h">
       <Filter>Multithreading</Filter>
     </ClInclude>
+    <ClInclude Include="Hash.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="TextWriter.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp" />
@@ -112,6 +118,9 @@
     <ClCompile Include="Threading.cpp">
       <Filter>Multithreading</Filter>
     </ClCompile>
+    <ClCompile Include="Hash.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Heap">
@@ -146,6 +155,9 @@
     </Filter>
     <Filter Include="Multithreading">
       <UniqueIdentifier>{4ed4cd8e-de95-432a-a6c4-fba5537a4105}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{bfc052de-a5df-4be3-8c42-99c871043d43}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

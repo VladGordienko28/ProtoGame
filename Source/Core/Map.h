@@ -90,6 +90,20 @@ namespace flu
 			return index != -1 ? &m_pairs[index].value : nullptr;
 		}
 
+		V& getRef( const K& key )
+		{
+			Int32 index = findPairIndex( key );
+			assert( index != -1 );
+			return m_pairs[index].value;
+		}
+
+		const V& getRef( const K& key ) const
+		{
+			Int32 index = findPairIndex( key );
+			assert( index != -1 );
+			return m_pairs[index].value;
+		}
+
 		Bool isEmpty() const
 		{
 			return m_pairs.size() == 0;

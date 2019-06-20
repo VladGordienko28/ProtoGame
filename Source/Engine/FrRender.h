@@ -134,6 +134,8 @@ class CRenderBase
 {
 public:
 	// CRenderBase interface.
+	virtual ~CRenderBase() = default;
+
 	virtual void Resize( Int32 NewWidth, Int32 NewHeight ) = 0;
 	virtual void Flush() = 0;
 	virtual void RenderLevel( CCanvas* Canvas, FLevel* Level, Int32 X, Int32 Y, Int32 W, Int32 H ) = 0;

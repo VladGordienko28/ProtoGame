@@ -36,6 +36,10 @@
 #include "Network/Network.h"
 
 
+// experimental:
+#include "DirectX11/DirectX11.h"
+#include "Experimental/DxAdapter.h"
+
 // Partial classes tree.
 class CEditor;
 class WResourceBrowser;

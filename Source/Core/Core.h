@@ -33,6 +33,7 @@
 #include "Heap.h"
 #include "LogCallback.h"
 #include "LogManager.h"
+#include "Hash.h"
 
 // legacy include
 #include "FrSerial.h"
@@ -54,6 +55,7 @@
 #include "Namespace.h"
 #include "Text.h"
 #include "FileManager.h"
+#include "TextWriter.h"
 #include "Buffer.h"
 
 #include "Lexer/Token.h"

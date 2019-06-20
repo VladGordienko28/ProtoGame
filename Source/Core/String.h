@@ -96,7 +96,8 @@ namespace flu
 
 		CHAR_TYPE* operator*() const
 		{
-			return m_data ? m_data->data : const_cast<CHAR_TYPE*>( L"" );
+			static const CHAR_TYPE EMPTY_STRING = CHAR_TYPE(0);
+			return m_data ? m_data->data : const_cast<CHAR_TYPE*>( &EMPTY_STRING );
 		}
 
 		StringBase<MANAGER_TYPE, MANAGER>& operator=( const StringBase<MANAGER_TYPE, MANAGER>& other )
@@ -743,4 +744,26 @@ namespace flu
 	using String = AnsiString;
 #endif
 
+	// Strings convertion
+	inline AnsiString wide2AnsiString( WideString source )
+	{
+		const auto bufferSize = sizeof(AnsiChar) * 2 * ( source.len() + 1 );
+		auto buffer = reinterpret_cast<AnsiChar*>( mem::alloc( bufferSize ) );
+
+		AnsiString result = cstr::wideToMultiByte( buffer, bufferSize, *source );
+
+		mem::free( buffer );
+		return result;
+	}
+
+	inline WideString ansi2WideString( AnsiString source )
+	{
+		const auto bufferSize = sizeof(WideChar) * 2 * ( source.len() + 1 );
+		auto buffer = reinterpret_cast<WideChar*>( mem::alloc( bufferSize ) );
+
+		WideString result = cstr::multiByteToWide( buffer, bufferSize / sizeof(WideChar), *source );
+
+		mem::free( buffer );
+		return result;
+	}
 }

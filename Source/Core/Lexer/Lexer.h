@@ -106,7 +106,7 @@ namespace lexer
 			return m_position;
 		}
 
-	private:
+	protected:
 		static const SizeT MAX_TOKEN_LENGHT = 256;
 
 		Text::Ptr m_text;

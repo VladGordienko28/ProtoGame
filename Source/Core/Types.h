@@ -24,10 +24,16 @@ using Bool		= bool;
 // Symbol types
 typedef wchar_t		WideChar;
 typedef char		AnsiChar;
+
+#if defined(TEXT)
+#undef TEXT
+#endif
 #if FLU_USE_WIDECHAR
 typedef WideChar	Char;
+#define TEXT( s ) L##s
 #else
 typedef AnsiChar	Char;
+#define TEXT( s ) s
 #endif
 
 // Validation

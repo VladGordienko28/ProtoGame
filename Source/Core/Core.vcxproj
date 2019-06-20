@@ -158,6 +158,7 @@
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="FrSerial.h" />
     <ClInclude Include="HandleArray.h" />
+    <ClInclude Include="Hash.h" />
     <ClInclude Include="Heap.h" />
     <ClInclude Include="JSon\JSon.h" />
     <ClInclude Include="Lexer\Lexer.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="String.h" />
     <ClInclude Include="StringManager.h" />
     <ClInclude Include="Text.h" />
+    <ClInclude Include="TextWriter.h" />
     <ClInclude Include="Threading.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="Utils.h" />
@@ -187,6 +189,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="FileManager.cpp" />
+    <ClCompile Include="Hash.cpp" />
     <ClCompile Include="Heap.cpp" />
     <ClCompile Include="JSon\BinaryJSon.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Core/Core.h</PrecompiledHeaderFile>

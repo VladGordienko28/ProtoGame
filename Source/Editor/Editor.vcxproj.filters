@@ -32,6 +32,9 @@
       <Filter>Png</Filter>
     </ClCompile>
     <ClCompile Include="FrEdComp.cpp" />
+    <ClCompile Include="Experimental\DxAdapter.cpp">
+      <Filter>Experimental</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FrEdMenu.h" />
@@ -66,6 +69,9 @@
     </ClInclude>
     <ClInclude Include="FrFontView.h" />
     <ClInclude Include="FrRename.h" />
+    <ClInclude Include="Experimental\DxAdapter.h">
+      <Filter>Experimental</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\GUI\Res\Consolas13_0.bmp">
@@ -104,6 +110,9 @@
     </Filter>
     <Filter Include="Png">
       <UniqueIdentifier>{c573bdb6-f321-495a-96af-3ba1007c1005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Experimental">
+      <UniqueIdentifier>{e3859032-e925-4fcd-9857-99011a2e3ca8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

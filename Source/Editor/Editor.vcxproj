@@ -109,7 +109,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\GUI\$(Configuration) $(PlatformShortName)\GUI.lib;..\Intermediate\Compiler\$(Configuration) $(PlatformShortName)\Compiler.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\Intermediate\OpenGL\$(Configuration) $(PlatformShortName)\OpenGL.lib;..\Intermediate\OpenAL\$(Configuration) $(PlatformShortName)\OpenAL.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\OpenAL\Lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Render\$(Configuration) $(PlatformShortName)\Render.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\GUI\$(Configuration) $(PlatformShortName)\GUI.lib;..\Intermediate\Compiler\$(Configuration) $(PlatformShortName)\Compiler.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\Intermediate\OpenGL\$(Configuration) $(PlatformShortName)\OpenGL.lib;..\Intermediate\OpenAL\$(Configuration) $(PlatformShortName)\OpenAL.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\Intermediate\FFX\$(Configuration) $(PlatformShortName)\FFX.lib;..\Intermediate\DirectX11\$(Configuration) $(PlatformShortName)\DirectX11.lib;..\OpenAL\Lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>"$(OutDir)flu_tests.exe"</Command>
@@ -127,7 +127,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\GUI\$(Configuration) $(PlatformShortName)\GUI.lib;..\Intermediate\Compiler\$(Configuration) $(PlatformShortName)\Compiler.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\Intermediate\OpenGL\$(Configuration) $(PlatformShortName)\OpenGL.lib;..\Intermediate\OpenAL\$(Configuration) $(PlatformShortName)\OpenAL.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\OpenAL\Lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Render\$(Configuration) $(PlatformShortName)\Render.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\GUI\$(Configuration) $(PlatformShortName)\GUI.lib;..\Intermediate\Compiler\$(Configuration) $(PlatformShortName)\Compiler.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\Intermediate\OpenGL\$(Configuration) $(PlatformShortName)\OpenGL.lib;..\Intermediate\OpenAL\$(Configuration) $(PlatformShortName)\OpenAL.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\Intermediate\FFX\$(Configuration) $(PlatformShortName)\FFX.lib;..\Intermediate\DirectX11\$(Configuration) $(PlatformShortName)\DirectX11.lib;..\OpenAL\Lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>"$(OutDir)flu_tests.exe"</Command>
@@ -149,7 +149,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\GUI\$(Configuration) $(PlatformShortName)\GUI.lib;..\Intermediate\Compiler\$(Configuration) $(PlatformShortName)\Compiler.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\Intermediate\OpenGL\$(Configuration) $(PlatformShortName)\OpenGL.lib;..\Intermediate\OpenAL\$(Configuration) $(PlatformShortName)\OpenAL.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\OpenAL\Lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Render\$(Configuration) $(PlatformShortName)\Render.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\GUI\$(Configuration) $(PlatformShortName)\GUI.lib;..\Intermediate\Compiler\$(Configuration) $(PlatformShortName)\Compiler.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\Intermediate\OpenGL\$(Configuration) $(PlatformShortName)\OpenGL.lib;..\Intermediate\OpenAL\$(Configuration) $(PlatformShortName)\OpenAL.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\Intermediate\FFX\$(Configuration) $(PlatformShortName)\FFX.lib;..\Intermediate\DirectX11\$(Configuration) $(PlatformShortName)\DirectX11.lib;..\OpenAL\Lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>"$(OutDir)FluTests.exe"</Command>
@@ -171,7 +171,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\GUI\$(Configuration) $(PlatformShortName)\GUI.lib;..\Intermediate\Compiler\$(Configuration) $(PlatformShortName)\Compiler.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\Intermediate\OpenGL\$(Configuration) $(PlatformShortName)\OpenGL.lib;..\Intermediate\OpenAL\$(Configuration) $(PlatformShortName)\OpenAL.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\OpenAL\Lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Render\$(Configuration) $(PlatformShortName)\Render.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\GUI\$(Configuration) $(PlatformShortName)\GUI.lib;..\Intermediate\Compiler\$(Configuration) $(PlatformShortName)\Compiler.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\Intermediate\OpenGL\$(Configuration) $(PlatformShortName)\OpenGL.lib;..\Intermediate\OpenAL\$(Configuration) $(PlatformShortName)\OpenAL.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\Intermediate\FFX\$(Configuration) $(PlatformShortName)\FFX.lib;..\Intermediate\DirectX11\$(Configuration) $(PlatformShortName)\DirectX11.lib;..\OpenAL\Lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>"$(OutDir)FluTests.exe"</Command>
@@ -183,6 +183,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Experimental\DxAdapter.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Editor\Editor.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Editor\Editor.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Editor\Editor.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Editor\Editor.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="FrAnimPage.cpp" />
     <ClCompile Include="FrBitPage.cpp" />
@@ -220,6 +226,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h" />
+    <ClInclude Include="Experimental\DxAdapter.h" />
     <ClInclude Include="FrAbout.h" />
     <ClInclude Include="FrAnimPage.h" />
     <ClInclude Include="FrBitPage.h" />

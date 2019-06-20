@@ -222,53 +222,6 @@ Bool TUrl::operator!=( const TUrl& Other ) const
 }
 
 /*-----------------------------------------------------------------------------
-	Hash functions.
------------------------------------------------------------------------------*/
-
-//
-// Murmur2 hash function.
-//
-UInt32 MurmurHash( const UInt8* Data, SizeT Size )
-{
-	const UInt8*	Ptr	= Data;
-
-	UInt32	M		= 0x5bd1e995,
-			R		= 24,
-			H		= 0 ^ (UInt32)Size;
-
-	while( Size >= 4 )
-	{
-		UInt32 k	= *(UInt32*)Ptr;
-
-		k	*= M;
-		k	^= k >> R;
-		k	*= M;
-
-		H	*= M;
-		H	^= k;
-
-		Ptr	 += 4;
-		Size -= 4;
-	}
-
-	switch( Size )
-	{
-		case 3:	H	^= Ptr[2] << 16;
-		case 2:	H	^= Ptr[1] << 8;
-		case 1:
-				H	^= Ptr[0];
-				H	*= M;
-	}
-
-	H	^= H >> 13;
-	H	*= M;
-	H	^= H >> 15;
-
-	return H;
-}
-
-
-/*-----------------------------------------------------------------------------
 	CCmdLineParser implementation.
 -----------------------------------------------------------------------------*/
 

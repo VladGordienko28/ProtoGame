@@ -11,10 +11,23 @@ namespace flu
 	template<SizeT ID_BITS, SizeT GEN_BITS, UInt32 DESCR> class Handle
 	{
 	public:
+		static const SizeT BITS_PER_ID = ID_BITS;
+		static const SizeT BITS_PER_GEN = GEN_BITS;
+
 		Handle()
 			:	id( ( 1 << ID_BITS ) - 1 ),
 				gen( ( 1 << GEN_BITS ) - 1 )
 		{
+		}
+
+		Bool operator==( Handle<ID_BITS, GEN_BITS, DESCR> other ) const
+		{
+			return id == other.id && gen == other.gen;
+		}
+
+		Bool operator!=( Handle<ID_BITS, GEN_BITS, DESCR> other ) const
+		{
+			return id != other.id || gen != other.gen;
 		}
 
 	private:
@@ -28,9 +41,16 @@ namespace flu
 		}
 
 		template<typename HANDLE_TYPE, typename T, SizeT MAX_SIZE> friend class HandleArray;
+		template<typename HANDLE> friend HANDLE INVALID_HANDLE();
 
 		static_assert( ID_BITS + GEN_BITS == 32, "Total Handle bits should be 32" );
 	};
+
+	// Invalid handle constructor
+	template<typename HANDLE> inline HANDLE INVALID_HANDLE()
+	{
+		return HANDLE( ( 1 << HANDLE::BITS_PER_ID ) - 1, ( 1 << HANDLE::BITS_PER_GEN ) - 1 );
+	}
 
 	/**
 	 *	An abstract non-resizable container, which uses immutable handles for
@@ -67,6 +87,21 @@ namespace flu
 			m_available[handle.id].id = MAX_SIZE;
 
 			return handle;
+		}
+
+		T* emplaceElement( HANDLE_TYPE& outHandle )
+		{
+			assert( m_firstAvailable != MAX_SIZE && "HandleArray overflowed" );
+
+			T* result = &m_data[m_firstAvailable];
+
+			HANDLE_TYPE handle = HANDLE_TYPE( m_firstAvailable, ++m_available[m_firstAvailable].gen );
+
+			m_firstAvailable = m_available[m_firstAvailable].id;
+			m_available[handle.id].id = MAX_SIZE;
+
+			outHandle = handle;
+			return result;
 		}
 
 		void removeElement( HANDLE_TYPE handle )
@@ -106,5 +141,6 @@ namespace flu
 
 		static_assert( isPowerOfTwo( MAX_SIZE ), "MaxSize of HandleArray should be power of two" );
 		static_assert( sizeof( HANDLE_TYPE ) == sizeof( UInt32 ), "Handle size should equal to UInt32 size" );
+		static_assert( MAX_SIZE <= ( 1 << HANDLE_TYPE::BITS_PER_ID ), "Handle array size is not suitable for handle type" );
 	};
 }

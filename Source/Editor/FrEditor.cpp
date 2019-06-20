@@ -141,7 +141,8 @@ void CEditor::Init( HINSTANCE InhInstance )
 	Config			= new CConfigManager( fm::getCurrentDirectory() );
 
 	// Create render & audio.
-	GRender		= new COpenGLRender( hWnd );
+	//GRender		= new COpenGLRender( hWnd );
+	GRender			= new CDirectX11Render( hWnd );
 
 #if FLU_X64
 	GAudio		= new CNullAudio();
@@ -274,6 +275,8 @@ void CEditor::Exit()
 	freeandnil(GAudio);
 	freeandnil(GRender);
 	freeandnil(Config);
+
+	//GRender = nullptr;
 
 	info( L"Ed: Editor shutdown" ); 
 }
