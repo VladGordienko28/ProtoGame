@@ -128,5 +128,10 @@ namespace fm
 	 */
 	extern void setCurrentDirectory( const Char* newDirectory );
 
+	/**
+	 *	Return last file modification time
+	 */
+	extern Int64 getFileModificationTime( const Char* fileName );
+
 } /* namespace fm */
 } /* namespace flu */

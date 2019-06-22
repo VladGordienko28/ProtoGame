@@ -38,6 +38,7 @@
 
 // experimental:
 #include "DirectX11/DirectX11.h"
+#include "FFX/FFX.h"
 #include "Experimental/DxAdapter.h"
 
 // Partial classes tree.

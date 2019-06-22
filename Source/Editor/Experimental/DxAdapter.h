@@ -87,16 +87,23 @@ private:
 
 		Float m_lockTime;
 
+		ffx::System::UPtr m_effectSystem;
 
+
+		ffx::Effect::Ptr m_colorEffect;
+		ffx::Effect::Ptr m_texturedEffect;
 
 		rend::VertexBufferHandle m_quadVB_XY;
+		rend::VertexBufferHandle m_quadVB_XYUV;
 
-		rend::ShaderHandle m_coloredVs;
-		rend::ShaderHandle m_coloredPs;
+		Array<rend::ShaderResourceView> m_srvs;
+		Array<rend::Texture2DHandle> m_textures;
+		rend::ShaderResourceView getSrvOf( FBitmap* bitmap );
 
+		rend::SamplerStateId m_samplerNearest;
+		rend::SamplerStateId m_samplerLinear;
 
-		rend::ConstantBufferHandle m_transformCB;
-		rend::ConstantBufferHandle m_colorCB;
+		rend::BlendStateId m_blendStates[EBitmapBlend::BLEND_MAX];
 
 		friend class CDirectX11Render;
 	};

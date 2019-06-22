@@ -33,14 +33,52 @@ namespace ffx
 	{
 		m_device = nullptr;
 		m_directory = L"";
+
+		// todo: add auto removing from manager
+		//assert( m_effects.isEmpty() );
 	}
 
-	Effect::Ptr System::getEffect( String effectName )
+	// todo: move to the background thread
+	void System::update()
+	{
+		for( auto& it : m_effects )
+		{
+			assert( it.value.effect );
+			Effect* effect = it.value.effect;
+
+			if( fm::fileExists( *effect->fileName() ) )
+			{
+				Int64 fileTime = fm::getFileModificationTime( *effect->fileName() );
+
+				if( fileTime > it.value.modificationTime )
+				{
+					effect->reload();
+					it.value.modificationTime = fileTime;
+				}
+			}
+		}
+	}
+
+	Effect::Ptr System::getEffect( String effectName, const rend::VertexDeclaration& vertexDeclaration )
 	{
 		assert( m_device );
+		assert( effectName );
 
-		// add cache here!!
+		CachedEffect* effect = m_effects.get( effectName );
 
+		if( effect )
+		{
+			assert( effect->effect );
+			return effect->effect;
+		}
+		else
+		{
+			return createEffect( effectName, vertexDeclaration );
+		}
+	}
+
+	Effect::Ptr System::createEffect( String effectName, const rend::VertexDeclaration& vertexDeclaration )
+	{
 		String fileName = m_directory + effectName + SHADER_EXTENSION;
 
 		if( !fm::fileExists( *fileName ) )
@@ -49,40 +87,17 @@ namespace ffx
 			return nullptr;
 		}
 
-		// load as text file
-		Text::Ptr sourceText = fm::readTextFile( *fileName );
-		assert( sourceText.hasObject() );
+		Effect* effect = new Effect( effectName, fileName, vertexDeclaration, m_device );
 
-
-
-#if 0
-
-
-			String errorMsg;
-			String warnMsg;
-			rend::ShaderCompiler::UPtr compiler = new dx11::ShaderCompiler();
-
-			auto compiledPS = compiler->compile( rend::EShaderType::Pixel, shaderText, L"psMain", &warnMsg, &errorMsg );
-			if( !compiledPS.isValid() )
-				fatal( L"Unable to compile hlsl shader with error: \n%s", *errorMsg );
-
-			auto compiledVS = compiler->compile( rend::EShaderType::Vertex, shaderText, L"vsMain", &warnMsg, &errorMsg );
-			if( !compiledVS.isValid() )
-				fatal( L"Unable to compile hlsl shader with error: \n%s", *errorMsg );
-
-			rend::VertexDeclaration declXY( L"VertexDecl_XY" );
-			declXY.addElement( { rend::EFormat::RG32_F, rend::EVertexElementUsage::Position, 0, 0 } );
-
-			m_coloredVs = m_device->createVertexShader( compiledVS, declXY, "Colored.hlsl" );
-			m_coloredPs = m_device->createPixelShader( compiledPS, "Colored.hlsl" );
-#endif
-
-
-
-
+		if( effect && effect->load() )
+		{
+			m_effects.put( effectName, CachedEffect( effect, fm::getFileModificationTime( *fileName ) ) );
+			return effect;
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
-
-
-
 }
 }

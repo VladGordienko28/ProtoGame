@@ -23,10 +23,12 @@ namespace dx11
 
 		rend::Texture1DHandle createTexture1D( rend::EFormat format, Int32 width, Int32 mips, 
 			rend::EUsage usage, const void* initialData, const AnsiChar* debugName ) override;
+		void updateTexture1D( rend::Texture1DHandle handle, const void* newData ) override;
 		void destroyTexture1D( rend::Texture1DHandle handle ) override;
 
 		rend::Texture2DHandle createTexture2D( rend::EFormat format, Int32 width, Int32 height, Int32 mips, 
 			rend::EUsage usage, const void* initialData, const AnsiChar* debugName ) override;
+		void updateTexture2D( rend::Texture2DHandle handle, const void* newData ) override;
 		void destroyTexture2D( rend::Texture2DHandle handle ) override;
 
 		rend::RenderTargetHandle createRenderTarget( rend::EFormat format, Int32 width, Int32 height, 
@@ -89,6 +91,8 @@ namespace dx11
 		rend::ShaderResourceView getShaderResourceView( rend::Texture1DHandle handle ) override;
 		rend::ShaderResourceView getShaderResourceView( rend::Texture2DHandle handle ) override;
 		rend::ShaderResourceView getShaderResourceView( rend::RenderTargetHandle handle ) override;
+
+		rend::ShaderCompiler* createCompiler() const override;
 
 	private:
 		SwapChain::UPtr m_swapChain;

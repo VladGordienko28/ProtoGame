@@ -19,8 +19,8 @@ namespace flu
 
 	void CDirectX11Render::Resize( Int32 newWidth, Int32 newHeight )
 	{
-		newWidth = clamp( newWidth,  1, 1920 );
-		newHeight = clamp( newHeight, 1, 1080 );
+		newWidth = clamp( newWidth,  1, 3000 );
+		newHeight = clamp( newHeight, 1, 3000 );
 
 		m_device->resize( newWidth, newHeight, false );
 	}
@@ -38,33 +38,9 @@ namespace flu
 	}
 
 	void CDirectX11Render::Unlock()
-	{/*
-		math::FloatColor drawColor = math::Color::hsl2rgb( GPlat->Now()*3, 255, 128, 255 );
+	{
+		m_canvas->m_effectSystem->update();
 
-		m_device->updateConstantBuffer( m_canvas->m_colorCB, &drawColor, sizeof( drawColor ) );
-
-		m_device->setVertexShader( m_canvas->m_coloredVs );
-		m_device->setPixelShader( m_canvas->m_coloredPs );
-
-		math::Vector points[4] =
-		{
-			{ +0.25f, -0.25f },
-			{ -0.25f, -0.25f },
-
-			{ +0.25f, +0.25f },
-			{ -0.25f, +0.25f },
-		};
-
-		m_device->updateVertexBuffer( m_canvas->m_quadVB_XY, points, sizeof( points ) );
-
-		m_device->setVertexBuffer( m_canvas->m_quadVB_XY );
-		m_device->setConstantBuffers( rend::EShaderType::Vertex, 0, 1, &m_canvas->m_transformCB );
-		m_device->setConstantBuffers( rend::EShaderType::Pixel, 1, 1, &m_canvas->m_colorCB );
-
-		m_device->setTopology( rend::EPrimitiveTopology::TriangleStrip );
-		m_device->draw( 4 );
-
-		*/
 		profile_zone( EProfilerGroup::Render, Present );
 		m_device->endFrame();
 	}
@@ -92,258 +68,59 @@ namespace flu
 	}
 
 
-
-
-#if 0
-	rend::Device::UPtr m_renderDevice;
-
-	rend::VertexBufferHandle vertexBuffer;
-	rend::ShaderHandle vertexShader;
-	rend::ShaderHandle pixelShader;
-	rend::ConstantBufferHandle shadeParamsCB;
-	rend::ConstantBufferHandle transformCB;
-	rend::Texture2DHandle texture;
-#endif
-
-
-
-#if 0
-
-	m_renderDevice = new dx11::Device( hWnd, 800, 600, false );
-
-	math::Color texData[32][32];
-
-	for( int i = 0; i < 32; ++i )
-		for( int j = 0; j < 32; ++j )
-		{
-			texData[i][j].r =
-				texData[i][j].g =
-				texData[i][j].b = ((i ^ j) % 2) != 0 ? 255 : 128;
-			texData[i][j].a = 255;
-		}
-
-
-	texture = m_renderDevice->createTexture2D( rend::EFormat::RGBA8_UNORM, 32, 32, 1, rend::EUsage::Immutable,
-		texData, "MyCheckerTexture" );
-
-
-	// --------------------------------------------------------------------------------------
-	String shaderText =
-L"//-----------------------------------------------------------------------------\n"
-"//	FlatShader.cpp: Flat color shading shader\n"
-"//	Created by Vlad Gordienko, 2018\n"
-"//-----------------------------------------------------------------------------\n"
-"\n"
-"cbuffer Transforms\n"
-"{\n"
-"	matrix projectionMatrix;\n"
-"}\n"
-"\n"
-"cbuffer ShadeParams\n"
-"{\n"
-"	float4 color;\n"
-"}\n"
-"\n"
-"// See: flu::render::VertexXY\n"
-"struct VS_INPUT\n"
-"{\n"
-"	float2 position		: POSITION;\n"
-"	float2 texCoord		: TEXCOORD0;\n"
-"};\n"
-"\n"
-"struct VS_OUTPUT\n"
-"{\n"
-"	float4 position		: SV_Position;\n"
-"	float2 texCoord		: TEXCOORD0;\n"
-"	float4 color		: COLOR;\n"
-"};\n"
-"\n"
-"/**\n"
-" *	Vertex Shader entry point\n"
-" */\n"
-"VS_OUTPUT vs_main( in VS_INPUT input )\n"
-"{\n"
-"	VS_OUTPUT output;\n"
-"\n"
-"	output.position = mul( float4( input.position, 0.f, 1.f ), projectionMatrix );\n"
-"	output.color = color;\n"
-"	output.texCoord = input.position * 2.5 + 0.0 * input.texCoord;\n"
-"\n"
-"	return output;\n"
-"}\n"
-"Texture2D albedo;\n"
-"SamplerState albedoSampler;\n"
-"\n"
-"/**\n"
-" *	Pixel Shader entry point\n"
-" */\n"
-"float4 ps_main( in VS_OUTPUT input ) : SV_Target\n"
-"{\n"
-"	return input.color * albedo.Sample( albedoSampler, input.texCoord );\n"
-"}";
-	
-	rend::ShaderCompiler::UPtr compiler = new dx11::ShaderCompiler();
-	Text::Ptr text = new Text( shaderText );
-
-	String Error;
-
-	auto result1 = compiler->compile( rend::EShaderType::Vertex, text, L"vs_main", nullptr, &Error );
-	auto result2 = compiler->compile( rend::EShaderType::Pixel, text, L"ps_main", nullptr, &Error );	
-
-	assert( result1.isValid() && result2.isValid() );
-
-	rend::VertexDeclaration decl( L"TrololoVertexDeclaration" );
-	decl.addElement( { rend::EFormat::RG32_F, rend::EVertexElementUsage::Position, 0, 0 } );
-	decl.addElement( { rend::EFormat::RG32_F, rend::EVertexElementUsage::TexCoord, 0, 8 } );
-
-	vertexShader = m_renderDevice->createVertexShader( result1, decl, "FlatVertexShader" );
-	pixelShader = m_renderDevice->createPixelShader( result2, "FlatPixelShader" );
-
-	math::FloatColor drawColor = math::colors::CORAL;
-	shadeParamsCB = m_renderDevice->createConstantBuffer( sizeof(math::FloatColor), rend::EUsage::Dynamic, 
-		&drawColor, "ShaderParams Constant Buffer" );
-
-
-	Float matrix[16] = 
-	{
-		1.f, 0.f, 0.f, 0.f,
-		0.f, 1.f, 0.f, 0.f,
-		0.f, 0.f, 1.f, 0.f,
-		0.f, 0.f, 0.f, 1.f
-	};
-
-	transformCB = m_renderDevice->createConstantBuffer( sizeof(matrix), rend::EUsage::Immutable, 
-		matrix, "Transform Constant buffer" );
-
-
-	math::Vector vertexBufferData[6] =
-	{
-		{ 0.f, 0.f },	{ 0.f, 0.f },
-		{ 0.5f, 0.5f },	{ 1.f, 0.f },
-		{ 1.f, 0.5f },	{ 1.f, 1.f }
-	};
-
-	vertexBuffer = m_renderDevice->createVertexBuffer( sizeof(math::Vector) * 2, 3,
-		rend::EUsage::Dynamic, vertexBufferData, "My Amazing VertexBuffer" );
-
-/*
-		EFormat format = EFormat::Unknown;
-		EVertexElementUsage usage = EVertexElementUsage::Position;
-		UInt32 usageIndex = 0;
-		UInt32 offset = 0;
-*/
-
-
-	// --------------------------------------------------------------------------------------
-
-
-
-#endif
-
-#if 0
-	m_renderDevice->destroyVertexBuffer( vertexBuffer );
-	m_renderDevice->destroyVertexShader( vertexShader );
-	m_renderDevice->destroyPixelShader( pixelShader );
-	m_renderDevice->destroyConstantBuffer( shadeParamsCB );
-	m_renderDevice->destroyConstantBuffer( transformCB );
-	m_renderDevice->destroyTexture2D( texture );
-
-
-
-	m_renderDevice = nullptr;
-#endif
-
-
-#if 0
-				m_renderDevice->beginFrame();
-
-
-				///////////////////////////////////////////////////////////////////////////
-
-					m_renderDevice->setVertexShader( vertexShader );
-					m_renderDevice->setPixelShader( pixelShader );
-					m_renderDevice->setVertexBuffer( vertexBuffer );
-
-					m_renderDevice->setConstantBuffers( rend::EShaderType::Vertex, 0, 1, &transformCB );
-					m_renderDevice->setConstantBuffers( rend::EShaderType::Vertex, 1, 1, &shadeParamsCB );
-
-					m_renderDevice->setTopology( rend::EPrimitiveTopology::TriangleList );
-
-
-	rend::SamplerStateId mySampler = m_renderDevice->getSamplerState( { rend::ESamplerFilter::Point, rend::ESamplerAddressMode::Clamp } );
-	m_renderDevice->setSamplerStates( rend::EShaderType::Pixel, 0, 1, &mySampler );
-
-
-	auto resourceView = m_renderDevice->getShaderResourceView( texture );
-	m_renderDevice->setSRVs( rend::EShaderType::Pixel, 0, 1, &resourceView );
-
-					math::FloatColor drawColor =
-					{
-						math::sin( GPlat->Now() * 2.7f ) * 0.5f + 0.5f,
-						math::sin( GPlat->Now() * 2.1f ) * 0.5f + 0.5f,
-						math::sin( GPlat->Now() * 0.9f ) * 0.5f + 0.5f,
-						1.f
-					};
-
-					m_renderDevice->updateConstantBuffer( shadeParamsCB, &drawColor, sizeof( math::FloatColor ) );
-
-					m_renderDevice->draw( 3 );
-
-				m_renderDevice->endFrame( false );
-#endif
-
-
 	CDirectX11Canvas::CDirectX11Canvas( CDirectX11Render* render, rend::Device* device )
 		:	m_render( render ),
 			m_device( device ),
 			m_lockTime( 0.f )
 	{
-		// load all shaders
-		{
-			Text::Ptr shaderText = fm::readTextFile( L"Shaders\\Colored.hlsl" );
-			assert( shaderText.hasObject() );
-
-			String errorMsg;
-			String warnMsg;
-			rend::ShaderCompiler::UPtr compiler = new dx11::ShaderCompiler();
-
-			auto compiledPS = compiler->compile( rend::EShaderType::Pixel, shaderText, L"psMain", &warnMsg, &errorMsg );
-			if( !compiledPS.isValid() )
-				fatal( L"Unable to compile hlsl shader with error: \n%s", *errorMsg );
-
-			auto compiledVS = compiler->compile( rend::EShaderType::Vertex, shaderText, L"vsMain", &warnMsg, &errorMsg );
-			if( !compiledVS.isValid() )
-				fatal( L"Unable to compile hlsl shader with error: \n%s", *errorMsg );
+		m_effectSystem = new ffx::System();
+		m_effectSystem->init( m_device, fm::getCurrentDirectory() + TEXT( "\\Shaders\\" ) );
 
 			rend::VertexDeclaration declXY( L"VertexDecl_XY" );
 			declXY.addElement( { rend::EFormat::RG32_F, rend::EVertexElementUsage::Position, 0, 0 } );
 
-			m_coloredVs = m_device->createVertexShader( compiledVS, declXY, "Colored.hlsl" );
-			m_coloredPs = m_device->createPixelShader( compiledPS, "Colored.hlsl" );
-		}
+		m_colorEffect = m_effectSystem->getEffect( L"Colored", declXY );
 
 
+			rend::VertexDeclaration declXYUV( L"VertexDecl_XYUV" );
+			declXYUV.addElement( { rend::EFormat::RG32_F, rend::EVertexElementUsage::Position, 0, 0 } );
+			declXYUV.addElement( { rend::EFormat::RG32_F, rend::EVertexElementUsage::TexCoord, 0, 8 } );
 
-		// allocate required constant buffers
-		m_transformCB = m_device->createConstantBuffer( 16 * sizeof( Float ), rend::EUsage::Dynamic, nullptr, "TransformCB" );
-		m_colorCB = m_device->createConstantBuffer( sizeof( math::FloatColor ), rend::EUsage::Dynamic, nullptr, "ColorCB" );
+		m_texturedEffect = m_effectSystem->getEffect( L"Textured", declXYUV );
 
 
 		// allocate required vertex buffers
 		m_quadVB_XY = m_device->createVertexBuffer( sizeof( math::Vector ), 4, rend::EUsage::Dynamic, nullptr, "QuadVB_XY" );
+		m_quadVB_XYUV = m_device->createVertexBuffer( sizeof( math::Vector )*2, 4, rend::EUsage::Dynamic, nullptr, "QuadVB_XYUV" );
 
+		m_samplerNearest = m_device->getSamplerState( { rend::ESamplerFilter::Point, rend::ESamplerAddressMode::Wrap } );
+		m_samplerLinear = m_device->getSamplerState( { rend::ESamplerFilter::Linear, rend::ESamplerAddressMode::Wrap } );
 
+		m_blendStates[BLEND_Regular] = -1;
+		m_blendStates[BLEND_Masked] = -1;
+		m_blendStates[BLEND_Translucent] = m_device->getBlendState( { rend::EBlendFactor::One, rend::EBlendFactor::InvSrcColor, rend::EBlendOp::Add, rend::EBlendFactor::One, rend::EBlendFactor::InvSrcAlpha, rend::EBlendOp::Add } );
+		m_blendStates[BLEND_Modulated] = m_device->getBlendState( { rend::EBlendFactor::DestColor, rend::EBlendFactor::SrcColor, rend::EBlendOp::Add, rend::EBlendFactor::DestAlpha, rend::EBlendFactor::SrcAlpha, rend::EBlendOp::Add } );
+		m_blendStates[BLEND_Alpha] = m_device->getBlendState( { rend::EBlendFactor::SrcAlpha, rend::EBlendFactor::InvSrcAlpha, rend::EBlendOp::Add, rend::EBlendFactor::SrcAlpha, rend::EBlendFactor::InvSrcAlpha, rend::EBlendOp::Add } );
+		m_blendStates[BLEND_Darken] = m_device->getBlendState( { rend::EBlendFactor::Zero, rend::EBlendFactor::InvSrcColor, rend::EBlendOp::Add, rend::EBlendFactor::Zero, rend::EBlendFactor::InvSrcAlpha, rend::EBlendOp::Add } );
+		m_blendStates[BLEND_Brighten] = m_device->getBlendState( { rend::EBlendFactor::SrcAlpha, rend::EBlendFactor::One, rend::EBlendOp::Add, rend::EBlendFactor::SrcAlpha, rend::EBlendFactor::One, rend::EBlendOp::Add } );
+		m_blendStates[BLEND_FastOpaque] = m_device->getBlendState( { rend::EBlendFactor::One, rend::EBlendFactor::InvSrcColor, rend::EBlendOp::Add, rend::EBlendFactor::One, rend::EBlendFactor::InvSrcAlpha, rend::EBlendOp::Add } );
 	}
 
 	CDirectX11Canvas::~CDirectX11Canvas()
 	{
-		m_device->destroyVertexShader( m_coloredVs );
-		m_device->destroyPixelShader( m_coloredPs );
+		m_effectSystem->shutdown();
+		m_effectSystem = nullptr;
 		
-		m_device->destroyVertexBuffer( m_quadVB_XY );
+		for( auto& it : m_textures )
+		{
+			m_device->destroyTexture2D( it );
+		}
 
-		m_device->destroyConstantBuffer( m_transformCB );
-		m_device->destroyConstantBuffer( m_colorCB );
+		m_textures.empty();
+		m_srvs.empty();
+
+		m_device->destroyVertexBuffer( m_quadVB_XY );
+		m_device->destroyVertexBuffer( m_quadVB_XYUV );
 	}
 
 	void CDirectX11Canvas::SetTransform( const TViewInfo& info )
@@ -384,7 +161,8 @@ L"//----------------------------------------------------------------------------
 		matrix[2][3] = 1.f;
 		matrix[3][3] = 1.f;
 
-		m_device->updateConstantBuffer( m_transformCB, matrix, sizeof( matrix ) );
+		m_colorEffect->setData( matrix, sizeof( matrix ), 16 );
+		m_texturedEffect->setData( matrix, sizeof( matrix ), 16 );
 	}
 
 	void CDirectX11Canvas::SetClip( const TClipArea& area )
@@ -399,18 +177,12 @@ L"//----------------------------------------------------------------------------
 	{
 		const math::Vector Verts[2] = { a, b };
 
-		const math::FloatColor drawColor = color;
-			
-		m_device->updateConstantBuffer( m_colorCB, &drawColor, sizeof( drawColor ) );
+		m_colorEffect->setColor( 0, color );
 
-		m_device->setVertexShader( m_coloredVs );
-		m_device->setPixelShader( m_coloredPs );
+		m_colorEffect->apply();
 
 		m_device->updateVertexBuffer( m_quadVB_XY, Verts, sizeof( Verts ) );
-
 		m_device->setVertexBuffer( m_quadVB_XY );
-		m_device->setConstantBuffers( rend::EShaderType::Vertex, 0, 1, &m_transformCB );
-		m_device->setConstantBuffers( rend::EShaderType::Pixel, 1, 1, &m_colorCB );
 
 		m_device->setTopology( rend::EPrimitiveTopology::LineStrip );
 		m_device->draw( 2 );
@@ -423,55 +195,142 @@ L"//----------------------------------------------------------------------------
 
 	void CDirectX11Canvas::DrawRect( const TRenderRect& rect )
 	{
+		math::Vector Verts[4];
+
+		// Compute sprite vertices.
+		if( !rect.Rotation )
+		{
+			// No rotation.
+			Verts[1] = rect.Bounds.min;
+			Verts[0] = math::Vector( rect.Bounds.min.x, rect.Bounds.max.y );
+			Verts[2] = rect.Bounds.max;
+			Verts[3] = math::Vector( rect.Bounds.max.x, rect.Bounds.min.y );
+		}
+		else
+		{
+			// Rotation.
+			math::Vector Center	= rect.Bounds.center();
+			math::Vector Size2	= rect.Bounds.size() * 0.5f;
+			math::Coords Coords	= math::Coords( Center, rect.Rotation );
+
+			math::Vector XAxis = Coords.xAxis * Size2.x,
+					YAxis = Coords.yAxis * Size2.y;
+
+			// World coords.
+			Verts[1] = Center - YAxis - XAxis;
+			Verts[0] = Center + YAxis - XAxis;
+			Verts[2] = Center + YAxis + XAxis;
+			Verts[3] = Center - YAxis + XAxis;
+		}
+
+
 		if( rect.Flags & POLY_FlatShade )
 		{
-			math::Vector Verts[4];
-
-			// Compute sprite vertices.
-			if( !rect.Rotation )
-			{
-				// No rotation.
-				Verts[1] = rect.Bounds.min;
-				Verts[0] = math::Vector( rect.Bounds.min.x, rect.Bounds.max.y );
-				Verts[2] = rect.Bounds.max;
-				Verts[3] = math::Vector( rect.Bounds.max.x, rect.Bounds.min.y );
-			}
-			else
-			{
-				// Rotation.
-				math::Vector Center	= rect.Bounds.center();
-				math::Vector Size2	= rect.Bounds.size() * 0.5f;
-				math::Coords Coords	= math::Coords( Center, rect.Rotation );
-
-				math::Vector XAxis = Coords.xAxis * Size2.x,
-						YAxis = Coords.yAxis * Size2.y;
-
-				// World coords.
-				Verts[1] = Center - YAxis - XAxis;
-				Verts[0] = Center + YAxis - XAxis;
-				Verts[2] = Center + YAxis + XAxis;
-				Verts[3] = Center - YAxis + XAxis;
-			}
-
-			const math::FloatColor drawColor = rect.Color;
-			
-			m_device->updateConstantBuffer( m_colorCB, &drawColor, sizeof( drawColor ) );
-
-			m_device->setVertexShader( m_coloredVs );
-			m_device->setPixelShader( m_coloredPs );
+			m_colorEffect->setColor( 0, rect.Color );
+			m_colorEffect->apply();
 
 			m_device->updateVertexBuffer( m_quadVB_XY, Verts, sizeof( Verts ) );
-
 			m_device->setVertexBuffer( m_quadVB_XY );
-			m_device->setConstantBuffers( rend::EShaderType::Vertex, 0, 1, &m_transformCB );
-			m_device->setConstantBuffers( rend::EShaderType::Pixel, 1, 1, &m_colorCB );
-
-			m_device->setTopology( rend::EPrimitiveTopology::TriangleStrip );
-			m_device->draw( 4 );
 		}
+		else if( rect.Texture && rect.Texture->IsA(FBitmap::MetaClass) )
+		{
+			math::Vector T1	= rect.TexCoords.min;
+			math::Vector T2	= rect.TexCoords.max;
+
+			math::Vector myVerts [4][2] = 
+			{
+				Verts[0], { T1.x, T2.y },
+				Verts[1], { T1.x, T1.y },
+				Verts[2], { T2.x, T2.y },
+				Verts[3], { T2.x, T1.y },
+			};
+
+
+			m_texturedEffect->setColor( 0, rect.Color );
+			m_texturedEffect->setSRV( 0, getSrvOf(As<FBitmap>(rect.Texture)) );
+
+			m_texturedEffect->setSamplerState( 0, As<FBitmap>(rect.Texture)->Filter == BFILTER_Nearest ? m_samplerNearest : m_samplerLinear );
+			m_texturedEffect->setBlendState( m_blendStates[As<FBitmap>(rect.Texture)->BlendMode] );
+
+			m_texturedEffect->apply();
+
+			m_device->updateVertexBuffer( m_quadVB_XYUV, myVerts, sizeof( myVerts ) );
+			m_device->setVertexBuffer( m_quadVB_XYUV );
+		}
+
+
+		m_device->setTopology( rend::EPrimitiveTopology::TriangleStrip );
+		m_device->draw( 4 );
 	}
 
 	void CDirectX11Canvas::DrawList( const TRenderList& list )
 	{
+	}
+
+
+static void* Palette8ToRGBA( UInt8* SourceData, math::Color* Palette, Int32 USize, Int32 VSize )
+{
+	static math::Color Buffer512[512*512];
+	Int32 i, n;
+
+    // Doesn't allow palette image with dimension > 512.
+	if( USize*VSize > 512*512 )
+		return nullptr;
+	
+	i	= USize * VSize;
+	while( i-- > 0 )
+	{
+		Buffer512[i] = Palette[SourceData[i]];
+	}
+
+	return Buffer512;
+}
+
+
+	rend::ShaderResourceView CDirectX11Canvas::getSrvOf( FBitmap* bitmap )
+	{
+		if( bitmap )
+		{
+			if( bitmap->RenderInfo == -1 )
+			{
+				rend::Texture2DHandle newTexture = m_device->createTexture2D( rend::EFormat::RGBA8_UNORM, bitmap->USize, bitmap->VSize, 1,
+					bitmap->bDynamic ? rend::EUsage::Dynamic : rend::EUsage::Immutable, bitmap->Format == BF_Palette8 ? Palette8ToRGBA
+											( 
+												(UInt8*)bitmap->GetData(), 
+												&bitmap->Palette.Colors[0], 
+												bitmap->USize, 
+												bitmap->VSize 
+											) : bitmap->GetData(), *wide2AnsiString(bitmap->GetName()) );
+
+				// todo: add dynamic textures update!!!
+
+				bitmap->RenderInfo = m_textures.push( newTexture );
+				m_srvs.push( m_device->getShaderResourceView( newTexture ) );
+			}
+
+
+			if( bitmap->bDynamic && bitmap->bRedrawn )
+			{
+				m_device->updateTexture2D( m_textures[bitmap->RenderInfo], bitmap->Format == BF_Palette8 ? Palette8ToRGBA
+											( 
+												(UInt8*)bitmap->GetData(), 
+												&bitmap->Palette.Colors[0], 
+												bitmap->USize, 
+												bitmap->VSize 
+											) : bitmap->GetData() );
+
+				bitmap->bRedrawn = false;
+			}
+
+			bitmap->Tick();
+
+			return m_srvs[bitmap->RenderInfo];
+		}
+		else
+		{
+			return { nullptr };
+		}
+
+
 	}
 }

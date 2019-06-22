@@ -5,12 +5,8 @@
 
 cbuffer Transforms : register( b0 )
 {
-	float4x4 projectionMatrix;
-}
-
-cbuffer Shading : register ( b1 )
-{
 	float4 color;
+	float4x4 projectionMatrix;
 }
 
 struct VsInput
@@ -33,10 +29,4 @@ VsOutput vsMain( in VsInput input )
 float4 psMain( in VsOutput input ) : SV_Target
 {
 	return color;
-}
-
-technique FlatShade
-{
-	VertexShader = vsMain();
-	PixelShader = psMain();
 }

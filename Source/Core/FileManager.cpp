@@ -336,10 +336,7 @@ namespace fm
 	Bool directoryExists( const Char* dirName )
 	{ 
 		UInt32 Type	= GetFileAttributes( dirName );
-
-		return	!( Type & INVALID_FILE_ATTRIBUTES ) && 
-				( Type & FILE_ATTRIBUTE_DIRECTORY );
-
+		return Type & FILE_ATTRIBUTE_DIRECTORY;
 	}
 
 	Bool fileExists( const Char* fileName )
@@ -401,6 +398,20 @@ namespace fm
 		if( !result )
 		{
 			fatal( L"Unable to change current working directory with error %d", GetLastError() );
+		}
+	}
+
+	Int64 getFileModificationTime( const Char* fileName )
+	{
+		WIN32_FILE_ATTRIBUTE_DATA fileData;
+
+		if( GetFileAttributesEx( fileName, GetFileExInfoStandard, &fileData ) )
+		{
+			return *reinterpret_cast<Int64*>( &fileData.ftLastWriteTime );
+		}
+		else
+		{
+			return 0;
 		}
 	}
 

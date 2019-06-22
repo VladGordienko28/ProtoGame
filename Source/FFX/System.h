@@ -19,20 +19,32 @@ namespace ffx
 		~System();
 
 		void init( rend::Device* device, String shadersDirectory );
+		void update();
 		void shutdown();
 
-		Effect::Ptr getEffect( String effectName );
-
+		Effect::Ptr getEffect( String effectName, const rend::VertexDeclaration& vertexDeclaration );
 
 	private:
 		static constexpr const Char* SHADER_EXTENSION = TEXT( ".ffx" );
 
-		rend::Device* m_device;
+		struct CachedEffect
+		{
+			Effect* effect = nullptr;
+			Int64 modificationTime = 0;
+
+			CachedEffect( Effect* inEffect, Int64 time )
+				:	effect( inEffect ),
+					modificationTime( time )
+			{
+			}
+		};
 
 		String m_directory;
+		Map<String, CachedEffect> m_effects;
 
+		rend::Device* m_device;
 
-
+		Effect::Ptr createEffect( String effectName, const rend::VertexDeclaration& vertexDeclaration );
 	};
 }
 }

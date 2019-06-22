@@ -25,10 +25,12 @@ namespace rend
 
 		virtual Texture1DHandle createTexture1D( EFormat format, Int32 width, Int32 mips = 1, 
 			EUsage usage = EUsage::Immutable, const void* initialData = nullptr, const AnsiChar* debugName = nullptr ) = 0;
+		virtual void updateTexture1D( Texture1DHandle handle, const void* newData ) = 0;
 		virtual void destroyTexture1D( Texture1DHandle handle ) = 0;
 
 		virtual Texture2DHandle createTexture2D( EFormat format, Int32 width, Int32 height, Int32 mips = 1, 
 			EUsage usage = EUsage::Immutable, const void* initialData = nullptr, const AnsiChar* debugName = nullptr ) = 0;
+		virtual void updateTexture2D( Texture2DHandle handle, const void* newData ) = 0;
 		virtual void destroyTexture2D( Texture2DHandle handle ) = 0;
 
 		virtual RenderTargetHandle createRenderTarget( EFormat format, Int32 width, Int32 height, 
@@ -90,6 +92,8 @@ namespace rend
 		virtual ShaderResourceView getShaderResourceView( Texture1DHandle handle ) = 0;
 		virtual ShaderResourceView getShaderResourceView( Texture2DHandle handle ) = 0;
 		virtual ShaderResourceView getShaderResourceView( RenderTargetHandle handle ) = 0;
+
+		virtual ShaderCompiler* createCompiler() const = 0;
 
 	private:
 		Device( const Device& ) = delete;

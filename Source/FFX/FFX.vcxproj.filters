@@ -36,6 +36,7 @@
     <ClCompile Include="Buffer.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="Effect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Runtime">

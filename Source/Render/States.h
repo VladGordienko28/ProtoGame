@@ -119,8 +119,9 @@ namespace rend
 			:	m_srcFactor( srcFactor ),
 				m_destFactor( destFactor ),
 				m_op( op ),
-				m_srcAlphaFactor( m_srcFactor ),
-				m_destAlphaFactor( m_destAlphaFactor )
+				m_srcAlphaFactor( srcAlphaFactor ),
+				m_destAlphaFactor( destAlphaFactor ),
+				m_alphaOp( alphaOp )
 		{
 		}
 

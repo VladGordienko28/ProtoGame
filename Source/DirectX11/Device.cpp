@@ -86,6 +86,24 @@ namespace dx11
 		return handle;
 	}
 
+	void Device::updateTexture1D( rend::Texture1DHandle handle, const void* newData )
+	{
+		DxTexture1D& texture = m_textures1D.get( handle );
+		assert( texture.m_usage == rend::EUsage::Dynamic );
+		assert( newData );
+
+		// todo: add ability to pass mapping parameters here
+		D3D11_MAPPED_SUBRESOURCE mappedData;
+		m_immediateContext->Map( texture.m_texture, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData );
+		{
+			const rend::FormatInfo& format = rend::getFormatInfo( texture.m_format );
+			const SizeT dataSize = ( texture.m_width * format.blockBytes ) / format.blockSizeX;
+
+			mem::copy( mappedData.pData, newData, dataSize );
+		}
+		m_immediateContext->Unmap( texture.m_texture, 0 );
+	}
+
 	void Device::destroyTexture1D( rend::Texture1DHandle handle )
 	{
 		DxTexture1D& texture = m_textures1D.get( handle );
@@ -101,6 +119,25 @@ namespace dx11
 
 		m_textures2D.emplaceElement( handle )->create( m_device.get(), format, width, height, mips, usage, initialData, debugName );
 		return handle;
+	}
+
+	void Device::updateTexture2D( rend::Texture2DHandle handle, const void* newData )
+	{
+		DxTexture2D& texture = m_textures2D.get( handle );
+		assert( texture.m_usage == rend::EUsage::Dynamic );
+		assert( newData );
+
+		// todo: add ability to pass mapping parameters here
+		D3D11_MAPPED_SUBRESOURCE mappedData;
+		m_immediateContext->Map( texture.m_texture, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData );
+		{
+			const rend::FormatInfo& format = rend::getFormatInfo( texture.m_format );
+			const SizeT dataSize = ( texture.m_width * texture.m_height * format.blockBytes ) /
+				( format.blockSizeX * format.blockSizeY );
+
+			mem::copy( mappedData.pData, newData, dataSize );
+		}
+		m_immediateContext->Unmap( texture.m_texture, 0 );
 	}
 
 	void Device::destroyTexture2D( rend::Texture2DHandle handle )
@@ -505,8 +542,15 @@ namespace dx11
 
 		for( UInt32 i = 0; i < numSlots; ++i )
 		{
-			DxRef<ID3D11SamplerState>& sampler = m_samplerStates.getRef( ids[i] );
-			samplerStates[i] = sampler.get();
+			if( ids[i] != -1 )
+			{
+				DxRef<ID3D11SamplerState>& sampler = m_samplerStates.getRef( ids[i] );
+				samplerStates[i] = sampler.get();			
+			}
+			else
+			{
+				samplerStates[i] = nullptr;
+			}
 		}
 	
 		switch( shader )
@@ -696,6 +740,11 @@ namespace dx11
 
 		m_vertexDeclarations.put( hash, CachedVertexDeclaration( m_device.get(), declaration, vertexShader ) );
 		return hash;
+	}
+
+	rend::ShaderCompiler* Device::createCompiler() const
+	{
+		return new ShaderCompiler();
 	}
 
 	Device::CachedVertexDeclaration::CachedVertexDeclaration( ID3D11Device* device, const rend::VertexDeclaration& declaration, 

@@ -190,7 +190,7 @@ void CCanvas::DrawText
 {
 	assert(Font);
 
-	if( Font->Bitmaps.size() > 1 )
+	if( Font->Bitmaps.size() > 1 || true ) // todo: remove this stuff !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	{
 		// Slow method, with atlases switching.
 
