@@ -25,7 +25,7 @@ namespace dx11
 		assert( mips == 1 && "Mips chain is not supported yet" );
 
 		D3D11_TEXTURE1D_DESC description;
-		mem::zero( &description, sizeof( D3D11_TEXTURE2D_DESC ) );
+		mem::zero( &description, sizeof( D3D11_TEXTURE1D_DESC ) );
 
 		description.Width = m_width = width;
 		description.MipLevels = m_levels = mips;
