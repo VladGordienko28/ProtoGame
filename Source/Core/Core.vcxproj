@@ -155,6 +155,7 @@
     <ClInclude Include="Concurrency.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="CString.h" />
+    <ClInclude Include="Evaluator.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="FrSerial.h" />
     <ClInclude Include="HandleArray.h" />

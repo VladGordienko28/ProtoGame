@@ -145,6 +145,16 @@ namespace dx11
 		Map<rend::SamplerStateId, DxRef<ID3D11SamplerState>> m_samplerStates;
 		Map<rend::BlendStateId, DxRef<ID3D11BlendState>> m_blendStates;
 
+	private:
+		// api state mirror
+		rend::ShaderHandle m_oldPixelShader;
+		rend::ShaderHandle m_oldVertexShader;
+
+		rend::VertexBufferHandle m_oldVertexBuffer;
+		rend::IndexBufferHandle m_oldIndexBuffer;
+
+		rend::BlendStateId m_oldBlendStateId;
+
 		rend::EPrimitiveTopology m_oldTopology;
 	};
 }

@@ -4,7 +4,6 @@
     <ClInclude Include="FFX.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="Technique.h" />
-    <ClInclude Include="Effect.h" />
     <ClInclude Include="FxLexer.h">
       <Filter>Compiler</Filter>
     </ClInclude>
@@ -19,6 +18,9 @@
     </ClInclude>
     <ClInclude Include="Buffer.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>Runtime</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -36,7 +38,9 @@
     <ClCompile Include="Buffer.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="Effect.cpp">
+      <Filter>Runtime</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Runtime">

@@ -78,6 +78,9 @@
     <ClInclude Include="TextWriter.h">
       <Filter>Misc</Filter>
     </ClInclude>
+    <ClInclude Include="Evaluator.h">
+      <Filter>Evaluator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp" />
@@ -158,6 +161,9 @@
     </Filter>
     <Filter Include="Misc">
       <UniqueIdentifier>{bfc052de-a5df-4be3-8c42-99c871043d43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Evaluator">
+      <UniqueIdentifier>{dda0bf4c-7a09-4348-9d34-7639c852a69a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

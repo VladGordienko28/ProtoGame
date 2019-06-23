@@ -36,8 +36,8 @@ float4 psMain( in VsOutput input ) : SV_Target
 {
 	float4 myCol = myTexture.Sample( texSampler, input.tCoord );
 
-	//if( myCol.a < 0.5 )
-	//	discard;
+	if( myCol.a < 0.1 )
+		discard;
 
 	return color * myCol;
 }

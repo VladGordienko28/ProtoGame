@@ -61,8 +61,8 @@ namespace dx11
 
 		if( debugName )
 		{
-			m_texture->SetPrivateData( WKPDID_D3DDebugObjectName, cstr::length( debugName ), debugName );
-			m_srv->SetPrivateData( WKPDID_D3DDebugObjectName, cstr::length( debugName ), debugName );
+			m_texture->SetPrivateData( WKPDID_D3DDebugObjectName, UINT( cstr::length( debugName ) ), debugName );
+			m_srv->SetPrivateData( WKPDID_D3DDebugObjectName, UINT( cstr::length( debugName ) ), debugName );
 		}
 
 		return true;
@@ -129,8 +129,8 @@ namespace dx11
 
 		if( debugName )
 		{
-			m_texture->SetPrivateData( WKPDID_D3DDebugObjectName, cstr::length( debugName ), debugName );
-			m_srv->SetPrivateData( WKPDID_D3DDebugObjectName, cstr::length( debugName ), debugName );
+			m_texture->SetPrivateData( WKPDID_D3DDebugObjectName, UINT( cstr::length( debugName ) ), debugName );
+			m_srv->SetPrivateData( WKPDID_D3DDebugObjectName, UINT( cstr::length( debugName ) ), debugName );
 		}
 
 		return true;
@@ -183,9 +183,9 @@ namespace dx11
 
 		if( debugName )
 		{
-			m_texture->SetPrivateData( WKPDID_D3DDebugObjectName, cstr::length( debugName ), debugName );
-			m_srv->SetPrivateData( WKPDID_D3DDebugObjectName, cstr::length( debugName ), debugName );
-			m_rtv->SetPrivateData( WKPDID_D3DDebugObjectName, cstr::length( debugName ), debugName );
+			m_texture->SetPrivateData( WKPDID_D3DDebugObjectName, UINT( cstr::length( debugName ) ), debugName );
+			m_srv->SetPrivateData( WKPDID_D3DDebugObjectName, UINT( cstr::length( debugName ) ), debugName );
+			m_rtv->SetPrivateData( WKPDID_D3DDebugObjectName, UINT( cstr::length( debugName ) ), debugName );
 		}
 
 		return true;
@@ -214,7 +214,7 @@ namespace dx11
 
 		if( debugName )
 		{
-			m_shader->SetPrivateData( WKPDID_D3DDebugObjectName, cstr::length( debugName ), debugName );
+			m_shader->SetPrivateData( WKPDID_D3DDebugObjectName, UINT( cstr::length( debugName ) ), debugName );
 		}
 
 		return true;
@@ -245,7 +245,7 @@ namespace dx11
 
 		if( debugName )
 		{
-			m_shader->SetPrivateData( WKPDID_D3DDebugObjectName, cstr::length( debugName ), debugName );
+			m_shader->SetPrivateData( WKPDID_D3DDebugObjectName, UINT( cstr::length( debugName ) ), debugName );
 		}
 
 		return true;
@@ -297,7 +297,7 @@ namespace dx11
 
 		if( debugName )
 		{
-			m_buffer->SetPrivateData( WKPDID_D3DDebugObjectName, cstr::length( debugName ), debugName );		
+			m_buffer->SetPrivateData( WKPDID_D3DDebugObjectName, UINT( cstr::length( debugName ) ), debugName );		
 		}
 
 		return true;
@@ -350,7 +350,7 @@ namespace dx11
 
 		if( debugName )
 		{
-			m_buffer->SetPrivateData( WKPDID_D3DDebugObjectName, cstr::length( debugName ), debugName );		
+			m_buffer->SetPrivateData( WKPDID_D3DDebugObjectName, UINT( cstr::length( debugName ) ), debugName );		
 		}
 
 		return true;
@@ -399,7 +399,7 @@ namespace dx11
 
 		if( debugName )
 		{
-			m_buffer->SetPrivateData( WKPDID_D3DDebugObjectName, cstr::length( debugName ), debugName );		
+			m_buffer->SetPrivateData( WKPDID_D3DDebugObjectName, UINT( cstr::length( debugName ) ), debugName );		
 		}
 
 		return true;

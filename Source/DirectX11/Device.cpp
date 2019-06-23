@@ -38,6 +38,8 @@ namespace dx11
 		this->setViewport( initialViewport );
 		m_immediateContext->OMSetRenderTargets( 1, &m_swapChain->getBackBufferRTV(), nullptr );
 
+		m_oldBlendStateId = -1;
+
 		m_oldTopology = rend::EPrimitiveTopology::Unknown;
 	}
 
@@ -62,7 +64,7 @@ namespace dx11
 
 		m_swapChain->resize( m_device.get(), width, height, fullScreen );
 
-		rend::Viewport newViewport = { 0.f, 0.f, width, height, 0.f, 1.f };
+		rend::Viewport newViewport = { 0.f, 0.f, Float(width), Float(height), 0.f, 1.f };
 
 		this->setViewport( newViewport );
 		m_immediateContext->OMSetRenderTargets( 1, &m_swapChain->getBackBufferRTV(), nullptr );
@@ -370,15 +372,24 @@ namespace dx11
 
 	void Device::enableBlendState( rend::BlendStateId blendStateId )
 	{
-		DxRef<ID3D11BlendState>& blendState = m_blendStates.getRef( blendStateId );
-		assert( blendState.hasObject() );
+		if( m_oldBlendStateId != blendStateId )
+		{
+			DxRef<ID3D11BlendState>& blendState = m_blendStates.getRef( blendStateId );
+			assert( blendState.hasObject() );
 
-		m_immediateContext->OMSetBlendState( blendState.get(), nullptr, MAX_UINT32 );
+			m_immediateContext->OMSetBlendState( blendState.get(), nullptr, MAX_UINT32 );
+
+			m_oldBlendStateId = blendStateId;
+		}
 	}
 
 	void Device::disableBlendState()
 	{
-		m_immediateContext->OMSetBlendState( nullptr, nullptr, MAX_UINT32 );
+		if( m_oldBlendStateId != -1 )
+		{
+			m_immediateContext->OMSetBlendState( nullptr, nullptr, MAX_UINT32 );
+			m_oldBlendStateId = -1;
+		}
 	}
 
 	rend::SamplerStateId Device::getSamplerState( const rend::SamplerState& samplerState )
@@ -465,34 +476,54 @@ namespace dx11
 
 	void Device::setVertexBuffer( rend::VertexBufferHandle handle )
 	{
-		DxVertexBuffer& vertexBuffer = m_vertexBuffers.get( handle );
+		if( m_oldVertexBuffer != handle )
+		{
+			DxVertexBuffer& vertexBuffer = m_vertexBuffers.get( handle );
 
-		UINT stride = vertexBuffer.m_vertexSize;
-		UINT offset = 0;
-		m_immediateContext->IASetVertexBuffers( 0, 1, &vertexBuffer.m_buffer, &stride, &offset );
+			UINT stride = vertexBuffer.m_vertexSize;
+			UINT offset = 0;
+			m_immediateContext->IASetVertexBuffers( 0, 1, &vertexBuffer.m_buffer, &stride, &offset );
+
+			m_oldVertexBuffer = handle;
+		}
 	}
 
 	void Device::setIndexBuffer( rend::IndexBufferHandle handle )
 	{
-		DxIndexBuffer& indexBuffer = m_indexBuffers.get( handle );
-		m_immediateContext->IASetIndexBuffer( indexBuffer.m_buffer, indexBuffer.m_format, 0 );
+		if( m_oldIndexBuffer != handle )
+		{
+			DxIndexBuffer& indexBuffer = m_indexBuffers.get( handle );
+			m_immediateContext->IASetIndexBuffer( indexBuffer.m_buffer, indexBuffer.m_format, 0 );	
+
+			m_oldIndexBuffer = handle;
+		}
 	}
 
 	void Device::setVertexShader( rend::ShaderHandle vertexShaderHandle )
 	{
-		DxVertexShader& vertexShader = m_vertexShaders.get( vertexShaderHandle );
+		if( vertexShaderHandle != m_oldVertexShader )
+		{
+			DxVertexShader& vertexShader = m_vertexShaders.get( vertexShaderHandle );
 
-		CachedVertexDeclaration* declaration = m_vertexDeclarations.get( vertexShader.m_vertexDeclaration );
-		assert( declaration );
+			CachedVertexDeclaration* declaration = m_vertexDeclarations.get( vertexShader.m_vertexDeclaration );
+			assert( declaration );
 
-		m_immediateContext->IASetInputLayout( declaration->m_inputLayout );
-		m_immediateContext->VSSetShader( vertexShader.m_shader, nullptr, 0 );
+			m_immediateContext->IASetInputLayout( declaration->m_inputLayout );
+			m_immediateContext->VSSetShader( vertexShader.m_shader, nullptr, 0 );
+
+			m_oldVertexShader = vertexShaderHandle;
+		}
 	}
 
 	void Device::setPixelShader( rend::ShaderHandle pixelShaderHandle )
 	{
-		DxPixelShader& pixelShader = m_pixelShaders.get( pixelShaderHandle );
-		m_immediateContext->PSSetShader( pixelShader.m_shader, nullptr, 0 );
+		if( pixelShaderHandle != m_oldPixelShader )
+		{
+			DxPixelShader& pixelShader = m_pixelShaders.get( pixelShaderHandle );
+			m_immediateContext->PSSetShader( pixelShader.m_shader, nullptr, 0 );
+
+			m_oldPixelShader = pixelShaderHandle;
+		}
 	}
 
 	void Device::setSRVs( rend::EShaderType shader, UInt32 firstSlot, UInt32 numSlots, rend::ShaderResourceView* resourceViews )

@@ -40,10 +40,10 @@ namespace flu
 		{
 			if( m_position + numBytes > SizeT( m_data.size() ) )
 			{
-				m_data.setSize( m_position + numBytes );
+				m_data.setSize( static_cast<Int32>( m_position + numBytes ) );
 			}
 
-			void* result = &m_data[m_position];
+			void* result = &m_data[static_cast<Int32>( m_position )];
 			m_position += numBytes;
 
 			return result;
@@ -53,7 +53,7 @@ namespace flu
 		{
 			if( m_position + numBytes > SizeT( m_data.size() ) )
 			{
-				m_data.setSize( m_position + numBytes );
+				m_data.setSize( static_cast<Int32>( m_position + numBytes ) );
 			}
 
 			mem::copy( &m_data[m_position], buffer, numBytes );

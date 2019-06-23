@@ -16,7 +16,6 @@ namespace ffx
 			m_device( device )
 	{
 		assert( device );
-		assert( system );
 		assert( vertexDeclaration.isValid() );
 
 		for( auto& it : m_buffers )
