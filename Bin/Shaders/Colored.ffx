@@ -3,6 +3,8 @@
 //	Created by Vlad Gordienko, 2018
 //-----------------------------------------------------------------------------
 
+#include "Common.ffxh"
+
 cbuffer Transforms : register( b0 )
 {
 	float4 color;
@@ -35,5 +37,5 @@ float4 psMain( in VsOutput input ) : SV_Target
 	if( (int(input.position.x - input.position.y) % 4) == 0 )
 		drawColor *= 0.5;
 */
-	return drawColor;
+	return doSomething( drawColor ); 
 }

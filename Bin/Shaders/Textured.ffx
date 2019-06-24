@@ -3,6 +3,8 @@
 //	Created by Vlad Gordienko, 2018
 //-----------------------------------------------------------------------------
 
+#include "Common.ffxh"
+
 cbuffer Transforms : register( b0 )
 {
 	float4 color;
@@ -39,5 +41,5 @@ float4 psMain( in VsOutput input ) : SV_Target
 	if( myCol.a < 0.1 )
 		discard;
 
-	return color * myCol;
+	return doSomething( color * myCol );
 }

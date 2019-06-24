@@ -22,6 +22,9 @@
     <ClInclude Include="Effect.h">
       <Filter>Runtime</Filter>
     </ClInclude>
+    <ClInclude Include="Preprocessor.h">
+      <Filter>Compiler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FFX.cpp" />
@@ -40,6 +43,9 @@
     </ClCompile>
     <ClCompile Include="Effect.cpp">
       <Filter>Runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="Preprocessor.cpp">
+      <Filter>Compiler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

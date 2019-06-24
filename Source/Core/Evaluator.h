@@ -24,7 +24,7 @@ namespace eval
 		struct Binary
 		{
 			using Function = T(*)( T, T );
-			Int32 priority;
+			Int32 precedence;
 			Function function;
 		};
 
@@ -83,7 +83,7 @@ namespace eval
 		}
 
 	private:
-		static Bool evaluateImpl( lexer::Lexer& lexer, const VARIABLES& variables, const TYPE_INFO& typeInfo, TYPE& result, Int32 priority, String& error )
+		static Bool evaluateImpl( lexer::Lexer& lexer, const VARIABLES& variables, const TYPE_INFO& typeInfo, TYPE& result, Int32 precedence, String& error )
 		{
 			TYPE value;
 			lexer::Token token;
@@ -143,7 +143,7 @@ namespace eval
 			}
 			else if( auto binary = typeInfo.getBinary( token.getText() ) )
 			{
-				if( priority >= binary->priority )
+				if( precedence >= binary->precedence )
 				{
 					result = value;
 					lexer.gotoToken( token );
@@ -153,7 +153,7 @@ namespace eval
 				{
 					TYPE other;
 
-					if( evaluateImpl( lexer, variables, typeInfo, other, binary->priority, error ) )
+					if( evaluateImpl( lexer, variables, typeInfo, other, binary->precedence, error ) )
 					{
 						value = binary->function( value, other );
 						goto OperatorTest;

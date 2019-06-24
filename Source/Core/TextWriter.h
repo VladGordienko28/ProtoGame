@@ -21,7 +21,7 @@ namespace flu
 		{
 		}
 
-		TEXT_TYPE getText() const
+		typename TEXT_TYPE::Ptr getText() const
 		{
 			return new TEXT_TYPE( m_text );
 		}
@@ -62,5 +62,5 @@ namespace flu
 	/**
 	 *	Define classes
 	 */
-	using TextWriter = TextWriterBase<String, Text::Ptr>;
+	using TextWriter = TextWriterBase<String, Text>;
 }

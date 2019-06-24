@@ -8,7 +8,17 @@ namespace flu
 namespace ffx
 {
 	/**
-	 *	A effect
+	 *	An effect loading context
+	 */
+	struct EffectLoadingContext
+	{
+	public:
+		class IIncludeProvider* includeProvider = nullptr;
+		Array<String> dependencies;
+	};
+
+	/**
+	 *	An effect
 	 */
 	class Effect: public ReferenceCount
 	{
@@ -50,9 +60,9 @@ namespace ffx
 			return m_fileName;
 		}
 
-		Bool load()
+		Bool load( EffectLoadingContext& context )
 		{
-			return reload();
+			return reload( context );
 		}
 
 	private:
@@ -91,7 +101,7 @@ namespace ffx
 		Effect() = delete;
 		Effect( String name, String fileName, const rend::VertexDeclaration& vertexDeclaration, rend::Device* device );
 
-		Bool reload();
+		Bool reload( EffectLoadingContext& context );
 		void cleanup();
 
 		friend class System;

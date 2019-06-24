@@ -30,18 +30,22 @@ namespace ffx
 		struct CachedEffect
 		{
 			Effect* effect = nullptr;
-			Int64 modificationTime = 0;
+			Int64 lastModificationTime = 0;
+			Array<String> files;
 
-			CachedEffect( Effect* inEffect, Int64 time )
+			CachedEffect( Effect* inEffect, Int64 inTime, const Array<String>& inFiles )
 				:	effect( inEffect ),
-					modificationTime( time )
+					lastModificationTime( inTime ),
+					files( inFiles )
 			{
+				assert( effect );
+				assert( lastModificationTime > 0 );
+				assert( files.size() > 0 );
 			}
 		};
 
 		String m_directory;
 		Map<String, CachedEffect> m_effects;
-
 		rend::Device* m_device;
 
 		Effect::Ptr createEffect( String effectName, const rend::VertexDeclaration& vertexDeclaration );

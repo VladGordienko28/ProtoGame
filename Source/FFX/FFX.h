@@ -16,5 +16,6 @@
 #include "FxLexer.h"
 #include "Technique.h"
 #include "Effect.h"
+#include "Preprocessor.h"
 #include "FxCompiler.h"
 #include "System.h"

@@ -46,15 +46,24 @@ namespace ffx
 			assert( it.value.effect );
 			Effect* effect = it.value.effect;
 
-			if( fm::fileExists( *effect->fileName() ) )
+			for( auto file : it.value.files )
 			{
-				Int64 fileTime = fm::getFileModificationTime( *effect->fileName() );
+				String fileName = String::format( L"%s\\%s", *m_directory, *file );
 
-				if( fileTime > it.value.modificationTime )
+				if( fm::fileExists( *fileName ) )
 				{
-					effect->reload();
-					it.value.modificationTime = fileTime;
-				}
+					Int64 fileTime = fm::getFileModificationTime( *fileName );
+
+					if( fileTime > it.value.lastModificationTime )
+					{
+						EffectLoadingContext context;
+
+						effect->reload( context );
+						it.value.lastModificationTime = fileTime;
+						it.value.files = context.dependencies;
+						break;
+					}
+				}	
 			}
 		}
 	}
@@ -89,9 +98,18 @@ namespace ffx
 
 		Effect* effect = new Effect( effectName, fileName, vertexDeclaration, m_device );
 
-		if( effect && effect->load() )
+		EffectLoadingContext context;
+
+		if( effect && effect->load( context ) )
 		{
-			m_effects.put( effectName, CachedEffect( effect, fm::getFileModificationTime( *fileName ) ) );
+			Int64 maxModificationTime = 0;
+
+			for( auto it : context.dependencies )
+			{
+				maxModificationTime = max( maxModificationTime, fm::getFileModificationTime( *String::format( L"%s\\%s", *m_directory, *it ) ) );
+			}
+
+			m_effects.put( effectName, CachedEffect( effect, maxModificationTime, context.dependencies ) );
 			return effect;
 		}
 		else

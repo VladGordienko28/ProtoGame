@@ -49,8 +49,13 @@ namespace lexer
 			// numberic constant
 			Bool hasPoint = false;
 
-			while( bufferPtr != bufferEnd && ( cstr::isDigit( c ) || c == '.' ) )
+			while( bufferPtr != bufferEnd && ( cstr::isDigit( c ) || c == '.' || c == 'f' ) )
 			{
+				if( c == 'f' )
+				{
+					c = '0';
+				}
+
 				*bufferPtr++ = c;
 
 				if( c == '.' )

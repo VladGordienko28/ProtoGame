@@ -35,8 +35,6 @@ namespace ffx
 		}
 
 		m_blendState = -1;
-
-		reload();
 	}
 
 	Effect::~Effect()
@@ -74,25 +72,63 @@ namespace ffx
 		m_blendState = blendState;
 	}
 
-	Bool Effect::reload()
+	Bool Effect::reload( EffectLoadingContext& context )
 	{
 		assert( fm::fileExists( *m_fileName ) );
 
+		info( L"Reloading of \"%s\"", *m_fileName );
+
 		Text::Ptr shaderText = fm::readTextFile( *m_fileName );
 		assert( shaderText.hasObject() );
+
+		//----------------------------------------------------------
+		class IncludeProvider: public IIncludeProvider
+		{
+		public:
+			IncludeProvider( String directory )
+				:	m_directory( directory )
+			{
+			}
+
+			Text::Ptr getInclude( String path ) const override
+			{
+				return fm::readTextFile( *String::format( TEXT( "%s\\%s" ), *m_directory, *path ) );
+			}
+
+		private:
+			String m_directory;
+		};
+
+		IncludeProvider provider( fm::getFilePath( *m_fileName ) );
+
+		PreprocessorInput input;
+		input.fileName = m_name + L".ffx";
+		input.source = shaderText;
+		input.emitLines = true;
+		input.includeProvider = &provider;
+
+
+		PreprocessorOutput output;
+
+		preprocess( input, output );
+
+
+		context.dependencies = output.dependencies;
+
+		//----------------------------------------------------------
 
 		String errorMsg;
 		String warnMsg;
 		rend::ShaderCompiler::UPtr compiler = m_device->createCompiler();
 
-		auto compiledPS = compiler->compile( rend::EShaderType::Pixel, shaderText, PS_ENTRY, &warnMsg, &errorMsg );
+		auto compiledPS = compiler->compile( rend::EShaderType::Pixel, output.source, PS_ENTRY, &warnMsg, &errorMsg );
 		if( !compiledPS.isValid() )
 		{
 			error( L"Unable to compile hlsl pixel shader with error: \n%s", *errorMsg );
 			return false;
 		}
 
-		auto compiledVS = compiler->compile( rend::EShaderType::Vertex, shaderText, VS_ENTRY, &warnMsg, &errorMsg );
+		auto compiledVS = compiler->compile( rend::EShaderType::Vertex, output.source, VS_ENTRY, &warnMsg, &errorMsg );
 		if( !compiledVS.isValid() )
 		{
 			error( L"Unable to compile hlsl vertex shader with error: \n%s", *errorMsg );
