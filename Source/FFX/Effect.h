@@ -14,6 +14,7 @@ namespace ffx
 	{
 	public:
 		class IIncludeProvider* includeProvider = nullptr;
+		String relativeFileName;
 		Array<String> dependencies;
 	};
 
@@ -55,16 +56,6 @@ namespace ffx
 			return m_name;
 		}
 
-		String fileName() const
-		{
-			return m_fileName;
-		}
-
-		Bool load( EffectLoadingContext& context )
-		{
-			return reload( context );
-		}
-
 	private:
 		static const constexpr Char* PS_ENTRY = TEXT( "psMain" );
 		static const constexpr Char* VS_ENTRY = TEXT( "vsMain" );
@@ -86,7 +77,6 @@ namespace ffx
 		};
 
 		String m_name;
-		String m_fileName;
 
 		rend::Device* m_device;
 
@@ -99,7 +89,7 @@ namespace ffx
 		rend::VertexDeclaration m_vertexDeclaration;
 
 		Effect() = delete;
-		Effect( String name, String fileName, const rend::VertexDeclaration& vertexDeclaration, rend::Device* device );
+		Effect( String name, const rend::VertexDeclaration& vertexDeclaration, rend::Device* device );
 
 		Bool reload( EffectLoadingContext& context );
 		void cleanup();

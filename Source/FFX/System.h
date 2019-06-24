@@ -31,17 +31,8 @@ namespace ffx
 		{
 			Effect* effect = nullptr;
 			Int64 lastModificationTime = 0;
+			String relativeFileName;
 			Array<String> files;
-
-			CachedEffect( Effect* inEffect, Int64 inTime, const Array<String>& inFiles )
-				:	effect( inEffect ),
-					lastModificationTime( inTime ),
-					files( inFiles )
-			{
-				assert( effect );
-				assert( lastModificationTime > 0 );
-				assert( files.size() > 0 );
-			}
 		};
 
 		String m_directory;
@@ -49,6 +40,7 @@ namespace ffx
 		rend::Device* m_device;
 
 		Effect::Ptr createEffect( String effectName, const rend::VertexDeclaration& vertexDeclaration );
+		Bool reloadEffect( CachedEffect& cachedEffect );
 	};
 }
 }

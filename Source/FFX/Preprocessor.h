@@ -13,7 +13,7 @@ namespace ffx
 	class IIncludeProvider: public NonCopyable
 	{
 	public:
-		virtual Text::Ptr getInclude( String path ) const = 0;
+		virtual Text::Ptr getInclude( String relativeFileName ) const = 0;
 	};
 
 	/**
@@ -22,8 +22,7 @@ namespace ffx
 	struct PreprocessorInput
 	{
 	public:
-		String fileName;
-		Text::Ptr source;
+		String relativeFileName;
 		Map<String, String> defines;
 		IIncludeProvider* includeProvider = nullptr;
 		Bool emitLines = true;

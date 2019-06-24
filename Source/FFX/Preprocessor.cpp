@@ -21,53 +21,46 @@ namespace ffx
 	};
 
 	// forward declaration
-	Bool parseFile( String fileName, Text::Ptr text, TextWriter& writer, const PreprocessorInput& input, 
+	Bool parseFile( String relativeFileName, TextWriter& writer, const PreprocessorInput& input, 
 		PreprocessorContext& context, String& error );
 
 
 	Bool processInclude( lexer::Lexer& lexer, TextWriter& writer, const PreprocessorInput& input, 
 		PreprocessorContext& context, String& error )
 	{
-		String path;
-		if( lexer.readString( path ) )
-		{
-			Text::Ptr includeText = input.includeProvider->getInclude( path );
+		String includePath;
 
-			if( includeText )
-			{
-				if( !parseFile( path, includeText, writer, input, context, error ) )
-				{
-					return false;
-				}
-			}
-			else
-			{
-				error = String::format( TEXT( "File \"%s\" is not found" ), *path );
-				return false;
-			}
+		if( lexer.readString( includePath ) )
+		{
+			return parseFile( includePath, writer, input, context, error );
 		}
 		else
 		{
 			error = TEXT( "Missing include path" );
 			return false;
 		}
-
-		return true;
 	}
 
-	Bool parseFile( String fileName, Text::Ptr text, TextWriter& writer, const PreprocessorInput& input, 
+	Bool parseFile( String relativeFileName, TextWriter& writer, const PreprocessorInput& input, 
 		PreprocessorContext& context, String& error )
 	{
 		for( auto it : context.includeStack )
 		{
-			if( String::insensitiveCompare( fileName, it ) == 0 )
+			if( String::insensitiveCompare( relativeFileName, it ) == 0 )
 			{
-				error = String::format( TEXT( "Circular dependency in \"%s\" found" ), *fileName );
+				error = String::format( TEXT( "Circular dependency in \"%s\" found" ), *relativeFileName );
 				return false;
 			}
 		}
 
-		context.includeStack.push( fileName );
+		Text::Ptr text = input.includeProvider->getInclude( relativeFileName );
+		if( !text )
+		{
+			error = String::format( TEXT( "File \"%s\" is not found" ), *relativeFileName );
+			return false;
+		}
+
+		context.includeStack.push( relativeFileName );
 		{
 			ffx::Lexer lexer( text );
 
@@ -102,15 +95,15 @@ namespace ffx
 				}
 				else
 				{
-
-
+					//---------------------------------------------------------------------------------------------------------
+					//
 
 					Char extraSymbol = (token.getType() != lexer::ETokenType::Symbol && prevToken.getType() != lexer::ETokenType::Symbol) ? ' ' : '\0';
 					if( prevLine != token.getLine() )
 					{
 						if( input.emitLines )
 						{
-							writer << String::format( TEXT("\n#line %d \"%s\""), token.getLine() + 1, *fileName );
+							writer << String::format( TEXT("\n#line %d \"%s\""), token.getLine() + 1, *relativeFileName );
 						}
 
 						extraSymbol = '\n';
@@ -122,19 +115,35 @@ namespace ffx
 				
 					
 					prevToken = token;
+
+					//
+					//---------------------------------------------------------------------------------------------------------
 				}
 			}
 		}
-		verify( context.includeStack.pop() == fileName );
+		verify( context.includeStack.pop() == relativeFileName );
 
-		context.dependencies.addUnique( fileName );
+
+		Bool alreadyInDependency = false;
+		for( auto it : context.includeStack )
+		{
+			if( String::insensitiveCompare( relativeFileName, it ) == 0 )
+			{
+				alreadyInDependency = true;
+				break;
+			}
+		}
+		if( !alreadyInDependency )
+		{
+			context.dependencies.addUnique( relativeFileName );
+		}
+
 		return true;
 	}
 
 	Bool preprocess( const PreprocessorInput& input, PreprocessorOutput& output, String* outError )
 	{
-		assert( input.fileName );
-		assert( input.source );
+		assert( input.relativeFileName );
 		assert( input.includeProvider );
 
 		PreprocessorContext context;
@@ -144,7 +153,7 @@ namespace ffx
 		TextWriter writer;
 		String error;
 
-		if( parseFile( input.fileName, input.source, writer, input, context, error ) )
+		if( parseFile( input.relativeFileName, writer, input, context, error ) )
 		{
 			assert( context.includeStack.size() == 0 );
 

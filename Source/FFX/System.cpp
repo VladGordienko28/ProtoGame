@@ -41,26 +41,21 @@ namespace ffx
 	// todo: move to the background thread
 	void System::update()
 	{
-		for( auto& it : m_effects )
+		for( auto& effect : m_effects )
 		{
-			assert( it.value.effect );
-			Effect* effect = it.value.effect;
+			assert( effect.value.effect );
 
-			for( auto file : it.value.files )
+			for( auto relativeFileName : effect.value.files )
 			{
-				String fileName = String::format( L"%s\\%s", *m_directory, *file );
+				String fileName = m_directory + relativeFileName;
 
 				if( fm::fileExists( *fileName ) )
 				{
 					Int64 fileTime = fm::getFileModificationTime( *fileName );
 
-					if( fileTime > it.value.lastModificationTime )
+					if( fileTime > effect.value.lastModificationTime )
 					{
-						EffectLoadingContext context;
-
-						effect->reload( context );
-						it.value.lastModificationTime = fileTime;
-						it.value.files = context.dependencies;
+						reloadEffect( effect.value );
 						break;
 					}
 				}	
@@ -88,34 +83,85 @@ namespace ffx
 
 	Effect::Ptr System::createEffect( String effectName, const rend::VertexDeclaration& vertexDeclaration )
 	{
-		String fileName = m_directory + effectName + SHADER_EXTENSION;
+		String relativeFileName = effectName + SHADER_EXTENSION;
+		String fileName = m_directory + relativeFileName;
 
 		if( !fm::fileExists( *fileName ) )
 		{
-			error( L"Shader %s is not found", *fileName );
+			error( L"Shader \"%s\" is not found", *fileName );
 			return nullptr;
 		}
 
-		Effect* effect = new Effect( effectName, fileName, vertexDeclaration, m_device );
+		CachedEffect cachedEffect;
+		cachedEffect.effect = new Effect( effectName, vertexDeclaration, m_device );
+		cachedEffect.relativeFileName = relativeFileName;
 
-		EffectLoadingContext context;
-
-		if( effect && effect->load( context ) )
+		if( cachedEffect.effect && reloadEffect( cachedEffect ) )
 		{
-			Int64 maxModificationTime = 0;
-
-			for( auto it : context.dependencies )
-			{
-				maxModificationTime = max( maxModificationTime, fm::getFileModificationTime( *String::format( L"%s\\%s", *m_directory, *it ) ) );
-			}
-
-			m_effects.put( effectName, CachedEffect( effect, maxModificationTime, context.dependencies ) );
-			return effect;
+			m_effects.put( effectName, cachedEffect );
+			return cachedEffect.effect;
 		}
 		else
 		{
 			return nullptr;
 		}
+	}
+
+	Bool System::reloadEffect( CachedEffect& cachedEffect )
+	{
+		assert( cachedEffect.effect );
+
+		class IncludeProvider: public IIncludeProvider
+		{
+		public:
+			IncludeProvider( String directory )
+				:	m_directory( directory )
+			{
+			}
+
+			Text::Ptr getInclude( String relativeFileName ) const override
+			{
+				if( !fm::isAbsoluteFileName( *relativeFileName ) )
+				{
+					return fm::readTextFile( *( m_directory + relativeFileName ) );				
+				}
+				else
+				{
+					return nullptr;
+				}
+			}
+
+		private:
+			String m_directory;
+		};
+
+		IncludeProvider includeProvider( m_directory );
+		
+		EffectLoadingContext context;
+		context.relativeFileName = cachedEffect.relativeFileName;
+		context.includeProvider = &includeProvider;
+
+		Bool result = cachedEffect.effect->reload( context );
+
+		if( result )
+		{
+			cachedEffect.files = context.dependencies;
+		}
+
+		Int64 lastModificationTime = 0;
+		for( auto it : cachedEffect.files )
+		{
+			String fileName = m_directory + it;
+			Int64 fileTime = fm::getFileModificationTime( *fileName );
+
+			if( fileTime > lastModificationTime )
+			{
+				lastModificationTime = fileTime;
+			}
+		}
+
+		cachedEffect.lastModificationTime = lastModificationTime;
+		return result;
 	}
 }
 }

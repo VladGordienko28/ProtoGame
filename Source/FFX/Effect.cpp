@@ -9,9 +9,8 @@ namespace flu
 {
 namespace ffx
 {
-	Effect::Effect( String name, String fileName, const rend::VertexDeclaration& vertexDeclaration, rend::Device* device )
+	Effect::Effect( String name, const rend::VertexDeclaration& vertexDeclaration, rend::Device* device )
 		:	m_name( name ),
-			m_fileName( fileName ),
 			m_vertexDeclaration( vertexDeclaration ),
 			m_device( device )
 	{
@@ -74,51 +73,27 @@ namespace ffx
 
 	Bool Effect::reload( EffectLoadingContext& context )
 	{
-		assert( fm::fileExists( *m_fileName ) );
+		assert( context.includeProvider );
+		assert( context.relativeFileName );
 
-		info( L"Reloading of \"%s\"", *m_fileName );
-
-		Text::Ptr shaderText = fm::readTextFile( *m_fileName );
-		assert( shaderText.hasObject() );
-
-		//----------------------------------------------------------
-		class IncludeProvider: public IIncludeProvider
-		{
-		public:
-			IncludeProvider( String directory )
-				:	m_directory( directory )
-			{
-			}
-
-			Text::Ptr getInclude( String path ) const override
-			{
-				return fm::readTextFile( *String::format( TEXT( "%s\\%s" ), *m_directory, *path ) );
-			}
-
-		private:
-			String m_directory;
-		};
-
-		IncludeProvider provider( fm::getFilePath( *m_fileName ) );
-
-		PreprocessorInput input;
-		input.fileName = m_name + L".ffx";
-		input.source = shaderText;
-		input.emitLines = true;
-		input.includeProvider = &provider;
-
-
-		PreprocessorOutput output;
-
-		preprocess( input, output );
-
-
-		context.dependencies = output.dependencies;
-
-		//----------------------------------------------------------
+		debug( L"Reloading of \"%s\"", *m_name );
 
 		String errorMsg;
 		String warnMsg;
+
+		PreprocessorInput input;
+		input.relativeFileName = context.relativeFileName;
+		input.includeProvider = context.includeProvider;
+		input.emitLines = true;
+
+		PreprocessorOutput output;
+
+		if( !preprocess( input, output, &errorMsg ) )
+		{
+			error( L"Unable to preprocess effect \"%s\" with error: \n%s", *context.relativeFileName, *errorMsg );
+			return false;
+		}
+
 		rend::ShaderCompiler::UPtr compiler = m_device->createCompiler();
 
 		auto compiledPS = compiler->compile( rend::EShaderType::Pixel, output.source, PS_ENTRY, &warnMsg, &errorMsg );
@@ -140,6 +115,7 @@ namespace ffx
 		m_shader.ps = m_device->createPixelShader( compiledPS, *wide2AnsiString( m_name ) );
 		m_shader.vs = m_device->createVertexShader( compiledVS, m_vertexDeclaration, *wide2AnsiString( m_name ) );
 
+		context.dependencies = output.dependencies;
 		return true;
 	}
 

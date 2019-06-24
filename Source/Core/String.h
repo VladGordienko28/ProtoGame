@@ -274,12 +274,12 @@ namespace flu
 			return *this;
 		}
 
-		StringBase<MANAGER_TYPE, MANAGER> operator+( const CHAR_TYPE* other )
+		StringBase<MANAGER_TYPE, MANAGER> operator+( const CHAR_TYPE* other ) const
 		{
 			return StringBase<MANAGER_TYPE, MANAGER>( *this ) += other;
 		}
 
-		StringBase<MANAGER_TYPE, MANAGER> operator+( const StringBase<MANAGER_TYPE, MANAGER>& other )
+		StringBase<MANAGER_TYPE, MANAGER> operator+( const StringBase<MANAGER_TYPE, MANAGER>& other ) const
 		{
 			return operator+( *other );
 		}
