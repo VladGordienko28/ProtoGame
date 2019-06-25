@@ -37,5 +37,6 @@ float4 psMain( in VsOutput input ) : SV_Target
 	if( (int(input.position.x - input.position.y) % 4) == 0 )
 		drawColor *= 0.5;
 */
+
 	return doSomething( drawColor ); 
 }

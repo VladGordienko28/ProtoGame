@@ -26,6 +26,7 @@ namespace ffx
 
 	private:
 		static constexpr const Char* SHADER_EXTENSION = TEXT( ".ffx" );
+		static constexpr const Char* COMPILED_SHADER_EXTENSION = TEXT( ".ffxo" );
 
 		struct CachedEffect
 		{
@@ -39,8 +40,11 @@ namespace ffx
 		Map<String, CachedEffect> m_effects;
 		rend::Device* m_device;
 
+		Compiler::UPtr m_compiler;
+
 		Effect::Ptr createEffect( String effectName, const rend::VertexDeclaration& vertexDeclaration );
 		Bool reloadEffect( CachedEffect& cachedEffect );
+		Bool saveEffectToFile( String effectName, const Array<UInt8>& effectBlob );
 	};
 }
 }

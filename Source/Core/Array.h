@@ -394,6 +394,33 @@ namespace flu
 				Serialize( s, v[i] );
 		}
 
+		friend IOutputStream& operator<<( IOutputStream& stream, const Array<T>& x )
+		{
+			Int32 size = x.m_size;
+			stream << size;
+
+			for( Int32 i = 0; i < x.size(); i++ )
+			{
+				stream << x[i];
+			}
+
+			return stream;
+		}
+
+		friend IInputStream& operator>>( IInputStream& stream, Array<T>& x )
+		{
+			Int32 size;
+			stream >> size;
+			x.setSize( size );
+
+			for( Int32 i = 0; i < x.size(); i++ )
+			{
+				stream >> x[i];
+			}
+
+			return stream;
+		}
+
 	private:
 		T* m_data;
 		Int32 m_size;

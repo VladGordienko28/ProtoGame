@@ -25,6 +25,9 @@
     <ClInclude Include="Preprocessor.h">
       <Filter>Compiler</Filter>
     </ClInclude>
+    <ClInclude Include="FxCommon.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FFX.cpp" />

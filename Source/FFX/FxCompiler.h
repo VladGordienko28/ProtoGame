@@ -13,22 +13,27 @@ namespace ffx
 	class Compiler final: public NonCopyable
 	{
 	public:
-		struct CompilationError
-		{
-			String error;
+		using UPtr = UniquePtr<Compiler>;
 
+		struct Output
+		{
+		public:
+			Array<UInt8> effectBlob;
+			Array<String> dependencies;
+
+			String errorMsg;
+			Array<String> warningsMsg;
 		};
 
+		Compiler( rend::Device* device );
+		~Compiler();
 
+		Bool compile( String relativeFileName, IIncludeProvider* includeProvider, Output& output );
 
 	private:
+		rend::Device* m_device;
 
-
-
-		void throwError( const Char* fmt, ... );
-		void throwWarning( const Char* fmt, ... );
-
-	
+		Compiler() = delete;
 	};
 }
 }

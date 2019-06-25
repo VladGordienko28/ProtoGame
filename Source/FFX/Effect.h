@@ -8,22 +8,14 @@ namespace flu
 namespace ffx
 {
 	/**
-	 *	An effect loading context
-	 */
-	struct EffectLoadingContext
-	{
-	public:
-		class IIncludeProvider* includeProvider = nullptr;
-		String relativeFileName;
-		Array<String> dependencies;
-	};
-
-	/**
 	 *	An effect
 	 */
 	class Effect: public ReferenceCount
 	{
 	public:
+		static const constexpr Char* PS_ENTRY = TEXT( "psMain" );
+		static const constexpr Char* VS_ENTRY = TEXT( "vsMain" );
+
 		using Ptr = SharedPtr<Effect>;
 
 		~Effect();
@@ -57,9 +49,6 @@ namespace ffx
 		}
 
 	private:
-		static const constexpr Char* PS_ENTRY = TEXT( "psMain" );
-		static const constexpr Char* VS_ENTRY = TEXT( "vsMain" );
-
 		static const SizeT CONSTANT_BUFFER_SIZE = 1024;
 		static const SizeT MAX_TEXTURES = 2;
 
@@ -91,7 +80,7 @@ namespace ffx
 		Effect() = delete;
 		Effect( String name, const rend::VertexDeclaration& vertexDeclaration, rend::Device* device );
 
-		Bool reload( EffectLoadingContext& context );
+		Bool reload( IInputStream::Ptr effectBlob );
 		void cleanup();
 
 		friend class System;

@@ -3,10 +3,12 @@
 //	Created by Vlad Gordienko, 2019
 //-----------------------------------------------------------------------------
 
+//#define OLOLO 1
+
 // experimental function
 float4 doSomething( uniform float4 value )
 {
 	//float lum = pow( dot( value.rgb, float3(0.3, 0.5, 0.2) ), 0.8 );
 	//return float4( lum, lum, lum, value.a );
-	return value.bgra;
+	return value.rgba;
 }

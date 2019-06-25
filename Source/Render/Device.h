@@ -94,6 +94,7 @@ namespace rend
 		virtual ShaderResourceView getShaderResourceView( RenderTargetHandle handle ) = 0;
 
 		virtual ShaderCompiler* createCompiler() const = 0;
+		virtual String compilerMark() const = 0;
 
 	private:
 		Device( const Device& ) = delete;

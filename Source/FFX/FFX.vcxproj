@@ -150,6 +150,7 @@
     <ClInclude Include="Declaration.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="FFX.h" />
+    <ClInclude Include="FxCommon.h" />
     <ClInclude Include="FxCompiler.h" />
     <ClInclude Include="FxLexer.h" />
     <ClInclude Include="Preprocessor.h" />

@@ -93,6 +93,7 @@ namespace dx11
 		rend::ShaderResourceView getShaderResourceView( rend::RenderTargetHandle handle ) override;
 
 		rend::ShaderCompiler* createCompiler() const override;
+		String compilerMark() const override;
 
 	private:
 		SwapChain::UPtr m_swapChain;

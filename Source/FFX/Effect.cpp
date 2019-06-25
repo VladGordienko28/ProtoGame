@@ -71,42 +71,39 @@ namespace ffx
 		m_blendState = blendState;
 	}
 
-	Bool Effect::reload( EffectLoadingContext& context )
+	Bool Effect::reload( IInputStream::Ptr effectBlob )
 	{
-		assert( context.includeProvider );
-		assert( context.relativeFileName );
-
+		assert( effectBlob.hasObject() );
 		debug( L"Reloading of \"%s\"", *m_name );
 
-		String errorMsg;
-		String warnMsg;
+		String ffxVersion, apiCompilerMark;
+		*effectBlob >> ffxVersion;
+		*effectBlob >> apiCompilerMark;
 
-		PreprocessorInput input;
-		input.relativeFileName = context.relativeFileName;
-		input.includeProvider = context.includeProvider;
-		input.emitLines = true;
-
-		PreprocessorOutput output;
-
-		if( !preprocess( input, output, &errorMsg ) )
+		if( ffxVersion != FFX_VERSION )
 		{
-			error( L"Unable to preprocess effect \"%s\" with error: \n%s", *context.relativeFileName, *errorMsg );
+			error( L"Incompatible effect version \"%s\"", *ffxVersion );
+			return false;
+		}
+		if( apiCompilerMark != m_device->compilerMark() )
+		{
+			error( L"Unsuitable compiled effect api \"%s\"", apiCompilerMark );
 			return false;
 		}
 
-		rend::ShaderCompiler::UPtr compiler = m_device->createCompiler();
+		rend::CompiledShader compiledPS, compiledVS;
+		*effectBlob >> compiledPS;
+		*effectBlob >> compiledVS;
 
-		auto compiledPS = compiler->compile( rend::EShaderType::Pixel, output.source, PS_ENTRY, &warnMsg, &errorMsg );
-		if( !compiledPS.isValid() )
+		if( !compiledPS.isValid() || !compiledVS.isValid() )
 		{
-			error( L"Unable to compile hlsl pixel shader with error: \n%s", *errorMsg );
+			error( L"Effect checksum mismatched" );
 			return false;
 		}
 
-		auto compiledVS = compiler->compile( rend::EShaderType::Vertex, output.source, VS_ENTRY, &warnMsg, &errorMsg );
-		if( !compiledVS.isValid() )
+		if( effectBlob->hasError() )
 		{
-			error( L"Unable to compile hlsl vertex shader with error: \n%s", *errorMsg );
+			error( L"Unexpected end of effect file" );
 			return false;
 		}
 
@@ -115,7 +112,6 @@ namespace ffx
 		m_shader.ps = m_device->createPixelShader( compiledPS, *wide2AnsiString( m_name ) );
 		m_shader.vs = m_device->createVertexShader( compiledVS, m_vertexDeclaration, *wide2AnsiString( m_name ) );
 
-		context.dependencies = output.dependencies;
 		return true;
 	}
 

@@ -778,6 +778,11 @@ namespace dx11
 		return new ShaderCompiler();
 	}
 
+	String Device::compilerMark() const
+	{
+		return ShaderCompiler::COMPILER_MARK;
+	}
+
 	Device::CachedVertexDeclaration::CachedVertexDeclaration( ID3D11Device* device, const rend::VertexDeclaration& declaration, 
 		const rend::CompiledShader& vertexShader )
 		:	m_vertexDecl( declaration )

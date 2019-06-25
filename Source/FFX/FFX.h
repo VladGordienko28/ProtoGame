@@ -10,6 +10,7 @@
 #include "Render/Render.h"
 
 // FFX includes
+#include "FxCommon.h"
 #include "Declaration.h"
 #include "Variable.h"
 #include "Buffer.h"

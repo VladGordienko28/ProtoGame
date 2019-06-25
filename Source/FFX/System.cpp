@@ -27,6 +27,7 @@ namespace ffx
 
 		m_device = device;
 		m_directory = shadersDirectory;
+		m_compiler = new Compiler( m_device );
 	}
 
 	void System::shutdown()
@@ -135,17 +136,20 @@ namespace ffx
 			String m_directory;
 		};
 
+		Bool result = false;
 		IncludeProvider includeProvider( m_directory );
 		
-		EffectLoadingContext context;
-		context.relativeFileName = cachedEffect.relativeFileName;
-		context.includeProvider = &includeProvider;
-
-		Bool result = cachedEffect.effect->reload( context );
-
-		if( result )
+		Compiler::Output compilerOutput;
+		if( result = m_compiler->compile( cachedEffect.relativeFileName, &includeProvider, compilerOutput ) )
 		{
-			cachedEffect.files = context.dependencies;
+			IInputStream::Ptr effectStream = new BufferReader( compilerOutput.effectBlob );
+			result &= cachedEffect.effect->reload( effectStream );		
+		
+			if( result )
+			{
+				cachedEffect.files = compilerOutput.dependencies;
+				saveEffectToFile( cachedEffect.effect->name(), compilerOutput.effectBlob );
+			}
 		}
 
 		Int64 lastModificationTime = 0;
@@ -162,6 +166,20 @@ namespace ffx
 
 		cachedEffect.lastModificationTime = lastModificationTime;
 		return result;
+	}
+
+	Bool System::saveEffectToFile( String effectName, const Array<UInt8>& effectBlob )
+	{
+		String fileName = m_directory + effectName + COMPILED_SHADER_EXTENSION;
+
+		if( auto writer = fm::writeBinaryFile( *fileName ) )
+		{
+			*writer << effectBlob;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
 }

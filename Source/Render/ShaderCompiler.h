@@ -25,6 +25,12 @@ namespace rend
 	class CompiledShader final
 	{
 	public:
+		CompiledShader()
+			:	m_type( EShaderType::Unknown ),
+				m_checksum( -1 )
+		{
+		}
+
 		CompiledShader( EShaderType type, const Array<UInt8>& data )
 			:	m_type( type ),
 				m_data( data )
@@ -54,7 +60,7 @@ namespace rend
 			return m_type;
 		}
 
-		SizeT codeLength() const
+		UInt32 codeLength() const
 		{
 			return m_data.size();
 		}
@@ -75,7 +81,24 @@ namespace rend
 		Array<UInt8> m_data;
 		UInt32 m_checksum;
 
-		CompiledShader() = delete;
+	public:
+		friend IOutputStream& operator<<( IOutputStream& stream, const CompiledShader& x )
+		{
+			stream.writeData( &x.m_type, sizeof( x.m_type ) );
+			stream << x.m_data;
+			stream << x.m_checksum;
+
+			return stream;
+		}
+
+		friend IInputStream& operator>>( IInputStream& stream, CompiledShader& x )
+		{
+			stream.readData( &x.m_type, sizeof( x.m_type ) );
+			stream >> x.m_data;
+			stream >> x.m_checksum;
+
+			return stream;
+		}
 	};
 
 	// todo: add compilation flags here!!
@@ -92,6 +115,8 @@ namespace rend
 
 		virtual CompiledShader compile( EShaderType shaderType, Text::Ptr shaderText, const Char* entryPoint,
 			String* warnings = nullptr, String* errors = nullptr ) = 0;
+
+		virtual String compilerMark() const = 0;
 	};
 }
 }

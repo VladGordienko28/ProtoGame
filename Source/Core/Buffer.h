@@ -70,4 +70,64 @@ namespace flu
 		Array<UInt8> m_data;
 		SizeT m_position;
 	};
+
+	/**
+	 *	A special class for data reading
+	 */
+	class BufferReader: public IInputStream
+	{
+	public:
+		BufferReader( const Array<UInt8>& data )
+			:	m_data( data ),
+				m_position( 0 )
+		{
+			m_hasError = false;
+		}
+
+		SizeT readData( void* buffer, SizeT size ) override
+		{
+			assert( buffer );
+
+			const SizeT bytesToRead = min( size, m_data.size() - m_position );
+
+			if( bytesToRead == size )
+			{
+				mem::copy( buffer, &m_data[m_position], size );
+				m_position += size;			
+			}
+			else
+			{
+				m_hasError = true;
+			}
+
+			return bytesToRead;
+		}
+
+		SizeT totalSize() override
+		{
+			return m_data.size();
+		}
+
+		void seek( SizeT newPosition ) override
+		{
+			assert( newPosition >= 0 && newPosition < m_data.size() );
+			m_position = newPosition;
+		}
+
+		SizeT tell() override
+		{
+			return m_position;
+		}
+
+		Bool isEof() const override
+		{
+			return m_position >= m_data.size();
+		}
+
+	private:
+		const Array<UInt8>& m_data;
+		SizeT m_position;
+
+		BufferReader() = delete;
+	};
 }
