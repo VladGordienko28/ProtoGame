@@ -8,7 +8,7 @@
 /*-----------------------------------------------------------------------------
     Image importers.
 -----------------------------------------------------------------------------*/
-
+#if 0
 //
 // Import the bmp file.
 //
@@ -48,7 +48,7 @@ FBitmap* ImportBMP( String Filename, String ResName )
 	math::Color* TempData = new math::Color[BmpInfo.biWidth * BmpInfo.biHeight];
 	Array<math::Color> Palette;
 	Int32 UMask = BmpInfo.biWidth-1;
-	Int32 UBits = IntLog2( BmpInfo.biWidth );
+	Int32 UBits = intLog2( BmpInfo.biWidth );
 	Int32 VMask = (BmpInfo.biHeight-1) << UBits;
 
 	// Load entire bmp data.
@@ -234,7 +234,7 @@ FBitmap* ImportTGA( String Filename, String ResName )
 		math::Color* Dest		= (math::Color*)Bitmap->GetData();
 
 		Int32 UMask = Width-1;
-		Int32 UBits = IntLog2( Width );
+		Int32 UBits = intLog2( Width );
 		Int32 VMask = (Height-1) << UBits;
 
 		if( TgaHeader.BPP == 24 )
@@ -280,7 +280,7 @@ FBitmap* ImportTGA( String Filename, String ResName )
 		math::Color* Image		= (math::Color*)Bitmap->GetData();
 
 		Int32 UMask = Width-1;
-		Int32 UBits = IntLog2( Width );
+		Int32 UBits = intLog2( Width );
 		Int32 VMask = (Height-1) << UBits;
 
 		// Extract pixel by pixel from compressed data.
@@ -367,7 +367,7 @@ FBitmap* ImportPNG( String Filename, String ResName )
 	}
 
 	Int32 UMask = PngWidth-1;
-	Int32 UBits = IntLog2(PngWidth);
+	Int32 UBits = intLog2(PngWidth);
 	Int32 VMask = (PngHeight-1) << UBits;
 	math::Color*	SourceData = (math::Color*)PngImage;
 
@@ -427,7 +427,7 @@ FBitmap* ImportPNG( String Filename, String ResName )
 	free(PngImage);
 	return Bitmap;
 }
-
+#endif
 
 /*-----------------------------------------------------------------------------
     Sound importers.
@@ -491,7 +491,7 @@ FMusic* ImportOGG( String Filename, String ResName )
 // Import the ogg file.
 //
 FFont* ImportFLF( String Filename, String ResName )
-{
+{/*
 	FFont* Font = nullptr;
 	FILE* File	= _wfopen( *Filename, L"r" );
 	{
@@ -573,9 +573,9 @@ FFont* ImportFLF( String Filename, String ResName )
 		}
 	
 		Page->BlendMode = BLEND_Alpha;
-	}
+	}*/
 
-	return Font;
+	return /*Font*/ nullptr;
 }
 
 
@@ -590,7 +590,7 @@ FFont* ImportFLF( String Filename, String ResName )
 FResource* CEditor::ImportResource( String Filename, String ResName )
 {
 	assert( fm::getFileName( *Filename ) );
-
+#if 0
 	// Try all formats.
 	if( String::pos( L".bmp", String::lowerCase(Filename) ) != -1 )
 	{
@@ -607,7 +607,9 @@ FResource* CEditor::ImportResource( String Filename, String ResName )
 		// Advanced png file.
 		return ImportPNG( Filename, ResName ? ResName : fm::getFileName( *Filename ) );
 	}
-	else if( String::pos( L".wav", String::lowerCase(Filename) ) != -1 )
+	else 
+#endif
+		if( String::pos( L".wav", String::lowerCase(Filename) ) != -1 )
 	{
 		// wav file.
 		return ImportWAV( Filename, ResName ? ResName : fm::getFileName( *Filename ) );

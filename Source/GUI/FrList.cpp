@@ -73,20 +73,20 @@ void WComboBox::OnPaint( CGUIRenderBase* Render )
 					);
 
 	// Draw a little triangle.
-	Render->DrawPicture
+	Render->DrawImage
 				( 
 					TPoint( Base.X+Size.Width-12, Base.Y+Size.Height/2-2 ), 
 					TSize(6, 3), 
 					TPoint(15, 0), 
 					TSize(6, 3), 
-					Root->Icons 
+					Root->Icons
 				);
 
 	// Draw selected item text.
 	if( ItemIndex != -1 )
 	{
 		TListItem& Item	= Items[ItemIndex];
-		TPoint TextPos	= TPoint( Base.X + 3, Base.Y + (Size.Height-Root->Font1->Height) / 2 );
+		TPoint TextPos	= TPoint( Base.X + 3, Base.Y + (Size.Height-Root->Font1->maxHeight()) / 2 );
 		Render->SetClipArea( Base, TSize( Size.Width-19, Size.Height ) );
 		Render->DrawText( TextPos, Item.Name, bEnabled ? GUI_COLOR_TEXT : GUI_COLOR_TEXT_OFF, Root->Font1 );
 	}	
@@ -377,7 +377,7 @@ void WListBox::OnPaint( CGUIRenderBase* Render )
 	// Draw items.
 	if( Items.size() > 0 )
 	{
-		Int32 TextY	= (ItemsHeight - Root->Font1->Height) / 2;
+		Int32 TextY	= (ItemsHeight - Root->Font1->maxHeight()) / 2;
 
 		// For each item.
 		for( Int32 i = 0, iItem = YToIndex(0); 
@@ -408,15 +408,15 @@ void WListBox::OnPaint( CGUIRenderBase* Render )
 
 			// Draw picture if has.
 			Int32 XOffset = 3;
-			if( Item.Picture )
+			if( Item.Picture != INVALID_HANDLE<rend::Texture2DHandle>() )
 			{
-				Render->DrawPicture
+				Render->DrawTexture
 				(
 					TPoint( Base.X+5, Base.Y + i*ItemsHeight + (ItemsHeight-Item.PicSize.Height)/2+1 ),
 					Item.PicSize,
 					Item.PicOffset,
 					Item.PicSize,
-					Item.Picture
+					Item.Picture, 128, 128 // fooooooooooooooooooo
 				);
 
 				XOffset += Item.PicSize.Width + 5;
@@ -476,7 +476,7 @@ Int32 WList::AddItem( String InName, void* InData )
 //
 // Add a new picture item to the list.
 //
-Int32 WList::AddPictureItem( String InName, FTexture* Picture, TPoint PicOffset, TSize PicSize, void* Data )
+Int32 WList::AddPictureItem( String InName, rend::Texture2DHandle Picture, TPoint PicOffset, TSize PicSize, void* Data )
 {
 	return Items.push(TListItem( InName, Picture, PicOffset, PicSize, Data ));
 }

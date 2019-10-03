@@ -84,7 +84,7 @@ void CGizmo::Rotate( math::Angle DeltaRot )
 //
 void CGizmo::Perform
 (
-	const TViewInfo& View,
+	const gfx::ViewInfo& View,
 	const math::Vector& CursorPos,
 	const math::Vector& MovementDelta,
 	math::Vector* OutTranslation,
@@ -131,7 +131,7 @@ void CGizmo::Perform
 			// Perform rotation.
 			//
 			math::Angle StoredRotation = Rotation;
-			math::Vector WorldCursor = View.Deproject(CursorPos.x, CursorPos.y);
+			math::Vector WorldCursor = View.deproject(CursorPos.x, CursorPos.y);
 			math::Vector Normal = WorldCursor - Location;
 			Normal.normalize();
 			math::Vector Tangent = Normal.cross();
@@ -151,17 +151,17 @@ void CGizmo::Perform
 
 			if( CurrentAxis == GIAX_X )
 			{
-				Float FactorX = (ToLocal.xAxis * MovementDelta)*0.15f / View.Zoom;
+				Float FactorX = (ToLocal.xAxis * MovementDelta)*0.15f / View.zoom;
 				Scale.x = clamp( Scale.x+FactorX, 0.01f, 100.f );
 			}
 			else if( CurrentAxis == GIAX_Y )
 			{
-				Float FactorY = (ToLocal.yAxis * MovementDelta)*0.15f / View.Zoom;
+				Float FactorY = (ToLocal.yAxis * MovementDelta)*0.15f / View.zoom;
 				Scale.y = clamp( Scale.y+FactorY, 0.01f, 100.f );
 			}
 			else
 			{
-				Float Factor = (MovementDelta * ((ToLocal.xAxis+ToLocal.yAxis)*0.5f))*0.15f / View.Zoom;
+				Float Factor = (MovementDelta * ((ToLocal.xAxis+ToLocal.yAxis)*0.5f))*0.15f / View.zoom;
 				Scale.x = clamp( Scale.x+Factor, 0.01f, 100.f );
 				Scale.y = clamp( Scale.y+Factor, 0.01f, 100.f );
 			}
@@ -184,13 +184,13 @@ void CGizmo::Perform
 //
 // Test hit with translation gizmo.
 //
-static EGizmoAxis HitTranslationGizmo( const TViewInfo& View, Float Size, Int32 Cx, Int32 Cy, const math::Coords& ToLocal, const math::Vector& Scale )
+static EGizmoAxis HitTranslationGizmo( const gfx::ViewInfo& View, Float Size, Int32 Cx, Int32 Cy, const math::Coords& ToLocal, const math::Vector& Scale )
 {
 	// Project to screen space.
 	math::Vector Center, XEnd, YEnd;
-	View.Project( ToLocal.origin, Center.x, Center.y );
-	View.Project( ToLocal.origin + ToLocal.xAxis*((GIZMO_ARROW_LEN+0.93f)*View.Zoom*Size), XEnd.x, XEnd.y );
-	View.Project( ToLocal.origin + ToLocal.yAxis*((GIZMO_ARROW_LEN+0.93f)*View.Zoom*Size), YEnd.x, YEnd.y );
+	View.project( ToLocal.origin, Center.x, Center.y );
+	View.project( ToLocal.origin + ToLocal.xAxis*((GIZMO_ARROW_LEN+0.93f)*View.zoom*Size), XEnd.x, XEnd.y );
+	View.project( ToLocal.origin + ToLocal.yAxis*((GIZMO_ARROW_LEN+0.93f)*View.zoom*Size), YEnd.x, YEnd.y );
 
 	if( math::isPointOnSegment( math::Vector(Cx, Cy), Center, XEnd, 3.f ) )
 	{
@@ -224,11 +224,11 @@ static EGizmoAxis HitTranslationGizmo( const TViewInfo& View, Float Size, Int32 
 //
 // Test hit with rotation gizmo.
 //
-static EGizmoAxis HitRotationGizmo( const TViewInfo& View, Float Size, Int32 Cx, Int32 Cy, const math::Coords& ToLocal, const math::Vector& Scale )
+static EGizmoAxis HitRotationGizmo( const gfx::ViewInfo& View, Float Size, Int32 Cx, Int32 Cy, const math::Coords& ToLocal, const math::Vector& Scale )
 {
 	math::Vector Center, CirclePoint;
-	View.Project( ToLocal.origin, Center.x, Center.y );
-	View.Project( ToLocal.origin + (math::Vector(0.f, GIZMO_RADIUS)*View.Zoom*Size), CirclePoint.x, CirclePoint.y );
+	View.project( ToLocal.origin, Center.x, Center.y );
+	View.project( ToLocal.origin + (math::Vector(0.f, GIZMO_RADIUS)*View.zoom*Size), CirclePoint.x, CirclePoint.y );
 
 	Float RealRadius = math::distance( Center, CirclePoint );
 	Float TestRadius = math::distance( Center, math::Vector(Cx, Cy) );
@@ -241,12 +241,12 @@ static EGizmoAxis HitRotationGizmo( const TViewInfo& View, Float Size, Int32 Cx,
 //
 // Test hit with rotation gizmo.
 //
-static EGizmoAxis HitScaleGizmo( const TViewInfo& View, Float Size, Int32 Cx, Int32 Cy, const math::Coords& ToLocal, const math::Vector& Scale )
+static EGizmoAxis HitScaleGizmo( const gfx::ViewInfo& View, Float Size, Int32 Cx, Int32 Cy, const math::Coords& ToLocal, const math::Vector& Scale )
 {
 	math::Vector Center, XEnd, YEnd;
-	View.Project( ToLocal.origin, Center.x, Center.y );
-	View.Project( ToLocal.origin + ToLocal.xAxis*((GIZMO_ARROW_LEN+0.5f)*View.Zoom*Size), XEnd.x, XEnd.y );
-	View.Project( ToLocal.origin + ToLocal.yAxis*((GIZMO_ARROW_LEN+0.5f)*View.Zoom*Size), YEnd.x, YEnd.y );
+	View.project( ToLocal.origin, Center.x, Center.y );
+	View.project( ToLocal.origin + ToLocal.xAxis*((GIZMO_ARROW_LEN+0.5f)*View.zoom*Size), XEnd.x, XEnd.y );
+	View.project( ToLocal.origin + ToLocal.yAxis*((GIZMO_ARROW_LEN+0.5f)*View.zoom*Size), YEnd.x, YEnd.y );
 
 	if( math::isPointOnSegment(math::Vector(Cx, Cy), Center, XEnd, 3.f) )
 	{
@@ -277,9 +277,9 @@ static EGizmoAxis HitScaleGizmo( const TViewInfo& View, Float Size, Int32 Cx, In
 //
 // Return gizmo's axis at specified cursor location.
 //
-EGizmoAxis CGizmo::AxisAt( const TViewInfo& ViewInfo, Int32 Cx, Int32 Cy )
+EGizmoAxis CGizmo::AxisAt( const gfx::ViewInfo& ViewInfo, Int32 Cx, Int32 Cy )
 {
-	static EGizmoAxis(*GizmoHitTable[GIZMO_MAX])( const TViewInfo&, Float, Int32, Int32, const math::Coords&, const math::Vector& ) = 
+	static EGizmoAxis(*GizmoHitTable[GIZMO_MAX])( const gfx::ViewInfo&, Float, Int32, Int32, const math::Coords&, const math::Vector& ) = 
 	{
 		HitTranslationGizmo,
 		HitRotationGizmo,
@@ -308,7 +308,7 @@ EGizmoAxis CGizmo::AxisAt( const TViewInfo& ViewInfo, Int32 Cx, Int32 Cy )
 //
 static void DrawArrow( CCanvas* Canvas, const math::Vector& From, const math::Vector& Dir, Float Length, Float Size, math::Color Color )
 {
-	math::Vector End = From + Dir * (Length * Canvas->View.Zoom);
+	math::Vector End = From + Dir * (Length * Canvas->View.zoom);
 	math::Coords ToWorld = math::Coords( End, Dir ).transpose();
 
 	// Draw arrow tail.
@@ -316,14 +316,14 @@ static void DrawArrow( CCanvas* Canvas, const math::Vector& From, const math::Ve
 
 	// Draw arrowhead.
 	TRenderPoly Poly;
-	Poly.Texture		= nullptr;
+	Poly.Image			= INVALID_HANDLE<rend::Texture2DHandle>();
 	Poly.Color			= Color;
 	Poly.Flags			= POLY_FlatShade;
 	Poly.NumVerts		= 3;
 
-	Poly.Vertices[0]	= math::transformPointBy( math::Vector( +0.0000f, -0.3125f )*Canvas->View.Zoom*Size, ToWorld );
-	Poly.Vertices[1]	= math::transformPointBy( math::Vector( +0.9375f, -0.0000f )*Canvas->View.Zoom*Size, ToWorld );
-	Poly.Vertices[2]	= math::transformPointBy( math::Vector( +0.0000f, +0.3125f )*Canvas->View.Zoom*Size, ToWorld );
+	Poly.Vertices[0]	= math::transformPointBy( math::Vector( +0.0000f, -0.3125f )*Canvas->View.zoom*Size, ToWorld );
+	Poly.Vertices[1]	= math::transformPointBy( math::Vector( +0.9375f, -0.0000f )*Canvas->View.zoom*Size, ToWorld );
+	Poly.Vertices[2]	= math::transformPointBy( math::Vector( +0.0000f, +0.3125f )*Canvas->View.zoom*Size, ToWorld );
 
 	Canvas->DrawPoly(Poly);
 }
@@ -335,7 +335,7 @@ static void DrawArrow( CCanvas* Canvas, const math::Vector& From, const math::Ve
 static void DrawStick( CCanvas* Canvas, const math::Vector& From, const math::Vector& Dir, Float Length, math::Color Color )
 {
 	// Line.
-	math::Vector End = From + Dir * (Length * Canvas->View.Zoom);
+	math::Vector End = From + Dir * (Length * Canvas->View.zoom);
 	Canvas->DrawLine( From, End, Color, false );
 
 	// Head.
@@ -348,13 +348,13 @@ static void DrawStick( CCanvas* Canvas, const math::Vector& From, const math::Ve
 //
 static void DrawTranslationGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, const math::Coords& ToLocal, const math::Vector& Scale )
 {
-	Float RectSize = GIZMO_RECT_SIZE * Canvas->View.Zoom * Size;
+	Float RectSize = GIZMO_RECT_SIZE * Canvas->View.zoom * Size;
 
 	// Draw 'both' semi-solid rect if selected.
 	if( Axis == GIAX_Both )
 	{
 		TRenderRect R;
-		R.Texture	= nullptr;
+		R.Image		= INVALID_HANDLE<rend::Texture2DHandle>();
 		R.Color		= GIZMO_BOTH_COLOR * 0.5f;
 		R.Flags		= POLY_FlatShade | POLY_Ghost;
 		R.Rotation	= math::vectorToAngle(ToLocal.xAxis);
@@ -381,7 +381,7 @@ static void DrawRotationGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, con
 	Canvas->DrawCircle
 	(
 		ToLocal.origin,
-		GIZMO_RADIUS * Canvas->View.Zoom * Size,
+		GIZMO_RADIUS * Canvas->View.zoom * Size,
 		Axis == AXIS_None ? GIZMO_X_COLOR : GIZMO_BOTH_COLOR,
 		false
 	);
@@ -389,7 +389,7 @@ static void DrawRotationGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, con
 	(
 		ToLocal.origin,
 		math::vectorToAngle(ToLocal.xAxis),
-		GIZMO_RADIUS * Canvas->View.Zoom * 0.75f * Size,
+		GIZMO_RADIUS * Canvas->View.zoom * 0.75f * Size,
 		GIZMO_BOTH_COLOR,
 		false
 	);
@@ -401,14 +401,14 @@ static void DrawRotationGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, con
 //
 static void DrawScaleGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, const math::Coords& ToLocal, const math::Vector& Scale )
 {
-	Float RectSizeX = GIZMO_RECT_SIZE * Canvas->View.Zoom * Scale.x * Size;
-	Float RectSizeY = GIZMO_RECT_SIZE * Canvas->View.Zoom * Scale.y * Size;
+	Float RectSizeX = GIZMO_RECT_SIZE * Canvas->View.zoom * Scale.x * Size;
+	Float RectSizeY = GIZMO_RECT_SIZE * Canvas->View.zoom * Scale.y * Size;
 
 	// Draw semi-solid rect.
 	if( Axis == GIAX_Both )
 	{
 		TRenderPoly P;
-		P.Texture		= nullptr;
+		P.Image			= INVALID_HANDLE<rend::Texture2DHandle>();
 		P.Color			= GIZMO_BOTH_COLOR * 0.5f;
 		P.Flags			= POLY_FlatShade | POLY_Ghost;
 		P.NumVerts		= 3;

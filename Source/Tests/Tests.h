@@ -24,13 +24,13 @@
 #define enter_unit( name )	\
 	g_currentTest.checksCount = 0;\
 	g_currentTest.unitName = #name;\
-	g_currentTest.startTime = GPlat->TimeStamp();\
+	g_currentTest.startTimeStamp = time::cycles64();\
 	info( L"Executing unit '%hs'...", g_currentTest.unitName );
 
 #define leave_unit	\
 	g_passedUnitsCount++;\
 	info( L"Unit '%hs' passed with %d checks in %.4f ms", g_currentTest.unitName, \
-		g_currentTest.checksCount, ( GPlat->TimeStamp() - g_currentTest.startTime ) * 1000.0 );
+		g_currentTest.checksCount, time::elapsedMsFrom( g_currentTest.startTimeStamp ) );
 
 namespace flu
 {
@@ -39,14 +39,14 @@ namespace tests
 	struct UnitTestInfo
 	{
 		Int32 checksCount = 0;
-		Double startTime = 0.0;
+		UInt64 startTimeStamp = 0;
 		const AnsiChar* unitName = "";
 	};
 
 	typedef void (*TestFunction)( void );
 
 	extern UnitTestInfo g_currentTest;
-	extern Double g_startTime;
+	extern UInt64 g_startTimeStamp;
 	extern Int32 g_passedUnitsCount;
 	extern Int32 g_failedUnitsCount;
 	extern Int32 g_skippedUnitsCount;

@@ -28,7 +28,6 @@ class FObject;
 	class FResource;
 		class FFont;
 		class FTexture;
-			class FMaterial;
 			class FBitmap;
 		class FLevel;
 		class FScript;
@@ -46,12 +45,16 @@ class CCollisionHash;
 class CPhysics;
 enum EEventName;
 struct TDelegate;
-struct TViewInfo;
 
 
 // Flu includes.
 #include "Core/Core.h"
 #include "Math/Math.h"
+#include "Render/Render.h"
+#include "FFX/FFX.h"
+#include "Resource/Resource.h"
+#include "Image/Image.h"
+#include "Font/Font.h"
 
 using namespace flu; //todo: remove this;
 
@@ -77,6 +80,18 @@ namespace envi
 #include "Core\FrIni.h"
 #include "Core\FrCorUtils.h"
 #include "Core\FrNetBas.h"
+
+// Rendering
+#include "Rendering/Api.h"
+#include "Rendering/ViewInfo.h"
+#include "Rendering/Utils.h"
+#include "Rendering/GrowOnlyVB.h"
+#include "Rendering/GridDrawer.h"
+
+
+/////  tobe removed!!!!!!!!!!!!!!!!!!!!!!
+extern ffx::Effect::Ptr g_coloredEffect;
+
 
 // Profiling
 #include "Chart/EngineProfiler.h"

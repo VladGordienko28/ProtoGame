@@ -178,6 +178,7 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextWriter.h" />
     <ClInclude Include="Threading.h" />
+    <ClInclude Include="Time.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
@@ -222,6 +223,7 @@
     <ClCompile Include="StringManager.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Threading.cpp" />
+    <ClCompile Include="Time.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

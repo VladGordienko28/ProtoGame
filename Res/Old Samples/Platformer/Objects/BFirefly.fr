@@ -1,9 +1,3 @@
 BEGIN_RESOURCE FBitmap BFirefly
-    BlendMode = 6
-    Saturation = 1.0000
-    AnimSpeed = 30.0000
-    Group = "Stuff"
-    FileName = "BFirefly.bmp"
-    UBits = 3
-    VBits = 3
+    image = "Platformer.Bitmaps.Firefly"
 END_RESOURCE

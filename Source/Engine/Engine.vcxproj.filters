@@ -19,6 +19,9 @@
     <Filter Include="Core %28 legacy %29">
       <UniqueIdentifier>{36e49054-5c9c-4d3c-887e-eb078eb70e82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{dd1878de-f5cc-4828-947c-577604cbb9d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\FrBase.h">
@@ -118,6 +121,21 @@
     <ClInclude Include="AI\AIPhysics.h">
       <Filter>AI</Filter>
     </ClInclude>
+    <ClInclude Include="Rendering\GridDrawer.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Api.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\GrowOnlyVB.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Utils.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\ViewInfo.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\FrClass.cpp">
@@ -190,6 +208,15 @@
     </ClCompile>
     <ClCompile Include="AI\Navigator.cpp">
       <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\GridDrawer.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Api.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\ViewInfo.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

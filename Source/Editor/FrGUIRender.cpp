@@ -36,7 +36,7 @@ void CGUIRender::BeginPaint( CCanvas* InCanvas )
 
 	// Set window coords system.
 	Canvas->SetTransform( 
-							TViewInfo
+							gfx::ViewInfo
 							( 
 								0.f, 
 								0.f, 
@@ -84,7 +84,7 @@ void CGUIRender::DrawRegion( TPoint P, TSize S, math::Color Color, math::Color B
 		// Case 1: Draw fully solid rect.
 		//
 		TRenderRect Rect;
-		Rect.Texture	= nullptr;
+		Rect.Image		= INVALID_HANDLE<rend::Texture2DHandle>();
 		Rect.Bounds.min	= math::Vector( P.X, P.Y );
 		Rect.Bounds.max	= math::Vector( P.X + S.Width, P.Y + S.Height );
 		Rect.Color		= Color;
@@ -117,7 +117,7 @@ void CGUIRender::DrawRegion( TPoint P, TSize S, math::Color Color, math::Color B
 		// Case 3: Draw two overlap rectangles.
 		//
 		TRenderRect Rect;
-		Rect.Texture	= nullptr;
+		Rect.Image		= INVALID_HANDLE<rend::Texture2DHandle>();
 		Rect.Bounds.min	= math::Vector( P.X, P.Y );
 		Rect.Bounds.max	= math::Vector( P.X + S.Width, P.Y + S.Height );
 		Rect.Color		= BorderColor;
@@ -140,7 +140,7 @@ void CGUIRender::DrawRegion( TPoint P, TSize S, math::Color Color, math::Color B
 		// Case 4: Draw pattern.
 		//
 		TRenderRect Rect;
-		Rect.Texture	= nullptr;
+		Rect.Image		= INVALID_HANDLE<rend::Texture2DHandle>();
 		Rect.Bounds.min	= math::Vector( P.X, P.Y );
 		Rect.Bounds.max	= math::Vector( P.X + S.Width, P.Y + S.Height );
 		Rect.Color		= BorderColor;
@@ -161,15 +161,11 @@ void CGUIRender::DrawRegion( TPoint P, TSize S, math::Color Color, math::Color B
 }
 
 
-
-//
-// Draw GUI picture.
-//
-void CGUIRender::DrawPicture( TPoint P, TSize S, TPoint BP, TSize BS, FTexture* Texture )
-{	
+void CGUIRender::DrawImage( TPoint P, TSize S, TPoint BP, TSize BS, img::Image::Ptr image )
+{
 	// Setup rect.
 	TRenderRect Rect;
-	Rect.Texture	= Texture;
+	Rect.Image		= image->getHandle();
 	Rect.Bounds.min	= math::Vector( P.X, P.Y );
 	Rect.Bounds.max	= math::Vector( P.X + S.Width, P.Y + S.Height );
 	Rect.Color		= Brightness != 1.f ? math::colors::WHITE*Brightness : math::colors::WHITE;
@@ -197,10 +193,56 @@ void CGUIRender::DrawPicture( TPoint P, TSize S, TPoint BP, TSize BS, FTexture* 
 	};
 
 	// Texture coords.
-	Rect.TexCoords.min.x	= BP.X * Rescale[Texture->UBits];
-	Rect.TexCoords.min.y	= BP.Y * Rescale[Texture->VBits];
-	Rect.TexCoords.max.x	= (BP.X+BS.Width)  * Rescale[Texture->UBits];
-	Rect.TexCoords.max.y	= (BP.Y+BS.Height) * Rescale[Texture->VBits];
+	Rect.TexCoords.min.x	= BP.X * Rescale[image->getUBits()];
+	Rect.TexCoords.min.y	= BP.Y * Rescale[image->getVBits()];
+	Rect.TexCoords.max.x	= (BP.X+BS.Width)  * Rescale[image->getUBits()];
+	Rect.TexCoords.max.y	= (BP.Y+BS.Height) * Rescale[image->getVBits()];
+
+	// Draw it.
+	Canvas->DrawRect( Rect );
+}
+
+void CGUIRender::DrawTexture( TPoint P, TSize S, TPoint BP, TSize BS, rend::Texture2DHandle image, UInt32 width, UInt32 height )
+{
+	// Setup rect.
+	TRenderRect Rect;
+	Rect.Image		= image;
+	Rect.Bounds.min	= math::Vector( P.X, P.Y );
+	Rect.Bounds.max	= math::Vector( P.X + S.Width, P.Y + S.Height );
+	Rect.Color		= Brightness != 1.f ? math::colors::WHITE*Brightness : math::colors::WHITE;
+	Rect.Color.a	= 0xff;
+	Rect.Flags		= POLY_Unlit;	
+	Rect.Rotation	= 0;	
+	
+	// Division table, used to reduce multiple
+	// divisions, since gui has many icons to draw.
+	static const Float Rescale[] =
+	{
+		1.f / 1.f,
+		1.f / 2.f,
+		1.f / 4.f,
+		1.f / 8.f,
+		1.f / 16.f,
+		1.f / 32.f,
+		1.f / 64.f,
+		1.f / 128.f,
+		1.f / 256.f,
+		1.f / 512.f,
+		1.f / 1024.f,
+		1.f / 2048.f,
+		1.f / 4096.f,
+	};
+
+	UInt8 uBits = intLog2( width );
+	UInt8 vBits = intLog2( height );
+
+
+
+	// Texture coords.
+	Rect.TexCoords.min.x	= BP.X * Rescale[uBits];
+	Rect.TexCoords.min.y	= BP.Y * Rescale[vBits];
+	Rect.TexCoords.max.x	= (BP.X+BS.Width)  * Rescale[uBits];
+	Rect.TexCoords.max.y	= (BP.Y+BS.Height) * Rescale[vBits];
 
 	// Draw it.
 	Canvas->DrawRect( Rect );
@@ -210,7 +252,7 @@ void CGUIRender::DrawPicture( TPoint P, TSize S, TPoint BP, TSize BS, FTexture* 
 //
 // Draw a GUI text.
 //
-void CGUIRender::DrawText( TPoint P, const Char* Text, Int32 Len, math::Color Color, FFont* Font )
+void CGUIRender::DrawText( TPoint P, const Char* Text, Int32 Len, math::Color Color, fnt::Font::Ptr Font )
 {
 	if( Brightness != 1.f )
 		Color *= Brightness;

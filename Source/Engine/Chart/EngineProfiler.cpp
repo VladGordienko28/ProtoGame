@@ -55,7 +55,7 @@ namespace profile
 	void EngineProfiler::enterZone( GroupId groupId, const Char* zoneName )
 	{
 		Zone zone;
-		zone.enterTime = GPlat->TimeStamp();
+		zone.enterTimeStamp = time::cycles64();
 		zone.groupId = groupId;
 		zone.metric = &findOrAddMetric( groupId, zoneName );
 
@@ -68,11 +68,9 @@ namespace profile
 
 		if( isGroupEnabled( zone.groupId ) )
 		{
-			Double leaveTime = GPlat->TimeStamp();
-
 			if( zone.metric->samples.size() == 0 || zone.metric->samples.last().time != m_frameEnterTime )
 			{
-				zone.metric->samples.push( { m_frameEnterTime, (leaveTime - zone.enterTime) * 1000.0 } );
+				zone.metric->samples.push( { m_frameEnterTime, time::elapsedMsFrom( zone.enterTimeStamp ) } );
 			}
 			else
 			{

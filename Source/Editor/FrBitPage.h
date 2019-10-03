@@ -8,6 +8,7 @@
 	WDemoEffectPanel.
 -----------------------------------------------------------------------------*/
 
+#if DEMO_EFFECTS_ENABLED
 //
 // Panel with demo-effect parameters.
 //
@@ -54,12 +55,12 @@ private:
 	void DrawTypeChange( WWidget* Sender );
 	void AnySliderChange( WWidget* Sender );
 };
-
+#endif
 
 /*-----------------------------------------------------------------------------
 	WMaterialPanel.
 -----------------------------------------------------------------------------*/
-
+#if MATERIAL_ENABLED
 //
 // Panel with material layers.
 //
@@ -103,7 +104,7 @@ private:
 	// Helpers.
 	void UpdateButtons();
 };
-
+#endif
 
 /*-----------------------------------------------------------------------------
 	WTexturePage.

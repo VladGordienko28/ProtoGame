@@ -86,22 +86,23 @@ void FSpriteComponent::Render( CCanvas* Canvas )
 
 	// Sprite is visible?
 	math::Rect Bounds = math::Rect( Location, Size.x, Size.y );
-	if( !Canvas->View.Bounds.isOverlap(math::Rect( Location, math::sqrt(Size.x*Size.x+Size.y*Size.y) )) )
+	if( !Canvas->View.bounds.isOverlap(math::Rect( Location, math::sqrt(Size.x*Size.x+Size.y*Size.y) )) )
 		return;
 
 	// Initialize rect.
 	TRenderRect Rect;
+	auto Image = Texture ? As<FBitmap>(Texture)->m_image : FBitmap::NullBitmap();
 	Rect.Flags			= POLY_Unlit * (bUnlit | !(Level->RndFlags & RND_Lighting));
 	Rect.Rotation		= Base->Rotation + Rotation;		
 	Rect.Color			= Base->bSelected ? math::Color( 0x80, 0xe6, 0x80, 0xff ) : Color;
-	Rect.Texture		= Texture ? Texture : FBitmap::NullBitmap();
+	Rect.Image			= Image->getHandle();
 	Rect.Bounds			= Bounds;
 	
 	// Integer texture coords to float.
-	Rect.TexCoords.min.x	= TexCoords.min.x * GRescale[Rect.Texture->UBits];
-	Rect.TexCoords.max.x	= TexCoords.max.x * GRescale[Rect.Texture->UBits];
-	Rect.TexCoords.min.y	= TexCoords.max.y * GRescale[Rect.Texture->VBits];
-	Rect.TexCoords.max.y	= TexCoords.min.y * GRescale[Rect.Texture->VBits];	
+	Rect.TexCoords.min.x	= TexCoords.min.x * GRescale[Image->getUBits()];
+	Rect.TexCoords.max.x	= TexCoords.max.x * GRescale[Image->getUBits()];
+	Rect.TexCoords.min.y	= TexCoords.max.y * GRescale[Image->getVBits()];
+	Rect.TexCoords.max.y	= TexCoords.min.y * GRescale[Image->getVBits()];	
 
 	if( Base->bFrozen )
 		Rect.Color	= Rect.Color * 0.55f;
@@ -183,21 +184,22 @@ void FDecoComponent::Render( CCanvas* Canvas )
 
 	// Is visible?
 	math::Rect Bounds = math::Rect( Base->Location, max(Scale.x, Scale.y)*2.f );
-	if( !Canvas->View.Bounds.isOverlap( Bounds ) )
+	if( !Canvas->View.bounds.isOverlap( Bounds ) )
 		return;
 
 	// Initialize polygon.
 	TRenderPoly Poly;
-	Poly.Texture		= Texture ? Texture : FBitmap::NullBitmap();
+	auto Image = Texture ? As<FBitmap>(Texture)->m_image : FBitmap::NullBitmap();
+	Poly.Image			= Image->getHandle();
 	Poly.Color			= Base->bSelected ? math::Color( 0x80, 0xe6, 0x80, 0xff ) : Color;
 	Poly.Flags			= POLY_Unlit * (bUnlit | !(Level->RndFlags & RND_Lighting));
 	Poly.NumVerts		= 4;
 
 	// Texture coords.
-	Float	U1	= TexCoords.min.x * GRescale[Poly.Texture->UBits],
-			U2	= TexCoords.max.x * GRescale[Poly.Texture->UBits],
-			V1	= TexCoords.min.y * GRescale[Poly.Texture->VBits],
-			V2	= TexCoords.max.y * GRescale[Poly.Texture->VBits];
+	Float	U1	= TexCoords.min.x * GRescale[Image->getUBits()],
+			U2	= TexCoords.max.x * GRescale[Image->getUBits()],
+			V1	= TexCoords.min.y * GRescale[Image->getVBits()],
+			V2	= TexCoords.max.y * GRescale[Image->getVBits()];
 
 	if( bFlipH )
 		exchange( U1, U2 );
@@ -383,7 +385,7 @@ void FAnimatedSpriteComponent::Render( CCanvas* Canvas )
 	math::Vector DrawSize/*( Base->Size.X*Scale.X, Base->Size.Y*Scale.Y )*/ = Scale;
 	math::Vector DrawPos( Base->Location.x+Offset.x, Base->Location.y+Offset.y );
 	math::Rect Bounds( DrawPos, DrawSize.x, DrawSize.y );
-	if( !Canvas->View.Bounds.isOverlap( Bounds ) )
+	if( !Canvas->View.bounds.isOverlap( Bounds ) )
 		return;
 
 	// Initialize rect struct.
@@ -401,13 +403,13 @@ void FAnimatedSpriteComponent::Render( CCanvas* Canvas )
 		TAnimSequence* Seq	= &Animation->Sequences[iSequence];
 		Int32 iDrawFrame	= math::floor(Frame) + Seq->Start;
 
-		Rect.Texture	= Animation->Sheet;
+		Rect.Image		= As<FBitmap>(Animation->Sheet)->m_image->getHandle();
 		Rect.TexCoords	= Animation->GetTexCoords( iDrawFrame );
 	}
 	else
 	{
 		// Bad animation, draw chess board instead.
-		Rect.Texture		= nullptr;
+		Rect.Image			= INVALID_HANDLE<rend::Texture2DHandle>();
 		Rect.TexCoords.min	= math::Vector( 0.f, 1.f );
 		Rect.TexCoords.max	= math::Vector( 1.f, 0.f );
 	}
@@ -587,34 +589,35 @@ void FParallaxLayerComponent::EditChange()
 void FParallaxLayerComponent::Render( CCanvas* Canvas )
 {
 	// Don't draw parallax layers in mirage!
-	if( Canvas->View.bMirage || !(Level->RndFlags & RND_Backdrop) )
+	if( Canvas->View.isMirage || !(Level->RndFlags & RND_Backdrop) )
 		return;
 
 	// How much tiles draw.
 	math::Vector Period = Scale + Gap;
-	math::Vector Area = Canvas->View.FOV;
+	math::Vector Area = Canvas->View.fov;
 	Int32 NumX = math::ceil(Area.x / Period.x) + 1;
 	Int32 NumY = math::ceil(Area.y / Period.y) + 1;
 
 	// Compute parallax parameters.
 	math::Vector Bias;
-	Bias.x = Canvas->View.Coords.origin.x * Parallax.x + Offset.x;
-	Bias.y = Canvas->View.Coords.origin.y * Parallax.y + Offset.y;
+	Bias.x = Canvas->View.coords.origin.x * Parallax.x + Offset.x;
+	Bias.y = Canvas->View.coords.origin.y * Parallax.y + Offset.y;
 	
 	Bias.x = fmod( Bias.x, Period.x );
 	Bias.y = fmod( Bias.y, Period.y );
 
 	// Setup render rect.
 	TRenderRect Rect;
-	Rect.Texture		= Texture ? Texture : FBitmap::NullBitmap();
+	auto Image = Texture ? As<FBitmap>(Texture)->m_image : FBitmap::NullBitmap();
+	Rect.Image			= Image->getHandle();
 	Rect.Color			= Base->bSelected ? math::Color( 0x80, 0xe6, 0x80, 0xff ) : Color;
 	Rect.Flags			= POLY_Unlit * (bUnlit | !(Level->RndFlags & RND_Lighting));
 	Rect.Rotation		= 0;
 
-	Rect.TexCoords.min.x	= TexCoords.min.x * GRescale[Rect.Texture->UBits];
-	Rect.TexCoords.max.x	= TexCoords.max.x * GRescale[Rect.Texture->UBits];
-	Rect.TexCoords.min.y	= TexCoords.max.y * GRescale[Rect.Texture->VBits];
-	Rect.TexCoords.max.y	= TexCoords.min.y * GRescale[Rect.Texture->VBits];	
+	Rect.TexCoords.min.x	= TexCoords.min.x * GRescale[Image->getUBits()];
+	Rect.TexCoords.max.x	= TexCoords.max.x * GRescale[Image->getUBits()];
+	Rect.TexCoords.min.y	= TexCoords.max.y * GRescale[Image->getVBits()];
+	Rect.TexCoords.max.y	= TexCoords.min.y * GRescale[Image->getVBits()];	
 
 	// Apply flipping.
 	if( bFlipH )
@@ -626,7 +629,7 @@ void FParallaxLayerComponent::Render( CCanvas* Canvas )
 	for( Int32 Y=0; Y<NumY; Y++ )
 	for( Int32 X=0; X<NumX; X++ )		
 	{
-		math::Vector Origin = Canvas->View.Coords.origin - math::Vector(Canvas->View.FOV.x/2.f, 0.f) - /*Canvas->View.Bounds.min -*/ Bias + math::Vector( X*Period.x, Y*Period.y ) - Scale*0.5f;
+		math::Vector Origin = Canvas->View.coords.origin - math::Vector(Canvas->View.fov.x/2.f, 0.f) - /*Canvas->View.Bounds.min -*/ Bias + math::Vector( X*Period.x, Y*Period.y ) - Scale*0.5f;
 		Rect.Bounds	= math::Rect( Origin, Scale.x, Scale.y );
 		Canvas->DrawRect( Rect );
 	}
@@ -657,15 +660,15 @@ FLabelComponent::FLabelComponent()
 void FLabelComponent::Render( CCanvas* Canvas )
 {
 	// Reject if any.
-	if( Canvas->View.bMirage || !Font || !Text )
+	if( Canvas->View.isMirage || !Font || !Text )
 		return;
-
-	TViewInfo OldView = Canvas->View;
-	Canvas->PushTransform(TViewInfo( OldView.X, OldView.Y, OldView.Width, OldView.Height ));
+/*
+	gfx::ViewInfo OldView = Canvas->View;
+	Canvas->PushTransform(gfx::ViewInfo( OldView.x, OldView.y, OldView.width, OldView.height ));
 	{
 		math::Vector	P;
 		Float	W = Font->TextWidth(*Text)*Scale, H = Font->Glyphs[0].H*Scale;
-		OldView.Project( Base->Location, P.x, P.y );
+		OldView.project( Base->Location, P.x, P.y );
 		
 		Canvas->DrawText
 		(
@@ -677,6 +680,7 @@ void FLabelComponent::Render( CCanvas* Canvas )
 		);
 	}
 	Canvas->PopTransform();
+*/
 }
 
 

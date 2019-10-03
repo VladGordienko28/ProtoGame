@@ -11,19 +11,6 @@
 -----------------------------------------------------------------------------*/
 
 //
-// Return the power of size.
-// For example 256->8, 32->5...
-//
-UInt32 IntLog2( UInt32 A )
-{
-	for( Int32 i=31; i>=0; i-- )
-		if( A & ( 1 << i ) )
-			return i;
-	return 0;
-}
-
-
-//
 // Wrap a value to the range.
 //
 Float Wrap( Float V, Float Min, Float Max )

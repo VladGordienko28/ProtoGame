@@ -35,6 +35,10 @@ namespace dx11
 			const AnsiChar* debugName ) override;
 		void destroyRenderTarget( rend::RenderTargetHandle handle ) override;
 
+		rend::DepthBufferHandle createDepthBuffer( rend::EFormat format, Int32 width, Int32 height,
+			const AnsiChar* debugName ) override;
+		void destroyDepthBuffer( rend::DepthBufferHandle handle ) override;
+
 		rend::ShaderHandle createPixelShader( const rend::CompiledShader& shader, const AnsiChar* debugName ) override;
 		void destroyPixelShader( rend::ShaderHandle handle ) override;
 
@@ -57,12 +61,15 @@ namespace dx11
 		void destroyConstantBuffer( rend::ConstantBufferHandle handle ) override;
 
 		rend::BlendStateId getBlendState( const rend::BlendState& blendState ) override;
-		void enableBlendState( rend::BlendStateId blendStateId ) override;
-		void disableBlendState() override;
+		void applyBlendState( rend::BlendStateId blendStateId ) override;
+
+		rend::DepthStencilStateId getDepthStencilState( const rend::DepthStencilState& depthStencilState ) override;
+		void applyDepthStencilState( rend::DepthStencilStateId depthStencilStateId ) override;
 
 		rend::SamplerStateId getSamplerState( const rend::SamplerState& samplerState ) override;
 
 		void clearRenderTarget( rend::RenderTargetHandle handle, const math::FloatColor& clearColor ) override;
+		void clearDepthBuffer( rend::DepthBufferHandle handle, Float depth, UInt8 stencil ) override;
 
 		void setVertexBuffer( rend::VertexBufferHandle handle ) override;
 		void setIndexBuffer( rend::IndexBufferHandle handle ) override;
@@ -80,6 +87,9 @@ namespace dx11
 		void drawIndexed( UInt32 indexCount, UInt32 startIndexLocation, Int32 baseVertexOffset ) override;
 		void draw( UInt32 vertexCount, UInt32 startVertexLocation ) override;
 
+		void setScissorArea( const rend::ScissorArea& area ) override;
+
+		void setRenderTarget( rend::RenderTargetHandle rtHandle, rend::DepthBufferHandle dbHandle ) override;
 		void setViewport( const rend::Viewport& viewport ) override;
 
 		Int32 getBackbufferWidth() const override;
@@ -91,9 +101,13 @@ namespace dx11
 		rend::ShaderResourceView getShaderResourceView( rend::Texture1DHandle handle ) override;
 		rend::ShaderResourceView getShaderResourceView( rend::Texture2DHandle handle ) override;
 		rend::ShaderResourceView getShaderResourceView( rend::RenderTargetHandle handle ) override;
+		rend::ShaderResourceView getShaderResourceView( rend::DepthBufferHandle handle ) override;
 
 		rend::ShaderCompiler* createCompiler() const override;
 		String compilerMark() const override;
+
+		const rend::MemoryStats& getMemoryStats() const override;
+		const rend::DrawStats& getDrawStats() const override;
 
 	private:
 		SwapChain::UPtr m_swapChain;
@@ -106,6 +120,7 @@ namespace dx11
 		static const SizeT MAX_TEXTURES_1D = 64;
 		static const SizeT MAX_TEXTURES_2D = 2048;
 		static const SizeT MAX_RENDER_TARGETS = 32;
+		static const SizeT MAX_DEPTH_BUFFERS = 8;
 		static const SizeT MAX_PIXEL_SHADERS = 128;
 		static const SizeT MAX_VERTEX_SHADERS = 128;
 		static const SizeT MAX_VERTEX_BUFFERS = 256;
@@ -116,6 +131,7 @@ namespace dx11
 		HandleArray<rend::Texture1DHandle, DxTexture1D, MAX_TEXTURES_1D> m_textures1D;
 		HandleArray<rend::Texture2DHandle, DxTexture2D, MAX_TEXTURES_2D> m_textures2D;
 		HandleArray<rend::RenderTargetHandle, DxRenderTarget, MAX_RENDER_TARGETS> m_renderTargets;
+		HandleArray<rend::DepthBufferHandle, DxDepthBuffer, MAX_DEPTH_BUFFERS> m_depthBuffers;
 		HandleArray<rend::ShaderHandle, DxPixelShader, MAX_PIXEL_SHADERS> m_pixelShaders;
 		HandleArray<rend::ShaderHandle, DxVertexShader, MAX_VERTEX_SHADERS> m_vertexShaders;
 		HandleArray<rend::VertexBufferHandle, DxVertexBuffer, MAX_VERTEX_BUFFERS> m_vertexBuffers;
@@ -145,6 +161,83 @@ namespace dx11
 	private:
 		Map<rend::SamplerStateId, DxRef<ID3D11SamplerState>> m_samplerStates;
 		Map<rend::BlendStateId, DxRef<ID3D11BlendState>> m_blendStates;
+		Map<rend::DepthStencilStateId, DxRef<ID3D11DepthStencilState>> m_depthStencilStates;
+
+		DxRef<ID3D11RasterizerState> m_defaultRasterState;
+		DxRef<ID3D11RasterizerState> m_scissorRasterState;
+		Bool m_scissorTestEnabled;
+
+		// statistics
+		rend::MemoryStats m_memoryStats;
+		rend::DrawStats m_drawStats;
+
+	private:
+		template<typename VALUE_TYPE, UInt32 MAX_SLOTS> class SlotsCache: public NonCopyable
+		{
+		public:
+			SlotsCache() = default;
+			~SlotsCache() = default;
+
+			void applyFilter( UInt32& firstSlot, UInt32& numSlots, UInt32& firstValue, VALUE_TYPE* values )
+			{
+				assert( numSlots > 0 );
+				assert( firstSlot + numSlots < MAX_SLOTS );
+				assert( values );
+
+				for( UInt32 i = numSlots - 1; numSlots > 0; --i )
+				{
+					if( m_slots[firstSlot + i] == values[i]  )
+					{
+						--numSlots;
+					}
+					else
+					{
+						break;
+					}
+				}
+
+				for( UInt32 i = 0; numSlots > 0; ++i )
+				{
+					if( m_slots[firstSlot] == values[i] )
+					{
+						++firstSlot;
+						++firstValue;
+						--numSlots;
+					}
+					else
+					{
+						break;
+					}
+				}
+
+				for( UInt32 i = 0; i < numSlots; ++i )
+				{
+					m_slots[firstSlot + i] = values[firstValue + i];
+				}
+			}
+
+			void invalidate( VALUE_TYPE nullValue )
+			{
+				for( auto& it : m_slots )
+				{
+					it = nullValue;
+				}
+			}
+
+		private:
+			StaticArray<VALUE_TYPE, MAX_SLOTS> m_slots;
+		};
+
+		template<typename VALUE_TYPE, UInt32 MAX_SLOTS> using StagesCache = 
+			StaticArray<SlotsCache<VALUE_TYPE, MAX_SLOTS>, static_cast<SizeT>( rend::EShaderType::MAX )>;
+
+		static const UInt32 MAX_CONSTANT_BUFFERS_SLOTS = 16;
+		static const UInt32 MAX_SAMPLER_STATES_SLOTS = 16;
+		static const UInt32 MAX_SRVS_SLOTS = 16;
+
+		StagesCache<rend::ConstantBufferHandle, MAX_CONSTANT_BUFFERS_SLOTS> m_constantBuffersCache;
+		StagesCache<rend::SamplerStateId, MAX_SAMPLER_STATES_SLOTS> m_samplerStatesCache;
+		StagesCache<rend::ShaderResourceView, MAX_SRVS_SLOTS> m_srvsCache;
 
 	private:
 		// api state mirror
@@ -155,6 +248,7 @@ namespace dx11
 		rend::IndexBufferHandle m_oldIndexBuffer;
 
 		rend::BlendStateId m_oldBlendStateId;
+		rend::DepthStencilStateId m_oldDepthStencilStateId;
 
 		rend::EPrimitiveTopology m_oldTopology;
 	};

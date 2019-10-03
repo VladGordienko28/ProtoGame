@@ -230,7 +230,7 @@ static inline void DrawBone( CCanvas* Canvas, const math::Vector& Origin, math::
 
 	// Draw bone.
 	TRenderPoly P;
-	P.Texture		= nullptr;
+	P.Image			= INVALID_HANDLE<rend::Texture2DHandle>();
 	P.Color			= Color * 0.3f;
 	P.Flags			= POLY_FlatShade | POLY_Ghost;
 	P.NumVerts		= 4;
@@ -256,7 +256,7 @@ static inline void DrawBone( CCanvas* Canvas, const math::Vector& Origin, math::
 static inline void DrawMaster( CCanvas* Canvas, const math::Vector& Origin, math::Angle Rotation, Float Size, math::Color Color )
 {
 	TRenderPoly P;
-	P.Texture		= nullptr;
+	P.Image			= INVALID_HANDLE<rend::Texture2DHandle>();
 	P.Color			= Color * 0.3f;
 	P.Flags			= POLY_FlatShade | POLY_Ghost;
 	P.NumVerts		= 16;

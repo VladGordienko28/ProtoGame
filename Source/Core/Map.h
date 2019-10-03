@@ -21,6 +21,18 @@ namespace flu
 		{
 			K key;
 			V value;
+
+			friend IOutputStream& operator<<( IOutputStream& stream, const Map<K, V>::Pair& pair )
+			{
+				stream << pair.key << pair.value;
+				return stream;
+			}
+
+			friend IInputStream& operator>>( IInputStream& stream, Map<K, V>::Pair& pair )
+			{
+				stream >> pair.key >> pair.value;
+				return stream;
+			}
 		};
 
 		Map()
@@ -216,6 +228,18 @@ namespace flu
 		ConstIterator end() const
 		{
 			return m_pairs.end();
+		}
+
+		friend IOutputStream& operator<<( IOutputStream& stream, const Map<K, V>& map )
+		{
+			stream << map.m_pairs;
+			return stream;
+		}
+
+		friend IInputStream& operator>>( IInputStream& stream, Map<K, V>& map )
+		{
+			stream >> map.m_pairs;
+			return stream;
 		}
 
 	private:

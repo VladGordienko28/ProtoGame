@@ -16,7 +16,7 @@ namespace flu
 			if( !m_file )
 				fatal( L"Unable to open log file '%s'", *fileName );
 
-			m_startupTime = GPlat->TimeStamp();
+			m_startupTimeStamp = time::cycles64();
 		}
 
 		~LogCallbackFile()
@@ -32,7 +32,7 @@ namespace flu
 			formLogMessage( buffer, LogManager::MAX_MESSAGE_LENGTH, 
 				logLevelAsString( level ), message );
 
-			fwprintf( m_file, L"%06.1f %s", GPlat->TimeStamp() - m_startupTime, buffer );
+			fwprintf( m_file, L"%06.1f %s", time::elapsedSecFrom( m_startupTimeStamp ), buffer );
 
 			if( level >= ELogLevel::Warning )
 			{
@@ -68,7 +68,7 @@ namespace flu
 		}
 
 	private:
-		Double m_startupTime;
+		UInt64 m_startupTimeStamp;
 		String m_fileName;
 		FILE* m_file;
 	};

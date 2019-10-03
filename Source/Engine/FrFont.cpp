@@ -14,10 +14,7 @@
 //
 FFont::FFont()
 	:	FResource(),
-		Bitmaps(),
-		Height( 0 ),
-		Glyphs(),
-		Remap()
+		m_font( nullptr )
 {
 }
 
@@ -44,7 +41,7 @@ void FFont::PostLoad()
 void FFont::Export( CExporterBase& Ex )
 {
 	FResource::Export(Ex);
-
+/*
 	// General info.
 	Int32 NumBitmaps = Bitmaps.size();
 	EXPORT_INTEGER( Height );
@@ -65,7 +62,7 @@ void FFont::Export( CExporterBase& Ex )
 	{
 		Ex.ExportInteger( *String::format( L"Glyphs[%d].A", i ), *(Int32*)(&Glyphs[i].iBitmap) );
 		Ex.ExportInteger( *String::format( L"Glyphs[%d].B", i ), *(Int32*)(&Glyphs[i].X) );
-	}
+	}*/
 }	
 
 
@@ -76,6 +73,12 @@ void FFont::Import( CImporterBase& Im )
 {
 	FResource::Import(Im);
 
+	String fontName;
+	IMPORT_STRING( fontName );
+
+	m_font = res::ResourceManager::get<fnt::Font>( fontName, res::EFailPolicy::FATAL );
+
+/*
 	// General info.
 	Int32 NumBitmaps;
 	IMPORT_INTEGER( NumBitmaps );
@@ -99,18 +102,7 @@ void FFont::Import( CImporterBase& Im )
 	{
 		*(Int32*)(&Glyphs[i].iBitmap)	=	Im.ImportInteger( *String::format( L"Glyphs[%d].A", i ) );
 		*(Int32*)(&Glyphs[i].X)		=	Im.ImportInteger( *String::format( L"Glyphs[%d].B", i ) );
-	}
-}
-
-
-// Glyph serialization.
-void Serialize( CSerializer& S, TGlyph& V )
-{
-	Serialize( S, V.iBitmap );
-	Serialize( S, V.X );
-	Serialize( S, V.Y );
-	Serialize( S, V.W );
-	Serialize( S, V.H );
+	}*/
 }
 
 //
@@ -120,7 +112,7 @@ void FFont::SerializeThis( CSerializer& S )
 { 
 	// Call parent.
 	FResource::SerializeThis(S); 
-
+/*
 	// Serialize common variables.
 	Serialize( S, Bitmaps );
 	Serialize( S, Height );
@@ -186,7 +178,7 @@ void FFont::SerializeThis( CSerializer& S )
 				Serialize( S, i );
 				Serialize( S, b );
 			}
-	}
+	}*/
 }
 
 
@@ -196,41 +188,16 @@ void FFont::SerializeThis( CSerializer& S )
 //
 Int32 FFont::TextWidth( const Char* Text )
 {
-	Int32 Width = 0;
+	Float width = 0.f;
 
 	for( const Char* C=Text; *C; C++ )
 	{
-		TGlyph& Glyph = GetGlyph(*C);
-		Width += Glyph.W;
+		const auto& glyph = GetGlyph(*C);
+		width += glyph.width;
 	}
 
-	return Width;
+	return width * m_font->getImage()->getUSize();
 }
-
-
-/*-----------------------------------------------------------------------------
-    TStaticFont implementation.
------------------------------------------------------------------------------*/
-
-//
-// GUI font constructor.
-//
-TStaticFont::TStaticFont()
-	:	FFont()
-{
-}
-
-
-//
-// GUI font destructor.
-//
-TStaticFont::~TStaticFont()
-{
-	// Kill manually all pages.
-	for( Int32 i=0; i<Bitmaps.size(); i++ )
-		delete Bitmaps[i];
-}
-
 
 /*-----------------------------------------------------------------------------
     Registration.

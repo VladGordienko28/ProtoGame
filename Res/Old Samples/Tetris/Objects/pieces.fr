@@ -1,8 +1,3 @@
 BEGIN_RESOURCE FBitmap pieces
-    BlendMode = 1
-    Saturation = 1.0000
-    AnimSpeed = 30.0000
-    FileName = "pieces.bmp"
-    UBits = 6
-    VBits = 6
+    image = "Tetris.Bitmaps.pieces"
 END_RESOURCE

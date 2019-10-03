@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="ResourceType.h" />
+    <ClInclude Include="ResourceCompiler.h" />
+    <ClInclude Include="ResourceId.h" />
+    <ClInclude Include="ResourceSystem.h" />
+    <ClInclude Include="FilesTracker.h" />
+    <ClInclude Include="Package.h" />
+    <ClInclude Include="NamesResolver.h" />
+    <ClInclude Include="Listener.h" />
+    <ClInclude Include="ResourceStorage.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="FilesTracker.cpp" />
+    <ClCompile Include="Package.cpp" />
+    <ClCompile Include="ResourceStorage.cpp" />
+  </ItemGroup>
+</Project>

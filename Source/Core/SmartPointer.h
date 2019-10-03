@@ -167,13 +167,13 @@ namespace flu
 	 */
 	class ReferenceCount
 	{
-	public:
+	public:	
 		ReferenceCount()
 			:	m_refCount( 0 )
 		{
 		}
 
-		~ReferenceCount()
+		virtual ~ReferenceCount()
 		{
 			assert( m_refCount == 0 );
 		}
@@ -183,8 +183,30 @@ namespace flu
 			return m_refCount;
 		}
 
+	protected:
+		using Destructor = void (*)( void*, ReferenceCount* );
+
+		struct Deleter
+		{
+			void* context = nullptr;
+			Destructor destructor = nullptr;
+
+			Bool isDefault() const
+			{
+				return !context && !destructor;
+			}
+		};
+
+		// todo: some template magic required here!!
+		void deleter( void* context, void (*destructor)( void*, ReferenceCount* ) )
+		{
+			m_deleter.context = context;
+			m_deleter.destructor = destructor;
+		}
+
 	private:
 		UInt32 m_refCount;
+		Deleter m_deleter;
 
 		void incRef()
 		{
@@ -213,7 +235,7 @@ namespace flu
 		{
 		}
 
-		~SafeReferenceCount()
+		virtual ~SafeReferenceCount()
 		{
 			assert( m_refCount.getValue() == 0 );
 		}
@@ -298,7 +320,14 @@ namespace flu
 					m_object->decRef();
 					if( m_object->refCount() == 0 )
 					{
-						delete m_object;
+						if( m_object->m_deleter.isDefault() )
+						{
+							delete m_object;
+						}
+						else
+						{
+							m_object->m_deleter.destructor( m_object->m_deleter.context, m_object );
+						}
 					}
 
 					m_object = nullptr;

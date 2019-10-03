@@ -532,10 +532,10 @@ namespace navi
 			static const Float EDGE_DRAW_SIZE = 2.5f;
 
 			TRenderRect lineRect;
-			lineRect.Texture = nullptr;
+			lineRect.Image = INVALID_HANDLE<rend::Texture2DHandle>();
 			lineRect.Flags = POLY_Unlit | POLY_AlphaGhost;
 
-			const Float lineWidth = ( EDGE_DRAW_SIZE * canvas->View.FOV.x * canvas->View.Zoom ) / canvas->View.Width;
+			const Float lineWidth = ( EDGE_DRAW_SIZE * canvas->View.fov.x * canvas->View.zoom ) / canvas->View.width;
 			const Float time = GPlat->Now();
 
 			for( const auto& it : m_edges )
@@ -546,7 +546,7 @@ namespace navi
 					getNode( it.iEndNode ).location
 				};
 
-				if( canvas->View.Bounds.isOverlap( math::Rect( verts, 2 ) ) )
+				if( canvas->View.bounds.isOverlap( math::Rect( verts, 2 ) ) )
 				{
 					const math::Vector delta = verts[1] - verts[0];
 					const Float deltaSize = delta.size();

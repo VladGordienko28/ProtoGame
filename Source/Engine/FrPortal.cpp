@@ -54,7 +54,7 @@ math::Vector FPortalComponent::TransferVector( math::Vector V )
 // Compute render info to render the scene through the
 // portal, return true, if computed successfully.
 //
-Bool FPortalComponent::ComputeViewInfo( const TViewInfo& Parent, TViewInfo& Result )
+Bool FPortalComponent::ComputeViewInfo( const gfx::ViewInfo& Parent, gfx::ViewInfo& Result )
 {
 	return false;
 }
@@ -125,36 +125,36 @@ math::Vector FMirrorComponent::TransferVector( math::Vector V )
 //
 // Compute TViewInfo for other side of the mirror.
 //
-Bool FMirrorComponent::ComputeViewInfo( const TViewInfo& Parent, TViewInfo& Result )
+Bool FMirrorComponent::ComputeViewInfo( const gfx::ViewInfo& Parent, gfx::ViewInfo& Result )
 {
-	Result.X				= Parent.X;
-	Result.Y				= Parent.Y;
-	Result.Width			= Parent.Width;
-	Result.Height			= Parent.Height;
-	Result.bMirage			= true;
-	Result.Coords.origin	= TransferPoint( Parent.Coords.origin );
-	Result.Coords.xAxis		= -Parent.Coords.xAxis;
-	Result.Coords.yAxis		= Parent.Coords.yAxis;
-	Result.UnCoords			= Result.Coords.transpose();
-	Result.FOV				= Parent.FOV;
-	Result.Zoom				= Parent.Zoom;
+	Result.x				= Parent.x;
+	Result.y				= Parent.y;
+	Result.width			= Parent.width;
+	Result.height			= Parent.height;
+	Result.isMirage			= true;
+	Result.coords.origin	= TransferPoint( Parent.coords.origin );
+	Result.coords.xAxis		= -Parent.coords.xAxis;
+	Result.coords.yAxis		= Parent.coords.yAxis;
+	Result.unCoords			= Result.coords.transpose();
+	Result.fov				= Parent.fov;
+	Result.zoom				= Parent.zoom;
 
 	// Mirror bounds.
-	if( Location.x > Parent.Coords.origin.x )
+	if( Location.x > Parent.coords.origin.x )
 	{
 		// Parent lie on the left half-plane.
-		Result.Bounds.min.x	= Parent.Bounds.min.x;
-		Result.Bounds.max.x	= Location.x + (Location.x-Parent.Bounds.min.x);
+		Result.bounds.min.x	= Parent.bounds.min.x;
+		Result.bounds.max.x	= Location.x + (Location.x-Parent.bounds.min.x);
 	}
 	else
 	{
 		// Parent lie on the right half-plane.
-		Result.Bounds.min.x	= Location.x - (Parent.Bounds.max.x - Location.x);
-		Result.Bounds.max.x	= Parent.Bounds.max.x;
+		Result.bounds.min.x	= Location.x - (Parent.bounds.max.x - Location.x);
+		Result.bounds.max.x	= Parent.bounds.max.x;
 	}
 
-	Result.Bounds.min.y	= Parent.Bounds.min.y;
-	Result.Bounds.max.y	= Parent.Bounds.max.y;
+	Result.bounds.min.y	= Parent.bounds.min.y;
+	Result.bounds.max.y	= Parent.bounds.max.y;
 
 	return true;
 }
@@ -166,7 +166,7 @@ Bool FMirrorComponent::ComputeViewInfo( const TViewInfo& Parent, TViewInfo& Resu
 void FMirrorComponent::Render( CCanvas* Canvas )
 {
 	// Never draw fake mirror.
-	if( Canvas->View.bMirage || !(Level->RndFlags & RND_Other) )
+	if( Canvas->View.isMirage || !(Level->RndFlags & RND_Other) )
 		return;
 
 	math::Color DrawColor = math::colors::DODGER_BLUE;
@@ -243,26 +243,26 @@ math::Vector FWarpComponent::TransferVector( math::Vector V )
 // Compute TViewInfo for the other side of the warp
 // portal.
 //
-Bool FWarpComponent::ComputeViewInfo( const TViewInfo& Parent, TViewInfo& Result )
+Bool FWarpComponent::ComputeViewInfo( const gfx::ViewInfo& Parent, gfx::ViewInfo& Result )
 {
 	if( !Other )
 		return false;
 
-	Result.X				= Parent.X;
-	Result.Y				= Parent.Y;
-	Result.Width			= Parent.Width;
-	Result.Height			= Parent.Height;
-	Result.bMirage			= true;
-	Result.Coords.origin	= TransferPoint( Parent.Coords.origin );
-	Result.Coords.xAxis		= TransferVector( Parent.Coords.xAxis );
-	Result.Coords.yAxis		= TransferVector( Parent.Coords.yAxis );
-	Result.UnCoords			= Result.Coords.transpose();
-	Result.FOV				= Parent.FOV;
-	Result.Zoom				= Parent.Zoom;
-	Result.Bounds			= math::Rect
+	Result.x				= Parent.x;
+	Result.y				= Parent.y;
+	Result.width			= Parent.width;
+	Result.height			= Parent.height;
+	Result.isMirage			= true;
+	Result.coords.origin	= TransferPoint( Parent.coords.origin );
+	Result.coords.xAxis		= TransferVector( Parent.coords.xAxis );
+	Result.coords.yAxis		= TransferVector( Parent.coords.yAxis );
+	Result.unCoords			= Result.coords.transpose();
+	Result.fov				= Parent.fov;
+	Result.zoom				= Parent.zoom;
+	Result.bounds			= math::Rect
 								( 
-									Result.Coords.origin, 
-									math::sqrt( sqr(Result.FOV.x)+sqr(Result.FOV.y)*Result.Zoom  )
+									Result.coords.origin, 
+									math::sqrt( sqr(Result.fov.x)+sqr(Result.fov.y)*Result.zoom  )
 								);
 
 	return true;
@@ -297,7 +297,7 @@ void FWarpComponent::SerializeThis( CSerializer& S )
 void FWarpComponent::Render( CCanvas* Canvas )
 {
 	// Don't draw fake.
-	if( Canvas->View.bMirage || !(Level->RndFlags & RND_Other) )
+	if( Canvas->View.isMirage || !(Level->RndFlags & RND_Other) )
 		return;
 
 	math::Coords C = ToWorld();

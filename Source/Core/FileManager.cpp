@@ -273,6 +273,14 @@ namespace fm
 		}
 	}
 
+	String getFileNameExt( const Char* fileName )
+	{
+		String name = getFileName( fileName );
+		String ext = getFileExt( fileName );
+
+		return ext ? name + L"." + ext : name;
+	}
+
 	Bool isAbsoluteFileName( const Char* fileName )
 	{ 
 		return cstr::findChar( fileName, ':' ) != nullptr;
@@ -336,7 +344,24 @@ namespace fm
 	Bool directoryExists( const Char* dirName )
 	{ 
 		UInt32 Type	= GetFileAttributes( dirName );
-		return Type & FILE_ATTRIBUTE_DIRECTORY;
+		return ( Type != INVALID_FILE_ATTRIBUTES ) && ( Type & FILE_ATTRIBUTE_DIRECTORY );
+	}
+
+	Bool createDirectory( const Char* dirPath )
+	{
+		BOOL result = CreateDirectory( dirPath, nullptr );
+
+		if( result )
+		{
+			return true;
+		}
+		else
+		{
+			error( TEXT( "Unable to create directory \"%s\" with error %d" ),
+				dirPath, GetLastError() );
+
+			return false;
+		}
 	}
 
 	Bool fileExists( const Char* fileName )
@@ -375,6 +400,45 @@ namespace fm
 		}
 
 		return std::move( result );
+	}
+
+	Bool traverseDirectory( const Char* directory, Array<String>& outFiles )
+	{
+		WIN32_FIND_DATA findData;
+
+		HANDLE hFind = FindFirstFile( *String::format( L"%s\\*", directory ), &findData );
+
+		if( hFind != INVALID_HANDLE_VALUE )
+		{
+			do
+			{
+				if( findData.cFileName[0] != '.' )
+				{
+					String fileName = String::format( L"%s\\%s", directory, findData.cFileName );
+
+					if( findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
+					{
+						if( !traverseDirectory( *fileName, outFiles ) )
+						{
+							return false;
+						}
+					}
+					else
+					{
+						outFiles.push( fileName );
+					}				
+				}
+
+			} while( FindNextFile( hFind, &findData ) );
+
+			FindClose( hFind );
+			return true;
+		}
+		else
+		{
+			outFiles.empty();
+			return false;
+		}
 	}
 
 	String getCurrentDirectory()

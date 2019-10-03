@@ -198,6 +198,11 @@
     <ClInclude Include="FrSkelet.h" />
     <ClInclude Include="Physics\PhysicsUtils.h" />
     <ClInclude Include="PostFX\FXTypes.h" />
+    <ClInclude Include="Rendering\Api.h" />
+    <ClInclude Include="Rendering\GridDrawer.h" />
+    <ClInclude Include="Rendering\GrowOnlyVB.h" />
+    <ClInclude Include="Rendering\Utils.h" />
+    <ClInclude Include="Rendering\ViewInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AI\Navigator.cpp">
@@ -315,6 +320,24 @@
     <ClCompile Include="FrSprite.cpp" />
     <ClCompile Include="FrTest.cpp" />
     <ClCompile Include="FrThings.cpp" />
+    <ClCompile Include="Rendering\Api.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Engine/Engine.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Rendering\GridDrawer.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Engine/Engine.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Rendering\ViewInfo.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Engine/Engine.h</PrecompiledHeaderFile>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Fluorine.natvis" />

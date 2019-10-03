@@ -8,15 +8,14 @@
 #include "Core/Core.h"
 #include "Math/Math.h"
 #include "Render/Render.h"
+#include "Resource/Resource.h"
 
 // FFX includes
 #include "FxCommon.h"
 #include "Declaration.h"
-#include "Variable.h"
-#include "Buffer.h"
 #include "FxLexer.h"
-#include "Technique.h"
 #include "Effect.h"
 #include "Preprocessor.h"
 #include "FxCompiler.h"
+#include "SharedConstants.h"
 #include "System.h"

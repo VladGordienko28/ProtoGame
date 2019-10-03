@@ -5,6 +5,9 @@
 
 #include "Engine.h"
 
+/////  tobe removed!!!!!!!!!!!!!!!!!!!!!!
+ffx::Effect::Ptr g_coloredEffect;
+
 /*-----------------------------------------------------------------------------
     CCanvas implementation.
 -----------------------------------------------------------------------------*/
@@ -182,7 +185,7 @@ void CCanvas::DrawText
 (	
 	const Char* Text,
 	Int32 Len,
-	FFont* Font, 
+	fnt::Font::Ptr Font, 
 	math::Color Color,
 	const math::Vector& Start, 
 	const math::Vector& Scale
@@ -190,17 +193,21 @@ void CCanvas::DrawText
 {
 	assert(Font);
 
-	if( Font->Bitmaps.size() > 1 || true ) // todo: remove this stuff !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	if(  true ) // todo: remove this stuff !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	{
 		// Slow method, with atlases switching.
 
 		// Setup tile info.
 		TRenderRect R;
 		R.Color			= Color;
-		R.Flags			= POLY_Unlit;
+		R.Flags			= POLY_Unlit | POLY_AlphaGhost;
 		R.Rotation		= 0;
 
 		math::Vector Walk = Start;
+
+		img::Image::Ptr image = Font->getImage();
+		Int32 uSize = image->getUSize();
+		Int32 vSize = image->getVSize();
 
 		// For each character in string.
 		for( Int32 i=0; i<Len; i++ )
@@ -208,23 +215,23 @@ void CCanvas::DrawText
 			// Handle whitespace glyph.
 			if( Text[i] == L' ' )
 			{
-				TGlyph& Glyph = Font->GetGlyph(L'a');
-				Walk.x += Glyph.W * Scale.x;
+				const fnt::Glyph& Glyph = Font->getGlyph(L'a');
+				Walk.x += Glyph.width * Scale.x * uSize;
 				continue;
 			}
 
 			// Get glyph info.
-			TGlyph& Glyph = Font->GetGlyph(Text[i]);
-			math::Vector CharSize = math::Vector( Glyph.W * Scale.x, Glyph.H * Scale.y );
+			const fnt::Glyph& Glyph = Font->getGlyph(Text[i]);
+			math::Vector CharSize = math::Vector( Glyph.width * Scale.x * uSize, Glyph.height * Scale.y * vSize );
 
 			// Character location.
-			R.Texture		= Font->Bitmaps[Glyph.iBitmap];
+			R.Image			= image->getHandle();
 			R.Bounds.min	= Walk;
 			R.Bounds.max	= Walk + CharSize;
 
 			// Glyph texture coords.
-			R.TexCoords.min = math::Vector( Glyph.X, Glyph.Y ) * (1.f/GLYPHS_ATLAS_SIZE);
-			R.TexCoords.max = math::Vector( Glyph.X+Glyph.W, Glyph.Y+Glyph.H ) * (1.f/GLYPHS_ATLAS_SIZE);
+			R.TexCoords.min = math::Vector( Glyph.x, Glyph.y ) ;
+			R.TexCoords.max = math::Vector( Glyph.x+Glyph.width, Glyph.y+Glyph.height );
 
 			// Draw tile.
 			DrawRect(R);
@@ -236,11 +243,11 @@ void CCanvas::DrawText
 	else
 	{
 		// Fast version with render list.
-
+#if 0
 		// Setup list.
 		TRenderList List( Len, Color );
-		List.Texture	= Font->Bitmaps.size() ? Font->Bitmaps[0] : nullptr;
-		List.Flags		= POLY_Unlit;
+		List.Image		= Font->Bitmaps.size() ? Font->Bitmaps[0]->m_image->getHandle() : INVALID_HANDLE<rend::Texture2DHandle>();
+		List.Flags		= POLY_Unlit | POLY_Ghost;
 		List.DrawColor	= Color;
 
 		math::Vector Walk	= Start;
@@ -286,6 +293,7 @@ void CCanvas::DrawText
 		// Don't render whitespace.
 		List.NumRects	= NumRnd;
 		DrawList( List );
+#endif
 	}
 }
 
@@ -298,7 +306,7 @@ void CCanvas::DrawText
 // Store old transformation and
 // make current given new one.
 //
-void CCanvas::PushTransform( const TViewInfo& Info )
+void CCanvas::PushTransform( const gfx::ViewInfo& Info )
 {
 	assert(StackTop < VIEW_STACK_SIZE);
 	ViewStack[StackTop++] = View;
@@ -317,84 +325,6 @@ void CCanvas::PopTransform()
 
 
 /*-----------------------------------------------------------------------------
-    Projection.
------------------------------------------------------------------------------*/
-
-//
-// View info constructor.
-//
-TViewInfo::TViewInfo()
-{}
-
-
-//
-// Screen or piece of it constructor.
-//
-TViewInfo::TViewInfo( Float InX, Float InY, Float InWidth, Float InHeight )
-	:	X( InX ), Y( InY ), Width( InWidth ), Height( InHeight ), 
-		bMirage( false ),
-		Coords( math::Vector( Width/2.f, Height/2.f ), math::Vector( 1.f, 0.f ), math::Vector( 0.f, 1.f ) ),
-		FOV( Width, -Height ),
-		Zoom( 1.f ),
-		UnCoords( Coords.transpose() ),
-		Bounds( math::Vector( 0.f, 0.f ), Width, Height )
-{}
-
-
-//
-// Level or part of level constructor.
-//
-TViewInfo::TViewInfo( math::Vector InLocation, math::Angle InRotation, math::Vector InFOV, Float InZoom, Bool InbMirage, Float InX, Float InY, Float InWidth, Float InHeight  )
-	:	X( InX ), Y( InY ), Width( InWidth ), Height( InHeight ), 
-		bMirage( InbMirage ),
-		Coords( InLocation, InRotation ),
-		FOV( InFOV ),
-		Zoom( InZoom ),
-		UnCoords( Coords.transpose() )
-{
-	if( InRotation )
-		Bounds	= math::Rect( Coords.origin, Zoom * math::sqrt(sqr(FOV.x)+sqr(FOV.y)));
-	else
-		Bounds	= math::Rect( Coords.origin, FOV.x * Zoom, FOV.y * Zoom );
-}
-
-
-//
-// Transform a point in the world's coords to the screen
-// coords system.
-//
-void TViewInfo::Project( const math::Vector V, Float& OutX, Float& OutY ) const
-{
-	math::Vector R, PixToFOV;
-
-	R			= math::transformPointBy( V, Coords );
-	PixToFOV.x	= Width		/ FOV.x;
-	PixToFOV.y	= Height	/ FOV.y;
-
-	OutX	= Width	 * 0.5f + R.x * PixToFOV.x/Zoom;
-	OutY	= Height * 0.5f - R.y * PixToFOV.y/Zoom;
-}
-
-
-//
-// Transform a point in the screen's coords to the world
-// coords system.
-//
-math::Vector TViewInfo::Deproject( Float InX, Float InY ) const
-{
-	math::Vector R, FOVToPix;
-
-	FOVToPix.x	= FOV.x / Width;
-	FOVToPix.y	= FOV.y / Height;
-
-	R.x	= ( InX - Width * 0.5f  ) * FOVToPix.x * Zoom;
-	R.y = ( Height * 0.5f - InY ) * FOVToPix.y * Zoom;
-
-	return math::transformPointBy( R, UnCoords );
-}
-
-
-/*-----------------------------------------------------------------------------
     TRenderList implementation.
 -----------------------------------------------------------------------------*/
 
@@ -405,7 +335,7 @@ math::Vector TViewInfo::Deproject( Float InX, Float InY ) const
 TRenderList::TRenderList( Int32 InNumRcts )
 {
 	Flags		= POLY_None;
-	Texture		= nullptr;
+	Image		= INVALID_HANDLE<rend::Texture2DHandle>();
 	NumRects	= InNumRcts;
 	Vertices	= (math::Vector*)CCanvas::GPool.Push(NumRects*4*sizeof(math::Rect));
 	TexCoords	= (math::Vector*)CCanvas::GPool.Push(NumRects*4*sizeof(math::Rect));
@@ -420,7 +350,7 @@ TRenderList::TRenderList( Int32 InNumRcts )
 TRenderList::TRenderList( Int32 InNumRcts, math::Color InColor )
 {
 	Flags		= POLY_None;
-	Texture		= nullptr;
+	Image		= INVALID_HANDLE<rend::Texture2DHandle>();
 	NumRects	= InNumRcts;
 	Vertices	= (math::Vector*)CCanvas::GPool.Push(NumRects*4*sizeof(math::Rect));
 	TexCoords	= (math::Vector*)CCanvas::GPool.Push(NumRects*4*sizeof(math::Rect));

@@ -69,6 +69,61 @@ namespace ffx
 		CodeEmitter() = delete;
 	};
 
+
+	Bool Compiler::compile( String relativePath, res::IDependencyProvider& dependencyProvider, 
+		res::CompilationOutput& output ) const
+	{
+		assert( relativePath );
+
+		rend::ShaderCompiler::UPtr apiCompiler = m_device->createCompiler();
+		assert( apiCompiler );
+
+		CodeEmitter emitter( output.compiledResource.data );
+
+		// emit header
+		emitter << String( FFX_VERSION );
+		emitter << apiCompiler->compilerMark();
+
+		// preprocess
+		PreprocessorInput preprocessorInput;
+		preprocessorInput.relativeFileName = relativePath;
+		preprocessorInput.includeProvider = &dependencyProvider;
+		preprocessorInput.emitLines = true;
+
+		PreprocessorOutput preprocessorOutput;
+
+		if( !preprocess( preprocessorInput, preprocessorOutput, &output.errorMsg ) )
+		{
+			error( L"Unable to preprocess effect \"%s\" with error: \n%s", *relativePath, *output.errorMsg );
+			return false;
+		}
+
+		// pixel shader compilation
+		rend::CompiledShader compiledPS = apiCompiler->compile( rend::EShaderType::Pixel, preprocessorOutput.source, Effect::PS_ENTRY, nullptr, &output.errorMsg );
+		if( !compiledPS.isValid() )
+		{
+			error( L"Unable to compile api pixel shader with error: \n%s", *output.errorMsg );
+			return false;
+		}
+
+		emitter << compiledPS;
+
+		// vertex shader compilation
+		rend::CompiledShader compiledVS = apiCompiler->compile( rend::EShaderType::Vertex, preprocessorOutput.source, Effect::VS_ENTRY, nullptr, &output.errorMsg );
+		if( !compiledVS.isValid() )
+		{
+			error( L"Unable to compile api vertex shader with error: \n%s", *output.errorMsg );
+			return false;
+		}
+
+		emitter << compiledVS;
+
+		//output.dependencies = preprocessorOutput.dependencies;///////////////////////////////////////////////////////////////////
+		return true;		
+	}
+
+
+#if 0
 	Compiler::Compiler( rend::Device* device )
 		:	m_device( device )
 	{
@@ -130,5 +185,7 @@ namespace ffx
 		output.dependencies = preprocessorOutput.dependencies;
 		return true;
 	}
+
+#endif
 }
 }

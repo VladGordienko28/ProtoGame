@@ -41,7 +41,7 @@ WSkeletonPage::WSkeletonPage( FSkeleton* InSkeleton, WContainer* InOwner, WWindo
 	Caption			= InSkeleton->GetName();
 	PageType		= PAGE_Skeleton;
 	Color			= PAGE_COLOR_SKELETON;
-	TabWidth		= Root->Font1->TextWidth( *Caption ) + 30;
+	TabWidth		= Root->Font1->textWidth( *Caption ) + 30;
 	Skeleton		= InSkeleton;
 
 	// Toolbar and buttons.
@@ -139,9 +139,9 @@ WSkeletonPage::WSkeletonPage( FSkeleton* InSkeleton, WContainer* InOwner, WWindo
 
 
 
-	SceneView.Zoom	= 1.f;
-	SceneView.Coords	= math::Coords(math::Vector(0, 0), 0);
-	SceneView.UnCoords	= SceneView.Coords.transpose();
+	SceneView.zoom	= 1.f;
+	SceneView.coords	= math::Coords(math::Vector(0, 0), 0);
+	SceneView.unCoords	= SceneView.coords.transpose();
 
 	AnimationTrack			= new WAnimationTrack( this, Root );
 	AnimationTrack->Align	= AL_Bottom;
@@ -515,7 +515,7 @@ static void DrawArrow( CCanvas* Canvas, const math::Vector& From, const math::Ve
 	Canvas->DrawLine( From, To, Color, false );
 
 	// Precompute arrowhead.
-	math::Vector ArrowHead = math::Vector( 0.13f, 0.05f )*Canvas->View.Zoom;
+	math::Vector ArrowHead = math::Vector( 0.13f, 0.05f )*Canvas->View.zoom;
 	math::Coords AHCoords = math::Coords
 	(
 		To,
@@ -599,7 +599,7 @@ TSkelPose& WSkeletonPage::GetCurrentPose()
 //
 Int32 WSkeletonPage::GetBoneAt( Int32 X, Int32 Y )
 {
-	math::Vector ScenePoint	= SceneView.Deproject( X, Y );
+	math::Vector ScenePoint	= SceneView.deproject( X, Y );
 	TSkelPose& Pose		= GetCurrentPose();
 
 	// Go through the bones.
@@ -910,7 +910,7 @@ void WSkeletonPage::OnMouseScroll( Int32 Delta )
 		// Zoom out.
 		while( Delta > 0 )
 		{
-			SceneView.Zoom	*= 1.05f;
+			SceneView.zoom	*= 1.05f;
 			Delta			-= 120;
 		}
 	}
@@ -919,14 +919,14 @@ void WSkeletonPage::OnMouseScroll( Int32 Delta )
 		// Zoom in.
 		while( Delta < 0 )
 		{
-			SceneView.Zoom	*= 0.95f;
+			SceneView.zoom	*= 0.95f;
 			Delta			+= 120;
 		}
 	}
 
 	// Snap & Clamp zoom!
-	SceneView.Zoom	= math::round(SceneView.Zoom*50.f)*0.02f;
-	SceneView.Zoom	= clamp( SceneView.Zoom, 0.2f, 5.f );
+	SceneView.zoom	= math::round(SceneView.zoom*50.f)*0.02f;
+	SceneView.zoom	= clamp( SceneView.zoom, 0.2f, 5.f );
 }
 
 
@@ -1065,10 +1065,10 @@ void WSkeletonPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 De
 {
 	// Transform widget delta to scene vector.
 	math::Vector Delta;
-	math::Vector FOV	= SceneView.FOV;
-	Delta.x		= +DeltaX * (FOV.x / Size.Width ) * SceneView.Zoom;
-	Delta.y		= -DeltaY * (FOV.y / Size.Height) * SceneView.Zoom;
-	Delta		= math::transformVectorBy( Delta, SceneView.UnCoords );
+	math::Vector FOV	= SceneView.fov;
+	Delta.x		= +DeltaX * (FOV.x / Size.Width ) * SceneView.zoom;
+	Delta.y		= -DeltaY * (FOV.y / Size.Height) * SceneView.zoom;
+	Delta		= math::transformVectorBy( Delta, SceneView.unCoords );
 
 	// Process proper drag.
 	switch( DragInfo.DragType )
@@ -1076,12 +1076,12 @@ void WSkeletonPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 De
 		case SKDR_Observer:
 		{
 			// Move scene observer.
-			SceneView.Coords.origin	-= Delta;
+			SceneView.coords.origin	-= Delta;
 
-			SceneView.Coords.origin.x	= clamp( SceneView.Coords.origin.x, -10.f, +10.f );		// PROPER SCALE@@@@@@@
-			SceneView.Coords.origin.y	= clamp( SceneView.Coords.origin.y, -10.f, +10.f );
+			SceneView.coords.origin.x	= clamp( SceneView.coords.origin.x, -10.f, +10.f );		// PROPER SCALE@@@@@@@
+			SceneView.coords.origin.y	= clamp( SceneView.coords.origin.y, -10.f, +10.f );
 
-			SceneView.UnCoords		= SceneView.Coords.transpose();
+			SceneView.unCoords		= SceneView.coords.transpose();
 			break;
 		}
 		case SKDR_Translate:
@@ -1131,7 +1131,7 @@ void WSkeletonPage::OnMouseDrag( EMouseButton Button, Int32 X, Int32 Y, Int32 De
 			TBonePose& Pose = Skeleton->RefPose.BonesPose[DragInfo.iNewBone];
 
 			// Update direction and scale.
-			math::Vector EndPoint = SceneView.Deproject( X, Y );
+			math::Vector EndPoint = SceneView.deproject( X, Y );
 			EndPoint.snap(TranslationSnap);
 			Info.Scale	= math::distance( Pose.Coords.origin, EndPoint );
 			if( Info.Type == SC_Bone )
@@ -1182,7 +1182,7 @@ void WSkeletonPage::OnMouseBeginDrag( EMouseButton Button, Int32 X, Int32 Y )
 		case SKT_AddMaster:
 		{
 			// Add a new bone.
-			math::Vector Pivot = SceneView.Deproject( X, Y );
+			math::Vector Pivot = SceneView.deproject( X, Y );
 			Pivot.snap(TranslationSnap);
 
 			Skeleton->Bones.push(TBoneInfo
@@ -1352,33 +1352,33 @@ void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 
 	// Not really good place to compute!!!!!!!!!!!
 
-	SceneView.FOV		= math::Vector( 20, Size.Height * 20.f / Size.Width );
+	SceneView.fov		= math::Vector( 20, Size.Height * 20.f / Size.Width );
 	// ignore zoom!
-	SceneView.bMirage	= false;
-	SceneView.Bounds	= math::Rect( SceneView.Coords.origin, 
-		SceneView.FOV.x * SceneView.Zoom, SceneView.FOV.y * SceneView.Zoom );
+	SceneView.isMirage	= false;
+	SceneView.bounds	= math::Rect( SceneView.coords.origin, 
+		SceneView.fov.x * SceneView.zoom, SceneView.fov.y * SceneView.zoom );
 
-	SceneView.X	= P.X;
-	SceneView.Y = P.Y;
-	SceneView.Width = Size.Width;
-	SceneView.Height = Size.Height;
+	SceneView.x	= P.X;
+	SceneView.y = P.Y;
+	SceneView.width = Size.Width;
+	SceneView.height = Size.Height;
 
 
 	Canvas->PushTransform(SceneView);
 	{
 		// Render background and grid.
 		TRenderRect Background;
-		Background.Texture		= nullptr;
+		Background.Image		= INVALID_HANDLE<rend::Texture2DHandle>();
 		Background.Bounds		= math::Rect( math::Vector(0.f, 0.f), SKEL_SCENE_SIZE );
 		Background.Color		= SKEL_SCENE_BG_COLOR;
 		Background.Flags		= POLY_FlatShade;
 		Background.Rotation		= 0;
 		Canvas->DrawRect(Background);
 
-		Int32 CMinX = math::trunc(max<Float>( Canvas->View.Bounds.min.x, -SKEL_SCENE_SIZE_HALF ))*2;
-		Int32 CMinY = math::trunc(max<Float>( Canvas->View.Bounds.min.y, -SKEL_SCENE_SIZE_HALF ))*2;
-		Int32 CMaxX = math::trunc(min<Float>( Canvas->View.Bounds.max.x, +SKEL_SCENE_SIZE_HALF ))*2;
-		Int32 CMaxY = math::trunc(min<Float>( Canvas->View.Bounds.max.y, +SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMinX = math::trunc(max<Float>( Canvas->View.bounds.min.x, -SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMinY = math::trunc(max<Float>( Canvas->View.bounds.min.y, -SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMaxX = math::trunc(min<Float>( Canvas->View.bounds.max.x, +SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMaxY = math::trunc(min<Float>( Canvas->View.bounds.max.y, +SKEL_SCENE_SIZE_HALF ))*2;
 
 		for( Int32 i=CMinX; i<=CMaxX; i++ )
 		{
@@ -1466,7 +1466,7 @@ void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 		{
 			Canvas->DrawLine
 			(
-				SceneView.Deproject( LLastPos.X, LLastPos.Y ),
+				SceneView.deproject( LLastPos.X, LLastPos.Y ),
 				GetBoneCenter(DragInfo.iFromBone),
 				math::colors::WHITE,
 				false
@@ -1495,7 +1495,7 @@ void WSkeletonPage::OnPaint( CGUIRenderBase* Render )
 	{
 		TPoint P = ClientToWindow( TPoint::Zero );
 
-		TSize HintSize = TSize( WWindow::Font1->TextWidth(*BoneHint), WWindow::Font1->Height );
+		TSize HintSize = TSize( WWindow::Font1->textWidth(*BoneHint), WWindow::Font1->maxHeight() );
 		TPoint DrawPos( BoneHintFrom.X+16, BoneHintFrom.Y+8 );
 
 		// Avoid out of window.
@@ -1645,7 +1645,7 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 	);
 	Render->DrawText
 	( 
-		TPoint( Base.X + 5, Base.Y+(FORM_HEADER_SIZE-Root->Font1->Height)/2 ), 
+		TPoint( Base.X + 5, Base.Y+(FORM_HEADER_SIZE-Root->Font1->maxHeight())/2 ), 
 		Caption, 
 		GUI_COLOR_TEXT, 
 		Root->Font1 
@@ -1694,7 +1694,7 @@ void WAnimationTrack::OnPaint( CGUIRenderBase* Render )
 			);
 
 			// Track line.
-			Int32 TrackX1 =  12 + Root->Font1->TextWidth(*TrackName);
+			Int32 TrackX1 =  12 + Root->Font1->textWidth(*TrackName);
 			Render->DrawRegion
 			(
 				TPoint( Base.X + TrackX1, TrackY+8 ),

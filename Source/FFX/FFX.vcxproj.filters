@@ -3,21 +3,14 @@
   <ItemGroup>
     <ClInclude Include="FFX.h" />
     <ClInclude Include="System.h" />
-    <ClInclude Include="Technique.h" />
     <ClInclude Include="FxLexer.h">
       <Filter>Compiler</Filter>
-    </ClInclude>
-    <ClInclude Include="Variable.h">
-      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Declaration.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="FxCompiler.h">
       <Filter>Compiler</Filter>
-    </ClInclude>
-    <ClInclude Include="Buffer.h">
-      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Effect.h">
       <Filter>Runtime</Filter>
@@ -28,6 +21,9 @@
     <ClInclude Include="FxCommon.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="SharedConstants.h">
+      <Filter>Runtime</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FFX.cpp" />
@@ -35,20 +31,17 @@
     <ClCompile Include="FxLexer.cpp">
       <Filter>Compiler</Filter>
     </ClCompile>
-    <ClCompile Include="Variable.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="FxCompiler.cpp">
       <Filter>Compiler</Filter>
-    </ClCompile>
-    <ClCompile Include="Buffer.cpp">
-      <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="Effect.cpp">
       <Filter>Runtime</Filter>
     </ClCompile>
     <ClCompile Include="Preprocessor.cpp">
       <Filter>Compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="SharedConstants.cpp">
+      <Filter>Runtime</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

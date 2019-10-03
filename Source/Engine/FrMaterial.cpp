@@ -5,6 +5,8 @@
 
 #include "Engine.h"
 
+#if MATERIAL_ENABLED
+
 /*-----------------------------------------------------------------------------
 	FMaterial implementation.
 -----------------------------------------------------------------------------*/
@@ -22,7 +24,7 @@ FMaterial::FMaterial()
 		MainLayer(nullptr)
 {
 	// Set default size.
-	UBits = VBits = IntLog2(MINIMAL_MATERIAL_SIZE);
+	UBits = VBits = intLog2(MINIMAL_MATERIAL_SIZE);
 	USize = VSize = 1 << UBits;
 }
 
@@ -63,7 +65,7 @@ void FMaterial::EditChange()
 	}
 	else
 	{
-		UBits = VBits = IntLog2(MINIMAL_MATERIAL_SIZE);
+		UBits = VBits = intLog2(MINIMAL_MATERIAL_SIZE);
 	}
 
 	USize = 1 << UBits;
@@ -87,7 +89,7 @@ void FMaterial::PostLoad()
 	}
 	else
 	{
-		UBits = VBits = IntLog2(MINIMAL_MATERIAL_SIZE);
+		UBits = VBits = intLog2(MINIMAL_MATERIAL_SIZE);
 	}
 
 	USize = 1 << UBits;
@@ -153,9 +155,9 @@ FDiffuseLayer::~FDiffuseLayer()
 //
 // Apply layer transforms.
 //
-void FDiffuseLayer::ApplyTransform( const TViewInfo& View, const math::Vector* InCoords, math::Vector* OutCoords, Int32 NumVerts )
+void FDiffuseLayer::ApplyTransform( const gfx::ViewInfo& View, const math::Vector* InCoords, math::Vector* OutCoords, Int32 NumVerts )
 {
-	Float Time = GPlat->TimeStamp();
+	Float Time = time::cyclesToSec( time::cycles64() );
 
 	if( bIgnoreMainBias )
 	{
@@ -370,6 +372,8 @@ REGISTER_CLASS_CPP( FDiffuseLayer, FMaterialLayer, CLASS_None )
 	ADD_PROPERTY(Oscillator, PROP_Editable);
 	ADD_PROPERTY(Parallax, PROP_Editable);
 }
+
+#endif
 
 /*-----------------------------------------------------------------------------
 	The End.

@@ -43,6 +43,7 @@ void CEditor::Tick( Float Delta )
 			// Render page.
 			if( Active )
 			{
+				gfx::ScopedRenderingZone srz( TEXT( "Editor Page" ) );
 				profile_zone( EProfilerGroup::General, RenderPage );
 				Active->RenderPageContent( Canvas );
 			}
@@ -50,6 +51,7 @@ void CEditor::Tick( Float Delta )
 			// Render editor GUI.
 			{
 				profile_zone( EProfilerGroup::General, RenderGUI );
+				gfx::ScopedRenderingZone srz( TEXT( "Editor GUI" ) );
 
 				GUIRender->BeginPaint( Canvas );
 				{
@@ -61,10 +63,22 @@ void CEditor::Tick( Float Delta )
 			// update profiler
 			{
 				profile_zone( EProfilerGroup::General, RenderChart );
-				m_engineChart.render( Canvas, WWindow::Font1 );
+				m_engineChart->render( Canvas );
 			}
 		}
 		GRender->Unlock();
+
+		// Fooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+		{
+			static Float lastUpdateTime = 0.f;
+			lastUpdateTime += Delta;
+
+			if( lastUpdateTime > 2.f )
+			{
+				res::ResourceManager::update();
+				lastUpdateTime = 0.f;
+			}
+		}
 	}
 }
 

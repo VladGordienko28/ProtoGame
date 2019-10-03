@@ -61,4 +61,17 @@ namespace flu
 		a = b;
 		b = c;
 	}
+
+	template<class T> inline UInt32 intLog2( T a )
+	{
+		for( UInt32 i = sizeof(T) * 8 - 1; i >= 0; --i )
+		{
+			if( a & ( 1 << i ) )
+			{
+				return i;
+			}
+		}
+
+		return 0;
+	}
 }

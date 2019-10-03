@@ -3,6 +3,10 @@
 	Created by Vlad Gordienko, Feb. 2018.
 =============================================================================*/
 
+#define MATERIAL_ENABLED 0
+
+#if MATERIAL_ENABLED
+
 /*-----------------------------------------------------------------------------
 	FMaterial.
 -----------------------------------------------------------------------------*/
@@ -111,7 +115,7 @@ public:
 	// FDiffuseLayer interface.
 	FDiffuseLayer();
 	~FDiffuseLayer();
-	void ApplyTransform( const TViewInfo& View, const math::Vector* InCoords, math::Vector* OutCoords, Int32 NumVerts );
+	void ApplyTransform( const gfx::ViewInfo& View, const math::Vector* InCoords, math::Vector* OutCoords, Int32 NumVerts );
 
 	// FObject interface.
 	void SerializeThis( CSerializer& S );
@@ -119,6 +123,7 @@ public:
 	void PostLoad();
 };
 
+#endif
 
 /*-----------------------------------------------------------------------------
 	The End.

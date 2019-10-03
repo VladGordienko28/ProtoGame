@@ -89,7 +89,7 @@ void WResourceBrowser::OnPaint( CGUIRenderBase* Render )
 	);
 	Render->DrawText
 	( 
-		TPoint( Base.X + 5, Base.Y+(FORM_HEADER_SIZE-Root->Font1->Height)/2 ), 
+		TPoint( Base.X + 5, Base.Y+(FORM_HEADER_SIZE-Root->Font1->maxHeight())/2 ), 
 		Caption, 
 		GUI_COLOR_TEXT, 
 		Root->Font1 
@@ -996,16 +996,16 @@ void WResourcePane::Refresh()
 				//
 				// Draw texture as bitmap or material, of course.
 				//
-				Icon.Picture	= As<FTexture>(Res);
-				Icon.TypeName	= Res->IsA(FMaterial::MetaClass) ? L"[Material]" : 
-									(Icon.Picture->USize==256 && Icon.Picture->VSize==1) ? L"[Palette]" : L"[Bitmap]";
+				Icon.Picture	= As<FBitmap>(Res)->m_image;
+				Icon.TypeName	=/* Res->IsA(FMaterial::MetaClass) ? L"[Material]" : */
+									(Icon.Picture->getUSize()==256 && Icon.Picture->getVSize()==1) ? L"[Palette]" : L"[Bitmap]";
 				Icon.PicOffset	= TPoint( 0, 0 );
-				Icon.PicSize	= TSize( Icon.Picture->USize, Icon.Picture->VSize );
+				Icon.PicSize	= TSize( Icon.Picture->getUSize(), Icon.Picture->getVSize() );
 
 				// Compute new scale, but keep aspect ratio.
-				Int32 Scale = max( 1, max( Icon.Picture->USize, Icon.Picture->VSize )/RES_ICON_SIZE );
-				Icon.Scale.Width	= max( 1, Icon.Picture->USize/Scale );
-				Icon.Scale.Height	= max( 1, Icon.Picture->VSize/Scale );
+				Int32 Scale = max<Int32>( 1, max( Icon.Picture->getUSize(), Icon.Picture->getVSize() )/RES_ICON_SIZE );
+				Icon.Scale.Width	= max<Int32>( 1, Icon.Picture->getUSize()/Scale );
+				Icon.Scale.Height	= max<Int32>( 1, Icon.Picture->getVSize()/Scale );
 			}
 			else if( Res->IsA(FAnimation::MetaClass) )
 			{
@@ -1018,12 +1018,12 @@ void WResourcePane::Refresh()
 				{
 					// Valid animation frame.
 					math::Rect Frame = Anim->GetTexCoords(Anim->Sequences[0].Start);
-					Icon.Picture			= Anim->Sheet;
+					Icon.Picture			= As<FBitmap>(Anim->Sheet)->m_image;
 
-					Icon.PicOffset.X	= Int32( (Float)Anim->Sheet->USize*Frame.min.x );
-					Icon.PicOffset.Y	= Int32( (Float)Anim->Sheet->VSize*Frame.max.y );
-					Icon.PicSize.Width	= Int32( (Float)Anim->Sheet->USize*(Frame.max.x-Frame.min.x) );
-					Icon.PicSize.Height	= Int32( (Float)Anim->Sheet->VSize*(Frame.min.y-Frame.max.y) );
+					Icon.PicOffset.X	= Int32( (Float)Anim->Sheet->getUSize()*Frame.min.x );
+					Icon.PicOffset.Y	= Int32( (Float)Anim->Sheet->getVSize()*Frame.max.y );
+					Icon.PicSize.Width	= Int32( (Float)Anim->Sheet->getUSize()*(Frame.max.x-Frame.min.x) );
+					Icon.PicSize.Height	= Int32( (Float)Anim->Sheet->getVSize()*(Frame.min.y-Frame.max.y) );
 
 					Float Scale = max( 1, max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
 					Icon.Scale.Width	= max<Int32>( 1, Icon.PicSize.Width/Scale );
@@ -1034,7 +1034,7 @@ void WResourcePane::Refresh()
 					// Bad animation.
 					Icon.Picture		= FBitmap::NullBitmap();
 					Icon.PicOffset		= TPoint( 0, 0 );
-					Icon.PicSize		= TSize( Icon.Picture->USize, Icon.Picture->VSize );
+					Icon.PicSize		= TSize( Icon.Picture->getUSize(), Icon.Picture->getVSize() );
 					Icon.Scale			= TSize( 32, 32 );
 				}
 			}
@@ -1061,12 +1061,12 @@ void WResourcePane::Refresh()
 						if( Anim && Anim->Sheet && Anim->Frames.size() && Anim->Sequences.size() )
 						{
 							math::Rect Frame = Anim->GetTexCoords(Anim->Sequences[0].Start);
-							Icon.Picture			= Anim->Sheet;
+							Icon.Picture			= As<FBitmap>(Anim->Sheet)->m_image;
 
-							Icon.PicOffset.X	= Int32( (Float)Anim->Sheet->USize*Frame.min.x );
-							Icon.PicOffset.Y	= Int32( (Float)Anim->Sheet->VSize*Frame.max.y );
-							Icon.PicSize.Width	= Int32( (Float)Anim->Sheet->USize*(Frame.max.x-Frame.min.x) );
-							Icon.PicSize.Height	= Int32( (Float)Anim->Sheet->VSize*(Frame.min.y-Frame.max.y) );
+							Icon.PicOffset.X	= Int32( (Float)Anim->Sheet->getUSize()*Frame.min.x );
+							Icon.PicOffset.Y	= Int32( (Float)Anim->Sheet->getVSize()*Frame.max.y );
+							Icon.PicSize.Width	= Int32( (Float)Anim->Sheet->getUSize()*(Frame.max.x-Frame.min.x) );
+							Icon.PicSize.Height	= Int32( (Float)Anim->Sheet->getVSize()*(Frame.min.y-Frame.max.y) );
 
 							Float Scale = max( 1, max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
 							Icon.Scale.Width	= max<Int32>( 1, Icon.PicSize.Width/Scale );
@@ -1083,7 +1083,7 @@ void WResourcePane::Refresh()
 						if( Sprite->Texture )
 						{
 							math::Rect	Frame		= Sprite->TexCoords;
-							Icon.Picture			= Sprite->Texture;
+							Icon.Picture			= As<FBitmap>(Sprite->Texture)->m_image;
 
 							Icon.PicOffset.X	= Int32( Frame.min.x );
 							Icon.PicOffset.Y	= Int32( Frame.min.y );
@@ -1105,12 +1105,12 @@ void WResourcePane::Refresh()
 						if( Sprite->Texture )
 						{
 							math::Rect	Frame		= Sprite->TexCoords;
-							Icon.Picture			= Sprite->Texture;
+							Icon.Picture			= As<FBitmap>(Sprite->Texture)->m_image;
 
-							Icon.PicOffset.X	= Int32( (Float)Icon.Picture->USize*Frame.min.x );
-							Icon.PicOffset.Y	= Int32( (Float)Icon.Picture->VSize*Frame.max.y );
-							Icon.PicSize.Width	= Int32( (Float)Icon.Picture->USize*(Frame.max.x-Frame.min.x) );
-							Icon.PicSize.Height	= Int32( (Float)Icon.Picture->VSize*(Frame.min.y-Frame.max.y) );
+							Icon.PicOffset.X	= Int32( (Float)Icon.Picture->getUSize()*Frame.min.x );
+							Icon.PicOffset.Y	= Int32( (Float)Icon.Picture->getVSize()*Frame.max.y );
+							Icon.PicSize.Width	= Int32( (Float)Icon.Picture->getUSize()*(Frame.max.x-Frame.min.x) );
+							Icon.PicSize.Height	= Int32( (Float)Icon.Picture->getVSize()*(Frame.min.y-Frame.max.y) );
 
 							Float Scale = max( 1, max( Icon.PicSize.Width, Icon.PicSize.Height )/RES_ICON_SIZE );
 							Icon.Scale.Width	= max<Int32>( 1, Icon.PicSize.Width/Scale );
@@ -1127,7 +1127,7 @@ void WResourcePane::Refresh()
 					NoSprite:;
 						Icon.Picture	= FBitmap::NullBitmap();
 						Icon.PicOffset	= TPoint( 0, 0 );
-						Icon.PicSize	= TSize( Icon.Picture->USize, Icon.Picture->VSize );
+						Icon.PicSize	= TSize( Icon.Picture->getUSize(), Icon.Picture->getVSize() );
 						Icon.Scale		= TSize( 32, 32 );
 						break;
 					}
@@ -1173,9 +1173,9 @@ void WResourcePane::Refresh()
 				//
 				FFont* Font		= As<FFont>(Res);
 				Icon.TypeName	= L"[Font]";
-				Icon.Picture	= Font->Bitmaps[0];
+				Icon.Picture	= Font->m_font->getImage();
 				Icon.PicOffset	= TPoint( 0, 0 );
-				Icon.PicSize	= TSize( GLYPHS_ATLAS_SIZE, GLYPHS_ATLAS_SIZE );
+				Icon.PicSize	= TSize( Font->m_font->getImage()->getUSize(), Font->m_font->getImage()->getVSize() );
 				Icon.Scale		= TSize( RES_ICON_SIZE, RES_ICON_SIZE );
 			}
 
@@ -1422,13 +1422,13 @@ void WResourcePane::OnPaint( CGUIRenderBase* Render )
 
 		// Draw picture.
 		if( Icon.Picture )
-		{
+		{/*
 			// Temporally switch style for root icons.
 			if( Icon.Picture == Root->Icons )
-				Root->Icons->BlendMode	= BLEND_Translucent;
+				Root->Icons->BlendMode	= BLEND_Translucent;*/
 
 			// Draw it.
-			Render->DrawPicture
+			Render->DrawImage
 			( 
 				Base + Icon.Position + TPoint( (RES_ICON_SIZE-Icon.Scale.Width)/2, (RES_ICON_SIZE-Icon.Scale.Height)/2 ),
 				Icon.Scale, 
@@ -1436,14 +1436,14 @@ void WResourcePane::OnPaint( CGUIRenderBase* Render )
 				Icon.PicSize, 
 				Icon.Picture
 			);
-
+			/*
 			// Restore root icons default style.
 			if( Icon.Picture == Root->Icons )
-				Root->Icons->BlendMode	= BLEND_Masked;
+				Root->Icons->BlendMode	= BLEND_Masked;*/
 		}
 
 		// Draw overlay label.
-		Int32 Width = Root->Font1->TextWidth( Icon.TypeName );
+		Int32 Width = Root->Font1->textWidth( Icon.TypeName );
 		Render->DrawText
 		( 
 			Base + Icon.Position + TPoint( RES_ICON_SIZE/2-Width/2, RES_ICON_SIZE - 17 ),
@@ -1628,9 +1628,11 @@ public:
 		ClassCombo->SetSize( 160, 18 );
 		for( Int32 i=0; i<CClassDatabase::GClasses.size(); i++ )
 		{
+#if DEMO_EFFECTS_ENABLED
 			CClass*	Class	= CClassDatabase::GClasses[i];
 			if( Class->IsA(FDemoBitmap::MetaClass) && !(Class->Flags & CLASS_Abstract) )
 				ClassCombo->AddItem( Class->GetAltName(), Class );
+#endif
 		}
 		ClassCombo->AlphabetSort();
 		ClassCombo->ItemIndex	= 0;
@@ -1721,7 +1723,7 @@ public:
 			);	
 			return;
 		}
-
+/*
 		CClass* DemoClass	= (CClass*)ClassCombo->Items[ClassCombo->ItemIndex].Data;
 		assert(DemoClass);
 		UInt32	USize		= 1 << (WidthCombo->ItemIndex + 5);
@@ -1735,7 +1737,7 @@ public:
 
 		Hide();
 		Browser->Refresh();
-		GEditor->OpenPageWith( Bitmap );
+		GEditor->OpenPageWith( Bitmap );*/
 	}
 
 private:
@@ -2469,12 +2471,14 @@ public:
 			return;
 		}
 
+#if MATERIAL_ENABLED
 		FMaterial* Material = NewObject<FMaterial>(NameEdit->Text);
 		Material->Group = GroupEdit->Text;
 
 		Hide();
 		Browser->Refresh();
 		GEditor->OpenPageWith(Material);
+#endif
 	}
 
 private:
@@ -2793,14 +2797,16 @@ void WAssetsPage::ButtonRemoveClick( WWidget* Sender )
 		if( S == IDYES )
 		{
 			// If its a font, also kill it bitmaps.
+			/*
 			FFont* Font = As<FFont>(Res);
 			if( Font )
 			{
 				for( Int32 i=0; i<Font->Bitmaps.size(); i++ )
 					if( Font->Bitmaps[i] )
 						DestroyObject( Font->Bitmaps[i], true );
-			}
+			}*/
 
+#if MATERIAL_ENABLED
 			// If its a material, also kill it layers.
 			FMaterial* Material = As<FMaterial>(Res);
 			if( Material )
@@ -2808,6 +2814,7 @@ void WAssetsPage::ButtonRemoveClick( WWidget* Sender )
 				for( Int32 i=0; i<Material->Layers.size(); i++ )
 					DestroyObject( Material->Layers[i], true );
 			}
+#endif
 
 			// Destroy resource.
 			DestroyObject( Res, true );
@@ -3197,7 +3204,7 @@ void WResourceList::Refresh()
 			}
 
 			// Add to list box.
-			AddPictureItem( Res->GetName(), WWindow::Icons, IconPos, TSize(16, 16), Res );
+			AddPictureItem( Res->GetName(), WWindow::Icons->getHandle(), IconPos, TSize(16, 16), Res );
 		}
 
 	// Alphabet sorting.

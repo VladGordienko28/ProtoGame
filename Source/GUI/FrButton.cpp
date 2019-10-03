@@ -35,14 +35,14 @@ void WPictureButton::OnPaint( CGUIRenderBase* Render )
 
 	// Draw picture.
 	if( Picture )
-		Render->DrawPicture
+		Render->DrawImage
 				( 
 					TPoint( Base.X+1+(Size.Width-Scale.Width)/2, Base.Y+1+(Size.Height-Scale.Height)/2 ),
 					TSize( Scale.Width, Scale.Height ), 
 					bEnabled ? 
 						Offset : TPoint( Offset.X, Offset.Y+16 ), 
 					Scale, 
-					Picture 
+					Picture
 				);
 }
 
@@ -109,7 +109,7 @@ void WCheckBox::OnPaint( CGUIRenderBase* Render )
 	WWidget::OnPaint( Render );
 
 	TPoint Base = ClientToWindow(TPoint(0, 0));
-	TSize  TextSize = TSize( Root->Font1->TextWidth(*Caption), Root->Font1->Height );
+	TSize  TextSize = TSize( Root->Font1->textWidth(*Caption), Root->Font1->maxHeight() );
 
 	Render->DrawRegion
 			( 
@@ -121,13 +121,13 @@ void WCheckBox::OnPaint( CGUIRenderBase* Render )
 			);
 
 	if( bChecked )
-		Render->DrawPicture
+		Render->DrawImage
 				( 
 					TPoint( Base.X+1, Base.Y+1 ), 
 					TSize( CHECKBOX_SIDE-2, CHECKBOX_SIDE-2 ), 
 					TPoint(4, 0), 
 					TSize(11, 11),
-					Root->Icons 
+					Root->Icons
 				);
 
 
@@ -241,11 +241,11 @@ void WRadioButton::OnPaint( CGUIRenderBase* Render )
 	WWidget::OnPaint( Render );
 
 	TPoint Base	= ClientToWindow(TPoint::Zero);
-	TSize  TextSize = TSize( Root->Font1->TextWidth(*Caption), Root->Font1->Height );
+	TSize  TextSize = TSize( Root->Font1->textWidth(*Caption), Root->Font1->maxHeight() );
 
 	Int32 iState = bChecked ? 1 : bHold ? 2 : 0;
 
-	Render->DrawPicture
+	Render->DrawImage
 	(
 		Base,
 		TSize(RADIOBUTTON_SIDE, RADIOBUTTON_SIDE),
@@ -388,7 +388,7 @@ void WButton::OnPaint( CGUIRenderBase* Render )
 	WWidget::OnPaint( Render );
 
 	TPoint Base = ClientToWindow(TPoint(0, 0));
-	TSize  TextSize = TSize( Root->Font1->TextWidth(*Caption), Root->Font1->Height );
+	TSize  TextSize = TSize( Root->Font1->textWidth(*Caption), Root->Font1->maxHeight() );
 
 	Render->DrawRegion
 			( 

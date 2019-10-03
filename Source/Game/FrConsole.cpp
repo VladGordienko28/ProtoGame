@@ -106,7 +106,7 @@ void CConsole::Render( CCanvas* Canvas )
 	// Set window coords.
 	Canvas->PushTransform
 	(
-		TViewInfo
+		gfx::ViewInfo
 		(
 			0.f, 0.f,
 			Canvas->ScreenWidth, Canvas->ScreenHeight

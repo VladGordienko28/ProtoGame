@@ -1,9 +1,3 @@
 BEGIN_RESOURCE FBitmap BFlame
-    Filter = 1
-    BlendMode = 6
-    Saturation = 0.9500
-    AnimSpeed = 30.0000
-    FileName = "BFlame.bmp"
-    UBits = 6
-    VBits = 6
+    image = "Particles.Bitmaps.Flame"
 END_RESOURCE

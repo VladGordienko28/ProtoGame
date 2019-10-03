@@ -55,6 +55,19 @@ private:
 	// Notifications.
 	void ButtonOkClick( WWidget* Sender );
 	void ButtonCancelClick( WWidget* Sender );
+
+	struct Bitmap
+	{
+		Array<math::Color> data;
+		rend::Texture2DHandle handle;
+	};
+
+	Bitmap SLBitmap;
+	Bitmap HBitmap;
+	Bitmap ABitmap;
+
+	void InitHSLBitmaps();
+	void DeinitHLSBitmaps();
 };
 
 

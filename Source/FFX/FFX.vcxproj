@@ -146,7 +146,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Buffer.h" />
     <ClInclude Include="Declaration.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="FFX.h" />
@@ -154,12 +153,10 @@
     <ClInclude Include="FxCompiler.h" />
     <ClInclude Include="FxLexer.h" />
     <ClInclude Include="Preprocessor.h" />
+    <ClInclude Include="SharedConstants.h" />
     <ClInclude Include="System.h" />
-    <ClInclude Include="Technique.h" />
-    <ClInclude Include="Variable.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="FFX.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -170,8 +167,8 @@
     <ClCompile Include="FxCompiler.cpp" />
     <ClCompile Include="FxLexer.cpp" />
     <ClCompile Include="Preprocessor.cpp" />
+    <ClCompile Include="SharedConstants.cpp" />
     <ClCompile Include="System.cpp" />
-    <ClCompile Include="Variable.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

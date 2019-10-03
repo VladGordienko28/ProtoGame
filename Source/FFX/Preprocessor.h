@@ -24,7 +24,7 @@ namespace ffx
 	public:
 		String relativeFileName;
 		Map<String, String> defines;
-		IIncludeProvider* includeProvider = nullptr;
+		res::IDependencyProvider* includeProvider = nullptr;
 		Bool emitLines = true;
 	};
 

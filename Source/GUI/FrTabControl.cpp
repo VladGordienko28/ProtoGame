@@ -118,8 +118,8 @@ void WTabControl::OnPaint( CGUIRenderBase* Render )
 	// Precompute.
 	TPoint Base		= ClientToWindow(TPoint::Zero);
 	Int32	TextY	= HeaderSide == ETH_Top ? 
-						Base.Y + (19-Root->Font1->Height) / 2 : 
-						Base.Y+Size.Height - Root->Font1->Height - (19-Root->Font1->Height) / 2;
+						Base.Y + (19-Root->Font1->maxHeight()) / 2 : 
+						Base.Y+Size.Height - Root->Font1->maxHeight() - (19-Root->Font1->maxHeight()) / 2;
 	Int32 XWalk	= Base.X;
 
 	// Draw a master bar.
@@ -186,14 +186,14 @@ void WTabControl::OnPaint( CGUIRenderBase* Render )
 					);
 
 				// Draw cross.
-				Render->DrawPicture
+				Render->DrawImage
 				( 
 					TPoint( XWalk+Page->TabWidth - 20, HeaderSide == ETH_Top ? 
 						Base.Y + 4 : Base.Y+Size.Height-15 ), 
 					TSize( 11, 11 ), 
 					TPoint( 0, 11 ), 
 					TSize( 11, 11 ), 
-					Root->Icons 
+					Root->Icons
 				);
 			}
 		}
@@ -231,7 +231,7 @@ void WTabControl::OnPaint( CGUIRenderBase* Render )
 					BPAT_Solid
 				);
 
-		Render->DrawPicture
+		Render->DrawImage
 		(
 			TPoint( Base.X+Size.Width-10, Start.Y+6 ),
 			TSize( 7, 4 ), 

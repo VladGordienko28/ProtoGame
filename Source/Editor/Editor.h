@@ -16,10 +16,6 @@
 #include <shellapi.h>
 
 
-
-// Third-party.
-#include "Png\lodepng.h"
-
 #undef DrawText
 #undef LoadBitmap
 #undef FindText
@@ -34,12 +30,14 @@
 #include "OpenAL/OpenALAud.h"
 #include "Compiler/Compiler.h"
 #include "Network/Network.h"
-
+#include "Resource/Resource.h"
+#include "Image/Image.h"
 
 // experimental:
 #include "DirectX11/DirectX11.h"
 #include "FFX/FFX.h"
 #include "Experimental/DxAdapter.h"
+
 
 // Partial classes tree.
 class CEditor;

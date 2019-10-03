@@ -54,6 +54,7 @@
 #include "HandleArray.h"
 #include "Namespace.h"
 #include "Text.h"
+#include "Time.h"
 #include "FileManager.h"
 #include "TextWriter.h"
 #include "Buffer.h"

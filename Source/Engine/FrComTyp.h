@@ -269,7 +269,7 @@ public:
 	~FPortalComponent();
 	virtual math::Vector TransferPoint( math::Vector P );
 	virtual math::Vector TransferVector( math::Vector V );
-	virtual Bool ComputeViewInfo( const TViewInfo& Parent, TViewInfo& Result );
+	virtual Bool ComputeViewInfo( const gfx::ViewInfo& Parent, gfx::ViewInfo& Result );
 
 	// FComponent interface.
 	void InitForEntity( FEntity* InEntity );
@@ -295,7 +295,7 @@ public:
 	FMirrorComponent();
 	math::Vector TransferPoint( math::Vector P );
 	math::Vector TransferVector( math::Vector V );
-	Bool ComputeViewInfo( const TViewInfo& Parent, TViewInfo& Result );
+	Bool ComputeViewInfo( const gfx::ViewInfo& Parent, gfx::ViewInfo& Result );
 
 	// CRenderAddon interface.
 	void Render( CCanvas* Canvas );
@@ -327,7 +327,7 @@ public:
 	// FPortalComponent interface.
 	math::Vector TransferPoint( math::Vector P );
 	math::Vector TransferVector( math::Vector V );
-	Bool ComputeViewInfo( const TViewInfo& Parent, TViewInfo& Result );
+	Bool ComputeViewInfo( const gfx::ViewInfo& Parent, gfx::ViewInfo& Result );
 
 	// FObject interface.
 	void EditChange();
@@ -1160,14 +1160,14 @@ public:
 
 private:
 	// All in-game variables.
-	CCanvas*		Canvas;
-	Float			Width;
-	Float			Height;
-	math::Color		Color;
-	FFont*			Font;
-	FTexture*		Texture;
-	Float			Effect[10];
-	TViewInfo		ViewInfo;
+	CCanvas*			Canvas;
+	Float				Width;
+	Float				Height;
+	math::Color			Color;
+	FFont*				Font;
+	FTexture*			Texture;
+	Float				Effect[10];
+	gfx::ViewInfo		ViewInfo;
 
 	// Natives.
 	void nativePoint( CFrame& Frame );

@@ -1,10 +1,3 @@
 BEGIN_RESOURCE FBitmap BTree3
-    Format = 1
-    BlendMode = 1
-    Saturation = 1.0000
-    AnimSpeed = 30.0000
-    Group = "<unused>"
-    FileName = "BTree3.png"
-    UBits = 8
-    VBits = 8
+    image = "HeroesAndMagic.Bitmaps.Tree3"
 END_RESOURCE

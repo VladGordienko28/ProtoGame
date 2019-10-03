@@ -289,7 +289,7 @@ namespace flu
 			return m_data != nullptr;
 		}
 
-		Bool toInteger( Int32& value, Int32 _default = 0 ) const
+		template<typename INT_TYPE> Bool toInteger( INT_TYPE& value, INT_TYPE _default = 0 ) const
 		{
 			if( !len() )
 			{
@@ -312,13 +312,13 @@ namespace flu
 				isNegative = false;
 			}
 
-			Int32 result = 0;
+			INT_TYPE result = 0;
 			for( SizeT i = charId; i < len(); ++i )
 			{
 				if( cstr::isDigit( m_data->data[i] ) )
 				{
 					result *= 10;
-					result += static_cast<Int32>( m_data->data[i] - '0' );
+					result += static_cast< INT_TYPE >( m_data->data[i] - '0' );
 				}
 				else
 				{

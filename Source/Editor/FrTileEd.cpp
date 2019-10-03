@@ -146,13 +146,13 @@ void WTileEditor::WTilesGrid::OnPaint( CGUIRenderBase* Render )
 		Float X = 0.f, Y = 0.f;
 
 		// Tileset.
-		Render->DrawPicture
+		Render->DrawImage
 					( 
 						Base, 
 						Size, 
 						TPoint( 0, 0 ), 
-						TSize( Model->Texture->USize, Editor->Model->Texture->VSize ), 
-						Model->Texture 
+						TSize( Model->Texture->getUSize(), Editor->Model->Texture->getVSize() ), 
+						As<FBitmap>(Model->Texture)->m_image
 					);
 
 		// Draw selection marks.

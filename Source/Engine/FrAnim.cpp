@@ -147,8 +147,8 @@ void FAnimation::SetFramesTable()
 	if( !Sheet || FrameH*FrameW==0 )
 		return;
 
-	Int32 XSize	= 1 << Sheet->UBits;
-	Int32 YSize	= 1 << Sheet->VBits;
+	Int32 XSize	= 1 << Sheet->getUBits();
+	Int32 YSize	= 1 << Sheet->getVBits();
 
 	// Without horrible whitespace after frames, for 
 	// power-of-two size.

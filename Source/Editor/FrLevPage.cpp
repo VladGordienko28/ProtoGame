@@ -146,7 +146,7 @@ WLevelPage::WLevelPage( FLevel* InLevel, WContainer* InOwner, WWindow* InRoot )
 	Caption		= Level->GetName();
 	PageType	= PAGE_Level;
 	Color		= PAGE_COLOR_LEVEL;
-	TabWidth	= Root->Font1->TextWidth( *Caption ) + 30;
+	TabWidth	= Root->Font1->textWidth( *Caption ) + 30;
 
 	// Set initial snap.
 	TranslationSnap	= 0.5f;
@@ -1422,7 +1422,7 @@ void WLevelPage::ClickEntity( FEntity* Entity, EMouseButton Button, Int32 X, Int
 			EntityPopup->Items[8].SubMenu->Items[2].bEnabled	= Script->Base->IsA(FBrushComponent::MetaClass);
 			EntityPopup->Items[8].SubMenu->Items[0].bEnabled	= false; // CSG_Union.
 			EntityPopup->Items[12].bEnabled	= Selector.Selected.size()==1 && Selector.Selected[0]->Script->IsScriptable();
-			EntityPopup->Size.Width			= max( 60+Root->Font1->TextWidth(*EntityPopup->Items[0].Text), 138 );
+			EntityPopup->Size.Width			= max<Int32>( 60+Root->Font1->textWidth(*EntityPopup->Items[0].Text), 138 );
 			EntityPopup->Show( TPoint( X, Y ) );
 		}
 		else
@@ -1457,7 +1457,7 @@ void WLevelPage::ClickBackdrop( EMouseButton Button, Int32 X, Int32 Y )
 		BackdropPopup->Items[0].Text		= String::format( L"Add %s here", Script ? *Script->GetName() : L"<Entity>" );
 		BackdropPopup->Items[0].bEnabled	= Script != nullptr;
 		BackdropPopup->Items[2].bEnabled	= GEntityClipboard.size()!=0 && GPlat->ClipboardPaste()==L"Entity";
-		BackdropPopup->Size.Width			= max( 60+Root->Font1->TextWidth(*BackdropPopup->Items[0].Text), 165 );
+		BackdropPopup->Size.Width			= max<Int32>( 60+Root->Font1->textWidth(*BackdropPopup->Items[0].Text), 165 );
 		BackdropPopup->Show(TPoint( X, Y ));		
 		Selector.UnselectAll();
 		UpdateInspector();
@@ -1960,7 +1960,7 @@ Bool WLevelPage::GetRollerAt( Int32 X, Int32 Y )
 math::Vector WLevelPage::ScreenToWorld( Int32 X, Int32 Y )
 {
 	TPoint P = ClientToWindow(TPoint::Zero);
-	TViewInfo View
+	gfx::ViewInfo View
 				(
 					Level->Camera.Location,
 					Level->Camera.Rotation,
@@ -1973,7 +1973,7 @@ math::Vector WLevelPage::ScreenToWorld( Int32 X, Int32 Y )
 					Size.Height
 				);
 
-	return View.Deproject( X, Y );
+	return View.deproject( X, Y );
 }
 
 
@@ -1983,7 +1983,7 @@ math::Vector WLevelPage::ScreenToWorld( Int32 X, Int32 Y )
 void WLevelPage::WorldToScreen( math::Vector V, Float& OutX, Float& OutY )
 {
 	TPoint P = ClientToWindow(TPoint::Zero);
-	TViewInfo View
+	gfx::ViewInfo View
 				(
 					Level->Camera.Location,
 					Level->Camera.Rotation,
@@ -1996,7 +1996,7 @@ void WLevelPage::WorldToScreen( math::Vector V, Float& OutX, Float& OutY )
 					Size.Height
 				);
 
-	View.Project( V, OutX, OutY );
+	View.project( V, OutX, OutY );
 }
 
 
@@ -2053,7 +2053,7 @@ void WLevelPage::DrawKeyframe( CCanvas* Canvas, FEntity* Entity )
 
 	// Draw keys numbers in viewport space.
 	TPoint P = ClientToWindow(TPoint::Zero);
-	Canvas->PushTransform(TViewInfo( P.X, P.Y, Size.Width, Size.Height ));
+	Canvas->PushTransform(gfx::ViewInfo( P.X, P.Y, Size.Width, Size.Height ));
 	for( Int32 i=0; i<Keyframe->Points.size(); i++ )
 	{
 		Float X, Y;
@@ -2084,10 +2084,10 @@ void WLevelPage::DrawLogicCircuit( CCanvas* Canvas )
 		FBaseComponent*		Base = Logic->Base;
 
 		// Is visible?
-		if( !Canvas->View.Bounds.isOverlap( Base->GetAABB() ) )
+		if( !Canvas->View.bounds.isOverlap( Base->GetAABB() ) )
 			continue;
 
-		Canvas->PushTransform(TViewInfo( P.X, P.Y, Size.Width, Size.Height ));
+		Canvas->PushTransform(gfx::ViewInfo( P.X, P.Y, Size.Width, Size.Height ));
 		{
 			// Draw plugs.
 			for( Int32 i=0; i<Logic->NumPlugs; i++ )
@@ -2100,7 +2100,7 @@ void WLevelPage::DrawLogicCircuit( CCanvas* Canvas )
 					Logic->PlugsName[i],
 					Root->Font2,
 					math::colors::WHITE,
-					math::Vector( X-Root->Font2->TextWidth(*Logic->PlugsName[i])-4, Y-8 )
+					math::Vector( X-Root->Font2->textWidth(*Logic->PlugsName[i])-4, Y-8 )
 				);
 			}
 
@@ -2161,7 +2161,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 	// Set level transform, for editor stuff rendering.
 	Canvas->SetTransform
 					( 
-						TViewInfo
+						gfx::ViewInfo
 							( 
 								Level->Camera.Location, 
 								Level->Camera.Rotation, 
@@ -2211,7 +2211,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 	// Set screen coords transform.
 	Canvas->SetTransform
 					(
-						TViewInfo
+						gfx::ViewInfo
 							(
 								Base.X, 
 								Base.Y, 
@@ -3041,7 +3041,7 @@ void WLevelPage::TRoller::Draw( CCanvas* Canvas, Bool bHighlight )
 			Canvas->DrawCircle
 							( 
 								Position, 
-								ROLLER_RADIUS * Canvas->View.Zoom, 
+								ROLLER_RADIUS * Canvas->View.zoom, 
 								math::colors::GOLD, 
 								false 
 							);
@@ -3050,7 +3050,7 @@ void WLevelPage::TRoller::Draw( CCanvas* Canvas, Bool bHighlight )
 							(
 								Position,
 								Angle,
-								ROLLER_RADIUS * Canvas->View.Zoom * 0.75f,
+								ROLLER_RADIUS * Canvas->View.zoom * 0.75f,
 								math::colors::GOLD,
 								false
 							);
@@ -3061,7 +3061,7 @@ void WLevelPage::TRoller::Draw( CCanvas* Canvas, Bool bHighlight )
 			Canvas->DrawCircle
 							( 
 								Position, 
-								ROLLER_RADIUS * Canvas->View.Zoom, 
+								ROLLER_RADIUS * Canvas->View.zoom, 
 								math::colors::BLUE, 
 								false 
 							);

@@ -27,6 +27,8 @@ namespace dx11
 			rend::EUsage usage, const void* initialData, const AnsiChar* debugName );
 
 		void destroy( ID3D11Device* device );
+
+		SizeT memoryUsage() const;
 	};
 
 	/**
@@ -50,6 +52,8 @@ namespace dx11
 			rend::EUsage usage, const void* initialData, const AnsiChar* debugName );
 
 		void destroy( ID3D11Device* device );
+
+		SizeT memoryUsage() const;
 	};
 
 	/**
@@ -70,6 +74,28 @@ namespace dx11
 
 		Bool create( ID3D11Device* device, rend::EFormat format, Int32 width, Int32 height, const AnsiChar* debugName );
 		void destroy( ID3D11Device* device );
+		SizeT memoryUsage() const;
+	};
+
+	/**
+	 *	A DirectX 11 Depth-Stencil buffer
+	 */
+	struct DxDepthBuffer
+	{
+	public:
+		DxRef<ID3D11Texture2D> m_texture = nullptr;
+		DxRef<ID3D11ShaderResourceView> m_srv = nullptr;
+		DxRef<ID3D11DepthStencilView> m_dsv = nullptr;
+		Int32 m_width = 0;
+		Int32 m_height = 0;
+		rend::EFormat m_format = rend::EFormat::Unknown;
+
+		DxDepthBuffer() = default;
+		~DxDepthBuffer();
+
+		Bool create( ID3D11Device* device, rend::EFormat format, Int32 width, Int32 height, const AnsiChar* debugName );
+		void destroy( ID3D11Device* device );
+		SizeT memoryUsage() const;
 	};
 
 	/**
@@ -101,6 +127,7 @@ namespace dx11
 
 		Bool create( ID3D11Device* device, const rend::CompiledShader& shader, UInt32 vertexDeclaration,
 			const AnsiChar* debugName );
+
 		void destroy( ID3D11Device* device );
 	};
 
@@ -122,6 +149,8 @@ namespace dx11
 			rend::EUsage usage, const void* initialData, const AnsiChar* debugName );
 
 		void destroy( ID3D11Device* device );
+
+		SizeT memoryUsage() const;
 	};
 
 	/**
@@ -131,7 +160,8 @@ namespace dx11
 	{
 	public:
 		DxRef<ID3D11Buffer> m_buffer = nullptr;
-		DXGI_FORMAT m_format = DXGI_FORMAT_UNKNOWN;
+		rend::EFormat m_format = rend::EFormat::Unknown;
+		DXGI_FORMAT m_dxFormat = DXGI_FORMAT_UNKNOWN;
 		rend::EUsage m_usage = rend::EUsage::Immutable;
 		UInt32 m_numIndexes = 0;
 
@@ -142,6 +172,8 @@ namespace dx11
 			rend::EUsage usage, const void* initialData, const AnsiChar* debugName );
 
 		void destroy( ID3D11Device* device );
+
+		SizeT memoryUsage() const;
 	};
 
 	/**
@@ -161,6 +193,8 @@ namespace dx11
 			rend::EUsage usage, const void* initialData, const AnsiChar* debugName );
 
 		void destroy( ID3D11Device* device );
+
+		SizeT memoryUsage() const;
 	};
 }
 }

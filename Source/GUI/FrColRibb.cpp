@@ -5,6 +5,8 @@
 
 #include "GUI.h"
 
+#if COLOR_RIBBON_ENABLED
+
 /*-----------------------------------------------------------------------------
 	WColorRibbon implementation.
 -----------------------------------------------------------------------------*/
@@ -27,8 +29,8 @@ WColorRibbon::WColorRibbon( WContainer* InOwner, WWindow* InRoot )
 	Ribbon->Format			= BF_RGBA;
 	Ribbon->USize			= 256;
 	Ribbon->VSize			= 1;
-	Ribbon->UBits			= IntLog2(Ribbon->USize);
-	Ribbon->VBits			= IntLog2(Ribbon->VSize);
+	Ribbon->UBits			= intLog2(Ribbon->USize);
+	Ribbon->VBits			= intLog2(Ribbon->VSize);
 	Ribbon->Filter			= BFILTER_Nearest;
 	Ribbon->BlendMode		= BLEND_Regular;
 	Ribbon->RenderInfo		= -1;
@@ -283,6 +285,7 @@ void WColorRibbon::OnChange()
 	EventChange(this);
 }
 
+#endif
 
 /*-----------------------------------------------------------------------------
 	The End.

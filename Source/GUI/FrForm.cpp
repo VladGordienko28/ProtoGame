@@ -155,7 +155,7 @@ void WForm::OnPaint( CGUIRenderBase* Render )
 	// Draw cool pattern header.
 	Render->DrawRegion
 					( 
-						TPoint( Base.X+2, Base.Y+1 ),
+						TPoint( Base.X+2, Base.Y+2 ),
 						TSize( Size.Width-3, FORM_HEADER_SIZE ),
 						GUI_COLOR_FORM_HEADER,
 						GUI_COLOR_FORM_HEADER,
@@ -163,7 +163,7 @@ void WForm::OnPaint( CGUIRenderBase* Render )
 					);
 
 	// Caption.
-	TSize TextSize	= TSize( Root->Font1->TextWidth(*Caption), Root->Font1->Height );
+	TSize TextSize	= TSize( Root->Font1->textWidth(*Caption), Root->Font1->maxHeight() );
 
 	Render->DrawText
 				( 
@@ -175,24 +175,24 @@ void WForm::OnPaint( CGUIRenderBase* Render )
 
 	// Draw 'close' icon.
 	if( bCanClose )
-		Render->DrawPicture
+		Render->DrawImage
 						( 
 							TPoint( Base.X+Size.Width-14, Base.Y+4 ), 
 							TSize( 11, 11 ), 
 							TPoint( 0, 11 ), 
 							TSize( 11, 11 ), 
-							Root->Icons 
+							Root->Icons
 						);
 
 	// Resize marker.
 	if( bSizeableH || bSizeableW )
-		Render->DrawPicture
+		Render->DrawImage
 						( 
 							TPoint( Base.X+Size.Width-10, Base.Y+Size.Height-10 ), 
 							TSize( 8, 8 ), 
 							TPoint( 15, 9 ), 
 							TSize( 8, 8 ), 
-							Root->Icons 
+							Root->Icons
 						);
 }
 
@@ -238,7 +238,7 @@ WMessageBox::WMessageBox( WWindow* InRoot, String InText, String InCaption, Bool
 
 	// Break text into lines and resize dialog to
 	// fit lines.
-	Lines = String::wrapText( InText, 320 / WWindow::Font1->TextWidth( L"a" ) );
+	Lines = String::wrapText( InText, 320 / WWindow::Font1->textWidth( L"a" ) );
 	SetSize( 340, 90+13*Lines.size() );
 	SetLocation( (Root->Size.Width-Size.Width)/2, (Root->Size.Height-Size.Height)/2 );
 

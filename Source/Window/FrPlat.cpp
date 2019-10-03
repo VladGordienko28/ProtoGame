@@ -13,24 +13,8 @@
 // Setup platform functions.
 //
 CWinPlatform::CWinPlatform()
-{	
-	// Timing.
-	LARGE_INTEGER LInt;
-	if( !QueryPerformanceFrequency(&LInt) )
-		fatal( L"'QueryPerformanceFrequency' failed." );
-	SecsPerCycle = 1.0 / (Double)LInt.QuadPart;
-	NowTime = 0.0;
-}
-
-
-//
-// Return current time.
-//
-Double CWinPlatform::TimeStamp()
 {
-	LARGE_INTEGER LInt;
-	QueryPerformanceCounter( &LInt );
-	return (Double)LInt.QuadPart * SecsPerCycle;
+	NowTime = 0.0;
 }
 
 
@@ -50,17 +34,6 @@ Double CWinPlatform::Now()
 void CWinPlatform::SetNow( Double InNow )
 {
 	NowTime = InNow;
-}
-
-
-//
-// Return CPU cycles, used for benchmark.
-//
-UInt32 CWinPlatform::Cycles()
-{
-	LARGE_INTEGER Cyc;
-	QueryPerformanceCounter(&Cyc);
-	return Cyc.LowPart;
 }
 
 

@@ -39,6 +39,8 @@ namespace rend
 	class SamplerState final
 	{
 	public:
+		static const SamplerStateId INVALID = -1;
+
 		SamplerState( ESamplerFilter filter, ESamplerAddressMode addrMode = ESamplerAddressMode::Wrap )
 			:	m_filter( filter ),
 				m_addressMode( addrMode )
@@ -61,7 +63,10 @@ namespace rend
 
 		UInt32 getHash() const
 		{
-			return hashing::murmur32( this, sizeof( SamplerState ) );
+			UInt32 hash = hashing::murmur32( this, sizeof( SamplerState ) );
+			assert( hash != INVALID );
+
+			return hash;
 		}
 
 	private:
@@ -114,6 +119,8 @@ namespace rend
 	class BlendState final
 	{
 	public:
+		static const BlendStateId INVALID = -1;
+
 		BlendState( EBlendFactor srcFactor, EBlendFactor destFactor, EBlendOp op,
 			EBlendFactor srcAlphaFactor, EBlendFactor destAlphaFactor, EBlendOp alphaOp )
 			:	m_srcFactor( srcFactor ),
@@ -161,7 +168,10 @@ namespace rend
 
 		UInt32 getHash() const
 		{
-			return hashing::murmur32( this, sizeof( BlendState ) );
+			UInt32 hash = hashing::murmur32( this, sizeof( BlendState ) );
+			assert( hash != INVALID );
+
+			return hash;
 		}
 
 	private:
@@ -174,6 +184,123 @@ namespace rend
 		EBlendOp m_alphaOp;
 
 		BlendState() = delete;
+	};
+
+	/**
+	 *	A comparsion function
+	 */
+	enum class EComparsionFunc : UInt8
+	{
+		Never,
+		Less,
+		Equal,
+		LessEqual,
+		Greater,
+		NotEqual,
+		GreaterEqual,
+		Always,
+		MAX
+	};
+
+	/**
+	 *	A stencil operation
+	 */
+	enum class EStencilOp : UInt8
+	{
+		Keep,
+		Zero,
+		Replace,
+		IncSat,
+		DecSat,
+		Invert,
+		Inc,
+		Dec,
+		MAX
+	};
+
+	/**
+	 *	A depth-stencil state identifier
+	 */	
+	using DepthStencilStateId = UInt32;
+
+	/**
+	 *	A depth-stencil state
+	 */	
+	class DepthStencilState final
+	{
+	public:
+		static const DepthStencilStateId INVALID = -1;
+
+		DepthStencilState( Bool depthEnabled, Bool depthWriteEnabled, EComparsionFunc depthFunc,
+			Bool stencilEnabled, EComparsionFunc stencilFunc, EStencilOp stencilPassOp, EStencilOp stencilFailOp )
+			:	m_depthEnabled( depthEnabled ),
+				m_depthWriteEnabled( depthWriteEnabled ),
+				m_depthFunc( depthFunc ),
+				m_stencilEnabled( stencilEnabled ),
+				m_stencilFunc( stencilFunc ),
+				m_stencilPassOp( stencilPassOp ),
+				m_stencilFailOp( stencilFailOp )
+		{	
+		}
+
+		~DepthStencilState()
+		{
+		}
+
+		Bool isDepthEnabled() const
+		{
+			return m_depthEnabled;
+		}
+
+		Bool isDepthWriteEnabled() const
+		{
+			return m_depthWriteEnabled;
+		}
+
+		EComparsionFunc getDepthFunc() const
+		{
+			return m_depthFunc;
+		}
+
+		Bool isStencilEnabled() const
+		{
+			return m_stencilEnabled;
+		}
+
+		EComparsionFunc getStencilFunc() const
+		{
+			return m_stencilFunc;
+		}
+
+		EStencilOp getStencilPassOp() const
+		{
+			return m_stencilPassOp;
+		}
+
+		EStencilOp getStencilFailOp() const
+		{
+			return m_stencilFailOp;
+		}
+
+		UInt32 getHash() const
+		{
+			UInt32 hash = hashing::murmur32( this, sizeof( DepthStencilState ) );
+			assert( hash != INVALID );
+			
+			return hash;
+		}
+
+	private:
+		Bool m_depthEnabled;
+		Bool m_depthWriteEnabled;
+		EComparsionFunc m_depthFunc;
+
+		Bool m_stencilEnabled;
+		EComparsionFunc m_stencilFunc;
+		EStencilOp m_stencilPassOp;
+		EStencilOp m_stencilFailOp;
+
+		DepthStencilState() = delete;
 	};
 }
 }

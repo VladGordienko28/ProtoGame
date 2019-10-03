@@ -413,6 +413,7 @@ void SaveResource( FResource* R, String Directory )
 			if( Script->IsScriptable() )
 				GEditor->ExportResource( Script, Directory+L"\\Scripts", true );
 		}
+#if MATERIAL_ENABLED
 		else if( R->IsA(FMaterial::MetaClass) )
 		{
 			//
@@ -438,6 +439,7 @@ void SaveResource( FResource* R, String Directory )
 				Writer.WriteString( L"    END_LAYER" );
 			}
 		}
+#endif
 		else
 		{
 			//
@@ -449,9 +451,9 @@ void SaveResource( FResource* R, String Directory )
 			// Save also bitmaps and sounds.
 			if( R->IsA(FBitmap::MetaClass) )
 			{
-				FBitmap* Bitmap	= As<FBitmap>(R);
-				if( Bitmap->IsValidBlock() )
-					GEditor->ExportResource( R, Directory+L"\\Bitmaps", false );			
+				//FBitmap* Bitmap	= As<FBitmap>(R);
+				//if( Bitmap->IsValidBlock() )
+					//GEditor->ExportResource( R, Directory+L"\\Bitmaps", false );			
 			}
 			else if( R->IsA(FSound::MetaClass) )
 				GEditor->ExportResource( R, Directory+L"\\Sounds", false );
@@ -699,7 +701,7 @@ public:
 		if( Value[0] != '"' ) 
 			return L"";
 
-		Char	Buffer[32] = {}, *Walk = Buffer, 
+		Char	Buffer[64] = {}, *Walk = Buffer, 
 				*ValWalk = &Value[1], *End = &Value[arraySize(Value)-1];
 
 		while( *ValWalk != '"' && ValWalk != End )
@@ -996,6 +998,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 		}
 
 		// Allocate bitmap.
+#if DEMO_EFFECTS_ENABLED
 		if( Resource->Class->IsA(FDemoBitmap::MetaClass) )
 		{
 			// Allocate new one.
@@ -1008,14 +1011,13 @@ TLoadObject* LoadResource( String FileName, String Directory )
 			Bitmap->Init( 1 << UBits, 1 << VBits );
 		}
 		else
+#endif
 		{
 			// Import bitmap from the file.
-			String BitFile, FullFn;
-			BitFile	= Resource->FindProperty( L"FileName", true )->ToString();
-			FullFn	= String::format( L"%s\\Bitmaps\\%s", *Directory, *BitFile );
-			if( !fm::fileExists( *FullFn ) ) 
-				throw String::format( L"File '%s' not found", *FullFn );
-			Resource->Object	= GEditor->ImportResource( FullFn );
+			String BitFile = Resource->FindProperty( L"image", true )->ToString();
+			FBitmap* bitmap;
+			Resource->Object = bitmap = NewObject<FBitmap>( Resource->Name, nullptr );
+			bitmap->m_image = res::ResourceManager::get<img::Image>( BitFile, res::EFailPolicy::FATAL );
 		}
 	}
 	else if( Resource->Class->IsA(FSound::MetaClass) )
@@ -1175,6 +1177,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 			}
 		}
 	}
+#if MATERIAL_ENABLED
 	else if( Resource->Class->IsA(FMaterial::MetaClass) )
 	{
 		//
@@ -1254,6 +1257,7 @@ TLoadObject* LoadResource( String FileName, String Directory )
 			Node->Object = Layer;
 		}
 	}
+#endif
 	else if( Resource->Class->IsA(FLevel::MetaClass) )
 	{
 		//

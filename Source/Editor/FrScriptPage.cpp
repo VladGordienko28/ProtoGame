@@ -547,7 +547,7 @@ WScriptPage::WScriptPage( FScript* InScript, WContainer* InOwner, WWindow* InRoo
 	PageType		= PAGE_Script;
 	Script			= InScript;
 	Caption			= InScript->GetName();
-	TabWidth		= Root->Font1->TextWidth( *Caption ) + 35;
+	TabWidth		= Root->Font1->textWidth( *Caption ) + 35;
 	Color			= PAGE_COLOR_SCRIPT;
 
 	// Create toolbar and buttons.
@@ -849,7 +849,7 @@ WCodeEditor::WCodeEditor( WScriptPage* InPage, WContainer* InOwner, WWindow* InR
 		LastHighlightTime( GPlat->Now() ),
 		LastTypeTime( GPlat->Now() ),
 		AutoDialog(nullptr),
-		CharSize( Root->Font2->TextWidth(L"A"), Root->Font2->Height )
+		CharSize( Root->Font2->textWidth(L"A"), Root->Font2->maxHeight() )
 {
 	// Initialize own fields.
 	Padding		= TArea( 0, 0, 0, 0 );
@@ -3230,7 +3230,7 @@ void WCodeEditor::WAutoComplete::OnPaint( CGUIRenderBase* Render )
 	// Draw items.
 	if( Items.size() > 0 )
 	{
-		Int32 TextY	= (ItemsHeight - Root->Font1->Height) / 2;
+		Int32 TextY	= (ItemsHeight - Root->Font1->maxHeight()) / 2;
 
 		// For each item.
 		for( Int32 i = 0, iItem = YToIndex(0); 
@@ -3616,7 +3616,7 @@ void WCompilerOutput::OnPaint( CGUIRenderBase* Render )
 	);
 	Render->DrawText
 	( 
-		TPoint( Base.X + 5, Base.Y+(FORM_HEADER_SIZE-Root->Font1->Height)/2 ), 
+		TPoint( Base.X + 5, Base.Y+(FORM_HEADER_SIZE-Root->Font1->maxHeight())/2 ), 
 		Caption, 
 		GUI_COLOR_TEXT, 
 		Root->Font1 

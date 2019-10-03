@@ -65,7 +65,7 @@ namespace profile
 		struct Zone
 		{
 			Metric* metric = nullptr;
-			Double enterTime = 0.0;
+			UInt64 enterTimeStamp = 0;
 			GroupId groupId = -1;
 		};		
 		

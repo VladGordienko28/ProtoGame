@@ -1,0 +1,64 @@
+//-----------------------------------------------------------------------------
+//	Grid.ffx: An editor grid shader
+//	Created by Vlad Gordienko, 2018
+//-----------------------------------------------------------------------------
+
+#include "Common.ffxh"
+
+cbuffer PerEffect : register( b2 )
+{
+	uint numXVerts;
+	float3 color;
+	float4 bounds; // x - cMinX, y - cMaxX, z - cMinY, w - cMaxY
+}
+
+struct VsOutput
+{
+	float4 position : SV_Position;
+	float2 style	: TEXCOORD0; // x - brightness, y - stipple
+};
+
+VsOutput vsMain( in uint vertexId : SV_VertexID )
+{
+	float2 position;
+	float2 style;
+
+	const uint lineId = vertexId / 2;
+	const uint parity = vertexId - lineId * 2;
+
+	if( vertexId < numXVerts )
+	{
+		// vertical lines
+		position.x = bounds.x + lineId;
+		position.y = parity == 0 ? bounds.z : bounds.w;
+
+		style.x = ( ceil(position.x) % 8 ) == 0 ? 1.0 : 0.5;
+		style.y = ( ceil(position.x) % 4 ) != 0 ? 1.0 : 0.0;
+	}
+	else
+	{
+		// horizontal lines
+		const uint horizLineId = ( vertexId - numXVerts ) / 2;
+
+		position.x = parity == 0 ? bounds.x : bounds.y;
+		position.y = bounds.z + horizLineId;
+
+		style.x = ( ceil(position.y) % 8 ) == 0 ? 1.0 : 0.5;
+		style.y = ( ceil(position.y) % 4 ) != 0 ? 1.0 : 0.0;
+	}
+
+	VsOutput output;
+	output.position = mul( float4( position, 0.f, 1.f ), g_projectionMatrix );
+	output.style = style;
+	return output;
+}
+
+float4 psMain( in VsOutput input ) : SV_Target
+{
+	float3 drawColor = color * input.style.x;
+	
+	const int pattern = ( int( input.position.x ) ^ int( input.position.y ) ) % 2;
+	drawColor *= input.style.y > 0.5 ? pattern : 1.0;
+
+	return float4( drawColor, 1.0 );
+}

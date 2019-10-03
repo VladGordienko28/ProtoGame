@@ -1135,13 +1135,13 @@ void CPropertyItem::Paint( TPoint Base, CGUIRenderBase* Render )
 
 	// Sign.
 	if( bExpandable )
-		Render->DrawPicture
+		Render->DrawImage
 					( 
 						TPoint( Base.X + 18 + Depth*20, Base.Y + Top + 6 ), 
 						TSize( 9, 9 ), 
 						TPoint( bExpanded ? 30 : 21, 0 ), 
 						TSize( 9, 9 ), 
-						Inspector->Root->Icons 
+						Inspector->Root->Icons
 					);
 
 	// Property name.
@@ -1378,13 +1378,13 @@ void CComponentItem::Paint( TPoint Base, CGUIRenderBase* Render )
 				);
 
 	// Sign.
-	Render->DrawPicture
+	Render->DrawImage
 				( 
 					TPoint( Base.X + 3, Base.Y + Top + 6 ), 
 					TSize( 9, 9 ), 
 					TPoint( bExpanded ? 30 : 21, 0 ), 
 					TSize( 9, 9 ), 
-					Inspector->Root->Icons 
+					Inspector->Root->Icons
 				);
 
 	// Component name.
@@ -1971,7 +1971,7 @@ void WObjectInspector::OnPaint( CGUIRenderBase* Render )
 				);
 	Render->DrawText
 				( 
-					TPoint( Base.X + 5, Base.Y+(INSPECTOR_HEADER_SIZE-Root->Font1->Height)/2 ), 
+					TPoint( Base.X + 5, Base.Y+(INSPECTOR_HEADER_SIZE-Root->Font1->maxHeight())/2 ), 
 					Caption, 
 					GUI_COLOR_TEXT, 
 					Root->Font1 

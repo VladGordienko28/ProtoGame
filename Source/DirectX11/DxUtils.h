@@ -28,11 +28,14 @@ namespace dx11
 			case rend::EFormat::RG16_I:			return DXGI_FORMAT_R16G16_SINT;
 			case rend::EFormat::RG16_U:			return DXGI_FORMAT_R16G16_UINT;
 			case rend::EFormat::RG32_F:			return DXGI_FORMAT_R32G32_FLOAT;
-			case rend::EFormat::RG32_I:			return DXGI_FORMAT_R32G32_FLOAT;
-			case rend::EFormat::RG32_U:			return DXGI_FORMAT_R32G32_FLOAT;
+			case rend::EFormat::RG32_I:			return DXGI_FORMAT_R32G32_SINT;
+			case rend::EFormat::RG32_U:			return DXGI_FORMAT_R32G32_UINT;
 			case rend::EFormat::RGBA8_I:		return DXGI_FORMAT_R8G8B8A8_SINT;
 			case rend::EFormat::RGBA8_U:		return DXGI_FORMAT_R8G8B8A8_UINT;
 			case rend::EFormat::RGBA8_UNORM:	return DXGI_FORMAT_R8G8B8A8_UNORM;
+			case rend::EFormat::RGBA32_F:		return DXGI_FORMAT_R32G32B32A32_FLOAT;
+			case rend::EFormat::RGBA32_I:		return DXGI_FORMAT_R32G32B32A32_SINT;
+			case rend::EFormat::RGBA32_U:		return DXGI_FORMAT_R32G32B32A32_UINT;
 			case rend::EFormat::D24S8:			return DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 			default:

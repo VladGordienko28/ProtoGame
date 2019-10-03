@@ -120,7 +120,7 @@ void FSpringComponent::Render( CCanvas* Canvas )
 
 		// Setup spring rectangle.
 		TRenderRect Rect;
-		Rect.Texture			= Segment;
+		Rect.Image				= As<FBitmap>(Segment)->m_image->getHandle();
 		Rect.Color				= bSelected ? math::Color( 0x80, 0xe6, 0x80, 0xff ) : math::colors::WHITE;
 		Rect.Flags				= POLY_Unlit;
 		Rect.Rotation			= math::vectorToAngle((Point1-Point2).cross());

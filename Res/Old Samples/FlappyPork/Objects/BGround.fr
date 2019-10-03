@@ -1,8 +1,3 @@
 BEGIN_RESOURCE FBitmap BGround
-    BlendMode = 1
-    Saturation = 1.0000
-    AnimSpeed = 30.0000
-    FileName = "BGround.bmp"
-    UBits = 5
-    VBits = 6
+    image = "FlappyPork.Bitmaps.Ground"
 END_RESOURCE

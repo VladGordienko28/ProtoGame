@@ -17,9 +17,7 @@ public:
 	CWinPlatform();
 
 	// CPlatformBase interface.
-	Double TimeStamp();
 	Double Now();
-	UInt32 Cycles();
 	void ClipboardCopy( Char* Str );
 	String ClipboardPaste();
 	void Launch( const Char* Target, const Char* Parms );
@@ -28,7 +26,6 @@ public:
 
 private:
 	// Internal variables.
-	Double		SecsPerCycle;
 	Double		NowTime;
 };
 

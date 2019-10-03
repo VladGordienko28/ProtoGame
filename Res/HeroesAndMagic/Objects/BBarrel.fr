@@ -1,9 +1,3 @@
 BEGIN_RESOURCE FBitmap BBarrel
-    BlendMode = 1
-    Saturation = 1.0000
-    AnimSpeed = 30.0000
-    Group = "<unused>"
-    FileName = "BBarrel.png"
-    UBits = 7
-    VBits = 7
+    image = "HeroesAndMagic.Bitmaps.Barrel"
 END_RESOURCE

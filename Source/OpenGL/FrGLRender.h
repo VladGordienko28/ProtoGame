@@ -11,7 +11,9 @@
 #define MAX_X_RES	1920
 #define MAX_Y_RES	1080
 
+#define OPENGL_ENABLED 0
 
+#if OPENGL_ENABLED
 /*-----------------------------------------------------------------------------
     COpenGLCanvas.
 -----------------------------------------------------------------------------*/
@@ -40,7 +42,7 @@ public:
 	~COpenGLCanvas();
 
 	// CCanvas interface.
-	void SetTransform( const TViewInfo& Info );
+	void SetTransform( const gfx::ViewInfo& Info );
 	void SetClip( const TClipArea& Area );
 	void DrawPoint( const math::Vector& P, Float Size, math::Color Color );
 	void DrawLine( const math::Vector& A, const math::Vector& B, math::Color Color, Bool bStipple );
@@ -116,6 +118,7 @@ public:
 	void Unlock();	
 };
 
+#endif
 
 /*-----------------------------------------------------------------------------
     The End.

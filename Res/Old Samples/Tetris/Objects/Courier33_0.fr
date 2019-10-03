@@ -1,9 +1,0 @@
-BEGIN_RESOURCE FBitmap Courier33_0
-    BlendMode = 2
-    Saturation = 1.0000
-    AnimSpeed = 30.0000
-    Owner = FFont::Courier33
-    FileName = "Courier33_0.bmp"
-    UBits = 8
-    VBits = 8
-END_RESOURCE

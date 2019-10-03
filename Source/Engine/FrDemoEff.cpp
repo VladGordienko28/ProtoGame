@@ -5,6 +5,8 @@
 
 #include "Engine.h"
 
+#if DEMO_EFFECTS_ENABLED
+
 /*-----------------------------------------------------------------------------
     Default palettes.
 -----------------------------------------------------------------------------*/
@@ -176,8 +178,8 @@ void FDemoBitmap::Init( Int32 InU, Int32 InV )
 	// Initialize FBitmap fields.
 	USize				= InU;
 	VSize				= InV;
-	UBits				= IntLog2(USize);
-	VBits				= IntLog2(VSize);
+	UBits				= intLog2(USize);
+	VBits				= intLog2(VSize);
 	RenderInfo			= -1;
 	PanUSpeed			= 0.f;
 	PanVSpeed			= 0.f;
@@ -3050,6 +3052,7 @@ REGISTER_CLASS_CPP( FHarmonicBitmap, FDemoBitmap, CLASS_None )
 	ADD_PROPERTY( WaveFreq, PROP_Editable );
 }
 
+#endif
 
 /*-----------------------------------------------------------------------------
     The End.

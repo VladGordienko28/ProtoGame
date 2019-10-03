@@ -20,10 +20,8 @@
 class CPlatformBase
 {
 public:
-	virtual Double TimeStamp() = 0;
 	virtual Double Now() = 0;
 	virtual void SetNow( Double InNow ) = 0;
-	virtual UInt32 Cycles() = 0;
 	virtual void ClipboardCopy( Char* Str ) = 0;
 	virtual String ClipboardPaste() = 0;
 	virtual void Launch( const Char* Target, const Char* Parms ) = 0;

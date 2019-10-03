@@ -29,7 +29,6 @@ inline Float InvPow2( Int32 A )
 }
 
 extern inline Float Wrap( Float V, Float Min, Float Max );
-extern inline UInt32 IntLog2( UInt32 A );
 extern math::Angle AngleLerp( math::Angle AFrom, math::Angle ATo, Float Alpha, Bool bCCW );
 
 //

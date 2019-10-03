@@ -53,7 +53,7 @@ namespace ffx
 			}
 		}
 
-		Text::Ptr text = input.includeProvider->getInclude( relativeFileName );
+		Text::Ptr text = input.includeProvider->getTextFile( relativeFileName );
 		if( !text )
 		{
 			error = String::format( TEXT( "File \"%s\" is not found" ), *relativeFileName );

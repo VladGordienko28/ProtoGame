@@ -39,6 +39,16 @@ namespace tests
 			check( fm::getFileName( L"..\\Packages\\System.fpg" ) == L"System" );
 		}
 
+		// fm::getFileNameExt
+		{
+			check( fm::getFileNameExt( L"" ) == L"" );
+			check( fm::getFileNameExt( L"Lemon" ) == L"Lemon" );
+			check( fm::getFileNameExt( L"Bzzz.wav" ) == L"Bzzz.wav" );
+			check( fm::getFileNameExt( L"C:\\Fluorine" ) == L"" );
+			check( fm::getFileNameExt( L"C:\\Fluorine\\MakeBuild.bat" ) == L"MakeBuild.bat" );
+			check( fm::getFileNameExt( L"..\\Packages\\System.fpg" ) == L"System.fpg" );
+		}
+
 		// fm::isAbsoluteFileName
 		{
 			check( fm::isAbsoluteFileName( L"" ) == false );

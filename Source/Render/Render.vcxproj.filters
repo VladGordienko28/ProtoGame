@@ -7,6 +7,7 @@
     <ClInclude Include="States.h" />
     <ClInclude Include="VertexDecl.h" />
     <ClInclude Include="ShaderCompiler.h" />
+    <ClInclude Include="Stats.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Render.cpp" />

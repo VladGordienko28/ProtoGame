@@ -63,7 +63,7 @@ public:
 			math::Color( 0x22, 0x22, 0x22, 0xff ),
 			BPAT_Solid
 		);
-		Render->DrawPicture
+		Render->DrawImage
 		(
 			TPoint( Base.X+(Size.Width-256)/2, Base.Y+12 ),
 			TSize( 256, 64 ),
@@ -91,7 +91,7 @@ public:
 		// Copyright.
 		Render->DrawText
 		(
-			TPoint( Base.X+(Size.Width-WWindow::Font1->TextWidth(*Lines[3]))/2, Base.Y+Size.Height-18 ),
+			TPoint( Base.X+(Size.Width-WWindow::Font1->textWidth(*Lines[3]))/2, Base.Y+Size.Height-18 ),
 			Lines[3],
 			GUI_COLOR_TEXT,
 			WWindow::Font1

@@ -30,7 +30,7 @@ WPlayPage::WPlayPage( FLevel* InOrigianl, EPlayMode InPlayMode, WContainer* InOw
 	PageType		= PAGE_Play;
 	Caption			= String::format( L"Play '%s'", *SourceLevel->GetName() );
 	Color			= PAGE_COLOR_PLAY;
-	TabWidth		= Root->Font1->TextWidth( *Caption ) + 30;
+	TabWidth		= Root->Font1->textWidth( *Caption ) + 30;
 
 	LogManager::instance().addCallback( this );
 
@@ -138,7 +138,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 								);
 
 	// Draw info.
-	Canvas->SetTransform( TViewInfo
+	Canvas->SetTransform( gfx::ViewInfo
 								(
 									P.X, 
 									P.Y, 
@@ -173,6 +173,22 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 					math::Vector( 10.f, 50.f ) 
 				);
 
+	// experimental
+	/*
+	static SizeT oldAllocations = 0;
+	SizeT numAllocs = mem::stats().totalAllocations;
+
+	Canvas->DrawText
+				( 
+					String::format( L"Allocations: %d", numAllocs - oldAllocations ), 
+					Root->Font1, 
+					math::colors::WHITE, 
+					math::Vector( 10.f, 70.f ) 
+				);
+	oldAllocations = numAllocs;
+	*/
+
+
 	// In-pause mode.
 	if( PlayLevel->bIsPause )
 		Canvas->DrawText
@@ -192,7 +208,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 						Messages[iMsg].message, 
 						Root->Font2, 
 						Messages[iMsg].color, 
-						math::Vector( 10.f, Size.Height - (Root->Font2->Height+2)*(iMsg+1) )
+						math::Vector( 10.f, Size.Height - (Root->Font2->maxHeight()+2)*(iMsg+1) )
 					);
 	}
 }
@@ -312,7 +328,7 @@ void WPlayPage::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 		GApp->GInput->MouseY		= TestY;
 
 		// World cursor.
-		GApp->GInput->WorldCursor	= TViewInfo
+		GApp->GInput->WorldCursor	= gfx::ViewInfo
 		(
 			PlayLevel->Camera.Location,
 			PlayLevel->Camera.Rotation,
@@ -321,7 +337,7 @@ void WPlayPage::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 			false,
 			Base.X, Base.Y,
 			Size.Width, Size.Height
-		).Deproject( X, Y );
+		).deproject( X, Y );
 	}
 }
 

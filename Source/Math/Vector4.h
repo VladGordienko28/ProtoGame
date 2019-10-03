@@ -32,6 +32,11 @@ namespace math
 		{
 		}
 
+		Vector4( const Vector& inXY, Float inZ, Float inW )
+			:	x( inXY.x ), y( inXY.y ), z( inZ ), w( inW )
+		{
+		}
+
 		Bool operator==( const Vector4& other ) const
 		{
 			return x == other.x && y == other.y && z == other.z && w == other.w;

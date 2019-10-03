@@ -74,6 +74,13 @@ namespace dx11
 		m_srv = nullptr;
 	}
 
+	SizeT DxTexture1D::memoryUsage() const
+	{
+		auto formatInfo = rend::getFormatInfo( m_format );
+		
+		return m_width * formatInfo.blockBytes / formatInfo.blockSizeX;
+	}
+
 	DxTexture2D::~DxTexture2D()
 	{
 		assert( !m_texture.hasObject() );
@@ -142,6 +149,14 @@ namespace dx11
 		m_srv = nullptr;
 	}
 
+	SizeT DxTexture2D::memoryUsage() const
+	{
+		auto formatInfo = rend::getFormatInfo( m_format );
+		
+		return ( m_width * formatInfo.blockBytes / formatInfo.blockSizeX ) *
+			( m_height * formatInfo.blockBytes / formatInfo.blockSizeY );
+	}
+
 	DxRenderTarget::~DxRenderTarget()
 	{
 		assert( !m_texture.hasObject() );
@@ -196,6 +211,78 @@ namespace dx11
 		m_rtv = nullptr;
 		m_srv = nullptr;
 		m_texture = nullptr;
+	}
+
+	SizeT DxRenderTarget::memoryUsage() const
+	{
+		auto formatInfo = rend::getFormatInfo( m_format );
+		
+		return ( m_width * formatInfo.blockBytes / formatInfo.blockSizeX ) *
+			( m_height * formatInfo.blockBytes / formatInfo.blockSizeY );
+	}
+
+	DxDepthBuffer::~DxDepthBuffer()
+	{
+		assert( !m_texture.hasObject() );
+		assert( !m_srv.hasObject() );
+		assert( !m_dsv.hasObject() );
+	}
+
+	Bool DxDepthBuffer::create( ID3D11Device* device, rend::EFormat format, Int32 width, Int32 height, const AnsiChar* debugName )
+	{
+		assert( device );
+		assert( format == rend::EFormat::D24S8 );
+		assert( width > 0 && height > 0 );
+
+		D3D11_TEXTURE2D_DESC description;
+		mem::zero( &description, sizeof( D3D11_TEXTURE2D_DESC ) );
+
+		description.Width = m_width = width;
+		description.Height = m_height = height;
+		description.MipLevels = 1;
+		description.ArraySize = 1;
+		description.Format = fluorineFormatToDirectX( m_format = format );
+		description.SampleDesc.Count = 1;
+		description.SampleDesc.Quality = 0;
+		description.Usage = D3D11_USAGE_DEFAULT;
+		description.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_DEPTH_STENCIL; 
+		description.CPUAccessFlags = 0;
+		description.MiscFlags = 0;
+
+		HRESULT result;
+
+		result = device->CreateTexture2D( &description, nullptr, &m_texture );
+		assert( SUCCEEDED( result ) );
+
+		result = device->CreateShaderResourceView( m_texture.get(), nullptr, &m_srv );
+		assert( SUCCEEDED( result ) );
+
+		result = device->CreateDepthStencilView( m_texture.get(), nullptr, &m_dsv );
+		assert( SUCCEEDED( result ) );
+
+		if( debugName )
+		{
+			m_texture->SetPrivateData( WKPDID_D3DDebugObjectName, UINT( cstr::length( debugName ) ), debugName );
+			m_srv->SetPrivateData( WKPDID_D3DDebugObjectName, UINT( cstr::length( debugName ) ), debugName );
+			m_dsv->SetPrivateData( WKPDID_D3DDebugObjectName, UINT( cstr::length( debugName ) ), debugName );
+		}
+
+		return true;
+	}
+
+	void DxDepthBuffer::destroy( ID3D11Device* device )
+	{
+		m_texture = nullptr;
+		m_srv = nullptr;
+		m_dsv = nullptr;
+	}
+
+	SizeT DxDepthBuffer::memoryUsage() const
+	{
+		auto formatInfo = rend::getFormatInfo( m_format );
+		
+		return ( m_width * formatInfo.blockBytes / formatInfo.blockSizeX ) *
+			( m_height * formatInfo.blockBytes / formatInfo.blockSizeY );
 	}
 
 	DxPixelShader::~DxPixelShader()
@@ -308,6 +395,11 @@ namespace dx11
 		m_buffer = nullptr;
 	}
 
+	SizeT DxVertexBuffer::memoryUsage() const
+	{
+		return m_vertexSize * m_numVerts;
+	}
+
 	DxIndexBuffer::~DxIndexBuffer()
 	{
 		assert( !m_buffer.hasObject() );
@@ -320,7 +412,7 @@ namespace dx11
 		assert( format == rend::EFormat::R16_U || format == rend::EFormat::R32_U );
 		assert( numIndexes );
 
-		m_format = fluorineFormatToDirectX( format );
+		m_dxFormat = fluorineFormatToDirectX( m_format = format );
 		m_numIndexes = numIndexes;
 
 		D3D11_BUFFER_DESC description;
@@ -359,6 +451,11 @@ namespace dx11
 	void DxIndexBuffer::destroy( ID3D11Device* device )
 	{
 		m_buffer = nullptr;
+	}
+
+	SizeT DxIndexBuffer::memoryUsage() const
+	{
+		return m_numIndexes * rend::getFormatInfo( m_format ).blockBytes;
 	}
 
 	DxConstantBuffer::~DxConstantBuffer()
@@ -408,6 +505,11 @@ namespace dx11
 	void DxConstantBuffer::destroy( ID3D11Device* device )
 	{
 		m_buffer = nullptr;
+	}
+
+	SizeT DxConstantBuffer::memoryUsage() const
+	{
+		return m_size;
 	}
 }
 }

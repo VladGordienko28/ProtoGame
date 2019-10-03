@@ -6,45 +6,39 @@
 namespace flu
 {
 namespace ffx
-{
+{		
+	
+	// fooooooooooooooooooooooooooooooooooooooooooooooooo remove this mess!~!!!!!!!!!!!!!!!
+		extern rend::VertexDeclaration* s_vertexDeclaration;
+
+
+
 	/**
 	 *	A FFX system
 	 */
-	class System
+	class System final: public res::IResourceSystem
 	{
 	public:
-		using UPtr = UniquePtr<System>;
-
-		System();
+		System( rend::Device* device );
 		~System();
 
-		void init( rend::Device* device, String shadersDirectory );
-		void update();
-		void shutdown();
+		res::Resource* createResource( String resourceName, res::ResourceId resourceId,
+			const res::CompiledResource& compiledResource ) override;
 
-		Effect::Ptr getEffect( String effectName, const rend::VertexDeclaration& vertexDeclaration );
+		Bool allowHotReloading() const override;
+		void reloadResource( res::ResourceId resourceId, const res::CompiledResource& compiledResource ) override;
+
+		Bool hasResource( res::ResourceId resourceId ) const override;
+		res::Resource* getResource( res::ResourceId resourceId ) const override;
 
 	private:
-		static constexpr const Char* SHADER_EXTENSION = TEXT( ".ffx" );
-		static constexpr const Char* COMPILED_SHADER_EXTENSION = TEXT( ".ffxo" );
+		Map<res::ResourceId, Effect*> m_effects;
 
-		struct CachedEffect
-		{
-			Effect* effect = nullptr;
-			Int64 lastModificationTime = 0;
-			String relativeFileName;
-			Array<String> files;
-		};
-
-		String m_directory;
-		Map<String, CachedEffect> m_effects;
 		rend::Device* m_device;
 
-		Compiler::UPtr m_compiler;
+		System() = delete;
 
-		Effect::Ptr createEffect( String effectName, const rend::VertexDeclaration& vertexDeclaration );
-		Bool reloadEffect( CachedEffect& cachedEffect );
-		Bool saveEffectToFile( String effectName, const Array<UInt8>& effectBlob );
+		void destroyEffect( Effect* effect );
 	};
 }
 }

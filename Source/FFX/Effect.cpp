@@ -25,7 +25,7 @@ namespace ffx
 
 		for( auto& it : m_samplerStates )
 		{
-			it = -1;
+			it = rend::SamplerState::INVALID;
 		}
 
 		for( auto& it : m_srvs )
@@ -33,7 +33,7 @@ namespace ffx
 			it.srv = nullptr;
 		}
 
-		m_blendState = -1;
+		m_blendState = rend::BlendState::INVALID;
 	}
 
 	Effect::~Effect()
@@ -71,14 +71,14 @@ namespace ffx
 		m_blendState = blendState;
 	}
 
-	Bool Effect::reload( IInputStream::Ptr effectBlob )
+	Bool Effect::reload( const res::CompiledResource& compiledResource )
 	{
-		assert( effectBlob.hasObject() );
+		IInputStream::Ptr stream = new BufferReader( compiledResource.data );
 		debug( L"Reloading of \"%s\"", *m_name );
 
 		String ffxVersion, apiCompilerMark;
-		*effectBlob >> ffxVersion;
-		*effectBlob >> apiCompilerMark;
+		*stream >> ffxVersion;
+		*stream >> apiCompilerMark;
 
 		if( ffxVersion != FFX_VERSION )
 		{
@@ -92,8 +92,8 @@ namespace ffx
 		}
 
 		rend::CompiledShader compiledPS, compiledVS;
-		*effectBlob >> compiledPS;
-		*effectBlob >> compiledVS;
+		*stream >> compiledPS;
+		*stream >> compiledVS;
 
 		if( !compiledPS.isValid() || !compiledVS.isValid() )
 		{
@@ -101,7 +101,7 @@ namespace ffx
 			return false;
 		}
 
-		if( effectBlob->hasError() )
+		if( stream->hasError() )
 		{
 			error( L"Unexpected end of effect file" );
 			return false;
@@ -147,17 +147,10 @@ namespace ffx
 		m_device->setSRVs( rend::EShaderType::Vertex, 0, MAX_TEXTURES, &m_srvs[0] );
 		m_device->setSRVs( rend::EShaderType::Pixel, 0, MAX_TEXTURES, &m_srvs[0] );
 
-		m_device->setConstantBuffers( rend::EShaderType::Vertex, 0, 1, &m_buffers[0].bufferHandle );
-		m_device->setConstantBuffers( rend::EShaderType::Pixel, 0, 1, &m_buffers[0].bufferHandle );
+		m_device->setConstantBuffers( rend::EShaderType::Vertex, EConstantBufferType::CBT_PerEffect, 1, &m_buffers[0].bufferHandle );
+		m_device->setConstantBuffers( rend::EShaderType::Pixel, EConstantBufferType::CBT_PerEffect, 1, &m_buffers[0].bufferHandle );
 
-		if( m_blendState != -1 )
-		{
-			m_device->enableBlendState( m_blendState );
-		}
-		else
-		{
-			m_device->disableBlendState();
-		}
+		m_device->applyBlendState( m_blendState );
 
 		m_device->setVertexShader( m_shader.vs );
 		m_device->setPixelShader( m_shader.ps );

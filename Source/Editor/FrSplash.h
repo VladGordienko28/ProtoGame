@@ -44,27 +44,27 @@ LRESULT CALLBACK SplashWndProc( HWND, UINT, WPARAM, LPARAM )
 //
 CSplash::CSplash( LPCTSTR BitmapID )
 {
-	TStaticBitmap* Bitmap	= LoadBitmapFromResource(GEditor->hInstance, BitmapID);
+	SystemBitmap Bitmap	= LoadBitmapFromResource(GEditor->hInstance, BitmapID);
 	{
-		BITMAPINFO*	Info	= (BITMAPINFO*)mem::alloc(sizeof(BITMAPINFO)+sizeof(RGBQUAD)*Bitmap->Palette.Colors.size());
+		BITMAPINFO*	Info	= (BITMAPINFO*)mem::alloc(sizeof(BITMAPINFO)+sizeof(RGBQUAD)*Bitmap.palette.size());
 		HDC			hDc		= GetDC(nullptr);
 
 		Info->bmiHeader.biBitCount		= 8;
 		Info->bmiHeader.biClrImportant	= 
-		Info->bmiHeader.biClrUsed		= Bitmap->Palette.Colors.size();
+		Info->bmiHeader.biClrUsed		= Bitmap.palette.size();
 		Info->bmiHeader.biCompression	= 0;
-		Info->bmiHeader.biHeight		= Bitmap->VSize;
+		Info->bmiHeader.biHeight		= Bitmap.height;
 		Info->bmiHeader.biPlanes		= 1;
 		Info->bmiHeader.biSize			= sizeof(BITMAPINFOHEADER);
-		Info->bmiHeader.biSizeImage		= Bitmap->GetBlockSize();
-		Info->bmiHeader.biWidth			= Bitmap->USize;
+		Info->bmiHeader.biSizeImage		= Bitmap.width * Bitmap.height;
+		Info->bmiHeader.biWidth			= Bitmap.width;
 		Info->bmiHeader.biXPelsPerMeter	= 
 		Info->bmiHeader.biYPelsPerMeter	= 2834;
 
 		// Flip palette RGBA -> BGR.
-		for( Int32 i=0; i<Bitmap->Palette.Colors.size(); i++ )
+		for( Int32 i=0; i<Bitmap.palette.size(); i++ )
 		{
-			math::Color Col = Bitmap->Palette.Colors[i];
+			math::Color Col = Bitmap.palette[i];
 			Info->bmiColors[i].rgbBlue		= Col.b;
 			Info->bmiColors[i].rgbGreen		= Col.g;
 			Info->bmiColors[i].rgbRed		= Col.r;
@@ -72,17 +72,17 @@ CSplash::CSplash( LPCTSTR BitmapID )
 		}
 
 		// Store size.
-		XSize		= Bitmap->USize;
-		YSize		= Bitmap->VSize;
+		XSize		= Bitmap.width;
+		YSize		= Bitmap.height;
 
 		// Flip image.
-		UInt8*	Data	= (UInt8*)Bitmap->GetData();
+		UInt8*	Data	= (UInt8*)&Bitmap.data[0];
 		UInt8	Buffer[1024];
-		for( Int32 V=0; V<Bitmap->VSize/2; V++ )
+		for( Int32 V=0; V<Bitmap.height/2; V++ )
 		{
-			mem::copy( Buffer, &Data[V*Bitmap->USize], Bitmap->USize );
-			mem::copy( &Data[V*Bitmap->USize], &Data[(Bitmap->VSize-V-1)*Bitmap->USize], Bitmap->USize );
-			mem::copy( &Data[(Bitmap->VSize-V-1)*Bitmap->USize], Buffer, Bitmap->USize );
+			mem::copy( Buffer, &Data[V*Bitmap.width], Bitmap.width );
+			mem::copy( &Data[V*Bitmap.width], &Data[(Bitmap.height-V-1)*Bitmap.width], Bitmap.width );
+			mem::copy( &Data[(Bitmap.height-V-1)*Bitmap.width], Buffer, Bitmap.width );
 		}
 
 		// To hBitmap;
@@ -91,14 +91,13 @@ CSplash::CSplash( LPCTSTR BitmapID )
 			hDc,
 			&Info->bmiHeader,
 			CBM_INIT,
-			Bitmap->GetData(),
+			&Bitmap.data[0],
 			Info,
 			DIB_RGB_COLORS
 		);
 		ReleaseDC( nullptr, hDc );
 		mem::free( Info );
 	}
-	delete Bitmap;
 	
 	// Allocate dialog.
 	hWnd	= CreateDialog

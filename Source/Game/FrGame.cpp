@@ -575,7 +575,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 							GGame->GInput->MouseY		= TestY;
 
 							// World cursor.
-							GGame->GInput->WorldCursor	= TViewInfo
+							GGame->GInput->WorldCursor	= gfx::ViewInfo
 							(
 								Level->Camera.Location,
 								Level->Camera.Rotation,
@@ -584,7 +584,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 								false,
 								0.f, 0.f,
 								WinWidth, WinHeight
-							).Deproject( X, Y );
+							).deproject( X, Y );
 						}
 					}
 

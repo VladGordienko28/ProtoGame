@@ -150,6 +150,7 @@
     <ClInclude Include="Render.h" />
     <ClInclude Include="ShaderCompiler.h" />
     <ClInclude Include="States.h" />
+    <ClInclude Include="Stats.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="VertexDecl.h" />
   </ItemGroup>

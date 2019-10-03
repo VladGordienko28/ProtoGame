@@ -24,7 +24,7 @@ WTreeView::WTreeView( WContainer* InOwner, WWindow* InRoot )
 		iSelected( -1 ),
 		RenderOrder(),
 		ScrollTop( 0 ),
-		CharHeight( Root->Font1->Height )
+		CharHeight( Root->Font1->maxHeight() )
 {
 	// Allocate scrollbar.
 	ScrollBar				= new WSlider( this, InRoot );
@@ -272,7 +272,7 @@ void WTreeView::OnPaint( CGUIRenderBase* Render )
 		// Selection mark, if required.
 		if( iNode == iSelected )
 		{
-			Int32 TextWidth = Root->Font1->TextWidth(*Node.Name);
+			Int32 TextWidth = Root->Font1->textWidth(*Node.Name);
 
 			Render->DrawRegion
 			(
@@ -305,13 +305,13 @@ void WTreeView::OnPaint( CGUIRenderBase* Render )
 
 		// Draw sign if can.
 		if( Node.NumChildren != 0 )
-			Render->DrawPicture
+			Render->DrawImage
 			( 
 				TPoint( LabelX-16, LabelY+3 ), 
 				TSize( 9, 9 ), 
 				TPoint( Node.bExpanded ? 30 : 21, 0 ), 
 				TSize( 9, 9 ), 
-				Root->Icons 
+				Root->Icons
 			);
 
 		// Advance.
@@ -345,7 +345,7 @@ Int32 WTreeView::XYToIndex( Int32 X, Int32 Y, Bool* AtSign )
 		if( inRange( Y, LabelY, YWalk ) )
 		{
 			// Test X.
-			Int32 TextWidth = Root->Font1->TextWidth(*Node.Name) + 2;
+			Int32 TextWidth = Root->Font1->textWidth(*Node.Name) + 2;
 
 			if( inRange( X, LabelX, LabelX+TextWidth ) )
 			{

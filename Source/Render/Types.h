@@ -41,6 +41,7 @@ namespace rend
 	using ConstantBufferHandle	= Handle<24, 8, 'CNS'>;
 	using ShaderHandle			= Handle<24, 8, 'SHR'>;
 	using RenderTargetHandle	= Handle<24, 8, 'RTG'>;
+	using DepthBufferHandle		= Handle<24, 8, 'DHP'>;
 
 	/**
 	 *	A rendering viewport bounds
@@ -65,6 +66,55 @@ namespace rend
 		// todo: rethink this, maybe template magic
 		// will help me
 		void* srv = nullptr;
+
+		Bool operator==( const ShaderResourceView& other ) const
+		{
+			return srv == other.srv;
+		}
+
+		Bool operator!=( const ShaderResourceView& other ) const
+		{
+			return srv != other.srv;
+		}
+	};
+
+	/**
+	 *	An area which define scissor rect
+	 */
+	struct ScissorArea
+	{
+	public:
+		Int32 top;
+		Int32 left;
+		Int32 bottom;
+		Int32 right;
+
+		ScissorArea()
+		{
+		}
+		
+		ScissorArea( Int32 inTop, Int32 inLeft, Int32 inBottom, Int32 inRight )
+			:	top( inTop ), left( inLeft ),
+				bottom( inBottom ), right( inRight )
+		{
+		}
+
+		Bool operator==( const ScissorArea& other ) const
+		{
+			return top == other.top && left == other.left &&
+						bottom == other.bottom && right == other.right;
+		}
+
+		Bool operator!=( const ScissorArea& other ) const
+		{
+			return top != other.top || left != other.left ||
+						bottom != other.bottom || right != other.right;
+		}
+
+		static inline ScissorArea NULL_AREA()
+		{
+			return ScissorArea( -1, -1 ,-1, -1 );
+		}
 	};
 
 	/**
@@ -99,6 +149,10 @@ namespace rend
 		RGBA8_I,
 		RGBA8_U,
 		RGBA8_UNORM,
+
+		RGBA32_F,
+		RGBA32_I,
+		RGBA32_U,
 
 		D24S8,
 

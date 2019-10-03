@@ -33,11 +33,19 @@ extern Bool ExecuteOpenFileDialog( HWND hWnd, String& FileName, String Directory
 extern Bool ExecuteSaveFileDialog( HWND hWnd, String& FileName, String Directory, const Char* Filters );
 
 
+struct SystemBitmap
+{
+public:
+	Array<UInt8> data;
+	Array<math::Color> palette;
+	UInt32 width, height;
+};
+
+
 //
 // GUI objects loaders.
 //
-extern TStaticBitmap* LoadBitmapFromResource( HINSTANCE hInstance, LPCTSTR ResID );
-extern TStaticFont* LoadFontFromResource( HINSTANCE hInstance, LPCTSTR FontID, LPCTSTR BitmapID );
+extern SystemBitmap LoadBitmapFromResource( HINSTANCE hInstance, LPCTSTR ResID );
 
 /*-----------------------------------------------------------------------------
     The End.

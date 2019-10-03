@@ -140,7 +140,7 @@ class WPictureButton: public WButton
 {
 public:
 	// Variables.
-	FBitmap*		Picture;
+	img::Image::Ptr	Picture;
 	TPoint			Offset;
 	TSize			Scale;
 

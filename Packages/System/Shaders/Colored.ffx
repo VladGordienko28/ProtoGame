@@ -1,0 +1,45 @@
+//-----------------------------------------------------------------------------
+//	Colored.hlsl: A simple shader for flat shaded primitives
+//	Created by Vlad Gordienko, 2018
+//-----------------------------------------------------------------------------
+
+#include "Common.ffxh"
+
+cbuffer Effect : register( b2 )
+{
+	float4 color;
+	bool isStipple;
+}
+
+struct VsInput
+{
+	float2 position : POSITION;
+};
+
+struct VsOutput
+{
+	float4 position : SV_Position;
+};
+
+VsOutput vsMain( in VsInput input )
+{
+	VsOutput output;
+	output.position = mul( float4( input.position, 0.f, 1.f ), g_projectionMatrix );
+	return output;
+}
+
+float4 psMain( in VsOutput input ) : SV_Target
+{
+	float4 drawColor = color; 
+	
+	// Amazing stipple pattern
+	[branch]
+	if( isStipple )
+	{
+		// todo: is really bad for performace!!
+		if( (int(input.position.x - input.position.y) % 4) == 0 )
+			discard;
+	}
+
+	return doSomething( drawColor ) /*+ (sin(g_gameTime * 10)*0.5 + 0.5)*/; 
+}

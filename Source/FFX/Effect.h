@@ -10,9 +10,11 @@ namespace ffx
 	/**
 	 *	An effect
 	 */
-	class Effect: public ReferenceCount
+	class Effect: public res::Resource
 	{
 	public:
+		static const res::EResourceType RESOURCE_TYPE = res::EResourceType::Effect;
+
 		static const constexpr Char* PS_ENTRY = TEXT( "psMain" );
 		static const constexpr Char* VS_ENTRY = TEXT( "vsMain" );
 
@@ -35,6 +37,11 @@ namespace ffx
 			setData( &value, sizeof( math::FloatColor ), offset );
 		}
 
+		void setBool( SizeT offset, Bool value )
+		{
+			setData( &value, sizeof( Bool ), offset );
+		}
+
 		void setData( const void* data, SizeT size, SizeT offset );
 		void setSRV( Int32 slot, rend::ShaderResourceView srv );
 		void setSamplerState( Int32 slot, rend::SamplerStateId samplerId );
@@ -43,7 +50,7 @@ namespace ffx
 
 		void apply();
 
-		String name() const
+		String getName() const
 		{
 			return m_name;
 		}
@@ -80,7 +87,7 @@ namespace ffx
 		Effect() = delete;
 		Effect( String name, const rend::VertexDeclaration& vertexDeclaration, rend::Device* device );
 
-		Bool reload( IInputStream::Ptr effectBlob );
+		Bool reload( const res::CompiledResource& compiledResource );
 		void cleanup();
 
 		friend class System;

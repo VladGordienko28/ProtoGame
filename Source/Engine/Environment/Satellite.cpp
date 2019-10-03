@@ -29,7 +29,7 @@ namespace envi
 
 	void Satellite::renderOrbit( CCanvas* canvas )
 	{
-		const math::Vector centroid = canvas->View.Coords.origin + m_orbitCenter;
+		const math::Vector centroid = canvas->View.coords.origin + m_orbitCenter;
 
 		canvas->DrawEllipse( centroid, m_orbitWidth, m_orbitHeight, 
 			math::colors::ANTIQUE_WHITE, false, 64 );
@@ -40,7 +40,7 @@ namespace envi
 	void Satellite::render( CCanvas* canvas, TimeOfDay dayTime )
 	{
 		const Float phase = 2.f * math::PI * ( dayTime.toPercent() - m_zenithTime.toPercent() );
-		const math::Vector centroid = canvas->View.Coords.origin + m_orbitCenter;
+		const math::Vector centroid = canvas->View.coords.origin + m_orbitCenter;
 		const math::Vector position = math::Vector( m_orbitWidth * math::sin( phase ), m_orbitHeight * math::cos( phase ) ) + centroid;
 
 		// todo: add visibility check
@@ -50,7 +50,7 @@ namespace envi
 		rr.Color = math::colors::WHITE;
 		rr.Flags = POLY_Unlit;
 		rr.Rotation = 0;
-		rr.Texture = m_bitmap;
+		rr.Image = m_bitmap ? m_bitmap->m_image->getHandle() : INVALID_HANDLE<rend::Texture2DHandle>();
 		rr.TexCoords.min = { 0.f, 0.f };
 		rr.TexCoords.max = { 1.f, 1.f };
 

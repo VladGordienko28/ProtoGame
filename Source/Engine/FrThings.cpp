@@ -155,7 +155,7 @@ void FSkyComponent::EditChange()
 void FSkyComponent::Render( CCanvas* Canvas )
 {
 	// Never render self in self.
-	if( Canvas->View.bMirage )
+	if( Canvas->View.isMirage )
 		return;
 
 	// Draw border.
@@ -169,15 +169,15 @@ void FSkyComponent::Render( CCanvas* Canvas )
 		Float Side, Side2;
 
 		ViewArea.x	= Extent;
-		ViewArea.y	= (Extent * Canvas->View.FOV.y) / Canvas->View.FOV.x;
+		ViewArea.y	= (Extent * Canvas->View.fov.y) / Canvas->View.fov.x;
 
 		Skydome		= math::Rect( Location, Size.x, Size.y );
 		Side		= math::sqrt( ViewArea.x*ViewArea.x + ViewArea.y*ViewArea.y );
 		Side2		= Side * 0.5f;
 
 		// Transform observer location and apply parallax.
-		Eye.x	= Canvas->View.Coords.origin.x * Parallax.x + Offset.x;
-		Eye.y	= Canvas->View.Coords.origin.y * Parallax.y + Offset.y;
+		Eye.x	= Canvas->View.coords.origin.x * Parallax.x + Offset.x;
+		Eye.y	= Canvas->View.coords.origin.y * Parallax.y + Offset.y;
 
 		// Azimuth of sky should be wrapped.
 		Eye.x	= Wrap( Eye.x, Skydome.min.x, Skydome.max.x );
@@ -187,7 +187,7 @@ void FSkyComponent::Render( CCanvas* Canvas )
 
 		math::Angle Roll = math::Angle( math::fMod( RollSpeed*(Float)GPlat->Now(), 2.f*math::PI ) );		
 		Canvas->DrawLineRect( Eye, ViewArea, Roll, math::colors::RED, false );
-		Canvas->DrawLineStar( Eye, Roll, 1.f * Canvas->View.Zoom, math::colors::RED, false );
+		Canvas->DrawLineStar( Eye, Roll, 1.f * Canvas->View.zoom, math::colors::RED, false );
 	}
 }	
 
@@ -215,7 +215,7 @@ void FZoneComponent::Render( CCanvas* Canvas )
 {
 	// Is visible?
 	math::Rect Bounds = GetAABB();
-	if( !Canvas->View.Bounds.isOverlap( Bounds ) || !(Level->RndFlags & RND_Other) )
+	if( !Canvas->View.bounds.isOverlap( Bounds ) || !(Level->RndFlags & RND_Other) )
 		return;
 
 	// Choose colors.
@@ -243,7 +243,7 @@ void FZoneComponent::Render( CCanvas* Canvas )
 		Rect.Flags		= POLY_Unlit | POLY_FlatShade | POLY_Ghost;
 		Rect.Bounds		= Bounds;
 		Rect.Rotation	= math::Angle(0);
-		Rect.Texture	= nullptr;
+		Rect.Image		= INVALID_HANDLE<rend::Texture2DHandle>();
 		Rect.Color		= Color1;
 
 		Canvas->DrawRect(Rect);
@@ -302,10 +302,10 @@ void FRectComponent::Render( CCanvas* Canvas )
 {
 	// Is visible?
 	math::Rect Bounds = GetAABB();
-	Bool bVisible	= Canvas->View.Bounds.isOverlap( Bounds );
+	Bool bVisible	= Canvas->View.bounds.isOverlap( Bounds );
 
 	// Send in game OnHide/OnShow notifications.
-	if( Level->bIsPlaying && !Canvas->View.bMirage )
+	if( Level->bIsPlaying && !Canvas->View.isMirage )
 	{
 		if( bVisible )
 		{
@@ -452,7 +452,7 @@ void FBrushComponent::Render( CCanvas* Canvas )
 
 	// Is visible?
 	math::Rect Bounds = GetAABB();
-	if( !Canvas->View.Bounds.isOverlap(Bounds) )
+	if( !Canvas->View.bounds.isOverlap(Bounds) )
 		return;
 
 	// Pick wire color.
@@ -479,7 +479,7 @@ void FBrushComponent::Render( CCanvas* Canvas )
 	// Draw textured surface.
 	if( Texture )
 	{
-		Poly.Texture	= Texture;
+		Poly.Image		= As<FBitmap>(Texture)->m_image->getHandle();
 		Poly.Flags		= POLY_Unlit*bUnlit | !(Level->RndFlags & RND_Lighting);
 		Poly.Color		= Color;
 
@@ -501,7 +501,7 @@ void FBrushComponent::Render( CCanvas* Canvas )
 	if( !Texture && (Level->RndFlags & RND_Other) || bSelected )
 	{
 		Poly.Flags	 = POLY_FlatShade | POLY_Ghost;
-		Poly.Texture = nullptr;
+		Poly.Image	 = INVALID_HANDLE<rend::Texture2DHandle>();
 		Poly.Color	 = bSelected ? Color2 : Color1;
 
 		if( bFrozen )
@@ -540,7 +540,7 @@ void FBrushComponent::Render( CCanvas* Canvas )
 						( 
 							Location + TexCoords.origin,
 							math::vectorToAngle( TexCoords.xAxis ),
-							2.5f * Canvas->View.Zoom,
+							2.5f * Canvas->View.zoom,
 							Color1,
 							false
 						);

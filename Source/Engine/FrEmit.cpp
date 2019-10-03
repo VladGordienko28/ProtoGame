@@ -378,7 +378,7 @@ void FWeatherEmitterComponent::Render( CCanvas* Canvas )
 {
     // Don't draw snowflakes or raindrops in
     // a mirage, especially in sky-zone.
-	if( !Canvas->View.bMirage )
+	if( !Canvas->View.isMirage )
 		FEmitterComponent::Render( Canvas );
 }
 
@@ -622,7 +622,7 @@ void FEmitterComponent::Render( CCanvas* Canvas )
 
 	// Render particles if they actually visible.
 	math::Rect Cloud = GetCloudRect();
-	if( !Canvas->View.Bounds.isOverlap( Cloud ) )
+	if( !Canvas->View.bounds.isOverlap( Cloud ) )
 		return;
 
 #if 0
@@ -687,7 +687,7 @@ void FEmitterComponent::Render( CCanvas* Canvas )
 
 	// Initialize list.
 	TRenderList List( NumPrts );
-	List.Texture		= Texture;
+	List.Image			= Texture ? As<FBitmap>(Texture)->m_image->getHandle() : INVALID_HANDLE<rend::Texture2DHandle>();
 	List.Flags			= POLY_Unlit*bUnlit | !(Level->RndFlags & RND_Lighting);
 
 	// Initialize list.

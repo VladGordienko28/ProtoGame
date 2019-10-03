@@ -1,9 +1,3 @@
 BEGIN_RESOURCE FBitmap BSun
-    BlendMode = 1
-    Saturation = 1.0000
-    AnimSpeed = 30.0000
-    Group = "<unused>"
-    FileName = "BSun.png"
-    UBits = 5
-    VBits = 5
+    image = "HeroesAndMagic.Bitmaps.Sun"
 END_RESOURCE

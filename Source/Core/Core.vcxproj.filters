@@ -81,6 +81,9 @@
     <ClInclude Include="Evaluator.h">
       <Filter>Evaluator</Filter>
     </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>Time</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp" />
@@ -124,6 +127,9 @@
     <ClCompile Include="Hash.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>Time</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Heap">
@@ -164,6 +170,9 @@
     </Filter>
     <Filter Include="Evaluator">
       <UniqueIdentifier>{dda0bf4c-7a09-4348-9d34-7639c852a69a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Time">
+      <UniqueIdentifier>{f1292bac-3b72-413e-b323-4395d82b4ca7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

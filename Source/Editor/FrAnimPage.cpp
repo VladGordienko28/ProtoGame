@@ -50,7 +50,7 @@ WAnimationPage::WAnimationPage( FAnimation* InAnimation, WContainer* InOwner, WW
 	Padding						= TArea( 0, 0, 0, 0 );
 	Animation					= InAnimation;
 	Caption						= Animation->GetName();
-	TabWidth					= Root->Font1->TextWidth( *Caption ) + 30;
+	TabWidth					= Root->Font1->textWidth( *Caption ) + 30;
 	PageType					= PAGE_Animation;
 	Color						= PAGE_COLOR_ANIMATION;
 
@@ -405,10 +405,10 @@ void WAnimationPage::OnPaint( CGUIRenderBase* Render )
 	if( Animation && Animation->Sheet )
 	{
 		FTexture* Texture	= Animation->Sheet;
-		Int32 X = Base.X - Pan.X + ( Size.Width - Texture->USize * Scale ) / 2;
-		Int32 Y = Base.Y - Pan.Y + ( Size.Height - Texture->VSize * Scale ) / 2;
-		Int32 W = Texture->USize * Scale;
-		Int32 H = Texture->VSize * Scale;
+		Int32 X = Base.X - Pan.X + ( Size.Width - Texture->getUSize() * Scale ) / 2;
+		Int32 Y = Base.Y - Pan.Y + ( Size.Height - Texture->getVSize() * Scale ) / 2;
+		Int32 W = Texture->getUSize() * Scale;
+		Int32 H = Texture->getVSize() * Scale;
 
 		// Draw border.
 		Render->DrawRegion
@@ -421,18 +421,18 @@ void WAnimationPage::OnPaint( CGUIRenderBase* Render )
 					);
 
 		// Draw image.
-		Render->DrawPicture
+		Render->DrawImage
 						( 
 							TPoint( X, Y ), 
 							TSize( W, H ), 
 							TPoint( 0, 0 ), 
-							TSize( Texture->USize, Texture->VSize ), 
-							Texture  
+							TSize( Texture->getUSize(), Texture->getVSize() ), 
+							As<FBitmap>(Texture)->m_image  
 						);
 
 		// Draw cells.
-		Int32 FrmPerX	= math::floor((Float)(Animation->Sheet->USize+Animation->SpaceX) / (Float)(Animation->FrameW+Animation->SpaceX));		
-		Int32 FrmPerY	= math::floor((Float)(Animation->Sheet->VSize+Animation->SpaceY) / (Float)(Animation->FrameH+Animation->SpaceY));
+		Int32 FrmPerX	= math::floor((Float)(Animation->Sheet->getUSize()+Animation->SpaceX) / (Float)(Animation->FrameW+Animation->SpaceX));		
+		Int32 FrmPerY	= math::floor((Float)(Animation->Sheet->getVSize()+Animation->SpaceY) / (Float)(Animation->FrameH+Animation->SpaceY));
 
 		// Vertical lines.
 		for( Int32 iX=0; iX<=FrmPerX; iX++ )
@@ -632,22 +632,22 @@ void WAnimationPlayer::OnPaint( CGUIRenderBase* Render )
 	TPoint Base = ClientToWindow(TPoint::Zero);
 	Render->SetClipArea( Base, Size );
 
-	Int32	X	= math::floor( R.min.x * Animation->Sheet->USize ),
-			Y	= math::floor( R.min.y * Animation->Sheet->VSize ),
-			W	= math::floor( (R.max.x-R.min.x) * Animation->Sheet->USize ),
-			H	= math::floor( (R.max.y-R.min.y) * Animation->Sheet->VSize );
+	Int32	X	= math::floor( R.min.x * Animation->Sheet->getUSize() ),
+			Y	= math::floor( R.min.y * Animation->Sheet->getVSize() ),
+			W	= math::floor( (R.max.x-R.min.x) * Animation->Sheet->getUSize() ),
+			H	= math::floor( (R.max.y-R.min.y) * Animation->Sheet->getVSize() );
 
 	Int32 DestX	= Base.X + (Size.Width - W) / 2,
 			DestY	= Base.Y + (Size.Height - H) / 2;
 
 	// Draw frame.
-	Render->DrawPicture
+	Render->DrawImage
 					( 
 						TPoint( DestX, DestY ),
 						TSize( W, H ),
 						TPoint( X, Y ),
 						TSize( W, H ),
-						Animation->Sheet
+						As<FBitmap>(Animation->Sheet)->m_image
 					);
 
 	// Write frame.

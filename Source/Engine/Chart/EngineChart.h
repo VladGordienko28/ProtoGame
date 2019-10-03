@@ -27,7 +27,7 @@ namespace flu
 		EngineChart();
 		~EngineChart();
 
-		void render( CCanvas* canvas, FFont* font );
+		void render( CCanvas* canvas );
 		
 		void setTimelineLength( Float newLength );
 		void toggleGroup( profile::IProfiler::GroupId groupId );
@@ -47,6 +47,9 @@ namespace flu
 		Float m_invTimelineMaxValue;
 		Bool m_enabled;
 
+		fnt::Font::Ptr m_font;
+
+		gfx::GrowOnlyVB<math::Vector, 128> m_vertexBuffer;
 		math::Color m_colorSet[COLOR_SET_SIZE];
 		String m_helpString;
 	};

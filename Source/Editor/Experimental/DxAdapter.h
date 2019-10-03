@@ -5,6 +5,13 @@
 
 namespace flu
 {
+	extern img::Image::Ptr g_coolImage;
+
+	extern rend::Device* g_device;
+	extern gfx::GridDrawer g_grid;
+
+	extern void renderLoadEffects();
+
 	/**
 	 *	An experimental DirectX11 backend integrated
 	 *	into legacy fluorine rendering system
@@ -17,7 +24,7 @@ namespace flu
 		~CDirectX11Canvas();
 
 		// CCanvas interface.
-		void SetTransform( const TViewInfo& info ) override;
+		void SetTransform( const gfx::ViewInfo& info ) override;
 		void SetClip( const TClipArea& area ) override;
 		void DrawPoint( const math::Vector& p, Float size, math::Color color ) override;
 		void DrawLine( const math::Vector& a, const math::Vector& b, math::Color color, Bool stipple ) override;
@@ -80,30 +87,44 @@ private:
 
 */
 
+		ffx::SharedConstants::UPtr m_sharedConstants;  /// not here!!!!!!!!!!!!!!!!!!
+
 	private:
+		friend class CDirectX11Render;
+
 		// not good, but well for now
 		CDirectX11Render* m_render;
 		rend::Device* m_device;
 
 		Float m_lockTime;
 
-		ffx::System::UPtr m_effectSystem;
 
 
-		ffx::Effect::Ptr m_colorEffect;
-		ffx::Effect::Ptr m_texturedEffect;
+
 
 		rend::VertexBufferHandle m_quadVB_XY;
 		rend::VertexBufferHandle m_quadVB_XYUV;
 
-		Array<rend::ShaderResourceView> m_srvs;
-		Array<rend::Texture2DHandle> m_textures;
-		rend::ShaderResourceView getSrvOf( FBitmap* bitmap );
+		rend::VertexBufferHandle m_polyVB_XY;
+		rend::VertexBufferHandle m_polyVB_XYUV;
+
+		rend::IndexBufferHandle m_polyIB;
 
 		rend::SamplerStateId m_samplerNearest;
 		rend::SamplerStateId m_samplerLinear;
 
-		rend::BlendStateId m_blendStates[EBitmapBlend::BLEND_MAX];
+		rend::BlendStateId m_normalBlendState;
+		rend::BlendStateId m_alphaBlendState;
+		rend::BlendStateId m_translucentBlendState;
+
+		//rend::BlendStateId m_blendStates[EBitmapBlend::BLEND_MAX];
+
+		struct PerViewData
+		{
+			Float viewProjectionMatrix[4][4];
+			math::Vector4 worldCamera;
+		};
+
 
 		friend class CDirectX11Render;
 	};

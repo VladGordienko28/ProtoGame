@@ -41,13 +41,13 @@ namespace flu
 		}
 
 		template<typename HANDLE_TYPE, typename T, SizeT MAX_SIZE> friend class HandleArray;
-		template<typename HANDLE> friend HANDLE INVALID_HANDLE();
+		template<typename HANDLE> friend constexpr HANDLE INVALID_HANDLE();
 
 		static_assert( ID_BITS + GEN_BITS == 32, "Total Handle bits should be 32" );
 	};
 
 	// Invalid handle constructor
-	template<typename HANDLE> inline HANDLE INVALID_HANDLE()
+	template<typename HANDLE> constexpr inline HANDLE INVALID_HANDLE()
 	{
 		return HANDLE( ( 1 << HANDLE::BITS_PER_ID ) - 1, ( 1 << HANDLE::BITS_PER_GEN ) - 1 );
 	}
@@ -107,7 +107,7 @@ namespace flu
 		void removeElement( HANDLE_TYPE handle )
 		{
 			assert( handle.id >= 0 && handle.id < MAX_SIZE );
-			assert( handle.gen = m_available[handle.id].gen );
+			assert( handle.gen == m_available[handle.id].gen );
 			assert( m_available[handle.id].id == MAX_SIZE );
 
 			m_available[handle.id].id = m_firstAvailable;
@@ -119,7 +119,7 @@ namespace flu
 		T& get( HANDLE_TYPE handle )
 		{
 			assert( handle.id >= 0 && handle.id < MAX_SIZE );
-			assert( handle.gen = m_available[handle.id].gen );
+			assert( handle.gen == m_available[handle.id].gen );
 			assert( m_available[handle.id].id == MAX_SIZE );
 			
 			return m_data[handle.id];
@@ -128,7 +128,7 @@ namespace flu
 		const T& get( HANDLE_TYPE handle ) const
 		{
 			assert( handle.id >= 0 && handle.id < MAX_SIZE );
-			assert( handle.gen = m_available[handle.id].gen );
+			assert( handle.gen == m_available[handle.id].gen );
 			assert( m_available[handle.id].id == MAX_SIZE );
 			
 			return m_data[handle.id];

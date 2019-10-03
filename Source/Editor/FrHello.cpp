@@ -25,12 +25,12 @@ WHelloPage::WHelloPage( WContainer* InOwner, WWindow* InRoot )
 	NewLink					= new WLinkLabel( this, Root );
 	NewLink->Caption		= L"Create a new project...";
 	NewLink->EventClick		= WIDGET_EVENT(WHelloPage::LinkNewClick);
-	NewLink->SetSize( WWindow::Font1->TextWidth(*NewLink->Caption), WWindow::Font1->Height );
+	NewLink->SetSize( WWindow::Font1->textWidth(*NewLink->Caption), WWindow::Font1->maxHeight() );
 
 	OpenLink				= new WLinkLabel( this, Root );
 	OpenLink->Caption		= L"Open an existing project...";
 	OpenLink->EventClick	= WIDGET_EVENT(WHelloPage::LinkOpenClick);
-	OpenLink->SetSize( WWindow::Font1->TextWidth(*OpenLink->Caption), WWindow::Font1->Height );
+	OpenLink->SetSize( WWindow::Font1->textWidth(*OpenLink->Caption), WWindow::Font1->maxHeight() );
 
 	// Links to recent projects.
 	for( Int32 i=0; i<arraySize(Recent); i++ )
@@ -47,7 +47,7 @@ WHelloPage::WHelloPage( WContainer* InOwner, WWindow* InRoot )
 		Recent[i]->Caption		= fm::getFileName( *RecentFiles[i] ) + L".fluproj";
 		Recent[i]->Tooltip		= RecentFiles[i];
 		Recent[i]->EventClick	= WIDGET_EVENT(WHelloPage::LinkRecentClick);
-		Recent[i]->SetSize( WWindow::Font1->TextWidth(*Recent[i]->Caption), WWindow::Font1->Height );
+		Recent[i]->SetSize( WWindow::Font1->textWidth(*Recent[i]->Caption), WWindow::Font1->maxHeight() );
 	}
 }
 
@@ -89,7 +89,7 @@ void WHelloPage::OnPaint( CGUIRenderBase* Render )
 	);
 	Render->DrawText
 	(
-		TPoint( Base.X+(Size.Width-Root->Font1->TextWidth(FLU_COPYRIGHT))/2 ,Base.Y+Size.Height-30 ),
+		TPoint( Base.X+(Size.Width-Root->Font1->textWidth(FLU_COPYRIGHT))/2 ,Base.Y+Size.Height-30 ),
 		FLU_COPYRIGHT,
 		GUI_COLOR_TEXT,
 		Root->Font1
@@ -104,7 +104,7 @@ void WHelloPage::OnPaint( CGUIRenderBase* Render )
 		math::Color( 0x22, 0x22, 0x22, 0xff ),
 		BPAT_Solid
 	);
-	Render->DrawPicture
+	Render->DrawImage
 	(
 		TPoint( Base.X+(Size.Width-256)/2, Base.Y+20 ),
 		TSize( 256, 64 ),

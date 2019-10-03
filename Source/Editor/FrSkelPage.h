@@ -58,11 +58,11 @@ private:
 
 	
 	// Internal variables.
-	TViewInfo	SceneView;
-	ESkelTool	Tool;
-	CGizmo		Gizmo;
-	Float		TranslationSnap;
-	Int32		RotationSnap;
+	gfx::ViewInfo	SceneView;
+	ESkelTool		Tool;
+	CGizmo			Gizmo;
+	Float			TranslationSnap;
+	Int32			RotationSnap;
 
 	// Internal widgets.
 	WToolBar*			ToolBar;

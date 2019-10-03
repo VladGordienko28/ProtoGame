@@ -51,16 +51,6 @@ inline void RegisterAll()
 		FScript						::method();\
 		FTexture					::method();\
 		FBitmap						::method();\
-		FDemoBitmap					::method();\
-		FPlasmaBitmap				::method();\
-		FFireBitmap					::method();\
-		FGlassBitmap				::method();\
-		FWaterBitmap				::method();\
-		FTechBitmap					::method();\
-		FHarmonicBitmap				::method();\
-		FMaterial					::method();\
-		FMaterialLayer				::method();\
-		FDiffuseLayer				::method();\
 		FFont						::method();\
 		FLevel						::method();\
 		FSound						::method();\
@@ -68,7 +58,16 @@ inline void RegisterAll()
 		FAnimation					::method();\
 		FSkeleton					::method();\
 		FProjectInfo				::method();\
-
+		//FDemoBitmap				::method();\
+		//FPlasmaBitmap				::method();\
+		//FFireBitmap				::method();\
+		//FGlassBitmap				::method();\
+		//FWaterBitmap				::method();\
+		//FTechBitmap				::method();\
+		//FHarmonicBitmap			::method();\
+		//FMaterial					::method();\
+		//FMaterialLayer			::method();\
+		//FDiffuseLayer				::method();\
 
 	// Register classes hierarchy.
 	FOREACH_CLASS(AutoRegisterClass)

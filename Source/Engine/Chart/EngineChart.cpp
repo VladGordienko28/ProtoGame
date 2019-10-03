@@ -10,6 +10,8 @@ namespace flu
 	static const Double DEFAULT_TIMELINE_TIME = 7.0;
 	static const math::Color TIMELINE_PANEL_COLOR = { 16, 16, 16, 200 };
 
+	static const Char CHART_FONT_NAME[] = TEXT( "Fonts.CourierNew_9" );
+
 	EngineChart::EngineChart()
 		:	m_profiler( static_cast<Int32>(EProfilerGroup::MAX) ),
 			m_invTimelineLength( 0.0 ),
@@ -35,6 +37,9 @@ namespace flu
 			m_helpString += String::format( L"[%d] %s; ", i, getGroupName( static_cast<EProfilerGroup>( i ) ) );
 		}
 
+		// obtain resources
+		m_font = res::ResourceManager::get<fnt::Font>( CHART_FONT_NAME, res::EFailPolicy::FATAL );
+
 		// turn on at least one group
 		m_profiler.enableGroup( static_cast<Int32>(EProfilerGroup::General) );
 	}
@@ -42,14 +47,18 @@ namespace flu
 	EngineChart::~EngineChart()
 	{
 		disable();
+
+		m_font = nullptr;
 	}
 
-	void EngineChart::render( CCanvas* canvas, FFont* font )
+	void EngineChart::render( CCanvas* canvas )
 	{
 		if( !m_enabled )
 			return;
 
-		canvas->SetTransform( TViewInfo ( 
+		gfx::ScopedRenderingZone srz( TEXT( "Profiler" ) );
+
+		canvas->SetTransform( gfx::ViewInfo( 
 			0.f, 0.f, canvas->ScreenWidth, canvas->ScreenHeight ) );
 
 		const Float screenW = canvas->ScreenWidth;
@@ -104,22 +113,17 @@ namespace flu
 				const Int32 colorIndex = COLOR_SET_MASK & ( groupId * 17 + reinterpret_cast<Int32>( it.name ) );
 				const math::Color drawColor = m_colorSet[colorIndex];
 
-				Double maxMetricValue = it.samples[0].value;
-				Double cumulativeValue = it.samples[0].value;
+				Double maxMetricValue = 0.0;
+				Double cumulativeValue = 0.0;
 
-				Float x1 = screenW - ( frameTime - it.samples[0].time ) * graphXRescale;
-				Float y1 = timelineOffset - it.samples[0].value * graphYRescale;
+				math::Vector* samplesBuffer = m_vertexBuffer.prepare( it.samples.size() );
 
-				// process all samples
-				for( Int32 i = 1; i < it.samples.size(); ++i )
+				for( Int32 i = 0; i < it.samples.size(); ++i )
 				{
-					Float x2 = screenW - ( frameTime - it.samples[i].time ) * graphXRescale;
-					Float y2 = timelineOffset - it.samples[i].value * graphYRescale;
+					Float x = screenW - ( frameTime - it.samples[i].time ) * graphXRescale;
+					Float y = timelineOffset - it.samples[i].value * graphYRescale;
 
-					canvas->DrawLine( { x1, y1 }, { x2, y2 }, drawColor, false );
-
-					x1 = x2;
-					y1 = y2;
+					samplesBuffer[i] = { x, y };
 
 					if( maxMetricValue < it.samples[i].value )
 						maxMetricValue = it.samples[i].value;
@@ -127,13 +131,20 @@ namespace flu
 					cumulativeValue += it.samples[i].value;
 				}
 
+				g_coloredEffect->setColor( 0, drawColor );
+				g_coloredEffect->apply();
+
+				m_vertexBuffer.bind();
+				gfx::api::setTopology( rend::EPrimitiveTopology::LineStrip );
+				gfx::api::draw( it.samples.size(), 0 );
+
 				// draw metric legend
 				metricItem.Color = drawColor;
 				canvas->DrawRect( metricItem );
 
 				canvas->DrawText( *String::format( L"%s: %s (avg %.2f)", 
 					getGroupName(static_cast<EProfilerGroup>( groupId )), it.name, ( cumulativeValue / it.samples.size() ) ), 
-					font, math::colors::WHITE, { 40.f, metricItem.Bounds.min.y + 2.f } );
+					m_font, math::colors::WHITE, { 40.f, metricItem.Bounds.min.y + 2.f } );
 
 				metricItem.Bounds.min.y += metricDrawStep;
 				metricItem.Bounds.max.y += metricDrawStep;
@@ -145,7 +156,7 @@ namespace flu
 		m_invTimelineMaxValue = 1.f / maxValue;
 
 		// draw help string
-		canvas->DrawText( m_helpString, font, math::colors::WHITE, { 10.f, screenH - 20.f } );
+		canvas->DrawText( m_helpString, m_font, math::colors::WHITE, { 10.f, screenH - 20.f } );
 	}
 
 	void EngineChart::setTimelineLength( Float newLength )

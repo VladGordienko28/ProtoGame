@@ -256,7 +256,7 @@ void FLogicComponent::Render( CCanvas* Canvas )
 	Pad.Flags		= POLY_Unlit | POLY_FlatShade | POLY_Ghost;
 	Pad.Color		= bEnabled ? math::Color( 0x20, 0x20, 0x20, 0xff ) : math::Color( 0x40, 0x40, 0x40, 0xff );
 	Pad.Bounds		= Rect;
-	Pad.Texture		= nullptr;
+	Pad.Image		= INVALID_HANDLE<rend::Texture2DHandle>();
 	Pad.Rotation	= 0;
 	Canvas->DrawRect( Pad );
 

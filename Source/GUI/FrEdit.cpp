@@ -26,8 +26,8 @@ WEdit::WEdit( WContainer* InOwner, WWindow* InRoot )
 	// Precompute the size of single character.
 	CharSize = TSize
 				( 
-					Root->Font2->TextWidth( L"A" ), 
-					Root->Font2->Height 
+					Root->Font2->textWidth( L"A" ), 
+					Root->Font2->maxHeight() 
 				);
 }
 
@@ -598,7 +598,7 @@ void WSpinner::OnPaint( CGUIRenderBase* Render )
 		(iSpinButton & 2) ? GUI_COLOR_BUTTON : GUI_COLOR_EDIT_OFF,
 		BPAT_Solid
 	);
-	Render->DrawPicture
+	Render->DrawImage
 	(
 		TPoint( P.X+Size.Width-ButtonSize.Width-1 + (ButtonSize.Width-5)/2, P.Y+1 + (ButtonSize.Height-3)/2 ),
 		TSize( 5, 3 ),
@@ -606,7 +606,7 @@ void WSpinner::OnPaint( CGUIRenderBase* Render )
 		TSize( 5, -3 ),
 		WWindow::Icons
 	);
-	Render->DrawPicture
+	Render->DrawImage
 	(
 		TPoint( P.X+Size.Width-ButtonSize.Width-1 + (ButtonSize.Width-5)/2, P.Y+2 + (ButtonSize.Height-3)/2 + ButtonSize.Height ),
 		TSize( 5, 3 ),

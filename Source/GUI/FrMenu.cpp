@@ -72,7 +72,7 @@ Int32 WMenu::AddSubMenu( String Title, WMenu* SubMenu )
 
 	// Resize to fit the item.
 	SetSize	(	
-				max( Size.Width, Root->Font1->TextWidth(*Title)+64 ), 
+				max<Int32>( Size.Width, Root->Font1->textWidth(*Title)+64 ), 
 				Item.Y + Item.Height + 1 
 			);
 
@@ -97,7 +97,7 @@ Int32 WMenu::AddItem( String Title, TNotifyEvent InEvent, Bool InbToggle )
 
 	// Resize to fit the item.
 	SetSize	(	
-				max( Size.Width, Root->Font1->TextWidth(*Title)+64 ), 
+				max<Int32>( Size.Width, Root->Font1->textWidth(*Title)+64 ), 
 				Item.Y + Item.Height + 1 
 			);
 
@@ -145,7 +145,7 @@ void WMenu::OnPaint( CGUIRenderBase* Render )
 	WWidget::OnPaint( Render );
 
 	TPoint Base = ClientToWindow(TPoint::Zero);
-	Int32  TextY = Base.Y +(MENU_ITEM_HEIGHT-Root->Font1->Height) / 2;	
+	Int32  TextY = Base.Y +(MENU_ITEM_HEIGHT-Root->Font1->maxHeight()) / 2;	
 
 	// Draw pad.
 	Render->DrawRegion( Base, Size, GUI_COLOR_MENU, GUI_COLOR_MENU_SELECTED, BPAT_Solid );
@@ -187,24 +187,24 @@ void WMenu::OnPaint( CGUIRenderBase* Render )
 
 		// If checked - draw mark.
 		if( Item.bChecked && Item.Text.len() )
-			Render->DrawPicture
+			Render->DrawImage
 					( 
 						TPoint( Base.X + 3, Base.Y + Item.Y + 7 ), 
 						TSize( 10, 10 ), 
 						TPoint( 0, 22 ), 
 						TSize( 10, 10 ), 
-						Root->Icons 
+						Root->Icons
 					);
 
 		// If have submenu draw little triangle.
 		if( Item.SubMenu )
-			Render->DrawPicture
+			Render->DrawImage
 					( 
 						TPoint( Base.X + Size.Width - 16, Base.Y + Item.Y + 7 ), 
 						TSize( 4, 7 ), 
 						TPoint(0, 0), 
 						TSize(4, 7), 
-						Root->Icons 
+						Root->Icons
 					);
 	}
 }
@@ -339,7 +339,7 @@ Int32 WMainMenu::AddSubMenu( String Title, WMenu* SubMenu )
 	TMainMenuItem Item;
 	Item.SubMenu	= SubMenu;
 	Item.Text		= Title;
-	Item.Width		= Root->Font1->TextWidth( *Title ) + 10;
+	Item.Width		= Root->Font1->textWidth( *Title ) + 10;
 	Item.X			= Items.size() ? Items.last().X + Items.last().Width : 4;
 
 	return Items.push(Item);
@@ -354,7 +354,7 @@ void WMainMenu::OnPaint( CGUIRenderBase* Render )
 	WWidget::OnPaint( Render );
 
 	TPoint Base = ClientToWindow( TPoint(0, 0) );
-	Int32 TextY = Base.Y + (Size.Height-Root->Font1->Height) / 2;
+	Int32 TextY = Base.Y + (Size.Height-Root->Font1->maxHeight()) / 2;
 
 	// Draw pad.
 	Render->DrawRegion( Base, Size, GUI_COLOR_MENU_BAR, GUI_COLOR_MENU_BAR, BPAT_Solid );

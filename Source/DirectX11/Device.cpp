@@ -5,6 +5,12 @@
 
 #include "DirectX11.h"
 
+#if FLU_PROFILE_GPU
+	#define GPU_STAT(x) x
+#else
+	#define GPU_STAT(x)
+#endif
+
 namespace flu
 {
 namespace dx11
@@ -38,9 +44,45 @@ namespace dx11
 		this->setViewport( initialViewport );
 		m_immediateContext->OMSetRenderTargets( 1, &m_swapChain->getBackBufferRTV(), nullptr );
 
-		m_oldBlendStateId = -1;
+		m_oldBlendStateId = rend::BlendState::INVALID;
+		m_oldDepthStencilStateId = rend::DepthStencilState::INVALID;
 
 		m_oldTopology = rend::EPrimitiveTopology::Unknown;
+
+		// create render states
+		D3D11_RASTERIZER_DESC rasterState;
+		rasterState.FillMode = D3D11_FILL_SOLID;
+		rasterState.CullMode = D3D11_CULL_NONE;
+		rasterState.FrontCounterClockwise = FALSE;
+		rasterState.DepthBias = 0;
+		rasterState.DepthBiasClamp = 0.f;
+		rasterState.SlopeScaledDepthBias = 0.f;
+		rasterState.DepthClipEnable = FALSE;
+		rasterState.MultisampleEnable = FALSE;
+		rasterState.AntialiasedLineEnable = FALSE;
+
+		rasterState.ScissorEnable = FALSE;
+		m_device->CreateRasterizerState( &rasterState, &m_defaultRasterState );
+
+		rasterState.ScissorEnable = TRUE;
+		m_device->CreateRasterizerState( &rasterState, &m_scissorRasterState );
+
+		m_immediateContext->RSSetState( m_defaultRasterState );
+		m_scissorTestEnabled = false;
+
+		// invalidate all slots caches
+		for( auto& it : m_constantBuffersCache )
+		{
+			it.invalidate( INVALID_HANDLE<rend::ConstantBufferHandle>() );
+		}
+		for( auto& it : m_samplerStatesCache )
+		{
+			it.invalidate( rend::SamplerState::INVALID );
+		}
+		for( auto& it : m_srvsCache )
+		{
+			it.invalidate( rend::ShaderResourceView() );
+		}
 	}
 
 	Device::~Device()
@@ -53,6 +95,7 @@ namespace dx11
 		m_samplerStates.empty();
 		m_vertexDeclarations.empty();
 		m_blendStates.empty();
+		m_depthStencilStates.empty();
 
 		m_swapChain = nullptr;
 		m_device = nullptr;
@@ -72,6 +115,7 @@ namespace dx11
 
 	void Device::beginFrame()
 	{
+		GPU_STAT( mem::zero( &m_drawStats, sizeof( rend::DrawStats ) ) );
 	}
 
 	void Device::endFrame( Bool lockToVSync )
@@ -85,6 +129,8 @@ namespace dx11
 		rend::Texture1DHandle handle;
 
 		m_textures1D.emplaceElement( handle )->create( m_device.get(), format, width, mips, usage, initialData, debugName );
+		GPU_STAT( m_memoryStats.m_texureBytes += m_textures1D.get( handle ).memoryUsage() );
+
 		return handle;
 	}
 
@@ -109,6 +155,8 @@ namespace dx11
 	void Device::destroyTexture1D( rend::Texture1DHandle handle )
 	{
 		DxTexture1D& texture = m_textures1D.get( handle );
+
+		GPU_STAT( m_memoryStats.m_texureBytes -= texture.memoryUsage() );
 		texture.destroy( m_device.get() );
 
 		m_textures1D.removeElement( handle );
@@ -120,6 +168,8 @@ namespace dx11
 		rend::Texture2DHandle handle;
 
 		m_textures2D.emplaceElement( handle )->create( m_device.get(), format, width, height, mips, usage, initialData, debugName );
+		GPU_STAT( m_memoryStats.m_texureBytes += m_textures2D.get( handle ).memoryUsage() );
+
 		return handle;
 	}
 
@@ -145,6 +195,8 @@ namespace dx11
 	void Device::destroyTexture2D( rend::Texture2DHandle handle )
 	{
 		DxTexture2D& texture = m_textures2D.get( handle );
+
+		GPU_STAT( m_memoryStats.m_texureBytes -= texture.memoryUsage() );
 		texture.destroy( m_device.get() );
 
 		m_textures2D.removeElement( handle );
@@ -156,15 +208,40 @@ namespace dx11
 		rend::RenderTargetHandle handle;
 
 		m_renderTargets.emplaceElement( handle )->create( m_device.get(), format, width, height, debugName );
+		GPU_STAT( m_memoryStats.m_texureBytes += m_renderTargets.get( handle ).memoryUsage() );
+
 		return handle;
 	}
 
 	void Device::destroyRenderTarget( rend::RenderTargetHandle handle )
 	{
 		DxRenderTarget& renderTarget = m_renderTargets.get( handle );
+
+		GPU_STAT( m_memoryStats.m_texureBytes -= renderTarget.memoryUsage() );
 		renderTarget.destroy( m_device.get() );
 
 		m_renderTargets.removeElement( handle );
+	}
+
+	rend::DepthBufferHandle Device::createDepthBuffer( rend::EFormat format, Int32 width, Int32 height,
+		const AnsiChar* debugName )
+	{
+		rend::DepthBufferHandle handle;
+
+		m_depthBuffers.emplaceElement( handle )->create( m_device.get(), format, width, height, debugName );
+		GPU_STAT( m_memoryStats.m_texureBytes += m_depthBuffers.get( handle ).memoryUsage() );
+
+		return handle;
+	}
+
+	void Device::destroyDepthBuffer( rend::DepthBufferHandle handle )
+	{
+		DxDepthBuffer& depthBuffer = m_depthBuffers.get( handle );
+
+		GPU_STAT( m_memoryStats.m_texureBytes -= depthBuffer.memoryUsage() );
+		depthBuffer.destroy( m_device.get() );
+
+		m_depthBuffers.removeElement( handle );
 	}
 
 	rend::ShaderHandle Device::createPixelShader( const rend::CompiledShader& shader, const AnsiChar* debugName )
@@ -217,7 +294,9 @@ namespace dx11
 		rend::EUsage usage, const void* initialData, const AnsiChar* debugName  )
 	{
 		rend::VertexBufferHandle handle;
+
 		m_vertexBuffers.emplaceElement( handle )->create( m_device.get(), vertexSize, numVerts, usage, initialData, debugName );
+		GPU_STAT( m_memoryStats.m_vertexBufferBytes += m_vertexBuffers.get( handle ).memoryUsage() );
 
 		return handle;
 	}
@@ -241,6 +320,8 @@ namespace dx11
 	void Device::destroyVertexBuffer( rend::VertexBufferHandle handle )
 	{
 		DxVertexBuffer& vertexBuffer = m_vertexBuffers.get( handle );
+
+		GPU_STAT( m_memoryStats.m_vertexBufferBytes -= vertexBuffer.memoryUsage() );
 		vertexBuffer.destroy( m_device.get() );
 
 		m_vertexBuffers.removeElement( handle );
@@ -250,7 +331,9 @@ namespace dx11
 		rend::EUsage usage, const void* initialData, const AnsiChar* debugName )
 	{
 		rend::IndexBufferHandle handle;
+
 		m_indexBuffers.emplaceElement( handle )->create( m_device.get(), indexFormat, numIndexes, usage, initialData, debugName );
+		GPU_STAT( m_memoryStats.m_indexBufferBytes += m_indexBuffers.get( handle ).memoryUsage() );
 
 		return handle;
 	}
@@ -258,6 +341,8 @@ namespace dx11
 	void Device::destroyIndexBuffer( rend::IndexBufferHandle handle )
 	{
 		DxIndexBuffer& indexBuffer = m_indexBuffers.get( handle );
+
+		GPU_STAT( m_memoryStats.m_indexBufferBytes -= indexBuffer.memoryUsage() );
 		indexBuffer.destroy( m_device.get() );
 
 		m_indexBuffers.removeElement( handle );
@@ -267,7 +352,9 @@ namespace dx11
 		const void* initialData, const AnsiChar* debugName )
 	{
 		rend::ConstantBufferHandle handle;
+
 		m_constantBuffers.emplaceElement( handle )->create( m_device.get(), bufferSize, usage, initialData, debugName );
+		GPU_STAT( m_memoryStats.m_constantBufferBytes += m_constantBuffers.get( handle ).memoryUsage() );
 
 		return handle;
 	}
@@ -290,6 +377,8 @@ namespace dx11
 	void Device::destroyConstantBuffer( rend::ConstantBufferHandle handle )
 	{
 		DxConstantBuffer& constantBuffer = m_constantBuffers.get( handle );
+
+		GPU_STAT( m_memoryStats.m_constantBufferBytes -= constantBuffer.memoryUsage() );
 		constantBuffer.destroy( m_device.get() );
 
 		m_constantBuffers.removeElement( handle );
@@ -370,25 +459,121 @@ namespace dx11
 		}
 	}
 
-	void Device::enableBlendState( rend::BlendStateId blendStateId )
+	void Device::applyBlendState( rend::BlendStateId blendStateId )
 	{
-		if( m_oldBlendStateId != blendStateId )
+		if( blendStateId != m_oldBlendStateId )
 		{
-			DxRef<ID3D11BlendState>& blendState = m_blendStates.getRef( blendStateId );
-			assert( blendState.hasObject() );
+			if( blendStateId != rend::BlendState::INVALID )
+			{
+				DxRef<ID3D11BlendState>& blendState = m_blendStates.getRef( blendStateId );
+				assert( blendState.hasObject() );
 
-			m_immediateContext->OMSetBlendState( blendState.get(), nullptr, MAX_UINT32 );
+				m_immediateContext->OMSetBlendState( blendState.get(), nullptr, MAX_UINT32 );
+			}
+			else
+			{
+				m_immediateContext->OMSetBlendState( nullptr, nullptr, MAX_UINT32 );
+			}
 
+			GPU_STAT( m_drawStats.m_blendStateSwitches++ );
 			m_oldBlendStateId = blendStateId;
 		}
 	}
 
-	void Device::disableBlendState()
+	D3D11_COMPARISON_FUNC fluorineComparsionFuncToDirectX( rend::EComparsionFunc func )
 	{
-		if( m_oldBlendStateId != -1 )
+		switch( func )
 		{
-			m_immediateContext->OMSetBlendState( nullptr, nullptr, MAX_UINT32 );
-			m_oldBlendStateId = -1;
+			case rend::EComparsionFunc::Never:			return D3D11_COMPARISON_NEVER;
+			case rend::EComparsionFunc::Less:			return D3D11_COMPARISON_LESS;
+			case rend::EComparsionFunc::Equal:			return D3D11_COMPARISON_EQUAL;
+			case rend::EComparsionFunc::LessEqual:		return D3D11_COMPARISON_LESS_EQUAL;
+			case rend::EComparsionFunc::Greater:		return D3D11_COMPARISON_GREATER;
+			case rend::EComparsionFunc::NotEqual:		return D3D11_COMPARISON_NOT_EQUAL;
+			case rend::EComparsionFunc::GreaterEqual:	return D3D11_COMPARISON_GREATER_EQUAL;
+			case rend::EComparsionFunc::Always:			return D3D11_COMPARISON_ALWAYS;
+
+			default:
+				fatal( L"Unknown comparsion function %d", func );
+				return D3D11_COMPARISON_ALWAYS;
+		}
+	}
+
+	D3D11_STENCIL_OP fluorineStencilOpToDirectX( rend::EStencilOp op )
+	{
+		switch( op )
+		{
+			case rend::EStencilOp::Keep:	return D3D11_STENCIL_OP_KEEP;
+			case rend::EStencilOp::Zero:	return D3D11_STENCIL_OP_ZERO;
+			case rend::EStencilOp::Replace:	return D3D11_STENCIL_OP_REPLACE;
+			case rend::EStencilOp::IncSat:	return D3D11_STENCIL_OP_INCR_SAT;
+			case rend::EStencilOp::DecSat:	return D3D11_STENCIL_OP_DECR_SAT;
+			case rend::EStencilOp::Invert:	return D3D11_STENCIL_OP_INVERT;
+			case rend::EStencilOp::Inc:		return D3D11_STENCIL_OP_INCR;
+			case rend::EStencilOp::Dec:		return D3D11_STENCIL_OP_DECR;
+
+			default:
+				fatal( L"Unknown stencil op %d", op );
+				return D3D11_STENCIL_OP_KEEP;
+		}
+	}
+
+	rend::DepthStencilStateId Device::getDepthStencilState( const rend::DepthStencilState& depthStencilState )
+	{
+		rend::DepthStencilStateId requiredDepthStencilHash = depthStencilState.getHash();
+
+		if( m_depthStencilStates.hasKey( requiredDepthStencilHash ) )
+		{
+			// reuse depth-stencil state from cache
+			return requiredDepthStencilHash;
+		}
+		else
+		{
+			// create new depth-stencil state
+			D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+			mem::zero( &depthStencilDesc, sizeof( D3D11_DEPTH_STENCIL_DESC ) );
+
+			depthStencilDesc.DepthEnable = depthStencilState.isDepthEnabled();
+			depthStencilDesc.DepthWriteMask = depthStencilState.isDepthWriteEnabled() ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
+			depthStencilDesc.DepthFunc = fluorineComparsionFuncToDirectX( depthStencilState.getDepthFunc() );
+
+			depthStencilDesc.StencilEnable = depthStencilState.isStencilEnabled();
+			depthStencilDesc.StencilReadMask = 0xff;
+			depthStencilDesc.StencilWriteMask = 0xff;
+
+			depthStencilDesc.FrontFace.StencilFunc = fluorineComparsionFuncToDirectX( depthStencilState.getStencilFunc() );
+			depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+			depthStencilDesc.FrontFace.StencilPassOp = fluorineStencilOpToDirectX( depthStencilState.getStencilPassOp() );
+			depthStencilDesc.FrontFace.StencilFailOp = fluorineStencilOpToDirectX( depthStencilState.getStencilFailOp() );
+
+			depthStencilDesc.BackFace = depthStencilDesc.FrontFace;
+
+			DxRef<ID3D11DepthStencilState> dxDepthStencilState;
+			HRESULT result = m_device->CreateDepthStencilState( &depthStencilDesc, &dxDepthStencilState );
+			assert( SUCCEEDED( result ));
+
+			m_depthStencilStates.put( requiredDepthStencilHash, dxDepthStencilState );
+			return requiredDepthStencilHash;	
+		}
+	}
+
+	void Device::applyDepthStencilState( rend::DepthStencilStateId depthStencilStateId )
+	{
+		if( depthStencilStateId != m_oldDepthStencilStateId )
+		{
+			if( depthStencilStateId != rend::DepthStencilState::INVALID )
+			{
+				DxRef<ID3D11DepthStencilState>& depthStencilState = m_depthStencilStates.getRef( depthStencilStateId );
+				assert( depthStencilState.hasObject() );
+
+				m_immediateContext->OMSetDepthStencilState( depthStencilState.get(), 0 );
+			}
+			else
+			{
+				m_immediateContext->OMSetDepthStencilState( nullptr, 0 );			
+			}
+		
+			m_oldDepthStencilStateId = depthStencilStateId;
 		}
 	}
 
@@ -474,15 +659,38 @@ namespace dx11
 		m_immediateContext->ClearRenderTargetView( rtv, reinterpret_cast<const Float*>( &clearColor ) );
 	}
 
+	void Device::clearDepthBuffer( rend::DepthBufferHandle handle, Float depth, UInt8 stencil )
+	{
+		assert( handle != INVALID_HANDLE<rend::DepthBufferHandle>() );
+
+		DxDepthBuffer& depthBuffer = m_depthBuffers.get( handle );
+		assert( depthBuffer.m_dsv.hasObject() );
+		assert( depthBuffer.m_format == rend::EFormat::D24S8 );
+
+		m_immediateContext->ClearDepthStencilView( depthBuffer.m_dsv.get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 
+			depth, stencil );
+	}
+
 	void Device::setVertexBuffer( rend::VertexBufferHandle handle )
 	{
 		if( m_oldVertexBuffer != handle )
 		{
-			DxVertexBuffer& vertexBuffer = m_vertexBuffers.get( handle );
+			if( handle != INVALID_HANDLE<rend::VertexBufferHandle>() )
+			{
+				DxVertexBuffer& vertexBuffer = m_vertexBuffers.get( handle );
 
-			UINT stride = vertexBuffer.m_vertexSize;
-			UINT offset = 0;
-			m_immediateContext->IASetVertexBuffers( 0, 1, &vertexBuffer.m_buffer, &stride, &offset );
+				UINT stride = vertexBuffer.m_vertexSize;
+				UINT offset = 0;
+				m_immediateContext->IASetVertexBuffers( 0, 1, &vertexBuffer.m_buffer, &stride, &offset );			
+			}
+			else
+			{
+				DxRef<ID3D11Buffer> nullBuffer;
+
+				UINT stride = 0;
+				UINT offset = 0;
+				m_immediateContext->IASetVertexBuffers( 0, 1, &nullBuffer, &stride, &offset );	
+			}
 
 			m_oldVertexBuffer = handle;
 		}
@@ -493,7 +701,7 @@ namespace dx11
 		if( m_oldIndexBuffer != handle )
 		{
 			DxIndexBuffer& indexBuffer = m_indexBuffers.get( handle );
-			m_immediateContext->IASetIndexBuffer( indexBuffer.m_buffer, indexBuffer.m_format, 0 );	
+			m_immediateContext->IASetIndexBuffer( indexBuffer.m_buffer, indexBuffer.m_dxFormat, 0 );	
 
 			m_oldIndexBuffer = handle;
 		}
@@ -531,76 +739,82 @@ namespace dx11
 		assert( numSlots > 0 );
 		assert( resourceViews != nullptr );
 
-		static const SizeT MAX_SRV_SLOTS = 16;
-		assert( numSlots < MAX_SRV_SLOTS );
+		UInt32 firstValueSlot = 0;
+		m_srvsCache[static_cast<SizeT>( shader )].applyFilter( firstSlot, numSlots, firstValueSlot, resourceViews );
 
-		StaticArray<ID3D11ShaderResourceView*, MAX_SRV_SLOTS> srvs;
-
-		for( UInt32 i = 0; i < numSlots; ++i )
+		if( numSlots > 0 )
 		{
-			srvs[i] = reinterpret_cast<ID3D11ShaderResourceView*>( resourceViews[i].srv );
-		}
+			StaticArray<ID3D11ShaderResourceView*, MAX_SRVS_SLOTS> srvs;
 
-		switch( shader )
-		{
-			case rend::EShaderType::Vertex:
-				m_immediateContext->VSSetShaderResources( firstSlot, numSlots, &srvs[0] );
-				break;
+			for( UInt32 i = 0; i < numSlots; ++i )
+			{
+				srvs[i] = reinterpret_cast<ID3D11ShaderResourceView*>( resourceViews[firstValueSlot + i].srv );
+			}
 
-			case rend::EShaderType::Pixel:
-				m_immediateContext->PSSetShaderResources( firstSlot, numSlots, &srvs[0] );
-				break;
+			switch( shader )
+			{
+				case rend::EShaderType::Vertex:
+					m_immediateContext->VSSetShaderResources( firstSlot, numSlots, &srvs[0] );
+					break;
 
-			case rend::EShaderType::Compute:
-				m_immediateContext->CSSetShaderResources( firstSlot, numSlots, &srvs[0] );
-				break;
+				case rend::EShaderType::Pixel:
+					m_immediateContext->PSSetShaderResources( firstSlot, numSlots, &srvs[0] );
+					break;
 
-			default:
-				fatal( L"Unable to set shader resources to unknown shader %d", shader );
-				break;
+				case rend::EShaderType::Compute:
+					m_immediateContext->CSSetShaderResources( firstSlot, numSlots, &srvs[0] );
+					break;
+
+				default:
+					fatal( L"Unable to set shader resources to unknown shader %d", shader );
+					break;
+			}		
 		}
 	}
 
 	void Device::setSamplerStates( rend::EShaderType shader, UInt32 firstSlot, UInt32 numSlots, rend::SamplerStateId* ids )
 	{
-		assert( numSlots > 0 );
+		assert( numSlots > 0 && numSlots < MAX_SAMPLER_STATES_SLOTS );
 		assert( ids != nullptr );
 
-		static const SizeT MAX_SAMPLER_STATE_SLOTS = 16;
-		assert( numSlots < MAX_SAMPLER_STATE_SLOTS );
+		UInt32 firstValueSlot = 0;
+		m_samplerStatesCache[static_cast<SizeT>( shader )].applyFilter( firstSlot, numSlots, firstValueSlot, ids );
 
-		StaticArray<ID3D11SamplerState*, MAX_SAMPLER_STATE_SLOTS> samplerStates;
-
-		for( UInt32 i = 0; i < numSlots; ++i )
+		if( numSlots > 0 )
 		{
-			if( ids[i] != -1 )
+			StaticArray<ID3D11SamplerState*, MAX_SAMPLER_STATES_SLOTS> samplerStates;
+
+			for( UInt32 i = 0; i < numSlots; ++i )
 			{
-				DxRef<ID3D11SamplerState>& sampler = m_samplerStates.getRef( ids[i] );
-				samplerStates[i] = sampler.get();			
+				if( ids[firstValueSlot + i] != rend::SamplerState::INVALID )
+				{
+					DxRef<ID3D11SamplerState>& sampler = m_samplerStates.getRef( ids[firstValueSlot + i] );
+					samplerStates[i] = sampler.get();			
+				}
+				else
+				{
+					samplerStates[i] = nullptr;
+				}
 			}
-			else
-			{
-				samplerStates[i] = nullptr;
-			}
-		}
 	
-		switch( shader )
-		{
-			case rend::EShaderType::Vertex:
-				m_immediateContext->VSSetSamplers( firstSlot, numSlots, &samplerStates[0] );
-				break;
+			switch( shader )
+			{
+				case rend::EShaderType::Vertex:
+					m_immediateContext->VSSetSamplers( firstSlot, numSlots, &samplerStates[0] );
+					break;
 
-			case rend::EShaderType::Pixel:
-				m_immediateContext->PSSetSamplers( firstSlot, numSlots, &samplerStates[0] );
-				break;
+				case rend::EShaderType::Pixel:
+					m_immediateContext->PSSetSamplers( firstSlot, numSlots, &samplerStates[0] );
+					break;
 
-			case rend::EShaderType::Compute:
-				m_immediateContext->CSSetSamplers( firstSlot, numSlots, &samplerStates[0] );
-				break;
+				case rend::EShaderType::Compute:
+					m_immediateContext->CSSetSamplers( firstSlot, numSlots, &samplerStates[0] );
+					break;
 
-			default:
-				fatal( L"Unable to set sampler states to unknown shader %d", shader );
-				break;
+				default:
+					fatal( L"Unable to set sampler states to unknown shader %d", shader );
+					break;
+			}
 		}
 	}
 
@@ -610,34 +824,37 @@ namespace dx11
 		assert( numSlots > 0 );
 		assert( buffers != nullptr );
 
-		static const SizeT MAX_CONSTANT_BUFFER_SLOTS = 16;
-		assert( numSlots < MAX_CONSTANT_BUFFER_SLOTS );
+		UInt32 firstValueSlot = 0;
+		m_constantBuffersCache[static_cast<SizeT>( shader )].applyFilter( firstSlot, numSlots, firstValueSlot, buffers );
 
-		StaticArray<ID3D11Buffer*, MAX_CONSTANT_BUFFER_SLOTS> constantBuffers;
-
-		for( UInt32 i = 0; i < numSlots; i++ )
+		if( numSlots > 0 )
 		{
-			DxConstantBuffer& buffer = m_constantBuffers.get( buffers[i] );
-			constantBuffers[i] = buffer.m_buffer.get();
-		}
+			StaticArray<ID3D11Buffer*, MAX_CONSTANT_BUFFERS_SLOTS> constantBuffers;
 
-		switch( shader )
-		{
-			case rend::EShaderType::Vertex:
-				m_immediateContext->VSSetConstantBuffers( firstSlot, numSlots, &constantBuffers[0] );
-				break;
+			for( UInt32 i = 0; i < numSlots; i++ )
+			{
+				DxConstantBuffer& buffer = m_constantBuffers.get( buffers[firstValueSlot + i] );
+				constantBuffers[i] = buffer.m_buffer.get();
+			}
 
-			case rend::EShaderType::Pixel:
-				m_immediateContext->PSSetConstantBuffers( firstSlot, numSlots, &constantBuffers[0] );
-				break;
+			switch( shader )
+			{
+				case rend::EShaderType::Vertex:
+					m_immediateContext->VSSetConstantBuffers( firstSlot, numSlots, &constantBuffers[0] );
+					break;
 
-			case rend::EShaderType::Compute:
-				m_immediateContext->CSSetConstantBuffers( firstSlot, numSlots, &constantBuffers[0] );
-				break;
+				case rend::EShaderType::Pixel:
+					m_immediateContext->PSSetConstantBuffers( firstSlot, numSlots, &constantBuffers[0] );
+					break;
 
-			default:
-				fatal( L"Unable to set constant buffers to unknown shader %d", shader );
-				break;
+				case rend::EShaderType::Compute:
+					m_immediateContext->CSSetConstantBuffers( firstSlot, numSlots, &constantBuffers[0] );
+					break;
+
+				default:
+					fatal( L"Unable to set constant buffers to unknown shader %d", shader );
+					break;
+			}		
 		}
 	}
 
@@ -683,12 +900,51 @@ namespace dx11
 
 	void Device::drawIndexed( UInt32 indexCount, UInt32 startIndexLocation, Int32 baseVertexOffset )
 	{
+		GPU_STAT( m_drawStats.m_drawCalls++ );
 		m_immediateContext->DrawIndexed( indexCount, startIndexLocation, baseVertexOffset );
 	}
 
 	void Device::draw( UInt32 vertexCount, UInt32 startVertexLocation )
 	{
+		GPU_STAT( m_drawStats.m_drawCalls++ );
 		m_immediateContext->Draw( vertexCount, startVertexLocation );
+	}
+
+	void Device::setScissorArea( const rend::ScissorArea& area )
+	{
+		if( area != rend::ScissorArea::NULL_AREA() )
+		{
+			if( !m_scissorTestEnabled )
+			{
+				m_immediateContext->RSSetState( m_scissorRasterState );
+				m_scissorTestEnabled = true;
+			}
+
+			CD3D11_RECT rect( area.left, area.top, area.right, area.bottom );
+			m_immediateContext->RSSetScissorRects( 1, &rect );
+			GPU_STAT( m_drawStats.m_renderStateSwitches++ );
+		}
+		else
+		{
+			if( m_scissorTestEnabled )
+			{
+				m_immediateContext->RSSetState( m_defaultRasterState );
+				GPU_STAT( m_drawStats.m_renderStateSwitches++ );
+
+				m_scissorTestEnabled = false;
+			}
+		}
+	}
+
+	void Device::setRenderTarget( rend::RenderTargetHandle rtHandle, rend::DepthBufferHandle dbHandle )
+	{
+		ID3D11RenderTargetView* rtv = rtHandle != INVALID_HANDLE<rend::RenderTargetHandle>() ?
+			m_renderTargets.get( rtHandle ).m_rtv.get() : m_swapChain->getBackBufferRTV();
+
+		ID3D11DepthStencilView* dsv = dbHandle != INVALID_HANDLE<rend::DepthBufferHandle>() ? 
+			m_depthBuffers.get( dbHandle ).m_dsv.get() : nullptr;
+
+		m_immediateContext->OMSetRenderTargets( 1, &rtv, dsv );
 	}
 
 	void Device::setViewport( const rend::Viewport& viewport )
@@ -764,6 +1020,16 @@ namespace dx11
 		return shaderResourceView;
 	}
 
+	rend::ShaderResourceView Device::getShaderResourceView( rend::DepthBufferHandle handle )
+	{
+		DxDepthBuffer& depthBuffer = m_depthBuffers.get( handle );
+		assert( depthBuffer.m_srv.hasObject() );
+
+		rend::ShaderResourceView shaderResourceView;
+		shaderResourceView.srv = depthBuffer.m_srv.get();
+		return shaderResourceView;	
+	}
+
 	UInt32 Device::createVertexDeclaration( const rend::VertexDeclaration& declaration, const rend::CompiledShader& vertexShader )
 	{
 		UInt32 hash = declaration.getHash();
@@ -781,6 +1047,16 @@ namespace dx11
 	String Device::compilerMark() const
 	{
 		return ShaderCompiler::COMPILER_MARK;
+	}
+
+	const rend::MemoryStats& Device::getMemoryStats() const
+	{
+		return m_memoryStats;
+	}
+
+	const rend::DrawStats& Device::getDrawStats() const
+	{
+		return m_drawStats;
 	}
 
 	Device::CachedVertexDeclaration::CachedVertexDeclaration( ID3D11Device* device, const rend::VertexDeclaration& declaration, 

@@ -28,7 +28,7 @@ public:
 	UInt32			Flags;
 	math::Rect		Bounds;
 	math::Angle		Rotation;
-	FTexture*		Texture;
+	rend::Texture2DHandle	Image;
 	math::Color		Color;
 	math::Rect		TexCoords;
 };
@@ -44,7 +44,7 @@ public:
 	math::Vector	Vertices[16];
 	math::Vector	TexCoords[16];
 	Int32			NumVerts;
-	FTexture*		Texture;
+	rend::Texture2DHandle	Image;
 	math::Color		Color;
 };
 
@@ -56,7 +56,7 @@ struct TRenderList
 {
 public:
 	UInt32			Flags;
-	FTexture*		Texture;
+	rend::Texture2DHandle		Image;
 	Int32			NumRects;
 	math::Vector*	Vertices;
 	math::Vector*	TexCoords;
@@ -67,37 +67,6 @@ public:
 	TRenderList( Int32 InNumRcts );
 	TRenderList( Int32 InNumRcts, math::Color InColor );
 	~TRenderList();
-};
-
-
-//
-// An information about view.
-//
-struct TViewInfo
-{
-public:
-	// To-screen transform.
-	Float		X;
-	Float		Y;
-	Float		Width;
-	Float		Height;
-
-	// World transform.
-	math::Coords	Coords;
-	math::Coords	UnCoords;
-	math::Vector	FOV;
-	Float			Zoom;
-	Bool			bMirage;
-	math::Rect		Bounds;
-
-	// Constructor.
-	TViewInfo();
-	TViewInfo( Float InX, Float InY, Float InWidth, Float InHeight );
-	TViewInfo( math::Vector InLocation, math::Angle InRotation, math::Vector InFOV, Float InZoom, Bool InbMirage, Float InX, Float InY, Float InWidth, Float InHeight  );
-
-	// Projection functions.
-	void Project( const math::Vector V, Float& OutX, Float& OutY ) const;
-	math::Vector Deproject( Float InX, Float InY ) const;
 };
 
 
@@ -117,6 +86,16 @@ public:
 			Width( InWidth ),
 			Height( InHeight )
 	{}
+	Bool operator==( const TClipArea& other ) const
+	{
+		return X == other.X && Y == other.Y &&
+					Width == other.Width && Height == other.Height;
+	}
+	Bool operator!=( const TClipArea& other ) const
+	{
+		return X != other.X || Y != other.Y ||
+					Width != other.Width || Height != other.Height;
+	}
 };
 
 // Special value, mean no clip.
@@ -159,7 +138,7 @@ public:
 	Float			ScreenHeight;
 
 	// View info.
-	TViewInfo		View;
+	gfx::ViewInfo	View;
 	TClipArea		Clip;
 
 	// Global memory pool, for temporal rendering
@@ -167,7 +146,7 @@ public:
 	static CStaticPool<4*1024*1024>		GPool;
 
 	// CCanvas interface.
-	virtual void SetTransform( const TViewInfo& Info ) = 0;
+	virtual void SetTransform( const gfx::ViewInfo& Info ) = 0;
 	virtual void SetClip( const TClipArea& Area ) = 0;
 	virtual void DrawPoint( const math::Vector& P, Float Size, math::Color Color ) = 0;
 	virtual void DrawLine( const math::Vector& A, const math::Vector& B, math::Color Color, Bool bStipple ) = 0;
@@ -176,7 +155,7 @@ public:
 	virtual void DrawList( const TRenderList& List ) = 0;
 
 	// Transformations stack.
-	void PushTransform( const TViewInfo& Info );
+	void PushTransform( const gfx::ViewInfo& Info );
 	void PopTransform();
 
 	// Drawing utilities.
@@ -237,7 +216,7 @@ public:
 	(	
 		const Char* Text,
 		Int32 Len,
-		FFont* Font, 
+		fnt::Font::Ptr Font, 
 		math::Color Color,
 		const math::Vector& Start, 
 		const math::Vector& Scale = math::Vector( 1.f, 1.f )  
@@ -246,7 +225,7 @@ public:
 	void DrawText
 	(	
 		const String& S,
-		FFont* Font, 
+		fnt::Font::Ptr Font, 
 		math::Color Color,
 		const math::Vector& Start, 
 		const math::Vector& Scale = math::Vector( 1.f, 1.f ) 
@@ -258,8 +237,8 @@ public:
 protected:
 	// Canvas internal.
 	enum{ VIEW_STACK_SIZE = 8 };
-	TViewInfo	ViewStack[VIEW_STACK_SIZE];
-	Int32		StackTop;
+	gfx::ViewInfo	ViewStack[VIEW_STACK_SIZE];
+	Int32			StackTop;
 };
 
 

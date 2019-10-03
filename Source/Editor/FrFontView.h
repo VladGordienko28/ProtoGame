@@ -56,10 +56,10 @@ public:
 		if( Font )
 			Render->DrawText
 			(
-				ClientToWindow(TPoint::Zero) + TPoint( (Size.Width-Font->TextWidth(*Edit->Text))/2, 40+(Size.Height-80+Font->Height)/2 ),
+				ClientToWindow(TPoint::Zero) + TPoint( (Size.Width-Font->TextWidth(*Edit->Text))/2, 40+(Size.Height-80+Font->maxHeight())/2 ),
 				*Edit->Text,
 				math::colors::WHITE,
-				Font
+				Font->m_font
 			);
 	}
 

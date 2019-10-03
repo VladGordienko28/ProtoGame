@@ -599,9 +599,9 @@ void WContainer::ShuffleChildren()
 //
 // GUI Drawing objects.
 //
-TStaticFont*	WWindow::Font1	= nullptr;
-TStaticFont*	WWindow::Font2	= nullptr;
-TStaticBitmap*	WWindow::Icons	= nullptr;
+fnt::Font::Ptr	WWindow::Font1	= nullptr;
+fnt::Font::Ptr	WWindow::Font2	= nullptr;
+img::Image::Ptr	WWindow::Icons	= nullptr;
 
 
 //
@@ -872,7 +872,7 @@ void WWindow::DrawTooltip( CGUIRenderBase* Render )
 			(GPlat->Now()-LastHighlightTime) > 0.5f 
 		)
 	{
-		TSize HintSize = TSize( Font1->TextWidth(*Highlight->Tooltip), Font1->Height );
+		TSize HintSize = TSize( Font1->textWidth(*Highlight->Tooltip), Font1->maxHeight() );
 		TPoint DrawPos = TPoint( MousePos.X+16, MousePos.Y+8 );
 		Render->SetClipArea( TPoint(0, 0), Size );		
 

@@ -68,8 +68,8 @@ void FPainterComponent::RenderHUD( CCanvas* InCanvas )
 {
 	// Setup fields, for access from script.
 	Canvas		= InCanvas;
-	Width		= Canvas->View.Width;
-	Height		= Canvas->View.Height;
+	Width		= Canvas->View.width;
+	Height		= Canvas->View.height;
 	Effect[0]	= Effect[1]	= Effect[2]	= 1.f;
 	Effect[3]	= Effect[4]	= Effect[5]	= 1.f;
 	Effect[6]	= Effect[7]	= Effect[8]	= 0.f;
@@ -77,14 +77,14 @@ void FPainterComponent::RenderHUD( CCanvas* InCanvas )
 
 	// Setup view info for valid screen to world
 	// transform.
-	ViewInfo	= TViewInfo
+	ViewInfo	= gfx::ViewInfo
 	(
 		Level->Camera.Location,
 		Level->Camera.Rotation,
 		Level->Camera.GetFitFOV( Width, Height ),
 		Level->Camera.Zoom,
 		false,
-		Canvas->View.X, Canvas->View.Y,
+		Canvas->View.x, Canvas->View.y,
 		Width, Height
 	);
 
@@ -140,7 +140,7 @@ void FPainterComponent::nativeTile( CFrame& Frame )
 
 		if( Texture )
 		{
-			R.Texture		= Texture;
+			R.Image			= As<FBitmap>(Texture)->m_image->getHandle();
 			R.Flags			= POLY_Unlit;
 
 			// Division table, used to reduce multiple
@@ -163,14 +163,14 @@ void FPainterComponent::nativeTile( CFrame& Frame )
 			};
 
 			// Texture coords.
-			R.TexCoords.min.x	= T.x * Rescale[Texture->UBits];
-			R.TexCoords.min.y	= T.y * Rescale[Texture->VBits];
-			R.TexCoords.max.x	= (T.x+TL.x)  * Rescale[Texture->UBits];
-			R.TexCoords.max.y	= (T.y+TL.y) * Rescale[Texture->VBits];
+			R.TexCoords.min.x	= T.x * Rescale[Texture->getUBits()];
+			R.TexCoords.min.y	= T.y * Rescale[Texture->getVBits()];
+			R.TexCoords.max.x	= (T.x+TL.x)  * Rescale[Texture->getUBits()];
+			R.TexCoords.max.y	= (T.y+TL.y) * Rescale[Texture->getVBits()];
 		}
 		else
 		{
-			R.Texture		= nullptr;
+			R.Image			= INVALID_HANDLE<rend::Texture2DHandle>();
 			R.Flags			= POLY_Unlit | POLY_FlatShade;
 		}
 
@@ -189,7 +189,7 @@ void FPainterComponent::nativeTextOut( CFrame& Frame )
 	Float	S	= POP_FLOAT;
 
 	if( Canvas && Font )
-		Canvas->DrawText( *T, T.len(), Font, Color, P, math::Vector( S, S ) );
+		Canvas->DrawText( *T, T.len(), Font->m_font, Color, P, math::Vector( S, S ) );
 }
 
 
@@ -228,7 +228,7 @@ void FPainterComponent::nativePushEffect( CFrame& Frame )
 void FPainterComponent::nativeProject( CFrame& Frame )
 {
 	Float	X, Y;
-	ViewInfo.Project( POP_VECTOR, X, Y );
+	ViewInfo.project( POP_VECTOR, X, Y );
 	*POPA_VECTOR	= math::Vector( X, Y );
 }
 
@@ -240,7 +240,7 @@ void FPainterComponent::nativeProject( CFrame& Frame )
 void FPainterComponent::nativeDeproject( CFrame& Frame )
 {
 	math::Vector V		= POP_VECTOR;
-	*POPA_VECTOR	= ViewInfo.Deproject( V.x, V.y );
+	*POPA_VECTOR	= ViewInfo.deproject( V.x, V.y );
 }
 
 

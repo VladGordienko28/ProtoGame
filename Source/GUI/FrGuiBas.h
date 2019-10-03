@@ -304,12 +304,13 @@ public:
 	// CGUIRenderBase abstract interface.
 	virtual void DrawRegion( TPoint P, TSize S, math::Color Color, math::Color BorderColor, EBrushPattern Pattern ) = 0;
 	virtual void SetClipArea( TPoint P, TSize S ) = 0;
-	virtual void DrawPicture( TPoint P, TSize S, TPoint BP, TSize BS, FTexture* Texture ) = 0;
-	virtual void DrawText( TPoint P, const Char* Text, Int32 Len, math::Color Color, FFont* Font ) = 0;
+	virtual void DrawImage( TPoint P, TSize S, TPoint BP, TSize BS, img::Image::Ptr image ) = 0;
+	virtual void DrawTexture( TPoint P, TSize S, TPoint BP, TSize BS, rend::Texture2DHandle image, UInt32 width, UInt32 height ) = 0;
+	virtual void DrawText( TPoint P, const Char* Text, Int32 Len, math::Color Color, fnt::Font::Ptr Font ) = 0;
 	virtual void SetBrightness( Float Brig ) = 0;
 
 	// CGUIRenderBase utility.
-	void DrawText( TPoint P, String Text, math::Color Color, FFont* Font )
+	void DrawText( TPoint P, String Text, math::Color Color, fnt::Font::Ptr Font )
 	{
 		DrawText( P, *Text, Text.len(), Color, Font );
 	}
@@ -438,9 +439,9 @@ public:
 	WWidget*	OldHighlight;
 
 	// Draw objects.
-	static TStaticFont*		Font1;
-	static TStaticFont*		Font2;
-	static TStaticBitmap*	Icons;
+	static fnt::Font::Ptr	Font1;
+	static fnt::Font::Ptr	Font2;
+	static img::Image::Ptr	Icons;
 
 	// WWindow interface.
 	WWindow();

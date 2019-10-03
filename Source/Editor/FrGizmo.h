@@ -54,10 +54,10 @@ public:
 
 	// World interaction.
 	void Render( CCanvas* Canvas );
-	EGizmoAxis AxisAt( const TViewInfo& ViewInfo, Int32 Cx, Int32 Cy );
+	EGizmoAxis AxisAt( const gfx::ViewInfo& ViewInfo, Int32 Cx, Int32 Cy );
 	void Perform
 	(
-		const TViewInfo& ViewInfo,
+		const gfx::ViewInfo& ViewInfo,
 		const math::Vector& CursorPos,
 		const math::Vector& MovementDelta,
 		math::Vector* OutTranslation,

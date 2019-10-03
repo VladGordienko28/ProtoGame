@@ -9,89 +9,36 @@
     Color dialog bitmaps.
 -----------------------------------------------------------------------------*/
 
-//
-// Bitmaps.
-//
-static	TStaticBitmap*		SLBitmap	= nullptr;
-static	TStaticBitmap*		HBitmap		= nullptr;
-static	TStaticBitmap*		ABitmap		= nullptr;
-
 
 //
 // Initialize bitmaps.
 //
-void InitHSLBitmaps()
+void WColorChooser::InitHSLBitmaps()
 {
 	// HBitmap.
-	if( !HBitmap )
 	{
-		HBitmap					= new TStaticBitmap();
-		HBitmap->Format			= BF_RGBA;
-		HBitmap->USize			= 1;
-		HBitmap->VSize			= 256;
-		HBitmap->UBits			= IntLog2(HBitmap->USize);
-		HBitmap->VBits			= IntLog2(HBitmap->VSize);
-		HBitmap->Filter			= BFILTER_Nearest;
-		HBitmap->BlendMode		= BLEND_Regular;
-		HBitmap->RenderInfo		= -1;
-		HBitmap->PanUSpeed		= 0.f;
-		HBitmap->PanVSpeed		= 0.f;
-		HBitmap->Saturation		= 1.f;
-		HBitmap->AnimSpeed		= 0.f;
-		HBitmap->bDynamic		= false;
-		HBitmap->bRedrawn		= false;
-		HBitmap->Data.setSize(256*sizeof(math::Color));
-
-		math::Color* Data = (math::Color*)HBitmap->GetData();
+		HBitmap.data.setSize( 256 * 1 );
 		for( Int32 i=0; i<256; i++ )
-			Data[i]	= math::Color::hsl2rgb( i, 0xff, 0x80 );
+			HBitmap.data[i]	= math::Color::hsl2rgb( i, 0xff, 0x80 );
+
+		HBitmap.handle = gfx::api::createTexture2D( rend::EFormat::RGBA8_UNORM, 1, 256, 1, rend::EUsage::Immutable, &HBitmap.data[0], "ColorChooser HBitmap" );
 	}
 
 	// ABitmap.
-	if( !ABitmap )
 	{
-		ABitmap					= new TStaticBitmap();
-		ABitmap->Format			= BF_RGBA;
-		ABitmap->USize			= 4;
-		ABitmap->VSize			= 4;
-		ABitmap->UBits			= IntLog2(ABitmap->USize);
-		ABitmap->VBits			= IntLog2(ABitmap->VSize);
-		ABitmap->Filter			= BFILTER_Nearest;
-		ABitmap->BlendMode		= BLEND_Alpha;
-		ABitmap->RenderInfo		= -1;
-		ABitmap->PanUSpeed		= 0.f;
-		ABitmap->PanVSpeed		= 0.f;
-		ABitmap->Saturation		= 1.f;
-		ABitmap->AnimSpeed		= 0.f;
-		ABitmap->bDynamic		= true;
-		ABitmap->bRedrawn		= false;
-		ABitmap->Data.setSize(4*4*sizeof(math::Color));
+		ABitmap.data.setSize( 4 * 4 );
 
-		math::Color* Data = (math::Color*)ABitmap->GetData();
-		mem::set( Data, 4*4*sizeof(math::Color), 0xff );
-		Data[0] = Data[1] = Data[14] = Data[15] =
-		Data[10] = Data[11] = Data[4] = Data[5] = math::Color( 0x80, 0x80, 0x80, 0xff );
+		mem::set( &ABitmap.data[0], 4*4*sizeof(math::Color), 0xff );
+		ABitmap.data[0] = ABitmap.data[1] = ABitmap.data[14] = ABitmap.data[15] =
+		ABitmap.data[10] = ABitmap.data[11] = ABitmap.data[4] = ABitmap.data[5] = math::Color( 0x80, 0x80, 0x80, 0xff );
+
+		ABitmap.handle = gfx::api::createTexture2D( rend::EFormat::RGBA8_UNORM, 4, 4, 1, rend::EUsage::Dynamic, &ABitmap.data[0], "ColorChooser ABitmap" );		
 	}
 
 	// SLBitmap.
-	if( !SLBitmap )
 	{
-		SLBitmap				= new TStaticBitmap();
-		SLBitmap->Format		= BF_RGBA;
-		SLBitmap->USize			= 256;
-		SLBitmap->VSize			= 256;
-		SLBitmap->UBits			= IntLog2(SLBitmap->USize);
-		SLBitmap->VBits			= IntLog2(SLBitmap->VSize);
-		SLBitmap->Filter		= BFILTER_Nearest;
-		SLBitmap->BlendMode		= BLEND_Regular;
-		SLBitmap->RenderInfo	= -1;
-		SLBitmap->PanUSpeed		= 0.f;
-		SLBitmap->PanVSpeed		= 0.f;
-		SLBitmap->Saturation	= 1.f;
-		SLBitmap->AnimSpeed		= 0.f;
-		SLBitmap->bDynamic		= true;
-		SLBitmap->bRedrawn		= true;
-		SLBitmap->Data.setSize(256*256*sizeof(math::Color));
+		SLBitmap.data.setSize( 256 * 256 );
+		SLBitmap.handle = gfx::api::createTexture2D( rend::EFormat::RGBA8_UNORM, 256, 256, 1, rend::EUsage::Dynamic, &SLBitmap.data[0], "ColorChooser SLBitmap" );
 	}
 }
 
@@ -285,39 +232,39 @@ void WColorChooser::OnPaint( CGUIRenderBase* Render )
 	L = LSpinner->GetIntValue();
 
 	// Draw SL panel.
-	Render->DrawPicture
+	Render->DrawTexture
 	(
 		TPoint( Base.X+10, Base.Y+30 ),
 		TSize( 256, 256 ),
 		TPoint( 0, 0 ),
 		TSize( 256, 256 ),
-		SLBitmap
+		SLBitmap.handle, 256, 256
 	);
-	Render->DrawPicture
+	Render->DrawImage
 	(
 		TPoint( Base.X+10+S-5, Base.Y+30+L-5 ),
 		TSize( 11, 11 ),
 		TPoint( 39, 9 ),
 		TSize( 11, 11 ),
-		WWindow::Icons		
+		WWindow::Icons
 	);
 	
 	// Draw H panel.
-	Render->DrawPicture
+	Render->DrawTexture
 	(
 		TPoint( Base.X+271, Base.Y+30 ),
 		TSize( 15, 256 ),
 		TPoint( 0, 0 ),
 		TSize( 1, 256 ),
-		HBitmap
+		HBitmap.handle, 1, 256
 	);
-	Render->DrawPicture
+	Render->DrawImage
 	(
 		TPoint( Base.X+286, Base.Y+30+H-5 ),
 		TSize( 8, 9 ),
 		TPoint( 39, 0 ),
 		TSize( 8, 9 ),
-		WWindow::Icons		
+		WWindow::Icons
 	);
 
 	// Draw labels next to edits.
@@ -350,13 +297,13 @@ void WColorChooser::OnPaint( CGUIRenderBase* Render )
 	if( bUseAlpha && Selected.a != 255 )
 	{
 		SetAlphaBlend(255-Selected.a);
-		Render->DrawPicture
+		Render->DrawTexture
 		(
 			TPoint( Base.X+298, Base.Y+45 ),
 			TSize( 50, 50 ),
 			TPoint( 0, 0 ),
 			TSize( 10, 10 ),
-			ABitmap
+			ABitmap.handle, 4, 4
 		);
 	}
 
@@ -379,13 +326,13 @@ void WColorChooser::OnPaint( CGUIRenderBase* Render )
 	if( bUseAlpha && SharedColor.a != 255 )
 	{
 		SetAlphaBlend(255-SharedColor.a);
-		Render->DrawPicture
+		Render->DrawTexture
 		(
 			TPoint( Base.X+348, Base.Y+45 ),
 			TSize( 50, 50 ),
 			TPoint( 2, 0 ),
 			TSize( 10, 10 ),
-			ABitmap
+			ABitmap.handle, 4, 4
 		);
 	}
 }
@@ -527,7 +474,7 @@ void WColorChooser::UpdateFromA( WWidget* Sender )
 //
 void WColorChooser::RefreshSL()
 {
-	math::Color*	Data	= (math::Color*)SLBitmap->GetData();
+	math::Color*	Data	= (math::Color*)&(SLBitmap.data[0]);
 
 	// Decompose selected color.
 	Int32	Hue;
@@ -559,7 +506,7 @@ void WColorChooser::RefreshSL()
 	}
 
 	// Force to reload.
-	SLBitmap->bRedrawn	= true;
+	gfx::api::updateTexture2D( SLBitmap.handle, &SLBitmap.data[0] );
 }
 
 
@@ -569,17 +516,17 @@ void WColorChooser::RefreshSL()
 void WColorChooser::SetAlphaBlend( UInt8 Alpha )
 {
 	assert(bUseAlpha);
-	math::Color*	Data	= (math::Color*)ABitmap->GetData();
+	math::Color*	Data	= (math::Color*)&ABitmap.data[0];
 
 	// Don't redraw, if not required.
 	if( Alpha == Data[0].a )
 		return;
 
-	for( Int32 i=0; i<ABitmap->USize*ABitmap->VSize; i++ )
+	for( Int32 i=0; i<4*4; i++ )
 		Data[i].a = Alpha;
 
 	// Force to reload.
-	ABitmap->bRedrawn	= true;
+	gfx::api::updateTexture2D( ABitmap.handle, &ABitmap.data[0] );
 }
 
 

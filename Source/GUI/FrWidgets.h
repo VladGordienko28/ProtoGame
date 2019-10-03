@@ -102,7 +102,7 @@ public:
 		for( Int32 i=0; i<Panels.size(); i++)
 		{
 			TStatusPanel& P	= Panels[i];
-			TSize  TextSize = TSize( Root->Font1->TextWidth(*P.Text), Root->Font1->Height );
+			TSize  TextSize = TSize( Root->Font1->textWidth(*P.Text), Root->Font1->maxHeight() );
 
 			if( P.Side == SPS_Left )
 			{
@@ -401,7 +401,7 @@ public:
 	void OnPaint( CGUIRenderBase* Render )
 	{
 		TPoint	Base = ClientToWindow(TPoint::Zero);
-		Int32	TextWidth = WWindow::Font1->TextWidth(*Caption);
+		Int32	TextWidth = WWindow::Font1->textWidth(*Caption);
 		Int32	PanelOffet	= bExpanded ? 8 : 4;
 		Int32 PanelSize	= bExpanded ? Size.Height : 12;
 

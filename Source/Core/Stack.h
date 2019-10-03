@@ -51,6 +51,19 @@ namespace flu
 			return m_currentSize == 0;
 		}
 
+		Bool isInStack( const T& item ) const
+		{
+			for( Int32 i = 0; i < m_currentSize; ++i )
+			{
+				if( m_data[i] == item )
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 	private:
 		T* m_data;
 		Int32 m_currentSize;

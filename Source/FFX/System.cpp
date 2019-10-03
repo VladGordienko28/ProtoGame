@@ -9,177 +9,78 @@ namespace flu
 {
 namespace ffx
 {
-	System::System()
-		:	m_device( nullptr )
+
+	rend::VertexDeclaration* s_vertexDeclaration = nullptr;
+
+
+	System::System( rend::Device* device )
+		:	m_effects(),
+			m_device( device )
 	{
+		assert( m_device );
 	}
 
 	System::~System()
 	{
+		assert( m_effects.isEmpty() );
 	}
 
-	void System::init( rend::Device* device, String shadersDirectory )
+	res::Resource* System::createResource( String resourceName, res::ResourceId resourceId,
+		const res::CompiledResource& compiledResource )
 	{
-		assert( device );
-		assert( !m_device );
-		assert( fm::directoryExists( *shadersDirectory ) );
-		assert( fm::isAbsoluteFileName( *shadersDirectory ) );
+		assert( !m_effects.hasKey( resourceId ) );
+		assert( compiledResource.isValid() );
 
-		m_device = device;
-		m_directory = shadersDirectory;
-		m_compiler = new Compiler( m_device );
+		Effect* effect = new Effect( resourceName, *s_vertexDeclaration, m_device );
+		effect->reload( compiledResource );
+
+		effect->deleter( this, []( void* context, ReferenceCount* refCounter )->void
+		{
+			System* system = reinterpret_cast<System*>( context );
+			Effect* effect = dynamic_cast<Effect*>( refCounter );
+			assert( system && effect );
+
+			system->destroyEffect( effect );
+			delete effect;
+		} );
+
+		m_effects.put( resourceId, effect );
+
+		return effect;
 	}
 
-	void System::shutdown()
+	Bool System::allowHotReloading() const
 	{
-		m_device = nullptr;
-		m_directory = L"";
-
-		// todo: add auto removing from manager
-		//assert( m_effects.isEmpty() );
+		return true;
 	}
 
-	// todo: move to the background thread
-	void System::update()
+	void System::reloadResource( res::ResourceId resourceId, const res::CompiledResource& compiledResource )
 	{
-		for( auto& effect : m_effects )
-		{
-			assert( effect.value.effect );
+		assert( compiledResource.isValid() );
 
-			for( auto relativeFileName : effect.value.files )
-			{
-				String fileName = m_directory + relativeFileName;
-
-				if( fm::fileExists( *fileName ) )
-				{
-					Int64 fileTime = fm::getFileModificationTime( *fileName );
-
-					if( fileTime > effect.value.lastModificationTime )
-					{
-						reloadEffect( effect.value );
-						break;
-					}
-				}	
-			}
-		}
+		Effect*& effect = m_effects.getRef( resourceId );
+		effect->reload( compiledResource );
 	}
 
-	Effect::Ptr System::getEffect( String effectName, const rend::VertexDeclaration& vertexDeclaration )
+	Bool System::hasResource( res::ResourceId resourceId ) const
 	{
-		assert( m_device );
-		assert( effectName );
-
-		CachedEffect* effect = m_effects.get( effectName );
-
-		if( effect )
-		{
-			assert( effect->effect );
-			return effect->effect;
-		}
-		else
-		{
-			return createEffect( effectName, vertexDeclaration );
-		}
+		return m_effects.hasKey( resourceId );
 	}
 
-	Effect::Ptr System::createEffect( String effectName, const rend::VertexDeclaration& vertexDeclaration )
+	res::Resource* System::getResource( res::ResourceId resourceId ) const
 	{
-		String relativeFileName = effectName + SHADER_EXTENSION;
-		String fileName = m_directory + relativeFileName;
-
-		if( !fm::fileExists( *fileName ) )
-		{
-			error( L"Shader \"%s\" is not found", *fileName );
-			return nullptr;
-		}
-
-		CachedEffect cachedEffect;
-		cachedEffect.effect = new Effect( effectName, vertexDeclaration, m_device );
-		cachedEffect.relativeFileName = relativeFileName;
-
-		if( cachedEffect.effect && reloadEffect( cachedEffect ) )
-		{
-			m_effects.put( effectName, cachedEffect );
-			return cachedEffect.effect;
-		}
-		else
-		{
-			return nullptr;
-		}
+		Effect* const* effect = m_effects.get( resourceId );
+		return effect ? *effect : nullptr;
 	}
 
-	Bool System::reloadEffect( CachedEffect& cachedEffect )
+	void System::destroyEffect( Effect* effect )
 	{
-		assert( cachedEffect.effect );
+		assert( effect );
 
-		class IncludeProvider: public IIncludeProvider
-		{
-		public:
-			IncludeProvider( String directory )
-				:	m_directory( directory )
-			{
-			}
+		res::ResourceId resourceId( res::EResourceType::Effect, effect->getName() );
 
-			Text::Ptr getInclude( String relativeFileName ) const override
-			{
-				if( !fm::isAbsoluteFileName( *relativeFileName ) )
-				{
-					return fm::readTextFile( *( m_directory + relativeFileName ) );				
-				}
-				else
-				{
-					return nullptr;
-				}
-			}
-
-		private:
-			String m_directory;
-		};
-
-		Bool result = false;
-		IncludeProvider includeProvider( m_directory );
-		
-		Compiler::Output compilerOutput;
-		if( result = m_compiler->compile( cachedEffect.relativeFileName, &includeProvider, compilerOutput ) )
-		{
-			IInputStream::Ptr effectStream = new BufferReader( compilerOutput.effectBlob );
-			result &= cachedEffect.effect->reload( effectStream );		
-		
-			if( result )
-			{
-				cachedEffect.files = compilerOutput.dependencies;
-				saveEffectToFile( cachedEffect.effect->name(), compilerOutput.effectBlob );
-			}
-		}
-
-		Int64 lastModificationTime = 0;
-		for( auto it : cachedEffect.files )
-		{
-			String fileName = m_directory + it;
-			Int64 fileTime = fm::getFileModificationTime( *fileName );
-
-			if( fileTime > lastModificationTime )
-			{
-				lastModificationTime = fileTime;
-			}
-		}
-
-		cachedEffect.lastModificationTime = lastModificationTime;
-		return result;
-	}
-
-	Bool System::saveEffectToFile( String effectName, const Array<UInt8>& effectBlob )
-	{
-		String fileName = m_directory + effectName + COMPILED_SHADER_EXTENSION;
-
-		if( auto writer = fm::writeBinaryFile( *fileName ) )
-		{
-			*writer << effectBlob;
-		}
-		else
-		{
-			return false;
-		}
+		Bool removed = m_effects.remove( resourceId );
+		assert( removed );
 	}
 }
 }

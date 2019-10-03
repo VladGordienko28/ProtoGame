@@ -1,8 +1,3 @@
 BEGIN_RESOURCE FBitmap BSparks
-    BlendMode = 1
-    Saturation = 1.0000
-    AnimSpeed = 30.0000
-    FileName = "BSparks.bmp"
-    UBits = 4
-    VBits = 4
+    image = "Particles.Bitmaps.Sparks"
 END_RESOURCE

@@ -27,7 +27,7 @@ WTexturePage::WTexturePage( FTexture* InTexture, WContainer* InOwner, WWindow* I
 	Padding		= TArea( 0, 0, 0, 0 );
 	Texture		= InTexture;
 	Caption		= InTexture->GetName();
-	TabWidth	= Root->Font1->TextWidth( *Caption ) + 30;
+	TabWidth	= Root->Font1->textWidth( *Caption ) + 30;
 	PageType	= PAGE_Texture;
 	Color		= PAGE_COLOR_TEXTURE;
 
@@ -37,7 +37,7 @@ WTexturePage::WTexturePage( FTexture* InTexture, WContainer* InOwner, WWindow* I
 
 	EditButton				= new WButton( ToolBar, Root );
 	EditButton->Caption		= L"Edit";
-	EditButton->Tooltip		= InTexture->IsA(FMaterial::MetaClass) ? L"Open Layers Editor" : L"Open Effects Editor";
+	//EditButton->Tooltip		= InTexture->IsA(FMaterial::MetaClass) ? L"Open Layers Editor" : L"Open Effects Editor";
 	EditButton->bEnabled	= false;
 	EditButton->bToggle		= true;
 	EditButton->bDown		= false;
@@ -69,6 +69,7 @@ WTexturePage::WTexturePage( FTexture* InTexture, WContainer* InOwner, WWindow* I
 	ZoomOutButton->SetSize( 25, 22 );
 	ToolBar->AddElement( ZoomOutButton );
 
+#if MATERIAL_ENABLED
 	// Create the parameters side panel.
 	if( Texture->IsA(FMaterial::MetaClass) )
 	{
@@ -84,7 +85,9 @@ WTexturePage::WTexturePage( FTexture* InTexture, WContainer* InOwner, WWindow* I
 		EraseButton->bEnabled	= false;
 		EditButton->bEnabled	= true;
 		EditButton->bDown		= true;
-	}		
+	}
+#endif
+#if DEMO_EFFECTS_ENABLED
 	else if	( 
 				Texture->IsA(FFireBitmap::MetaClass) ||
 				Texture->IsA(FTechBitmap::MetaClass) ||
@@ -104,6 +107,7 @@ WTexturePage::WTexturePage( FTexture* InTexture, WContainer* InOwner, WWindow* I
 		EditButton->bEnabled	= true;
 		EditButton->bDown		= true;
 	}
+#endif
 }
 
 
@@ -163,6 +167,7 @@ void WTexturePage::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WEditorPage::OnMouseDown( Button, X, Y );
 
+#if DEMO_EFFECTS_ENABLED
 	// Figure out drag mode.
 	if( Texture->IsA(FDemoBitmap::MetaClass) )
 	{
@@ -194,6 +199,7 @@ void WTexturePage::OnMouseDown( EMouseButton Button, Int32 X, Int32 Y )
 		}
 	}
 	else
+#endif
 	{
 		// Simple bitmap, always panning it.
 		if( Button == MB_Left )
@@ -215,6 +221,7 @@ void WTexturePage::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 {
 	WEditorPage::OnMouseUp( Button, X, Y );
 
+#if DEMO_EFFECTS_ENABLED
 	// Notify about click?
 	if( !bMouseMove && Texture->IsA(FDemoBitmap::MetaClass) && DragMode == DRAG_Drawing )
 	{
@@ -235,6 +242,7 @@ void WTexturePage::OnMouseUp( EMouseButton Button, Int32 X, Int32 Y )
 			)
 				DemoBitmap->MouseClick( Button, BitPos.X, BitPos.Y );
 	}
+#endif
 
 	// Cleanup.
 	DragMode	= DRAG_None;
@@ -255,8 +263,8 @@ void WTexturePage::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 	// Are we inside bitmap?
 	TPoint BitPos	= TPoint
 						(	
-							(Pan.X + X - (Size.Width-Texture->USize*Scale)/2)/Scale, 
-							(Pan.Y + Y - (Size.Height-Texture->VSize*Scale)/2)/Scale  
+							(Pan.X + X - (Size.Width-Texture->getUSize()*Scale)/2)/Scale, 
+							(Pan.Y + Y - (Size.Height-Texture->getVSize()*Scale)/2)/Scale  
 						);
 
 	if( DragMode == DRAG_Panning )
@@ -269,9 +277,9 @@ void WTexturePage::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 
 	if	(	
 			BitPos.X >= 0 && 
-			BitPos.X < Texture->USize && 
+			BitPos.X < Texture->getUSize() && 
 			BitPos.Y >= 0 && 
-			BitPos.Y < Texture->VSize 
+			BitPos.Y < Texture->getVSize() 
 		)
 	{
 		// We are inside bitmap, but we can draw?
@@ -352,10 +360,10 @@ void WTexturePage::OnPaint( CGUIRenderBase* Render )
 
 	// Draw bitmap.
 	{
-		Int32 X = Base.X - Pan.X + ( Size.Width - Texture->USize * Scale ) / 2;
-		Int32 Y = Base.Y - Pan.Y + ( Size.Height - Texture->VSize * Scale ) / 2;
-		Int32 W = Texture->USize * Scale;
-		Int32 H = Texture->VSize * Scale;
+		Int32 X = Base.X - Pan.X + ( Size.Width - Texture->getUSize() * Scale ) / 2;
+		Int32 Y = Base.Y - Pan.Y + ( Size.Height - Texture->getVSize() * Scale ) / 2;
+		Int32 W = Texture->getUSize() * Scale;
+		Int32 H = Texture->getVSize() * Scale;
 
 		// Draw border.
 		Render->DrawRegion
@@ -368,13 +376,13 @@ void WTexturePage::OnPaint( CGUIRenderBase* Render )
 					);
 
 		// Draw image.
-		Render->DrawPicture
+		Render->DrawImage
 						( 
 							TPoint( X, Y ), 
 							TSize( W, H ), 
 							TPoint( 0, 0 ), 
-							TSize( Texture->USize, Texture->VSize ), 
-							Texture  
+							TSize( Texture->getUSize(), Texture->getVSize() ), 
+							As<FBitmap>(Texture)->m_image  
 						);
 	}
 
@@ -407,7 +415,7 @@ void WTexturePage::OnResize()
 /*-----------------------------------------------------------------------------
 	WDemoEffectPanel implementation.
 -----------------------------------------------------------------------------*/
-
+#if DEMO_EFFECTS_ENABLED
 //
 // Bitmap edit form constructor.
 //
@@ -649,11 +657,13 @@ void WDemoEffectPanel::DrawTypeChange( WWidget* Sender )
 			Labels[i]->bVisible = false;
 		}
 }
-
+#endif
 
 /*-----------------------------------------------------------------------------
 	WMaterialPanel implementation.
 -----------------------------------------------------------------------------*/
+
+#if MATERIAL_ENABLED
 
 //
 // Material edit form constructor.
@@ -712,6 +722,7 @@ WMaterialPanel::WMaterialPanel( FMaterial* InMaterial, WContainer* InOwner, WWin
 
 	// PopUp menu with layers.
 	TypePopup			= new WPopupMenu( Root, Root );
+
 	for( Int32 i=0; i<CClassDatabase::GClasses.size(); i++ )
 	{
 		CClass* TestClass = CClassDatabase::GClasses[i];
@@ -964,6 +975,7 @@ void WMaterialPanel::UpdateButtons()
 	ToDownButton->bEnabled = RemoveLayerButton->bEnabled && iSelected < Material->Layers.size()-1;
 }
 
+#endif
 
 /*-----------------------------------------------------------------------------
     The End.

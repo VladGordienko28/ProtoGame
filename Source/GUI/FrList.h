@@ -16,7 +16,7 @@ public:
 	// Variables.
 	String		Name;
 	void*		Data;
-	FTexture*	Picture;
+	rend::Texture2DHandle	Picture;
 	TPoint		PicOffset;
 	TSize		PicSize;
 	Bool		bEnabled;
@@ -26,7 +26,7 @@ public:
 		:	Name(),
 			Data( nullptr ),
 			bEnabled( true ),
-			Picture( nullptr ),
+			Picture( INVALID_HANDLE<rend::Texture2DHandle>() ),
 			PicOffset( 0, 0 ),
 			PicSize( 0, 0 )
 	{}
@@ -34,11 +34,11 @@ public:
 		: Name( InName ),
 		  Data( InData ),
 		  bEnabled( InbEnabled ),
-		  Picture( nullptr ),
+		  Picture( INVALID_HANDLE<rend::Texture2DHandle>() ),
 		  PicOffset( 0, 0 ),
 		  PicSize( 0, 0 )
 	{}
-	TListItem( String InName, FTexture* Picture, TPoint PicOffset, TSize PicSize, void* InData, Bool InbEnabled=true)
+	TListItem( String InName, rend::Texture2DHandle Picture, TPoint PicOffset, TSize PicSize, void* InData, Bool InbEnabled=true)
 		: Name( InName ),
 		  Data( InData ),
 		  bEnabled( InbEnabled ),
@@ -69,7 +69,7 @@ public:
 	// WListWidget interface.
 	WList( WContainer* InOwner, WWindow* InRoot );
 	virtual Int32 AddItem( String InName, void* InData );
-	virtual Int32 AddPictureItem( String InName, FTexture* Picture, TPoint PicOffset, TSize PicSize, void* Data );
+	virtual Int32 AddPictureItem( String InName, rend::Texture2DHandle Picture, TPoint PicOffset, TSize PicSize, void* Data );
 	virtual void Remove( Int32 iItem );
 	virtual void Empty();
 	virtual void SetItemIndex( Int32 NewIdx, Bool bNotify = true );

@@ -10,7 +10,7 @@ namespace flu
 namespace tests
 {
 	UnitTestInfo g_currentTest;
-	Double g_startTime = 0.0;
+	UInt64 g_startTimeStamp = 0;
 	Int32 g_passedUnitsCount = 0;
 	Int32 g_failedUnitsCount = 0;
 	Int32 g_skippedUnitsCount = 0;
@@ -60,7 +60,7 @@ int main( int nArgs, char* args[] )
 	flu::LogManager::instance().addCallback( new ConsoleOutputCallback() );
 
 	int errorCode = 0;
-	tests::g_startTime = GPlat->TimeStamp();
+	tests::g_startTimeStamp = time::cycles64();
 
 	info( L"------ Fluorine Unit Tests Framework ------" );
 
@@ -77,7 +77,7 @@ int main( int nArgs, char* args[] )
 		}
 	}
 
-	info( L"--- %.4f ms elapsed ---", ( GPlat->TimeStamp() - tests::g_startTime ) * 1000.0 );
+	info( L"--- %.4f ms elapsed ---", time::elapsedMsFrom( tests::g_startTimeStamp ) );
 	info( L"========== Tests: %d passed, %d failed, %d skipped ==========", 
 		tests::g_passedUnitsCount, tests::g_failedUnitsCount, tests::g_skippedUnitsCount );
 

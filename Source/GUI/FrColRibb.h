@@ -3,6 +3,10 @@
 	Created by Vlad Gordienko, Mar. 2018.
 =============================================================================*/
 
+#define COLOR_RIBBON_ENABLED 0
+
+
+#if COLOR_RIBBON_ENABLED
 /*-----------------------------------------------------------------------------
 	WColorRibbon.
 -----------------------------------------------------------------------------*/
@@ -31,9 +35,15 @@ public:
 	void OnMouseLeave();
 
 private:
+	struct Bitmap
+	{
+		Array<math::Color> data;
+		rend::Texture2DHandle handle;
+	};
+
 	// Internal.
 	math::InterpCurve<math::Color>*	Curve;
-	TStaticBitmap*					Ribbon;
+	Bitmap							Ribbon;
 	Int32							iSelected;
 
 	// Helper functions.
@@ -42,6 +52,7 @@ private:
 	void ColorSelected( WWidget* Sender );
 };
 
+#endif
 
 /*-----------------------------------------------------------------------------
 	The End.

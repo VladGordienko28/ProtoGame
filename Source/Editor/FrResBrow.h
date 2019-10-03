@@ -86,7 +86,7 @@ private:
 	struct TIcon
 	{
 		FResource*	Resource;
-		FTexture*	Picture;
+		img::Image::Ptr	Picture;
 		const Char*	TypeName;
 		TPoint		Position;
 		TPoint		PicOffset;

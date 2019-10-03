@@ -10,6 +10,7 @@
 
 // Render includes
 #include "Types.h"
+#include "Stats.h"
 #include "VertexDecl.h"
 #include "States.h"
 #include "ShaderCompiler.h"

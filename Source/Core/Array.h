@@ -516,6 +516,11 @@ namespace flu
 			m_data[b] = tmp;
 		}
 
+		SizeT size() const
+		{
+			return SIZE;
+		}
+
 		using Iterator = T*;
 		using ConstIterator = const T*;
 

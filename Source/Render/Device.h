@@ -37,6 +37,10 @@ namespace rend
 			const AnsiChar* debugName = nullptr ) = 0;
 		virtual void destroyRenderTarget( RenderTargetHandle handle ) = 0;
 
+		virtual DepthBufferHandle createDepthBuffer( EFormat format, Int32 width, Int32 height,
+			const AnsiChar* debugName = nullptr ) = 0;
+		virtual void destroyDepthBuffer( DepthBufferHandle handle ) = 0;
+
 		virtual ShaderHandle createPixelShader( const CompiledShader& shader, const AnsiChar* debugName = nullptr ) = 0;
 		virtual void destroyPixelShader( ShaderHandle handle ) = 0;
 
@@ -59,12 +63,15 @@ namespace rend
 		virtual void destroyConstantBuffer( ConstantBufferHandle handle ) = 0;
 
 		virtual BlendStateId getBlendState( const BlendState& blendState ) = 0;
-		virtual void enableBlendState( BlendStateId blendStateId ) = 0;
-		virtual void disableBlendState() = 0;
+		virtual void applyBlendState( BlendStateId blendStateId ) = 0;
+
+		virtual DepthStencilStateId getDepthStencilState( const DepthStencilState& depthStencilState ) = 0;
+		virtual void applyDepthStencilState( DepthStencilStateId depthStencilStateId ) = 0;
 
 		virtual SamplerStateId getSamplerState( const SamplerState& samplerState ) = 0;
 
 		virtual void clearRenderTarget( RenderTargetHandle handle, const math::FloatColor& clearColor ) = 0;
+		virtual void clearDepthBuffer( DepthBufferHandle handle, Float depth, UInt8 stencil ) = 0;
 
 		virtual void setVertexBuffer( VertexBufferHandle handle ) = 0;
 		virtual void setIndexBuffer( IndexBufferHandle handle ) = 0;
@@ -81,6 +88,9 @@ namespace rend
 		virtual void drawIndexed( UInt32 indexCount, UInt32 startIndexLocation = 0, Int32 baseVertexOffset = 0 ) = 0;
 		virtual void draw( UInt32 vertexCount, UInt32 startVertexLocation = 0 ) = 0;
 
+		virtual void setScissorArea( const ScissorArea& area ) = 0;
+
+		virtual void setRenderTarget( RenderTargetHandle rtHandle, DepthBufferHandle dbHandle ) = 0;
 		virtual void setViewport( const Viewport& viewport ) = 0;
 
 		virtual Int32 getBackbufferWidth() const = 0;
@@ -92,9 +102,13 @@ namespace rend
 		virtual ShaderResourceView getShaderResourceView( Texture1DHandle handle ) = 0;
 		virtual ShaderResourceView getShaderResourceView( Texture2DHandle handle ) = 0;
 		virtual ShaderResourceView getShaderResourceView( RenderTargetHandle handle ) = 0;
+		virtual ShaderResourceView getShaderResourceView( DepthBufferHandle handle ) = 0;
 
 		virtual ShaderCompiler* createCompiler() const = 0;
 		virtual String compilerMark() const = 0;
+
+		virtual const MemoryStats& getMemoryStats() const = 0;
+		virtual const DrawStats& getDrawStats() const = 0;
 
 	private:
 		Device( const Device& ) = delete;

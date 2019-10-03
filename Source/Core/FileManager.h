@@ -83,6 +83,14 @@ namespace fm
 	 *		"FlappyPork.fluproj" -> "FlappyPork"
 	 */
 	extern String getFileName( const Char* fileName );
+
+	/**
+	 *	Returns the file name with extension.
+	 *	For example:
+	 *		"F:\Amazing Fluorine\Res\HeroesAndMagic\Bitmaps\BMidnightSky.png" -> "BMidnightSky.png"
+	 *		"FlappyPork.fluproj" -> "FlappyPork.fluproj"
+	 */
+	extern String getFileNameExt( const Char* fileName );
 	
 	/**
 	 *	Return true, if file name is absolute, i.e. contains colon.
@@ -109,9 +117,22 @@ namespace fm
 	extern Bool directoryExists( const Char* dirName );
 
 	/**
+	 *	Creates a new directory, only last folder will be
+	 *	created.
+	 */
+	extern Bool createDirectory( const Char* dirPath );
+
+	/**
 	 *	Return whether file exists
 	 */
 	extern Bool fileExists( const Char* fileName );
+
+	/**
+	 *	Traverse in diectory and return absolute file names for all files
+	 *	event in nested directories.
+	 *	Note: assumed directory without a last slash
+	 */
+	extern Bool traverseDirectory( const Char* directory, Array<String>& outFiles );
 
 	/**
 	 *	Find files in the specified directory with wildcard

@@ -90,6 +90,31 @@ CEditor::~CEditor()
     Editor initialization.
 -----------------------------------------------------------------------------*/
 
+class ResourceListener: public res::IListener
+{
+public:
+	ResourceListener() = default;
+	~ResourceListener() = default;
+
+	void onError( String resourceName, String message )
+	{
+		error( L"%s: %s", *resourceName, *message );
+	}
+
+	void onWarning( String resourceName, String message )
+	{
+		warn( L"%s: %s", *resourceName, *message );
+	}
+
+	void onInfo( String resourceName, String message )
+	{
+		info( L"%s: %s", *resourceName, *message );
+	}
+};
+
+ResourceListener g_resListener;
+
+
 //
 // Initialize the editor.
 //
@@ -140,9 +165,16 @@ void CEditor::Init( HINSTANCE InhInstance )
 	// Load configure file.
 	Config			= new CConfigManager( fm::getCurrentDirectory() );
 
+	res::ResourceManager::create( Config->ReadString( L"Editor", L"ResMan", L"PackagesPath" ),
+		Config->ReadString( L"Editor", L"ResMan", L"CachePath" ),
+		Config->ReadString( L"Editor", L"ResMan", L"UseCache" ) );
+
+	res::ResourceManager::addListener( &g_resListener );
+
 	// Create render & audio.
 	//GRender		= new COpenGLRender( hWnd );
 	GRender			= new CDirectX11Render( hWnd );
+
 
 #if FLU_X64
 	GAudio		= new CNullAudio();
@@ -161,11 +193,31 @@ void CEditor::Init( HINSTANCE InhInstance )
 	GUIRender	= new CGUIRender();
 	GUIWindow	= new WWindow();	
 
+	res::ResourceManager::registerResourceType( res::EResourceType::Effect, new ffx::System( g_device ), new ffx::Compiler( g_device ) );
+	res::ResourceManager::registerResourceType( res::EResourceType::Image, new img::System( g_device ), new img::Converter() );
+	res::ResourceManager::registerResourceType( res::EResourceType::Font, new fnt::System(), new fnt::Compiler() ); ///////////////////////
+
+	m_engineChart = new EngineChart();
+
+	//auto myAmazingFont = res::ResourceManager::get<fnt::Font>( L"Fonts.InkyThinPixels_14", res::EFailPolicy::FATAL );
+
+	renderLoadEffects();
+			g_grid.create(  math::colors::GRAY, math::WORLD_SIZE );
+
 	// Load gui resources.
-	WWindow::Font1				= LoadFontFromResource( hInstance, MAKEINTRESOURCE(IDR_FONT1), MAKEINTRESOURCE(IDB_FONT1) );
-	WWindow::Font2				= LoadFontFromResource( hInstance, MAKEINTRESOURCE(IDR_FONT2), MAKEINTRESOURCE(IDB_FONT2) );
-	WWindow::Icons				= LoadBitmapFromResource( hInstance, MAKEINTRESOURCE(IDB_GUIICONS) );
+
+	//WWindow::Font1				= LoadFontFromResource( hInstance, MAKEINTRESOURCE(IDR_FONT1), /*MAKEINTRESOURCE(IDB_FONT1)*/ L"System.Editor.WascoSans9_0" );
+	//WWindow::Font2				= LoadFontFromResource( hInstance, MAKEINTRESOURCE(IDR_FONT2), /*MAKEINTRESOURCE(IDB_FONT2)*/ L"System.Editor.Consolas13_0" );
+	/*	WWindow::Icons				= LoadBitmapFromResource( hInstance, MAKEINTRESOURCE(IDB_GUIICONS) );
 	WWindow::Icons->BlendMode	= BLEND_Masked;
+	*/
+
+	WWindow::Icons = res::ResourceManager::get<img::Image>( L"System.Editor.GuiIcons", res::EFailPolicy::FATAL );
+	WWindow::Font1 = res::ResourceManager::get<fnt::Font>( L"Fonts.RopaSans_9", res::EFailPolicy::FATAL ); // no no no no
+	WWindow::Font2 = res::ResourceManager::get<fnt::Font>( L"Fonts.Consolas_9", res::EFailPolicy::FATAL ); // no no no no
+	//WWindow::Font2 = res::ResourceManager::get<fnt::Font>( L"Fonts.Consolas_9", res::EFailPolicy::FATAL );
+
+	//res::ResourceManager::generatePackages();
 
 	// Allocate top panels.
 	MainMenu		= new WEditorMainMenu( GUIWindow, GUIWindow );
@@ -263,12 +315,19 @@ void CEditor::Exit()
 		delete Project;
 
 	// Delete GUI, and it resources.
-	delete WWindow::Font1;
-	delete WWindow::Font2;
-	delete WWindow::Icons;
+	WWindow::Font1 = nullptr;
+	WWindow::Font2 = nullptr;
+	WWindow::Icons = nullptr;
 
 	delete GUIWindow;
 	delete GUIRender;
+
+	m_engineChart = nullptr;
+
+	g_coolImage = nullptr;
+
+	res::ResourceManager::removeListener( &g_resListener );
+	res::ResourceManager::destroy();
 
 	// Shutdown subsystems.
 	freeandnil(GInput);
@@ -289,7 +348,7 @@ void CEditor::Exit()
 //
 // Global timing variables.
 //
-static Double	GOldTime;
+static UInt64	GOldTimeStamp;
 static Double	GStartupTime;
 static Double	GNowTime;
 static Double	GfpsTime;
@@ -312,8 +371,8 @@ void CEditor::MainLoop()
 	Bool	bInFocus	= true;
 
 	// Initial timing.
-	GOldTime		= GPlat->TimeStamp();
-	GStartupTime	= GNowTime = GPlat->TimeStamp();
+	GOldTimeStamp	= time::cycles64();
+	GStartupTime	= GNowTime = time::cyclesToSec( time::cycles64() );
 	GPlat->SetNow( GNowTime );
 	GfpsTime		= 0.0;
 	GfpsCount		= 0;
@@ -347,10 +406,10 @@ void CEditor::MainLoop()
 			}
 		
 			// Compute 'now' time.
-			Double Time			= GPlat->TimeStamp();
-			Double DeltaTime	= Time - GOldTime;
-			GOldTime			= Time;
-			GNowTime			= Time - GStartupTime;
+			UInt64 TimeStamp	= time::cycles64();
+			Double DeltaTime	= time::cyclesToSec( TimeStamp - GOldTimeStamp );
+			GOldTimeStamp		= TimeStamp;
+			GNowTime			= time::cyclesToSec( TimeStamp ) - GStartupTime;
 			GPlat->SetNow( GNowTime );
 
 			// Count FPS stats.
@@ -444,6 +503,30 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 				OldY	= Y;
 			}
 
+			// Handle cursor mode.
+			if( GEditor->GUIWindow->GetCursorMode() == CM_Wrap )
+			{
+				Int32 ClientY = GEditor->GUIWindow->Size.Height;
+
+				Int32 NewY=Y;
+				if( Y<=0 )			NewY = ClientY-1;
+				if( Y>=ClientY )	NewY = 1;
+
+				if( NewY != Y )
+				{
+					POINT P = { X, NewY }; 
+					ClientToScreen( GEditor->hWnd, &P );
+					SetCursorPos( P.x, P.y );
+					OldY		= NewY;
+				}
+			}
+			break;
+		}
+		case WM_SETCURSOR:
+		{
+			//
+			// Prevent cursor override by the system
+			//
 			static const LPCTSTR CursorRemap[CR_MAX] =
 			{
 				IDC_ARROW,							// CR_Arrow.
@@ -474,30 +557,10 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 				)
 			);
 
-			// Handle cursor mode.
-			if( GEditor->GUIWindow->GetCursorMode() == CM_Wrap )
-			{
-				Int32 ClientY = GEditor->GUIWindow->Size.Height;
+			// todo: needs better cursor handling
+			if( Style == ECursorStyle::CR_Arrow )
+				return DefWindowProc( HWnd, Message, WParam, LParam );
 
-				Int32 NewY=Y;
-				if( Y<=0 )			NewY = ClientY-1;
-				if( Y>=ClientY )	NewY = 1;
-
-				if( NewY != Y )
-				{
-					POINT P = { X, NewY }; 
-					ClientToScreen( GEditor->hWnd, &P );
-					SetCursorPos( P.x, P.y );
-					OldY		= NewY;
-				}
-			}
-			break;
-		}
-		case WM_SETCURSOR:
-		{
-			//
-			// Prevent cursor override by the system
-			//
 			break;
 		}
 		case WM_CLOSE:
@@ -597,19 +660,19 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 
 			if( WParam == KEY_Tilde )
 			{
-				if( GEditor->m_engineChart.isEnabled() )
+				if( GEditor->m_engineChart->isEnabled() )
 				{
-					GEditor->m_engineChart.disable();
+					GEditor->m_engineChart->disable();
 				}
 				else
 				{
-					GEditor->m_engineChart.enable();
+					GEditor->m_engineChart->enable();
 				}
 			}
 
-			if( WParam >= KEY_0 && WParam <= KEY_9 && GEditor->m_engineChart.isEnabled() )
+			if( WParam >= KEY_0 && WParam <= KEY_9 && GEditor->m_engineChart->isEnabled() )
 			{
-				GEditor->m_engineChart.toggleGroup( WParam - KEY_0 );
+				GEditor->m_engineChart->toggleGroup( WParam - KEY_0 );
 			}
 
 			break;

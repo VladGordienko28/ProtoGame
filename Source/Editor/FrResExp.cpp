@@ -8,7 +8,7 @@
 /*-----------------------------------------------------------------------------
     Bitmap exporters.
 -----------------------------------------------------------------------------*/
-
+#if 0
 //
 // Export image to bmp or tga file.
 //
@@ -174,7 +174,7 @@ Bool ExportBitmap( FBitmap* Bitmap, String Directory )
 	else
 		return false;
 }
-
+#endif
 
 /*-----------------------------------------------------------------------------
     Script exporters.
@@ -249,7 +249,9 @@ Bool CEditor::ExportResource( FResource* Res, String Directory, Bool bOverride )
 	else if( Res->IsA(FBitmap::MetaClass) )
 	{
 		// Export bitmap to file.
-		return ExportBitmap( As<FBitmap>(Res), Directory );
+		//return ExportBitmap( As<FBitmap>(Res), Directory );
+		assert( false );
+		return false;
 	}
 	else
 	{

@@ -44,6 +44,10 @@ void FModelComponent::SetAtlasTable()
 	TilesPerU	= clamp<UInt8>( TilesPerU, 1, 200 );
 	TilesPerV	= clamp<UInt8>( TilesPerV, 1, 200 );
 
+	// offset by 0.25 of pixel
+	Float subPixelXOffset = Texture ? 0.25f / Texture->getUSize() : 0.f;
+	Float subPixelYOffset = Texture ? 0.25f / Texture->getVSize() : 0.f;
+
 	Float TileSizeU	= 1.f / TilesPerU;
 	Float TileSizeV	= 1.f / TilesPerV;
 	Int32 iTile = 0, U, V;
@@ -52,8 +56,8 @@ void FModelComponent::SetAtlasTable()
 		for( U=0; U<TilesPerU; U++ )
 		{
 			math::Rect Tile;
-			Tile.min		= math::Vector( (Float)TileSizeU*(U+0.f), (Float)TileSizeV*(V+1.f) );
-			Tile.max		= math::Vector( (Float)TileSizeU*(U+1.f), (Float)TileSizeV*(V+0.f) );
+			Tile.min		= math::Vector( (Float)TileSizeU*(U+0.f) + subPixelXOffset, (Float)TileSizeV*(V+1.f) - subPixelYOffset );
+			Tile.max		= math::Vector( (Float)TileSizeU*(U+1.f) - subPixelXOffset, (Float)TileSizeV*(V+0.f) + subPixelYOffset );
 
 			AtlasTable[iTile++]	= Tile;
 
@@ -175,7 +179,7 @@ void FModelComponent::Render( CCanvas* Canvas )
 	if( !( Level->RndFlags & RND_Model ) )
 		return;
 
-	math::Rect	View		= Canvas->View.Bounds;
+	math::Rect	View		= Canvas->View.bounds;
 	math::Rect	ModelBounds	= GetAABB();
 
 	// Is visible?
@@ -190,7 +194,7 @@ void FModelComponent::Render( CCanvas* Canvas )
 		Pad.Bounds			= ModelBounds;
 		Pad.Color			= math::Color( 0x20, 0x20, 0x30, 0xff );
 		Pad.Rotation		= 0;
-		Pad.Texture			= nullptr;
+		Pad.Image			= INVALID_HANDLE<rend::Texture2DHandle>();
 		Canvas->DrawRect( Pad );
 	}
 
@@ -241,7 +245,7 @@ void FModelComponent::Render( CCanvas* Canvas )
 	// Setup list.
 	Int32	NumTiles = 0;
 	TRenderList List( NumVis, Color );
-	List.Texture	= Texture;
+	List.Image		= Texture ? As<FBitmap>(Texture)->m_image->getHandle() : INVALID_HANDLE<rend::Texture2DHandle>();
 	List.DrawColor	= bFrozen ? Color*0.75f : Color;
 	List.Flags		= POLY_Unlit*bUnlit | !(Level->RndFlags & RND_Lighting);
 
@@ -321,7 +325,7 @@ void FModelComponent::Render( CCanvas* Canvas )
 			Tile.Flags				= POLY_Unlit | POLY_FlatShade | POLY_Ghost;
 			Tile.Rotation			= 0;
 			Tile.Color				= math::colors::FIRE_BRICK;
-			Tile.Texture			= nullptr;
+			Tile.Image				= INVALID_HANDLE<rend::Texture2DHandle>();
 			
 			Tile.Bounds.min.x		= (X + 0.f)*TileSize.x + Location.x;
 			Tile.Bounds.min.y		= (Y + 0.f)*TileSize.y + Location.y;
@@ -342,7 +346,7 @@ void FModelComponent::Render( CCanvas* Canvas )
 			TRenderRect Tile;
 			Tile.Flags				= POLY_Unlit | POLY_Ghost;
 			Tile.Rotation			= 0;
-			Tile.Texture			= Texture;
+			Tile.Image				= Texture ? As<FBitmap>(Texture)->m_image->getHandle() : INVALID_HANDLE<rend::Texture2DHandle>();
 			Tile.Color				= math::Color( 0xa0, 0xa0, 0xa0, 0xff );
 
 			for( Int32 i=0; i<Selected.size(); i++ )
