@@ -84,9 +84,6 @@
     </ClInclude>
     <ClInclude Include="FrModi.h" />
     <ClInclude Include="FrMaterial.h" />
-    <ClInclude Include="Core\FrNetBas.h">
-      <Filter>Core %28 legacy %29</Filter>
-    </ClInclude>
     <ClInclude Include="FrDbgDraw.h" />
     <ClInclude Include="Chart\EngineChart.h">
       <Filter>Chart</Filter>

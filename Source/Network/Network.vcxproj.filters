@@ -4,9 +4,13 @@
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="FrConnect.cpp" />
     <ClCompile Include="FrNetUtils.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Network.h" />
     <ClInclude Include="FrConnect.h" />
+    <ClInclude Include="Types.h" />
+    <ClInclude Include="Interfaces.h" />
+    <ClInclude Include="NetworkManager.h" />
   </ItemGroup>
 </Project>

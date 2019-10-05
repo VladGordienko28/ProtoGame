@@ -11,7 +11,7 @@
 
 namespace Net
 {
-
+#if 0
 //
 // Convert IP address to string.
 //
@@ -106,7 +106,7 @@ Bool WSAInitialize( String* Error )
 
 	return true;
 }
-
+#endif
 
 }
 

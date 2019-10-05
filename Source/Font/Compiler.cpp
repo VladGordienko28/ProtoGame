@@ -66,10 +66,10 @@ namespace fnt
 			assert( charNode.hasObject() );
 
 			Int32 c = charNode->dotgetInt( TEXT( "C" ), -1 );
-			Float x = charNode->dotgetInt( TEXT( "X" ), -1 );
-			Float y = charNode->dotgetInt( TEXT( "Y" ), -1 );
-			Float w = charNode->dotgetInt( TEXT( "W" ), -1 );
-			Float h = charNode->dotgetInt( TEXT( "H" ), -1 );
+			Float x = charNode->dotgetFloat( TEXT( "X" ), -1.f );
+			Float y = charNode->dotgetFloat( TEXT( "Y" ), -1.f );
+			Float w = charNode->dotgetFloat( TEXT( "W" ), -1.f );
+			Float h = charNode->dotgetFloat( TEXT( "H" ), -1.f );
 
 			if( c == -1 || x == -1.f || y == -1.f || w == -1.f || h == -1.f )
 			{
@@ -92,7 +92,7 @@ namespace fnt
 		}
 
 		// serialize data
-		BufferWriter writer( &output.compiledResource.data );
+		UserBufferWriter writer( output.compiledResource.data );
 
 		writer << imageResourceId;
 		writer << glyphs;

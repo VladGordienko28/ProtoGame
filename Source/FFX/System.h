@@ -7,12 +7,6 @@ namespace flu
 {
 namespace ffx
 {		
-	
-	// fooooooooooooooooooooooooooooooooooooooooooooooooo remove this mess!~!!!!!!!!!!!!!!!
-		extern rend::VertexDeclaration* s_vertexDeclaration;
-
-
-
 	/**
 	 *	A FFX system
 	 */

@@ -322,7 +322,7 @@ namespace img
 			if( colorDepth == 24 )
 			{
 				// 24 bits, not compressed
-				for( Int32 i = 0; i < width * height; ++i )
+				for( UInt32 i = 0; i < width * height; ++i )
 				{
 					math::Color pixel = { tempImage[i * 3 + 2], tempImage[i * 3 + 1], tempImage[i * 3 + 0], 0xff };
 					
@@ -337,7 +337,7 @@ namespace img
 			else
 			{
 				// 32 bits, not compressed
-				for( Int32 i = 0; i < width * height; ++i )
+				for( UInt32 i = 0; i < width * height; ++i )
 				{
 					math::Color pixel = { tempImage[i * 4 + 2], tempImage[i * 4 + 1], tempImage[i * 4 + 0], tempImage[i * 4 + 3] };
 					image[( vMask & ~i ) | ( i & uMask )] = pixel;

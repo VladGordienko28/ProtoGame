@@ -6,85 +6,6 @@
 namespace flu
 {
 	/**
-	 *	A special buffer for data writing
-	 */
-	//todo: split into two classes
-	class BufferWriter: public IOutputStream
-	{
-	public:
-		// own data
-		BufferWriter()
-			:	m_position( 0 ),
-				m_data( &m_OwnData )
-		{
-		}
-
-		// custom data
-		BufferWriter( Array<UInt8>* inBuffer )
-			:	m_position( 0 ),
-				m_data( inBuffer )
-		{
-			assert( inBuffer );
-			assert( inBuffer->size() == 0 );
-		}
-
-		~BufferWriter()
-		{
-			m_OwnData.empty();
-		}
-
-		void* data()
-		{
-			return &(*m_data)[0];
-		}
-
-		SizeT size() const override
-		{
-			return m_data->size();
-		}
-
-		SizeT tell() const override
-		{
-			return m_position;
-		}
-
-		void* reserveData( SizeT numBytes ) override
-		{
-			if( m_position + numBytes > SizeT( m_data->size() ) )
-			{
-				m_data->setSize( static_cast<Int32>( m_position + numBytes ) );
-			}
-
-			void* result = &m_data[static_cast<Int32>( m_position )];
-			m_position += numBytes;
-
-			return result;
-		}
-
-		void writeData( const void* buffer, SizeT numBytes ) override
-		{
-			if( m_position + numBytes > SizeT( m_data->size() ) )
-			{
-				m_data->setSize( static_cast<Int32>( m_position + numBytes ) );
-			}
-
-			mem::copy( &(*m_data)[m_position], buffer, numBytes );
-			m_position += numBytes;
-		}
-
-		void seek( SizeT offset ) override
-		{
-			assert( offset > 0 && offset < SizeT( m_data->size() ) );
-			m_position = offset;
-		}
-
-	private:
-		Array<UInt8>* m_data;
-		Array<UInt8> m_OwnData;
-		SizeT m_position;
-	};
-
-	/**
 	 *	A special class for data reading
 	 */
 	class BufferReader: public IInputStream
@@ -123,7 +44,7 @@ namespace flu
 
 		void seek( SizeT newPosition ) override
 		{
-			assert( newPosition >= 0 && newPosition < m_data.size() );
+			assert( newPosition >= 0 && newPosition < static_cast<SizeT>( m_data.size() ) );
 			m_position = newPosition;
 		}
 
@@ -134,7 +55,7 @@ namespace flu
 
 		Bool isEof() const override
 		{
-			return m_position >= m_data.size();
+			return m_position >= static_cast<SizeT>( m_data.size() );
 		}
 
 	private:
@@ -142,5 +63,112 @@ namespace flu
 		SizeT m_position;
 
 		BufferReader() = delete;
+	};
+
+	/**
+	 *	A base buffer writer
+	 */
+	template<typename ContainerType> class BufferWriterBase: public IOutputStream
+	{
+	public:
+		void* getData()
+		{
+			assert( m_data.size() > 0 );
+			return &m_data[0];
+		}
+
+		SizeT size() const override
+		{
+			return m_data.size();
+		}
+
+		SizeT tell() const override
+		{
+			return m_position;
+		}
+
+		void* reserveData( SizeT numBytes ) override
+		{
+			if( m_position + numBytes > static_cast<SizeT>( m_data.size() ) )
+			{
+				m_data.setSize( static_cast<Int32>( m_position + numBytes ) );
+			}
+
+			void* result = &m_data[static_cast<Int32>( m_position )];
+			m_position += numBytes;
+
+			return result;
+		}
+
+		void writeData( const void* buffer, SizeT numBytes ) override
+		{
+			if( m_position + numBytes > static_cast<SizeT>( m_data.size() ) )
+			{
+				m_data.setSize( static_cast<Int32>( m_position + numBytes ) );
+			}
+
+			mem::copy( &m_data[m_position], buffer, numBytes );
+			m_position += numBytes;
+		}
+
+		void seek( SizeT offset ) override
+		{
+			assert( offset > 0 && offset < SizeT( m_data.size() ) );
+			m_position = offset;
+		}
+
+	protected:
+		ContainerType m_data;
+		SizeT m_position;
+
+		BufferWriterBase()
+			:	m_position( 0 ),
+				m_data()
+		{
+		}
+
+		BufferWriterBase( ContainerType& userData )
+			:	m_position( 0 ),
+				m_data( userData )
+		{
+		}
+	};
+
+	/**
+	 *	A buffer which write data to own buffer
+	 */
+	class OwningBufferWriter: public BufferWriterBase<Array<UInt8>>
+	{
+	public:
+		OwningBufferWriter()
+			:	BufferWriterBase<Array<UInt8>>()
+		{
+		}
+
+		~OwningBufferWriter()
+		{
+			m_data.empty();
+		}
+	};
+
+	/**
+	 *	A buffer which write data to user specified buffer
+	 */
+	class UserBufferWriter: public BufferWriterBase<Array<UInt8>&>
+	{
+	public:
+		UserBufferWriter( Array<UInt8>& userData )
+			:	BufferWriterBase<Array<UInt8>&>( userData )
+		{
+		}
+
+		~UserBufferWriter()
+		{
+		}
+
+	private:
+		UserBufferWriter() = delete;
+		UserBufferWriter( UserBufferWriter& ) = delete;
+		UserBufferWriter( UserBufferWriter&& ) = delete;
 	};
 }

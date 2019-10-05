@@ -27,10 +27,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="NetworkManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FrConnect.h" />
+    <ClInclude Include="Interfaces.h" />
     <ClInclude Include="Network.h" />
+    <ClInclude Include="NetworkManager.h" />
+    <ClInclude Include="Types.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B8135FB7-5DE7-49BC-ABBB-240AD59502CA}</ProjectGuid>

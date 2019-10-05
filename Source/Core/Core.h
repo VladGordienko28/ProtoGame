@@ -52,7 +52,6 @@
 #include "StringManager.h"
 #include "String.h"
 #include "HandleArray.h"
-#include "Namespace.h"
 #include "Text.h"
 #include "Time.h"
 #include "FileManager.h"

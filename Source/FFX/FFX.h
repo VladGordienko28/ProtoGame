@@ -12,10 +12,8 @@
 
 // FFX includes
 #include "FxCommon.h"
-#include "Declaration.h"
 #include "FxLexer.h"
 #include "Effect.h"
-#include "Preprocessor.h"
 #include "FxCompiler.h"
 #include "SharedConstants.h"
 #include "System.h"

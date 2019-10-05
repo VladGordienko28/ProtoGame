@@ -161,7 +161,7 @@ namespace rend
 
 	struct FormatInfo
 	{
-		const AnsiChar* name;
+		const Char* name;
 		UInt32 blockBytes;
 		UInt32 blockSizeX;
 		UInt32 blockSizeY;
@@ -172,5 +172,6 @@ namespace rend
 	 *	Return information about specific format
 	 */
 	extern const FormatInfo& getFormatInfo( EFormat format );
+	extern EFormat getFormatByName( String formatName );
 }
 }

@@ -48,6 +48,7 @@ namespace flu
 		Bool m_enabled;
 
 		fnt::Font::Ptr m_font;
+		ffx::Effect::Ptr m_effect;
 
 		gfx::GrowOnlyVB<math::Vector, 128> m_vertexBuffer;
 		math::Color m_colorSet[COLOR_SET_SIZE];

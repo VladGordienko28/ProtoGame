@@ -323,7 +323,6 @@ namespace dx11
 		assert( device );
 		assert( shader.getType() == rend::EShaderType::Vertex );
 		assert( shader.isValid() );
-		assert( vertexDeclaration != 0 );
 
 		m_vertexDeclaration = vertexDeclaration;
 

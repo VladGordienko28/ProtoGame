@@ -64,7 +64,7 @@ namespace res
 		m_name = header.name;
 		assert( header.size > 0 );
 
-		for( Int32 i = 0; i < header.size; ++i )
+		for( UInt32 i = 0; i < header.size; ++i )
 		{
 			ResourceId resourceId;	
 			ResourceEntry entry;

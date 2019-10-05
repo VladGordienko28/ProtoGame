@@ -146,13 +146,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Declaration.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="FFX.h" />
     <ClInclude Include="FxCommon.h" />
     <ClInclude Include="FxCompiler.h" />
+    <ClInclude Include="FxKeyword.h" />
     <ClInclude Include="FxLexer.h" />
-    <ClInclude Include="Preprocessor.h" />
     <ClInclude Include="SharedConstants.h" />
     <ClInclude Include="System.h" />
   </ItemGroup>
@@ -166,7 +165,6 @@
     </ClCompile>
     <ClCompile Include="FxCompiler.cpp" />
     <ClCompile Include="FxLexer.cpp" />
-    <ClCompile Include="Preprocessor.cpp" />
     <ClCompile Include="SharedConstants.cpp" />
     <ClCompile Include="System.cpp" />
   </ItemGroup>

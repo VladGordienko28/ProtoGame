@@ -1,20 +1,25 @@
-/*=============================================================================
-	Network.h: Network general include file.
-	Copyright Apr.2018 Vlad Gordienko.
-=============================================================================*/
+//-----------------------------------------------------------------------------
+//	Network.h: Network main include file
+//	Created by Vlad Gordienko, 2018
+//-----------------------------------------------------------------------------
 #pragma once
 
-// C++ includes.
-#include <WinSock2.h>
-#pragma comment (lib, "Ws2_32.lib")
+// fluorine includes
+#include "Core/Core.h"
 
-// Flu includes.
-#include "Engine\Engine.h"
+// network includes
+#include "Types.h"
+#include "Interfaces.h"
+#include "NetworkManager.h"
 
-// Network includes.
+
+
+
 #include "FrConnect.h"
 
 
+
+#if 0
 //
 // Network utils.
 //
@@ -26,7 +31,4 @@ namespace Net
 	extern String IPToString( const TNetAddress& Address );
 	extern TNetAddress StringToIP( String Str );
 }
-
-/*-----------------------------------------------------------------------------
-	The End.
------------------------------------------------------------------------------*/
+#endif

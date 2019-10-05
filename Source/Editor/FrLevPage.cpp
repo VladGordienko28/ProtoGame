@@ -2845,6 +2845,13 @@ void WLevelPage::ButtonKeyClick( WWidget* Sender )
 //
 void WLevelPage::ButtonPaintClick( WWidget* Sender )
 {
+	// fooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+	auto explev = exportLevel( Level );
+
+	Text::Ptr text = JSon::saveToText( explev );
+	String desc = text->toString();
+
+
 	// Update buttons status.
 	EditButton->bDown	= false;
 	KeyButton->bDown	= false;

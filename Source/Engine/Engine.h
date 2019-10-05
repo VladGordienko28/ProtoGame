@@ -79,7 +79,6 @@ namespace envi
 #include "Core\FrFile.h"
 #include "Core\FrIni.h"
 #include "Core\FrCorUtils.h"
-#include "Core\FrNetBas.h"
 
 // Rendering
 #include "Rendering/Api.h"
@@ -88,10 +87,7 @@ namespace envi
 #include "Rendering/GrowOnlyVB.h"
 #include "Rendering/GridDrawer.h"
 
-
-/////  tobe removed!!!!!!!!!!!!!!!!!!!!!!
-extern ffx::Effect::Ptr g_coloredEffect;
-
+#include "RenderPipeline/IRenderPipeline.h"
 
 // Profiling
 #include "Chart/EngineProfiler.h"

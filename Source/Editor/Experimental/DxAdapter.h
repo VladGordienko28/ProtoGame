@@ -5,12 +5,11 @@
 
 namespace flu
 {
-	extern img::Image::Ptr g_coolImage;
-
 	extern rend::Device* g_device;
 	extern gfx::GridDrawer g_grid;
 
 	extern void renderLoadEffects();
+	extern void renderDestroyEffects();
 
 	/**
 	 *	An experimental DirectX11 backend integrated

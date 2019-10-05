@@ -1090,15 +1090,22 @@ namespace dx11
 			inputElementsDesc.push( element );
 		}
 
-		HRESULT result = device->CreateInputLayout( &inputElementsDesc[0], inputElementsDesc.size(), vertexShader.code(), 
-			vertexShader.codeLength(), &m_inputLayout );
-
-		assert( SUCCEEDED( result ) );
-
-		if( declaration.getName() )
+		if( inputElementsDesc.size() > 0 )
 		{
-			AnsiString ansiName = wide2AnsiString( declaration.getName() );
-			m_inputLayout->SetPrivateData( WKPDID_D3DDebugObjectName, ansiName.len(), *ansiName );
+			HRESULT result = device->CreateInputLayout( &inputElementsDesc[0], inputElementsDesc.size(), 
+				vertexShader.code(), vertexShader.codeLength(), &m_inputLayout );
+
+			assert( SUCCEEDED( result ) );
+
+			if( declaration.getName() )
+			{
+				AnsiString ansiName = wide2AnsiString( declaration.getName() );
+				m_inputLayout->SetPrivateData( WKPDID_D3DDebugObjectName, ansiName.len(), *ansiName );
+			}		
+		}
+		else
+		{
+			m_inputLayout = nullptr;
 		}
 	}
 

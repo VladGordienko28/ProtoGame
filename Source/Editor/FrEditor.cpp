@@ -324,7 +324,8 @@ void CEditor::Exit()
 
 	m_engineChart = nullptr;
 
-	g_coolImage = nullptr;
+	renderDestroyEffects();
+	g_grid.destroy();
 
 	res::ResourceManager::removeListener( &g_resListener );
 	res::ResourceManager::destroy();

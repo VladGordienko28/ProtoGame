@@ -63,7 +63,7 @@ namespace res
 		}
 		else
 		{
-			fatal( TEXT( "LocalStorage: unable to resolve ResourceId \"%s\"", *resourceId.toString() ) );
+			fatal( TEXT( "LocalStorage: unable to resolve ResourceId \"%s\"" ), *resourceId.toString() );
 			return CompiledResource();
 		}
 	}
@@ -356,7 +356,7 @@ namespace res
 
 		// replace all '.' with '\\' in name
 		String wildcard = resourceName;
-		for( Int32 i = 0; i < wildcard.len(); ++i )
+		for( SizeT i = 0; i < wildcard.len(); ++i )
 		{
 			if( wildcard[i] == TEXT( '.' ) )
 			{
@@ -376,7 +376,7 @@ namespace res
 			String relativeFileName = String::del( file, 0, m_packagesPath.len() );
 
 			// find at least one compiler
-			for( Int32 i = 0; i < m_compilers.size(); ++i )
+			for( SizeT i = 0; i < m_compilers.size(); ++i )
 			{
 				const IResourceCompiler* compiler = m_compilers[i].get();
 
@@ -398,7 +398,7 @@ namespace res
 
 	EResourceType LocalStorage::getFileResourceType( String fileName ) const
 	{
-		for( Int32 i = 0; i < m_compilers.size(); ++i )
+		for( SizeT i = 0; i < m_compilers.size(); ++i )
 		{
 			const auto& compiler = m_compilers[i];
 
@@ -555,7 +555,7 @@ namespace res
 		String resourceName = String::del( fileName, dotPos, fileName.len() - dotPos );
 
 		// remove slashes
-		for( Int32 i = 0; i < resourceName.len(); ++i )
+		for( SizeT i = 0; i < resourceName.len(); ++i )
 		{
 			if( resourceName[i] == TEXT( '\\' ) || resourceName[i] == TEXT( '/' ) )
 			{

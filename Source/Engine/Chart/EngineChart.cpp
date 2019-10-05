@@ -11,6 +11,7 @@ namespace flu
 	static const math::Color TIMELINE_PANEL_COLOR = { 16, 16, 16, 200 };
 
 	static const Char CHART_FONT_NAME[] = TEXT( "Fonts.CourierNew_9" );
+	static const Char CHART_EFFECT_NAME[] = TEXT( "System.Shaders.Colored" );
 
 	EngineChart::EngineChart()
 		:	m_profiler( static_cast<Int32>(EProfilerGroup::MAX) ),
@@ -39,6 +40,7 @@ namespace flu
 
 		// obtain resources
 		m_font = res::ResourceManager::get<fnt::Font>( CHART_FONT_NAME, res::EFailPolicy::FATAL );
+		m_effect = res::ResourceManager::get<ffx::Effect>( CHART_EFFECT_NAME, res::EFailPolicy::FATAL );
 
 		// turn on at least one group
 		m_profiler.enableGroup( static_cast<Int32>(EProfilerGroup::General) );
@@ -131,8 +133,8 @@ namespace flu
 					cumulativeValue += it.samples[i].value;
 				}
 
-				g_coloredEffect->setColor( 0, drawColor );
-				g_coloredEffect->apply();
+				m_effect->setColor( 0, drawColor );
+				m_effect->apply();
 
 				m_vertexBuffer.bind();
 				gfx::api::setTopology( rend::EPrimitiveTopology::LineStrip );

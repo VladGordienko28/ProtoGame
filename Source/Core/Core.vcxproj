@@ -167,7 +167,6 @@
     <ClInclude Include="LogCallback.h" />
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="Namespace.h" />
     <ClInclude Include="Profiler.h" />
     <ClInclude Include="Queue.h" />
     <ClInclude Include="SmartPointer.h" />
@@ -218,7 +217,6 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Core/Core.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="LogManager.cpp" />
-    <ClCompile Include="Namespace.cpp" />
     <ClCompile Include="Profiler.cpp" />
     <ClCompile Include="StringManager.cpp" />
     <ClCompile Include="Text.cpp" />

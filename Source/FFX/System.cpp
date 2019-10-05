@@ -9,10 +9,6 @@ namespace flu
 {
 namespace ffx
 {
-
-	rend::VertexDeclaration* s_vertexDeclaration = nullptr;
-
-
 	System::System( rend::Device* device )
 		:	m_effects(),
 			m_device( device )
@@ -31,7 +27,7 @@ namespace ffx
 		assert( !m_effects.hasKey( resourceId ) );
 		assert( compiledResource.isValid() );
 
-		Effect* effect = new Effect( resourceName, *s_vertexDeclaration, m_device );
+		Effect* effect = new Effect( resourceName, m_device );
 		effect->reload( compiledResource );
 
 		effect->deleter( this, []( void* context, ReferenceCount* refCounter )->void

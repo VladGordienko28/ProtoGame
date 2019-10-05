@@ -9,13 +9,11 @@ namespace flu
 {
 namespace ffx
 {
-	Effect::Effect( String name, const rend::VertexDeclaration& vertexDeclaration, rend::Device* device )
+	Effect::Effect( String name, rend::Device* device )
 		:	m_name( name ),
-			m_vertexDeclaration( vertexDeclaration ),
 			m_device( device )
 	{
 		assert( device );
-		assert( vertexDeclaration.isValid() );
 
 		for( auto& it : m_buffers )
 		{
@@ -91,6 +89,12 @@ namespace ffx
 			return false;
 		}
 
+		// load vertex declaration
+		rend::VertexDeclaration vertexDeclaration;
+		*stream >> vertexDeclaration;
+		assert( vertexDeclaration.isValid() );
+
+		// load api shaders
 		rend::CompiledShader compiledPS, compiledVS;
 		*stream >> compiledPS;
 		*stream >> compiledVS;
@@ -110,7 +114,7 @@ namespace ffx
 		cleanup();
 
 		m_shader.ps = m_device->createPixelShader( compiledPS, *wide2AnsiString( m_name ) );
-		m_shader.vs = m_device->createVertexShader( compiledVS, m_vertexDeclaration, *wide2AnsiString( m_name ) );
+		m_shader.vs = m_device->createVertexShader( compiledVS, vertexDeclaration, *wide2AnsiString( m_name ) );
 
 		return true;
 	}

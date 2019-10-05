@@ -26,9 +26,6 @@
     <ClInclude Include="Stack.h">
       <Filter>Containers</Filter>
     </ClInclude>
-    <ClInclude Include="Namespace.h">
-      <Filter>Namespace</Filter>
-    </ClInclude>
     <ClInclude Include="String.h">
       <Filter>String</Filter>
     </ClInclude>
@@ -99,9 +96,6 @@
     <ClCompile Include="Profiler.cpp">
       <Filter>Profiler</Filter>
     </ClCompile>
-    <ClCompile Include="Namespace.cpp">
-      <Filter>Namespace</Filter>
-    </ClCompile>
     <ClCompile Include="StringManager.cpp">
       <Filter>String</Filter>
     </ClCompile>
@@ -146,9 +140,6 @@
     </Filter>
     <Filter Include="Profiler">
       <UniqueIdentifier>{a7f0b409-6b37-4060-90a6-a719c6b58afc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Namespace">
-      <UniqueIdentifier>{c9469f8e-9bd2-457f-a013-332a71c47f3a}</UniqueIdentifier>
     </Filter>
     <Filter Include="String">
       <UniqueIdentifier>{3b8d669b-3596-431f-9e31-c180fc55661d}</UniqueIdentifier>

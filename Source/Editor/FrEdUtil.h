@@ -42,6 +42,13 @@ extern void CSGIntersection( FBrushComponent* Brush, FLevel* Level );
 extern void CSGDifference( FBrushComponent* Brush, FLevel* Level );
 
 
+
+//
+// Experimental stuff
+//
+JSon::Ptr exportLevel( FLevel* level );
+
+
 /*-----------------------------------------------------------------------------
     The End.
 -----------------------------------------------------------------------------*/

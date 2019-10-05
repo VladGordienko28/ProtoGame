@@ -27,6 +27,18 @@ namespace rend
 		EVertexElementUsage usage = EVertexElementUsage::Position;
 		UInt32 usageIndex = 0;
 		UInt32 offset = 0;
+
+		friend IOutputStream& operator<<( IOutputStream& stream, const VertexElement& x )
+		{
+			stream << (UInt32)x.format << (UInt32)x.usage << x.usageIndex << x.offset;
+			return stream;
+		}
+
+		friend IInputStream& operator>>( IInputStream& stream, VertexElement& x )
+		{
+			stream >> (UInt32&)x.format >> (UInt32&)x.usage >> x.usageIndex >> x.offset;
+			return stream;
+		}
 	};
 
 	/**
@@ -35,6 +47,10 @@ namespace rend
 	class VertexDeclaration final
 	{
 	public:
+		VertexDeclaration()
+		{
+		}
+
 		VertexDeclaration( String name )
 			:	m_name( name ),
 				m_elements()
@@ -62,7 +78,9 @@ namespace rend
 		UInt32 getHash() const
 		{
 			assert( isValid() );
-			return hashing::murmur32( &m_elements[0], m_elements.size() * sizeof( VertexElement ) );
+
+			return m_elements.size() > 0 ? 
+				hashing::murmur32( &m_elements[0], m_elements.size() * sizeof( VertexElement ) ) : 0;
 		}
 
 		String getName() const
@@ -70,14 +88,35 @@ namespace rend
 			return m_name;
 		}
 
+		// todo: add validation for all elements
 		Bool isValid() const
 		{
-			return m_name && m_elements.size() > 0;
+			return m_name;
+		}
+
+		friend IOutputStream& operator<<( IOutputStream& stream, const VertexDeclaration& x )
+		{
+			stream << x.m_name << x.m_elements;
+			return stream;
+		}
+
+		friend IInputStream& operator>>( IInputStream& stream, VertexDeclaration& x )
+		{
+			stream >> x.m_name >> x.m_elements;
+			return stream;
 		}
 
 	private:
 		String m_name;
 		Array<VertexElement> m_elements;
 	};
+
+	inline EVertexElementUsage getVertexElementUsageByName( String name )
+	{
+		return name == TEXT( "Position" ) ? EVertexElementUsage::Position :
+			name == TEXT( "TexCoord" ) ? EVertexElementUsage::TexCoord :
+			name == TEXT( "Color" ) ? EVertexElementUsage::Color :
+				EVertexElementUsage::MAX;
+	}
 }
 }

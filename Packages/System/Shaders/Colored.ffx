@@ -11,6 +11,11 @@ cbuffer Effect : register( b2 )
 	bool isStipple;
 }
 
+vertex_decl VertexDecl_XY
+{
+	["RG32_F", "Position", 0, 0]
+}
+
 struct VsInput
 {
 	float2 position : POSITION;

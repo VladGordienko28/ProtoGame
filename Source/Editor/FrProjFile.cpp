@@ -1819,6 +1819,122 @@ FResource* CEditor::PreloadResource( String Name )
 }
 
 
+
+///////////////////////////////////////////////////////////////////////////////
+JSon::Ptr exportLevel( FLevel* level )
+{
+	assert( level );
+
+	class JSonExporter: public CExporterBase
+	{
+	public:
+		JSon::Ptr rootNode;
+
+		void ExportByte	( const Char* FieldName, UInt8 Value )
+		{
+			rootNode->addField( FieldName, JSon::createIntNode( Value ) );
+		}
+		void ExportInteger( const Char* FieldName, Int32 Value )
+		{
+			rootNode->addField( FieldName, JSon::createIntNode( Value ) );
+		}
+		void ExportFloat( const Char* FieldName, Float Value )
+		{
+			rootNode->addField( FieldName, JSon::createFloatNode( Value ) );
+		}
+		void ExportString( const Char* FieldName, String Value )
+		{
+			rootNode->addField( FieldName, JSon::createStringNode( Value ) );
+		}
+		void ExportBool( const Char* FieldName, Bool Value	)
+		{
+			rootNode->addField( FieldName, JSon::createBoolNode( Value ) );
+		}
+		void ExportColor( const Char* FieldName, math::Color Value	)
+		{
+			JSon::Ptr colorNode = JSon::createObjectNode();
+			colorNode->addField( L"r", JSon::createIntNode( Value.r ) );
+			colorNode->addField( L"g", JSon::createIntNode( Value.g ) );
+			colorNode->addField( L"b", JSon::createIntNode( Value.b ) );
+			colorNode->addField( L"a", JSon::createIntNode( Value.a ) );
+
+			rootNode->addField( FieldName, colorNode );
+		}
+		void ExportVector( const Char* FieldName, math::Vector Value )
+		{
+			JSon::Ptr vectorNode = JSon::createArrayNode();
+			vectorNode->insertElement( JSon::createFloatNode( Value.x ) );
+			vectorNode->insertElement( JSon::createFloatNode( Value.y ) );
+
+			rootNode->addField( FieldName, vectorNode );
+		}
+		void ExportAABB( const Char* FieldName, math::Rect Value )
+		{
+			JSon::Ptr aabbNode = JSon::createArrayNode();
+			aabbNode->insertElement( JSon::createFloatNode( Value.min.x ) );
+			aabbNode->insertElement( JSon::createFloatNode( Value.min.y ) );
+			aabbNode->insertElement( JSon::createFloatNode( Value.max.x ) );
+			aabbNode->insertElement( JSon::createFloatNode( Value.max.y ) );
+		}
+		void ExportAngle( const Char* FieldName, math::Angle Value )
+		{
+			rootNode->addField( FieldName, JSon::createFloatNode(  Value.toDegs() ) );
+
+		}
+		void ExportObject( const Char* FieldName, FObject* Value )
+		{
+			String objName = Value ? Value->GetFullName() : L"null";
+			rootNode->addField( FieldName, JSon::createStringNode(objName) );
+		}
+	};
+
+	JSon::Ptr rootNode = JSon::createObjectNode();
+
+	JSonExporter exporter;
+	exporter.rootNode = rootNode;
+
+	// level itself
+	level->Export( exporter );
+
+	// all entities
+	JSon::Ptr entitiesNode = JSon::createArrayNode();
+	rootNode->addField( L"Entity", entitiesNode );
+
+	for( Int32 j = 0; j < level->Entities.size(); ++j )
+	{
+		FEntity* entity = level->Entities[j];
+
+		JSon::Ptr entityNode = JSon::createObjectNode();
+		entitiesNode->insertElement( entityNode );
+
+		// entity itself
+		exporter.rootNode = entitiesNode;
+		entity->Export( exporter );
+
+		JSon::Ptr componentsNode = JSon::createArrayNode(  );
+		entitiesNode->insertElement( componentsNode );
+
+		// all components
+		for( Int32 i = 0; i < entity->Components.size(); ++i  )
+		{
+			FComponent* component = entity->Components[i];
+
+			JSon::Ptr componentNode = JSon::createObjectNode();
+			componentsNode->insertElement( componentNode );
+
+			exporter.rootNode = componentNode;
+			component->Export( exporter );
+		
+		}
+	}
+
+
+
+	return rootNode;
+}
+
+
+
 /*-----------------------------------------------------------------------------
     The End.
 -----------------------------------------------------------------------------*/

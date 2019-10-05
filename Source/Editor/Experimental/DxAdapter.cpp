@@ -87,26 +87,16 @@ namespace flu
 
 	void renderLoadEffects()
 	{
-			rend::VertexDeclaration declXY( L"VertexDecl_XY" );
-			declXY.addElement( { rend::EFormat::RG32_F, rend::EVertexElementUsage::Position, 0, 0 } );
-
-
-		ffx::s_vertexDeclaration = &declXY;
-
-		g_colorEffect = g_coloredEffect = res::ResourceManager::get<ffx::Effect>( L"System.Shaders.Colored" );
-
-
-			rend::VertexDeclaration declXYUV( L"VertexDecl_XYUV" );
-			declXYUV.addElement( { rend::EFormat::RG32_F, rend::EVertexElementUsage::Position, 0, 0 } );
-			declXYUV.addElement( { rend::EFormat::RG32_F, rend::EVertexElementUsage::TexCoord, 0, 8 } );
-
-			ffx::s_vertexDeclaration = &declXYUV;
-
+		g_colorEffect = res::ResourceManager::get<ffx::Effect>( L"System.Shaders.Colored" );
 		g_texturedEffect = res::ResourceManager::get<ffx::Effect>( L"System.Shaders.Textured" );;
-
-
 		g_gridEffect = res::ResourceManager::get<ffx::Effect>( L"System.Shaders.Grid" );
+	}
 
+	void renderDestroyEffects()
+	{
+		g_colorEffect = nullptr;
+		g_texturedEffect = nullptr;
+		g_gridEffect = nullptr;
 	}
 
 
@@ -173,9 +163,9 @@ namespace flu
 
 	CDirectX11Canvas::~CDirectX11Canvas()
 	{
-		g_grid.destroy( );
+		//g_grid.destroy( );
 
-		g_coloredEffect = nullptr;
+		g_colorEffect = nullptr;
 		g_gridEffect = nullptr;
 		g_texturedEffect = nullptr;
 

@@ -12,6 +12,10 @@ cbuffer PerEffect : register( b2 )
 	float4 bounds; // x - cMinX, y - cMaxX, z - cMinY, w - cMaxY
 }
 
+vertex_decl VertexDecl_Null
+{
+}
+
 struct VsOutput
 {
 	float4 position : SV_Position;

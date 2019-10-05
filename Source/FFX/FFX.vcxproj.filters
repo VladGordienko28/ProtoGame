@@ -2,12 +2,8 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="FFX.h" />
-    <ClInclude Include="System.h" />
     <ClInclude Include="FxLexer.h">
       <Filter>Compiler</Filter>
-    </ClInclude>
-    <ClInclude Include="Declaration.h">
-      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="FxCompiler.h">
       <Filter>Compiler</Filter>
@@ -15,19 +11,21 @@
     <ClInclude Include="Effect.h">
       <Filter>Runtime</Filter>
     </ClInclude>
-    <ClInclude Include="Preprocessor.h">
-      <Filter>Compiler</Filter>
-    </ClInclude>
     <ClInclude Include="FxCommon.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="SharedConstants.h">
       <Filter>Runtime</Filter>
     </ClInclude>
+    <ClInclude Include="FxKeyword.h">
+      <Filter>Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>Runtime</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FFX.cpp" />
-    <ClCompile Include="System.cpp" />
     <ClCompile Include="FxLexer.cpp">
       <Filter>Compiler</Filter>
     </ClCompile>
@@ -37,10 +35,10 @@
     <ClCompile Include="Effect.cpp">
       <Filter>Runtime</Filter>
     </ClCompile>
-    <ClCompile Include="Preprocessor.cpp">
-      <Filter>Compiler</Filter>
-    </ClCompile>
     <ClCompile Include="SharedConstants.cpp">
+      <Filter>Runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="System.cpp">
       <Filter>Runtime</Filter>
     </ClCompile>
   </ItemGroup>

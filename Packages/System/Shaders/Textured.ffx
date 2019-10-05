@@ -13,6 +13,12 @@ cbuffer Effect : register( b2 )
 Texture2D<float4> myTexture : register( t0 );
 SamplerState texSampler : register( s0 );
 
+vertex_decl VertexDecl_XYUV
+{
+	["RG32_F", "Position", 0, 0],
+	["RG32_F", "TexCoord", 0, 8]
+}
+
 struct VsInput
 {
 	float2 position : POSITION;

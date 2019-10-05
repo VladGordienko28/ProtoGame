@@ -82,10 +82,8 @@ namespace ffx
 		StaticArray<rend::ShaderResourceView, MAX_TEXTURES> m_srvs;
 		rend::BlendStateId m_blendState;
 
-		rend::VertexDeclaration m_vertexDeclaration;
-
 		Effect() = delete;
-		Effect( String name, const rend::VertexDeclaration& vertexDeclaration, rend::Device* device );
+		Effect( String name, rend::Device* device );
 
 		Bool reload( const res::CompiledResource& compiledResource );
 		void cleanup();

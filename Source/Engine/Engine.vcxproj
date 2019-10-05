@@ -159,7 +159,6 @@
     <ClInclude Include="Core\FrFile.h" />
     <ClInclude Include="Core\FrIni.h" />
     <ClInclude Include="Core\FrMath.h" />
-    <ClInclude Include="Core\FrNetBas.h" />
     <ClInclude Include="Core\FrObject.h" />
     <ClInclude Include="Core\FrRand.h" />
     <ClInclude Include="Core\FrMemory.h" />
@@ -203,6 +202,7 @@
     <ClInclude Include="Rendering\GrowOnlyVB.h" />
     <ClInclude Include="Rendering\Utils.h" />
     <ClInclude Include="Rendering\ViewInfo.h" />
+    <ClInclude Include="RenderPipeline\IRenderPipeline.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AI\Navigator.cpp">

@@ -13,52 +13,48 @@ namespace ffx
 	class Compiler final: public res::IResourceCompiler
 	{
 	public:
-		Compiler( rend::Device* device )
-			:	m_device( device )
-		{
-			assert( device );
-		}
-
-		~Compiler()
-		{
-		
-		}
+		Compiler( rend::Device* device );
+		~Compiler();
 
 		Bool compile( String relativePath, res::IDependencyProvider& dependencyProvider, 
-			res::CompilationOutput& output ) const override
-;
+			res::CompilationOutput& output ) const override;
 
-		Bool isSupportedFile( String relativePath ) const override
-		{
-			String ext = fm::getFileExt( *relativePath );
-			return ext == TEXT("ffx");
-		}
+		Bool isSupportedFile( String relativePath ) const override;
 
 	private:
 		rend::Device* m_device;
 
+	private:
+		// compiler settings
+		static const Bool EMIT_LINES = true;
+		static const Int32 MAX_INCLUSION_DEPTH = 8;
 
-/*
-		using UPtr = UniquePtr<Compiler>;
-
-		struct Output
+		struct Context
 		{
 		public:
-			Array<UInt8> effectBlob;
-			Array<String> dependencies;
+			res::CompilationOutput& output;
 
-			String errorMsg;
-			Array<String> warningsMsg;
+			TextWriter writer;
+			Array<String> inclusionStack;
+
+			rend::VertexDeclaration vertexDecl;
+
+			Context() = delete;
+			
+			Context( res::CompilationOutput& inOutput )
+				:	output( inOutput ),
+					inclusionStack( MAX_INCLUSION_DEPTH )
+			{
+			}
 		};
 
+		Bool parseFile( String relativePath, 
+			res::IDependencyProvider& dependencyProvider, Context& context ) const;
 
+		Bool parseDirective( lexer::Lexer& lexer, 
+			res::IDependencyProvider& dependencyProvider, Context& context ) const;
 
-		Bool compile( String relativeFileName, IIncludeProvider* includeProvider, Output& output );
-
-	private:
-		rend::Device* m_device;
-
-		Compiler() = delete;*/
+		Bool compileVertexDecl( lexer::Lexer& lexer, Context& context ) const;
 	};
 }
 }
