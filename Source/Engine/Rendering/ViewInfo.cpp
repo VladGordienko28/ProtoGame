@@ -74,5 +74,43 @@ namespace gfx
 
 		return math::transformPointBy( ur, unCoords );
 	}
+
+	void ViewInfo::viewProjectionMatrix( UInt32 clientWidth, UInt32 clientHeight, Float* matrix ) const
+	{
+		const Float xFov2 = 2.f / ( fov.x * zoom );
+		const Float yFov2 = 2.f / ( fov.y * zoom );
+
+		const math::Vector sScale = 
+		{
+			width / clientWidth,
+			height / clientHeight
+		};
+
+		const math::Vector sOffset =
+		{
+			( 2.f / clientWidth ) * ( x + ( width / 2.f ) ) - 1.f,
+			1.f - ( 2.f / clientHeight ) * ( y + ( height / 2.f ) )
+		};
+
+		matrix[0 * 4 + 0] = xFov2 * +coords.xAxis.x * sScale.x;
+		matrix[1 * 4 + 0] = yFov2 * -coords.xAxis.y * sScale.y;
+		matrix[2 * 4 + 0] = 0.f;
+		matrix[3 * 4 + 0] = 0.f;
+
+		matrix[0 * 4 + 1] = xFov2 * -coords.yAxis.x * sScale.x;
+		matrix[1 * 4 + 1] = yFov2 * +coords.yAxis.y * sScale.y;
+		matrix[2 * 4 + 1] = 0.f;
+		matrix[3 * 4 + 1] = 0.f;
+
+		matrix[0 * 4 + 2] = 0.f;
+		matrix[1 * 4 + 2] = 0.f;
+		matrix[2 * 4 + 2] = 1.f;
+		matrix[3 * 4 + 2] = 0.f;
+
+		matrix[0 * 4 + 3] = -( coords.origin.x * matrix[0 * 4 + 0] + coords.origin.y * matrix[0 * 4 + 1] ) + sOffset.x;
+		matrix[1 * 4 + 3] = -( coords.origin.x * matrix[1 * 4 + 0] + coords.origin.y * matrix[1 * 4 + 1] ) + sOffset.y;
+		matrix[2 * 4 + 3] = 1.f;
+		matrix[3 * 4 + 3] = 1.f;
+	}
 }
 }

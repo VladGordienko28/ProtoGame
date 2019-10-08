@@ -14,6 +14,7 @@ namespace flu
 		Entity,
 		Render,
 		Memory,
+		GPUMemory,
 		DrawCalls,
 		MAX
 	};
@@ -50,7 +51,9 @@ namespace flu
 		fnt::Font::Ptr m_font;
 		ffx::Effect::Ptr m_effect;
 
-		gfx::GrowOnlyVB<math::Vector, 128> m_vertexBuffer;
+		gfx::GrowOnlyVB<math::Vector, 256> m_vertexBuffer;
+		gfx::TextDrawer m_textDrawer;
+
 		math::Color m_colorSet[COLOR_SET_SIZE];
 		String m_helpString;
 	};

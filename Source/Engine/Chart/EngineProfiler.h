@@ -33,6 +33,7 @@ namespace profile
 		struct Metric
 		{
 			const Char* name = nullptr;
+			UInt32 color = 0;
 			Array<Sample> samples;
 		};
 

@@ -63,5 +63,14 @@ namespace res
 		Resource() = default;
 		virtual ~Resource() = default;
 	};
+
+	/**
+	 *	Resource declaration macro
+	 */
+	#define	DECLARE_RESOURCE( resName, systemName, compilerName )\
+			using Ptr = SharedPtr<resName>;\
+			typedef class systemName SystemType;\
+			typedef class compilerName CompilerType;\
+			static const res::EResourceType RESOURCE_TYPE = res::EResourceType::##resName;
 }
 }

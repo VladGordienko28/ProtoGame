@@ -199,10 +199,13 @@
     <ClInclude Include="PostFX\FXTypes.h" />
     <ClInclude Include="Rendering\Api.h" />
     <ClInclude Include="Rendering\GridDrawer.h" />
+    <ClInclude Include="Rendering\GrowOnlyIB.h" />
     <ClInclude Include="Rendering\GrowOnlyVB.h" />
+    <ClInclude Include="Rendering\TextDrawer.h" />
     <ClInclude Include="Rendering\Utils.h" />
     <ClInclude Include="Rendering\ViewInfo.h" />
     <ClInclude Include="RenderPipeline\IRenderPipeline.h" />
+    <ClInclude Include="RenderPipeline\SharedConstants.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AI\Navigator.cpp">
@@ -327,6 +330,12 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Engine/Engine.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="Rendering\GridDrawer.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Engine/Engine.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Rendering\TextDrawer.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Engine/Engine.h</PrecompiledHeaderFile>

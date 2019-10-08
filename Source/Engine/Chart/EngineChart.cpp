@@ -17,7 +17,8 @@ namespace flu
 		:	m_profiler( static_cast<Int32>(EProfilerGroup::MAX) ),
 			m_invTimelineLength( 0.0 ),
 			m_invTimelineMaxValue( 0.f ),
-			m_enabled( false )
+			m_enabled( false ),
+			m_vertexBuffer( "Profiler_VB" )
 	{
 		setTimelineLength( DEFAULT_TIMELINE_TIME );
 
@@ -25,10 +26,6 @@ namespace flu
 		for( UInt8 i = 0; i < arraySize(m_colorSet); ++i )
 		{
 			m_colorSet[i] = math::Color::hsl2rgb( i * ( 256 / COLOR_SET_SIZE ), 200, 128 );
-		}
-		for( UInt8 i = 0; i < arraySize(m_colorSet); ++i )
-		{
-			exchange( m_colorSet[i], m_colorSet[Random( arraySize(m_colorSet) )] );
 		}
 
 		// help
@@ -112,13 +109,13 @@ namespace flu
 				}
 
 				// choose color
-				const Int32 colorIndex = COLOR_SET_MASK & ( groupId * 17 + reinterpret_cast<Int32>( it.name ) );
+				const Int32 colorIndex = COLOR_SET_MASK & it.color;
 				const math::Color drawColor = m_colorSet[colorIndex];
 
 				Double maxMetricValue = 0.0;
 				Double cumulativeValue = 0.0;
 
-				math::Vector* samplesBuffer = m_vertexBuffer.prepare( it.samples.size() );
+				math::Vector* samplesBuffer = m_vertexBuffer.reserve( it.samples.size() );
 
 				for( Int32 i = 0; i < it.samples.size(); ++i )
 				{
@@ -136,7 +133,7 @@ namespace flu
 				m_effect->setColor( 0, drawColor );
 				m_effect->apply();
 
-				m_vertexBuffer.bind();
+				m_vertexBuffer.flushAndBind();
 				gfx::api::setTopology( rend::EPrimitiveTopology::LineStrip );
 				gfx::api::draw( it.samples.size(), 0 );
 
@@ -144,9 +141,10 @@ namespace flu
 				metricItem.Color = drawColor;
 				canvas->DrawRect( metricItem );
 
-				canvas->DrawText( *String::format( L"%s: %s (avg %.2f)", 
+				m_textDrawer.batchText( String::format( L"%s: %s (avg %.2f)", 
 					getGroupName(static_cast<EProfilerGroup>( groupId )), it.name, ( cumulativeValue / it.samples.size() ) ), 
 					m_font, math::colors::WHITE, { 40.f, metricItem.Bounds.min.y + 2.f } );
+
 
 				metricItem.Bounds.min.y += metricDrawStep;
 				metricItem.Bounds.max.y += metricDrawStep;
@@ -158,7 +156,8 @@ namespace flu
 		m_invTimelineMaxValue = 1.f / maxValue;
 
 		// draw help string
-		canvas->DrawText( m_helpString, m_font, math::colors::WHITE, { 10.f, screenH - 20.f } );
+		m_textDrawer.batchText( m_helpString, m_font, math::colors::WHITE, { 10.f, screenH - 20.f } );
+		m_textDrawer.flush();
 	}
 
 	void EngineChart::setTimelineLength( Float newLength )
@@ -212,7 +211,8 @@ namespace flu
 			case EProfilerGroup::Entity:	return L"Entity";
 			case EProfilerGroup::Render:	return L"Render";
 			case EProfilerGroup::Memory:	return L"Memory";
-			case EProfilerGroup::DrawCalls:	return L"DrawCalls";
+			case EProfilerGroup::GPUMemory:	return L"GPU Memory";
+			case EProfilerGroup::DrawCalls:	return L"Draw Calls";
 			default:						return L"Unknown";
 		}
 	}

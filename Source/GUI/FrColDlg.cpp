@@ -42,6 +42,13 @@ void WColorChooser::InitHSLBitmaps()
 	}
 }
 
+void WColorChooser::DeinitHLSBitmaps()
+{
+	gfx::api::destroyTexture2D( HBitmap.handle );
+	gfx::api::destroyTexture2D( ABitmap.handle );
+	gfx::api::destroyTexture2D( SLBitmap.handle );
+}
+
 
 /*-----------------------------------------------------------------------------
     WColorChooser implementation.
@@ -170,6 +177,9 @@ WColorChooser::~WColorChooser()
 {
 	// Restore old modal.
 	Root->Modal	= OldModal;
+
+	// Destroy temporal textures
+	DeinitHLSBitmaps();
 }
 
 

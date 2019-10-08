@@ -54,9 +54,24 @@ namespace api
 		return g_device->createIndexBuffer( indexFormat, numIndexes, usage, initialData, debugName );
 	}
 
+	void updateIndexBuffer( rend::IndexBufferHandle handle, const void* newData, UInt32 dataSize )
+	{
+		g_device->updateIndexBuffer( handle, newData, dataSize );
+	}
+
 	void destroyIndexBuffer( rend::IndexBufferHandle handle )
 	{
 		g_device->destroyIndexBuffer( handle );
+	}
+
+	rend::SamplerStateId getSamplerState( const rend::SamplerState& samplerState )
+	{
+		return g_device->getSamplerState( samplerState );
+	}
+
+	rend::BlendStateId getBlendState( const rend::BlendState& blendState )
+	{
+		return g_device->getBlendState( blendState );
 	}
 
 	void setVertexBuffer( rend::VertexBufferHandle handle )

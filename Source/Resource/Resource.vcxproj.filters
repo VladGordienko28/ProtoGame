@@ -11,13 +11,34 @@
     <ClInclude Include="Package.h" />
     <ClInclude Include="NamesResolver.h" />
     <ClInclude Include="Listener.h" />
-    <ClInclude Include="ResourceStorage.h" />
+    <ClInclude Include="LocalStorage.h">
+      <Filter>Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="PackageStorage.h">
+      <Filter>Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoteStorage.h">
+      <Filter>Storage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="FilesTracker.cpp" />
     <ClCompile Include="Package.cpp" />
-    <ClCompile Include="ResourceStorage.cpp" />
+    <ClCompile Include="LocalStorage.cpp">
+      <Filter>Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="PackageStorage.cpp">
+      <Filter>Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="RemoteStorage.cpp">
+      <Filter>Storage</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Storage">
+      <UniqueIdentifier>{abaf77b6-f9ab-41f2-9787-2dc01c9f296d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

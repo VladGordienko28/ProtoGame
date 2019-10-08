@@ -432,7 +432,7 @@ namespace img
 
 		if( pngError )
 		{
-			output.errorMsg = String::format( TEXT( "Unable to encode to png with error \"%s\"" ), 
+			output.errorMsg = String::format( TEXT("Unable to encode to png with error: \"%hs\""), 
 				lodepng_error_text( pngError ) );
 
 			lodepng_state_cleanup( &state );
@@ -461,6 +461,42 @@ namespace img
 		Array<UInt8>& data = output.compiledResource.data;
 		data.setSize( loader->totalSize() );
 		loader->readData( &data[0], data.size() );
+
+		return true;
+	}
+
+	Bool Converter::construct( String name, res::IConstructionEnvironment& environment, String& errorMsg,
+		EImageType type, UInt32 width, UInt32 height, const void* data ) const
+	{
+		assert( type == EImageType::RGBA ); // todo: add support of other types
+		assert( width > 0 && height > 0 );
+		assert( data != nullptr );
+
+		const String fileName = name + TEXT(".png");
+		IOutputStream::Ptr writer = environment.writeBinaryFile( fileName );
+
+		if( !writer )
+		{
+			errorMsg = String::format( TEXT("Unable to open file \"%s\""), *fileName );
+			return false;
+		}
+
+		UInt8* pngData = nullptr;
+		SizeT pngSize = 0;
+
+		auto pngError = lodepng_encode_memory( &pngData, &pngSize, reinterpret_cast<const UInt8*>( data ), 
+			width, height, LCT_RGBA, 8 );
+
+		if( pngError )
+		{
+			errorMsg = String::format( TEXT("Unable to encode to png with error: \"%hs\""), 
+				lodepng_error_text( pngError ) );
+
+			return false;
+		}
+
+		writer->writeData( pngData, pngSize );
+		mem::free( pngData );
 
 		return true;
 	}

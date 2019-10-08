@@ -13,12 +13,10 @@ namespace ffx
 	class Effect: public res::Resource
 	{
 	public:
-		static const res::EResourceType RESOURCE_TYPE = res::EResourceType::Effect;
+		DECLARE_RESOURCE( Effect, System, Compiler );
 
 		static const constexpr Char* PS_ENTRY = TEXT( "psMain" );
 		static const constexpr Char* VS_ENTRY = TEXT( "vsMain" );
-
-		using Ptr = SharedPtr<Effect>;
 
 		~Effect();
 
@@ -44,9 +42,14 @@ namespace ffx
 
 		void setData( const void* data, SizeT size, SizeT offset );
 		void setSRV( Int32 slot, rend::ShaderResourceView srv );
+		void setTexture( Int32 slot, rend::Texture2DHandle texture );
+
 		void setSamplerState( Int32 slot, rend::SamplerStateId samplerId );
 
 		void setBlendState( rend::BlendStateId blendState );
+
+
+
 
 		void apply();
 

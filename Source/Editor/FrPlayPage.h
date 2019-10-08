@@ -67,6 +67,9 @@ private:
 	FLevel*				PlayLevel;
 	Float				PlayTime;
 
+	// Rendering
+	gfx::TextDrawer		m_textDrawer;
+
 	// Runtime script messages.
 	struct ScriptMessage
 	{

@@ -17,8 +17,11 @@ namespace img
 		~Converter();
 
 		Bool compile( String relativePath, res::IDependencyProvider& dependencyProvider, 
-			res::CompilationOutput& output ) const override
-;
+			res::CompilationOutput& output ) const override;
+
+		Bool construct( String name, res::IConstructionEnvironment& environment, String& errorMsg,
+			EImageType type, UInt32 width, UInt32 height, const void* data ) const;
+
 		Bool isSupportedFile( String relativePath ) const override
 		{
 			const String ext = fm::getFileExt( *relativePath );

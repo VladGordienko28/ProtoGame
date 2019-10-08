@@ -62,6 +62,12 @@ namespace gfx
 			return deproject( pixelPos.x, pixelPos.y );
 		}
 
+		/**
+		 *	Convert a ViewInfo to graphical api friendly 
+		 *	4x4 matrix
+		 */
+		void viewProjectionMatrix( UInt32 clientWidth, UInt32 clientHeight, Float* outMatrix ) const;
+
 		math::Vector location() const
 		{
 			return coords.origin;

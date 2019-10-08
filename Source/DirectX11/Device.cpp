@@ -338,6 +338,22 @@ namespace dx11
 		return handle;
 	}
 
+	void Device::updateIndexBuffer( rend::IndexBufferHandle handle, const void* newData, UInt32 dataSize )
+	{
+		DxIndexBuffer& buffer = m_indexBuffers.get( handle );
+		assert( buffer.m_usage == rend::EUsage::Dynamic );
+		assert( dataSize <= buffer.m_numIndexes * buffer.m_indexTypeSize );
+		assert( newData );
+	
+		// todo: add ability to pass mapping parameters here
+		D3D11_MAPPED_SUBRESOURCE mappedData;
+		m_immediateContext->Map( buffer.m_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData );
+		{
+			mem::copy( mappedData.pData, newData, dataSize );
+		}
+		m_immediateContext->Unmap( buffer.m_buffer, 0 );
+	}
+
 	void Device::destroyIndexBuffer( rend::IndexBufferHandle handle )
 	{
 		DxIndexBuffer& indexBuffer = m_indexBuffers.get( handle );
@@ -1057,6 +1073,79 @@ namespace dx11
 	const rend::DrawStats& Device::getDrawStats() const
 	{
 		return m_drawStats;
+	}
+
+	Bool Device::copyTextureToCPU( rend::Texture2DHandle handle, rend::EFormat& outFormat,
+		UInt32& outWidth, UInt32& outHeight, Array<UInt8>& outData )
+	{
+		ID3D11Texture2D* sourceTexture = nullptr;
+
+		if( handle != INVALID_HANDLE<rend::Texture2DHandle>() )
+		{
+			// normal texture
+			DxTexture2D& texture = m_textures2D.get( handle );
+			assert( texture.m_texture.hasObject() );
+
+			outFormat = texture.m_format;
+			outWidth = texture.m_width;
+			outHeight = texture.m_height;
+
+			sourceTexture = texture.m_texture;
+		}
+		else
+		{
+			// swap chain's texture
+			outFormat = m_swapChain->getFormat();
+			outWidth = m_swapChain->getWidth();
+			outHeight = m_swapChain->getHeight();
+
+			sourceTexture = m_swapChain->getBackBuffer();
+		}
+
+        D3D11_TEXTURE2D_DESC stagingTexDesc;
+		mem::zero( &stagingTexDesc, sizeof( D3D11_TEXTURE2D_DESC ) );
+
+        stagingTexDesc.Width = outWidth;
+        stagingTexDesc.Height = outHeight;
+        stagingTexDesc.MipLevels = 1;
+        stagingTexDesc.ArraySize = 1;
+        stagingTexDesc.Format = fluorineFormatToDirectX( outFormat );
+        stagingTexDesc.SampleDesc.Count = 1;
+		stagingTexDesc.SampleDesc.Quality = 0;
+        stagingTexDesc.Usage = D3D11_USAGE_STAGING;
+        stagingTexDesc.BindFlags = 0;
+        stagingTexDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+        stagingTexDesc.MiscFlags = 0;
+
+		DxRef<ID3D11Texture2D> stagingTexture;
+		HRESULT result = m_device->CreateTexture2D( &stagingTexDesc, nullptr, &stagingTexture );
+		assert( SUCCEEDED( result ) );	
+
+		// copy to staging
+		m_immediateContext->CopyResource( stagingTexture, sourceTexture );
+
+		// map to cpu
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+		result = m_immediateContext->Map( stagingTexture, 0, D3D11_MAP_READ, 0, &mappedResource );
+		assert( SUCCEEDED( result ) );
+		{
+			auto formatInfo = rend::getFormatInfo( outFormat );
+		
+			// todo: formula is not correct
+			SizeT lineSize = outWidth * formatInfo.blockBytes;
+			SizeT dataSize = outHeight * lineSize;
+			outData.setSize( dataSize );
+
+			// copy line by line according to row pitch
+			for( UInt32 y = 0; y < outHeight; ++y )
+			{
+				const UInt8* sourceLine = &reinterpret_cast<UInt8*>( mappedResource.pData )[y * mappedResource.RowPitch];
+				mem::copy( &outData[y * lineSize], sourceLine, lineSize );	
+			}
+		}
+		m_immediateContext->Unmap( stagingTexture, 0 );
+
+		return true;
 	}
 
 	Device::CachedVertexDeclaration::CachedVertexDeclaration( ID3D11Device* device, const rend::VertexDeclaration& declaration, 

@@ -16,5 +16,7 @@
 #include "ResourceSystem.h"
 #include "FilesTracker.h"
 #include "Package.h"
-#include "ResourceStorage.h"
+#include "LocalStorage.h"
+#include "PackageStorage.h"
+#include "RemoteStorage.h"
 #include "ResourceManager.h"

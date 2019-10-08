@@ -153,8 +153,8 @@ namespace dx11
 	{
 		auto formatInfo = rend::getFormatInfo( m_format );
 		
-		return ( m_width * formatInfo.blockBytes / formatInfo.blockSizeX ) *
-			( m_height * formatInfo.blockBytes / formatInfo.blockSizeY );
+		return ( m_width * m_height * formatInfo.blockBytes ) /
+			( formatInfo.blockSizeX * formatInfo.blockSizeY );
 	}
 
 	DxRenderTarget::~DxRenderTarget()
@@ -217,8 +217,8 @@ namespace dx11
 	{
 		auto formatInfo = rend::getFormatInfo( m_format );
 		
-		return ( m_width * formatInfo.blockBytes / formatInfo.blockSizeX ) *
-			( m_height * formatInfo.blockBytes / formatInfo.blockSizeY );
+		return ( m_width * m_height * formatInfo.blockBytes ) /
+			( formatInfo.blockSizeX * formatInfo.blockSizeY );
 	}
 
 	DxDepthBuffer::~DxDepthBuffer()
@@ -281,8 +281,8 @@ namespace dx11
 	{
 		auto formatInfo = rend::getFormatInfo( m_format );
 		
-		return ( m_width * formatInfo.blockBytes / formatInfo.blockSizeX ) *
-			( m_height * formatInfo.blockBytes / formatInfo.blockSizeY );
+		return ( m_width * m_height * formatInfo.blockBytes ) /
+			( formatInfo.blockSizeX * formatInfo.blockSizeY );
 	}
 
 	DxPixelShader::~DxPixelShader()
@@ -413,9 +413,10 @@ namespace dx11
 
 		m_dxFormat = fluorineFormatToDirectX( m_format = format );
 		m_numIndexes = numIndexes;
+		m_indexTypeSize = rend::getFormatInfo( format ).blockBytes;
 
 		D3D11_BUFFER_DESC description;
-		description.ByteWidth = numIndexes * rend::getFormatInfo( format ).blockBytes;
+		description.ByteWidth = numIndexes * m_indexTypeSize;
 		description.Usage = fluorineUsageToDirectX( m_usage = usage );
 		description.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		description.CPUAccessFlags = usage == rend::EUsage::Dynamic ? D3D11_CPU_ACCESS_WRITE : 0;

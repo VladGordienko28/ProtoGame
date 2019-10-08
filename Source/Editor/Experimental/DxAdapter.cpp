@@ -8,10 +8,6 @@
 namespace flu
 {
 
-
-
-	gfx::GridDrawer g_grid;
-
 	CDirectX11Render::CDirectX11Render( HWND hwnd )
 	{
 		m_hwnd = hwnd;
@@ -41,14 +37,10 @@ namespace flu
 		m_canvas->ScreenHeight = m_device->getBackbufferHeight();
 		m_canvas->m_lockTime = math::fMod( GPlat->Now(), 1000.f * 2.f * math::PI );
 
-		struct PerFrameData
-		{
-			Float gameTime;
-		};
-
-		PerFrameData perFrameData;
+		gfx::SharedConstants::PerFrameData perFrameData;
 		perFrameData.gameTime = m_canvas->m_lockTime;
-		m_canvas->m_sharedConstants->updatePerFrameBuffer( &perFrameData );
+
+		m_canvas->m_sharedConstants->setPerFrameData( perFrameData );
 		m_canvas->m_sharedConstants->bindToPipeline();
 
 
@@ -72,31 +64,22 @@ namespace flu
 	}
 
 
-	void CDirectX11Render::Flush()
-	{
-	}
-
-
-
 	img::Image::Ptr g_coolImage;
 	rend::Device* g_device;
 
 		ffx::Effect::Ptr g_colorEffect;
 		ffx::Effect::Ptr g_texturedEffect;
-		ffx::Effect::Ptr g_gridEffect;
 
 	void renderLoadEffects()
 	{
 		g_colorEffect = res::ResourceManager::get<ffx::Effect>( L"System.Shaders.Colored" );
 		g_texturedEffect = res::ResourceManager::get<ffx::Effect>( L"System.Shaders.Textured" );;
-		g_gridEffect = res::ResourceManager::get<ffx::Effect>( L"System.Shaders.Grid" );
 	}
 
 	void renderDestroyEffects()
 	{
 		g_colorEffect = nullptr;
 		g_texturedEffect = nullptr;
-		g_gridEffect = nullptr;
 	}
 
 
@@ -117,7 +100,7 @@ namespace flu
 
 
 
-		m_sharedConstants = new ffx::SharedConstants( 16, sizeof( PerViewData ), m_device );
+		m_sharedConstants = new gfx::SharedConstants( m_device );
 
 
 
@@ -163,10 +146,8 @@ namespace flu
 
 	CDirectX11Canvas::~CDirectX11Canvas()
 	{
-		//g_grid.destroy( );
 
 		g_colorEffect = nullptr;
-		g_gridEffect = nullptr;
 		g_texturedEffect = nullptr;
 
 		m_sharedConstants = nullptr;
@@ -182,45 +163,11 @@ namespace flu
 
 	void CDirectX11Canvas::SetTransform( const gfx::ViewInfo& info )
 	{
-		const Float xFov2 = 2.f / ( info.fov.x * info.zoom );
-		const Float yFov2 = 2.f / ( info.fov.y * info.zoom );
+		gfx::SharedConstants::PerViewData perViewData;
+		info.viewProjectionMatrix( m_device->getBackbufferWidth(), m_device->getBackbufferHeight(), perViewData.viewProjectionMatrix );
+		perViewData.worldCamera = math::Vector4( info.coords.origin, info.bounds.sizeX(), info.bounds.sizeY() );
 
-		const Float backbufferWidth = m_device->getBackbufferWidth();
-		const Float backbufferHeight = m_device->getBackbufferHeight();
-
-		math::Vector sScale, sOffset;
-
-		sScale.x = info.width / backbufferWidth;
-		sScale.y = info.height / backbufferHeight;
-
-		sOffset.x = ( 2.f / backbufferWidth ) * ( info.x + ( info.width / 2.f ) ) - 1.f;
-		sOffset.y = 1.f - ( 2.f / backbufferHeight ) * ( info.y + ( info.height / 2.f ) );
-
-		PerViewData viewData;
-
-		viewData.viewProjectionMatrix[0][0] = xFov2 * +info.coords.xAxis.x * sScale.x;
-		viewData.viewProjectionMatrix[1][0] = yFov2 * -info.coords.xAxis.y * sScale.y;
-		viewData.viewProjectionMatrix[2][0] = 0.f;
-		viewData.viewProjectionMatrix[3][0] = 0.f;
-
-		viewData.viewProjectionMatrix[0][1] = xFov2 * -info.coords.yAxis.x * sScale.x;
-		viewData.viewProjectionMatrix[1][1] = yFov2 * +info.coords.yAxis.y * sScale.y;
-		viewData.viewProjectionMatrix[2][1] = 0.f;
-		viewData.viewProjectionMatrix[3][1] = 0.f;
-
-		viewData.viewProjectionMatrix[0][2] = 0.f;
-		viewData.viewProjectionMatrix[1][2] = 0.f;
-		viewData.viewProjectionMatrix[2][2] = 1.f;
-		viewData.viewProjectionMatrix[3][2] = 0.f;
-
-		viewData.viewProjectionMatrix[0][3] = -( info.coords.origin.x * viewData.viewProjectionMatrix[0][0] + info.coords.origin.y * viewData.viewProjectionMatrix[0][1] ) + sOffset.x;
-		viewData.viewProjectionMatrix[1][3] = -( info.coords.origin.x * viewData.viewProjectionMatrix[1][0] + info.coords.origin.y * viewData.viewProjectionMatrix[1][1] ) + sOffset.y;
-		viewData.viewProjectionMatrix[2][3] = 1.f;
-		viewData.viewProjectionMatrix[3][3] = 1.f;
-
-		viewData.worldCamera = math::Vector4( info.coords.origin, info.bounds.sizeX(), info.bounds.sizeY() );
-
-		m_sharedConstants->updatePerViewBuffer( &viewData );
+		m_sharedConstants->setPerViewData( perViewData );
 
 		// Store this coords system.
 		View			= info;
@@ -460,7 +407,7 @@ Bool RenderObjectCmp( FComponent*const &A, FComponent*const &B )
 	return A->GetLayer() < B->GetLayer();
 }
 
-
+#if 0
 	void CDirectX11Render::RenderLevel( CCanvas* canvas, FLevel* level, Int32 x, Int32 y, Int32 w, Int32 h )
 	{
 		// Check pointers.
@@ -508,7 +455,7 @@ Bool RenderObjectCmp( FComponent*const &A, FComponent*const &B )
 
 		canvas->PushTransform( MasterView );
 		{
-			g_grid.render( canvas->View );
+			//g_grid.render( canvas->View );
 
 
 			// Render all objects in master view.
@@ -843,4 +790,5 @@ Bool RenderObjectCmp( FComponent*const &A, FComponent*const &B )
 
 
 	}
+#endif
 }

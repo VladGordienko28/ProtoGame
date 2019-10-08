@@ -189,9 +189,7 @@ void CEditor::Init( HINSTANCE InhInstance )
 	GAudio->MusicVolume		= Config->ReadFloat( L"Editor", L"Audio", L"MusicVolume", 1.f );
 	GAudio->FXVolume		= Config->ReadFloat( L"Editor", L"Audio", L"FXVolume", 1.f );
 
-	// Initialize editor GUI.
-	GUIRender	= new CGUIRender();
-	GUIWindow	= new WWindow();	
+
 
 	res::ResourceManager::registerResourceType( res::EResourceType::Effect, new ffx::System( g_device ), new ffx::Compiler( g_device ) );
 	res::ResourceManager::registerResourceType( res::EResourceType::Image, new img::System( g_device ), new img::Converter() );
@@ -202,7 +200,12 @@ void CEditor::Init( HINSTANCE InhInstance )
 	//auto myAmazingFont = res::ResourceManager::get<fnt::Font>( L"Fonts.InkyThinPixels_14", res::EFailPolicy::FATAL );
 
 	renderLoadEffects();
-			g_grid.create(  math::colors::GRAY, math::WORLD_SIZE );
+
+	// Initialize editor GUI.
+	GUIRender	= new CGUIRender();
+	GUIWindow	= new WWindow();	
+
+	//auto tololo = res::ResourceManager::construct<img::Image>( L"MyImage", 0, 0, nullptr );
 
 	// Load gui resources.
 
@@ -325,7 +328,6 @@ void CEditor::Exit()
 	m_engineChart = nullptr;
 
 	renderDestroyEffects();
-	g_grid.destroy();
 
 	res::ResourceManager::removeListener( &g_resListener );
 	res::ResourceManager::destroy();

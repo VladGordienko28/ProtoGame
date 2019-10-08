@@ -52,6 +52,8 @@ void CGUIRender::BeginPaint( CCanvas* InCanvas )
 //
 void CGUIRender::EndPaint()
 {
+
+	FlushText();
 	Canvas->SetClip( CLIP_NONE );
 	Canvas = nullptr;
 }
@@ -256,7 +258,8 @@ void CGUIRender::DrawText( TPoint P, const Char* Text, Int32 Len, math::Color Co
 {
 	if( Brightness != 1.f )
 		Color *= Brightness;
-	Canvas->DrawText( Text, Len, Font, Color, math::Vector(P.X, P.Y) );
+
+	m_textDrawer.batchText( Text, Len, Font, Color, math::Vector(P.X, P.Y) );
 }
 
 

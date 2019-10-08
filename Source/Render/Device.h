@@ -55,6 +55,7 @@ namespace rend
 
 		virtual IndexBufferHandle createIndexBuffer( EFormat indexFormat, UInt32 numIndexes, 
 			EUsage usage = EUsage::Dynamic, const void* initialData = nullptr, const AnsiChar* debugName = nullptr  ) = 0;
+		virtual void updateIndexBuffer( IndexBufferHandle handle, const void* newData, UInt32 dataSize ) = 0;
 		virtual void destroyIndexBuffer( IndexBufferHandle handle ) = 0;
 
 		virtual ConstantBufferHandle createConstantBuffer( UInt32 bufferSize, EUsage usage = EUsage::Dynamic, 
@@ -109,6 +110,9 @@ namespace rend
 
 		virtual const MemoryStats& getMemoryStats() const = 0;
 		virtual const DrawStats& getDrawStats() const = 0;
+
+		virtual Bool copyTextureToCPU( Texture2DHandle handle, EFormat& outFormat,
+			UInt32& outWidth, UInt32& outHeight, Array<UInt8>& outData ) = 0;
 
 	private:
 		Device( const Device& ) = delete;

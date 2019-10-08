@@ -12,8 +12,8 @@ cbuffer PerFrame : register( b0 )
 // Constant buffer with Per-View variables
 cbuffer PerView : register( b1 )
 {
-	float4x4 g_projectionMatrix;
-	float4 g_worldCamera; // xy - location, zw - size
+	float4x4 g_viewProjectionMatrix;
+	float4 g_worldCamera; // xy - location; zw - size
 }
 
 

@@ -85,8 +85,11 @@ namespace envi
 #include "Rendering/ViewInfo.h"
 #include "Rendering/Utils.h"
 #include "Rendering/GrowOnlyVB.h"
+#include "Rendering/GrowOnlyIB.h"
 #include "Rendering/GridDrawer.h"
+#include "Rendering/TextDrawer.h"
 
+#include "RenderPipeline/SharedConstants.h"
 #include "RenderPipeline/IRenderPipeline.h"
 
 // Profiling

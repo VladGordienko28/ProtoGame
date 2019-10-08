@@ -18,6 +18,16 @@ namespace res
 	};
 
 	/**
+	 *	An abstract construction environment
+	 */
+	class IConstructionEnvironment: public NonCopyable
+	{
+	public:
+		virtual Bool writeTextFile( String relativeFileName, Text::Ptr text ) const = 0;
+		virtual IOutputStream::Ptr writeBinaryFile( String relativeFileName ) const = 0;
+	};
+
+	/**
 	 *	A compilation output
 	 */
 	struct CompilationOutput

@@ -11,27 +11,17 @@ namespace gfx
 {
 	static const Char GRID_EFFECT_NAME[] = TEXT( "System.Shaders.Grid" );
 
-	GridDrawer::GridDrawer()
-		:	m_gridSize( 0.f ),
-			m_color( 0.f, 0.f, 0.f, 1.f ),
+	GridDrawer::GridDrawer( math::Color color, UInt32 size )
+		:	m_gridSize( size ),
+			m_color( color ),
 			m_effect( nullptr )
-	{
-	}
-
-	GridDrawer::~GridDrawer()
-	{
-	}
-
-	void GridDrawer::create( math::Color color, UInt32 size )
 	{
 		assert( size > 0 );
 
-		m_gridSize = size;
-		m_color = color;
 		m_effect = res::ResourceManager::get< ffx::Effect >( GRID_EFFECT_NAME );
 	}
 
-	void GridDrawer::destroy()
+	GridDrawer::~GridDrawer()
 	{
 		m_effect = nullptr;
 	}

@@ -1,8 +1,3 @@
 BEGIN_RESOURCE FBitmap BChain
-    BlendMode = 1
-    Saturation = 1.0000
-    AnimSpeed = 30.0000
-    FileName = "BChain.bmp"
-    UBits = 3
-    VBits = 4
+    image = "Physics.Bitmaps.Chain"
 END_RESOURCE

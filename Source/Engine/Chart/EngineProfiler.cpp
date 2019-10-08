@@ -117,6 +117,7 @@ namespace profile
 
 		Metric newMetric;
 		newMetric.name = name;
+		newMetric.color = hashing::murmur32( name, cstr::length( name ) * sizeof( Char ) );
 		
 		m_groups[groupId].push( newMetric );
 		return m_groups[groupId].last();

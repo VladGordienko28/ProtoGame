@@ -50,6 +50,8 @@ FLevel::FLevel()
 
 
 	m_ambientColors.addSample( 1.f, math::Color( 60, 87, 144, 255 ) );
+
+	m_gridDrawer = new gfx::GridDrawer(  math::colors::GRAY, math::WORLD_SIZE );
 }
 
 void FLevel::EditChange()
@@ -526,6 +528,92 @@ void FLevel::ReleaseEntity( Int32 iEntity )
 	// Let's CObjectDatabase handle it.
 	Entities.removeFast(iEntity);
 	DestroyObject( Entity, true );
+}
+
+
+
+void FLevel::renderLevel( CCanvas* canvas, Int32 x, Int32 y, Int32 width, Int32 height )
+{
+	assert( canvas );
+
+	// Sort render objects according to it layer.
+	if( GFrameStamp & 31 )
+		RenderObjects.sort( []( FComponent* const &a, FComponent* const &b )->Bool { return a->GetLayer() < b->GetLayer(); } );
+
+	// Clamp level scrolling when we play.
+	if( bIsPlaying )
+	{
+		Camera.Location.x	= clamp
+		(
+			Camera.Location.x,
+			Camera.ScrollBound.min.x + Camera.FOV.x*0.5f,
+			Camera.ScrollBound.max.x - Camera.FOV.x*0.5f
+		);
+
+		Camera.Location.y	= clamp
+		(
+			Camera.Location.y,
+			Camera.ScrollBound.min.y + Camera.FOV.y*0.5f,
+			Camera.ScrollBound.max.y - Camera.FOV.y*0.5f
+		);
+	}
+
+	// Compute master view.
+	gfx::ViewInfo MasterView	= gfx::ViewInfo
+	(
+		Camera.Location,
+		Camera.Rotation,
+		Camera.GetFitFOV( width, height ),
+		Camera.Zoom,
+		false,
+		x,
+		y, 
+		width, 
+		height
+	);
+
+
+		canvas->PushTransform( MasterView );
+		{
+			m_gridDrawer->render( canvas->View );
+
+
+			// Render all objects in master view.
+			for( Int32 i=0; i<RenderObjects.size(); i++ )
+				RenderObjects[i]->Render( canvas );
+
+			// Draw debug stuff.
+			// !!todo: add special flag for level.
+			CDebugDrawHelper::Instance().Render( canvas );
+
+			// Draw path if need
+			if( RndFlags & RND_Paths )
+				m_navigator.draw( canvas );
+		}
+		canvas->PopTransform();
+
+
+	// Render HUD in-game only.
+	if( bIsPlaying && (RndFlags & RND_HUD) )
+	{
+		// Set screen coords.
+		canvas->PushTransform
+		(
+			gfx::ViewInfo
+			( 
+				canvas->Clip.X, 
+				canvas->Clip.Y, 
+				canvas->Clip.Width, 
+				canvas->Clip.Height 
+			)
+		); 
+		{
+			// Draw each element.
+			for( FPainterComponent* P=FirstPainter; P; P=P->NextPainter )
+				P->RenderHUD( canvas );
+		}
+		canvas->PopTransform();
+	}
 }
 
 

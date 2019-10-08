@@ -127,15 +127,14 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 	TPoint P = ClientToWindow(TPoint( 0, 0 ));
 
 	if( PlayLevel )
-		GEditor->GRender->RenderLevel
-								(
-									Canvas, 
-									PlayLevel, 
-									P.X, 
-									P.Y, 
-									Size.Width, 
-									Size.Height
-								);
+		PlayLevel->renderLevel
+						(
+							Canvas,
+							P.X, 
+							P.Y, 
+							Size.Width, 
+							Size.Height
+						);
 
 	// Draw info.
 	Canvas->SetTransform( gfx::ViewInfo
@@ -147,7 +146,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 								) );
 
 	// FPS.
-	Canvas->DrawText
+	m_textDrawer.batchText
 				( 
 					String::format( L"FPS: %d", GEditor->FPS ),
 					Root->Font1, 
@@ -156,7 +155,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 				);
 
 #if FLU_PROFILE_MEMORY
-	Canvas->DrawText
+	m_textDrawer.batchText
 				( 
 					String::format( L"Mem: %.2f kB", Double(mem::stats().totalAllocatedBytes) / 1024 ), 
 					Root->Font1, 
@@ -165,7 +164,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 				);
 #endif
 
-	Canvas->DrawText
+	m_textDrawer.batchText
 				( 
 					String::format( L"Game Time: %s", *PlayLevel->m_environmentContext.getCurrentTime().toString() ), 
 					Root->Font1, 
@@ -191,7 +190,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 
 	// In-pause mode.
 	if( PlayLevel->bIsPause )
-		Canvas->DrawText
+		m_textDrawer.batchText
 					(
 						L"Pause",
 						Root->Font1, 
@@ -203,7 +202,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 	// Output all script errors.
 	for( Int32 iMsg=0; iMsg<Messages.size(); iMsg++ )
 	{
-		Canvas->DrawText
+		m_textDrawer.batchText
 					( 
 						Messages[iMsg].message, 
 						Root->Font2, 
@@ -211,6 +210,8 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 						math::Vector( 10.f, Size.Height - (Root->Font2->maxHeight()+2)*(iMsg+1) )
 					);
 	}
+
+	m_textDrawer.flush();
 }
 
 

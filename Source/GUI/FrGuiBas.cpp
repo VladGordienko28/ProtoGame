@@ -408,11 +408,13 @@ void WContainer::WidgetProc( EWidgetProcEvent Event, TWidProcParms Parms )
 {
 	switch ( Event )
 	{
-		case WPE_Paint:
+		case WPE_Paint:Parms.Render->FlushText();
 			WWidget::WidgetProc( Event, Parms );
 			for( Int32 i=0; i<Children.size(); i++ )
 				if( Children[i]->bVisible )
 					Children[i]->WidgetProc( Event, Parms );
+
+			
 			break;
 
 		case WPE_MouseMove:

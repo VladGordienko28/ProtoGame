@@ -2059,7 +2059,7 @@ void WLevelPage::DrawKeyframe( CCanvas* Canvas, FEntity* Entity )
 		Float X, Y;
 		WorldToScreen( Keyframe->Points[i].Location, X, Y );
 
-		Canvas->DrawText
+		m_textDrawer.batchText
 					(	
 						String::format( L"%d", i+1 ),
 						Root->Font2,
@@ -2095,7 +2095,7 @@ void WLevelPage::DrawLogicCircuit( CCanvas* Canvas )
 				Float X, Y;
 				WorldToScreen( Logic->GetPlugPos(i), X, Y );
 				
-				Canvas->DrawText
+				m_textDrawer.batchText
 				(
 					Logic->PlugsName[i],
 					Root->Font2,
@@ -2110,7 +2110,7 @@ void WLevelPage::DrawLogicCircuit( CCanvas* Canvas )
 				Float X, Y;
 				WorldToScreen( Logic->GetJackPos(i), X, Y );
 				
-				Canvas->DrawText
+				m_textDrawer.batchText
 				(
 					Logic->JacksName[i],
 					Root->Font2,
@@ -2148,15 +2148,14 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 	TPoint Base = ClientToWindow(TPoint::Zero);
 									  
 	// Render level.
-	GEditor->GRender->RenderLevel
-							( 
-								Canvas, 
-								Level, 
-								Base.X, 
-								Base.Y, 
-								Size.Width, 
-								Size.Height 
-							);
+	Level->renderLevel
+					( 
+						Canvas,
+						Base.X, 
+						Base.Y, 
+						Size.Width, 
+						Size.Height 
+					);
 
 	// Set level transform, for editor stuff rendering.
 	Canvas->SetTransform
@@ -2220,7 +2219,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 							)
 					);
 	// Draw stats.
-	Canvas->DrawText
+	m_textDrawer.batchText
 				( 
 					String::format( L"FPS: %d", GEditor->FPS ), 
 					Root->Font1, 
@@ -2229,7 +2228,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 				);
 
 #if FLU_PROFILE_MEMORY
-	Canvas->DrawText
+	m_textDrawer.batchText
 				( 
 					String::format( L"Mem: %.2f kB", Double(mem::stats().totalAllocatedBytes) / 1024 ), 
 					Root->Font1, 
@@ -2238,13 +2237,15 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 				);
 #endif
 
-	Canvas->DrawText
+	m_textDrawer.batchText
 				( 
 					String::format( L"Game Time: %s", *Level->m_environmentContext.getCurrentTime().toString() ), 
 					Root->Font1, 
 					math::colors::WHITE, 
 					math::Vector( 10.f, 72.f ) 
 				);
+
+	m_textDrawer.flush();
 }
 
 
@@ -2809,6 +2810,18 @@ void WLevelPage::ButtonSearchDialogClick( WWidget* Sender )
 void WLevelPage::ButtonRndFlagsClick( WWidget* Sender )
 {
 	RndFlagsPopup->Show(WindowToClient(Root->MousePos));
+
+
+	// foooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+	UInt32 width;
+	UInt32 height;
+	rend::EFormat format;
+	Array<UInt8> data;
+
+	g_device->copyTextureToCPU( INVALID_HANDLE<rend::Texture2DHandle>(), format, width, height, data );
+
+	auto image = res::ResourceManager::construct<img::Image>( L"Experimental.ScreenShots.MyShot00",
+		img::EImageType::RGBA, width, height, &data[0] );
 }
 
 

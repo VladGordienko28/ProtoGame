@@ -9,35 +9,57 @@ namespace flu
 {
 namespace ffx
 {
-	SharedConstants::SharedConstants( UInt32 perFrameBufferSize, UInt32 perViewBufferSize, rend::Device* device )
+	SharedConstants::SharedConstants( rend::Device* device )
 		:	m_device( device )
 	{
-		assert( device );
-		assert( perFrameBufferSize > 0 && perViewBufferSize > 0 );
-
-		m_perFrameCB.handle = device->createConstantBuffer( perFrameBufferSize, rend::EUsage::Dynamic, nullptr, "PerFrame constants" );
-		m_perFrameCB.size = perFrameBufferSize;
-
-		m_perViewCB.handle = device->createConstantBuffer( perViewBufferSize, rend::EUsage::Dynamic, nullptr, "PerView constants" );
-		m_perViewCB.size = perViewBufferSize;
+		assert( m_device != nullptr );
 	}
 
 	SharedConstants::~SharedConstants()
 	{
-		m_device->destroyConstantBuffer( m_perFrameCB.handle );
-		m_perFrameCB.handle = INVALID_HANDLE<rend::ConstantBufferHandle>();
+		if( m_perFrameCB.handle != INVALID_HANDLE<rend::ConstantBufferHandle>() )
+		{
+			m_device->destroyConstantBuffer( m_perFrameCB.handle );
+			m_perFrameCB.handle = INVALID_HANDLE<rend::ConstantBufferHandle>();
+		}
 
-		m_device->destroyConstantBuffer( m_perViewCB.handle );
-		m_perViewCB.handle = INVALID_HANDLE<rend::ConstantBufferHandle>();
+		if( m_perViewCB.handle != INVALID_HANDLE<rend::ConstantBufferHandle>() )
+		{
+			m_device->destroyConstantBuffer( m_perViewCB.handle );
+			m_perViewCB.handle = INVALID_HANDLE<rend::ConstantBufferHandle>();
+		}
 	}
 
 	void SharedConstants::bindToPipeline()
 	{
+		assert( m_perFrameCB.handle != INVALID_HANDLE<rend::ConstantBufferHandle>() );
+		assert( m_perViewCB.handle != INVALID_HANDLE<rend::ConstantBufferHandle>() );
+
 		m_device->setConstantBuffers( rend::EShaderType::Vertex, EConstantBufferType::CBT_PerFrame, 1, &m_perFrameCB.handle );
 		m_device->setConstantBuffers( rend::EShaderType::Pixel, EConstantBufferType::CBT_PerFrame, 1, &m_perFrameCB.handle );
 
 		m_device->setConstantBuffers( rend::EShaderType::Vertex, EConstantBufferType::CBT_PerView, 1, &m_perViewCB.handle );
 		m_device->setConstantBuffers( rend::EShaderType::Pixel, EConstantBufferType::CBT_PerView, 1, &m_perViewCB.handle );
+	}
+
+	void SharedConstants::initPerFrameBuffer( UInt32 bufferSize )
+	{
+		assert( bufferSize > 0 );
+		assert( m_perFrameCB.handle == INVALID_HANDLE<rend::ConstantBufferHandle>() );
+
+		m_perFrameCB.size = bufferSize;
+		m_perFrameCB.handle = m_device->createConstantBuffer( bufferSize, 
+			rend::EUsage::Dynamic, nullptr, "PerFrame Constants" );
+	}
+
+	void SharedConstants::initPerViewBuffer( UInt32 bufferSize )
+	{
+		assert( bufferSize > 0 );
+		assert( m_perViewCB.handle == INVALID_HANDLE<rend::ConstantBufferHandle>() );
+
+		m_perViewCB.size = bufferSize;
+		m_perViewCB.handle = m_device->createConstantBuffer( bufferSize, 
+			rend::EUsage::Dynamic, nullptr, "PerView Constants" );
 	}
 
 	void SharedConstants::updatePerFrameBuffer( const void* data )

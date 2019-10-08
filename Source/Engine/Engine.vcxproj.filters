@@ -22,6 +22,9 @@
     <Filter Include="Rendering">
       <UniqueIdentifier>{dd1878de-f5cc-4828-947c-577604cbb9d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RenderPipeline">
+      <UniqueIdentifier>{f932045d-ff78-42dc-8d4f-cf01e0648e78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\FrBase.h">
@@ -133,6 +136,18 @@
     <ClInclude Include="Rendering\ViewInfo.h">
       <Filter>Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="RenderPipeline\IRenderPipeline.h">
+      <Filter>RenderPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPipeline\SharedConstants.h">
+      <Filter>RenderPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\GrowOnlyIB.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\TextDrawer.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\FrClass.cpp">
@@ -213,6 +228,9 @@
       <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\ViewInfo.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\TextDrawer.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
   </ItemGroup>

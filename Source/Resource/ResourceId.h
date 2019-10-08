@@ -21,7 +21,7 @@ namespace res
 
 		ResourceId( EResourceType inType, String inName )
 			:	type( inType ),
-				hash( inName.hashCode() )
+				hash( hashing::murmur32( *inName, inName.len() * sizeof( Char ) ) )
 		{
 		}
 

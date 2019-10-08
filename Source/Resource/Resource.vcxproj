@@ -152,19 +152,24 @@
   <ItemGroup>
     <ClInclude Include="FilesTracker.h" />
     <ClInclude Include="Listener.h" />
+    <ClInclude Include="LocalStorage.h" />
     <ClInclude Include="NamesResolver.h" />
     <ClInclude Include="Package.h" />
+    <ClInclude Include="PackageStorage.h" />
+    <ClInclude Include="RemoteStorage.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceCompiler.h" />
     <ClInclude Include="ResourceId.h" />
     <ClInclude Include="ResourceManager.h" />
-    <ClInclude Include="ResourceStorage.h" />
     <ClInclude Include="ResourceSystem.h" />
     <ClInclude Include="ResourceType.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FilesTracker.cpp" />
+    <ClCompile Include="LocalStorage.cpp" />
     <ClCompile Include="Package.cpp" />
+    <ClCompile Include="PackageStorage.cpp" />
+    <ClCompile Include="RemoteStorage.cpp" />
     <ClCompile Include="Resource.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -172,7 +177,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp" />
-    <ClCompile Include="ResourceStorage.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

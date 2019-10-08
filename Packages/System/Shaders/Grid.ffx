@@ -52,7 +52,7 @@ VsOutput vsMain( in uint vertexId : SV_VertexID )
 	}
 
 	VsOutput output;
-	output.position = mul( float4( position, 0.f, 1.f ), g_projectionMatrix );
+	output.position = mul( float4( position, 0.f, 1.f ), g_viewProjectionMatrix );
 	output.style = style;
 	return output;
 }

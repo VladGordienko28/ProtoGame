@@ -46,13 +46,13 @@ void CApplication::Flush()
 	{
 		// Flush in editor.
 		GAudio->Flush();
-		GRender->Flush();
+		//GRender->Flush();
 	}
 	else
 	{
 		// Flush in game.
 		GAudio->Flush();
-		GRender->Flush();
+		//GRender->Flush();
 
 		if( Project )
 			Project->BlockMan->Flush();

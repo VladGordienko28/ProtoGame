@@ -1,9 +1,3 @@
 BEGIN_RESOURCE FBitmap eveningsky
-    BlendMode = 4
-    Saturation = 1.0000
-    AnimSpeed = 30.0000
-    Group = "<unused>"
-    FileName = "eveningsky.png"
-    UBits = 4
-    VBits = 7
+    image = "Protogame.Bitmaps.eveningsky"
 END_RESOURCE

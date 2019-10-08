@@ -13,12 +13,14 @@ namespace ffx
 	class SharedConstants: public NonCopyable
 	{
 	public:
-		using UPtr = UniquePtr<SharedConstants>;
-
-		SharedConstants( UInt32 perFrameBufferSize, UInt32 perViewBufferSize, rend::Device* device );
+		SharedConstants( rend::Device* device );
 		~SharedConstants();
 
 		void bindToPipeline();
+
+	protected:
+		void initPerFrameBuffer( UInt32 bufferSize );
+		void initPerViewBuffer( UInt32 bufferSize );
 
 		void updatePerFrameBuffer( const void* data );
 		void updatePerViewBuffer( const void* data );
@@ -26,8 +28,8 @@ namespace ffx
 	private:
 		struct Buffer
 		{
-			rend::ConstantBufferHandle handle;
-			UInt32 size;
+			rend::ConstantBufferHandle handle = INVALID_HANDLE<rend::ConstantBufferHandle>();
+			UInt32 size = 0;
 		};
 
 		Buffer m_perFrameCB;

@@ -27,8 +27,7 @@ namespace img
 	class Image: public res::Resource
 	{
 	public:
-		using Ptr = SharedPtr<Image>;
-		static const auto RESOURCE_TYPE = res::EResourceType::Image;
+		DECLARE_RESOURCE( Image, System, Converter );
 
 		~Image();
 

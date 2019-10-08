@@ -33,6 +33,9 @@ namespace res
 
 		static Bool generatePackages(); // todo: add output add output directory + flags
 		static Bool loadAllPackages(); // todo: rethink
+		
+		// resource functions
+		template<typename T, typename... Args> static typename T::Ptr construct( String resourceName, Args... args );
 
 		template<typename T> static typename T::Ptr get( String resourceName, EFailPolicy failPolicy = EFailPolicy::RETURN_NULL );
 		template<typename T> static typename T::Ptr get( ResourceId resourceId, EFailPolicy failPolicy = EFailPolicy::RETURN_NULL );
@@ -177,6 +180,28 @@ namespace res
 				manager.m_listener.onError( resourceId.toString(), TEXT( "is not found" ) );
 				return nullptr;
 			}
+		}
+	}
+
+	template<typename T, typename ...Args> static typename T::Ptr ResourceManager::construct( String resourceName, Args... args )
+	{
+		ResourceManager& manager = instance();
+		assert( manager.m_isInitialized );
+		assert( manager.m_localStorage.hasObject() );
+
+		const EResourceType resType = T::RESOURCE_TYPE;
+		IResourceSystem* system = manager.getSystem( resType );
+		assert( resourceName );
+		assert( system );
+
+		if( manager.m_localStorage->construct<T>( resourceName, manager.m_listener, args... ) )
+		{
+			return get<T>( resourceName, EFailPolicy::RETURN_NULL );
+		}
+		else
+		{
+			manager.m_listener.onError( resourceName, TEXT( "unable to construct resource" ) );
+			return nullptr;
 		}
 	}
 }

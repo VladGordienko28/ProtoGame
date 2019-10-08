@@ -34,7 +34,7 @@ struct VsOutput
 VsOutput vsMain( in VsInput input )
 {
 	VsOutput output;
-	output.position = mul( float4( input.position, 0.f, 1.f ), g_projectionMatrix );
+	output.position = mul( float4( input.position, 0.f, 1.f ), g_viewProjectionMatrix );
 	output.tCoord = input.tCoord;
 	return output;
 }

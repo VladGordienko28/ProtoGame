@@ -47,13 +47,18 @@ namespace dx11
 			return m_height;
 		}
 
+		rend::EFormat getFormat() const
+		{
+			return SWAP_CHAIN_FORMAT;
+		}
+
 		Bool isFullscreen() const
 		{
 			return m_isFullScreen;
 		}
 
 	private:
-		static const DXGI_FORMAT SWAP_CHAIN_FORMAT = DXGI_FORMAT_R8G8B8A8_UNORM;
+		static const rend::EFormat SWAP_CHAIN_FORMAT = rend::EFormat::RGBA8_UNORM;
 
 		DxRef<IDXGISwapChain> m_swapChain;
 		DxRef<ID3D11Texture2D> m_backBuffer;

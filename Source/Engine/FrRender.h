@@ -116,8 +116,6 @@ public:
 	virtual ~CRenderBase() = default;
 
 	virtual void Resize( Int32 NewWidth, Int32 NewHeight ) = 0;
-	virtual void Flush() = 0;
-	virtual void RenderLevel( CCanvas* Canvas, FLevel* Level, Int32 X, Int32 Y, Int32 W, Int32 H ) = 0;
 	virtual CCanvas* Lock() = 0;
 	virtual void Unlock() = 0;			
 };
@@ -211,28 +209,6 @@ public:
 		math::Color Color,
 		Bool bStipple 
 	);
-
-	void DrawText
-	(	
-		const Char* Text,
-		Int32 Len,
-		fnt::Font::Ptr Font, 
-		math::Color Color,
-		const math::Vector& Start, 
-		const math::Vector& Scale = math::Vector( 1.f, 1.f )  
-	);
-
-	void DrawText
-	(	
-		const String& S,
-		fnt::Font::Ptr Font, 
-		math::Color Color,
-		const math::Vector& Start, 
-		const math::Vector& Scale = math::Vector( 1.f, 1.f ) 
-	)
-	{
-		DrawText( *S, S.len(), Font, Color, Start, Scale );
-	}
 
 protected:
 	// Canvas internal.

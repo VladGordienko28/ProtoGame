@@ -6,7 +6,6 @@
 namespace flu
 {
 	extern rend::Device* g_device;
-	extern gfx::GridDrawer g_grid;
 
 	extern void renderLoadEffects();
 	extern void renderDestroyEffects();
@@ -86,7 +85,8 @@ private:
 
 */
 
-		ffx::SharedConstants::UPtr m_sharedConstants;  /// not here!!!!!!!!!!!!!!!!!!
+
+		gfx::SharedConstants::UPtr m_sharedConstants;  /// not here!!!!!!!!!!!!!!!!!!
 
 	private:
 		friend class CDirectX11Render;
@@ -141,8 +141,6 @@ private:
 
 		// CRenderBase interface.
 		void Resize( Int32 newWidth, Int32 newHeight ) override;
-		void Flush() override;
-		void RenderLevel( CCanvas* canvas, FLevel* level, Int32 x, Int32 y, Int32 w, Int32 h ) override;
 		CCanvas* Lock() override;
 		void Unlock() override;
 

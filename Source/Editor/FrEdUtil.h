@@ -29,6 +29,14 @@ public:
 	void DrawImage( TPoint P, TSize S, TPoint BP, TSize BS, img::Image::Ptr image );
 	void DrawTexture( TPoint P, TSize S, TPoint BP, TSize BS, rend::Texture2DHandle image, UInt32 width, UInt32 height );
 	void SetBrightness( Float Brig );
+
+	void FlushText() override
+	{
+		m_textDrawer.flush();
+	}
+
+private:
+	gfx::TextDrawer m_textDrawer;
 };
 
 

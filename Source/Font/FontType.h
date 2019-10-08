@@ -13,8 +13,7 @@ namespace fnt
 	class Font: public res::Resource
 	{
 	public:
-		using Ptr = SharedPtr<Font>;
-		static const auto RESOURCE_TYPE = res::EResourceType::Font;
+		DECLARE_RESOURCE( Font, System, Compiler );
 
 		~Font();
 

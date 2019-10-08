@@ -59,6 +59,12 @@ namespace ffx
 		m_srvs[slot] = srv;
 	}
 
+	void Effect::setTexture( Int32 slot, rend::Texture2DHandle texture )
+	{
+		rend::ShaderResourceView srv = m_device->getShaderResourceView( texture );
+		m_srvs[slot] = srv;
+	}
+
 	void Effect::setSamplerState( Int32 slot, rend::SamplerStateId samplerId )
 	{
 		m_samplerStates[slot] = samplerId;

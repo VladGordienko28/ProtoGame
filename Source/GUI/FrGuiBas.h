@@ -307,6 +307,7 @@ public:
 	virtual void DrawImage( TPoint P, TSize S, TPoint BP, TSize BS, img::Image::Ptr image ) = 0;
 	virtual void DrawTexture( TPoint P, TSize S, TPoint BP, TSize BS, rend::Texture2DHandle image, UInt32 width, UInt32 height ) = 0;
 	virtual void DrawText( TPoint P, const Char* Text, Int32 Len, math::Color Color, fnt::Font::Ptr Font ) = 0;
+	virtual void FlushText() = 0;
 	virtual void SetBrightness( Float Brig ) = 0;
 
 	// CGUIRenderBase utility.

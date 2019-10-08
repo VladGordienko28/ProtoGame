@@ -24,7 +24,7 @@ namespace dx11
 		swapChainDesc.BufferDesc.Height = height;
 		swapChainDesc.BufferDesc.RefreshRate.Denominator = 0;
 		swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
-		swapChainDesc.BufferDesc.Format = SWAP_CHAIN_FORMAT;
+		swapChainDesc.BufferDesc.Format = fluorineFormatToDirectX( SWAP_CHAIN_FORMAT );
 		swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 		swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
@@ -69,7 +69,9 @@ namespace dx11
 		m_backBufferRTV = nullptr;
 		m_backBuffer = nullptr;
 
-		HRESULT result = m_swapChain->ResizeBuffers( 1, width, height, SWAP_CHAIN_FORMAT, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH );
+		HRESULT result = m_swapChain->ResizeBuffers( 1, width, height, 
+			fluorineFormatToDirectX( SWAP_CHAIN_FORMAT ), DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH );
+
 		assert( SUCCEEDED( result ) );
 
 		result = m_swapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), (void**)&m_backBuffer );

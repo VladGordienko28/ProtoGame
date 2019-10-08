@@ -53,6 +53,7 @@ namespace dx11
 
 		rend::IndexBufferHandle createIndexBuffer( rend::EFormat indexFormat, UInt32 numIndexes, 
 			rend::EUsage usage, const void* initialData, const AnsiChar* debugName ) override;
+		void updateIndexBuffer( rend::IndexBufferHandle handle, const void* newData, UInt32 dataSize ) override;
 		void destroyIndexBuffer( rend::IndexBufferHandle handle ) override;
 
 		rend::ConstantBufferHandle createConstantBuffer( UInt32 bufferSize, rend::EUsage usage, 
@@ -108,6 +109,9 @@ namespace dx11
 
 		const rend::MemoryStats& getMemoryStats() const override;
 		const rend::DrawStats& getDrawStats() const override;
+
+		Bool copyTextureToCPU( rend::Texture2DHandle handle, rend::EFormat& outFormat,
+			UInt32& outWidth, UInt32& outHeight, Array<UInt8>& outData ) override;
 
 	private:
 		SwapChain::UPtr m_swapChain;

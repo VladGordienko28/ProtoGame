@@ -15,7 +15,19 @@
 void CEditor::Tick( Float Delta )
 {
 	profile_zone( EProfilerGroup::General, TotalTime );
-	profile_counter( EProfilerGroup::Memory, Allocated_Kb, mem::stats().totalAllocatedBytes / 1024.0 );
+
+	profile_counter( EProfilerGroup::Memory, Allocated_Kb, mem::stats().totalAllocatedBytes / 1024 );
+
+	// GPU memory stats
+	profile_counter( EProfilerGroup::GPUMemory, GPU_Total_Kb,		g_device->getMemoryStats().totalBytes() / 1024 );
+	profile_counter( EProfilerGroup::GPUMemory, GPU_Texture_Kb,		g_device->getMemoryStats().m_texureBytes / 1024 );
+	profile_counter( EProfilerGroup::GPUMemory, GPU_Vertex_Kb,		g_device->getMemoryStats().m_vertexBufferBytes / 1024 );
+	profile_counter( EProfilerGroup::GPUMemory, GPU_Constant_Kb,	g_device->getMemoryStats().m_constantBufferBytes / 1024 );
+	profile_counter( EProfilerGroup::GPUMemory, GPU_Index_Kb,		g_device->getMemoryStats().m_indexBufferBytes / 1024 );
+
+	// Draw calls stats
+	profile_counter( EProfilerGroup::DrawCalls, Draw_Calls, g_device->getDrawStats().m_drawCalls );
+	profile_counter( EProfilerGroup::DrawCalls, State_Switchings, g_device->getDrawStats().m_blendStateSwitches );
 
 	// Get active page.
 	WEditorPage* Active = (WEditorPage*)EditorPages->GetActivePage();

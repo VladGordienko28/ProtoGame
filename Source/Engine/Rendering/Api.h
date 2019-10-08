@@ -20,7 +20,11 @@ namespace api
 
 	extern rend::IndexBufferHandle createIndexBuffer( rend::EFormat indexFormat, UInt32 numIndexes, 
 		rend::EUsage usage, const void* initialData, const AnsiChar* debugName );
+	extern void updateIndexBuffer( rend::IndexBufferHandle handle, const void* newData, UInt32 dataSize );
 	extern void destroyIndexBuffer( rend::IndexBufferHandle handle );
+
+	extern rend::SamplerStateId getSamplerState( const rend::SamplerState& samplerState );
+	extern rend::BlendStateId getBlendState( const rend::BlendState& blendState );
 
 	extern void setVertexBuffer( rend::VertexBufferHandle handle );
 	extern void setIndexBuffer( rend::IndexBufferHandle handle );

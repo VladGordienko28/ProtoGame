@@ -164,6 +164,7 @@ namespace dx11
 		DXGI_FORMAT m_dxFormat = DXGI_FORMAT_UNKNOWN;
 		rend::EUsage m_usage = rend::EUsage::Immutable;
 		UInt32 m_numIndexes = 0;
+		UInt32 m_indexTypeSize = 0;
 
 		DxIndexBuffer() = default;
 		~DxIndexBuffer();

@@ -166,6 +166,9 @@ private:
 	WKeyframeEditor*	KeyframeEditor;
 	WForm*				EntitySearch;
 
+	// Rendering
+	gfx::TextDrawer		m_textDrawer;
+
 	// Internal widgets events.
 	void PopAddEntityClick( WWidget* Sender );
 	void PopPasteClick( WWidget* Sender );

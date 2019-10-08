@@ -15,11 +15,8 @@ namespace gfx
 	public:
 		using UPtr = UniquePtr<GridDrawer>;
 
-		GridDrawer();
+		GridDrawer( math::Color color, UInt32 size );
 		~GridDrawer();
-
-		void create( math::Color color, UInt32 size );
-		void destroy();
 
 		void render( const ViewInfo& viewInfo );
 
@@ -27,6 +24,8 @@ namespace gfx
 		Float				m_gridSize;
 		math::FloatColor	m_color;
 		ffx::Effect::Ptr	m_effect;
+
+		GridDrawer() = delete;
 	};
 }
 }
