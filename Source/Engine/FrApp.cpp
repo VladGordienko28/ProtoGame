@@ -13,11 +13,9 @@
 // Application constructor.
 //
 CApplication::CApplication()
-	:	GRender( nullptr ),
-		GAudio( nullptr ),
+	:	GAudio( nullptr ),
 		GInput( nullptr ),
 		Project( nullptr ),
-		Config( nullptr ),
 		FPS( 0 )
 {
 	// Set up pointer to self.

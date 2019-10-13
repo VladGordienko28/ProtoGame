@@ -7,7 +7,6 @@
 #include "Res\resource.h"
 #include "FrSplash.h"
 
-
 /*-----------------------------------------------------------------------------
     Editor declarations.
 -----------------------------------------------------------------------------*/
@@ -162,18 +161,22 @@ void CEditor::Init( HINSTANCE InhInstance )
 	);
 	assert(hWnd);
 
-	// Load configure file.
-	Config			= new CConfigManager( fm::getCurrentDirectory() );
+	ConfigManager::create( fm::getCurrentDirectory(), L"Editor" );
 
-	res::ResourceManager::create( Config->ReadString( L"Editor", L"ResMan", L"PackagesPath" ),
-		Config->ReadString( L"Editor", L"ResMan", L"CachePath" ),
-		Config->ReadString( L"Editor", L"ResMan", L"UseCache" ) );
+	// Load configure file.
+	m_renderDevice = new dx11::Device( hWnd, 800, 600, false );
+
+	m_world = new World( m_renderDevice.get() );
 
 	res::ResourceManager::addListener( &g_resListener );
 
-	// Create render & audio.
-	//GRender		= new COpenGLRender( hWnd );
-	GRender			= new CDirectX11Render( hWnd );
+
+
+	m_legacyRender			= new CDirectX11Render( m_renderDevice.get(), m_world->drawContext() );
+
+
+
+
 
 
 #if FLU_X64
@@ -185,35 +188,22 @@ void CEditor::Init( HINSTANCE InhInstance )
 	GInput		= new CInput();
 
 	// Default for editor audio volume.
-	GAudio->MasterVolume	= Config->ReadFloat( L"Editor", L"Audio", L"MasterVolume", 1.f );
-	GAudio->MusicVolume		= Config->ReadFloat( L"Editor", L"Audio", L"MusicVolume", 1.f );
-	GAudio->FXVolume		= Config->ReadFloat( L"Editor", L"Audio", L"FXVolume", 1.f );
+	//GAudio->MasterVolume	= Config->ReadFloat( L"Editor", L"Audio", L"MasterVolume", 1.f );
+	//GAudio->MusicVolume		= Config->ReadFloat( L"Editor", L"Audio", L"MusicVolume", 1.f );
+	//GAudio->FXVolume		= Config->ReadFloat( L"Editor", L"Audio", L"FXVolume", 1.f );
 
 
 
-	res::ResourceManager::registerResourceType( res::EResourceType::Effect, new ffx::System( g_device ), new ffx::Compiler( g_device ) );
-	res::ResourceManager::registerResourceType( res::EResourceType::Image, new img::System( g_device ), new img::Converter() );
-	res::ResourceManager::registerResourceType( res::EResourceType::Font, new fnt::System(), new fnt::Compiler() ); ///////////////////////
+///////////
 
 	m_engineChart = new EngineChart();
 
-	//auto myAmazingFont = res::ResourceManager::get<fnt::Font>( L"Fonts.InkyThinPixels_14", res::EFailPolicy::FATAL );
 
-	renderLoadEffects();
 
 	// Initialize editor GUI.
 	GUIRender	= new CGUIRender();
 	GUIWindow	= new WWindow();	
 
-	//auto tololo = res::ResourceManager::construct<img::Image>( L"MyImage", 0, 0, nullptr );
-
-	// Load gui resources.
-
-	//WWindow::Font1				= LoadFontFromResource( hInstance, MAKEINTRESOURCE(IDR_FONT1), /*MAKEINTRESOURCE(IDB_FONT1)*/ L"System.Editor.WascoSans9_0" );
-	//WWindow::Font2				= LoadFontFromResource( hInstance, MAKEINTRESOURCE(IDR_FONT2), /*MAKEINTRESOURCE(IDB_FONT2)*/ L"System.Editor.Consolas13_0" );
-	/*	WWindow::Icons				= LoadBitmapFromResource( hInstance, MAKEINTRESOURCE(IDB_GUIICONS) );
-	WWindow::Icons->BlendMode	= BLEND_Masked;
-	*/
 
 	WWindow::Icons = res::ResourceManager::get<img::Image>( L"System.Editor.GuiIcons", res::EFailPolicy::FATAL );
 	WWindow::Font1 = res::ResourceManager::get<fnt::Font>( L"Fonts.RopaSans_9", res::EFailPolicy::FATAL ); // no no no no
@@ -327,18 +317,21 @@ void CEditor::Exit()
 
 	m_engineChart = nullptr;
 
-	renderDestroyEffects();
 
 	res::ResourceManager::removeListener( &g_resListener );
-	res::ResourceManager::destroy();
 
 	// Shutdown subsystems.
 	freeandnil(GInput);
 	freeandnil(GAudio);
-	freeandnil(GRender);
-	freeandnil(Config);
 
-	//GRender = nullptr;
+
+	delete m_legacyRender;
+
+
+	m_world = nullptr;
+	m_renderDevice = nullptr;
+
+	ConfigManager::destroy();
 
 	info( L"Ed: Editor shutdown" ); 
 }
@@ -661,6 +654,11 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			GEditor->GUIWindow->WidgetProc( WPE_KeyDown, (Int32)WParam );
 			GEditor->GInput->OnKeyDown( (Int32)WParam );
 
+			if( WParam == KEY_F4 )
+			{
+				mem::dumpAllocations( L"RuntimeMemoryDump.txt" );
+			}
+
 			if( WParam == KEY_Tilde )
 			{
 				if( GEditor->m_engineChart->isEnabled() )
@@ -697,7 +695,12 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			Int32	NewX = LOWORD( LParam ), 
 					NewY = HIWORD( LParam );
 
-			GEditor->GRender->Resize( NewX, NewY );
+			NewX = clamp( NewX,  1, 3000 );
+			NewY = clamp( NewY, 1, 3000 );
+
+			GEditor->m_renderDevice->resize( NewX, NewY, false );
+			GEditor->m_world->onResize( NewX, NewY, false );
+
 			GEditor->GUIWindow->Size = TSize( NewX, NewY );
 			GEditor->GUIWindow->WidgetProc( WPE_Resize, TWidProcParms() );
 			break;

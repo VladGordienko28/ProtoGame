@@ -166,7 +166,7 @@ Bool FMirrorComponent::ComputeViewInfo( const gfx::ViewInfo& Parent, gfx::ViewIn
 void FMirrorComponent::Render( CCanvas* Canvas )
 {
 	// Never draw fake mirror.
-	if( Canvas->View.isMirage || !(Level->RndFlags & RND_Other) )
+	if( Canvas->viewInfo().isMirage || !(Level->RndFlags & RND_Other) )
 		return;
 
 	math::Color DrawColor = math::colors::DODGER_BLUE;
@@ -177,14 +177,15 @@ void FMirrorComponent::Render( CCanvas* Canvas )
 	math::Vector V1 = math::Vector( Location.x, Location.y - 0.5f * Width );
 	math::Vector V2 = math::Vector( Location.x, Location.y + 0.5f * Width );
 
-	Canvas->DrawLine( V1, V2, DrawColor, false );
+	Level->m_primitiveDrawer.batchLine( V1, V2, 1.f, DrawColor );
 
 	// Tips.
-	Canvas->DrawCoolPoint( V1, 5.f, DrawColor );
-	Canvas->DrawCoolPoint( V2, 5.f, DrawColor );
+	Level->m_primitiveDrawer.batchCoolPoint( V1, 5.f, 1.f, DrawColor );
+	Level->m_primitiveDrawer.batchCoolPoint( V2, 5.f, 1.f, DrawColor );
 
 	// Centroid.
-	Canvas->DrawPoint( Location, 4.f, DrawColor );
+	Level->m_primitiveDrawer.batchPoint( Location, 1.f, 4.f, DrawColor );
+
 }
 
 
@@ -297,7 +298,7 @@ void FWarpComponent::SerializeThis( CSerializer& S )
 void FWarpComponent::Render( CCanvas* Canvas )
 {
 	// Don't draw fake.
-	if( Canvas->View.isMirage || !(Level->RndFlags & RND_Other) )
+	if( Canvas->viewInfo().isMirage || !(Level->RndFlags & RND_Other) )
 		return;
 
 	math::Coords C = ToWorld();
@@ -308,14 +309,14 @@ void FWarpComponent::Render( CCanvas* Canvas )
 	if( bSelected )
 		DrawColor *= 2.f;
 
-	Canvas->DrawLine( V1, V2, DrawColor, false );
+	Level->m_primitiveDrawer.batchLine( V1, V2, 1.f, DrawColor );
 
 	// Tips.
-	Canvas->DrawCoolPoint( V1, 6.f, DrawColor );
-	Canvas->DrawCoolPoint( V2, 6.f, DrawColor );
+	Level->m_primitiveDrawer.batchCoolPoint( V1, 6.f, 1.f, DrawColor );
+	Level->m_primitiveDrawer.batchCoolPoint( V2, 6.f, 1.f, DrawColor );
 
 	// Centroid.
-	Canvas->DrawPoint( Location, 4.f, DrawColor );
+	Level->m_primitiveDrawer.batchPoint( Location, 1.f, 4.f, DrawColor );
 }
 
 

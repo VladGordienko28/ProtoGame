@@ -6,3 +6,5 @@
 KEYWORD( include )
 KEYWORD( vertex_decl )
 KEYWORD( technique )
+KEYWORD( vertex_shader )
+KEYWORD( pixel_shader )

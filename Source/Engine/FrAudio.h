@@ -63,6 +63,7 @@ public:
 	Float			FXVolume;
 
 	// CAudioBase interface.
+	virtual ~CAudioBase() = default;
 	virtual void Flush() = 0;
 	virtual void Tick( Float Delta, FLevel* Scene=nullptr ) = 0;
 	virtual void PlayMusic( FMusic* Music, Float FadeTime ) = 0;

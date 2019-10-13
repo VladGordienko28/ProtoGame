@@ -57,7 +57,10 @@ void CFrame::ExecuteNative( FEntity* Context, EOpCode Code )
 			String	File	= POP_STRING;
 			String	Section	= POP_STRING;
 			String	Key		= POP_STRING;
-			*POPA_STRING	= GApp->Config->ReadString( *File, *Section, *Key );
+			//*POPA_STRING	= GApp->Config->ReadString( *File, *Section, *Key );
+			
+			// todo: fix or remove this op
+			assert( false && "Not implemented" );
 			break;
 		}
 		case OP_GetScript:

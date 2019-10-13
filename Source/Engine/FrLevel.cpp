@@ -575,7 +575,7 @@ void FLevel::renderLevel( CCanvas* canvas, Int32 x, Int32 y, Int32 width, Int32 
 
 		canvas->PushTransform( MasterView );
 		{
-			m_gridDrawer->render( canvas->View );
+			m_gridDrawer->render( canvas->viewInfo() );
 
 
 			// Render all objects in master view.
@@ -588,7 +588,9 @@ void FLevel::renderLevel( CCanvas* canvas, Int32 x, Int32 y, Int32 width, Int32 
 
 			// Draw path if need
 			if( RndFlags & RND_Paths )
-				m_navigator.draw( canvas );
+				m_navigator.draw( m_primitiveDrawer, canvas );
+
+			m_primitiveDrawer.flush();
 		}
 		canvas->PopTransform();
 
@@ -611,6 +613,8 @@ void FLevel::renderLevel( CCanvas* canvas, Int32 x, Int32 y, Int32 width, Int32 
 			// Draw each element.
 			for( FPainterComponent* P=FirstPainter; P; P=P->NextPainter )
 				P->RenderHUD( canvas );
+
+			m_primitiveDrawer.flush();
 		}
 		canvas->PopTransform();
 	}

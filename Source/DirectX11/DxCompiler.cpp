@@ -22,7 +22,7 @@ namespace dx11
 	rend::CompiledShader ShaderCompiler::compile( rend::EShaderType shaderType, Text::Ptr shaderText, const Char* entryPoint,
 		String* warnings, String* errors )
 	{
-		assert( shaderType != rend::EShaderType::Unknown );
+		assert( shaderType < rend::EShaderType::ST_MAX );
 		assert( shaderText.hasObject() );
 		assert( entryPoint && *entryPoint );
 
@@ -32,9 +32,9 @@ namespace dx11
 		const AnsiChar* shaderTarget = nullptr;
 		switch( shaderType )
 		{
-			case rend::EShaderType::Vertex:		shaderTarget = "vs_4_1"; break;
-			case rend::EShaderType::Pixel:		shaderTarget = "ps_4_1"; break;
-			case rend::EShaderType::Compute:	shaderTarget = "cs_4_1"; break;
+			case rend::EShaderType::ST_Vertex:	shaderTarget = "vs_4_1"; break;
+			case rend::EShaderType::ST_Pixel:	shaderTarget = "ps_4_1"; break;
+			case rend::EShaderType::ST_Compute:	shaderTarget = "cs_4_1"; break;
 
 			default:
 				fatal( L"Unknown shader type %d", shaderType );
@@ -76,7 +76,7 @@ namespace dx11
 				*errors = ansi2WideString( ansiErrors );
 			}
 
-			return rend::CompiledShader( rend::EShaderType::Unknown, Array<UInt8>() );
+			return rend::CompiledShader( rend::EShaderType::ST_MAX, Array<UInt8>() );
 		}
 	}
 }

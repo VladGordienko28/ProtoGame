@@ -13,6 +13,7 @@
 // FFX includes
 #include "FxCommon.h"
 #include "FxLexer.h"
+#include "FxTypes.h"
 #include "Effect.h"
 #include "FxCompiler.h"
 #include "SharedConstants.h"

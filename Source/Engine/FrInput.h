@@ -107,7 +107,7 @@ public:
 
 	// CInput interface.
 	CInput();
-	void RemapFromIni( CConfigManager* Config );
+	void RemapFromConfig();
 	void SetLevel( FLevel* InLevel );
 	void Reset();
 	Bool KeyIsPressed( Int32 iKey );

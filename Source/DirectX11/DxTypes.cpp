@@ -293,7 +293,7 @@ namespace dx11
 	Bool DxPixelShader::create( ID3D11Device* device, const rend::CompiledShader& shader, const AnsiChar* debugName )
 	{
 		assert( device );
-		assert( shader.getType() == rend::EShaderType::Pixel );
+		assert( shader.getType() == rend::EShaderType::ST_Pixel );
 		assert( shader.isValid() );
 
 		HRESULT result = device->CreatePixelShader( shader.code(), shader.codeLength(), nullptr, &m_shader );
@@ -321,7 +321,7 @@ namespace dx11
 		const AnsiChar* debugName )
 	{
 		assert( device );
-		assert( shader.getType() == rend::EShaderType::Vertex );
+		assert( shader.getType() == rend::EShaderType::ST_Vertex );
 		assert( shader.isValid() );
 
 		m_vertexDeclaration = vertexDeclaration;

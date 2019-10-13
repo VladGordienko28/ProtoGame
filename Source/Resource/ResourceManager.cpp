@@ -11,8 +11,7 @@ namespace res
 {
 	ResourceManager::ResourceManager()
 		:	m_packagesPath( TEXT( "" ) ),
-			m_isInitialized( false ),
-			m_requestsStack( MAX_REQUESTS_DEPTH )
+			m_isInitialized( false )
 	{
 	}
 

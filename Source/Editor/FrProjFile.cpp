@@ -92,11 +92,11 @@ Bool CEditor::NewProject()
 	// Load default resources for every project.
 	for( Int32 iDef=0; true; iDef++ )
 	{
-		String ResName = Config->ReadString
+		String ResName = ConfigManager::readString
 		( 
-			L"Editor",
+			EConfigFile::Application,
 			L"Project", 
-			*String::format( L"Res[%d]", iDef ) 
+			*String::format( L"Res_%d", iDef ) 
 		);
 
 		if( !ResName )
@@ -1717,7 +1717,7 @@ Bool CEditor::OpenProjectFrom( String FileName )
 	{
 		Int32 i;
 		for( i=0; i<5; i++ )
-			if(	String::upperCase(Config->ReadString( L"Editor", L"Recent", *String::format(L"Recent[%i]", i), L"" )) == 
+			if(	String::upperCase(ConfigManager::readString( EConfigFile::Application, L"Recent", *String::format(L"Recent_%i", i), L"" )) == 
 				String::upperCase(FileName) )
 			{
 				// Yes, it found in list.
@@ -1730,12 +1730,12 @@ Bool CEditor::OpenProjectFrom( String FileName )
 			// So shift list and add new one.
 			for( Int32 j=4; j>0; j-- )
 			{
-				String Prev	= Config->ReadString( L"Editor", L"Recent", *String::format(L"Recent[%i]", j-1), L"" );
-				Config->WriteString( L"Editor", L"Recent", *String::format(L"Recent[%i]", j), Prev );
+				String Prev	= ConfigManager::readString( EConfigFile::Application, L"Recent", *String::format(L"Recent_%i", j-1), L"" );
+				ConfigManager::writeString( EConfigFile::Application, L"Recent", *String::format(L"Recent_%i", j), Prev );
 			}
 
 			// Add new.
-			Config->WriteString( L"Editor", L"Recent", L"Recent[0]", FileName );
+			ConfigManager::writeString( EConfigFile::Application, L"Recent", L"Recent_0", FileName );
 		}
 	}
 

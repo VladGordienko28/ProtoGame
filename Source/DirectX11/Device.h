@@ -233,7 +233,7 @@ namespace dx11
 		};
 
 		template<typename VALUE_TYPE, UInt32 MAX_SLOTS> using StagesCache = 
-			StaticArray<SlotsCache<VALUE_TYPE, MAX_SLOTS>, static_cast<SizeT>( rend::EShaderType::MAX )>;
+			StaticArray<SlotsCache<VALUE_TYPE, MAX_SLOTS>, static_cast<SizeT>( rend::EShaderType::ST_MAX )>;
 
 		static const UInt32 MAX_CONSTANT_BUFFERS_SLOTS = 16;
 		static const UInt32 MAX_SAMPLER_STATES_SLOTS = 16;

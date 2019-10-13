@@ -46,6 +46,11 @@ namespace api
 		rend::EUsage usage, const void* initialData, const AnsiChar* debugName );
 	extern void updateTexture2D( rend::Texture2DHandle handle, const void* newData );
 	extern void destroyTexture2D( rend::Texture2DHandle handle );
+
+	extern rend::ShaderResourceView getShaderResourceView( rend::Texture1DHandle handle );
+	extern rend::ShaderResourceView getShaderResourceView( rend::Texture2DHandle handle );
+	extern rend::ShaderResourceView getShaderResourceView( rend::RenderTargetHandle handle );
+	extern rend::ShaderResourceView getShaderResourceView( rend::DepthBufferHandle handle );
 }
 }
 }

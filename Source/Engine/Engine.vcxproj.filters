@@ -42,9 +42,6 @@
     <ClInclude Include="Core\FrFile.h">
       <Filter>Core %28 legacy %29</Filter>
     </ClInclude>
-    <ClInclude Include="Core\FrIni.h">
-      <Filter>Core %28 legacy %29</Filter>
-    </ClInclude>
     <ClInclude Include="Core\FrMath.h">
       <Filter>Core %28 legacy %29</Filter>
     </ClInclude>
@@ -148,6 +145,13 @@
     <ClInclude Include="Rendering\TextDrawer.h">
       <Filter>Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="RenderPipeline\DrawContext.h">
+      <Filter>RenderPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\PrimitiveDrawer.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\FrClass.cpp">
@@ -199,9 +203,6 @@
     <ClCompile Include="FrSkelet.cpp" />
     <ClCompile Include="FrSkelAnim.cpp" />
     <ClCompile Include="FrMaterial.cpp" />
-    <ClCompile Include="Core\FrIni.cpp">
-      <Filter>Core %28 legacy %29</Filter>
-    </ClCompile>
     <ClCompile Include="FrDbgDraw.cpp" />
     <ClCompile Include="Chart\EngineProfiler.cpp">
       <Filter>Chart</Filter>
@@ -233,6 +234,13 @@
     <ClCompile Include="Rendering\TextDrawer.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="RenderPipeline\DrawContext.cpp">
+      <Filter>RenderPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\PrimitiveDrawer.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Fluorine.natvis" />

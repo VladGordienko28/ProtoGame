@@ -8,8 +8,8 @@ namespace flu
 namespace gfx
 {
 	/**
-	 *	A helper class which allowed to mark some interesting 
-	 *	in rendering debugging tools
+	 *	A helper class which allowe to mark some interesting 
+	 *	zone in rendering debugging tools, such as RenderDoc
 	 */
 	class ScopedRenderingZone final: public NonCopyable
 	{
@@ -28,5 +28,13 @@ namespace gfx
 	private:
 		ScopedRenderingZone() = delete;
 	};
+
+	/**
+	 *	Returns SRV from the any handle type
+	 */
+	template<typename HANDLE_TYPE> rend::ShaderResourceView srvOf( HANDLE_TYPE handle )
+	{
+		return api::getShaderResourceView( handle );
+	}
 }
 }

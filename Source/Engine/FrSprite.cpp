@@ -86,7 +86,7 @@ void FSpriteComponent::Render( CCanvas* Canvas )
 
 	// Sprite is visible?
 	math::Rect Bounds = math::Rect( Location, Size.x, Size.y );
-	if( !Canvas->View.bounds.isOverlap(math::Rect( Location, math::sqrt(Size.x*Size.x+Size.y*Size.y) )) )
+	if( !Canvas->viewInfo().bounds.isOverlap(math::Rect( Location, math::sqrt(Size.x*Size.x+Size.y*Size.y) )) )
 		return;
 
 	// Initialize rect.
@@ -184,7 +184,7 @@ void FDecoComponent::Render( CCanvas* Canvas )
 
 	// Is visible?
 	math::Rect Bounds = math::Rect( Base->Location, max(Scale.x, Scale.y)*2.f );
-	if( !Canvas->View.bounds.isOverlap( Bounds ) )
+	if( !Canvas->viewInfo().bounds.isOverlap( Bounds ) )
 		return;
 
 	// Initialize polygon.
@@ -385,7 +385,7 @@ void FAnimatedSpriteComponent::Render( CCanvas* Canvas )
 	math::Vector DrawSize/*( Base->Size.X*Scale.X, Base->Size.Y*Scale.Y )*/ = Scale;
 	math::Vector DrawPos( Base->Location.x+Offset.x, Base->Location.y+Offset.y );
 	math::Rect Bounds( DrawPos, DrawSize.x, DrawSize.y );
-	if( !Canvas->View.bounds.isOverlap( Bounds ) )
+	if( !Canvas->viewInfo().bounds.isOverlap( Bounds ) )
 		return;
 
 	// Initialize rect struct.
@@ -589,19 +589,19 @@ void FParallaxLayerComponent::EditChange()
 void FParallaxLayerComponent::Render( CCanvas* Canvas )
 {
 	// Don't draw parallax layers in mirage!
-	if( Canvas->View.isMirage || !(Level->RndFlags & RND_Backdrop) )
+	if( Canvas->viewInfo().isMirage || !(Level->RndFlags & RND_Backdrop) )
 		return;
 
 	// How much tiles draw.
 	math::Vector Period = Scale + Gap;
-	math::Vector Area = Canvas->View.fov;
+	math::Vector Area = Canvas->viewInfo().fov;
 	Int32 NumX = math::ceil(Area.x / Period.x) + 1;
 	Int32 NumY = math::ceil(Area.y / Period.y) + 1;
 
 	// Compute parallax parameters.
 	math::Vector Bias;
-	Bias.x = Canvas->View.coords.origin.x * Parallax.x + Offset.x;
-	Bias.y = Canvas->View.coords.origin.y * Parallax.y + Offset.y;
+	Bias.x = Canvas->viewInfo().coords.origin.x * Parallax.x + Offset.x;
+	Bias.y = Canvas->viewInfo().coords.origin.y * Parallax.y + Offset.y;
 	
 	Bias.x = fmod( Bias.x, Period.x );
 	Bias.y = fmod( Bias.y, Period.y );
@@ -629,7 +629,7 @@ void FParallaxLayerComponent::Render( CCanvas* Canvas )
 	for( Int32 Y=0; Y<NumY; Y++ )
 	for( Int32 X=0; X<NumX; X++ )		
 	{
-		math::Vector Origin = Canvas->View.coords.origin - math::Vector(Canvas->View.fov.x/2.f, 0.f) - /*Canvas->View.Bounds.min -*/ Bias + math::Vector( X*Period.x, Y*Period.y ) - Scale*0.5f;
+		math::Vector Origin = Canvas->viewInfo().coords.origin - math::Vector(Canvas->viewInfo().fov.x/2.f, 0.f) - /*Canvas->View.Bounds.min -*/ Bias + math::Vector( X*Period.x, Y*Period.y ) - Scale*0.5f;
 		Rect.Bounds	= math::Rect( Origin, Scale.x, Scale.y );
 		Canvas->DrawRect( Rect );
 	}
@@ -660,7 +660,7 @@ FLabelComponent::FLabelComponent()
 void FLabelComponent::Render( CCanvas* Canvas )
 {
 	// Reject if any.
-	if( Canvas->View.isMirage || !Font || !Text )
+	if( Canvas->viewInfo().isMirage || !Font || !Text )
 		return;
 /*
 	gfx::ViewInfo OldView = Canvas->View;

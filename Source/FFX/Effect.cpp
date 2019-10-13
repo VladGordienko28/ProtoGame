@@ -17,7 +17,9 @@ namespace ffx
 
 		for( auto& it : m_buffers )
 		{
-			it.bufferHandle = m_device->createConstantBuffer( CONSTANT_BUFFER_SIZE, rend::EUsage::Dynamic, nullptr, *wide2AnsiString( m_name ) );
+			it.bufferHandle = m_device->createConstantBuffer( CONSTANT_BUFFER_SIZE, 
+				rend::EUsage::Dynamic, nullptr, *wide2AnsiString( m_name ) );
+
 			mem::zero( &it.data[0], CONSTANT_BUFFER_SIZE );
 		}
 
@@ -36,7 +38,7 @@ namespace ffx
 
 	Effect::~Effect()
 	{
-		cleanup();
+		destroyShaders();
 
 		for( auto& it : m_buffers )
 		{
@@ -77,12 +79,11 @@ namespace ffx
 
 	Bool Effect::reload( const res::CompiledResource& compiledResource )
 	{
-		IInputStream::Ptr stream = new BufferReader( compiledResource.data );
-		debug( L"Reloading of \"%s\"", *m_name );
+		BufferReader stream( compiledResource.data );
 
 		String ffxVersion, apiCompilerMark;
-		*stream >> ffxVersion;
-		*stream >> apiCompilerMark;
+		stream >> ffxVersion;
+		stream >> apiCompilerMark;
 
 		if( ffxVersion != FFX_VERSION )
 		{
@@ -97,51 +98,105 @@ namespace ffx
 
 		// load vertex declaration
 		rend::VertexDeclaration vertexDeclaration;
-		*stream >> vertexDeclaration;
+		stream >> vertexDeclaration;
 		assert( vertexDeclaration.isValid() );
 
 		// load api shaders
-		rend::CompiledShader compiledPS, compiledVS;
-		*stream >> compiledPS;
-		*stream >> compiledVS;
+		destroyShaders();
 
-		if( !compiledPS.isValid() || !compiledVS.isValid() )
+		Array<rend::CompiledShader> compiledShaders;
+		stream >> compiledShaders;
+
+		for( const auto& it: compiledShaders )
 		{
-			error( L"Effect checksum mismatched" );
-			return false;
+			if( !it.isValid() )
+			{
+				error( L"Effect checksum mismatched" );
+				return false;
+			}
+
+			switch ( it.getType() )
+			{
+				case rend::EShaderType::ST_Vertex:
+				{
+					ApiShader vs;
+					vs.type = rend::EShaderType::ST_Vertex;
+					vs.handle =  m_device->createVertexShader( it, 
+						vertexDeclaration, *wide2AnsiString( m_name + TEXT("_VS") ) );
+
+					m_apiShaders.push( vs );
+					break;
+				}
+				case rend::EShaderType::ST_Pixel:
+				{
+					ApiShader ps;
+					ps.type = rend::EShaderType::ST_Pixel;
+					ps.handle =  m_device->createPixelShader( it, 
+						*wide2AnsiString( m_name + TEXT("_PS") ) );
+
+					m_apiShaders.push( ps );
+					break;
+				}
+				default:
+				{
+					fatal( TEXT("Unknown shader type %d"), it.getType() );
+					break;
+				}
+			}
 		}
 
-		if( stream->hasError() )
+		// load techniques
+		stream >> m_techniques;
+
+		assert( m_techniques.size() > 0 );
+		m_currentTechnique = 0;
+
+		// final validation
+		if( stream.hasError() )
 		{
 			error( L"Unexpected end of effect file" );
 			return false;
 		}
 
-		cleanup();
-
-		m_shader.ps = m_device->createPixelShader( compiledPS, *wide2AnsiString( m_name ) );
-		m_shader.vs = m_device->createVertexShader( compiledVS, vertexDeclaration, *wide2AnsiString( m_name ) );
-
 		return true;
 	}
 
-	void Effect::cleanup()
+	void Effect::destroyShaders()
 	{
-		if( m_shader.vs != INVALID_HANDLE<rend::ShaderHandle>() )
+		for( auto& it : m_apiShaders )
 		{
-			m_device->destroyVertexShader( m_shader.vs );
-			m_shader.vs = INVALID_HANDLE<rend::ShaderHandle>();
+			switch ( it.type )
+			{
+				case rend::EShaderType::ST_Vertex:
+					m_device->destroyVertexShader( it.handle );
+					break;
+
+				case rend::EShaderType::ST_Pixel:
+					m_device->destroyPixelShader( it.handle );
+					break;
+
+				default:
+					fatal( TEXT("Unknown shader type %d"), it.type );
+					break;
+			}
 		}
-	
-		if( m_shader.ps != INVALID_HANDLE<rend::ShaderHandle>() )
-		{
-			m_device->destroyPixelShader( m_shader.ps );
-			m_shader.ps = INVALID_HANDLE<rend::ShaderHandle>();
-		}
+
+		m_apiShaders.empty();
+		m_techniques.empty();
+		m_currentTechnique = INVALID_TECHNIQUE;
 	}
 
 	void Effect::apply()
 	{
+		assert( m_currentTechnique != INVALID_TECHNIQUE );
+
+		// bind shaders
+		const Technique& tech = m_techniques[m_currentTechnique];
+
+		m_device->setVertexShader( m_apiShaders[tech.shaderIds[rend::EShaderType::ST_Vertex]].handle );
+		m_device->setPixelShader(  m_apiShaders[tech.shaderIds[rend::EShaderType::ST_Pixel]].handle );
+
+		// bind buffers
 		for( auto& it : m_buffers )
 		{
 			if( it.dirty )
@@ -151,19 +206,35 @@ namespace ffx
 			}
 		}
 		
-		m_device->setSamplerStates( rend::EShaderType::Vertex, 0, MAX_TEXTURES, &m_samplerStates[0] );
-		m_device->setSamplerStates( rend::EShaderType::Pixel, 0, MAX_TEXTURES, &m_samplerStates[0] );
+		m_device->setSamplerStates( rend::EShaderType::ST_Vertex, 0, MAX_TEXTURES, &m_samplerStates[0] );
+		m_device->setSamplerStates( rend::EShaderType::ST_Pixel, 0, MAX_TEXTURES, &m_samplerStates[0] );
 
-		m_device->setSRVs( rend::EShaderType::Vertex, 0, MAX_TEXTURES, &m_srvs[0] );
-		m_device->setSRVs( rend::EShaderType::Pixel, 0, MAX_TEXTURES, &m_srvs[0] );
+		m_device->setSRVs( rend::EShaderType::ST_Vertex, 0, MAX_TEXTURES, &m_srvs[0] );
+		m_device->setSRVs( rend::EShaderType::ST_Pixel, 0, MAX_TEXTURES, &m_srvs[0] );
 
-		m_device->setConstantBuffers( rend::EShaderType::Vertex, EConstantBufferType::CBT_PerEffect, 1, &m_buffers[0].bufferHandle );
-		m_device->setConstantBuffers( rend::EShaderType::Pixel, EConstantBufferType::CBT_PerEffect, 1, &m_buffers[0].bufferHandle );
+		m_device->setConstantBuffers( rend::EShaderType::ST_Vertex, EConstantBufferType::CBT_PerEffect, 1, &m_buffers[0].bufferHandle );
+		m_device->setConstantBuffers( rend::EShaderType::ST_Pixel, EConstantBufferType::CBT_PerEffect, 1, &m_buffers[0].bufferHandle );
 
 		m_device->applyBlendState( m_blendState );
+	}
 
-		m_device->setVertexShader( m_shader.vs );
-		m_device->setPixelShader( m_shader.ps );
+	TechniqueId Effect::getTechnique( String name ) const
+	{
+		for( Int32 i = 0; i < m_techniques.size(); ++i )
+		{
+			if( name == m_techniques[i].name )
+			{
+				return i;
+			}
+		}
+
+		return INVALID_TECHNIQUE;
+	}
+
+	void Effect::setTechnique( TechniqueId tech )
+	{
+		assert( tech != INVALID_TECHNIQUE );
+		m_currentTechnique = tech;
 	}
 }
 }

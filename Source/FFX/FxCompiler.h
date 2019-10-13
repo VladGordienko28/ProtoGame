@@ -29,6 +29,13 @@ namespace ffx
 		static const Bool EMIT_LINES = true;
 		static const Int32 MAX_INCLUSION_DEPTH = 8;
 
+		struct TechniqueInfo
+		{
+		public:
+			String name;
+			String entries[rend::EShaderType::ST_MAX];
+		};
+
 		struct Context
 		{
 		public:
@@ -38,6 +45,7 @@ namespace ffx
 			Array<String> inclusionStack;
 
 			rend::VertexDeclaration vertexDecl;
+			Array<TechniqueInfo> techniques;
 
 			Context() = delete;
 			
@@ -55,6 +63,7 @@ namespace ffx
 			res::IDependencyProvider& dependencyProvider, Context& context ) const;
 
 		Bool compileVertexDecl( lexer::Lexer& lexer, Context& context ) const;
+		Bool compileTechnique( lexer::Lexer& lexer, Context& context ) const;
 	};
 }
 }

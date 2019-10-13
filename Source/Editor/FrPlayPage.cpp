@@ -137,7 +137,7 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 						);
 
 	// Draw info.
-	Canvas->SetTransform( gfx::ViewInfo
+	Canvas->PushTransform( gfx::ViewInfo
 								(
 									P.X, 
 									P.Y, 
@@ -212,6 +212,8 @@ void WPlayPage::RenderPageContent( CCanvas* Canvas )
 	}
 
 	m_textDrawer.flush();
+
+	Canvas->PopTransform();
 }
 
 

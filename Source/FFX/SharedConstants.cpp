@@ -35,11 +35,11 @@ namespace ffx
 		assert( m_perFrameCB.handle != INVALID_HANDLE<rend::ConstantBufferHandle>() );
 		assert( m_perViewCB.handle != INVALID_HANDLE<rend::ConstantBufferHandle>() );
 
-		m_device->setConstantBuffers( rend::EShaderType::Vertex, EConstantBufferType::CBT_PerFrame, 1, &m_perFrameCB.handle );
-		m_device->setConstantBuffers( rend::EShaderType::Pixel, EConstantBufferType::CBT_PerFrame, 1, &m_perFrameCB.handle );
+		m_device->setConstantBuffers( rend::EShaderType::ST_Vertex, EConstantBufferType::CBT_PerFrame, 1, &m_perFrameCB.handle );
+		m_device->setConstantBuffers( rend::EShaderType::ST_Pixel, EConstantBufferType::CBT_PerFrame, 1, &m_perFrameCB.handle );
 
-		m_device->setConstantBuffers( rend::EShaderType::Vertex, EConstantBufferType::CBT_PerView, 1, &m_perViewCB.handle );
-		m_device->setConstantBuffers( rend::EShaderType::Pixel, EConstantBufferType::CBT_PerView, 1, &m_perViewCB.handle );
+		m_device->setConstantBuffers( rend::EShaderType::ST_Vertex, EConstantBufferType::CBT_PerView, 1, &m_perViewCB.handle );
+		m_device->setConstantBuffers( rend::EShaderType::ST_Pixel, EConstantBufferType::CBT_PerView, 1, &m_perViewCB.handle );
 	}
 
 	void SharedConstants::initPerFrameBuffer( UInt32 bufferSize )

@@ -80,7 +80,7 @@ void FLightComponent::SerializeThis( CSerializer& S )
 void FLightComponent::Render( CCanvas* Canvas )
 {
 	if( Base->bSelected )
-		Canvas->DrawCircle( Base->Location, Radius, math::colors::YELLOW, false, 48 );
+		Level->m_primitiveDrawer.batchCircle( Base->Location, Radius, 1.f, math::colors::YELLOW, 48 );
 }
 
 
@@ -155,7 +155,7 @@ void FSkyComponent::EditChange()
 void FSkyComponent::Render( CCanvas* Canvas )
 {
 	// Never render self in self.
-	if( Canvas->View.isMirage )
+	if( Canvas->viewInfo().isMirage )
 		return;
 
 	// Draw border.
@@ -169,15 +169,15 @@ void FSkyComponent::Render( CCanvas* Canvas )
 		Float Side, Side2;
 
 		ViewArea.x	= Extent;
-		ViewArea.y	= (Extent * Canvas->View.fov.y) / Canvas->View.fov.x;
+		ViewArea.y	= (Extent * Canvas->viewInfo().fov.y) / Canvas->viewInfo().fov.x;
 
 		Skydome		= math::Rect( Location, Size.x, Size.y );
 		Side		= math::sqrt( ViewArea.x*ViewArea.x + ViewArea.y*ViewArea.y );
 		Side2		= Side * 0.5f;
 
 		// Transform observer location and apply parallax.
-		Eye.x	= Canvas->View.coords.origin.x * Parallax.x + Offset.x;
-		Eye.y	= Canvas->View.coords.origin.y * Parallax.y + Offset.y;
+		Eye.x	= Canvas->viewInfo().coords.origin.x * Parallax.x + Offset.x;
+		Eye.y	= Canvas->viewInfo().coords.origin.y * Parallax.y + Offset.y;
 
 		// Azimuth of sky should be wrapped.
 		Eye.x	= Wrap( Eye.x, Skydome.min.x, Skydome.max.x );
@@ -186,8 +186,8 @@ void FSkyComponent::Render( CCanvas* Canvas )
 		Eye.y	= clamp( Eye.y, Skydome.min.y+Side2, Skydome.max.y-Side2 );
 
 		math::Angle Roll = math::Angle( math::fMod( RollSpeed*(Float)GPlat->Now(), 2.f*math::PI ) );		
-		Canvas->DrawLineRect( Eye, ViewArea, Roll, math::colors::RED, false );
-		Canvas->DrawLineStar( Eye, Roll, 1.f * Canvas->View.zoom, math::colors::RED, false );
+		Level->m_primitiveDrawer.batchLineRect( Eye, ViewArea.x, ViewArea.y, Roll, 1.f, math::colors::RED );
+		Level->m_primitiveDrawer.batchLineStar( Eye, Roll, 1.f * Canvas->viewInfo().zoom, 1.f, math::colors::RED );
 	}
 }	
 
@@ -215,7 +215,7 @@ void FZoneComponent::Render( CCanvas* Canvas )
 {
 	// Is visible?
 	math::Rect Bounds = GetAABB();
-	if( !Canvas->View.bounds.isOverlap( Bounds ) || !(Level->RndFlags & RND_Other) )
+	if( !Canvas->viewInfo().bounds.isOverlap( Bounds ) || !(Level->RndFlags & RND_Other) )
 		return;
 
 	// Choose colors.
@@ -226,13 +226,13 @@ void FZoneComponent::Render( CCanvas* Canvas )
 		Color2	= math::colors::GRAY + Color2 * 0.5f;
 
 	// Draw wire bounds.
-	Canvas->DrawLineRect
+	Level->m_primitiveDrawer.batchLineRect
 					( 
 						Location, 
-						Size, 
+						Size.x, Size.y, 
 						math::Angle(0), 
-						Color2, 
-						false
+						1.f,
+						Color2
 					);
 
 	// If selected - draw stretch points and zone area.
@@ -302,10 +302,10 @@ void FRectComponent::Render( CCanvas* Canvas )
 {
 	// Is visible?
 	math::Rect Bounds = GetAABB();
-	Bool bVisible	= Canvas->View.bounds.isOverlap( Bounds );
+	Bool bVisible	= Canvas->viewInfo().bounds.isOverlap( Bounds );
 
 	// Send in game OnHide/OnShow notifications.
-	if( Level->bIsPlaying && !Canvas->View.isMirage )
+	if( Level->bIsPlaying && !Canvas->viewInfo().isMirage )
 	{
 		if( bVisible )
 		{
@@ -340,7 +340,7 @@ void FRectComponent::Render( CCanvas* Canvas )
 				YAxis = Coords.yAxis * Size2.y;
 
 		// Draw wire border.
-		Canvas->DrawLineRect( Location, Size, Rotation, math::colors::WHITE, false );
+		Level->m_primitiveDrawer.batchLineRect( Location, Size.x, Size.y, Rotation, 1.f, math::colors::WHITE );
 
 		// Draw points.
 		if( !bFixedSize )
@@ -358,7 +358,7 @@ void FRectComponent::Render( CCanvas* Canvas )
 			};
 
 			for( Int32 i=0; i<8; i++ )
-				Canvas->DrawCoolPoint( Points[i], 8.f, math::colors::WHITE );
+				Level->m_primitiveDrawer.batchCoolPoint( Points[i], 1.f, 8.f, math::colors::WHITE );
 		}
 	}
 }
@@ -452,7 +452,7 @@ void FBrushComponent::Render( CCanvas* Canvas )
 
 	// Is visible?
 	math::Rect Bounds = GetAABB();
-	if( !Canvas->View.bounds.isOverlap(Bounds) )
+	if( !Canvas->viewInfo().bounds.isOverlap(Bounds) )
 		return;
 
 	// Pick wire color.
@@ -528,7 +528,7 @@ void FBrushComponent::Render( CCanvas* Canvas )
 		for( Int32 i=0; i<Poly.NumVerts; i++ )
 		{
 			V2 = Poly.Vertices[i];
-			Canvas->DrawLine( V1, V2, WireColor, false );
+			Level->m_primitiveDrawer.batchLine( V1, V2, 1.f, WireColor );
 			V1 = V2;
 		}
 	}
@@ -536,17 +536,18 @@ void FBrushComponent::Render( CCanvas* Canvas )
 	// Draw a texture coords marker.
 	if( bSelected )
 	{
-		Canvas->DrawLineStar
+		Level->m_primitiveDrawer.batchLineStar
 						( 
 							Location + TexCoords.origin,
 							math::vectorToAngle( TexCoords.xAxis ),
-							2.5f * Canvas->View.zoom,
-							Color1,
-							false
+							2.5f * Canvas->viewInfo().zoom,
+							1.f,
+							Color1
 						);
-		Canvas->DrawCoolPoint
+		Level->m_primitiveDrawer.batchCoolPoint
 							(
 								Location + TexCoords.origin,
+								1.f,
 								5.f,
 								Color2
 							);
@@ -555,7 +556,7 @@ void FBrushComponent::Render( CCanvas* Canvas )
 	// Draw a stretch points.
 	if( bSelected )
 		for( Int32 i=0; i<NumVerts; i++ )
-			Canvas->DrawCoolPoint( Poly.Vertices[i], 8.f, Color2 );
+			Level->m_primitiveDrawer.batchCoolPoint( Poly.Vertices[i], 1.f, 8.f, Color2 );
 }
 
 

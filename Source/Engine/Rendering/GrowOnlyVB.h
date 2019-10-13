@@ -60,13 +60,15 @@ namespace gfx
 			return &m_cpuBuffer[from];
 		}
 
-		void flushAndBind()
+		UInt32 flushAndBind()
 		{
-			flush();
+			UInt32 numVerts = flush();
 			bind();
+
+			return numVerts;
 		}
 
-		void flush()
+		UInt32 flush()
 		{
 			assert( m_cpuBuffer.size() > 0 );
 
@@ -91,7 +93,10 @@ namespace gfx
 					&m_cpuBuffer[0], m_position * sizeof( VERTEX_TYPE ) );
 			}
 
+			UInt32 numVerts = m_position;
 			m_position = 0;
+
+			return numVerts;
 		}
 
 		void bind()

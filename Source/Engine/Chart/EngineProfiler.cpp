@@ -12,7 +12,6 @@ namespace profile
 	EngineProfiler::EngineProfiler( Int32 numGroups )
 		:	m_frameEnterTime( 0.0 ),
 			m_samplesLifetime( 1.0 ),
-			m_zonesStack( MAX_ZONES_DEPTH ),
 			m_frameLocked( false )
 	{
 		m_groups.setSize( numGroups );

@@ -48,3 +48,9 @@ float4 psMain( in VsOutput input ) : SV_Target
 
 	return pow( doSomething( color * myCol ), 1.0 );
 }
+
+technique Main
+{
+	vertex_shader = vsMain;
+	pixel_shader = psMain;
+}

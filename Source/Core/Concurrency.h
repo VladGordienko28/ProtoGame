@@ -8,7 +8,7 @@ namespace flu
 namespace concurrency
 {
 	/**
-	 *	An abstract asynchronization object
+	 *	An abstract synchronization object
 	 */
 	class ISyncObject
 	{

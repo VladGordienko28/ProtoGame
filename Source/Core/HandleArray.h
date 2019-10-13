@@ -61,14 +61,7 @@ namespace flu
 	public:
 		HandleArray()
 		{
-			for( UInt32 i = 0; i < MAX_SIZE; ++i )
-			{
-				m_available[i].id = i + 1;
-				m_available[i].gen = 0;
-			}
-
-			m_firstAvailable = 0;
-			m_available[MAX_SIZE - 1].id = MAX_SIZE;
+			resetLinks();
 		}
 
 		~HandleArray()
@@ -138,6 +131,18 @@ namespace flu
 		T m_data[MAX_SIZE];
 		HANDLE_TYPE m_available[MAX_SIZE];
 		UInt32 m_firstAvailable;
+
+		void resetLinks()
+		{
+			for( UInt32 i = 0; i < MAX_SIZE; ++i )
+			{
+				m_available[i].id = i + 1;
+				m_available[i].gen = 0;
+			}
+
+			m_firstAvailable = 0;
+			m_available[MAX_SIZE - 1].id = MAX_SIZE;
+		}
 
 		static_assert( isPowerOfTwo( MAX_SIZE ), "MaxSize of HandleArray should be power of two" );
 		static_assert( sizeof( HANDLE_TYPE ) == sizeof( UInt32 ), "Handle size should equal to UInt32 size" );

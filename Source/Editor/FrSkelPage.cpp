@@ -511,6 +511,7 @@ void WSkeletonPage::OnOpen()
 //
 static void DrawArrow( CCanvas* Canvas, const math::Vector& From, const math::Vector& To, math::Color Color )
 {
+/*
 	// Draw straight line.
 	Canvas->DrawLine( From, To, Color, false );
 
@@ -537,6 +538,7 @@ static void DrawArrow( CCanvas* Canvas, const math::Vector& From, const math::Ve
 		Color,
 		false
 	);
+*/
 }
 
 
@@ -1348,6 +1350,7 @@ void WSkeletonPage::OnMouseMove( EMouseButton Button, Int32 X, Int32 Y )
 
 void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 {
+
 	TPoint P = ClientToWindow(TPoint::Zero);
 
 	// Not really good place to compute!!!!!!!!!!!
@@ -1375,22 +1378,22 @@ void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 		Background.Rotation		= 0;
 		Canvas->DrawRect(Background);
 
-		Int32 CMinX = math::trunc(max<Float>( Canvas->View.bounds.min.x, -SKEL_SCENE_SIZE_HALF ))*2;
-		Int32 CMinY = math::trunc(max<Float>( Canvas->View.bounds.min.y, -SKEL_SCENE_SIZE_HALF ))*2;
-		Int32 CMaxX = math::trunc(min<Float>( Canvas->View.bounds.max.x, +SKEL_SCENE_SIZE_HALF ))*2;
-		Int32 CMaxY = math::trunc(min<Float>( Canvas->View.bounds.max.y, +SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMinX = math::trunc(max<Float>( Canvas->viewInfo().bounds.min.x, -SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMinY = math::trunc(max<Float>( Canvas->viewInfo().bounds.min.y, -SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMaxX = math::trunc(min<Float>( Canvas->viewInfo().bounds.max.x, +SKEL_SCENE_SIZE_HALF ))*2;
+		Int32 CMaxY = math::trunc(min<Float>( Canvas->viewInfo().bounds.max.y, +SKEL_SCENE_SIZE_HALF ))*2;
 
 		for( Int32 i=CMinX; i<=CMaxX; i++ )
 		{
 			math::Vector V1( i/2.f, -SKEL_SCENE_SIZE_HALF );
 			math::Vector V2( i/2.f, +SKEL_SCENE_SIZE_HALF );
-			Canvas->DrawLine( V1, V2, SKEL_SCENE_GRID_COLOR, i & 1 );
+			//Canvas->DrawLine( V1, V2, SKEL_SCENE_GRID_COLOR, i & 1 );
 		}
 		for( Int32 i=CMinY; i<=CMaxY; i++ )
 		{
 			math::Vector V1( -SKEL_SCENE_SIZE_HALF, i/2.f );
 			math::Vector V2( +SKEL_SCENE_SIZE_HALF, i/2.f );
-			Canvas->DrawLine( V1, V2, SKEL_SCENE_GRID_COLOR, i & 1 );
+			//Canvas->DrawLine( V1, V2, SKEL_SCENE_GRID_COLOR, i & 1 );
 		}
 
 
@@ -1398,9 +1401,9 @@ void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 
 		// Draw centroid.
 		math::Color CentroidColor = AnimationTrack->IsRecording() ? SKEL_SCENE_RECORD_CENTER_COLOR : SKEL_SCENE_CENTER_COLOR;
-		Canvas->DrawLine( math::Vector(0.f, -SKEL_SCENE_SIZE_HALF), math::Vector(0.f, +SKEL_SCENE_SIZE_HALF), CentroidColor, false );
-		Canvas->DrawLine( math::Vector(-SKEL_SCENE_SIZE_HALF, 0.f), math::Vector(+SKEL_SCENE_SIZE_HALF, 0.f), CentroidColor, false );
-		Canvas->DrawLineRect( math::Vector(0.f, 0.f), math::Vector(SKEL_SCENE_SIZE, SKEL_SCENE_SIZE), 0, CentroidColor, false );
+		//Canvas->DrawLine( math::Vector(0.f, -SKEL_SCENE_SIZE_HALF), math::Vector(0.f, +SKEL_SCENE_SIZE_HALF), CentroidColor, false );
+		//Canvas->DrawLine( math::Vector(-SKEL_SCENE_SIZE_HALF, 0.f), math::Vector(+SKEL_SCENE_SIZE_HALF, 0.f), CentroidColor, false );
+		//Canvas->DrawLineRect( math::Vector(0.f, 0.f), math::Vector(SKEL_SCENE_SIZE, SKEL_SCENE_SIZE), 0, CentroidColor, false );
 
 
 
@@ -1435,7 +1438,7 @@ void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 
 		Skeleton->Render( Canvas, math::Vector(0,0), math::Vector(1, 1), Skeleton->RefPose );
 
-		Canvas->DrawLineStar( math::Vector(5, 5), (Float)GPlat->Now()*65536.f, 3, math::colors::GOLD, true );
+		//Canvas->DrawLineStar( math::Vector(5, 5), (Float)GPlat->Now()*65536.f, 3, math::colors::GOLD, true );
 
 
 		// Draw a links if need.
@@ -1463,14 +1466,14 @@ void WSkeletonPage::RenderPageContent( CCanvas* Canvas )
 
 		// Temporary linking line.
 		if( DragInfo.DragType == SKDR_Linking && DragInfo.iFromBone != -1 )
-		{
+		{/*
 			Canvas->DrawLine
 			(
 				SceneView.deproject( LLastPos.X, LLastPos.Y ),
 				GetBoneCenter(DragInfo.iFromBone),
 				math::colors::WHITE,
 				false
-			);
+			);*/
 		}
 
 		// Gizmo.

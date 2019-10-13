@@ -65,26 +65,78 @@ namespace ffx
 			return false;
 		}
 
-		// compile pixel shader
-		auto compiledPS = apiCompiler->compile( rend::EShaderType::Pixel, 
-			context.writer.getText(), Effect::PS_ENTRY, nullptr, &output.errorMsg );
-
-		if( !compiledPS.isValid() )
+		// compile all shaders in technique
+		if( context.techniques.size() == 0 )
 		{
+			output.errorMsg = TEXT( "Effect should declare at least one technique" );
+			return false;
+		}
+		if( context.techniques.size() > Technique::MAX_TECHNIQUES )
+		{
+			output.errorMsg = TEXT( "Too many techniques" );
 			return false;
 		}
 
-		// compile vertext shader
-		auto compiledVS = apiCompiler->compile( rend::EShaderType::Vertex, 
-			context.writer.getText(), Effect::VS_ENTRY, nullptr, &output.errorMsg );
+		Array<rend::CompiledShader> shaderList;
+		Map<String, ShaderId> shaderMap;
+		Array<Technique> techs;
 
-		if( !compiledVS.isValid() )
+		for( const auto& it : context.techniques )
 		{
-			return false;
+			Technique tech;
+			tech.name = it.name;
+
+			UInt32 i = 0;
+			for( const String& entryPointName : it.entries )
+			{
+				rend::EShaderType shaderType = static_cast<rend::EShaderType>( i );
+
+				if( entryPointName )
+				{
+					if( ShaderId* id = shaderMap.get( entryPointName ) )
+					{
+						// reuse the same shader
+						tech.shaderIds[i] = *id;
+					}
+					else
+					{
+						// compile new shader with new entry point
+						auto compiledShader = apiCompiler->compile( shaderType, 
+							context.writer.getText(), *entryPointName, nullptr, &output.errorMsg );
+
+						if( !compiledShader.isValid() )
+						{
+							return false;
+						}
+
+						ShaderId newId = shaderList.push( compiledShader );
+						shaderMap.put( entryPointName, newId );
+						tech.shaderIds[i] = newId;
+					}
+				}
+				else
+				{
+					// we not allow missing shaders yet
+					if( shaderType != rend::EShaderType::ST_Compute )
+					{
+						output.errorMsg = String::format( TEXT( "Missing some shader in technique \"%s\"" ), *tech.name );
+						return false;					
+					}
+					else
+					{
+						tech.shaderIds[i] = INVALID_SHADER;
+					}
+				}
+
+				++i;
+			}
+
+			techs.push( tech );
 		}
 
-		emitter << compiledPS;
-		emitter << compiledVS;
+		// emit all techniques and shaders
+		emitter << shaderList;
+		emitter << techs;
 
 		return true;
 	}
@@ -146,6 +198,14 @@ namespace ffx
 				{
 					// compile vertex declaration
 					if( !compileVertexDecl( lexer, context ) )
+					{
+						return false;
+					}
+				}
+				else if( token.getText() == KW_technique )
+				{
+					// compile technique
+					if( !compileTechnique( lexer, context ) )
 					{
 						return false;
 					}
@@ -331,6 +391,99 @@ namespace ffx
 		assert( vertexDecl.isValid() );
 		context.vertexDecl = vertexDecl;
 
+		return true;
+	}
+
+	Bool Compiler::compileTechnique( lexer::Lexer& lexer, Context& context ) const
+	{
+		TechniqueInfo info;
+
+		// parse name
+		info.name = lexer.getIdentifier();
+		if( !info.name )
+		{
+			compiler_error( "Missing technique name" );
+			return false;
+		}
+		if( !lexer.matchSymbol( TEXT("{") ) )
+		{
+			compiler_error( "Bad technique name" );
+			return false;
+		}
+
+		// parse list of shader types
+		while( true )
+		{
+			if( lexer.matchSymbol( TEXT("}") ) )
+			{
+				break;
+			}
+
+			// shader type
+			String shaderType = lexer.getIdentifier();
+			if( !shaderType )
+			{
+				compiler_error( "Missing shader type" );
+				return false;
+			}
+			if( !lexer.matchSymbol( TEXT("=") ) )
+			{
+				compiler_error( "Bad shader type" );
+				return false;
+			}
+
+			// entry point name
+			String entryName = lexer.getIdentifier();
+			if( !entryName )
+			{
+				compiler_error( "Missing shader entry point name" );
+				return false;
+			}
+			if( !lexer.matchSymbol( TEXT(";") ) )
+			{
+				compiler_error( "Bad shader entry point name" );
+				return false;
+			}
+
+			// save to info
+			if( shaderType == KW_vertex_shader )
+			{
+				if( info.entries[rend::EShaderType::ST_Vertex] )
+				{
+					compiler_error( "Vertex Shader entry point is already defined" );
+					return false;
+				}
+
+				info.entries[rend::EShaderType::ST_Vertex] = entryName;
+			}
+			else if( shaderType == KW_pixel_shader )
+			{
+				if( info.entries[rend::EShaderType::ST_Pixel] )
+				{
+					compiler_error( "Pixel Shader entry point is already defined" );
+					return false;
+				}
+
+				info.entries[rend::EShaderType::ST_Pixel] = entryName;
+			}
+			else
+			{
+				compiler_error( "Unknown shader type \"%s\"", *shaderType );
+				return false;
+			}
+		}
+
+		// check for duplicates
+		for( const auto& it : context.techniques )
+		{
+			if( it.name == info.name )
+			{
+				compiler_error( "Technique \"%s\" already defined", *info.name );
+				return false;
+			}
+		}
+
+		context.techniques.push( info );
 		return true;
 	}
 }

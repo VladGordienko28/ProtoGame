@@ -19,6 +19,8 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	Editor.MainLoop();
 	Editor.Exit();
 
+	UnRegisterAll();
+
 	return 0;
 }
          

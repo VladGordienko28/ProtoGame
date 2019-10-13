@@ -54,12 +54,12 @@ namespace res
 		PackageStorage::UPtr m_packageStorage;
 
 		static const Int32 MAX_REQUESTS_DEPTH = 8;
-		FixedStack<ResourceId> m_requestsStack;
+		FixedStack<ResourceId, MAX_REQUESTS_DEPTH> m_requestsStack;
 
 		class ScopedRequest: public NonCopyable
 		{
 		public:
-			ScopedRequest( FixedStack<ResourceId>& stack, ResourceId resourceId )
+			ScopedRequest( FixedStack<ResourceId, MAX_REQUESTS_DEPTH>& stack, ResourceId resourceId )
 				:	m_stack( stack ),
 					m_resourceId( resourceId )
 			{
@@ -77,7 +77,7 @@ namespace res
 			}
 
 		private:
-			FixedStack<ResourceId>& m_stack;
+			FixedStack<ResourceId, MAX_REQUESTS_DEPTH>& m_stack;
 			ResourceId m_resourceId;
 
 			ScopedRequest() = delete;

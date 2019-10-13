@@ -140,6 +140,25 @@ namespace api
 	{
 		g_device->destroyTexture2D( handle );
 	}
+
+	rend::ShaderResourceView getShaderResourceView( rend::Texture1DHandle handle )
+	{
+		return g_device->getShaderResourceView( handle );
+	}
+
+	rend::ShaderResourceView getShaderResourceView( rend::Texture2DHandle handle )
+	{
+		return g_device->getShaderResourceView( handle );
+	}
+
+	rend::ShaderResourceView getShaderResourceView( rend::RenderTargetHandle handle )
+	{
+		return g_device->getShaderResourceView( handle );
+	}
+	rend::ShaderResourceView getShaderResourceView( rend::DepthBufferHandle handle )
+	{
+		return g_device->getShaderResourceView( handle );
+	}
 }
 }
 }

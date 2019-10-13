@@ -408,7 +408,7 @@ void WContainer::WidgetProc( EWidgetProcEvent Event, TWidProcParms Parms )
 {
 	switch ( Event )
 	{
-		case WPE_Paint:Parms.Render->FlushText();
+		case WPE_Paint:
 			WWidget::WidgetProc( Event, Parms );
 			for( Int32 i=0; i<Children.size(); i++ )
 				if( Children[i]->bVisible )

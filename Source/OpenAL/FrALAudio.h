@@ -40,6 +40,7 @@ class CMusicStreamBase
 {
 public:
 	// CMusicStreamBase interface.
+	virtual ~CMusicStreamBase() = default;
 	virtual void Tick( Float Delta ) = 0;
 	virtual void PlayMusic( FMusic* InMusic, Float FadeTime ) = 0;
 };

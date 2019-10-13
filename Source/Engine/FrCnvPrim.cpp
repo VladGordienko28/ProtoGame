@@ -16,7 +16,7 @@
 //
 CStaticPool<4*1024*1024>	CCanvas::GPool;
 
-
+#if 0
 //
 // Draw a circle.
 //
@@ -174,32 +174,7 @@ void CCanvas::DrawCoolPoint( const math::Vector& P, Float Size, math::Color Colo
 	DrawPoint( P, Size, Color );
 
 }
-
-
-/*-----------------------------------------------------------------------------
-    Stack of transformations.
------------------------------------------------------------------------------*/
-
-//
-// Store old transformation and
-// make current given new one.
-//
-void CCanvas::PushTransform( const gfx::ViewInfo& Info )
-{
-	assert(StackTop < VIEW_STACK_SIZE);
-	ViewStack[StackTop++] = View;
-	SetTransform( Info );
-}
-
-
-//
-// Restore last saved transform.
-//
-void CCanvas::PopTransform()
-{
-	assert(StackTop > 0);
-	SetTransform( ViewStack[--StackTop] );
-}
+#endif
 
 
 /*-----------------------------------------------------------------------------

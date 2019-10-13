@@ -261,15 +261,15 @@ void FLogicComponent::Render( CCanvas* Canvas )
 	Canvas->DrawRect( Pad );
 
 	// Wire bounds.
-	Canvas->DrawLineRect( Base->Location, Base->Size, 0, WireColor, false );
+	Level->m_primitiveDrawer.batchLineRect( Base->Location, Base->Size.x, Base->Size.y, 0, 1.f, WireColor );
 
 	// Draw the plugs sockets.
 	for( Int32 i=0; i<NumPlugs; i++ )
-		Canvas->DrawPoint( GetPlugPos(i), 7.f, WireColor );
+		Level->m_primitiveDrawer.batchPoint( GetPlugPos(i), 1.f, 7.f, WireColor );
 
 	// Draw the jacks sockets.
 	for( Int32 i=0; i<NumJacks; i++ )
-		Canvas->DrawPoint( GetJackPos(i), 7.f, WireColor );
+		Level->m_primitiveDrawer.batchPoint( GetJackPos(i), 1.f, 7.f, WireColor );
 
 	// Draw connectors.
 	for( Int32 iPlug=0; iPlug<NumPlugs; iPlug++ )
@@ -278,12 +278,12 @@ void FLogicComponent::Render( CCanvas* Canvas )
 			TLogicConnector& Conn = Plugs[iPlug][iConn];
 
 			if( Conn.Target )
-				Canvas->DrawSmoothLine
+				Level->m_primitiveDrawer.batchSmoothLine
 							( 
 								GetPlugPos(iPlug), 
 								Conn.Target->GetJackPos(Conn.iJack), 
-								WireColor, 
-								false 
+								1.f,
+								WireColor
 							);
 		}
 }

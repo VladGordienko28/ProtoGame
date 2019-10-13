@@ -33,6 +33,8 @@ void CDebugDrawHelper::Reset()
 //
 void CDebugDrawHelper::Render( CCanvas* Canvas )
 {
+	// todo: broken
+/*
 	for( Int32 i=0; i<Points.size(); i++ )
 	{
 		auto& P = Points[i];
@@ -43,6 +45,7 @@ void CDebugDrawHelper::Render( CCanvas* Canvas )
 		auto& L = Lines[i];
 		Canvas->DrawLine( L.PFrom, L.PTo, L.Color, false );
 	}
+	*/
 }
 
 

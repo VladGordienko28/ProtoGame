@@ -8,30 +8,22 @@ namespace flu
 	/**
 	 *	A very simple fixed-sized stack
 	 */
-	template<typename T> class FixedStack
+	template<typename T, SizeT SIZE> class FixedStack
 	{
 	public:
-		FixedStack( Int32 maxSize )
-			:	m_data( nullptr ),
-				m_maxSize( maxSize ),
-				m_currentSize( 0 )
+		FixedStack()
+			:	m_currentSize( 0 )
 		{
-			assert( maxSize > 0 );
-			m_data = new T[maxSize]();
 		}
 
 		~FixedStack()
 		{
 			empty();
-			delete[] m_data;
 		}
 
 		void empty()
 		{
-			for( Int32 i = 0; i < m_maxSize; ++i )
-			{
-				(&m_data[i])->~T();
-			}
+			m_currentSize = 0;
 		}
 
 		T pop()
@@ -40,10 +32,16 @@ namespace flu
 			return m_data[--m_currentSize];
 		}
 
-		void push( T& item )
+		void push( const T& item )
 		{
-			assert( m_currentSize < m_maxSize && "Stack overflowed" );
+			assert( m_currentSize < SIZE && "Stack overflowed" );
 			m_data[m_currentSize++] = item; 
+		}
+
+		const T& peek() const
+		{
+			assert( m_currentSize > 0 && "Cannot peek empty stack" );
+			return m_data[m_currentSize - 1];
 		}
 
 		Bool isEmpty() const
@@ -65,13 +63,13 @@ namespace flu
 		}
 
 	private:
-		T* m_data;
+		T m_data[SIZE];
 		Int32 m_currentSize;
-		Int32 m_maxSize;
 
-		FixedStack() = delete;
 		FixedStack( FixedStack& ) = delete;
-		FixedStack<T> operator=( FixedStack& ) = delete;
+		FixedStack<T, SIZE> operator=( FixedStack& ) = delete;
+
+		static_assert( SIZE > 0, "FixedArray size should be greater than 0" );
 	};
 
 } // namespace flu

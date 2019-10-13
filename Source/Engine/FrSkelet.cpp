@@ -240,6 +240,8 @@ static inline void DrawBone( CCanvas* Canvas, const math::Vector& Origin, math::
 	P.Vertices[3]	= Wing2;
 	Canvas->DrawPoly( P );
 
+	// todo: broken
+/*
 	// Draw wire.
 	Canvas->DrawLine( Origin,	BoneTip,	Color, false );
 	Canvas->DrawLine( Wing1,	Wing2,		Color, false );
@@ -247,6 +249,7 @@ static inline void DrawBone( CCanvas* Canvas, const math::Vector& Origin, math::
 	Canvas->DrawLine( Origin,	Wing2,		Color, false );
 	Canvas->DrawLine( Wing1,	BoneTip,	Color, false );
 	Canvas->DrawLine( Wing2,	BoneTip,	Color, false );
+	*/
 }
 
 
@@ -275,7 +278,8 @@ static inline void DrawMaster( CCanvas* Canvas, const math::Vector& Origin, math
 	{
 		math::Vector This = P.Vertices[i];
 
-		Canvas->DrawLine( Prev, This, Color, false );
+		// broken
+		//Canvas->DrawLine( Prev, This, Color, false );
 
 		Prev = This;
 	}
@@ -314,7 +318,8 @@ void FSkeleton::Render
 				// ngon + fulfill.
 
 			case SC_IKSolver:
-				Canvas->DrawLineStar( P.Location, P.Rotation, Info.Scale, RenderColor, false );
+				// broken
+				//Canvas->DrawLineStar( P.Location, P.Rotation, Info.Scale, RenderColor, false );
 				break;
 		}
 

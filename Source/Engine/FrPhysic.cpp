@@ -59,12 +59,12 @@ void FJointComponent::Render( CCanvas* Canvas )
 			math::Vector Point1 = math::transformPointBy( Hook1, Body1->Base->ToWorld() );
 			math::Vector Point2 = math::transformPointBy( Hook2, Body2->Base->ToWorld() );
 
-			Canvas->DrawLine
+			Level->m_primitiveDrawer.batchLine
 						(
 							Point1,
 							Point2,
-							math::colors::LIME_GREEN,
-							false
+							1.f,
+							math::colors::LIME_GREEN
 						);
 		}
 }
@@ -244,16 +244,16 @@ void FHingeComponent::Render( CCanvas* Canvas )
 		if( Body1 )
 		{
 			math::Vector Pin = math::transformPointBy( Hook1, Body1->Base->ToWorld() );
-			Canvas->DrawLineStar( Pin, Body1->Base->Rotation, 2.f, math::colors::LIGHT_CORAL, false );
-			Canvas->DrawPoint( Pin, 5.f, math::colors::LIGHT_CORAL );
+			Level->m_primitiveDrawer.batchLineStar( Pin, Body1->Base->Rotation, 2.f, 1.f, math::colors::LIGHT_CORAL );
+			Level->m_primitiveDrawer.batchPoint( Pin, 1.f, 5.f, math::colors::LIGHT_CORAL );
 		}
 
 		// Render Body2.
 		if( Body2 )
 		{
 			math::Vector Pin = math::transformPointBy( Hook2, Body2->Base->ToWorld() );
-			Canvas->DrawLineStar( Pin, Body2->Base->Rotation, 2.f, math::colors::LIGHT_BLUE, false );
-			Canvas->DrawPoint( Pin, 5.f, math::colors::LIGHT_BLUE );
+			Level->m_primitiveDrawer.batchLineStar( Pin, Body2->Base->Rotation, 2.f, 1.f, math::colors::LIGHT_BLUE );
+			Level->m_primitiveDrawer.batchPoint( Pin, 1.f, 5.f, math::colors::LIGHT_BLUE );
 		}
 	}
 }

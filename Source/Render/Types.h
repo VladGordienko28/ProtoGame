@@ -146,6 +146,10 @@ namespace rend
 		RG32_I,
 		RG32_U,
 
+		RGB32_F,
+		RGB32_I,
+		RGB32_U,
+
 		RGBA8_I,
 		RGBA8_U,
 		RGBA8_UNORM,

@@ -600,7 +600,7 @@ COggMusicStream::~COggMusicStream()
 		Stream	= nullptr;
 	}
 
-	ov_clear( &OGGStream );
+	//ov_clear( &OGGStream ); // crashed!!
 }
 
 

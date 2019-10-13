@@ -152,6 +152,7 @@
     <ClInclude Include="FxCompiler.h" />
     <ClInclude Include="FxKeyword.h" />
     <ClInclude Include="FxLexer.h" />
+    <ClInclude Include="FxTypes.h" />
     <ClInclude Include="SharedConstants.h" />
     <ClInclude Include="System.h" />
   </ItemGroup>

@@ -81,6 +81,9 @@
     <ClInclude Include="Time.h">
       <Filter>Time</Filter>
     </ClInclude>
+    <ClInclude Include="ConfigManager.h">
+      <Filter>Config</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp" />
@@ -124,6 +127,9 @@
     <ClCompile Include="Time.cpp">
       <Filter>Time</Filter>
     </ClCompile>
+    <ClCompile Include="ConfigManager.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Heap">
@@ -164,6 +170,9 @@
     </Filter>
     <Filter Include="Time">
       <UniqueIdentifier>{f1292bac-3b72-413e-b323-4395d82b4ca7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{4fb0e5d9-cffb-45b4-a93d-4fc380c37484}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

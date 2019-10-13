@@ -57,6 +57,7 @@
 #include "FileManager.h"
 #include "TextWriter.h"
 #include "Buffer.h"
+#include "ConfigManager.h"
 
 #include "Lexer/Token.h"
 #include "Lexer/Lexer.h"

@@ -308,6 +308,7 @@ EGizmoAxis CGizmo::AxisAt( const gfx::ViewInfo& ViewInfo, Int32 Cx, Int32 Cy )
 //
 static void DrawArrow( CCanvas* Canvas, const math::Vector& From, const math::Vector& Dir, Float Length, Float Size, math::Color Color )
 {
+/*
 	math::Vector End = From + Dir * (Length * Canvas->View.zoom);
 	math::Coords ToWorld = math::Coords( End, Dir ).transpose();
 
@@ -326,6 +327,7 @@ static void DrawArrow( CCanvas* Canvas, const math::Vector& From, const math::Ve
 	Poly.Vertices[2]	= math::transformPointBy( math::Vector( +0.0000f, +0.3125f )*Canvas->View.zoom*Size, ToWorld );
 
 	Canvas->DrawPoly(Poly);
+*/
 }
 
 
@@ -334,12 +336,14 @@ static void DrawArrow( CCanvas* Canvas, const math::Vector& From, const math::Ve
 //
 static void DrawStick( CCanvas* Canvas, const math::Vector& From, const math::Vector& Dir, Float Length, math::Color Color )
 {
+/*
 	// Line.
 	math::Vector End = From + Dir * (Length * Canvas->View.zoom);
 	Canvas->DrawLine( From, End, Color, false );
 
 	// Head.
 	Canvas->DrawPoint( End, 6.f, Color );
+*/
 }
 
 
@@ -348,6 +352,7 @@ static void DrawStick( CCanvas* Canvas, const math::Vector& From, const math::Ve
 //
 static void DrawTranslationGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, const math::Coords& ToLocal, const math::Vector& Scale )
 {
+/*
 	Float RectSize = GIZMO_RECT_SIZE * Canvas->View.zoom * Size;
 
 	// Draw 'both' semi-solid rect if selected.
@@ -370,6 +375,7 @@ static void DrawTranslationGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, 
 	// And finally draw arrows.
 	DrawArrow( Canvas, ToLocal.origin, ToLocal.xAxis, GIZMO_ARROW_LEN*Size, Size, (Axis==GIAX_X || Axis==GIAX_Both) ? GIZMO_BOTH_COLOR : GIZMO_X_COLOR );
 	DrawArrow( Canvas, ToLocal.origin, ToLocal.yAxis, GIZMO_ARROW_LEN*Size, Size, (Axis==GIAX_Y || Axis==GIAX_Both) ? GIZMO_BOTH_COLOR : GIZMO_Y_COLOR );
+*/
 }
 
 
@@ -378,6 +384,7 @@ static void DrawTranslationGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, 
 //
 static void DrawRotationGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, const math::Coords& ToLocal, const math::Vector& Scale )
 {
+/*
 	Canvas->DrawCircle
 	(
 		ToLocal.origin,
@@ -393,6 +400,7 @@ static void DrawRotationGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, con
 		GIZMO_BOTH_COLOR,
 		false
 	);
+*/
 }
 
 
@@ -401,6 +409,7 @@ static void DrawRotationGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, con
 //
 static void DrawScaleGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, const math::Coords& ToLocal, const math::Vector& Scale )
 {
+/*
 	Float RectSizeX = GIZMO_RECT_SIZE * Canvas->View.zoom * Scale.x * Size;
 	Float RectSizeY = GIZMO_RECT_SIZE * Canvas->View.zoom * Scale.y * Size;
 
@@ -430,6 +439,7 @@ static void DrawScaleGizmo( CCanvas* Canvas, Float Size, EGizmoAxis Axis, const 
 	// Draw sticks-handles.
 	DrawStick( Canvas, ToLocal.origin, ToLocal.xAxis, GIZMO_ARROW_LEN*Scale.x*Size, (Axis==GIAX_X || Axis==GIAX_Both) ? GIZMO_BOTH_COLOR : GIZMO_X_COLOR );
 	DrawStick( Canvas, ToLocal.origin, ToLocal.yAxis, GIZMO_ARROW_LEN*Scale.y*Size, (Axis==GIAX_Y || Axis==GIAX_Both) ? GIZMO_BOTH_COLOR : GIZMO_Y_COLOR );
+*/
 }
 
 

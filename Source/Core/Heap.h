@@ -22,10 +22,15 @@ namespace mem
 	struct Stats
 	{
 		SizeT totalAllocatedBytes = 0;
+		SizeT peakAllocatedBytes = 0;
 		SizeT totalAllocations = 0;
 	};
 
 	extern const Stats& stats();
+
+	extern void enterKnownMemLeaksZone();
+	extern void leaveKnownMemLeaksZone();
+	extern void dumpAllocations( const Char* fileName, Bool ignoreKnown = true );
 }
 }
 

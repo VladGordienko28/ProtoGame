@@ -14,7 +14,6 @@ class CApplication
 {
 public:
 	// Global subsystems.
-	CRenderBase*		GRender;
 	CAudioBase*			GAudio;
 	CInput*				GInput;
 
@@ -23,7 +22,6 @@ public:
 
 	// Misc.
 	Int32				FPS;
-	CConfigManager*		Config;
 
 	// CApplication interface.
 	CApplication();

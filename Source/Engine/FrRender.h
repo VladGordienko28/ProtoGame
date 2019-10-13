@@ -115,7 +115,6 @@ public:
 	// CRenderBase interface.
 	virtual ~CRenderBase() = default;
 
-	virtual void Resize( Int32 NewWidth, Int32 NewHeight ) = 0;
 	virtual CCanvas* Lock() = 0;
 	virtual void Unlock() = 0;			
 };
@@ -131,12 +130,12 @@ public:
 class CCanvas
 {
 public:
-	// Window info.
-	Float			ScreenWidth;
-	Float			ScreenHeight;
+	CCanvas( gfx::DrawContext& drawContext )
+		:	m_drawContext( drawContext )
+	{
+	}
 
 	// View info.
-	gfx::ViewInfo	View;
 	TClipArea		Clip;
 
 	// Global memory pool, for temporal rendering
@@ -144,77 +143,30 @@ public:
 	static CStaticPool<4*1024*1024>		GPool;
 
 	// CCanvas interface.
-	virtual void SetTransform( const gfx::ViewInfo& Info ) = 0;
 	virtual void SetClip( const TClipArea& Area ) = 0;
-	virtual void DrawPoint( const math::Vector& P, Float Size, math::Color Color ) = 0;
-	virtual void DrawLine( const math::Vector& A, const math::Vector& B, math::Color Color, Bool bStipple ) = 0;
 	virtual void DrawPoly( const TRenderPoly& Poly ) = 0;
 	virtual void DrawRect( const TRenderRect& Rect ) = 0;
 	virtual void DrawList( const TRenderList& List ) = 0;
 
 	// Transformations stack.
-	void PushTransform( const gfx::ViewInfo& Info );
-	void PopTransform();
+	void PushTransform( const gfx::ViewInfo& Info )
+	{
+		m_drawContext.pushViewInfo( Info );
+	}
 
-	// Drawing utilities.
-	void DrawCircle
-	( 
-		const math::Vector& Center,
-		Float Radius,
-		math::Color Color,
-		Bool bStipple,
-		Int32 Detail = 32 
-	);
+	void PopTransform()
+	{
+		m_drawContext.popViewInfo();
+	}
 
-	void DrawEllipse
-	( 
-		const math::Vector& Center,
-		Float XSize,
-		Float YSize,
-		math::Color Color,
-		Bool bStipple,
-		Int32 Detail = 32 
-	);
-
-	void DrawCoolPoint
-	( 
-		const math::Vector& P,
-		Float Size,
-		math::Color Color 
-	);
-
-	void DrawSmoothLine
-	( 
-		const math::Vector& A,
-		const math::Vector& B,
-		math::Color Color,
-		Bool bStipple,
-		Int32 Detail = 16 
-	);
-
-	void DrawLineStar
-	( 
-		const math::Vector& Center,
-		math::Angle Rotation,
-		Float Size,
-		math::Color Color,
-		Bool bStipple 
-	);
-
-	void DrawLineRect
-	( 
-		const math::Vector& Center,
-		const math::Vector& Size,
-		math::Angle Rotation,
-		math::Color Color,
-		Bool bStipple 
-	);
+	const gfx::ViewInfo& viewInfo() const
+	{
+		return m_drawContext.getViewInfo();
+	}
 
 protected:
 	// Canvas internal.
-	enum{ VIEW_STACK_SIZE = 8 };
-	gfx::ViewInfo	ViewStack[VIEW_STACK_SIZE];
-	Int32			StackTop;
+	gfx::DrawContext& m_drawContext;
 };
 
 

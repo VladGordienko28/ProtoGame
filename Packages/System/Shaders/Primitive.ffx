@@ -1,0 +1,43 @@
+//-----------------------------------------------------------------------------
+//	Primitive.ffx: A simple shader for flat shaded primitives
+//	Created by Vlad Gordienko, 2019
+//-----------------------------------------------------------------------------
+
+#include "Common.ffxh"
+
+vertex_decl VertexDecl_XYRGBA
+{
+	["RGB32_F", "Position", 0, 0],
+    ["RGBA8_UNORM", "Color", 0, 12]
+}
+
+struct VsInput
+{
+	float3 position : POSITION;
+    float4 color : COLOR0;
+};
+
+struct VsOutput
+{
+	float4 position : SV_Position;
+    nointerpolation float4 color : COLOR0;
+};
+
+VsOutput vsMain( in VsInput input )
+{
+	VsOutput output;
+	output.position = mul( float4( input.position, 1.f ), g_viewProjectionMatrix );
+    output.color = input.color;
+	return output;
+}
+
+float4 psMain( in VsOutput input ) : SV_Target
+{
+    return input.color;
+}
+
+technique Main
+{
+	vertex_shader = vsMain;
+	pixel_shader = psMain;
+}

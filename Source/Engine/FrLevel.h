@@ -170,6 +170,8 @@ public:
 public:
 	gfx::GridDrawer::UPtr m_gridDrawer;
 
+	gfx::PrimitiveDrawer m_primitiveDrawer; // fooooooooooooooooooooooooooooooo, move somewhere else!!!!
+
 	// Level rendering
 	void renderLevel( CCanvas* canvas, Int32 x, Int32 y, Int32 width, Int32 height );
 

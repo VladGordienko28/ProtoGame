@@ -47,6 +47,13 @@ public:
 
 	UniquePtr<EngineChart> m_engineChart;
 
+	rend::Device::UPtr		m_renderDevice;
+	World::UPtr				m_world;
+
+
+	// foooooooooooooooooooooooooooooooooooooooo
+	CDirectX11Render* m_legacyRender;
+
 	// Editor functions.
 	void Tick( Float Delta );
 	WEditorPage* OpenPageWith( FResource* InResource );

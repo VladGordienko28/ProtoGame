@@ -74,7 +74,7 @@ namespace profile
 		Double m_samplesLifetime;
 		Bool m_frameLocked;
 
-		FixedStack<Zone> m_zonesStack;
+		FixedStack<Zone, MAX_ZONES_DEPTH> m_zonesStack;
 
 		Array<Group> m_groups; // needs better solution
 		Array<Bool> m_groupFilter;

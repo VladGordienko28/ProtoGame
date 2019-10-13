@@ -130,7 +130,7 @@ namespace navi
 		/**
 		 *	Debug draw a navigation network
 		 */
-		void draw( CCanvas* canvas );
+		void draw( gfx::PrimitiveDrawer& drawer, CCanvas* canvas );
 
 		Int32 getNodesCount() const
 		{

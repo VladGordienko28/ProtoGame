@@ -378,7 +378,7 @@ void FWeatherEmitterComponent::Render( CCanvas* Canvas )
 {
     // Don't draw snowflakes or raindrops in
     // a mirage, especially in sky-zone.
-	if( !Canvas->View.isMirage )
+	if( !Canvas->viewInfo().isMirage )
 		FEmitterComponent::Render( Canvas );
 }
 
@@ -622,7 +622,7 @@ void FEmitterComponent::Render( CCanvas* Canvas )
 
 	// Render particles if they actually visible.
 	math::Rect Cloud = GetCloudRect();
-	if( !Canvas->View.bounds.isOverlap( Cloud ) )
+	if( !Canvas->viewInfo().bounds.isOverlap( Cloud ) )
 		return;
 
 #if 0
@@ -733,13 +733,13 @@ void FEmitterComponent::Render( CCanvas* Canvas )
 
 	// Render cloud boundS if emitter are selected.
 	if( Base->bSelected )
-		Canvas->DrawLineRect
+		Level->m_primitiveDrawer.batchLineRect
 						( 
 							Cloud.center(), 
-							Cloud.size(), 
+							Cloud.sizeX(), Cloud.sizeY(), 
 							0, 
-							math::colors::ORANGE, 
-							false 
+							1.f,
+							math::colors::ORANGE
 						);
 }
 

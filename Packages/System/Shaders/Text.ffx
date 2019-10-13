@@ -45,3 +45,9 @@ float4 psMain( in VsOutput input ) : SV_Target
     const float4 texColor = fontAtlas.Sample( fontAtlasSampler, input.tCoord );
     return texColor * input.color;
 }
+
+technique Main
+{
+	vertex_shader = vsMain;
+	pixel_shader = psMain;
+}

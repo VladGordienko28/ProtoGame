@@ -157,7 +157,6 @@
     <ClInclude Include="Core\FrEncode.h" />
     <ClInclude Include="Core\FrExpImp.h" />
     <ClInclude Include="Core\FrFile.h" />
-    <ClInclude Include="Core\FrIni.h" />
     <ClInclude Include="Core\FrMath.h" />
     <ClInclude Include="Core\FrObject.h" />
     <ClInclude Include="Core\FrRand.h" />
@@ -201,11 +200,14 @@
     <ClInclude Include="Rendering\GridDrawer.h" />
     <ClInclude Include="Rendering\GrowOnlyIB.h" />
     <ClInclude Include="Rendering\GrowOnlyVB.h" />
+    <ClInclude Include="Rendering\PrimitiveDrawer.h" />
     <ClInclude Include="Rendering\TextDrawer.h" />
     <ClInclude Include="Rendering\Utils.h" />
     <ClInclude Include="Rendering\ViewInfo.h" />
+    <ClInclude Include="RenderPipeline\DrawContext.h" />
     <ClInclude Include="RenderPipeline\IRenderPipeline.h" />
     <ClInclude Include="RenderPipeline\SharedConstants.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AI\Navigator.cpp">
@@ -243,12 +245,6 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\Engine.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\Engine.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\Engine.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <ClCompile Include="Core\FrIni.cpp">
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../Engine.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../Engine.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Engine.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Engine.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="Core\FrMath.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\Engine.h</PrecompiledHeaderFile>
@@ -335,6 +331,12 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Engine/Engine.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Engine/Engine.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="Rendering\PrimitiveDrawer.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Engine/Engine.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="Rendering\TextDrawer.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
@@ -347,6 +349,13 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Engine/Engine.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Engine/Engine.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="RenderPipeline\DrawContext.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Engine/Engine.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Engine/Engine.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Fluorine.natvis" />

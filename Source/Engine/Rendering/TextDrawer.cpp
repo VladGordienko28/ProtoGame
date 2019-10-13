@@ -109,14 +109,16 @@ namespace gfx
 
 	Float TextDrawer::textHeight( fnt::Font::Ptr font, Float yScale ) const
 	{
+		assert( font.hasObject() );
 
-		return 0;////////////////////////////////////////////////////
-
+		return font->maxHeight() * yScale;
 	}
 
 	Float TextDrawer::textWidth( const Char* text, Int32 len, fnt::Font::Ptr font, Float xScale ) const
 	{
-		return 0;////////////////////////////////////////////////////
+		assert( font.hasObject() );
+
+		return font->textWidth( text ) * xScale; // todo: take len into according
 	}
 
 	void TextDrawer::flush()

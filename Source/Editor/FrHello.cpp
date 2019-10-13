@@ -34,7 +34,7 @@ WHelloPage::WHelloPage( WContainer* InOwner, WWindow* InRoot )
 
 	// Links to recent projects.
 	for( Int32 i=0; i<arraySize(Recent); i++ )
-		RecentFiles[i]	= GEditor->Config->ReadString( L"Editor", L"Recent", *String::format(L"Recent[%i]", i), L"" );
+		RecentFiles[i]	= ConfigManager::readString( EConfigFile::Application, L"Recent", *String::format(L"Recent_%i", i), L"" );
 
 	// Allocate links.
 	mem::zero( Recent, sizeof(Recent) );

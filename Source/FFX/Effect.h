@@ -15,10 +15,18 @@ namespace ffx
 	public:
 		DECLARE_RESOURCE( Effect, System, Compiler );
 
-		static const constexpr Char* PS_ENTRY = TEXT( "psMain" );
-		static const constexpr Char* VS_ENTRY = TEXT( "vsMain" );
-
 		~Effect();
+
+		void apply();
+
+		TechniqueId getTechnique( String name ) const;
+		void setTechnique( TechniqueId tech );
+
+		void setSRV( Int32 slot, rend::ShaderResourceView srv );
+		void setTexture( Int32 slot, rend::Texture2DHandle texture );
+		void setSamplerState( Int32 slot, rend::SamplerStateId samplerId );
+		void setBlendState( rend::BlendStateId blendState );
+		void setData( const void* data, SizeT size, SizeT offset );
 
 		void setFloat( SizeT offset, Float value )
 		{
@@ -40,33 +48,15 @@ namespace ffx
 			setData( &value, sizeof( Bool ), offset );
 		}
 
-		void setData( const void* data, SizeT size, SizeT offset );
-		void setSRV( Int32 slot, rend::ShaderResourceView srv );
-		void setTexture( Int32 slot, rend::Texture2DHandle texture );
-
-		void setSamplerState( Int32 slot, rend::SamplerStateId samplerId );
-
-		void setBlendState( rend::BlendStateId blendState );
-
-
-
-
-		void apply();
-
 		String getName() const
 		{
 			return m_name;
 		}
 
 	private:
+		////////////////////////////////////////////
 		static const SizeT CONSTANT_BUFFER_SIZE = 1024;
 		static const SizeT MAX_TEXTURES = 2;
-
-		struct ShaderSet
-		{
-			rend::ShaderHandle vs = INVALID_HANDLE<rend::ShaderHandle>();
-			rend::ShaderHandle ps = INVALID_HANDLE<rend::ShaderHandle>();
-		};
 
 		struct Buffer
 		{
@@ -75,21 +65,37 @@ namespace ffx
 			Bool dirty = false;
 		};
 
-		String m_name;
 
-		rend::Device* m_device;
 
-		ShaderSet m_shader;
+
+
 		StaticArray<Buffer, 1> m_buffers;
 		StaticArray<rend::SamplerStateId, MAX_TEXTURES> m_samplerStates;
 		StaticArray<rend::ShaderResourceView, MAX_TEXTURES> m_srvs;
 		rend::BlendStateId m_blendState;
+		////////////////////////////////////////////////
+
+
+		struct ApiShader
+		{
+			rend::EShaderType type = rend::EShaderType::ST_MAX;
+			rend::ShaderHandle handle = INVALID_HANDLE<rend::ShaderHandle>();
+		};
+
+		// permanent tables
+		Array<ApiShader> m_apiShaders;
+		Array<Technique> m_techniques;
+
+		TechniqueId m_currentTechnique;
+
+		String m_name;
+		rend::Device* m_device;
 
 		Effect() = delete;
 		Effect( String name, rend::Device* device );
 
 		Bool reload( const res::CompiledResource& compiledResource );
-		void cleanup();
+		void destroyShaders();
 
 		friend class System;
 	};

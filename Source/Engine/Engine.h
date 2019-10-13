@@ -77,7 +77,6 @@ namespace envi
 #include "Core\FrClass.h"
 #include "Core\FrObject.h"
 #include "Core\FrFile.h"
-#include "Core\FrIni.h"
 #include "Core\FrCorUtils.h"
 
 // Rendering
@@ -88,8 +87,10 @@ namespace envi
 #include "Rendering/GrowOnlyIB.h"
 #include "Rendering/GridDrawer.h"
 #include "Rendering/TextDrawer.h"
+#include "Rendering/PrimitiveDrawer.h"
 
 #include "RenderPipeline/SharedConstants.h"
+#include "RenderPipeline/DrawContext.h"
 #include "RenderPipeline/IRenderPipeline.h"
 
 // Profiling
@@ -112,6 +113,9 @@ namespace envi
 // AI
 #include "AI/AIPhysics.h"
 #include "AI/Navigator.h"
+
+// World
+#include "World.h"
 
 #include "FrCom.h"
 #include "FrBlock.h"

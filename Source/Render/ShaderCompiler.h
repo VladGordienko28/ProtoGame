@@ -10,13 +10,12 @@ namespace rend
 	/**
 	 *	A shader type
 	 */
-	enum class EShaderType
+	enum EShaderType : UInt32
 	{
-		Unknown,
-		Vertex,
-		Pixel,
-		Compute,
-		MAX
+		ST_Vertex,
+		ST_Pixel,
+		ST_Compute,
+		ST_MAX
 	};
 
 	/**
@@ -26,7 +25,7 @@ namespace rend
 	{
 	public:
 		CompiledShader()
-			:	m_type( EShaderType::Unknown ),
+			:	m_type( EShaderType::ST_MAX ),
 				m_checksum( -1 )
 		{
 		}
@@ -52,7 +51,7 @@ namespace rend
 
 		Bool isValid() const
 		{
-			return m_type != EShaderType::Unknown && m_data.size() > 0;
+			return m_type < EShaderType::ST_MAX && m_data.size() > 0;
 		}
 
 		EShaderType getType() const

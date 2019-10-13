@@ -68,8 +68,8 @@ void FPainterComponent::RenderHUD( CCanvas* InCanvas )
 {
 	// Setup fields, for access from script.
 	Canvas		= InCanvas;
-	Width		= Canvas->View.width;
-	Height		= Canvas->View.height;
+	Width		= Canvas->viewInfo().width;
+	Height		= Canvas->viewInfo().height;
 	Effect[0]	= Effect[1]	= Effect[2]	= 1.f;
 	Effect[3]	= Effect[4]	= Effect[5]	= 1.f;
 	Effect[6]	= Effect[7]	= Effect[8]	= 0.f;
@@ -84,7 +84,7 @@ void FPainterComponent::RenderHUD( CCanvas* InCanvas )
 		Level->Camera.GetFitFOV( Width, Height ),
 		Level->Camera.Zoom,
 		false,
-		Canvas->View.x, Canvas->View.y,
+		Canvas->viewInfo().x, Canvas->viewInfo().y,
 		Width, Height
 	);
 
@@ -102,7 +102,7 @@ void FPainterComponent::nativePoint( CFrame& Frame )
 	Float	S	= POP_FLOAT;
 
 	if( Canvas )
-		Canvas->DrawPoint( P, S, Color );
+		Level->m_primitiveDrawer.batchPoint( P, 1.f, S, Color );
 }
 
 
@@ -115,7 +115,7 @@ void FPainterComponent::nativeLine( CFrame& Frame )
 			B	= POP_VECTOR;
 
 	if( Canvas )
-		Canvas->DrawLine( A, B, Color, false );
+		Level->m_primitiveDrawer.batchLine( A, B, 1.f, Color );
 }
 
 

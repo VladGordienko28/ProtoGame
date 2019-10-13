@@ -524,18 +524,20 @@ namespace navi
 		}
 	}
 
-	void Navigator::draw( CCanvas* canvas )
+	void Navigator::draw( gfx::PrimitiveDrawer& drawer, CCanvas* canvas )
 	{
 		if( isValid() )
 		{
 			static const Float NODE_DRAW_SIZE = 10.f;
 			static const Float EDGE_DRAW_SIZE = 2.5f;
 
+			const gfx::ViewInfo viewInfo = canvas->viewInfo();
+
 			TRenderRect lineRect;
 			lineRect.Image = INVALID_HANDLE<rend::Texture2DHandle>();
 			lineRect.Flags = POLY_Unlit | POLY_AlphaGhost;
 
-			const Float lineWidth = ( EDGE_DRAW_SIZE * canvas->View.fov.x * canvas->View.zoom ) / canvas->View.width;
+			const Float lineWidth = ( EDGE_DRAW_SIZE * viewInfo.fov.x * viewInfo.zoom ) / viewInfo.width;
 			const Float time = GPlat->Now();
 
 			for( const auto& it : m_edges )
@@ -546,7 +548,7 @@ namespace navi
 					getNode( it.iEndNode ).location
 				};
 
-				if( canvas->View.bounds.isOverlap( math::Rect( verts, 2 ) ) )
+				if( viewInfo.bounds.isOverlap( math::Rect( verts, 2 ) ) )
 				{
 					const math::Vector delta = verts[1] - verts[0];
 					const Float deltaSize = delta.size();
@@ -565,7 +567,7 @@ namespace navi
 
 			for( const auto& it : m_nodes )
 			{
-				canvas->DrawCoolPoint( it.location, NODE_DRAW_SIZE, math::colors::GHOST_WHITE );
+				drawer.batchCoolPoint( it.location, 1.f, NODE_DRAW_SIZE, math::colors::GHOST_WHITE );
 			}
 		}
 	}

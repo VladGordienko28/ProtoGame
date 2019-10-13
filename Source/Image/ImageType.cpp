@@ -64,6 +64,7 @@ namespace img
 		m_uBits = intLog2( m_uSize );
 		m_vBits = intLog2( m_vSize );
 
+		lodepng_state_cleanup( &state );
 		mem::free( imageData );
 		return true;
 	}

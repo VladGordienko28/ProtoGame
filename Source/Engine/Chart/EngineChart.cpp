@@ -50,18 +50,18 @@ namespace flu
 		m_font = nullptr;
 	}
 
-	void EngineChart::render( CCanvas* canvas )
+	void EngineChart::render( CCanvas* canvas, gfx::DrawContext& drawContext )
 	{
 		if( !m_enabled )
 			return;
 
 		gfx::ScopedRenderingZone srz( TEXT( "Profiler" ) );
 
-		canvas->SetTransform( gfx::ViewInfo( 
-			0.f, 0.f, canvas->ScreenWidth, canvas->ScreenHeight ) );
+		const Float screenW = drawContext.backbufferWidth();
+		const Float screenH = drawContext.backbufferHeight();
 
-		const Float screenW = canvas->ScreenWidth;
-		const Float screenH = canvas->ScreenHeight;
+		drawContext.pushViewInfo( gfx::ViewInfo( 
+			0.f, 0.f, screenW, screenH ) );
 
 		const Float metricDrawStep = 30.f;
 
@@ -158,6 +158,8 @@ namespace flu
 		// draw help string
 		m_textDrawer.batchText( m_helpString, m_font, math::colors::WHITE, { 10.f, screenH - 20.f } );
 		m_textDrawer.flush();
+
+		drawContext.popViewInfo();
 	}
 
 	void EngineChart::setTimelineLength( Float newLength )

@@ -33,6 +33,9 @@
 #define FLU_PROFILE_MEMORY FLU_DEBUG
 #define FLU_PROFILE_GPU FLU_DEBUG
 
+// Memory leaks
+#define FLU_ENABLE_MEM_TRACKING FLU_DEBUG && FLU_PLATFORM_WINDOWS
+
 // Assertions
 #define FLU_ENABLE_ASSERT 1 || FLU_DEBUG
 
@@ -50,7 +53,7 @@
 #define FLU_NAME		L"Fluorine"
 
 // Hello page copyright string.
-#define	FLU_COPYRIGHT	L"Copyright 2016-2019 Vlad Gordienko."
+#define	FLU_COPYRIGHT	L"Copyright 2016-2019 Vlad Gordienko"
 
 // Fluorine client name.
 #if FLU_DEBUG

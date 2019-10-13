@@ -2023,31 +2023,32 @@ void WLevelPage::DrawKeyframe( CCanvas* Canvas, FEntity* Entity )
 
 	// Draw trajectory.
 	for( Int32 i=1; i<Keyframe->Points.size(); i++ )
-		Canvas->DrawLine
+		Level->m_primitiveDrawer.batchLine
 					( 
 						Keyframe->Points[i-1].Location,
 						Keyframe->Points[i].Location,
-						math::colors::PINK,
-						false
+						1.f,
+						math::colors::PINK
 					);
 
 	// Draw control points.
 	for( Int32 i=0; i<Keyframe->Points.size(); i++ )
 	{
-		Canvas->DrawPoint
+		Level->m_primitiveDrawer.batchPoint
 						(
 							Keyframe->Points[i].Location,
+							1.f,
 							5.f,
 							math::colors::PINK
 						);
 
-		Canvas->DrawLineStar
+		Level->m_primitiveDrawer.batchLineStar
 						(
 							Keyframe->Points[i].Location,
 							Keyframe->Points[i].Rotation,
 							1.f,
-							math::colors::PINK,
-							false
+							1.f,
+							math::colors::PINK
 						);
 	}
 
@@ -2084,7 +2085,7 @@ void WLevelPage::DrawLogicCircuit( CCanvas* Canvas )
 		FBaseComponent*		Base = Logic->Base;
 
 		// Is visible?
-		if( !Canvas->View.bounds.isOverlap( Base->GetAABB() ) )
+		if( !Canvas->viewInfo().bounds.isOverlap( Base->GetAABB() ) )
 			continue;
 
 		Canvas->PushTransform(gfx::ViewInfo( P.X, P.Y, Size.Width, Size.Height ));
@@ -2129,13 +2130,14 @@ void WLevelPage::DrawLogicCircuit( CCanvas* Canvas )
 //
 void WLevelPage::DrawScrollClamp( CCanvas* Canvas )
 {
-	Canvas->DrawLineRect
+	Level->m_primitiveDrawer.batchLineRect
 	(
 		Level->Camera.ScrollBound.center(),
-		Level->Camera.ScrollBound.size(),
+		Level->Camera.ScrollBound.size().x,
+		Level->Camera.ScrollBound.size().y,
 		0,
-		math::colors::LIME_GREEN,
-		false
+		1.f,
+		math::colors::LIME_GREEN
 	);
 }
 
@@ -2158,7 +2160,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 					);
 
 	// Set level transform, for editor stuff rendering.
-	Canvas->SetTransform
+	Canvas->PushTransform
 					( 
 						gfx::ViewInfo
 							( 
@@ -2196,19 +2198,22 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 			// Highlight drag vertex.
 			FBrushComponent* B = DragInfo.VBrush;
 			Int32 i = DragInfo.ViVert;
-			Canvas->DrawCoolPoint( B->Vertices[i] + B->Location, 10.f, math::colors::DEEP_PINK );
+			Level->m_primitiveDrawer.batchCoolPoint( B->Vertices[i] + B->Location, 1.f, 10.f, math::colors::DEEP_PINK );
 			break;
 		}
 		case DRAG_LogicLink:
 		{
 			// Draw active link line.
 			math::Vector Pen = ScreenToWorld( LLastPos.X, LLastPos.Y );
-			Canvas->DrawSmoothLine( DragInfo.LSource->GetPlugPos(DragInfo.LPlug), Pen, math::colors::LIGHT_BLUE, false );
+			Level->m_primitiveDrawer.batchSmoothLine( DragInfo.LSource->GetPlugPos(DragInfo.LPlug), Pen, 1.f, math::colors::LIGHT_BLUE );
 		}
 	}
 
+	Level->m_primitiveDrawer.flush();
+	Canvas->PopTransform();
+
 	// Set screen coords transform.
-	Canvas->SetTransform
+	Canvas->PushTransform
 					(
 						gfx::ViewInfo
 							(
@@ -2246,6 +2251,7 @@ void WLevelPage::RenderPageContent( CCanvas* Canvas )
 				);
 
 	m_textDrawer.flush();
+	Canvas->PopTransform();
 }
 
 
@@ -2811,7 +2817,7 @@ void WLevelPage::ButtonRndFlagsClick( WWidget* Sender )
 {
 	RndFlagsPopup->Show(WindowToClient(Root->MousePos));
 
-
+/*
 	// foooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 	UInt32 width;
 	UInt32 height;
@@ -2821,7 +2827,7 @@ void WLevelPage::ButtonRndFlagsClick( WWidget* Sender )
 	g_device->copyTextureToCPU( INVALID_HANDLE<rend::Texture2DHandle>(), format, width, height, data );
 
 	auto image = res::ResourceManager::construct<img::Image>( L"Experimental.ScreenShots.MyShot00",
-		img::EImageType::RGBA, width, height, &data[0] );
+		img::EImageType::RGBA, width, height, &data[0] );*/
 }
 
 
@@ -3053,6 +3059,8 @@ void WLevelPage::TRoller::Update( TSelector& Sel )
 //
 void WLevelPage::TRoller::Draw( CCanvas* Canvas, Bool bHighlight )
 {
+	// todo: really broken!!
+	/*
 	if( bVisible )
 	{
 		if( bHighlight )
@@ -3086,7 +3094,7 @@ void WLevelPage::TRoller::Draw( CCanvas* Canvas, Bool bHighlight )
 								false 
 							);
 		}	
-	}
+	}*/
 }
 
 

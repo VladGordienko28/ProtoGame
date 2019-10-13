@@ -163,7 +163,7 @@ void CInput::OnCharType( Char TypedChar )
 // Read ConfigRemap from the ini file to apply user
 // configuration preferences.
 //
-void CInput::RemapFromIni( CConfigManager* Config )
+void CInput::RemapFromConfig()
 {
 	// Get list of names.
 	CEnum* InputKeys	= CClassDatabase::StaticFindEnum(L"EInputKeys");
@@ -172,7 +172,7 @@ void CInput::RemapFromIni( CConfigManager* Config )
 
 	// Let's torment ini.
 	for( Int32 i=0; i<KEY_MAX; i++ )
-		ConfigRemap[i]	= Config->ReadInteger( L"Prefs", L"Input", *InputKeys->GetAliasOf(i), i );
+		ConfigRemap[i]	= ConfigManager::readInt( EConfigFile::User, L"Input", *InputKeys->GetAliasOf(i), i );
 
 }
 

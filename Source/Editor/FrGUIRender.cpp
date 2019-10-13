@@ -13,9 +13,19 @@
 // GUI render constructor.
 //
 CGUIRender::CGUIRender()
-	:	Canvas( nullptr ),
-		Brightness( 1.f )
+	:	m_brightness( 1.f )
 {
+	m_coloredEffect = res::ResourceManager::get<ffx::Effect>( L"System.Shaders.Colored", res::EFailPolicy::FATAL );
+	m_texturedEffect = res::ResourceManager::get<ffx::Effect>( L"System.Shaders.Textured", res::EFailPolicy::FATAL );	
+
+	m_solidTech = m_coloredEffect->getTechnique( L"Solid" );
+	m_stippleTech = m_coloredEffect->getTechnique( L"Stipple" );
+
+	m_coloredVB = gfx::api::createVertexBuffer( sizeof(math::Vector), 4, rend::EUsage::Dynamic, nullptr, "GUI_Colored_VB" );
+	m_texturedVB = gfx::api::createVertexBuffer( sizeof(math::Vector4), 4, rend::EUsage::Dynamic, nullptr, "GUI_Textured_VB" );
+
+	auto samplerState = gfx::api::getSamplerState( { rend::ESamplerFilter::Linear, rend::ESamplerAddressMode::Wrap } );
+	m_texturedEffect->setSamplerState( 0, samplerState );
 }
 
 
@@ -24,24 +34,27 @@ CGUIRender::CGUIRender()
 //
 CGUIRender::~CGUIRender()
 {
+	m_coloredEffect = nullptr;
+	m_texturedEffect = nullptr;
+
+	gfx::api::destroyVertexBuffer( m_coloredVB );
+	gfx::api::destroyVertexBuffer( m_texturedVB );
 }
 
 
 //
 // Prepare for GUI rendering.
 //
-void CGUIRender::BeginPaint( CCanvas* InCanvas )
+void CGUIRender::BeginPaint( gfx::DrawContext& drawContext )
 {
-	Canvas	= InCanvas;
-
 	// Set window coords system.
-	Canvas->SetTransform( 
+	drawContext.pushViewInfo( 
 							gfx::ViewInfo
 							( 
 								0.f, 
 								0.f, 
-								Canvas->ScreenWidth, 
-								Canvas->ScreenHeight 
+								drawContext.backbufferWidth(), 
+								drawContext.backbufferHeight() 
 							) 
 						);
 }
@@ -50,12 +63,14 @@ void CGUIRender::BeginPaint( CCanvas* InCanvas )
 //
 // End GUI rendering.
 //
-void CGUIRender::EndPaint()
+void CGUIRender::EndPaint( gfx::DrawContext& drawContext )
 {
+	drawContext.popViewInfo();
 
+/*
 	FlushText();
 	Canvas->SetClip( CLIP_NONE );
-	Canvas = nullptr;
+	Canvas = nullptr;*/
 }
 
 
@@ -63,21 +78,23 @@ void CGUIRender::EndPaint()
 // Draw a rectangle.
 //
 void CGUIRender::DrawRegion( TPoint P, TSize S, math::Color Color, math::Color BorderColor, EBrushPattern Pattern )
-{		
-	// Pattern flag remap.
-	static const UInt32 PatternFlag[BPAT_MAX] =
+{
+	math::Vector verts[4] = 
 	{
-		POLY_None,
-		POLY_None,
-		POLY_StippleI,
-		POLY_StippleII
+		{ Float(P.X), Float(P.Y + S.Height) },
+		{ Float(P.X), Float(P.Y)  },
+		{ Float(P.X + S.Width), Float(P.Y + S.Height) },
+		{ Float(P.X + S.Width), Float(P.Y) }
 	};
 
+
+	m_coloredEffect->setBlendState( rend::BlendState::INVALID );
+
 	// Apply color rescale.
-	if( Brightness != 1.f )
+	if( m_brightness != 1.f )
 	{
-		Color		*= Brightness;
-		BorderColor	*= Brightness;
+		Color		*= m_brightness;
+		BorderColor	*= m_brightness;
 	}
 
 	if( Color == BorderColor && Pattern == BPAT_Solid )
@@ -85,21 +102,22 @@ void CGUIRender::DrawRegion( TPoint P, TSize S, math::Color Color, math::Color B
 		//
 		// Case 1: Draw fully solid rect.
 		//
-		TRenderRect Rect;
-		Rect.Image		= INVALID_HANDLE<rend::Texture2DHandle>();
-		Rect.Bounds.min	= math::Vector( P.X, P.Y );
-		Rect.Bounds.max	= math::Vector( P.X + S.Width, P.Y + S.Height );
-		Rect.Color		= Color;
-		Rect.Flags		= POLY_FlatShade;
-		Rect.Rotation	= 0;
+		m_coloredEffect->setColor( 0, Color );
+		m_coloredEffect->setTechnique( m_solidTech );
+		m_coloredEffect->apply();
 
-		Canvas->DrawRect( Rect );
+		gfx::api::updateVertexBuffer( m_coloredVB, verts, sizeof( verts ) );
+		gfx::api::setVertexBuffer( m_coloredVB );
+
+		gfx::api::setTopology( rend::EPrimitiveTopology::TriangleStrip );
+		gfx::api::draw( 4, 0 );
 	}
 	else if( Pattern == BPAT_None )
 	{
 		//
 		// Case 2: Just draw border.
 		//
+/*
 		math::Rect Rect;
 		Rect.min	= math::Vector( P.X, P.Y );
 		Rect.max	= math::Vector( P.X + S.Width, P.Y + S.Height );
@@ -111,143 +129,103 @@ void CGUIRender::DrawRegion( TPoint P, TSize S, math::Color Color, math::Color B
 			0, 
 			BorderColor, 
 			false
-		);
+		);*/
 	}
 	else if( Pattern == BPAT_Solid )
 	{
 		//
 		// Case 3: Draw two overlap rectangles.
 		//
-		TRenderRect Rect;
-		Rect.Image		= INVALID_HANDLE<rend::Texture2DHandle>();
-		Rect.Bounds.min	= math::Vector( P.X, P.Y );
-		Rect.Bounds.max	= math::Vector( P.X + S.Width, P.Y + S.Height );
-		Rect.Color		= BorderColor;
-		Rect.Flags		= POLY_FlatShade;
-		Rect.Rotation	= 0;
+		math::Vector borderVerts[4] = 
+		{
+			{ Float(P.X+1), Float(P.Y + S.Height-1) },
+			{ Float(P.X+1), Float(P.Y+1)  },
+			{ Float(P.X + S.Width-1), Float(P.Y + S.Height-1) },
+			{ Float(P.X + S.Width-1), Float(P.Y+1) }
+		};
 
-		Canvas->DrawRect( Rect );
+		// border
+		m_coloredEffect->setColor( 0, BorderColor );
+		m_coloredEffect->setTechnique( m_solidTech );
+		m_coloredEffect->apply();
 
-		Rect.Bounds.min.x++;
-		Rect.Bounds.min.y++;
-		Rect.Bounds.max.x--;
-		Rect.Bounds.max.y--;
-		Rect.Color		= Color;
+		gfx::api::updateVertexBuffer( m_coloredVB, verts, sizeof( verts ) );
+		gfx::api::setVertexBuffer( m_coloredVB );
 
-		Canvas->DrawRect( Rect );
+		gfx::api::setTopology( rend::EPrimitiveTopology::TriangleStrip );
+		gfx::api::draw( 4, 0 );
+
+		// rect
+		m_coloredEffect->setColor( 0, Color );
+		m_coloredEffect->apply();
+
+		gfx::api::updateVertexBuffer( m_coloredVB, borderVerts, sizeof( borderVerts ) );
+
+		gfx::api::draw( 4, 0 );
 	}
 	else
 	{
 		//
 		// Case 4: Draw pattern.
 		//
-		TRenderRect Rect;
-		Rect.Image		= INVALID_HANDLE<rend::Texture2DHandle>();
-		Rect.Bounds.min	= math::Vector( P.X, P.Y );
-		Rect.Bounds.max	= math::Vector( P.X + S.Width, P.Y + S.Height );
-		Rect.Color		= BorderColor;
-		Rect.Flags		= POLY_FlatShade | PatternFlag[Pattern];
-		Rect.Rotation	= 0;
+		m_coloredEffect->setColor( 0, Color );
+		m_coloredEffect->setTechnique( m_stippleTech );
+		m_coloredEffect->apply();
 
-		Canvas->DrawRect( Rect );
+		gfx::api::updateVertexBuffer( m_coloredVB, verts, sizeof( verts ) );
+		gfx::api::setVertexBuffer( m_coloredVB );
 
-		Canvas->DrawLineRect
+		gfx::api::setTopology( rend::EPrimitiveTopology::TriangleStrip );
+		gfx::api::draw( 4, 0 );
+
+
+/*		Canvas->DrawLineRect
 		( 
 			Rect.Bounds.center(), 
 			Rect.Bounds.size(), 
 			0, 
 			BorderColor, 
 			false
-		);
+		);*/
 	}
 }
 
 
 void CGUIRender::DrawImage( TPoint P, TSize S, TPoint BP, TSize BS, img::Image::Ptr image )
 {
-	// Setup rect.
-	TRenderRect Rect;
-	Rect.Image		= image->getHandle();
-	Rect.Bounds.min	= math::Vector( P.X, P.Y );
-	Rect.Bounds.max	= math::Vector( P.X + S.Width, P.Y + S.Height );
-	Rect.Color		= Brightness != 1.f ? math::colors::WHITE*Brightness : math::colors::WHITE;
-	Rect.Color.a	= 0xff;
-	Rect.Flags		= POLY_Unlit;	
-	Rect.Rotation	= 0;	
-	
-	// Division table, used to reduce multiple
-	// divisions, since gui has many icons to draw.
-	static const Float Rescale[] =
-	{
-		1.f / 1.f,
-		1.f / 2.f,
-		1.f / 4.f,
-		1.f / 8.f,
-		1.f / 16.f,
-		1.f / 32.f,
-		1.f / 64.f,
-		1.f / 128.f,
-		1.f / 256.f,
-		1.f / 512.f,
-		1.f / 1024.f,
-		1.f / 2048.f,
-		1.f / 4096.f,
-	};
-
-	// Texture coords.
-	Rect.TexCoords.min.x	= BP.X * Rescale[image->getUBits()];
-	Rect.TexCoords.min.y	= BP.Y * Rescale[image->getVBits()];
-	Rect.TexCoords.max.x	= (BP.X+BS.Width)  * Rescale[image->getUBits()];
-	Rect.TexCoords.max.y	= (BP.Y+BS.Height) * Rescale[image->getVBits()];
-
-	// Draw it.
-	Canvas->DrawRect( Rect );
+	DrawTexture( P, S, BP, BS, image->getHandle(), image->getUSize(), image->getVSize() );
 }
 
 void CGUIRender::DrawTexture( TPoint P, TSize S, TPoint BP, TSize BS, rend::Texture2DHandle image, UInt32 width, UInt32 height )
 {
-	// Setup rect.
-	TRenderRect Rect;
-	Rect.Image		= image;
-	Rect.Bounds.min	= math::Vector( P.X, P.Y );
-	Rect.Bounds.max	= math::Vector( P.X + S.Width, P.Y + S.Height );
-	Rect.Color		= Brightness != 1.f ? math::colors::WHITE*Brightness : math::colors::WHITE;
-	Rect.Color.a	= 0xff;
-	Rect.Flags		= POLY_Unlit;	
-	Rect.Rotation	= 0;	
-	
-	// Division table, used to reduce multiple
-	// divisions, since gui has many icons to draw.
-	static const Float Rescale[] =
-	{
-		1.f / 1.f,
-		1.f / 2.f,
-		1.f / 4.f,
-		1.f / 8.f,
-		1.f / 16.f,
-		1.f / 32.f,
-		1.f / 64.f,
-		1.f / 128.f,
-		1.f / 256.f,
-		1.f / 512.f,
-		1.f / 1024.f,
-		1.f / 2048.f,
-		1.f / 4096.f,
-	};
-
-	UInt8 uBits = intLog2( width );
-	UInt8 vBits = intLog2( height );
-
-
+	Float invUSize = 1.f / width;
+	Float invVSize = 1.f / height;
 
 	// Texture coords.
-	Rect.TexCoords.min.x	= BP.X * Rescale[uBits];
-	Rect.TexCoords.min.y	= BP.Y * Rescale[vBits];
-	Rect.TexCoords.max.x	= (BP.X+BS.Width)  * Rescale[uBits];
-	Rect.TexCoords.max.y	= (BP.Y+BS.Height) * Rescale[vBits];
+	math::Rect tc;
+	tc.min.x	= BP.X * invUSize;
+	tc.min.y	= BP.Y * invVSize;
+	tc.max.x	= ( BP.X + BS.Width )  * invUSize;
+	tc.max.y	= ( BP.Y + BS.Height ) * invVSize;
 
-	// Draw it.
-	Canvas->DrawRect( Rect );
+	math::Vector4 verts[4] = 
+	{
+		{ Float(P.X), Float(P.Y + S.Height), tc.min.x, tc.max.y },
+		{ Float(P.X), Float(P.Y), tc.min.x, tc.min.y  },
+		{ Float(P.X + S.Width), Float(P.Y + S.Height), tc.max.x, tc.max.y },
+		{ Float(P.X + S.Width), Float(P.Y), tc.max.x, tc.min.y }
+	};
+
+	m_texturedEffect->setColor( 0, math::colors::WHITE*m_brightness );
+	m_texturedEffect->setSRV( 0, gfx::srvOf( image ) );
+
+	m_texturedEffect->apply();
+
+	gfx::api::updateVertexBuffer( m_texturedVB, verts, sizeof( verts ) );
+	gfx::api::setVertexBuffer( m_texturedVB );
+
+	gfx::api::setTopology( rend::EPrimitiveTopology::TriangleStrip );
+	gfx::api::draw( 4, 0 );
 }
 
 
@@ -256,10 +234,11 @@ void CGUIRender::DrawTexture( TPoint P, TSize S, TPoint BP, TSize BS, rend::Text
 //
 void CGUIRender::DrawText( TPoint P, const Char* Text, Int32 Len, math::Color Color, fnt::Font::Ptr Font )
 {
-	if( Brightness != 1.f )
-		Color *= Brightness;
+	if( m_brightness != 1.f )
+		Color *= m_brightness;
 
 	m_textDrawer.batchText( Text, Len, Font, Color, math::Vector(P.X, P.Y) );
+	m_textDrawer.flush();
 }
 
 
@@ -268,6 +247,7 @@ void CGUIRender::DrawText( TPoint P, const Char* Text, Int32 Len, math::Color Co
 //
 void CGUIRender::SetClipArea( TPoint P, TSize S )
 {
+#if 0
 	Canvas->SetClip
 	( 
 		TClipArea
@@ -276,6 +256,7 @@ void CGUIRender::SetClipArea( TPoint P, TSize S )
 			S.Width, S.Height 
 		) 
 	);
+#endif
 }
 
 
@@ -285,7 +266,7 @@ void CGUIRender::SetClipArea( TPoint P, TSize S )
 //
 void CGUIRender::SetBrightness( Float Brig )
 {
-	Brightness	= clamp( Brig, 0.f, 1.f );
+	m_brightness = clamp( Brig, 0.f, 1.f );
 }
 
 

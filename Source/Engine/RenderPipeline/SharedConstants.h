@@ -13,8 +13,6 @@ namespace gfx
 	class SharedConstants: public ffx::SharedConstants
 	{
 	public:
-		using UPtr = UniquePtr<SharedConstants>;
-
 		// must be synced with Common.ffxh
 		struct PerFrameData
 		{

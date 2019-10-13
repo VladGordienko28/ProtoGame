@@ -134,6 +134,14 @@ namespace flu
 		}
 		return stream;
 	}
+	template<class T, SizeT S> inline IOutputStream& operator<<( IOutputStream& stream, const T(&x)[S] )
+	{
+		for( const auto& it : x )
+		{
+			stream << it;
+		}
+		return stream;
+	}
 
 	/**
 	 *	Helper input operators
@@ -201,6 +209,14 @@ namespace flu
 	inline IInputStream& operator>>( IInputStream& stream, WideChar& x )
 	{
 		stream.readData( &x, sizeof( WideChar ) );
+		return stream;
+	}
+	template<class T, SizeT S> inline IInputStream& operator>>( IInputStream& stream, T(&x)[S] )
+	{
+		for( auto& it : x )
+		{
+			stream >> it;
+		}
 		return stream;
 	}
 

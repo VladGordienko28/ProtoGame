@@ -28,7 +28,7 @@ namespace flu
 		EngineChart();
 		~EngineChart();
 
-		void render( CCanvas* canvas );
+		void render( CCanvas* canvas, gfx::DrawContext& drawContext );
 		
 		void setTimelineLength( Float newLength );
 		void toggleGroup( profile::IProfiler::GroupId groupId );

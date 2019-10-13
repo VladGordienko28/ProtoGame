@@ -8,7 +8,6 @@
 cbuffer Effect : register( b2 )
 {
 	float4 color;
-	bool isStipple;
 }
 
 vertex_decl VertexDecl_XY
@@ -33,18 +32,27 @@ VsOutput vsMain( in VsInput input )
 	return output;
 }
 
-float4 psMain( in VsOutput input ) : SV_Target
+float4 psSolid( in VsOutput input ) : SV_Target
 {
-	float4 drawColor = color; 
-	
-	// Amazing stipple pattern
-	[branch]
-	if( isStipple )
-	{
-		// todo: is really bad for performace!!
-		if( (int(input.position.x - input.position.y) % 4) == 0 )
-			discard;
-	}
+	return color;
+}
 
-	return doSomething( drawColor ) /*+ (sin(g_gameTime * 10)*0.5 + 0.5)*/; 
+float4 psStipple( in VsOutput input ) : SV_Target
+{
+	if( ( int( input.position.x - input.position.y ) % 4 ) == 0 )
+		discard;
+
+	return color;
+}
+
+technique Solid
+{
+	vertex_shader = vsMain;
+	pixel_shader = psSolid;
+}
+
+technique Stipple
+{
+	vertex_shader = vsMain;
+	pixel_shader = psStipple;
 }

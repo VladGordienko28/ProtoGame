@@ -179,7 +179,7 @@ void FModelComponent::Render( CCanvas* Canvas )
 	if( !( Level->RndFlags & RND_Model ) )
 		return;
 
-	math::Rect	View		= Canvas->View.bounds;
+	math::Rect	View		= Canvas->viewInfo().bounds;
 	math::Rect	ModelBounds	= GetAABB();
 
 	// Is visible?
@@ -300,7 +300,7 @@ void FModelComponent::Render( CCanvas* Canvas )
 	{
 		math::Vector V1 = math::Vector( Location.x + X*TileSize.x, Location.y );
 		math::Vector V2 = math::Vector( Location.x + X*TileSize.x, Location.y + MapYSize * TileSize.y );
-		Canvas->DrawLine( V1, V2, GridColor, false );
+		Level->m_primitiveDrawer.batchLine( V1, V2, 1.f, GridColor );
 	}
 
 	// Horizontal lines.
@@ -308,7 +308,7 @@ void FModelComponent::Render( CCanvas* Canvas )
 	{
 		math::Vector V1 = math::Vector( Location.x, Location.y + Y*TileSize.y );
 		math::Vector V2 = math::Vector( Location.x + MapXSize*TileSize.x, Location.y + Y*TileSize.y );
-		Canvas->DrawLine( V1, V2, GridColor, false );
+		Level->m_primitiveDrawer.batchLine( V1, V2, 1.f, GridColor );
 	}
 
 	// Draw temporal tiles.

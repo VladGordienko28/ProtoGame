@@ -769,15 +769,15 @@ namespace dx11
 
 			switch( shader )
 			{
-				case rend::EShaderType::Vertex:
+				case rend::EShaderType::ST_Vertex:
 					m_immediateContext->VSSetShaderResources( firstSlot, numSlots, &srvs[0] );
 					break;
 
-				case rend::EShaderType::Pixel:
+				case rend::EShaderType::ST_Pixel:
 					m_immediateContext->PSSetShaderResources( firstSlot, numSlots, &srvs[0] );
 					break;
 
-				case rend::EShaderType::Compute:
+				case rend::EShaderType::ST_Compute:
 					m_immediateContext->CSSetShaderResources( firstSlot, numSlots, &srvs[0] );
 					break;
 
@@ -815,15 +815,15 @@ namespace dx11
 	
 			switch( shader )
 			{
-				case rend::EShaderType::Vertex:
+				case rend::EShaderType::ST_Vertex:
 					m_immediateContext->VSSetSamplers( firstSlot, numSlots, &samplerStates[0] );
 					break;
 
-				case rend::EShaderType::Pixel:
+				case rend::EShaderType::ST_Pixel:
 					m_immediateContext->PSSetSamplers( firstSlot, numSlots, &samplerStates[0] );
 					break;
 
-				case rend::EShaderType::Compute:
+				case rend::EShaderType::ST_Compute:
 					m_immediateContext->CSSetSamplers( firstSlot, numSlots, &samplerStates[0] );
 					break;
 
@@ -855,15 +855,15 @@ namespace dx11
 
 			switch( shader )
 			{
-				case rend::EShaderType::Vertex:
+				case rend::EShaderType::ST_Vertex:
 					m_immediateContext->VSSetConstantBuffers( firstSlot, numSlots, &constantBuffers[0] );
 					break;
 
-				case rend::EShaderType::Pixel:
+				case rend::EShaderType::ST_Pixel:
 					m_immediateContext->PSSetConstantBuffers( firstSlot, numSlots, &constantBuffers[0] );
 					break;
 
-				case rend::EShaderType::Compute:
+				case rend::EShaderType::ST_Compute:
 					m_immediateContext->CSSetConstantBuffers( firstSlot, numSlots, &constantBuffers[0] );
 					break;
 
