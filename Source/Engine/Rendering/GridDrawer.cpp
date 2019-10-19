@@ -9,7 +9,7 @@ namespace flu
 {
 namespace gfx
 {
-	static const Char GRID_EFFECT_NAME[] = TEXT( "System.Shaders.Grid" );
+	static const Char GRID_EFFECT_NAME[] = TXT( "System.Shaders.Grid" );
 
 	GridDrawer::GridDrawer( math::Color color, UInt32 size )
 		:	m_gridSize( size ),

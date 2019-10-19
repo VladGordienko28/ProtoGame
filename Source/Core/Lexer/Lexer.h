@@ -34,7 +34,7 @@ namespace lexer
 		 *	@param allowNegative: interprete '-' as part of numberic value or not
 		 *	@return true if token just retrieved or false if eof reached
 		 */
-		Bool getToken( Token& outToken, Bool allowNegative = true );
+		Bool getToken( Token& outToken, Bool allowNegative = true, Bool allowFloat = true );
 
 		/**
 		 *	Peek a next token in the text

@@ -35,6 +35,15 @@ namespace fnt
 		*reader >> m_glyphs;
 		*reader >> m_remap;
 
+		// rescale glyphs
+		for( auto& it : m_glyphs )
+		{
+			it.x /= m_image->getUSize();
+			it.y /= m_image->getVSize();
+			it.width /= m_image->getUSize();
+			it.height /= m_image->getVSize();
+		}
+
 		return !reader->hasError();
 	}
 

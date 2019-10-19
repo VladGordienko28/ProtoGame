@@ -13,7 +13,7 @@ namespace flu
 		General,
 		Entity,
 		Render,
-		Memory,
+		RAMMemory,
 		GPUMemory,
 		DrawCalls,
 		MAX

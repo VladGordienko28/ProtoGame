@@ -22,7 +22,7 @@ namespace res
 	class ResourceManager final: NonCopyable
 	{
 	public:
-		static Bool create( String packagesPath, String cachePath, Bool useCache );
+		static Bool create();
 		static void destroy();
 
 		static void registerResourceType( EResourceType type, IResourceSystem* system,
@@ -44,7 +44,6 @@ namespace res
 		static void removeListener( IListener* listener );
 
 	private:
-		String m_packagesPath;
 		Bool m_isInitialized;
 		ListenerList m_listener;
 
@@ -52,6 +51,8 @@ namespace res
 
 		LocalStorage::UPtr m_localStorage;
 		PackageStorage::UPtr m_packageStorage;
+		RemoteStorage::UPtr m_remoteStorage;
+		IStorage* m_storage;
 
 		static const Int32 MAX_REQUESTS_DEPTH = 8;
 		FixedStack<ResourceId, MAX_REQUESTS_DEPTH> m_requestsStack;
@@ -65,7 +66,7 @@ namespace res
 			{
 				if( m_stack.isInStack( m_resourceId ) )
 				{
-					fatal( TEXT( "Circular reference detected in \"%s\"" ), *m_resourceId.toString() );
+					fatal( TXT( "Circular reference detected in \"%s\"" ), *m_resourceId.toString() );
 				}
 
 				m_stack.push( m_resourceId );
@@ -86,7 +87,7 @@ namespace res
 		ResourceManager();
 		~ResourceManager();
 
-		Bool createImpl( String packagesPath, String cachePath, Bool useCache );
+		Bool createImpl();
 		void destroyImpl();
 
 		void registerResourceTypeImpl( EResourceType type, IResourceSystem* system,
@@ -135,10 +136,10 @@ namespace res
 			{
 				if( failPolicy == EFailPolicy::FATAL )
 				{
-					fatal( TEXT( "Resource \"%s\" is not found" ), *resourceName );
+					fatal( TXT( "Resource \"%s\" is not found" ), *resourceName );
 				}
 
-				manager.m_listener.onError( resourceName, TEXT( "is not found" ) );
+				manager.m_listener.onError( resourceName, TXT( "is not found" ) );
 				return nullptr;
 			}
 		}
@@ -174,10 +175,10 @@ namespace res
 			{
 				if( failPolicy == EFailPolicy::FATAL )
 				{
-					fatal( TEXT( "Resource \"%s\" is not found" ), *resourceId.toString() );
+					fatal( TXT( "Resource \"%s\" is not found" ), *resourceId.toString() );
 				}
 
-				manager.m_listener.onError( resourceId.toString(), TEXT( "is not found" ) );
+				manager.m_listener.onError( resourceId.toString(), TXT( "is not found" ) );
 				return nullptr;
 			}
 		}
@@ -200,7 +201,7 @@ namespace res
 		}
 		else
 		{
-			manager.m_listener.onError( resourceName, TEXT( "unable to construct resource" ) );
+			manager.m_listener.onError( resourceName, TXT( "unable to construct resource" ) );
 			return nullptr;
 		}
 	}

@@ -2,6 +2,7 @@
 	FrBuild.h: Predefined compiling directives.
 	Copyright Jun.2016 Vlad Gordienko.
 =============================================================================*/
+#pragma once
 
 // Platform bitness
 #if !_WIN64

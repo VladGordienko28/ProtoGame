@@ -6,23 +6,6 @@
 
 #include "Build.h"
 
-// platform specific include
-#if FLU_PLATFORM_WINDOWS
-#include <Windows.h>
-
-#ifdef min
-#undef min
-#endif
-
-#ifdef max
-#undef max
-#endif
-
-#ifdef DrawText
-#undef DrawText
-#endif
-#endif
-
 // std includes
 #include <string>
 #include <stdarg.h>
@@ -36,7 +19,7 @@
 #include "Hash.h"
 
 // legacy include
-#include "FrSerial.h"
+#include "FrSerial.h" // todo: get rid of this file
 
 #include "SmartPointer.h"
 #include "CString.h"

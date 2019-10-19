@@ -29,11 +29,13 @@ namespace flu
 		static Bool readBool( EConfigFile file, const Char* section, const Char* key, Bool _default = false );
 		static Int32 readInt( EConfigFile file, const Char* section, const Char* key, Int32 _default = 0 );
 		static Float readFloat( EConfigFile file, const Char* section, const Char* key, Float _default = 0.f );
-		static String readString( EConfigFile file, const Char* section, const Char* key, String _default = TEXT("") );
+		static String readString( EConfigFile file, const Char* section, const Char* key, String _default = TXT("") );
 
 		static void writeBool( EConfigFile file, const Char* section, const Char* key, Bool value );
 		static void writeInt( EConfigFile file, const Char* section, const Char* key, Int32 value );
 		static void writeFloat( EConfigFile file, const Char* section, const Char* key, Float value  );
 		static void writeString( EConfigFile file, const Char* section, const Char* key, String value );
+
+		static String getApplicationName();
 	};
 }

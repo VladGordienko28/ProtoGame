@@ -4,15 +4,15 @@
 =============================================================================*/
 #pragma once
 
+// Flu includes.
+#include "Core/Core.h"
+#include "Engine/Engine.h"
+
 // C++ includes.
 #include <io.h>
 #include <fcntl.h>
 #include <windows.h>
 #include <windowsx.h>
-
-// Flu includes.
-#include "Core/Core.h"
-#include "Engine/Engine.h"
 
 // Window includes.
 #include "FrPlat.h"

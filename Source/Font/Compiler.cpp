@@ -15,7 +15,7 @@ namespace fnt
 		Text::Ptr ffntText = dependencyProvider.getTextFile( relativePath );
 		if( !ffntText )
 		{
-			output.errorMsg = TEXT( "Unable to open font file" );
+			output.errorMsg = TXT( "Unable to open font file" );
 			return false;
 		}
 
@@ -25,36 +25,31 @@ namespace fnt
 			return false;
 		}
 
-		String realFontName = rootNode->dotgetString( TEXT( "Name" ), TEXT( "" ) );
-		String imageName = rootNode->dotgetString( TEXT( "Image" ), TEXT( "" ) );
-		JSon::Ptr glyphsNode = rootNode->getField( TEXT( "Glyphs" ), JSon::EMissingPolicy::USE_NULL );
+		String realFontName = rootNode->dotgetString( TXT( "Name" ), TXT( "" ) );
+		String imageName = rootNode->dotgetString( TXT( "Image" ), TXT( "" ) );
+		JSon::Ptr glyphsNode = rootNode->getField( TXT( "Glyphs" ), JSon::EMissingPolicy::USE_NULL );
 
 		if( !realFontName )
 		{
-			output.errorMsg = TEXT( "Missing font name" );
+			output.errorMsg = TXT( "Missing font name" );
 			return false;
 		}
 		if( !imageName )
 		{
-			output.errorMsg = TEXT( "Missing font image name" );
+			output.errorMsg = TXT( "Missing font image name" );
 			return false;
 		}
 		if( !glyphsNode )
 		{
-			output.errorMsg = TEXT( "Missing glyphs definition" );
+			output.errorMsg = TXT( "Missing glyphs definition" );
 			return false;
 		}
 
 		// get image
 		res::ResourceId imageResourceId( res::EResourceType::Image, imageName );
-		auto image = res::ResourceManager::get<img::Image>( imageName );
-		if( !image )
-		{
-			output.errorMsg = String::format( TEXT( "Image \"%s\" is not found" ), *imageName );
-			return false;
-		}
-
 		output.references.put( imageResourceId, imageName );
+		// todo: add missing image handling
+
 
 		// make table of all glyphs
 		Array<Glyph> glyphs;
@@ -65,15 +60,15 @@ namespace fnt
 			JSon::Ptr charNode = glyphsNode->getElement( i, JSon::EMissingPolicy::USE_NULL );
 			assert( charNode.hasObject() );
 
-			Int32 c = charNode->dotgetInt( TEXT( "C" ), -1 );
-			Float x = charNode->dotgetFloat( TEXT( "X" ), -1.f );
-			Float y = charNode->dotgetFloat( TEXT( "Y" ), -1.f );
-			Float w = charNode->dotgetFloat( TEXT( "W" ), -1.f );
-			Float h = charNode->dotgetFloat( TEXT( "H" ), -1.f );
+			Int32 c = charNode->dotgetInt( TXT( "C" ), -1 );
+			Float x = charNode->dotgetFloat( TXT( "X" ), -1.f );
+			Float y = charNode->dotgetFloat( TXT( "Y" ), -1.f );
+			Float w = charNode->dotgetFloat( TXT( "W" ), -1.f );
+			Float h = charNode->dotgetFloat( TXT( "H" ), -1.f );
 
 			if( c == -1 || x == -1.f || y == -1.f || w == -1.f || h == -1.f )
 			{
-				output.errorMsg = TEXT( "Bad glyphs table" );
+				output.errorMsg = TXT( "Bad glyphs table" );
 				return false;
 			}
 
@@ -83,10 +78,10 @@ namespace fnt
 			}
 
 			Glyph glyph;
-			glyph.x = x / image->getUSize();
-			glyph.y = y / image->getVSize();
-			glyph.width = w / image->getUSize();
-			glyph.height = h / image->getVSize();
+			glyph.x = x;
+			glyph.y = y;
+			glyph.width = w;
+			glyph.height = h;
 
 			remap[c] = glyphs.push( glyph );
 		}

@@ -87,7 +87,14 @@ namespace img
 // todo: make it safe and avoid some strange stuff
 void* lodepng_malloc( size_t size )
 {
-	return flu::mem::malloc( size );
+	if( size > 0 )
+	{
+		return flu::mem::malloc( size );
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 void* lodepng_realloc( void* ptr, size_t new_size )

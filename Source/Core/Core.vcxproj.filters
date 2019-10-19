@@ -130,6 +130,12 @@
     <ClCompile Include="ConfigManager.cpp">
       <Filter>Config</Filter>
     </ClCompile>
+    <ClCompile Include="Atomic.cpp">
+      <Filter>Multithreading</Filter>
+    </ClCompile>
+    <ClCompile Include="Concurrency.cpp">
+      <Filter>Multithreading</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Heap">

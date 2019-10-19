@@ -10,8 +10,8 @@ namespace flu
 	static const Double DEFAULT_TIMELINE_TIME = 7.0;
 	static const math::Color TIMELINE_PANEL_COLOR = { 16, 16, 16, 200 };
 
-	static const Char CHART_FONT_NAME[] = TEXT( "Fonts.CourierNew_9" );
-	static const Char CHART_EFFECT_NAME[] = TEXT( "System.Shaders.Colored" );
+	static const Char CHART_FONT_NAME[] = TXT( "Fonts.CourierNew_9" );
+	static const Char CHART_EFFECT_NAME[] = TXT( "System.Shaders.Colored" );
 
 	EngineChart::EngineChart()
 		:	m_profiler( static_cast<Int32>(EProfilerGroup::MAX) ),
@@ -55,7 +55,7 @@ namespace flu
 		if( !m_enabled )
 			return;
 
-		gfx::ScopedRenderingZone srz( TEXT( "Profiler" ) );
+		gfx::ScopedRenderingZone srz( TXT( "Profiler" ) );
 
 		const Float screenW = drawContext.backbufferWidth();
 		const Float screenH = drawContext.backbufferHeight();
@@ -212,7 +212,7 @@ namespace flu
 			case EProfilerGroup::General:	return L"General";
 			case EProfilerGroup::Entity:	return L"Entity";
 			case EProfilerGroup::Render:	return L"Render";
-			case EProfilerGroup::Memory:	return L"Memory";
+			case EProfilerGroup::RAMMemory:	return L"RAM Memory";
 			case EProfilerGroup::GPUMemory:	return L"GPU Memory";
 			case EProfilerGroup::DrawCalls:	return L"Draw Calls";
 			default:						return L"Unknown";

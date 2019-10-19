@@ -40,6 +40,19 @@ CShell::CShell()
 	// Initialize global variables.
 	GIsEditor	= false;
 	GShell		= this;
+
+	ConfigManager::create( fm::getCurrentDirectory(), TXT("Shell") );
+
+	net::NetworkManager::create();
+	res::ResourceServer::create();
+
+
+
+
+	res::ResourceServer::registerResourceType( res::EResourceType::Effect, new ffx::Compiler( new dx11::ShaderCompiler() ) );
+	res::ResourceServer::registerResourceType( res::EResourceType::Image, new img::Converter() );
+	res::ResourceServer::registerResourceType( res::EResourceType::Font, new fnt::Compiler() );
+
 }
 
 
@@ -48,7 +61,13 @@ CShell::CShell()
 //
 CShell::~CShell()
 {
+	res::ResourceServer::destroy();
+
+	net::NetworkManager::destroy();
+
 	LogManager::instance().removeCallback( this );
+
+	ConfigManager::destroy();
 
 	GShell	= nullptr;
 }
@@ -59,9 +78,13 @@ CShell::~CShell()
 //
 Int32 CShell::Run( Int32 ArgC, Char* ArgV[] )
 {
-	//
-	// ToDo: Insert main shell work here.
-	//
+
+	while( true ) // todo: add signal for quit
+	{
+		res::ResourceServer::update();
+
+		threading::sleep( 10 );
+	}
 
 	warn( L"It's seems like nothing to do" );
 	warn( L"Bye :)" );
@@ -117,8 +140,9 @@ void CShell::handleFatalMessage( const Char* message )
 	SetConsoleTextAttribute( m_consoleHandle, FOREGROUND_RED | FOREGROUND_INTENSITY );
 
 	wprintf( L"FATAL!\n %s\n\n", message );
-	wprintf( L"StackTrace:\n %s", flu::win::stackTrace( nullptr ) );
+	wprintf( L"StackTrace:\n %s\n\n", flu::win::stackTrace( nullptr ) );
 
+	system( "pause" );
 	ExitProcess( 0 );
 }
 

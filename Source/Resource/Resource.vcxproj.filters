@@ -20,6 +20,18 @@
     <ClInclude Include="RemoteStorage.h">
       <Filter>Storage</Filter>
     </ClInclude>
+    <ClInclude Include="Remote\ResourceServer.h">
+      <Filter>Remote</Filter>
+    </ClInclude>
+    <ClInclude Include="Remote\ResourceClient.h">
+      <Filter>Remote</Filter>
+    </ClInclude>
+    <ClInclude Include="Remote\Common.h">
+      <Filter>Remote</Filter>
+    </ClInclude>
+    <ClInclude Include="IStorage.h">
+      <Filter>Storage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Resource.cpp" />
@@ -35,10 +47,19 @@
     <ClCompile Include="RemoteStorage.cpp">
       <Filter>Storage</Filter>
     </ClCompile>
+    <ClCompile Include="Remote\ResourceServer.cpp">
+      <Filter>Remote</Filter>
+    </ClCompile>
+    <ClCompile Include="Remote\ResourceClient.cpp">
+      <Filter>Remote</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Storage">
       <UniqueIdentifier>{abaf77b6-f9ab-41f2-9787-2dc01c9f296d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Remote">
+      <UniqueIdentifier>{39482930-568c-4ca8-ae21-60fbdfcc5a77}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

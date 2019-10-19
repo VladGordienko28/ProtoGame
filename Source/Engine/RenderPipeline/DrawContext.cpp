@@ -9,9 +9,10 @@ namespace flu
 {
 namespace gfx
 {
-	DrawContext::DrawContext( rend::Device* device )
+	DrawContext::DrawContext( rend::Device* device, gfx::SharedConstants& sharedConstants )
 		:	m_device( device ),
-			m_sharedConstants( device )
+			m_sharedConstants( sharedConstants ),
+			m_scissorArea( rend::ScissorArea::NULL_AREA() )
 	{
 		assert( device );
 	}
@@ -35,6 +36,17 @@ namespace gfx
 	const ViewInfo& DrawContext::getViewInfo() const
 	{
 		return m_viewInfoStack.peek();
+	}
+
+	void DrawContext::setScissorArea( const rend::ScissorArea& area )
+	{
+		m_scissorArea = area;
+		m_device->setScissorArea(  area );
+	}
+
+	const rend::ScissorArea& DrawContext::getScissorArea() const
+	{
+		return m_scissorArea;
 	}
 
 	void DrawContext::submitViewInfo( const ViewInfo& info )

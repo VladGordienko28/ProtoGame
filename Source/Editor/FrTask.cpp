@@ -109,13 +109,13 @@ void WTaskDialog::Hide()
 void WTaskDialog::RedrawAll()
 {
 	// Render the editor.
-	CCanvas* Canvas	= GEditor->m_legacyRender->Lock();
+	GEditor->m_world->onBeginUpdate();
 	{
 		WEditorPage* Active = GEditor->GetActivePage();
 
 		// Render page.
 		if( Active )
-			Active->RenderPageContent( Canvas );
+			Active->RenderPageContent( GEditor->m_legacyRender->m_canvas.get() );
 
 		// Render editor GUI.
 		GEditor->GUIRender->BeginPaint( GEditor->m_world->drawContext() );
@@ -124,7 +124,7 @@ void WTaskDialog::RedrawAll()
 		}
 		GEditor->GUIRender->EndPaint( GEditor->m_world->drawContext() );
 	}
-	GEditor->m_legacyRender->Unlock();
+	GEditor->m_world->onEndUpdate();
 }
 
 

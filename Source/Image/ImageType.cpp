@@ -42,7 +42,7 @@ namespace img
 
 		if( pngError )
 		{
-			error( TEXT( "Unable to load image \"%s\" with error \"%s\"" ), *m_name, 
+			error( TXT( "Unable to load image \"%s\" with error \"%s\"" ), *m_name, 
 				lodepng_error_text( pngError ) );
 
 			lodepng_state_cleanup( &state );

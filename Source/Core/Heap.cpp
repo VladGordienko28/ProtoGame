@@ -9,8 +9,8 @@
 
 #if FLU_ENABLE_MEM_TRACKING
 #pragma pack( push, 8 )
-#include <DbgHelp.h>
 #include <Windows.h>
+#include <DbgHelp.h>
 #pragma comment( lib, "dbghelp.lib" )
 #pragma pack( pop ) 
 #endif
@@ -31,7 +31,7 @@ namespace mem
 			:	m_allocationList( nullptr ),
 				m_knownLeaksZoneCounter( 0 )
 		{
-			m_kernel32Module = LoadLibrary( TEXT("kernel32.dll") );
+			m_kernel32Module = LoadLibrary( TXT("kernel32.dll") );
 			assert( m_kernel32Module != NULL && "Failed to load kernel32 module" );
 
 			m_captureStackFunc = reinterpret_cast<CaptureStackBackTraceType>( 
@@ -126,13 +126,13 @@ namespace mem
 					}
 
 					fwprintf( file, L"=====\n" );
-					fwprintf( file, L"%#010x : %d bytes\n", it->address, it->size );
+					fwprintf( file, L"0x%p : %d bytes\n", it->address, it->size );
 
 					for( UInt32 i = 0; i < it->numFrames; ++i )
 					{
 						SymFromAddr( hProcess, reinterpret_cast<DWORD64>( it->callstack[i] ), 0, symbol );
 
-						fwprintf( file, L"    %#010x: %hs ( %#010x )\n", it->callstack[i], symbol->Name, symbol->Address );
+						fwprintf( file, L"    0x%p: %hs ( 0x%p )\n", it->callstack[i], symbol->Name, (void*)symbol->Address );
 					}
 
 					fwprintf( file, L"\n" );
@@ -165,7 +165,7 @@ namespace mem
 		}
 
 	private:
-		static const constexpr Char DEFAULT_DUMP_FILE_NAME[] = TEXT("MemoryDump.txt");
+		static const constexpr Char DEFAULT_DUMP_FILE_NAME[] = TXT("MemoryDump.txt");
 		static const SizeT MAX_CALLSTACK_DEPTH = 8;
 		static const UInt32 NUM_FRAMES_TO_SKIP = 1;
 

@@ -9,7 +9,7 @@ namespace flu
 {
 namespace gfx
 {
-	static const Char TEXT_EFFECT_NAME[] = TEXT( "System.Shaders.Text" );
+	static const Char TEXT_EFFECT_NAME[] = TXT( "System.Shaders.Text" );
 
 	TextDrawer::TextDrawer()
 		:	m_vertexBuffer( "TextDrawer_VB" ),

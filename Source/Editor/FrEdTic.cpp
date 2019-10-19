@@ -16,21 +16,7 @@ void CEditor::Tick( Float Delta )
 {
 	profile_zone( EProfilerGroup::General, TotalTime );
 
-	profile_counter( EProfilerGroup::Memory, RAM_TotalAllocated_Kb, mem::stats().totalAllocatedBytes / 1024 );
-	profile_counter( EProfilerGroup::Memory, RAM_PeakAllocated_Kb, mem::stats().peakAllocatedBytes / 1024 );
-	profile_counter( EProfilerGroup::Memory, RAM_AvgAllocSize_b, mem::stats().totalAllocatedBytes / mem::stats().totalAllocations );
 
-
-	// GPU memory stats
-	profile_counter( EProfilerGroup::GPUMemory, GPU_Total_Kb,		m_renderDevice->getMemoryStats().totalBytes() / 1024 );
-	profile_counter( EProfilerGroup::GPUMemory, GPU_Texture_Kb,		m_renderDevice->getMemoryStats().m_texureBytes / 1024 );
-	profile_counter( EProfilerGroup::GPUMemory, GPU_Vertex_Kb,		m_renderDevice->getMemoryStats().m_vertexBufferBytes / 1024 );
-	profile_counter( EProfilerGroup::GPUMemory, GPU_Constant_Kb,	m_renderDevice->getMemoryStats().m_constantBufferBytes / 1024 );
-	profile_counter( EProfilerGroup::GPUMemory, GPU_Index_Kb,		m_renderDevice->getMemoryStats().m_indexBufferBytes / 1024 );
-
-	// Draw calls stats
-	profile_counter( EProfilerGroup::DrawCalls, Draw_Calls, m_renderDevice->getDrawStats().m_drawCalls );
-	profile_counter( EProfilerGroup::DrawCalls, State_Switchings, m_renderDevice->getDrawStats().m_blendStateSwitches );
 
 	// Get active page.
 	WEditorPage* Active = (WEditorPage*)EditorPages->GetActivePage();
@@ -53,22 +39,21 @@ void CEditor::Tick( Float Delta )
 	{
 		profile_zone( EProfilerGroup::General, RenderTime )
 
-		CCanvas* Canvas	= m_legacyRender->Lock();
+		m_world->onBeginUpdate();
 		{
-			m_world->onUpdate();
 
 			// Render page.
 			if( Active )
 			{
-				gfx::ScopedRenderingZone srz( TEXT( "Editor Page" ) );
+				gfx::ScopedRenderingZone srz( TXT( "Editor Page" ) );
 				profile_zone( EProfilerGroup::General, RenderPage );
-				Active->RenderPageContent( Canvas );
+				Active->RenderPageContent( m_legacyRender->m_canvas.get() );
 			}
 
 			// Render editor GUI.
 			{
 				profile_zone( EProfilerGroup::General, RenderGUI );
-				gfx::ScopedRenderingZone srz( TEXT( "Editor GUI" ) );
+				gfx::ScopedRenderingZone srz( TXT( "Editor GUI" ) );
 
 				GUIRender->BeginPaint( m_world->drawContext() );
 				{
@@ -80,10 +65,10 @@ void CEditor::Tick( Float Delta )
 			// update profiler
 			{
 				profile_zone( EProfilerGroup::General, RenderChart );
-				m_engineChart->render( Canvas, m_world->drawContext() );
+				m_engineChart->render( m_legacyRender->m_canvas.get(), m_world->drawContext() );
 			}
 		}
-		m_legacyRender->Unlock();
+		m_world->onEndUpdate();
 
 		// Fooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 		{

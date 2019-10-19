@@ -5,6 +5,10 @@
 
 #include "Core.h"
 
+#if FLU_PLATFORM_WINDOWS
+#include <Windows.h>
+#endif
+
 namespace flu
 {
 namespace threading
@@ -14,53 +18,70 @@ namespace threading
 #endif
 
 #if FLU_PLATFORM_WINDOWS
-
-	DWORD _stdcall Thread::_threadEntryPoint( LPVOID pThis )
+	/**
+	 *	This is WinAPI thread
+	 */
+	class WinThread: public Thread
 	{
-		Thread* thisThread = reinterpret_cast<Thread*>( pThis );
-		thisThread->m_entryFunction( thisThread->m_args );
-		return 0;
-	}
-
-	Thread::Thread( EntryFunction entryFunction, void* args )
-		:	m_entryFunction( entryFunction ),
-			m_args( args )
-	{
-		DWORD outThreadId;
-		m_thread = CreateThread( nullptr, 0, _threadEntryPoint, this, 0, &outThreadId );
-		//todo: add thread naming
-	}
-
-	Thread::~Thread()
-	{
-		WaitForSingleObject( m_thread, INFINITE );
-		CloseHandle( m_thread );
-	}
-
-	void Thread::setPriority( EThreadPriority newPriority )
-	{
-		switch( newPriority )
+	public:
+		WinThread( EntryFunction entryFunction, void* args )
+			:	m_entryFunction( entryFunction ),
+				m_args( args )
 		{
-			case EThreadPriority::Low:
-				SetThreadPriority( m_thread, THREAD_PRIORITY_BELOW_NORMAL );
-				break;
-
-			case EThreadPriority::Normal:
-				SetThreadPriority( m_thread, THREAD_PRIORITY_NORMAL );
-				break;
-
-			case EThreadPriority::High:
-				SetThreadPriority( m_thread, THREAD_PRIORITY_ABOVE_NORMAL );
-				break;
-
-			default:
-				assert( false && "Unknown thread priority" );
+			DWORD outThreadId;
+			m_thread = CreateThread( nullptr, 0, _threadEntryPoint, this, 0, &outThreadId );
+			//todo: add thread naming
 		}
-	}
 
-	void Thread::wait()
+		~WinThread()
+		{
+			WaitForSingleObject( m_thread, INFINITE );
+			CloseHandle( m_thread );
+		}
+
+		void setPriority( EThreadPriority newPriority ) override
+		{
+			switch( newPriority )
+			{
+				case EThreadPriority::Low:
+					SetThreadPriority( m_thread, THREAD_PRIORITY_BELOW_NORMAL );
+					break;
+
+				case EThreadPriority::Normal:
+					SetThreadPriority( m_thread, THREAD_PRIORITY_NORMAL );
+					break;
+
+				case EThreadPriority::High:
+					SetThreadPriority( m_thread, THREAD_PRIORITY_ABOVE_NORMAL );
+					break;
+
+				default:
+					assert( false && "Unknown thread priority" );
+			}
+		}
+
+		void wait() override
+		{
+			WaitForSingleObject( m_thread, INFINITE );
+		}
+
+	private:
+		HANDLE m_thread;
+
+		EntryFunction m_entryFunction;
+		void* m_args;
+
+		static DWORD _stdcall _threadEntryPoint( LPVOID pThis )
+		{
+			WinThread* thisThread = reinterpret_cast<WinThread*>( pThis );
+			thisThread->m_entryFunction( thisThread->m_args );
+			return 0;		
+		}
+	};
+
+	Thread* Thread::create( EntryFunction entryFunction, void* arg )
 	{
-		WaitForSingleObject( m_thread, INFINITE );
+		return new WinThread( entryFunction, arg );
 	}
 
 #else

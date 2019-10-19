@@ -69,7 +69,7 @@ namespace eval
 			static TYPE_INFO typeInfo;
 
 			// todo: add proper support of dual symbols
-			lexer::Lexer lexer( new Text( expression ), { typeInfo.getDualSymbols(), TEXT( '\"' ) } );
+			lexer::Lexer lexer( new Text( expression ), { typeInfo.getDualSymbols(), TXT( '\"' ) } );
 			String error;
 
 			Bool status = evaluateImpl( lexer, variables, typeInfo, result, 0, error );
@@ -89,16 +89,16 @@ namespace eval
 			lexer::Token token;
 			lexer.getToken( token, true );
 
-			if( token.getText() == TEXT( "(" ) )
+			if( token.getText() == TXT( "(" ) )
 			{
 				if( !evaluateImpl( lexer, variables, typeInfo, value, 0, error ) )
 				{
 					return false;
 				}
 
-				if( !lexer.matchSymbol( TEXT( ")" ) ) )
+				if( !lexer.matchSymbol( TXT( ")" ) ) )
 				{
-					error = TEXT( "No enclosing bracket found" );
+					error = TXT( "No enclosing bracket found" );
 					return false;
 				}
 			}
@@ -112,7 +112,7 @@ namespace eval
 				}
 				else
 				{
-					error = String::format( TEXT( "Variable \"%s\" is not found" ), *token.getText() );
+					error = String::format( TXT( "Variable \"%s\" is not found" ), *token.getText() );
 					return false;
 				}
 			}
@@ -130,7 +130,7 @@ namespace eval
 			}
 			else
 			{
-				error = TEXT( "Missing sub-expression" );
+				error = TXT( "Missing sub-expression" );
 				return false;
 			}
 
@@ -181,29 +181,29 @@ namespace eval
 	public:
 		IntegerTypeInfo()
 		{
-			m_unaryOperators.put( TEXT( "-" ), { []( Int32 a )->Int32{ return -a; } } );
-			m_unaryOperators.put( TEXT( "+" ), { []( Int32 a )->Int32{ return +a; } } );
-			m_unaryOperators.put( TEXT( "~" ), { []( Int32 a )->Int32{ return ~a; } } );
-			m_unaryOperators.put( TEXT( "!" ), { []( Int32 a )->Int32{ return !a; } } );
+			m_unaryOperators.put( TXT( "-" ), { []( Int32 a )->Int32{ return -a; } } );
+			m_unaryOperators.put( TXT( "+" ), { []( Int32 a )->Int32{ return +a; } } );
+			m_unaryOperators.put( TXT( "~" ), { []( Int32 a )->Int32{ return ~a; } } );
+			m_unaryOperators.put( TXT( "!" ), { []( Int32 a )->Int32{ return !a; } } );
 
-			m_binaryOperators.put( TEXT( "+"  ), { 5, []( Int32 a, Int32 b )->Int32{ return a + b;  } } );
-			m_binaryOperators.put( TEXT( "-"  ), { 5, []( Int32 a, Int32 b )->Int32{ return a - b;  } } );
-			m_binaryOperators.put( TEXT( "*"  ), { 6, []( Int32 a, Int32 b )->Int32{ return a * b;  } } );
-			m_binaryOperators.put( TEXT( "/"  ), { 6, []( Int32 a, Int32 b )->Int32{ return a / b;  } } );
-			m_binaryOperators.put( TEXT( "%"  ), { 6, []( Int32 a, Int32 b )->Int32{ return a % b;  } } );
+			m_binaryOperators.put( TXT( "+"  ), { 5, []( Int32 a, Int32 b )->Int32{ return a + b;  } } );
+			m_binaryOperators.put( TXT( "-"  ), { 5, []( Int32 a, Int32 b )->Int32{ return a - b;  } } );
+			m_binaryOperators.put( TXT( "*"  ), { 6, []( Int32 a, Int32 b )->Int32{ return a * b;  } } );
+			m_binaryOperators.put( TXT( "/"  ), { 6, []( Int32 a, Int32 b )->Int32{ return a / b;  } } );
+			m_binaryOperators.put( TXT( "%"  ), { 6, []( Int32 a, Int32 b )->Int32{ return a % b;  } } );
 
-			m_binaryOperators.put( TEXT( "<"  ), { 4, []( Int32 a, Int32 b )->Int32{ return a < b;  } } );
-			m_binaryOperators.put( TEXT( ">"  ), { 4, []( Int32 a, Int32 b )->Int32{ return a > b;  } } );
-			m_binaryOperators.put( TEXT( "<=" ), { 4, []( Int32 a, Int32 b )->Int32{ return a <= b; } } );
-			m_binaryOperators.put( TEXT( ">=" ), { 4, []( Int32 a, Int32 b )->Int32{ return a >= b; } } );
+			m_binaryOperators.put( TXT( "<"  ), { 4, []( Int32 a, Int32 b )->Int32{ return a < b;  } } );
+			m_binaryOperators.put( TXT( ">"  ), { 4, []( Int32 a, Int32 b )->Int32{ return a > b;  } } );
+			m_binaryOperators.put( TXT( "<=" ), { 4, []( Int32 a, Int32 b )->Int32{ return a <= b; } } );
+			m_binaryOperators.put( TXT( ">=" ), { 4, []( Int32 a, Int32 b )->Int32{ return a >= b; } } );
 
-			m_binaryOperators.put( TEXT( "==" ), { 3, []( Int32 a, Int32 b )->Int32{ return a == b; } } );
-			m_binaryOperators.put( TEXT( "!=" ), { 3, []( Int32 a, Int32 b )->Int32{ return a != b; } } );
+			m_binaryOperators.put( TXT( "==" ), { 3, []( Int32 a, Int32 b )->Int32{ return a == b; } } );
+			m_binaryOperators.put( TXT( "!=" ), { 3, []( Int32 a, Int32 b )->Int32{ return a != b; } } );
 
-			m_dualSymbols.push( TEXT( "<=" ) );
-			m_dualSymbols.push( TEXT( ">=" ) );
-			m_dualSymbols.push( TEXT( "!=" ) );
-			m_dualSymbols.push( TEXT( "==" ) );
+			m_dualSymbols.push( TXT( "<=" ) );
+			m_dualSymbols.push( TXT( ">=" ) );
+			m_dualSymbols.push( TXT( "!=" ) );
+			m_dualSymbols.push( TXT( "==" ) );
 		}
 
 		Bool parseValue( const lexer::Token& token, Int32& outValue ) const override
@@ -228,13 +228,13 @@ namespace eval
 	public:
 		FloatTypeInfo()
 		{
-			m_unaryOperators.put( TEXT( "-" ), { []( Float a )->Float{ return -a; } } );
-			m_unaryOperators.put( TEXT( "+" ), { []( Float a )->Float{ return +a; } } );
+			m_unaryOperators.put( TXT( "-" ), { []( Float a )->Float{ return -a; } } );
+			m_unaryOperators.put( TXT( "+" ), { []( Float a )->Float{ return +a; } } );
 
-			m_binaryOperators.put( TEXT( "+"  ), { 5, []( Float a, Float b )->Float{ return a + b;  } } );
-			m_binaryOperators.put( TEXT( "-"  ), { 5, []( Float a, Float b )->Float{ return a - b;  } } );
-			m_binaryOperators.put( TEXT( "*"  ), { 6, []( Float a, Float b )->Float{ return a * b;  } } );
-			m_binaryOperators.put( TEXT( "/"  ), { 6, []( Float a, Float b )->Float{ return a / b;  } } );
+			m_binaryOperators.put( TXT( "+"  ), { 5, []( Float a, Float b )->Float{ return a + b;  } } );
+			m_binaryOperators.put( TXT( "-"  ), { 5, []( Float a, Float b )->Float{ return a - b;  } } );
+			m_binaryOperators.put( TXT( "*"  ), { 6, []( Float a, Float b )->Float{ return a * b;  } } );
+			m_binaryOperators.put( TXT( "/"  ), { 6, []( Float a, Float b )->Float{ return a / b;  } } );
 		}
 
 		Bool parseValue( const lexer::Token& token, Float& outValue ) const override

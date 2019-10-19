@@ -10,8 +10,7 @@ namespace flu
 namespace res
 {
 	ResourceManager::ResourceManager()
-		:	m_packagesPath( TEXT( "" ) ),
-			m_isInitialized( false )
+		:	m_isInitialized( false )
 	{
 	}
 
@@ -19,13 +18,13 @@ namespace res
 	{
 		if( m_isInitialized )
 		{
-			fatal( TEXT( "ResourceManager wasn't deinitialized properly" ) );
+			fatal( TXT( "ResourceManager wasn't deinitialized properly" ) );
 		}
 	}
 
-	Bool ResourceManager::create( String packagesPath, String cachePath, Bool useCache )
+	Bool ResourceManager::create()
 	{
-		return instance().createImpl( packagesPath, cachePath, useCache );
+		return instance().createImpl();
 	}
 
 	void ResourceManager::destroy()
@@ -50,7 +49,7 @@ namespace res
 		ResourceManager& manager = instance();
 
 		assert( manager.m_localStorage );
-		return PackageStorage::generatePackages( manager.m_localStorage.get(), manager.m_packagesPath ) > 0;
+		return PackageStorage::generatePackages( manager.m_localStorage.get(), manager.m_localStorage->getPackagesPath() ) > 0;
 	}
 
 	Bool ResourceManager::loadAllPackages()
@@ -59,7 +58,7 @@ namespace res
 		ResourceManager& manager = instance();
 		if( manager.m_packageStorage.hasObject() )
 		{
-			return manager.m_packageStorage->loadAllPackages( manager.m_packagesPath );
+			return manager.m_packageStorage->loadAllPackages( manager.m_localStorage->getPackagesPath() );
 		}
 		else
 		{
@@ -67,15 +66,40 @@ namespace res
 		}
 	}
 
-	Bool ResourceManager::createImpl( String packagesPath, String cachePath, Bool useCache )
+	Bool ResourceManager::createImpl()
 	{
 		assert( !m_isInitialized );
 
-		m_packagesPath = fm::resolveFileName( *packagesPath, fm::EPathBase::Exe );
+		String storageType = ConfigManager::readString( EConfigFile::Application, TXT("ResourceManager"), TXT("Storage") );
 
-		m_localStorage = new LocalStorage( packagesPath, cachePath, useCache );
+		if( storageType == TXT("LOCAL") )
+		{
+			String packagesPath = ConfigManager::readString( EConfigFile::Application, TXT("ResourceManager"), TXT("PackagesPath") );
+			String cachePath = ConfigManager::readString( EConfigFile::Application, TXT("ResourceManager"), TXT("CachePath") );
+			Bool useCache = ConfigManager::readString( EConfigFile::Application, TXT("ResourceManager"), TXT("UseCache") );
 
-		m_packageStorage = new PackageStorage();
+			m_localStorage = new LocalStorage( packagesPath, cachePath, useCache );
+			m_storage = m_localStorage.get();
+		}
+		else if( storageType == TXT("PACKAGE") )
+		{
+			m_packageStorage = new PackageStorage();
+			m_storage = m_packageStorage.get();
+		}
+		else if( storageType == TXT("REMOTE") )
+		{
+			String serverAddress = ConfigManager::readString( EConfigFile::Application, TXT("ResourceManager"), TXT("ResourceServer") );
+			
+			m_remoteStorage = new RemoteStorage( serverAddress );
+			m_storage = m_remoteStorage.get();
+		}
+		else
+		{
+			fatal( L"Unknown resource storage type \"%s\"", *storageType );
+			return false;
+		}
+
+		m_storage->setListener( &m_listener );
 
 		m_isInitialized = true;
 		info( L"ResourceManager is initialized" );
@@ -93,6 +117,11 @@ namespace res
 		{
 			it = nullptr;
 		}
+
+		// shutdown one of the storages
+		m_localStorage = nullptr;
+		m_packageStorage = nullptr;
+		m_remoteStorage = nullptr;
 
 		m_isInitialized = false;
 		info( L"ResourceManager is deinitialized" );
@@ -121,11 +150,9 @@ namespace res
 	void ResourceManager::updateImpl()
 	{
 		assert( m_isInitialized );	
+		assert( m_storage );
 
-		if( m_localStorage.hasObject() )
-		{
-			m_localStorage->reloadChanged( m_systems, m_listener );
-		}
+		m_storage->update( m_systems );
 	}
 
 	void ResourceManager::addListener( IListener* listener )
@@ -148,60 +175,23 @@ namespace res
 
 	CompiledResource ResourceManager::requestCompiled( EResourceType type, String resourceName )
 	{
-		CompiledResource compiledResource;
-/*
-		// attempt to load from compiled package
-		if( m_packageStorage.hasObject() )
-		{
-			compiledResource = m_packageStorage->requestCompiled( type, resourceName, m_listener );
-			
-			if( compiledResource.isValid() )
-			{
-				return compiledResource;
-			}
-		}*/
+		assert( m_storage );
 
-		// attempt to compile or load from the cache
-		if( m_localStorage.hasObject() )
-		{
-			compiledResource = m_localStorage->requestCompiled( type, resourceName, m_listener, true );
-		}
-
-		return compiledResource;
+		return m_storage->requestCompiled( type, resourceName );
 	}
 
 	CompiledResource ResourceManager::requestCompiled( ResourceId resourceId )
 	{
-		CompiledResource compiledResource;
-/*
-		// attempt to load from compiled package
-		if( m_packageStorage.hasObject() )
-		{
-			compiledResource = m_packageStorage->requestCompiled( type, resourceName, m_listener );
-			
-			if( compiledResource.isValid() )
-			{
-				return compiledResource;
-			}
-		}*/
+		assert( m_storage );
 
-		// attempt to compile or load from the cache
-		if( m_localStorage.hasObject() )
-		{
-			compiledResource = m_localStorage->requestCompiled( resourceId, m_listener, true );
-		}
-
-		return compiledResource;
+		return m_storage->requestCompiled( resourceId );
 	}
 
 	String ResourceManager::resolveResourceId( ResourceId resourceId ) const
 	{
-		if( m_localStorage.hasObject() )
-		{
-			return m_localStorage->resolveResourceId( resourceId );
-		}
+		assert( m_storage );
 
-		return TEXT( "" );
+		return m_storage->resolveResourceId( resourceId );
 	}
 }
 }

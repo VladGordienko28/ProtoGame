@@ -23,7 +23,7 @@ namespace fnt
 		{
 			const String ext = fm::getFileExt( *relativePath );
 
-			return ext == TEXT( "ffnt" );
+			return ext == TXT( "ffnt" );
 		}
 	};
 }

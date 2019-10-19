@@ -2,13 +2,12 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Network.cpp" />
-    <ClCompile Include="FrConnect.cpp" />
-    <ClCompile Include="FrNetUtils.cpp" />
     <ClCompile Include="NetworkManager.cpp" />
+    <ClCompile Include="UDP.cpp" />
+    <ClCompile Include="TCP.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Network.h" />
-    <ClInclude Include="FrConnect.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="Interfaces.h" />
     <ClInclude Include="NetworkManager.h" />

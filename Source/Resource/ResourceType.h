@@ -17,6 +17,7 @@ namespace res
 		Font,
 		MAX
 	};
+	ENUM_FOR_STREAM( EResourceType );
 
 	/**
 	 *	A binary representation of the resource

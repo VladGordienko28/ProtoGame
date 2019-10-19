@@ -122,7 +122,7 @@ namespace ffx
 					ApiShader vs;
 					vs.type = rend::EShaderType::ST_Vertex;
 					vs.handle =  m_device->createVertexShader( it, 
-						vertexDeclaration, *wide2AnsiString( m_name + TEXT("_VS") ) );
+						vertexDeclaration, *wide2AnsiString( m_name + TXT("_VS") ) );
 
 					m_apiShaders.push( vs );
 					break;
@@ -132,14 +132,14 @@ namespace ffx
 					ApiShader ps;
 					ps.type = rend::EShaderType::ST_Pixel;
 					ps.handle =  m_device->createPixelShader( it, 
-						*wide2AnsiString( m_name + TEXT("_PS") ) );
+						*wide2AnsiString( m_name + TXT("_PS") ) );
 
 					m_apiShaders.push( ps );
 					break;
 				}
 				default:
 				{
-					fatal( TEXT("Unknown shader type %d"), it.getType() );
+					fatal( TXT("Unknown shader type %d"), it.getType() );
 					break;
 				}
 			}
@@ -176,7 +176,7 @@ namespace ffx
 					break;
 
 				default:
-					fatal( TEXT("Unknown shader type %d"), it.type );
+					fatal( TXT("Unknown shader type %d"), it.type );
 					break;
 			}
 		}

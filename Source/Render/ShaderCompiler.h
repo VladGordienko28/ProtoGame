@@ -105,12 +105,12 @@ namespace rend
 	/**
 	 *	An abstract shader compiler
 	 */
-	class ShaderCompiler
+	class ShaderCompiler: public NonCopyable
 	{
 	public:
 		using UPtr = UniquePtr<ShaderCompiler>;
 
-		~ShaderCompiler() = default;
+		virtual ~ShaderCompiler() = default;
 
 		virtual CompiledShader compile( EShaderType shaderType, Text::Ptr shaderText, const Char* entryPoint,
 			String* warnings = nullptr, String* errors = nullptr ) = 0;

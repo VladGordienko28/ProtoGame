@@ -113,9 +113,9 @@ namespace rend
 
 	inline EVertexElementUsage getVertexElementUsageByName( String name )
 	{
-		return name == TEXT( "Position" ) ? EVertexElementUsage::Position :
-			name == TEXT( "TexCoord" ) ? EVertexElementUsage::TexCoord :
-			name == TEXT( "Color" ) ? EVertexElementUsage::Color :
+		return name == TXT( "Position" ) ? EVertexElementUsage::Position :
+			name == TXT( "TexCoord" ) ? EVertexElementUsage::TexCoord :
+			name == TXT( "Color" ) ? EVertexElementUsage::Color :
 				EVertexElementUsage::MAX;
 	}
 }

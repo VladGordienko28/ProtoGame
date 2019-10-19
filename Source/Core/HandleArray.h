@@ -30,6 +30,23 @@ namespace flu
 			return id != other.id || gen != other.gen;
 		}
 
+		// for Map<Handle, *>
+		Bool operator<( Handle<ID_BITS, GEN_BITS, DESCR> other ) const
+		{
+			UInt32 a = *reinterpret_cast<const UInt32*>( this );
+			UInt32 b = *reinterpret_cast<const UInt32*>( &other );
+
+			return a < b;
+		}
+
+		Bool operator>( Handle<ID_BITS, GEN_BITS, DESCR> other ) const
+		{
+			UInt32 a = *reinterpret_cast<const UInt32*>( this );
+			UInt32 b = *reinterpret_cast<const UInt32*>( &other );
+
+			return a > b;
+		}
+
 	private:
 		UInt32 id : ID_BITS;
 		UInt32 gen : GEN_BITS;	

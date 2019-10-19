@@ -18,25 +18,6 @@ namespace flu
 		info( L"DirectX11: DirectX11 render initialized" );
 	}
 
-	CCanvas* CDirectX11Render::Lock()
-	{
-		m_device->beginFrame();
-		m_device->clearRenderTarget( INVALID_HANDLE<rend::RenderTargetHandle>(), math::colors::BLACK );
-	
-
-
-
-		return m_canvas.get();
-	}
-
-	void CDirectX11Render::Unlock()
-	{
-		//m_canvas->m_effectSystem->update();
-
-		profile_zone( EProfilerGroup::Render, Present );
-		m_device->endFrame();
-	}
-
 	CDirectX11Render::~CDirectX11Render()
 	{
 		m_canvas = nullptr;
@@ -107,24 +88,6 @@ namespace flu
 		m_device->destroyVertexBuffer( m_polyVB_XYUV );
 
 		m_device->destroyIndexBuffer( m_polyIB );
-	}
-
-	void CDirectX11Canvas::SetClip( const TClipArea& area )
-	{
-		if( CLIP_NONE != area )
-		{
-			rend::ScissorArea scissorArea;
-			scissorArea.left = area.X;
-			scissorArea.top = area.Y;
-			scissorArea.right = area.X + area.Width;
-			scissorArea.bottom = area.Y + area.Height;
-
-			m_device->setScissorArea( scissorArea );		
-		}
-		else
-		{
-			m_device->setScissorArea( rend::ScissorArea::NULL_AREA() );
-		}
 	}
 
 	void CDirectX11Canvas::DrawPoly( const TRenderPoly& poly )

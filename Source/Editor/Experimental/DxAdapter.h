@@ -17,7 +17,6 @@ namespace flu
 		~CDirectX11Canvas();
 
 		// CCanvas interface.
-		void SetClip( const TClipArea& area ) override;
 		void DrawPoly( const TRenderPoly& poly ) override;
 		void DrawRect( const TRenderRect& rect ) override;
 		void DrawList( const TRenderList& list ) override;
@@ -70,11 +69,7 @@ namespace flu
 		CDirectX11Render( rend::Device* inDevice, gfx::DrawContext& drawContext );
 		~CDirectX11Render();
 
-		// CRenderBase interface.
-		CCanvas* Lock() override;
-		void Unlock() override;
-
-	private:
+	public:
 
 		rend::Device* m_device;
 		UniquePtr<CDirectX11Canvas> m_canvas;

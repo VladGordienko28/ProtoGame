@@ -9,7 +9,7 @@ namespace flu
 {
 namespace gfx
 {
-	static const Char PRIMITIVE_EFFECT_NAME[] = TEXT( "System.Shaders.Primitive" );
+	static const Char PRIMITIVE_EFFECT_NAME[] = TXT( "System.Shaders.Primitive" );
 
 	PrimitiveDrawer::PrimitiveDrawer()
 		:	m_vertexBuffer( "PrimitiveDrawer_VB" ),

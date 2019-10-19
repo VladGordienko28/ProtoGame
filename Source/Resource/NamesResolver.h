@@ -25,7 +25,7 @@ namespace res
 
 				if( resourceName != *oldResourceName )
 				{
-					fatal( TEXT( "Names hash collision for \"%s\" and \"%s\"" ),
+					fatal( TXT( "Names hash collision for \"%s\" and \"%s\"" ),
 						*resourceName, **oldResourceName );
 				}
 
@@ -39,7 +39,13 @@ namespace res
 		String getName( ResourceId resourceId ) const
 		{
 			const String* resourceName = m_table.get( resourceId );
-			return resourceName ? *resourceName : TEXT( "" );
+			return resourceName ? *resourceName : TXT( "" );
+		}
+
+		String getPrettyName( ResourceId resourceId ) const
+		{
+			String name = getName( resourceId );
+			return name ? name : resourceId.toString();
 		}
 
 	private:

@@ -8,6 +8,17 @@ namespace flu
 namespace net
 {
 	/**
+	 *	A list of connection errors
+	 */
+	enum class EError
+	{
+		Ok,
+		Failed,		// API call error
+		BadState,	// Connection is in bad state to perform operation
+		Refused		// Disconnected by the other side
+	};
+
+	/**
 	 *	An UDP connection interface
 	 */
 	class UDPConnection: public NonCopyable
@@ -39,13 +50,13 @@ namespace net
 			Connected
 		};
 
-		virtual Bool connect( const Address& serverAddress ) = 0;
-		virtual Bool shutdown() = 0;
+		virtual EError connect( const Address& serverAddress ) = 0; // todo: add timeout here!
+		virtual EError shutdown() = 0;
 
-		virtual void update() const = 0;
+		virtual EError waitForConnection() = 0;
 
-		virtual Bool sendData( const void* data, SizeT size ) = 0;
-		virtual SizeT receiveData( void* data, SizeT size ) = 0;
+		virtual EError sendData( const void* data, SizeT size, SizeT& bytesSended ) = 0;
+		virtual EError receiveData( void* data, SizeT size, SizeT& bytesReceived ) = 0;
 
 		virtual EState getState() const = 0;
 		
@@ -71,19 +82,15 @@ namespace net
 			Listening
 		};
 
-		virtual Bool bindToPort( UInt16 port ) = 0;
-		virtual Bool shutdown() = 0;
+		virtual EError listen( UInt16 port, UInt32 maxQueueSize ) = 0;
+		virtual EError shutdown() = 0;
 
-		virtual Bool listen( UInt32 maxQueueSize ) = 0;
-
-		virtual void update() = 0;
-
-		virtual Bool sendData( ClientId clientId, const void* data, SizeT size ) = 0;
-		virtual SizeT receiveData( ClientId clientId, void* data, SizeT size ) = 0;
+		virtual EError sendData( ClientId clientId, const void* data, SizeT size, SizeT& bytesSended ) = 0;
+		virtual EError receiveData( ClientId clientId, void* data, SizeT size, SizeT& bytesReceived ) = 0;
 
 		virtual ClientId pollConnection() = 0;
-		virtual Bool disconnectClient( ClientId clientId ) = 0;
-		virtual Bool isConnected( ClientId clientId ) const = 0;
+		virtual EError disconnectClient( ClientId clientId ) = 0;
+		virtual Address getClientAddress( ClientId clientId ) const = 0;
 
 		virtual EState getState() const = 0;
 

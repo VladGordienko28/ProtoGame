@@ -594,7 +594,7 @@ void FLevel::renderLevel( CCanvas* canvas, Int32 x, Int32 y, Int32 width, Int32 
 		}
 		canvas->PopTransform();
 
-
+/*
 	// Render HUD in-game only.
 	if( bIsPlaying && (RndFlags & RND_HUD) )
 	{
@@ -617,7 +617,7 @@ void FLevel::renderLevel( CCanvas* canvas, Int32 x, Int32 y, Int32 width, Int32 
 			m_primitiveDrawer.flush();
 		}
 		canvas->PopTransform();
-	}
+	}*/
 }
 
 

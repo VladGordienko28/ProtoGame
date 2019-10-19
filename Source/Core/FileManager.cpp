@@ -357,7 +357,7 @@ namespace fm
 		}
 		else
 		{
-			error( TEXT( "Unable to create directory \"%s\" with error %d" ),
+			error( TXT( "Unable to create directory \"%s\" with error %d" ),
 				dirPath, GetLastError() );
 
 			return false;

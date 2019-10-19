@@ -105,14 +105,14 @@ namespace rend
 		virtual ShaderResourceView getShaderResourceView( RenderTargetHandle handle ) = 0;
 		virtual ShaderResourceView getShaderResourceView( DepthBufferHandle handle ) = 0;
 
-		virtual ShaderCompiler* createCompiler() const = 0;
-		virtual String compilerMark() const = 0;
-
 		virtual const MemoryStats& getMemoryStats() const = 0;
 		virtual const DrawStats& getDrawStats() const = 0;
 
 		virtual Bool copyTextureToCPU( Texture2DHandle handle, EFormat& outFormat,
 			UInt32& outWidth, UInt32& outHeight, Array<UInt8>& outData ) = 0;
+
+		virtual ShaderCompiler* createCompiler() const = 0;
+		virtual String compilerMark() const = 0;
 
 	private:
 		Device( const Device& ) = delete;

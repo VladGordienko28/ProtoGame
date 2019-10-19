@@ -4,6 +4,13 @@
 =============================================================================*/
 #pragma once
 
+// Flu includes.
+#include "Engine\Engine.h"
+#include "Compiler\Compiler.h"
+#include "Window\Window.h"
+#include "Network/Network.h"
+#include "DirectX11/DirectX11.h"
+
 // C++ includes.
 #include <io.h>
 #include <stdio.h>
@@ -23,10 +30,7 @@
 #undef LoadBitmap
 #undef FindText
 
-// Flu includes.
-#include "Engine\Engine.h"
-#include "Compiler\Compiler.h"
-#include "Window\Window.h"
+
 
 // Shell includes.
 #include "FrShell.h"

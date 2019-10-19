@@ -1055,16 +1055,6 @@ namespace dx11
 		return hash;
 	}
 
-	rend::ShaderCompiler* Device::createCompiler() const
-	{
-		return new ShaderCompiler();
-	}
-
-	String Device::compilerMark() const
-	{
-		return ShaderCompiler::COMPILER_MARK;
-	}
-
 	const rend::MemoryStats& Device::getMemoryStats() const
 	{
 		return m_memoryStats;

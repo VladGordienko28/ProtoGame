@@ -10,191 +10,97 @@ namespace concurrency
 	/**
 	 *	An abstract synchronization object
 	 */
-	class ISyncObject
+	template<typename THIS_TYPE> class ISyncObject: public NonCopyable
 	{
 	public:
-		virtual ~ISyncObject() = default;
-		virtual void lock() = 0;
-		virtual void unlock() = 0;
-	};
+		using UPtr = UniquePtr<THIS_TYPE>;
 
+		class Guard
+		{
+		public:
+			Guard( const UPtr& syncObject )
+				:	m_syncObject( syncObject.get() )
+			{
+				assert( m_syncObject );
+				m_syncObject->lock();
+			}
+
+			~Guard()
+			{
+				m_syncObject->unlock();
+			}
+
+		private:
+			THIS_TYPE* m_syncObject;
+
+			Guard() = delete;
+		};
+	};
 
 	/**
 	 *	A dummy synchronization object
 	 */
-	class Dummy: public ISyncObject
+	class Dummy: public ISyncObject<Dummy>
 	{
 	public:
-		Dummy()
+		void lock()
 		{
 		}
 
-		void lock() override
+		void unlock()
 		{
 		}
 
-		void unlock() override
-		{
-		}
+		static Dummy* create();
+
+	protected:
+		Dummy() = default;
 	};
 
 	/**
 	 *	A critical section.
 	 */
-	class CriticalSection: public ISyncObject
+	class CriticalSection: public ISyncObject<CriticalSection>
 	{
-#if FLU_PLATFORM_WINDOWS
 	public:
-		CriticalSection()
-		{
-			InitializeCriticalSection( &m_criticalSection );
-			m_acquired = false;
-		}
+		virtual void lock() = 0;
+		virtual Bool tryLock() = 0;
+		virtual void unlock() = 0;
 
-		~CriticalSection()
-		{
-			DeleteCriticalSection( &m_criticalSection );
-		}
+		static CriticalSection* create();
 
-		void lock() override
-		{
-			EnterCriticalSection( &m_criticalSection );
-			assert( m_acquired == false );
-			m_acquired = true;
-		}
-
-		Bool tryLock()
-		{
-			if( TryEnterCriticalSection( &m_criticalSection ) )
-			{
-				assert( m_acquired == false );
-				m_acquired = true;
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		void unlock() override
-		{
-			m_acquired = false;
-			LeaveCriticalSection( &m_criticalSection );
-		}
-
-	private:
-		CRITICAL_SECTION m_criticalSection;
-		Bool m_acquired;
-#else
-#error CriticalSection is not implemented for current platform
-#endif
+	protected:
+		CriticalSection() = default;
 	};
 
 	/**
 	 *	A mutex
 	 */
-	class Mutex: public ISyncObject
+	class Mutex: public ISyncObject<Mutex>
 	{
-#if FLU_PLATFORM_WINDOWS
 	public:
-		Mutex()
-		{
-			m_mutex = CreateMutex( nullptr, false, nullptr );
-		}
+		virtual void lock() = 0;
+		virtual void unlock() = 0;
 
-		~Mutex()
-		{
-			CloseHandle( m_mutex );
-		}
+		static Mutex* create();
 
-		void lock() override
-		{
-			WaitForSingleObject( m_mutex, INFINITE );
-		}
-
-		void unlock() override
-		{
-			ReleaseMutex( m_mutex );
-		}
-
-	private:
-		HANDLE m_mutex;
-#else
-#error Mutex is not implemented for current platform
-#endif
+	protected:
+		Mutex() = default;
 	};
 
 	/**
 	 *	A lightweight spinlock
 	 */
-	class SpinLock: public ISyncObject
+	class SpinLock: public ISyncObject<SpinLock>
 	{
-#if FLU_PLATFORM_WINDOWS
 	public:
-		SpinLock()
-		{
-			m_locked = false;
-		}
+		virtual void lock() = 0;
+		virtual void unlock() = 0;
 
-		void lock() override
-		{
-			static const UInt32 IDLING_COUNT = 128;
-			UInt32 spinner = IDLING_COUNT;
+		static SpinLock* create();
 
-			for( ; ; )
-			{
-				if( InterlockedExchange( &m_locked, 1 ) == 0 )
-				{
-					break;
-				}
-
-				if( --spinner == 0 )
-				{
-					spinner = IDLING_COUNT;
-					Sleep( 0 );
-				}
-			}
-		}
-
-		void unlock() override
-		{
-			InterlockedExchange( &m_locked, 0 );
-		}
-
-	private:
-		volatile UInt32 m_locked;
-#else
-#error SpinLock is not implemented for current platform
-#endif
-	};
-
-	/**
-	 *	A scoped lock which is useful for guard data in
-	 *	scope
-	 */
-	class ScopeLock final
-	{
-	public:	
-		ScopeLock( typename ISyncObject& inSyncObject )
-			:	m_syncObject( inSyncObject )
-		{
-			m_syncObject.lock();
-		}
-
-		~ScopeLock()
-		{
-			m_syncObject.unlock();
-		}
-
-	private:
-		ISyncObject& m_syncObject;
-
-		ScopeLock() = delete;
-		ScopeLock( const ScopeLock& ) = delete;
-		ScopeLock( ScopeLock&& ) = delete;
-		ScopeLock& operator=( const ScopeLock& ) = delete;
-		ScopeLock& operator=( ScopeLock&& ) = delete;
+	protected:
+		SpinLock() = default;
 	};
 
 } // namespace concurrency

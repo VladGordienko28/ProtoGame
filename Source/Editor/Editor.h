@@ -4,6 +4,23 @@
 =============================================================================*/
 #pragma once
 
+// Flu includes.
+#include "Core/Core.h"
+#include "Engine/Engine.h"
+#include "GUI/GUI.h"
+#include "Window/Window.h"
+#include "OpenGL/OpenGLRend.h"
+#include "OpenAL/OpenALAud.h"
+#include "Compiler/Compiler.h"
+#include "Network/Network.h"
+#include "Resource/Resource.h"
+#include "Image/Image.h"
+
+// experimental:
+#include "DirectX11/DirectX11.h"
+#include "FFX/FFX.h"
+#include "Experimental/DxAdapter.h"
+
 #define WIN32_LEAN_AND_MEAN
 
 // C++ includes.
@@ -21,22 +38,7 @@
 #undef FindText
 #undef EVENT_MAX
 
-// Flu includes.
-#include "Core/Core.h"
-#include "Engine/Engine.h"
-#include "GUI/GUI.h"
-#include "Window/Window.h"
-#include "OpenGL/OpenGLRend.h"
-#include "OpenAL/OpenALAud.h"
-#include "Compiler/Compiler.h"
-#include "Network/Network.h"
-#include "Resource/Resource.h"
-#include "Image/Image.h"
 
-// experimental:
-#include "DirectX11/DirectX11.h"
-#include "FFX/FFX.h"
-#include "Experimental/DxAdapter.h"
 
 
 // Partial classes tree.

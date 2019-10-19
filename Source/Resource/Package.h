@@ -41,7 +41,7 @@ namespace res
 	{
 	public:
 		using UPtr = UniquePtr<Package>;
-		static constexpr const Char* EXTENSION = TEXT( ".fpkg" );
+		static constexpr const Char* EXTENSION = TXT( ".fpkg" );
 
 		Package();
 		~Package();

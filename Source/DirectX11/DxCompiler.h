@@ -13,7 +13,7 @@ namespace dx11
 	class ShaderCompiler final: public rend::ShaderCompiler
 	{
 	public:
-		static const constexpr Char* COMPILER_MARK = TEXT( "hlsl_4.1" );
+		static const constexpr Char* COMPILER_MARK = TXT( "hlsl_4.1" );
 
 		ShaderCompiler();
 		~ShaderCompiler();

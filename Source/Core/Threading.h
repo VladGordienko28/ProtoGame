@@ -30,31 +30,22 @@ namespace threading
 	/**
 	 *	This is thread
 	 */
-	class Thread
+	class Thread: public NonCopyable
 	{
 	public:
-		Thread( EntryFunction entryFunction, void* arg );
-		~Thread();
-		void setPriority( EThreadPriority newPriority );
-		void wait();
+		using UPtr = UniquePtr<Thread>;
 
-	private:
-		Thread() = delete;
+		static Thread* create( EntryFunction entryFunction, void* arg );
+
+		virtual void setPriority( EThreadPriority newPriority ) = 0;
+		virtual void wait() = 0;
+
+	protected:
+		Thread() = default;
 		Thread( const Thread& ) = delete;
 		Thread( Thread&& ) = delete;
 		Thread& operator=( const Thread& ) = delete;
 		Thread& operator=( Thread&& ) = delete;
-
-#if FLU_PLATFORM_WINDOWS
-		HANDLE m_thread;
-
-		EntryFunction m_entryFunction;
-		void* m_args;
-
-		static DWORD _stdcall _threadEntryPoint( LPVOID pThis );
-#else
-#error Thread is not implemented for current platform
-#endif
 	};
 
 	/**

@@ -21,7 +21,9 @@ namespace net
 		static TCPClient* createTCPClient();
 		static TCPServer* createTCPServer();
 
-		static Address getLocalIP();
+		static Address getLocalIP( String* hostName = nullptr );
+		static Address resolveIP( String hostName );
+		static String unresolveIP( const Address& address );
 
 	private:
 		Bool m_isInitialized;
@@ -29,7 +31,7 @@ namespace net
 		NetworkManager();
 		~NetworkManager();
 
-		NetworkManager& instance();
+		static NetworkManager& instance();
 	};
 }
 }

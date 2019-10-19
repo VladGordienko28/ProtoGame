@@ -27,6 +27,7 @@ namespace flu
 		StringManager()
 		{
 			mem::zero( m_reusePool, sizeof(m_reusePool) );
+			m_reusePoolLock = concurrency::SpinLock::create();
 		}
 
 		~StringManager()
@@ -53,7 +54,7 @@ namespace flu
 				deinitializeString( data );
 			}
 
-			concurrency::ScopeLock lock( m_reusePoolLock );
+			concurrency::SpinLock::Guard slg( m_reusePoolLock );
 
 			if( requiredLength < REUSE_POOL_SIZE && m_reusePool[requiredLength] )
 			{
@@ -79,7 +80,7 @@ namespace flu
 				{
 					if( data->length < REUSE_POOL_SIZE )
 					{
-						concurrency::ScopeLock lock( m_reusePoolLock );
+						concurrency::SpinLock::Guard slg( m_reusePoolLock );
 
 						SizeT len = data->length;
 						data->nextInPool = m_reusePool[len];
@@ -127,7 +128,7 @@ namespace flu
 			Int32 totalLength = 0;
 			Int32 totalStrings = 0;
 
-			concurrency::ScopeLock lock( m_reusePoolLock );
+			concurrency::SpinLock::Guard slg( m_reusePoolLock );
 
 			for( SizeT i = 0; i < REUSE_POOL_SIZE; ++i )
 			{
@@ -171,7 +172,7 @@ namespace flu
 		static_assert( isPowerOfTwo( REUSE_POOL_SIZE ), "Reuse pool size should be power of two" );
 
 		StringData* m_reusePool[REUSE_POOL_SIZE];
-		concurrency::SpinLock m_reusePoolLock;
+		concurrency::SpinLock::UPtr m_reusePoolLock;
 
 		StringManager( StringManager<T>&& ) = delete;
 		StringManager( const StringManager<T>& ) = delete;

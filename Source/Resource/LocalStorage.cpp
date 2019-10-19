@@ -10,6 +10,7 @@ namespace flu
 namespace res
 {
 	LocalStorage::LocalStorage( String packagesPath, String cachePath, Bool useCache )
+		:	m_listener( nullptr )
 	{
 		m_useCache = useCache;
 		m_packagesPath = fm::resolveFileName( *packagesPath, fm::EPathBase::Exe );
@@ -50,33 +51,45 @@ namespace res
 		m_compilers[resTypeId] = compiler;
 	}
 
-	CompiledResource LocalStorage::requestCompiled( ResourceId resourceId,
-		IListener& listener, Bool allowCached )
+	void LocalStorage::setListener( IListener* listener )
+	{
+		m_listener = listener;
+	}
+
+	CompiledResource LocalStorage::requestCompiled( EResourceType type, String resourceName )
+	{
+		return requestCompiledImpl( type, resourceName, true );
+	}
+
+	CompiledResource LocalStorage::requestCompiled( ResourceId resourceId )
+	{
+		return requestCompiledImpl( resourceId, true );
+	}
+
+	CompiledResource LocalStorage::requestCompiledImpl( ResourceId resourceId, Bool allowCached )
 	{
 		// try to resolve ResourceId
 		String resourceName = m_namesResolver.getName( resourceId );
 
 		if( resourceName )
 		{
-			return requestCompiled( resourceId.getType(), resourceName, 
-				listener, allowCached );
+			return requestCompiledImpl( resourceId.getType(), resourceName, allowCached );
 		}
 		else
 		{
-			fatal( TEXT( "LocalStorage: unable to resolve ResourceId \"%s\"" ), *resourceId.toString() );
+			fatal( TXT( "LocalStorage: unable to resolve ResourceId \"%s\"" ), *resourceId.toString() );
 			return CompiledResource();
 		}
 	}
 
-	CompiledResource LocalStorage::requestCompiled( EResourceType type, String resourceName, 
-		IListener& listener, Bool allowCached )
+	CompiledResource LocalStorage::requestCompiledImpl( EResourceType type, String resourceName, Bool allowCached )
 	{
 		ResourceId resourceId( type, resourceName );	
 
 		// attempt to find in cache
 		if( m_useCache && allowCached )
 		{
-			CompiledResource cachedResource = loadFromCache( resourceId, resourceName, listener );
+			CompiledResource cachedResource = loadFromCache( resourceId, resourceName );
 
 			if( cachedResource.isValid() )
 			{
@@ -85,13 +98,13 @@ namespace res
 		}
 
 		// compilation need
-		CompilationOutput output = compile( resourceId, resourceName, listener );
+		CompilationOutput output = compile( resourceId, resourceName );
 
 		if( !output.hasError() )
 		{
 			if( m_useCache )
 			{
-				saveToCache( resourceId, resourceName, output, listener );
+				saveToCache( resourceId, resourceName, output );
 			}
 
 			return output.compiledResource;
@@ -102,26 +115,35 @@ namespace res
 		}
 	}
 
-	String LocalStorage::resolveResourceId( ResourceId resourceId ) const
+	String LocalStorage::resolveResourceId( ResourceId resourceId )
 	{
 		return m_namesResolver.getName( resourceId );
 	}
 
-	void LocalStorage::reloadChanged( ResourceSystemList& systems, IListener& listener )
+	Array<ResourceId> LocalStorage::trackChanges()
 	{
-		Array<ResourceId> changedResources = m_filesTracker->trackChanges();
+		return m_filesTracker->trackChanges();
+	}
+
+	void LocalStorage::update( ResourceSystemList& systemList )
+	{
+		Array<ResourceId> changedResources = trackChanges();
 
 		for( auto& it : changedResources )
 		{
-			IResourceSystem* system = systems[ static_cast<SizeT>( it.getType() ) ].get();
+			IResourceSystem* system = systemList[static_cast<SizeT>( it.getType() )].get();
 			assert( system );
 
 			if( system->allowHotReloading() )
 			{
-				String resourceName = m_namesResolver.getName( it );
-				listener.onInfo( resourceName, TEXT( "changed from the outside, reloading..." ) );
+				String prettyName = m_namesResolver.getPrettyName( it );
 
-				CompiledResource recompiled = requestCompiled( it.getType(), resourceName, listener, false );
+				if( m_listener )
+				{
+					m_listener->onInfo( prettyName, TXT( "changed from the outside, reloading..." ) );
+				}
+
+				CompiledResource recompiled = requestCompiledImpl( it, false );
 
 				if( recompiled.isValid() )
 				{
@@ -129,13 +151,16 @@ namespace res
 				}
 				else
 				{
-					listener.onError( resourceName, TEXT( "unable to reload changed resource" ) );
+					if( m_listener )
+					{
+						m_listener->onError( prettyName, TXT( "unable to reload changed resource" ) );
+					}
 				}
 			}
 		}
 	}
 
-	CompiledResource LocalStorage::loadFromCache( ResourceId resourceId, String resourceName, IListener& listener )
+	CompiledResource LocalStorage::loadFromCache( ResourceId resourceId, String resourceName )
 	{
 		assert( m_useCache && m_cachePath );
 
@@ -193,12 +218,19 @@ namespace res
 						m_namesResolver.addName( it.key, it.value );
 					}
 
-					listener.onInfo( resourceName, TEXT( "found in cache" ) );
+					if( m_listener )
+					{
+						m_listener->onInfo( resourceName, TXT( "found in cache" ) );
+					}
+
 					return compiledResource;				
 				}
 				else
 				{
-					listener.onInfo( resourceName, TEXT( "cache is out of date" ) );
+					if( m_listener )
+					{
+						m_listener->onInfo( resourceName, TXT( "cache is out of date" ) );
+					}
 				}
 			}
 		}
@@ -207,7 +239,7 @@ namespace res
 		return CompiledResource();
 	}
 
-	void LocalStorage::saveToCache( ResourceId resourceId, String resourceName, const CompilationOutput& output, IListener& listener )
+	void LocalStorage::saveToCache( ResourceId resourceId, String resourceName, const CompilationOutput& output )
 	{
 		assert( m_useCache && m_cachePath );
 		assert( !output.hasError() && output.compiledResource.isValid() );
@@ -223,19 +255,23 @@ namespace res
 			*fileWriter << output.references;
 			*fileWriter << output.compiledResource;
 
-			listener.onInfo( resourceName, String::format( TEXT( "Cache saved to \"%s\"" ), *cacheFileName ) );
+			if( m_listener )
+				m_listener->onInfo( resourceName, String::format( TXT( "Cache saved to \"%s\"" ), *cacheFileName ) );
 		}
 		else
 		{
-			listener.onWarning( resourceName, 
-				String::format( TEXT( "Unable save resource cache to \"%s\"" ), *cacheFileName ) );
+			if( m_listener )
+				m_listener->onWarning( resourceName, 
+					String::format( TXT( "Unable save resource cache to \"%s\"" ), *cacheFileName ) );
 		}
 	}
 
-	CompilationOutput LocalStorage::compile( ResourceId resourceId, String resourceName, IListener& listener )
+	CompilationOutput LocalStorage::compile( ResourceId resourceId, String resourceName )
 	{
 		UInt64 startupTime = time::cycles64();
-		listener.onInfo( resourceName, TEXT( "compilation started..." ) );
+
+		if( m_listener )
+			m_listener->onInfo( resourceName, TXT( "compilation started..." ) );
 
 		assert( resourceName );
 		assert( getCompiler( resourceId.getType() ) );
@@ -247,7 +283,9 @@ namespace res
 	
 		if( !resourceFileName )
 		{
-			listener.onError( resourceName, TEXT( "is not found on disk" ) );
+			if( m_listener )
+				m_listener->onError( resourceName, TXT( "is not found on disk" ) );
+
 			return output;
 		}
 
@@ -318,24 +356,34 @@ namespace res
 		};
 
 		String resourceRelativePath = fm::getFilePath( *resourceFileName );
-		String resourcePath = m_packagesPath + resourceRelativePath + TEXT( "\\" );
+		String resourcePath = m_packagesPath + resourceRelativePath + TXT( "\\" );
 
 		DependencyProvider dependencyProvider( resourcePath, resourceRelativePath, output );
 
 		getCompiler( fileType )->compile( fm::getFileNameExt( *resourceFileName ), dependencyProvider, output );
 
 		// output all warnings
-		for( auto& it : output.warningsMsg )
+		if( m_listener )
 		{
-			listener.onWarning( resourceName, it );
+			for( auto& it : output.warningsMsg )
+			{
+				m_listener->onWarning( resourceName, it );
+			}		
 		}
 
 		if( !output.hasError() )
 		{
-			listener.onInfo( resourceName, String::format( L"compiled successfully in %.4f sec", 
-				time::elapsedSecFrom( startupTime ) ) );
+			if( m_listener )
+				m_listener->onInfo( resourceName, String::format( L"compiled successfully in %.4f sec", 
+					time::elapsedSecFrom( startupTime ) ) );
 
 			m_namesResolver.addName( resourceId, resourceName );
+
+			// remember all references
+			for( const auto& it : output.references )
+			{
+				m_namesResolver.addName( it.key, it.value );
+			}
 
 			// untrack old dependencies and track new
 			m_filesTracker->removeResourceFiles( resourceId );
@@ -344,7 +392,8 @@ namespace res
 		else
 		{
 			// compilation failed
-			listener.onError( resourceName, output.errorMsg );
+			if( m_listener )
+				m_listener->onError( resourceName, output.errorMsg );
 		}
 
 		return output;
@@ -358,16 +407,16 @@ namespace res
 		String wildcard = resourceName;
 		for( SizeT i = 0; i < wildcard.len(); ++i )
 		{
-			if( wildcard[i] == TEXT( '.' ) )
+			if( wildcard[i] == TXT( '.' ) )
 			{
-				wildcard[i] = TEXT( '\\' );
+				wildcard[i] = TXT( '\\' );
 			}
 		}
 
-		wildcard += TEXT( ".*" );
+		wildcard += TXT( ".*" );
 
 		String directory = m_packagesPath + fm::getFilePath( *wildcard );
-		String fileMask = fm::getFileName( *wildcard ) + TEXT( "." ) + fm::getFileExt( *wildcard );
+		String fileMask = fm::getFileName( *wildcard ) + TXT( "." ) + fm::getFileExt( *wildcard );
 
 		Array<String> files = fm::findFiles( *directory, *fileMask );
 
@@ -393,7 +442,7 @@ namespace res
 		}
 
 		// nothing found
-		return TEXT( "" );
+		return TXT( "" );
 	}
 
 	EResourceType LocalStorage::getFileResourceType( String fileName ) const
@@ -411,21 +460,25 @@ namespace res
 		return EResourceType::MAX;
 	}
 
-	String LocalStorage::prepareResourceFolder( String resourceName, IListener& listener )
+	String LocalStorage::prepareResourceFolder( String resourceName )
 	{
 		assert( resourceName );
 
 		// check for package name at least
-		if( String::pos( TEXT("."), resourceName ) == -1 )
+		if( String::pos( TXT("."), resourceName ) == -1 )
 		{
-			listener.onError( resourceName, TEXT("missing package name") );
-			return TEXT("");
+			if( m_listener )
+			{
+				m_listener->onError( resourceName, TXT("missing package name") );
+			}
+
+			return TXT("");
 		}
 
 		// step by step create subfolders
 		String result;
 		Int32 folderNamePos = 0;
-		Int32 dotPos = String::pos( TEXT("."), resourceName );
+		Int32 dotPos = String::pos( TXT("."), resourceName );
 
 		while( dotPos != -1 )
 		{
@@ -439,16 +492,19 @@ namespace res
 			{
 				if( !fm::createDirectory( *absolutePath ) )
 				{
-					listener.onError( resourceName, 
-						String::format( TEXT("Unable to create directory \"%s\""), *absolutePath ) );
+					if( m_listener )
+					{
+						m_listener->onError( resourceName, 
+							String::format( TXT("Unable to create directory \"%s\""), *absolutePath ) );
+					}
 
-					return TEXT("");
+					return TXT("");
 				}
 			}
 
 			folderNamePos = dotPos + 1;
-			dotPos = String::pos( TEXT("."), resourceName, folderNamePos );
-			result += TEXT("\\");
+			dotPos = String::pos( TXT("."), resourceName, folderNamePos );
+			result += TXT("\\");
 		}
 
 		return result;

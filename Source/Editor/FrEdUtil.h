@@ -40,6 +40,8 @@ private:
 
 	rend::VertexBufferHandle m_coloredVB;
 	rend::VertexBufferHandle m_texturedVB;
+
+	gfx::DrawContext* m_drawContext;
 };
 
 

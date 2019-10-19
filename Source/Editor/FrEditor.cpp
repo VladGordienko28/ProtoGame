@@ -113,7 +113,6 @@ public:
 
 ResourceListener g_resListener;
 
-
 //
 // Initialize the editor.
 //
@@ -173,9 +172,6 @@ void CEditor::Init( HINSTANCE InhInstance )
 
 
 	m_legacyRender			= new CDirectX11Render( m_renderDevice.get(), m_world->drawContext() );
-
-
-
 
 
 
@@ -331,6 +327,8 @@ void CEditor::Exit()
 	m_world = nullptr;
 	m_renderDevice = nullptr;
 
+	net::NetworkManager::destroy();
+
 	ConfigManager::destroy();
 
 	info( L"Ed: Editor shutdown" ); 
@@ -418,6 +416,7 @@ void CEditor::MainLoop()
 				GfpsTime	= 0.0;
 				GfpsCount	= 0;	
 			}
+
 
 			profile_begin_frame();
 			{

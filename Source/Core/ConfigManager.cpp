@@ -27,10 +27,15 @@ namespace flu
 		void writeFloat( EConfigFile file, const Char* section, const Char* key, Float value  );
 		void writeString( EConfigFile file, const Char* section, const Char* key, String value );
 
+		String getApplicationName() const
+		{
+			return m_appName;
+		}
+
 	private:
-		static const constexpr Char EXTENSION[] = TEXT("*.ini");
-		static const constexpr Char SYSTEM_FILE[] = TEXT("System");
-		static const constexpr Char USER_FILE[] = TEXT("User");
+		static const constexpr Char EXTENSION[] = TXT("*.ini");
+		static const constexpr Char SYSTEM_FILE[] = TXT("System");
+		static const constexpr Char USER_FILE[] = TXT("User");
 
 		struct Value
 		{
@@ -121,11 +126,11 @@ namespace flu
 		String value = readValue( file, section, key );
 		Int32 tempInt;
 
-		if( String::insensitiveCompare( TEXT("True"), value ) == 0 )
+		if( String::insensitiveCompare( TXT("True"), value ) == 0 )
 		{
 			return true;
 		}
-		else if( String::insensitiveCompare( TEXT("False"), value ) == 0 )
+		else if( String::insensitiveCompare( TXT("False"), value ) == 0 )
 		{
 			return false;
 		}
@@ -167,7 +172,7 @@ namespace flu
 
 	void ConfigManagerImpl::writeBool( EConfigFile file, const Char* section, const Char* key, Bool value )
 	{
-		writeValue( file, section, key, value ? TEXT("True") : TEXT("False") );
+		writeValue( file, section, key, value ? TXT("True") : TXT("False") );
 	}
 
 	void ConfigManagerImpl::writeInt( EConfigFile file, const Char* section, const Char* key, Int32 value )
@@ -205,7 +210,7 @@ namespace flu
 			Loop:
 				Char c = getRawChar();
 
-				if( c == TEXT(';') || c == TEXT('#') )
+				if( c == TXT(';') || c == TXT('#') )
 				{
 					m_position.line++;
 					m_position.pos = 0;
@@ -237,13 +242,13 @@ namespace flu
 				break;
 			}
 
-			if( token.getType() == lexer::ETokenType::Symbol && token.getText() == TEXT("[") )
+			if( token.getType() == lexer::ETokenType::Symbol && token.getText() == TXT("[") )
 			{
 				// section declaration
 				String sectionName = lexer.getIdentifier();
 
 				if( sectionName && !file.sections.hasKey( sectionName ) && 
-					lexer.matchSymbol( TEXT("]") ) )
+					lexer.matchSymbol( TXT("]") ) )
 				{
 					file.sections.put( sectionName, {} );	
 					
@@ -264,7 +269,7 @@ namespace flu
 				lexer::Token valueToken;
 
 				if( section && !section->pairs.hasKey( key ) && 
-					lexer.matchSymbol( TEXT("=") ) && lexer.getToken( valueToken, true ) )
+					lexer.matchSymbol( TXT("=") ) && lexer.getToken( valueToken, true ) )
 				{
 					Value value;
 
@@ -312,15 +317,15 @@ namespace flu
 
 		for( const auto& section : file.sections )
 		{
-			writer << String::format( TEXT("[%s]\n"), *section.key );
+			writer << String::format( TXT("[%s]\n"), *section.key );
 
 			for( const auto& pair : section.value.pairs )
 			{
-				auto fmtStr = pair.value.useQuotes ? TEXT("%s=\"%s\"\n") : TEXT("%s=%s\n");
+				auto fmtStr = pair.value.useQuotes ? TXT("%s=\"%s\"\n") : TXT("%s=%s\n");
 				writer << String::format( fmtStr, *pair.key, *pair.value.text );
 			}
 
-			writer << TEXT("\n");
+			writer << TXT("\n");
 		}
 
 		if( fm::writeTextFile( *file.fileName, writer.getText() ) )
@@ -340,11 +345,11 @@ namespace flu
 		{
 			Value* value = sect->pairs.get( key );
 
-			return value ? value->text : TEXT("");
+			return value ? value->text : TXT("");
 		}
 		else
 		{
-			return TEXT("");
+			return TXT("");
 		}
 	}
 
@@ -355,7 +360,7 @@ namespace flu
 
 		Value val;
 		val.text = value;
-		val.useQuotes = cstr::findChar( *value, TEXT(' ') ) != nullptr;
+		val.useQuotes = cstr::findChar( *value, TXT(' ') ) != nullptr;
 
 		sect->pairs.put( key, val );
 	}
@@ -413,7 +418,7 @@ namespace flu
 				assert( file != EConfigFile::Any && fileName );
 
 				File newFile;
-				newFile.fileName = String::format( TEXT("%s\\%s.ini"), *m_directory, *fileName );
+				newFile.fileName = String::format( TXT("%s\\%s.ini"), *m_directory, *fileName );
 				newFile.isDirty = true;
 
 				m_files.put( fileName, newFile );
@@ -497,5 +502,10 @@ namespace flu
 	void ConfigManager::writeString( EConfigFile file, const Char* section, const Char* key, String value )
 	{
 		g_configManager->writeString( file, section, key, value );
+	}
+
+	String ConfigManager::getApplicationName()
+	{
+		return g_configManager->getApplicationName();
 	}
 }

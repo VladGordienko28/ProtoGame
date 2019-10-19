@@ -18,7 +18,7 @@ namespace res
 
 	Package::~Package()
 	{
-		m_name = TEXT( "" );
+		m_name = TXT( "" );
 		m_entries.empty();
 		m_loader = nullptr;
 	}
@@ -29,14 +29,14 @@ namespace res
 
 		if( !fm::fileExists( *fileName ) )
 		{
-			error( TEXT( "Unable to load package: file \"%s\" is not found" ), *fileName );
+			error( TXT( "Unable to load package: file \"%s\" is not found" ), *fileName );
 			return false;
 		}
 
 		m_loader = fm::readBinaryFile( *fileName ).get();
 		if( !m_loader.hasObject() )
 		{
-			error( TEXT( "Unable to open package file \"%s\"" ), *fileName );
+			error( TXT( "Unable to open package file \"%s\"" ), *fileName );
 			return false;
 		}
 
@@ -46,7 +46,7 @@ namespace res
 
 		if( header.magic != PackageHeader::MAGIC )
 		{
-			error( TEXT( "Unable to load package: file \"%s\" is not a package file" ), 
+			error( TXT( "Unable to load package: file \"%s\" is not a package file" ), 
 				*fileName );
 
 			return false;
@@ -54,7 +54,7 @@ namespace res
 
 		if( header.version != PackageHeader::VERSION )
 		{
-			error( TEXT( "Unable to load package \"%s\", version mismatch" ), 
+			error( TXT( "Unable to load package \"%s\", version mismatch" ), 
 				*fileName );
 
 			return false;
@@ -78,7 +78,7 @@ namespace res
 			assert( isNewEntry );
 		}
 
-		info( TEXT( "Package \"%s\" is loaded with %d resources" ), *m_name, m_entries.size() );
+		info( TXT( "Package \"%s\" is loaded with %d resources" ), *m_name, m_entries.size() );
 		return true;
 	}
 

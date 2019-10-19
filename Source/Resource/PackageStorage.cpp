@@ -11,7 +11,8 @@ namespace res
 {
 	PackageStorage::PackageStorage()
 		:	m_packages(),
-			m_resourceId2Package()
+			m_resourceId2Package(),
+			m_listener( nullptr )
 	{
 	}
 
@@ -27,14 +28,19 @@ namespace res
 		m_resourceId2Package.empty();
 	}
 
-	CompiledResource PackageStorage::requestCompiled( EResourceType type, String resourceName, IListener& listener )
+	void PackageStorage::setListener( IListener* listener )
+	{
+		m_listener = listener;
+	}
+
+	CompiledResource PackageStorage::requestCompiled( EResourceType type, String resourceName )
 	{
 		ResourceId resourceId( type, resourceName );
 
-		return requestCompiled( resourceId, listener );
+		return requestCompiled( resourceId );
 	}
 
-	CompiledResource PackageStorage::requestCompiled( ResourceId resourceId, IListener& listener )
+	CompiledResource PackageStorage::requestCompiled( ResourceId resourceId )
 	{
 		Package** packagePtr = m_resourceId2Package.get( resourceId );
 
@@ -42,19 +48,27 @@ namespace res
 		{
 			Package* package = *packagePtr;
 
-			listener.onInfo( resourceId.toString(), TEXT( "loaded from package" ) );
+			if( m_listener )
+				m_listener->onInfo( resourceId.toString(), TXT( "loaded from package" ) );
+			
 			return package->getResource( resourceId );
 		}
 		else
 		{
-			listener.onError( resourceId.toString(), TEXT( "is not found" ) );
+			if( m_listener )
+				m_listener->onError( resourceId.toString(), TXT( "is not found" ) );
+
 			return CompiledResource();
 		}
 	}
 
-	String PackageStorage::resolveResourceId( ResourceId resourceId ) const
+	String PackageStorage::resolveResourceId( ResourceId resourceId )
 	{
 		return m_namesResolver.getName( resourceId );
+	}
+
+	void PackageStorage::update( ResourceSystemList& systemList )
+	{
 	}
 
 	Bool PackageStorage::loadAllPackages( String directory )
@@ -62,7 +76,7 @@ namespace res
 		UInt32 numLoaded = 0;
 
 		// remove last slash if has
-		if( directory[directory.len() - 1] == TEXT( '\\' ) )
+		if( directory[directory.len() - 1] == TXT( '\\' ) )
 		{
 			directory = String::del( directory, directory.len() - 1, 1 );
 		}
@@ -103,12 +117,12 @@ namespace res
 
 			package->fillNamesResolver( m_namesResolver );
 
-			info( TEXT( "Package \"%s\" loaded" ), *package->getName() );
+			info( TXT( "Package \"%s\" loaded" ), *package->getName() );
 			return true;
 		}
 		else
 		{
-			error( TEXT( "Unable to load package from \"%s\"" ), *fileName );
+			error( TXT( "Unable to load package from \"%s\"" ), *fileName );
 
 			delete package;
 			return false;
@@ -129,7 +143,7 @@ namespace res
 
 	static String getResourcePackageName( String resourceName )
 	{
-		Int32 dotPos = String::pos( TEXT( "." ), resourceName, 0 );
+		Int32 dotPos = String::pos( TXT( "." ), resourceName, 0 );
 		
 		if( dotPos != -1 )
 		{
@@ -137,17 +151,17 @@ namespace res
 		}
 		else
 		{
-			return TEXT( "" );
+			return TXT( "" );
 		}
 	}
 
 	static String fileNameToResourceName( String fileName )
 	{
 		// remove extension
-		Int32 dotPos = String::pos( TEXT( "." ), fileName, 0 );
+		Int32 dotPos = String::pos( TXT( "." ), fileName, 0 );
 		if( dotPos == -1 )
 		{
-			return TEXT( "" );
+			return TXT( "" );
 		}
 
 		String resourceName = String::del( fileName, dotPos, fileName.len() - dotPos );
@@ -155,16 +169,16 @@ namespace res
 		// remove slashes
 		for( SizeT i = 0; i < resourceName.len(); ++i )
 		{
-			if( resourceName[i] == TEXT( '\\' ) || resourceName[i] == TEXT( '/' ) )
+			if( resourceName[i] == TXT( '\\' ) || resourceName[i] == TXT( '/' ) )
 			{
-				resourceName[i] = TEXT( '.' );
+				resourceName[i] = TXT( '.' );
 			}
 
 			// check characters
 			if( !cstr::isDigitLetter( resourceName[i] ) && 
-				resourceName[i] != TEXT( '.' ) )
+				resourceName[i] != TXT( '.' ) )
 			{
-				return TEXT( "" );
+				return TXT( "" );
 			}
 		}
 
@@ -177,11 +191,11 @@ namespace res
 		assert( outputPath );
 		assert( fm::directoryExists( *localStorage->getPackagesPath() ) );
 		assert( fm::directoryExists( *outputPath ) );
-		assert( outputPath[outputPath.len() - 1] == TEXT( '\\' )  );
+		assert( outputPath[outputPath.len() - 1] == TXT( '\\' )  );
 
 		// remove last slash if has
 		String packagesPath = localStorage->getPackagesPath();
-		if( packagesPath[packagesPath.len() - 1] == TEXT( '\\' ) )
+		if( packagesPath[packagesPath.len() - 1] == TXT( '\\' ) )
 		{
 			packagesPath = String::del( packagesPath, packagesPath.len() - 1, 1 );
 		}
@@ -252,7 +266,7 @@ namespace res
 			fm::IBinaryFileWriter::Ptr writer = fm::writeBinaryFile( *packageFileName );
 			if( !writer.hasObject() )
 			{
-				error( TEXT( "Unable to save package \"%s\"" ), *packageFileName );
+				error( TXT( "Unable to save package \"%s\"" ), *packageFileName );
 				return 0;
 			}
 
@@ -291,11 +305,11 @@ namespace res
 				const ResourceInfo& resInfo = package.value[i];
 
 				ListenerList listener;
-				CompiledResource compiledResource = localStorage->requestCompiled( resInfo.resourceType, resInfo.resourceName, listener, true );
+				CompiledResource compiledResource = localStorage->requestCompiled( resInfo.resourceType, resInfo.resourceName );
 
 				if( !compiledResource.isValid() )
 				{
-					error( TEXT( "Unable to compile resource \"%s\"" ), *resInfo.resourceName );
+					error( TXT( "Unable to compile resource \"%s\"" ), *resInfo.resourceName );
 					return 0;
 				}
 

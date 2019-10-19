@@ -10,24 +10,25 @@ namespace flu
 namespace ffx
 {
 	// list of all ffx keywords
-	#define KEYWORD( word ) static const Char KW_##word[] = TEXT( #word );
+	#define KEYWORD( word ) static const Char KW_##word[] = TXT( #word );
 	#include "FxKeyword.h"
 	#undef KEYWORD
 
-	Compiler::Compiler( rend::Device* device )
-		:	m_device( device )
+	Compiler::Compiler( rend::ShaderCompiler* apiCompiler )
+		:	m_apiCompiler( apiCompiler )
 	{
-		assert( device );
+		assert( apiCompiler );
 	}
 
 	Compiler::~Compiler()
 	{
+		m_apiCompiler = nullptr;
 	}
 
 	Bool Compiler::isSupportedFile( String relativePath ) const
 	{
 		String ext = fm::getFileExt( *relativePath );
-		return ext == TEXT("ffx");
+		return ext == TXT("ffx");
 	}
 
 	Bool Compiler::compile( String relativePath, res::IDependencyProvider& dependencyProvider, 
@@ -38,13 +39,9 @@ namespace ffx
 		// create code emitter
 		UserBufferWriter emitter( output.compiledResource.data );
 
-		// obtain api compiler
-		rend::ShaderCompiler::UPtr apiCompiler = m_device->createCompiler();
-		assert( apiCompiler );
-
 		// emit header
 		emitter << String( FFX_VERSION );
-		emitter << apiCompiler->compilerMark();
+		emitter << m_apiCompiler->compilerMark();
 
 		// parse all files and compile all FFX stuff
 		Context context( output );
@@ -61,19 +58,19 @@ namespace ffx
 		}
 		else
 		{
-			output.errorMsg = TEXT( "Missing vertex declaration in shader" );
+			output.errorMsg = TXT( "Missing vertex declaration in shader" );
 			return false;
 		}
 
 		// compile all shaders in technique
 		if( context.techniques.size() == 0 )
 		{
-			output.errorMsg = TEXT( "Effect should declare at least one technique" );
+			output.errorMsg = TXT( "Effect should declare at least one technique" );
 			return false;
 		}
 		if( context.techniques.size() > Technique::MAX_TECHNIQUES )
 		{
-			output.errorMsg = TEXT( "Too many techniques" );
+			output.errorMsg = TXT( "Too many techniques" );
 			return false;
 		}
 
@@ -101,7 +98,7 @@ namespace ffx
 					else
 					{
 						// compile new shader with new entry point
-						auto compiledShader = apiCompiler->compile( shaderType, 
+						auto compiledShader = m_apiCompiler->compile( shaderType, 
 							context.writer.getText(), *entryPointName, nullptr, &output.errorMsg );
 
 						if( !compiledShader.isValid() )
@@ -119,7 +116,7 @@ namespace ffx
 					// we not allow missing shaders yet
 					if( shaderType != rend::EShaderType::ST_Compute )
 					{
-						output.errorMsg = String::format( TEXT( "Missing some shader in technique \"%s\"" ), *tech.name );
+						output.errorMsg = String::format( TXT( "Missing some shader in technique \"%s\"" ), *tech.name );
 						return false;					
 					}
 					else
@@ -143,7 +140,7 @@ namespace ffx
 
 	// A compiler macro, which helps form a error message
 	#define compiler_error( msg, ... )\
-		context.output.errorMsg = String::format( TEXT( "%s(%d): " ) TEXT( msg ),\
+		context.output.errorMsg = String::format( TXT( "%s(%d): " ) TXT( msg ),\
 		*context.inclusionStack.last(), lexer.getPosition().line + 1, __VA_ARGS__ );
 
 	Bool Compiler::parseFile( String relativePath, 
@@ -154,7 +151,7 @@ namespace ffx
 		{
 			if( String::insensitiveCompare( relativePath, it ) == 0 )
 			{
-				context.output.errorMsg = String::format( TEXT( "Circular dependency is found in \"%s\"" ), *relativePath );
+				context.output.errorMsg = String::format( TXT( "Circular dependency is found in \"%s\"" ), *relativePath );
 				return false;
 			}
 		}
@@ -163,7 +160,7 @@ namespace ffx
 		Text::Ptr text = dependencyProvider.getTextFile( relativePath );
 		if( !text )
 		{
-			context.output.errorMsg = String::format( TEXT( "File \"%s\" is not found" ), *relativePath );
+			context.output.errorMsg = String::format( TXT( "File \"%s\" is not found" ), *relativePath );
 			return false;
 		}
 
@@ -186,7 +183,7 @@ namespace ffx
 				}
 
 				if( token.getType() == lexer::ETokenType::Symbol && 
-					token.getText() == TEXT( "#" ) )
+					token.getText() == TXT( "#" ) )
 				{
 					// parse directive
 					if( !parseDirective( lexer, dependencyProvider, context ) )
@@ -214,17 +211,17 @@ namespace ffx
 				{
 					// everything else
 					Char insertSymbol = ( token.getType() != lexer::ETokenType::Symbol && 
-						prevToken.getType() != lexer::ETokenType::String ) ? TEXT(' ') : TEXT('\0');
+						prevToken.getType() != lexer::ETokenType::String ) ? TXT(' ') : TXT('\0');
 
 					if( prevLineNum != token.getLine() )
 					{
 						if( EMIT_LINES )
 						{
-							context.writer << String::format( TEXT("\n#line %d \"%s\""), 
+							context.writer << String::format( TXT("\n#line %d \"%s\""), 
 								token.getLine() + 1, *relativePath );
 						}
 					
-						insertSymbol = TEXT('\n');
+						insertSymbol = TXT('\n');
 						prevLineNum = token.getLine();
 					}
 
@@ -285,7 +282,7 @@ namespace ffx
 			compiler_error( "Missing vertex_decl name" );
 			return false;
 		}
-		if( !lexer.matchSymbol( TEXT( "{" ) ) )
+		if( !lexer.matchSymbol( TXT( "{" ) ) )
 		{
 			compiler_error( "Missing vertex_decl declaration" );
 			return false;
@@ -303,12 +300,12 @@ namespace ffx
 				compiler_error( "Missing vertex_decl element declaration" );
 				return false;
 			}
-			if( token.getText() == TEXT("}") )
+			if( token.getText() == TXT("}") )
 			{
 				break;
 			}
 
-			if( token.getText() == TEXT("[") )
+			if( token.getText() == TXT("[") )
 			{
 				// parse format
 				String formatName;
@@ -320,7 +317,7 @@ namespace ffx
 					compiler_error( "Unknown vertex format \"%s\"", *formatName );
 					return false;
 				}
-				if( !lexer.matchSymbol( TEXT(",") ) )
+				if( !lexer.matchSymbol( TXT(",") ) )
 				{
 					compiler_error( "Missing \",\" in element declaration" );
 					return false;
@@ -336,7 +333,7 @@ namespace ffx
 					compiler_error( "Unknown vertex element usage \"%s\"", *usageName );
 					return false;
 				}
-				if( !lexer.matchSymbol( TEXT(",") ) )
+				if( !lexer.matchSymbol( TXT(",") ) )
 				{
 					compiler_error( "Missing \",\" in element declaration" );
 					return false;
@@ -349,7 +346,7 @@ namespace ffx
 					compiler_error( "Missing usage index for vertex element" );
 					return false;
 				}
-				if( !lexer.matchSymbol( TEXT(",") ) )
+				if( !lexer.matchSymbol( TXT(",") ) )
 				{
 					compiler_error( "Missing \",\" in element declaration" );
 					return false;
@@ -362,14 +359,14 @@ namespace ffx
 					compiler_error( "Missing offset for vertex element" );
 					return false;
 				}
-				if( !lexer.matchSymbol( TEXT("]") ) )
+				if( !lexer.matchSymbol( TXT("]") ) )
 				{
 					compiler_error( "Missing \"]\" in element declaration" );
 					return false;
 				}
 
 				// Read elements comma
-				lexer.matchSymbol( TEXT(",") );
+				lexer.matchSymbol( TXT(",") );
 
 				// add a new element to declaration
 				rend::VertexElement element;
@@ -405,7 +402,7 @@ namespace ffx
 			compiler_error( "Missing technique name" );
 			return false;
 		}
-		if( !lexer.matchSymbol( TEXT("{") ) )
+		if( !lexer.matchSymbol( TXT("{") ) )
 		{
 			compiler_error( "Bad technique name" );
 			return false;
@@ -414,7 +411,7 @@ namespace ffx
 		// parse list of shader types
 		while( true )
 		{
-			if( lexer.matchSymbol( TEXT("}") ) )
+			if( lexer.matchSymbol( TXT("}") ) )
 			{
 				break;
 			}
@@ -426,7 +423,7 @@ namespace ffx
 				compiler_error( "Missing shader type" );
 				return false;
 			}
-			if( !lexer.matchSymbol( TEXT("=") ) )
+			if( !lexer.matchSymbol( TXT("=") ) )
 			{
 				compiler_error( "Bad shader type" );
 				return false;
@@ -439,7 +436,7 @@ namespace ffx
 				compiler_error( "Missing shader entry point name" );
 				return false;
 			}
-			if( !lexer.matchSymbol( TEXT(";") ) )
+			if( !lexer.matchSymbol( TXT(";") ) )
 			{
 				compiler_error( "Bad shader entry point name" );
 				return false;

@@ -11,7 +11,7 @@ namespace res
 	 *	A package storage, which load compiled resources from the
 	 *	packages
 	 */
-	class PackageStorage final: public NonCopyable
+	class PackageStorage final: public IStorage
 	{
 	public:
 		using UPtr = UniquePtr<PackageStorage>;
@@ -19,10 +19,14 @@ namespace res
 		PackageStorage();
 		~PackageStorage();
 
-		CompiledResource requestCompiled( EResourceType type, String resourceName, IListener& listener );
-		CompiledResource requestCompiled( ResourceId resourceId, IListener& listener );
+		void setListener( IListener* listener ) override;
 
-		String resolveResourceId( ResourceId resourceId ) const;
+		CompiledResource requestCompiled( EResourceType type, String resourceName ) override;
+		CompiledResource requestCompiled( ResourceId resourceId ) override;
+
+		String resolveResourceId( ResourceId resourceId ) override;
+
+		void update( ResourceSystemList& systemList ) override;
 
 		Bool loadAllPackages( String directory );
 		Bool loadPackage( String fileName );
@@ -36,6 +40,8 @@ namespace res
 		Map<ResourceId, Package*> m_resourceId2Package;
 
 		NamesResolver m_namesResolver;
+
+		IListener* m_listener;
 	};
 }
 }

@@ -69,39 +69,6 @@ public:
 	~TRenderList();
 };
 
-
-//
-// An area to clip.
-//
-struct TClipArea
-{
-public:
-	Int32 X, Y, Width, Height;
-
-	TClipArea()
-	{}
-	TClipArea( Int32 InX, Int32 InY, Int32 InWidth, Int32 InHeight )
-		:	X( InX ), 
-			Y( InY ), 
-			Width( InWidth ),
-			Height( InHeight )
-	{}
-	Bool operator==( const TClipArea& other ) const
-	{
-		return X == other.X && Y == other.Y &&
-					Width == other.Width && Height == other.Height;
-	}
-	Bool operator!=( const TClipArea& other ) const
-	{
-		return X != other.X || Y != other.Y ||
-					Width != other.Width || Height != other.Height;
-	}
-};
-
-// Special value, mean no clip.
-#define CLIP_NONE	TClipArea( -1, -1, -1, -1 )
-
-
 /*-----------------------------------------------------------------------------
     CRenderBase.
 -----------------------------------------------------------------------------*/
@@ -113,10 +80,7 @@ class CRenderBase
 {
 public:
 	// CRenderBase interface.
-	virtual ~CRenderBase() = default;
-
-	virtual CCanvas* Lock() = 0;
-	virtual void Unlock() = 0;			
+	virtual ~CRenderBase() = default;		
 };
 
 
@@ -135,15 +99,11 @@ public:
 	{
 	}
 
-	// View info.
-	TClipArea		Clip;
-
 	// Global memory pool, for temporal rendering
 	// objects.
 	static CStaticPool<4*1024*1024>		GPool;
 
 	// CCanvas interface.
-	virtual void SetClip( const TClipArea& Area ) = 0;
 	virtual void DrawPoly( const TRenderPoly& Poly ) = 0;
 	virtual void DrawRect( const TRenderRect& Rect ) = 0;
 	virtual void DrawList( const TRenderList& List ) = 0;

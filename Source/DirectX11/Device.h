@@ -104,14 +104,21 @@ namespace dx11
 		rend::ShaderResourceView getShaderResourceView( rend::RenderTargetHandle handle ) override;
 		rend::ShaderResourceView getShaderResourceView( rend::DepthBufferHandle handle ) override;
 
-		rend::ShaderCompiler* createCompiler() const override;
-		String compilerMark() const override;
-
 		const rend::MemoryStats& getMemoryStats() const override;
 		const rend::DrawStats& getDrawStats() const override;
 
 		Bool copyTextureToCPU( rend::Texture2DHandle handle, rend::EFormat& outFormat,
 			UInt32& outWidth, UInt32& outHeight, Array<UInt8>& outData ) override;
+
+		rend::ShaderCompiler* createCompiler() const override
+		{
+			return new ShaderCompiler();
+		}
+
+		String compilerMark() const override
+		{
+			return ShaderCompiler::COMPILER_MARK;
+		}
 
 	private:
 		SwapChain::UPtr m_swapChain;

@@ -10,7 +10,7 @@ namespace ffx
 	/**
 	 * A FFX framework version
 	 */
-	static const constexpr Char* FFX_VERSION = TEXT( "FFX_1.0" );
+	static const constexpr Char* FFX_VERSION = TXT( "FFX_1.0" );
 
 	/**
 	 * A constant buffer slot ids for various purposes

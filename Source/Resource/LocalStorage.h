@@ -11,7 +11,7 @@ namespace res
 	 *	A local storage, which compile, cache and reload resources
 	 *	from the disk ( working copy )
 	 */
-	class LocalStorage final: public NonCopyable
+	class LocalStorage: public IStorage
 	{
 	public:
 		using UPtr = UniquePtr<LocalStorage>;
@@ -21,15 +21,15 @@ namespace res
 
 		void registerCompiler( EResourceType type, IResourceCompiler* compiler );
 
-		CompiledResource requestCompiled( EResourceType type, String resourceName, 
-			IListener& listener, Bool allowCached );
+		void setListener( IListener* listener ) override;
 
-		CompiledResource requestCompiled( ResourceId resourceId,
-			IListener& listener, Bool allowCached );
+		CompiledResource requestCompiled( EResourceType type, String resourceName ) override;
+		CompiledResource requestCompiled( ResourceId resourceId ) override;
 
-		String resolveResourceId( ResourceId resourceId ) const;
+		String resolveResourceId( ResourceId resourceId ) override;
 
-		void reloadChanged( ResourceSystemList& systems, IListener& listener );
+		Array<ResourceId> trackChanges();
+		void update( ResourceSystemList& systemList ) override;
 
 		EResourceType getFileResourceType( String fileName ) const;
 
@@ -42,7 +42,7 @@ namespace res
 			IListener& listener, Args... args );
 
 	private:
-		static constexpr const Char CACHE_EXTENSION[] = TEXT( ".fcache" );
+		static constexpr const Char CACHE_EXTENSION[] = TXT( ".fcache" );
 
 		String m_packagesPath;
 		String m_cachePath;
@@ -53,16 +53,21 @@ namespace res
 
 		StaticArray<IResourceCompiler::UPtr, Resource::NUM_TYPES> m_compilers;
 
+		IListener* m_listener;
+
 		LocalStorage() = delete;
 
-		CompiledResource loadFromCache( ResourceId resourceId, String resourceName, IListener& listener );
-		void saveToCache( ResourceId resourceId, String resourceName, const CompilationOutput& output, IListener& listener );
+		CompiledResource requestCompiledImpl( EResourceType type, String resourceName, Bool allowCached );
+		CompiledResource requestCompiledImpl( ResourceId resourceId, Bool allowCached );
 
-		CompilationOutput compile( ResourceId resourceId, String resourceName, IListener& listener );
+		CompiledResource loadFromCache( ResourceId resourceId, String resourceName );
+		void saveToCache( ResourceId resourceId, String resourceName, const CompilationOutput& output );
+
+		CompilationOutput compile( ResourceId resourceId, String resourceName );
 
 		String findResourceFile( String resourceName, EResourceType* outType ) const;
 
-		String prepareResourceFolder( String resourceName, IListener& listener );
+		String prepareResourceFolder( String resourceName );
 
 		IResourceCompiler* getCompiler( EResourceType resType ) const
 		{
@@ -81,7 +86,7 @@ namespace res
 		}
 
 		// parse resource file name
-		String resourceFileName = cstr::findRevChar( *resourceName, TEXT('.') ) + 1;
+		String resourceFileName = cstr::findRevChar( *resourceName, TXT('.') ) + 1;
 
 		class ConstructionEnvironment: public IConstructionEnvironment
 		{

@@ -59,13 +59,13 @@ namespace img
 
 		if( bmpHeader.bfType != 0x4d42 )
 		{
-			output.errorMsg = String::format( TEXT( "\"%s\" is not a bmp file" ), *relativePath );
+			output.errorMsg = String::format( TXT( "\"%s\" is not a bmp file" ), *relativePath );
 			return false;
 		}
 
 		if( !isPowerOfTwo( bmpInfo.biWidth ) || !isPowerOfTwo( bmpInfo.biHeight ) )
 		{
-			output.errorMsg = String::format( TEXT( "\"%s\" size is not power of two" ), *relativePath );
+			output.errorMsg = String::format( TXT( "\"%s\" size is not power of two" ), *relativePath );
 			return false;
 		}
 
@@ -139,7 +139,7 @@ namespace img
 		}
 		else
 		{
-			output.errorMsg = String::format( TEXT( "\"%s\" unsupported %d bits" ), *relativePath, bmpInfo.biBitCount );
+			output.errorMsg = String::format( TXT( "\"%s\" unsupported %d bits" ), *relativePath, bmpInfo.biBitCount );
 			return false;
 		}
 
@@ -195,7 +195,7 @@ namespace img
 
 			if( pngError )
 			{
-				output.errorMsg = String::format( TEXT( "Unable to encode to png with error \"%s\"" ), 
+				output.errorMsg = String::format( TXT( "Unable to encode to png with error \"%s\"" ), 
 					lodepng_error_text( pngError ) );
 
 				lodepng_state_cleanup( &state );
@@ -232,7 +232,7 @@ namespace img
 
 			if( pngError )
 			{
-				output.errorMsg = String::format( TEXT( "Unable to encode to png with error \"%s\"" ), 
+				output.errorMsg = String::format( TXT( "Unable to encode to png with error \"%s\"" ), 
 					lodepng_error_text( pngError ) );
 
 				lodepng_state_cleanup( &state );
@@ -279,13 +279,13 @@ namespace img
 
 		if( tgaHeader.imageType != 2 && tgaHeader.imageType != 10 )
 		{
-			output.errorMsg = String::format( TEXT( "\"%s\" only 24 and 32 bits TGA supported" ), *relativePath );
+			output.errorMsg = String::format( TXT( "\"%s\" only 24 and 32 bits TGA supported" ), *relativePath );
 			return false;
 		}
 
 		if( tgaHeader.colorMapType != 0 )
 		{
-			output.errorMsg = String::format( TEXT( "\"%s\" color-mapped TGA is not supported" ), *relativePath );
+			output.errorMsg = String::format( TXT( "\"%s\" color-mapped TGA is not supported" ), *relativePath );
 			return false;
 		}
 
@@ -295,13 +295,13 @@ namespace img
 
 		if( !isPowerOfTwo( width ) || !isPowerOfTwo( height ) )
 		{
-			output.errorMsg = String::format( TEXT( "\"%s\" size is not power of two" ), *relativePath );
+			output.errorMsg = String::format( TXT( "\"%s\" size is not power of two" ), *relativePath );
 			return false;
 		}
 
 		if( colorDepth < 24 )
 		{
-			output.errorMsg = String::format( TEXT( "\"%s\" only 24 and 32 bits TGA supported" ), *relativePath );
+			output.errorMsg = String::format( TXT( "\"%s\" only 24 and 32 bits TGA supported" ), *relativePath );
 			return false;
 		}
 
@@ -411,7 +411,7 @@ namespace img
 		}
 		else
 		{
-			output.errorMsg = String::format( TEXT( "\"%s\" unknown TGA image type %d" ), *relativePath, tgaHeader.imageType );
+			output.errorMsg = String::format( TXT( "\"%s\" unknown TGA image type %d" ), *relativePath, tgaHeader.imageType );
 			return false;
 		}
 
@@ -432,7 +432,7 @@ namespace img
 
 		if( pngError )
 		{
-			output.errorMsg = String::format( TEXT("Unable to encode to png with error: \"%hs\""), 
+			output.errorMsg = String::format( TXT("Unable to encode to png with error: \"%hs\""), 
 				lodepng_error_text( pngError ) );
 
 			lodepng_state_cleanup( &state );
@@ -472,12 +472,12 @@ namespace img
 		assert( width > 0 && height > 0 );
 		assert( data != nullptr );
 
-		const String fileName = name + TEXT(".png");
+		const String fileName = name + TXT(".png");
 		IOutputStream::Ptr writer = environment.writeBinaryFile( fileName );
 
 		if( !writer )
 		{
-			errorMsg = String::format( TEXT("Unable to open file \"%s\""), *fileName );
+			errorMsg = String::format( TXT("Unable to open file \"%s\""), *fileName );
 			return false;
 		}
 
@@ -489,7 +489,7 @@ namespace img
 
 		if( pngError )
 		{
-			errorMsg = String::format( TEXT("Unable to encode to png with error: \"%hs\""), 
+			errorMsg = String::format( TXT("Unable to encode to png with error: \"%hs\""), 
 				lodepng_error_text( pngError ) );
 
 			return false;
@@ -506,21 +506,21 @@ namespace img
 	{
 		const String ext = fm::getFileExt( *relativePath );
 
-		if( ext == TEXT( "bmp" ) )
+		if( ext == TXT( "bmp" ) )
 		{
 			return compileBmp( relativePath, dependencyProvider, output );
 		}
-		else if( ext == TEXT( "tga" ) )
+		else if( ext == TXT( "tga" ) )
 		{
 			return compileTga( relativePath, dependencyProvider, output );
 		}
-		else if( ext == TEXT( "png" ) )
+		else if( ext == TXT( "png" ) )
 		{
 			return compilePng( relativePath, dependencyProvider, output );
 		}
 		else
 		{
-			fatal( TEXT( "Unknown image format in \"%s\"" ), *relativePath );
+			fatal( TXT( "Unknown image format in \"%s\"" ), *relativePath );
 			return false;
 		}
 	}

@@ -13,7 +13,7 @@ namespace ffx
 	class Compiler final: public res::IResourceCompiler
 	{
 	public:
-		Compiler( rend::Device* device );
+		Compiler( rend::ShaderCompiler* apiCompiler );
 		~Compiler();
 
 		Bool compile( String relativePath, res::IDependencyProvider& dependencyProvider, 
@@ -22,7 +22,7 @@ namespace ffx
 		Bool isSupportedFile( String relativePath ) const override;
 
 	private:
-		rend::Device* m_device;
+		rend::ShaderCompiler::UPtr m_apiCompiler;
 
 	private:
 		// compiler settings

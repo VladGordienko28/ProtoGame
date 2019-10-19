@@ -27,7 +27,7 @@ namespace lexer
 		m_position.pos = m_lastPosition.pos = 0;
 	}
 
-	Bool Lexer::getToken( Token& outToken, Bool allowNegative )
+	Bool Lexer::getToken( Token& outToken, Bool allowNegative, Bool allowFloat )
 	{
 		Char buffer[MAX_TOKEN_LENGHT] = {};
 		Char* bufferPtr = buffer;
@@ -56,10 +56,13 @@ namespace lexer
 					c = '0';
 				}
 
-				*bufferPtr++ = c;
-
 				if( c == '.' )
 				{
+					if( !allowFloat )
+					{
+						break;
+					}
+
 					if( hasPoint )
 					{
 						return false;
@@ -69,6 +72,8 @@ namespace lexer
 						hasPoint = true;
 					}
 				}
+
+				*bufferPtr++ = c;
 
 				c = getChar();
 			}
@@ -220,7 +225,7 @@ namespace lexer
 	{
 		Token token;
 
-		if( getToken( token, true ) && token.getType() == ETokenType::Integer )
+		if( getToken( token, true, false ) && token.getType() == ETokenType::Integer )
 		{
 			result = token.getIntConst();
 			return true;

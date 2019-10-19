@@ -25,15 +25,15 @@ using Bool		= bool;
 typedef wchar_t		WideChar;
 typedef char		AnsiChar;
 
-#if defined(TEXT)
-#undef TEXT
+#if defined(TXT)
+#undef TXT
 #endif
 #if FLU_USE_WIDECHAR
 typedef WideChar	Char;
-#define TEXT( s ) L##s
+#define TXT( s ) L##s
 #else
 typedef AnsiChar	Char;
-#define TEXT( s ) s
+#define TXT( s ) s
 #endif
 
 // Validation

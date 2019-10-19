@@ -26,8 +26,8 @@ namespace img
 		{
 			const String ext = fm::getFileExt( *relativePath );
 
-			return ext == TEXT( "bmp" ) || ext == TEXT( "png" ) ||
-				ext == TEXT( "tga" );
+			return ext == TXT( "bmp" ) || ext == TXT( "png" ) ||
+				ext == TXT( "tga" );
 		}
 	};
 }

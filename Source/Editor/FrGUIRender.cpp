@@ -57,6 +57,8 @@ void CGUIRender::BeginPaint( gfx::DrawContext& drawContext )
 								drawContext.backbufferHeight() 
 							) 
 						);
+
+	m_drawContext = &drawContext;
 }
 
 
@@ -66,11 +68,8 @@ void CGUIRender::BeginPaint( gfx::DrawContext& drawContext )
 void CGUIRender::EndPaint( gfx::DrawContext& drawContext )
 {
 	drawContext.popViewInfo();
-
-/*
-	FlushText();
-	Canvas->SetClip( CLIP_NONE );
-	Canvas = nullptr;*/
+	drawContext.setScissorArea( rend::ScissorArea::NULL_AREA() );
+	m_drawContext = nullptr;
 }
 
 
@@ -247,16 +246,7 @@ void CGUIRender::DrawText( TPoint P, const Char* Text, Int32 Len, math::Color Co
 //
 void CGUIRender::SetClipArea( TPoint P, TSize S )
 {
-#if 0
-	Canvas->SetClip
-	( 
-		TClipArea
-		( 
-			P.X, P.Y, 
-			S.Width, S.Height 
-		) 
-	);
-#endif
+	m_drawContext->setScissorArea( { P.Y, P.X, P.Y + S.Height, P.X + S.Width } );
 }
 
 
