@@ -32,9 +32,6 @@ public:
 	Int32				WinWidth;
 	Int32				WinHeight;
 
-	// Profiling
-	flu::EngineChart m_engineChart;
-
 	// CApplication interface.
 	void SetCaption( String NewCaption );
 	void SetSize( Int32 NewWidth, Int32 NewHeight, EAppWindowType NewType );

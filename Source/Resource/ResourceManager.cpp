@@ -144,6 +144,12 @@ namespace res
 			m_localStorage->registerCompiler( type, compiler );
 		}
 
+		if( !m_localStorage.hasObject() && compiler )
+		{
+			// current storage is not allow compilation
+			delete compiler;
+		}
+
 		info( L"Registered a new resource type %d", type );
 	}
 

@@ -45,9 +45,8 @@ public:
 	WTaskDialog*			TaskDialog;
 	WGameBuilderDialog*		GameBuilder;
 
-	UniquePtr<EngineChart> m_engineChart;
-
 	rend::Device::UPtr		m_renderDevice;
+	in::Device::UPtr		m_inputDevice;
 	World::UPtr				m_world;
 
 

@@ -349,6 +349,7 @@ void App::Initialize(CoreApplicationView^ applicationView)
 	info( L"" );
 
 	flu::ConfigManager::create( fm::getCurrentDirectory(), L"XBox" );
+	m_inputDevice = new flu::xb::XInputDevice();
 
 }
 
@@ -356,13 +357,16 @@ void App::Initialize(CoreApplicationView^ applicationView)
 void dipsToPixels( float inW, float inH, int& outW, int& outH )
 {
 	DisplayInformation^ currentDisplayInformation = DisplayInformation::GetForCurrentView();
-
+/*
 	float dpi = currentDisplayInformation->LogicalDpi;
 
 	static const float dipsPerInch = 96.0f;
 
 	outW = flu::math::floor( inW * dpi / dipsPerInch + 0.5f );
-	outH = flu::math::floor( inH * dpi / dipsPerInch + 0.5f );
+	outH = flu::math::floor( inH * dpi / dipsPerInch + 0.5f );*/
+
+	outW = currentDisplayInformation->ScreenWidthInRawPixels;
+	outH = currentDisplayInformation->ScreenHeightInRawPixels;
 }
 
 
@@ -397,7 +401,7 @@ void App::SetWindow(CoreWindow^ window)
 
 	m_renderDevice = new flu::dx11::Device( reinterpret_cast<IUnknown*>( window ), realW, realH, false );
 
-	m_world = new World( m_renderDevice.get() );
+	m_world = new World( m_renderDevice.get(), m_inputDevice.get() );
 
 	m_grid = new flu::gfx::GridDrawer( flu::math::colors::GREEN, 515 );
 	m_textDrawer = new flu::gfx::TextDrawer();
@@ -407,12 +411,8 @@ void App::SetWindow(CoreWindow^ window)
 
 	m_canvas = new CDirectX11Canvas( m_renderDevice.get(), m_world->drawContext() );
 
-	m_chart = new flu::EngineChart();
-				m_chart->toggleGroup( 0 );
-				m_chart->toggleGroup( 1 );
-				m_chart->toggleGroup( 2 );
-				m_chart->toggleGroup( 3 );
-				m_chart->toggleGroup( 4 );
+
+
 }
 
 // Initializes scene resources, or loads a previously saved app state.
@@ -445,51 +445,23 @@ void App::Run()
 		profile_begin_frame();
 			using namespace flu;
 
+			m_inputDevice->update( 0.f ); // real dt!
+
 			static math::Vector pos = {0, 0};
 			static math::Angle rot = 0;
 
 
-		  XINPUT_STATE state;
-		  mem::zero( &state, sizeof(XINPUT_STATE) );
 
-		  static DWORD packetId = -1;
-
-        // Simply get the state of the controller from XInput.
-        DWORD dwResult = XInputGetState( 0, &state );
-
-		if( dwResult == ERROR_SUCCESS  )
+		//if( dwResult == ERROR_SUCCESS  )
 		{
-			pos.x += Float(state.Gamepad.sThumbLX) / 32768.f;
-			pos.y += Float(state.Gamepad.sThumbLY) / 32768.f;
+				pos += m_inputDevice->getGamepadStick( 0, 0 );
 
-			if( state.Gamepad.wButtons & XINPUT_GAMEPAD_A ) rot += 10;
+				rot += m_inputDevice->getGamepadTrigger( 0, 1 ) * 0.1f;
+				rot -= m_inputDevice->getGamepadTrigger( 0, 0 ) * 0.1f;
 
-			if( state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP ) pos.y += 0.1;
-			if( state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN ) pos.y -= 0.1;
-
-			if( state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT ) pos.x -= 0.1;
-			if( state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT ) pos.x += 0.1;
-
-			static Int32 selectedGroup = 0;
-
-			if( packetId != state.dwPacketNumber )
-			{
-				if( state.Gamepad.wButtons & XINPUT_GAMEPAD_Y )
-					m_chart->toggle();
-
-				if( m_chart->isEnabled() )
-				{
-					if( state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER ) selectedGroup = (selectedGroup - 1) % 6;
-					if( state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER ) selectedGroup = (selectedGroup + 1) % 6;
-
-
-					m_chart->selectGroup( selectedGroup );
-				}
-			}
 
 		}
 
-		packetId = state.dwPacketNumber;
 
 
 			gfx::ViewInfo view( pos, rot, {64, 32}, 1, false, 0, 0, m_world->drawContext().backbufferWidth(), m_world->drawContext().backbufferHeight() );
@@ -522,10 +494,8 @@ void App::Run()
 
 			m_world->drawContext().popViewInfo();
 
-			m_chart->render( m_canvas.get(), m_world->drawContext() );
-
 			//m_renderDevice->endFrame( true );
-			m_world->onEndUpdate();
+			m_world->onEndUpdate(m_canvas.get());
 
 			res::ResourceManager::update(); // todo: add timeout
 

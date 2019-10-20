@@ -61,14 +61,8 @@ void CEditor::Tick( Float Delta )
 				}
 				GUIRender->EndPaint( m_world->drawContext() );
 			}
-
-			// update profiler
-			{
-				profile_zone( EProfilerGroup::General, RenderChart );
-				m_engineChart->render( m_legacyRender->m_canvas.get(), m_world->drawContext() );
-			}
 		}
-		m_world->onEndUpdate();
+		m_world->onEndUpdate(GEditor->m_legacyRender->m_canvas.get());
 
 		// Fooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 		{

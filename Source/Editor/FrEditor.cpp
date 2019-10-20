@@ -164,8 +164,9 @@ void CEditor::Init( HINSTANCE InhInstance )
 
 	// Load configure file.
 	m_renderDevice = new dx11::Device( hWnd, 800, 600, false );
+	m_inputDevice = new in::Device();
 
-	m_world = new World( m_renderDevice.get() );
+	m_world = new World( m_renderDevice.get(), m_inputDevice.get() );
 
 	res::ResourceManager::addListener( &g_resListener );
 
@@ -191,8 +192,6 @@ void CEditor::Init( HINSTANCE InhInstance )
 
 
 ///////////
-
-	m_engineChart = new EngineChart();
 
 
 
@@ -310,9 +309,6 @@ void CEditor::Exit()
 
 	delete GUIWindow;
 	delete GUIRender;
-
-	m_engineChart = nullptr;
-
 
 	res::ResourceManager::removeListener( &g_resListener );
 
@@ -642,6 +638,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			//
 			GEditor->GUIWindow->WidgetProc( WPE_KeyUp, (Int32)WParam );
 			GEditor->GInput->OnKeyUp( (Int32)WParam );
+			GEditor->m_inputDevice->onKeyboardUp( (in::EKeyboardButton)WParam );
 			break;
 		}
 		case WM_KEYDOWN:
@@ -652,27 +649,11 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			//
 			GEditor->GUIWindow->WidgetProc( WPE_KeyDown, (Int32)WParam );
 			GEditor->GInput->OnKeyDown( (Int32)WParam );
+			GEditor->m_inputDevice->onKeyboardDown( (in::EKeyboardButton)WParam );
 
 			if( WParam == KEY_F4 )
 			{
 				mem::dumpAllocations( L"RuntimeMemoryDump.txt" );
-			}
-
-			if( WParam == KEY_Tilde )
-			{
-				if( GEditor->m_engineChart->isEnabled() )
-				{
-					GEditor->m_engineChart->disable();
-				}
-				else
-				{
-					GEditor->m_engineChart->enable();
-				}
-			}
-
-			if( WParam >= KEY_0 && WParam <= KEY_9 && GEditor->m_engineChart->isEnabled() )
-			{
-				GEditor->m_engineChart->toggleGroup( WParam - KEY_0 );
 			}
 
 			break;
@@ -684,6 +665,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			//
 			GEditor->GUIWindow->WidgetProc( WPE_CharType, (Char)WParam );
 			GEditor->GInput->OnCharType( (Char)WParam );
+			GEditor->m_inputDevice->onKeyboardType( (Char)WParam );
 			break;
 		}
 		case WM_SIZE:
@@ -723,6 +705,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			//
 			Int32 SrlDlt = GET_WHEEL_DELTA_WPARAM( WParam );
 			GEditor->GUIWindow->WidgetProc( WPE_MouseScroll, SrlDlt );
+			GEditor->m_inputDevice->onMouseScroll( SrlDlt );
 			break;
 		}
 		case WM_GETMINMAXINFO:

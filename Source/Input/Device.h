@@ -13,6 +13,8 @@ namespace in
 	class Device: public NonCopyable
 	{
 	public:
+		using UPtr = UniquePtr<Device>;
+
 		static const SizeT MAX_GAMEPADS = 4;
 
 		Device();

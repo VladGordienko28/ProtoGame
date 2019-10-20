@@ -22,23 +22,17 @@ namespace flu
 	/**
 	 *	An engine chart
 	 */
-	class EngineChart final
+	class EngineChart final: public in::InputClient, public NonCopyable
 	{
 	public:
+		using UPtr = UniquePtr<EngineChart>;
+
 		EngineChart();
 		~EngineChart();
 
 		void render( CCanvas* canvas, gfx::DrawContext& drawContext );
 		
 		void setTimelineLength( Float newLength );
-
-		void toggleGroup( profile::IProfiler::GroupId groupId );
-		void selectGroup( profile::IProfiler::GroupId groupId );
-
-		void enable();
-		void disable();
-		void toggle();
-		Bool isEnabled() const;
 
 		static const Char* getGroupName( EProfilerGroup group );
 
@@ -59,6 +53,13 @@ namespace flu
 
 		math::Color m_colorSet[COLOR_SET_SIZE];
 		String m_helpString;
+
+		Bool onGamepadDown( in::GamepadId id, in::EGamepadButton button ) override;
+		Bool onKeyboardDown( in::EKeyboardButton button, Bool repeat ) override;
+
+		void enable();
+		void disable();
+		Bool isEnabled() const;
 	};
 
 } // namespace flu

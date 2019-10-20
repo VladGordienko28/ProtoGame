@@ -13,7 +13,7 @@ namespace flu
 	public:
 		using UPtr = UniquePtr<World>;
 
-		World( rend::Device* inRenderDevice );
+		World( rend::Device* renderDevice, in::Device* inputDevice );
 		~World();
 
 		//virtual void onUpdate();
@@ -21,7 +21,7 @@ namespace flu
 
 		// todo: merge into one function
 		virtual void onBeginUpdate();
-		virtual void onEndUpdate();
+		virtual void onEndUpdate( CCanvas* canvas );
 
 
 		// foooooooooooooooooooooooooooooooooooooooooooooo
@@ -32,6 +32,11 @@ namespace flu
 		rend::Device* m_renderDevice;
 		gfx::DrawContext m_drawContext;
 		gfx::SharedConstants m_sharedConstants;
+
+		// input system
+		in::Device* m_inputDevice;
+
+		EngineChart::UPtr m_engineChart;
 
 		// timing
 

@@ -43,10 +43,13 @@ namespace XBoxGame
 		flu::gfx::TextDrawer::UPtr m_textDrawer;
 		flu::fnt::Font::Ptr m_font;
 
-		flu::UniquePtr<flu::EngineChart> m_chart;
-
 		//std::shared_ptr<DX::DeviceResources> m_deviceResources;
 		//std::unique_ptr<XBoxGameMain> m_main;
+
+
+		/////////////////////////////////////////////////////
+		flu::xb::XInputDevice::UPtr m_inputDevice;
+
 		bool m_windowClosed;
 		bool m_windowVisible;
 	};

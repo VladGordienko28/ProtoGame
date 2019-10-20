@@ -5,6 +5,9 @@
 #include "Render/Render.h"
 #include "DirectX11/DirectX11.h"
 #include "Window/Window.h"
+#include "Input/Input.h"
+
+
 
 #include <wrl.h>
 #include <wrl/client.h>
@@ -20,4 +23,4 @@
 #include <agile.h>
 #include <concrt.h>
 
-#include <xinput.h>
+#include "Src/XInput.h"

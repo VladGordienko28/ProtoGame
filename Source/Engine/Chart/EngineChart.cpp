@@ -40,7 +40,7 @@ namespace flu
 		m_effect = res::ResourceManager::get<ffx::Effect>( CHART_EFFECT_NAME, res::EFailPolicy::FATAL );
 
 		// turn on at least one group
-		m_profiler.enableGroup( static_cast<Int32>(EProfilerGroup::General) );
+		m_profiler.selectGroup( static_cast<profile::IProfiler::GroupId>( EProfilerGroup::General ) );
 	}
 
 	EngineChart::~EngineChart()
@@ -55,6 +55,7 @@ namespace flu
 		if( !m_enabled )
 			return;
 
+		profile_zone( EProfilerGroup::General, RenderChart );
 		gfx::ScopedRenderingZone srz( TXT( "Profiler" ) );
 
 		const Float screenW = drawContext.backbufferWidth();
@@ -95,7 +96,7 @@ namespace flu
 
 		for( Int32 groupId = 0; groupId < groups.size(); ++groupId )
 		{
-			if( !m_profiler.isGroupEnabled( groupId ) )
+			if( groupId != m_profiler.selectedGroup() )
 			{
 				continue;
 			}
@@ -170,6 +171,65 @@ namespace flu
 		m_profiler.setSamplesLifetime( newLength );
 	}
 
+	Bool EngineChart::onGamepadDown( in::GamepadId id, in::EGamepadButton button )
+	{
+		if( button == in::EGamepadButton::GB_Y )
+		{
+			if( isEnabled() )
+			{
+				disable();
+			}
+			else
+			{
+				enable();
+			}
+
+			return true;
+		}
+
+		if( isEnabled() )
+		{
+			if( button == in::EGamepadButton::GB_LeftShoulder )
+			{
+				m_profiler.selectPrevGroup();
+				return true;
+			}
+
+			if( button == in::EGamepadButton::GB_RightShoulder )
+			{
+				m_profiler.selectNextGroup();
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	Bool EngineChart::onKeyboardDown( in::EKeyboardButton button, Bool repeat )
+	{
+		if( button == in::EKeyboardButton::KB_Tilde && !repeat )
+		{
+			if( isEnabled() )
+			{
+				disable();
+			}
+			else
+			{
+				enable();
+			}
+
+			return true;
+		}
+
+		if( isEnabled() && inRange( button, in::EKeyboardButton::KB_NumPad0, in::EKeyboardButton::KB_NumPad9 ) )
+		{
+			m_profiler.selectGroup( button - in::EKeyboardButton::KB_NumPad0 );
+			return true;
+		}
+
+		return false;
+	}
+
 	void EngineChart::enable()
 	{
 		if( !m_enabled )
@@ -188,38 +248,9 @@ namespace flu
 		}
 	}
 
-	void EngineChart::toggle()
-	{
-		if( isEnabled() )
-		{
-			disable();
-		}
-		else
-		{
-			enable();
-		}
-	}
-
 	Bool EngineChart::isEnabled() const
 	{
 		return m_enabled;
-	}
-
-	void EngineChart::toggleGroup( profile::IProfiler::GroupId groupId )
-	{
-		if( m_profiler.isGroupEnabled( groupId ) )
-		{
-			m_profiler.disableGroup( groupId );
-		}
-		else
-		{
-			m_profiler.enableGroup( groupId );
-		}
-	}
-
-	void EngineChart::selectGroup( profile::IProfiler::GroupId groupId )
-	{
-		m_profiler.selectGroup( groupId );
 	}
 
 	const Char* EngineChart::getGroupName( EProfilerGroup group )

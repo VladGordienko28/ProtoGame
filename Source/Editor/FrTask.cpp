@@ -124,7 +124,7 @@ void WTaskDialog::RedrawAll()
 		}
 		GEditor->GUIRender->EndPaint( GEditor->m_world->drawContext() );
 	}
-	GEditor->m_world->onEndUpdate();
+	GEditor->m_world->onEndUpdate( GEditor->m_legacyRender->m_canvas.get() );
 }
 
 

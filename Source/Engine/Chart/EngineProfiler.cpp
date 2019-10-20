@@ -12,10 +12,10 @@ namespace profile
 	EngineProfiler::EngineProfiler( Int32 numGroups )
 		:	m_frameEnterTime( 0.0 ),
 			m_samplesLifetime( 1.0 ),
-			m_frameLocked( false )
+			m_frameLocked( false ),
+			m_selectedGroup( -1 )
 	{
 		m_groups.setSize( numGroups );
-		m_groupFilter.setSize( numGroups );
 	}
 
 	EngineProfiler::~EngineProfiler()
@@ -65,7 +65,7 @@ namespace profile
 	{
 		Zone zone = m_zonesStack.pop();
 
-		if( isGroupEnabled( zone.groupId ) )
+		if( zone.groupId == m_selectedGroup )
 		{
 			if( zone.metric->samples.size() == 0 || zone.metric->samples.last().time != m_frameEnterTime )
 			{
@@ -80,7 +80,7 @@ namespace profile
 
 	void EngineProfiler::updateCounter( GroupId groupId, const Char* counterName, Double value )
 	{
-		if( isGroupEnabled( groupId ) )
+		if( groupId == m_selectedGroup )
 		{
 			Metric& metric = findOrAddMetric( groupId, counterName );
 
@@ -93,6 +93,21 @@ namespace profile
 				fatal( L"Counter \"%s\" updated twice per frame", counterName );
 			}
 		}
+	}
+
+	void EngineProfiler::selectGroup( GroupId groupId )
+	{
+		m_selectedGroup = clamp( groupId, 0, m_groups.size() );
+	}
+
+	void EngineProfiler::selectNextGroup()
+	{
+		m_selectedGroup = min( m_selectedGroup + 1, m_groups.size() - 1 );
+	}
+
+	void EngineProfiler::selectPrevGroup()
+	{
+		m_selectedGroup = max( m_selectedGroup - 1, 0 );
 	}
 
 	const Array<EngineProfiler::Group>& EngineProfiler::getMetrics() const

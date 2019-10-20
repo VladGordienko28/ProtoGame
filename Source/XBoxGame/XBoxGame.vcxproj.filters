@@ -65,16 +65,25 @@
     <Filter Include="Config">
       <UniqueIdentifier>{ac79eb72-7e8c-4ad3-a655-23473bf8faf3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src">
+      <UniqueIdentifier>{ae57f052-3db7-4652-b74e-a08774eb55e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="XBoxGameMain.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Src\XInput.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
     <ClInclude Include="XBoxGameMain.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Src\XInput.h">
+      <Filter>Src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">

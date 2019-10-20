@@ -7,18 +7,17 @@
 
 namespace flu
 {
-	World::World( rend::Device* inRenderDevice )
-		:	m_renderDevice( inRenderDevice ),
-			m_drawContext( inRenderDevice, m_sharedConstants ),
-			m_sharedConstants( inRenderDevice )
+	World::World( rend::Device* renderDevice, in::Device* inputDevice )
+		:	m_renderDevice( renderDevice ),
+			m_inputDevice( inputDevice ),
+			m_drawContext( renderDevice, m_sharedConstants ),
+			m_sharedConstants( renderDevice )
 	{
-		assert( inRenderDevice );
+		assert( renderDevice );
+		assert( inputDevice );
 
 		// initialize resource manager
 		{
-			String packagesPath	= ConfigManager::readString( EConfigFile::System, TXT("ResMan"), TXT("PackagesPath") );
-			String cachePath	= ConfigManager::readString( EConfigFile::System, TXT("ResMan"), TXT("CachePath") );
-			Bool useCache		= ConfigManager::readString( EConfigFile::System, TXT("ResMan"), TXT("UseCache") );
 
 
 			// fooooooooooooo
@@ -44,10 +43,16 @@ namespace flu
 
 		// initialize engine gfx
 		gfx::api::initialize( m_renderDevice );
+
+
+		m_engineChart = new EngineChart();
+		m_inputDevice->addClient( m_engineChart.get() );
 	}
 
 	World::~World()
 	{
+		m_inputDevice->removeClient( m_engineChart.get() );
+		m_engineChart = nullptr;
 
 		gfx::api::finalize();
 		res::ResourceManager::destroy();
@@ -81,8 +86,10 @@ namespace flu
 		m_renderDevice->clearRenderTarget( INVALID_HANDLE<rend::RenderTargetHandle>(), math::colors::BLACK );
 	}
 
-	void World::onEndUpdate()
+	void World::onEndUpdate( CCanvas* canvas ) // fo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	{
+		m_engineChart->render( canvas, m_drawContext );
+
 		updateMetrics();
 
 		profile_zone( EProfilerGroup::Render, Present );

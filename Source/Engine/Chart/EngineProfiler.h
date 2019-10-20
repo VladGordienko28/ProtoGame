@@ -42,32 +42,13 @@ namespace profile
 		const Array<Group>& getMetrics() const;
 		void setSamplesLifetime( Double lifeTime );
 
-		void enableGroup( GroupId groupId )
-		{
-			if( groupId >= 0 && groupId < m_groupFilter.size() )
-				m_groupFilter[groupId] = true;
-		}
+		void selectGroup( GroupId groupId );
+		void selectNextGroup();
+		void selectPrevGroup();
 
-		void disableGroup( GroupId groupId )
+		GroupId selectedGroup() const
 		{
-			if( groupId >= 0 && groupId < m_groupFilter.size() )
-				m_groupFilter[groupId] = false;
-		}
-
-		Bool isGroupEnabled( GroupId groupId ) const
-		{
-			return groupId >= 0 && groupId < m_groupFilter.size() ? 
-				m_groupFilter[groupId] : false;
-		}
-
-		void selectGroup( GroupId groupId )
-		{
-			for( auto& it : m_groupFilter )
-			{
-				it = false;
-			}
-
-			enableGroup( groupId );
+			return m_selectedGroup;
 		}
 
 	private:
@@ -86,8 +67,8 @@ namespace profile
 
 		FixedStack<Zone, MAX_ZONES_DEPTH> m_zonesStack;
 
-		Array<Group> m_groups; // needs better solution
-		Array<Bool> m_groupFilter;
+		Array<Group> m_groups; // todo: needs better solution
+		GroupId m_selectedGroup;
 
 		EngineProfiler() = delete;
 		Metric& findOrAddMetric( GroupId groupId, const Char* name );

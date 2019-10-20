@@ -327,12 +327,6 @@ void CGame::Tick( Float Delta )
 			// Render console.
 			if( Console->IsActive() )
 				Console->Render( Canvas );
-
-			// update profiler
-			{
-				profile_zone( EProfilerGroup::General, RenderChart );
-				m_engineChart.render( Canvas, CConsole::Font );
-			}
 		}
 		GRender->Unlock();
 	}
