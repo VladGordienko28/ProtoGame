@@ -25,8 +25,8 @@ namespace net
 
 		EError waitForConnection() override;
 
-		EError sendData( const void* data, SizeT size, SizeT& sended ) override;
-		EError receiveData( void* data, SizeT size, SizeT& received ) override;
+		EError sendData( const void* data, SizeT size, SizeT& sended, Bool blocking ) override;
+		EError receiveData( void* data, SizeT size, SizeT& received, Bool blocking ) override;
 
 		EState getState() const override;
 
@@ -49,8 +49,8 @@ namespace net
 		EError listen( UInt16 port, UInt32 maxQueueSize ) override;
 		EError shutdown() override;
 
-		EError sendData( ClientId clientId, const void* data, SizeT size, SizeT& bytesSended ) override;
-		EError receiveData( ClientId clientId, void* data, SizeT size, SizeT& bytesReceived ) override;
+		EError sendData( ClientId clientId, const void* data, SizeT size, SizeT& bytesSended, Bool blocking ) override;
+		EError receiveData( ClientId clientId, void* data, SizeT size, SizeT& bytesReceived, Bool blocking ) override;
 
 		ClientId pollConnection() override;
 		EError disconnectClient( ClientId clientId ) override;
@@ -69,6 +69,28 @@ namespace net
 
 		void disconnect( SOCKET& socket );
 	};
+
+	static void blockSocket( SOCKET socket, Bool forRecv, Bool forSend )
+	{
+		assert( socket != INVALID_SOCKET );
+
+		fd_set forRecvSet, forSendSet;
+
+		FD_ZERO( &forRecvSet );
+		FD_ZERO( &forSendSet );
+
+		if( forRecv )
+		{
+			FD_SET( socket, &forRecvSet );
+		}
+		if( forSend )
+		{
+			FD_SET( socket, &forSendSet );
+		}
+
+		int result = select( socket + 1, &forRecvSet, &forSendSet, nullptr, nullptr ); // blocking
+		assert( result >= 0 );
+	}
 
 	TCPClientImpl::TCPClientImpl()
 		:	m_socket( INVALID_SOCKET ),
@@ -107,7 +129,7 @@ namespace net
 
 			error( L"Unable to set TCP port non-blocking" );
 			return EError::Failed;
-		}
+		}		
 
 		sockaddr_in addr;
 		mem::zero( &addr, sizeof( sockaddr_in ) );
@@ -179,7 +201,7 @@ namespace net
 		return EError::Ok;
 	}
 
-	EError TCPClientImpl::sendData( const void* data, SizeT size, SizeT& bytesSended )
+	EError TCPClientImpl::sendData( const void* data, SizeT size, SizeT& bytesSended, Bool blocking )
 	{
 		if( m_state == EState::Connected )
 		{
@@ -199,15 +221,27 @@ namespace net
 						bytesSended = 0;
 						return EError::Refused;
 					}
-					else
+
+					if( !blocking )
 					{
 						bytesSended = size - bytesRemain;
-						return EError::Ok;
+						return EError::Ok;	
 					}
-				}
 
-				bytesRemain -= bytesSend;
-				dataPtr += bytesSend;
+					blockSocket( m_socket, true, false );
+				}
+				else if( bytesSend == 0 )
+				{
+					disconnect();
+
+					bytesSended = 0;
+					return EError::Refused;
+				}
+				else
+				{
+					bytesRemain -= bytesSend;
+					dataPtr += bytesSend;				
+				}
 			}
 
 			bytesSended = size - bytesRemain;
@@ -219,7 +253,7 @@ namespace net
 		}
 	}
 
-	EError TCPClientImpl::receiveData( void* data, SizeT size, SizeT& bytesReceived )
+	EError TCPClientImpl::receiveData( void* data, SizeT size, SizeT& bytesReceived, Bool blocking )
 	{
 		if( m_state == EState::Connected )
 		{
@@ -239,15 +273,27 @@ namespace net
 						bytesReceived = 0;
 						return EError::Refused;
 					}
-					else
+
+					if( !blocking )
 					{
 						bytesReceived = size - bytesRemain;
-						return EError::Ok;
+						return EError::Ok;	
 					}
-				}
 
-				bytesRemain -= bytesReceive;
-				dataPtr += bytesReceive;
+					blockSocket( m_socket, true, false );
+				}
+				else if( bytesReceive == 0 )
+				{
+					disconnect();
+
+					bytesReceived = 0;
+					return EError::Refused;
+				}
+				else
+				{
+					bytesRemain -= bytesReceive;
+					dataPtr += bytesReceive;				
+				}
 			}
 
 			bytesReceived = size - bytesRemain;
@@ -371,7 +417,7 @@ namespace net
 		}
 	}
 
-	EError TCPServerImpl::sendData( ClientId clientId, const void* data, SizeT size, SizeT& bytesSended )
+	EError TCPServerImpl::sendData( ClientId clientId, const void* data, SizeT size, SizeT& bytesSended, Bool blocking )
 	{
 		if( m_state == EState::Listening )
 		{
@@ -393,15 +439,27 @@ namespace net
 						bytesSended = 0;
 						return EError::Refused;
 					}
-					else
+
+					if( !blocking )
 					{
 						bytesSended = size - bytesRemain;
-						return EError::Ok;
+						return EError::Ok;	
 					}
-				}
 
-				bytesRemain -= bytesSend;
-				dataPtr += bytesSend;
+					blockSocket( remoteSocket, true, false );
+				}
+				else if( bytesSend == 0 )
+				{
+					disconnectClient( clientId );
+
+					bytesSended = 0;
+					return EError::Refused;
+				}
+				else
+				{
+					bytesRemain -= bytesSend;
+					dataPtr += bytesSend;				
+				}
 			}
 
 			bytesSended = size - bytesRemain;
@@ -413,7 +471,7 @@ namespace net
 		}
 	}
 
-	EError TCPServerImpl::receiveData( ClientId clientId, void* data, SizeT size, SizeT& bytesReceived )
+	EError TCPServerImpl::receiveData( ClientId clientId, void* data, SizeT size, SizeT& bytesReceived, Bool blocking )
 	{
 		if( m_state == EState::Listening )
 		{
@@ -426,8 +484,6 @@ namespace net
 			{
 				Int32 bytesReceive = recv( remoteSocket, reinterpret_cast<char*>( dataPtr ), bytesRemain, 0 );
 
-				auto stuff = WSAGetLastError();
-
 				if( bytesReceive == SOCKET_ERROR )
 				{
 					if( WSAGetLastError() != WSAEWOULDBLOCK )
@@ -437,22 +493,27 @@ namespace net
 						bytesReceived = 0;
 						return EError::Refused;
 					}
-					else
+
+					if( !blocking )
 					{
 						bytesReceived = size - bytesRemain;
-						return EError::Ok;
+						return EError::Ok;	
 					}
+
+					blockSocket( remoteSocket, true, false );
 				}
 				else if( bytesReceive == 0 )
 				{
 					disconnectClient( clientId );
-					bytesReceived = 0;
 
+					bytesReceived = 0;
 					return EError::Refused;
 				}
-
-				bytesRemain -= bytesReceive;
-				dataPtr += bytesReceive;
+				else
+				{
+					bytesRemain -= bytesReceive;
+					dataPtr += bytesReceive;				
+				}
 			}
 
 			bytesReceived = size - bytesRemain;

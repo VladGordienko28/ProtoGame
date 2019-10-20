@@ -78,7 +78,7 @@ namespace res
 		};
 
 		EReceiveResult receiveClientMessage( net::TCPServer::ClientId id, ClientMessageHeader& header, 
-			Array<UInt8>& data );
+			Array<UInt8>& data, Bool blocking );
 
 		Bool sendServerMessage( net::TCPServer::ClientId id, EServerMessage message, const void* data, SizeT dataSize );
 

@@ -55,8 +55,8 @@ namespace net
 
 		virtual EError waitForConnection() = 0;
 
-		virtual EError sendData( const void* data, SizeT size, SizeT& bytesSended ) = 0;
-		virtual EError receiveData( void* data, SizeT size, SizeT& bytesReceived ) = 0;
+		virtual EError sendData( const void* data, SizeT size, SizeT& bytesSended, Bool blocking = false ) = 0;
+		virtual EError receiveData( void* data, SizeT size, SizeT& bytesReceived, Bool blocking = false ) = 0;
 
 		virtual EState getState() const = 0;
 		
@@ -85,8 +85,8 @@ namespace net
 		virtual EError listen( UInt16 port, UInt32 maxQueueSize ) = 0;
 		virtual EError shutdown() = 0;
 
-		virtual EError sendData( ClientId clientId, const void* data, SizeT size, SizeT& bytesSended ) = 0;
-		virtual EError receiveData( ClientId clientId, void* data, SizeT size, SizeT& bytesReceived ) = 0;
+		virtual EError sendData( ClientId clientId, const void* data, SizeT size, SizeT& bytesSended, Bool blocking = false ) = 0;
+		virtual EError receiveData( ClientId clientId, void* data, SizeT size, SizeT& bytesReceived, Bool blocking = false ) = 0;
 
 		virtual ClientId pollConnection() = 0;
 		virtual EError disconnectClient( ClientId clientId ) = 0;

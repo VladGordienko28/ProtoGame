@@ -445,7 +445,17 @@ void App::Run()
 		profile_begin_frame();
 			using namespace flu;
 
-			m_inputDevice->update( 0.f ); // real dt!
+			// hack for profile switching
+			if( flu::profile::isDefaultProfiler() )
+			{
+				m_inputDevice->update( 0.f ); // real dt!
+			}
+			else
+			{
+				profile_zone( EProfilerGroup::General, Input );
+				m_inputDevice->update( 0.f ); // real dt!	
+			}
+
 
 			static math::Vector pos = {0, 0};
 			static math::Angle rot = 0;
@@ -497,7 +507,10 @@ void App::Run()
 			//m_renderDevice->endFrame( true );
 			m_world->onEndUpdate(m_canvas.get());
 
-			res::ResourceManager::update(); // todo: add timeout
+			{
+				profile_zone( EProfilerGroup::General, ResourceManager );
+				res::ResourceManager::update(); // todo: add timeout
+			}
 
 			/*
 			if (m_main->Render())

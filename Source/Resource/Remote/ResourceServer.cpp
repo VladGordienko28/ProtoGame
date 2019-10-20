@@ -146,7 +146,7 @@ namespace res
 		ClientMessageHeader header;
 		Array<UInt8> data;
 
-		EReceiveResult result = receiveClientMessage( client.id, header, data ); 
+		EReceiveResult result = receiveClientMessage( client.id, header, data, false ); 
 
 		if( result == EReceiveResult::Ok )
 		{
@@ -178,7 +178,7 @@ namespace res
 			ClientMessageHeader header;
 			Array<UInt8> data;
 
-			EReceiveResult result = receiveClientMessage( client.id, header, data );
+			EReceiveResult result = receiveClientMessage( client.id, header, data, false );
 
 			if( result == EReceiveResult::Ok )
 			{
@@ -327,11 +327,11 @@ namespace res
 	}
 
 	ResourceServer::EReceiveResult ResourceServer::receiveClientMessage( net::TCPServer::ClientId id,
-		ClientMessageHeader& header, Array<UInt8>& data )
+		ClientMessageHeader& header, Array<UInt8>& data, Bool blocking )
 	{
 		SizeT bytesReceived;
 
-		if( m_tcpServer->receiveData( id, &header, sizeof( ClientMessageHeader ), bytesReceived ) == net::EError::Ok )
+		if( m_tcpServer->receiveData( id, &header, sizeof( ClientMessageHeader ), bytesReceived, blocking ) == net::EError::Ok )
 		{
 			if( bytesReceived > 0 )
 			{
@@ -342,7 +342,7 @@ namespace res
 				data.setSize( header.payloadSize );
 
 				if( header.payloadSize == 0 || 
-					m_tcpServer->receiveData( id, &data[0], header.payloadSize, bytesReceived ) == net::EError::Ok )
+					m_tcpServer->receiveData( id, &data[0], header.payloadSize, bytesReceived, true ) == net::EError::Ok )
 				{
 					assert( bytesReceived == header.payloadSize );
 					return EReceiveResult::Ok;
@@ -383,7 +383,7 @@ namespace res
 		}
 
 		SizeT bytesSended;
-		if( m_tcpServer->sendData( id, writer.getData(), writer.size(), bytesSended ) == net::EError::Ok )
+		if( m_tcpServer->sendData( id, writer.getData(), writer.size(), bytesSended, true ) == net::EError::Ok )
 		{
 			assert( bytesSended == writer.size() );
 			return true;

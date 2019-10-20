@@ -32,6 +32,7 @@ namespace profile
 	extern IProfiler* getProfiler();
 	extern void setProfiler( IProfiler* newProfiler );
 	extern void setDefaultProfiler();
+	extern Bool isDefaultProfiler();
 
 	/**
 	 *	A wrapper class for zone tracking

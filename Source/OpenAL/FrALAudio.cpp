@@ -865,7 +865,7 @@ COpenALAudio::~COpenALAudio()
 	{
 		alDeleteSources( 1, &AmbientSources[i].iALId );
 	}
-
+/*
 	// Clean up all buffers being FSound's.
 	if( GObjectDatabase )
 		for( Int32 i=0; i<GObjectDatabase->GObjects.size(); i++ )
@@ -876,7 +876,7 @@ COpenALAudio::~COpenALAudio()
 				alDeleteBuffers( 1, (ALuint*)&S->AudioInfo );
 				S->AudioInfo	= -1;
 			}
-
+*/
 	// And finally destroy device and its context.
 	alcMakeContextCurrent( nullptr );
 	alcDestroyContext( Context );

@@ -63,5 +63,10 @@ namespace profile
 		g_activeProfiler = &g_nullProfiler;
 	}
 
+	Bool isDefaultProfiler()
+	{
+		return g_activeProfiler == &g_nullProfiler;
+	}
+
 } // namespace profile
 } // namespace flu

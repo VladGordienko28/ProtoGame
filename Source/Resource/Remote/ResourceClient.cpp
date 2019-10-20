@@ -185,39 +185,34 @@ namespace res
 		SizeT bytesReceived;
 
 		// kind of blocking socket
-		while( true )
+		if( m_tcpClient->receiveData( &header, sizeof( ServerMessageHeader ), bytesReceived, blocking ) == net::EError::Ok )
 		{
-			if( m_tcpClient->receiveData( &header, sizeof( ServerMessageHeader ), bytesReceived ) == net::EError::Ok )
+			if( bytesReceived > 0 )
 			{
-				if( bytesReceived > 0 )
+				assert( bytesReceived == sizeof( ServerMessageHeader ) );
+
+				bytesReceived = 0;
+				data.setSize( header.payloadSize );
+
+				if( header.payloadSize == 0 || m_tcpClient->receiveData( &data[0], header.payloadSize, bytesReceived, true ) == net::EError::Ok )
 				{
-					assert( bytesReceived == sizeof( ServerMessageHeader ) );
-
-					bytesReceived = 0;
-					data.setSize( header.payloadSize );
-
-					if( header.payloadSize == 0 || m_tcpClient->receiveData( &data[0], header.payloadSize, bytesReceived ) == net::EError::Ok )
-					{
-						assert( bytesReceived == header.payloadSize );
-						return EReceiveResult::Ok;
-					}
-					else
-					{
-						fatal( L"Unexpected end of server request" );
-					}
+					assert( bytesReceived == header.payloadSize );
+					return EReceiveResult::Ok;
 				}
-				else if( !blocking )
+				else
 				{
-					return EReceiveResult::Pending;
+					fatal( L"Unexpected end of server request" );
 				}
 			}
-			else
+			else if( !blocking )
 			{
-				// unable to read header
-				fatal( L"Resource Server was disconnected" );
-			}		
-
-			threading::sleep( NET_IDLING_MS );
+				return EReceiveResult::Pending;
+			}
+		}
+		else
+		{
+			// unable to read header
+			fatal( L"Resource Server was disconnected" );
 		}
 	}
 
@@ -238,7 +233,7 @@ namespace res
 		}
 
 		SizeT bytesSended;
-		if( m_tcpClient->sendData( writer.getData(), writer.size(), bytesSended ) == net::EError::Ok )
+		if( m_tcpClient->sendData( writer.getData(), writer.size(), bytesSended, true ) == net::EError::Ok )
 		{
 			assert( bytesSended == writer.size() );
 		}
