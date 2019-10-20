@@ -60,6 +60,16 @@ namespace profile
 				m_groupFilter[groupId] : false;
 		}
 
+		void selectGroup( GroupId groupId )
+		{
+			for( auto& it : m_groupFilter )
+			{
+				it = false;
+			}
+
+			enableGroup( groupId );
+		}
+
 	private:
 		static const Int32 MAX_ZONES_DEPTH = 16;
 

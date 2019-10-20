@@ -15,17 +15,33 @@ namespace flu
 {
 namespace dx11
 {
+#if FLU_PLATFORM_XBOX
+	Device::Device( IUnknown* coreWindow, UInt32 width, UInt32 height, Bool fullscreen )
+#else
 	Device::Device( HWND hwnd, UInt32 width, UInt32 height, Bool fullscreen )
+#endif
 		:	rend::Device()
 	{
-		assert( hwnd != INVALID_HANDLE_VALUE );
-	
-		// todo: smart features detection need
-		D3D_FEATURE_LEVEL featureLevel = D3D_FEATURE_LEVEL_11_0;
-		D3D_FEATURE_LEVEL finalFeatureLevel = D3D_FEATURE_LEVEL_11_0;
+		const D3D_FEATURE_LEVEL allFeatureLevels[] =
+		{
+			D3D_FEATURE_LEVEL_12_1,
+			D3D_FEATURE_LEVEL_12_0,
+			D3D_FEATURE_LEVEL_11_1,
+			D3D_FEATURE_LEVEL_11_0,
+			D3D_FEATURE_LEVEL_10_1,
+			D3D_FEATURE_LEVEL_10_0,
+		};
 
-		HRESULT result = D3D11CreateDevice( nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, D3D11_CREATE_DEVICE_SINGLETHREADED, 
-			&featureLevel, 1, D3D11_SDK_VERSION, &m_device, &finalFeatureLevel, &m_immediateContext );
+		D3D_FEATURE_LEVEL selectedFeatureLevel = D3D_FEATURE_LEVEL_11_0;
+
+		UINT deviceFlags = D3D11_CREATE_DEVICE_SINGLETHREADED;
+
+#if FLU_DEBUG
+		deviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+		HRESULT result = D3D11CreateDevice( nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, deviceFlags, 
+			allFeatureLevels, arraySize( allFeatureLevels ), D3D11_SDK_VERSION, &m_device, &selectedFeatureLevel, &m_immediateContext );
 
 		if( FAILED( result ) )
 		{
@@ -36,7 +52,13 @@ namespace dx11
 			reinterpret_cast<void**>( &m_userDefinedAnnotation ) );
 		assert( SUCCEEDED( result ) );
 
+		info( L"Device successfully created with feature level %s", *featureLevelToString( selectedFeatureLevel ) );
+
+#if FLU_PLATFORM_XBOX
+		m_swapChain = new SwapChain( m_device, coreWindow, width, height, fullscreen );
+#else
 		m_swapChain = new SwapChain( m_device, hwnd, width, height, fullscreen );
+#endif
 
 		// set initial render target and viewport
 		rend::Viewport initialViewport = { 0.f, 0.f, Float( width ), Float( height ), 0.f, 1.f };
@@ -116,6 +138,11 @@ namespace dx11
 	void Device::beginFrame()
 	{
 		GPU_STAT( mem::zero( &m_drawStats, sizeof( rend::DrawStats ) ) );
+
+#if FLU_PLATFORM_XBOX
+		// Set backbuffer render target view, only for XBox due to different SwapChain settings
+		setRenderTarget( INVALID_HANDLE<rend::RenderTargetHandle>(), INVALID_HANDLE<rend::DepthBufferHandle>() );
+#endif
 	}
 
 	void Device::endFrame( Bool lockToVSync )

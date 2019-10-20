@@ -20,6 +20,13 @@
 	#define FLU_PLATFORM_WINDOWS 0
 #endif
 
+// XBox support
+#if _SCORPIO
+	#define FLU_PLATFORM_XBOX 1
+#else
+	#define FLU_PLATFORM_XBOX 0
+#endif
+
 // Configuration
 #if _DEBUG
 	#define FLU_DEBUG 1
@@ -35,7 +42,7 @@
 #define FLU_PROFILE_GPU FLU_DEBUG
 
 // Memory leaks
-#define FLU_ENABLE_MEM_TRACKING FLU_DEBUG && FLU_PLATFORM_WINDOWS
+#define FLU_ENABLE_MEM_TRACKING FLU_DEBUG && FLU_PLATFORM_WINDOWS && !FLU_PLATFORM_XBOX
 
 // Assertions
 #define FLU_ENABLE_ASSERT 1 || FLU_DEBUG

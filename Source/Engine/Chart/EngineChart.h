@@ -31,10 +31,13 @@ namespace flu
 		void render( CCanvas* canvas, gfx::DrawContext& drawContext );
 		
 		void setTimelineLength( Float newLength );
+
 		void toggleGroup( profile::IProfiler::GroupId groupId );
+		void selectGroup( profile::IProfiler::GroupId groupId );
 
 		void enable();
 		void disable();
+		void toggle();
 		Bool isEnabled() const;
 
 		static const Char* getGroupName( EProfilerGroup group );

@@ -68,7 +68,7 @@ namespace flu
 
 	void World::onBeginUpdate()
 	{
-		Float lockTime = math::fMod( GPlat->Now(), 1000.f * 2.f * math::PI );
+		Float lockTime = /*math::fMod( GPlat->Now(), 1000.f * 2.f * math::PI )*/0;
 
 		gfx::SharedConstants::PerFrameData perFrameData;
 		perFrameData.gameTime = lockTime;
@@ -86,7 +86,7 @@ namespace flu
 		updateMetrics();
 
 		profile_zone( EProfilerGroup::Render, Present );
-		m_renderDevice->endFrame();
+		m_renderDevice->endFrame( true );
 	}
 
 	void World::onResize( UInt32 newWidth, UInt32 newHeight, Bool fullScreen )

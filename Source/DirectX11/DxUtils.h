@@ -68,5 +68,24 @@ namespace dx11
 				return D3D11_USAGE_DEFAULT;
 		}
 	}
+
+	/**
+	 *	Convert a DirectX feature level to human-readable string
+	 */
+	inline String featureLevelToString( D3D_FEATURE_LEVEL featureLevel )
+	{
+		switch ( featureLevel )
+		{
+			case D3D_FEATURE_LEVEL_10_0: return TXT("10.0");
+			case D3D_FEATURE_LEVEL_10_1: return TXT("10.1");
+			case D3D_FEATURE_LEVEL_11_0: return TXT("11.0");
+			case D3D_FEATURE_LEVEL_11_1: return TXT("11.1");
+			case D3D_FEATURE_LEVEL_12_0: return TXT("12.0");
+			case D3D_FEATURE_LEVEL_12_1: return TXT("12.1");
+			
+			default:
+				return TXT("??.?");
+		}
+	}
 }
 }

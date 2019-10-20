@@ -84,7 +84,7 @@ namespace flu
 		const Array<profile::EngineProfiler::Group>& groups = m_profiler.getMetrics();
 
 		Double maxValue = 0.0;
-		Double frameTime = GPlat->Now();
+		Double frameTime = time::cyclesToSec( time::cycles64() );
 
 		const Float timelineScale = 0.90f;
 		const Float timelineH = screenH * timelineScale;
@@ -188,6 +188,18 @@ namespace flu
 		}
 	}
 
+	void EngineChart::toggle()
+	{
+		if( isEnabled() )
+		{
+			disable();
+		}
+		else
+		{
+			enable();
+		}
+	}
+
 	Bool EngineChart::isEnabled() const
 	{
 		return m_enabled;
@@ -203,6 +215,11 @@ namespace flu
 		{
 			m_profiler.enableGroup( groupId );
 		}
+	}
+
+	void EngineChart::selectGroup( profile::IProfiler::GroupId groupId )
+	{
+		m_profiler.selectGroup( groupId );
 	}
 
 	const Char* EngineChart::getGroupName( EProfilerGroup group )

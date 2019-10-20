@@ -165,7 +165,7 @@ namespace net
 
 			Int32 selectError = select( m_socket + 1, nullptr, &socketSet, nullptr, &selectTime );
 
-			if( selectError != SOCKET_ERROR && selectError != 0 )
+			if( selectError != SOCKET_ERROR /*&& selectError != 0*/ ) // todo: investigate for XBox
 			{
 				// socket is writable, so connected
 				m_state = EState::Connected;

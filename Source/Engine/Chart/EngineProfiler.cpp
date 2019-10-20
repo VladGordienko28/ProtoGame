@@ -26,7 +26,7 @@ namespace profile
 	{
 		assert( !m_frameLocked );
 
-		m_frameEnterTime = GPlat->Now();
+		m_frameEnterTime = time::cyclesToSec( time::cycles64() );
 		m_frameLocked = true;
 	}
 

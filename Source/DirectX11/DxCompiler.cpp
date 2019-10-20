@@ -32,9 +32,9 @@ namespace dx11
 		const AnsiChar* shaderTarget = nullptr;
 		switch( shaderType )
 		{
-			case rend::EShaderType::ST_Vertex:	shaderTarget = "vs_4_1"; break;
-			case rend::EShaderType::ST_Pixel:	shaderTarget = "ps_4_1"; break;
-			case rend::EShaderType::ST_Compute:	shaderTarget = "cs_4_1"; break;
+			case rend::EShaderType::ST_Vertex:	shaderTarget = "vs_4_0"; break;
+			case rend::EShaderType::ST_Pixel:	shaderTarget = "ps_4_0"; break;
+			case rend::EShaderType::ST_Compute:	shaderTarget = "cs_4_0"; break;
 
 			default:
 				fatal( L"Unknown shader type %d", shaderType );

@@ -13,7 +13,11 @@ namespace dx11
 	class Device: public rend::Device
 	{
 	public:
+#if FLU_PLATFORM_XBOX
+		Device( IUnknown* coreWindow, UInt32 width, UInt32 height, Bool fullscreen = false );
+#else
 		Device( HWND hwnd, UInt32 width, UInt32 height, Bool fullscreen = false );
+#endif
 		~Device();
 
 		void resize( UInt32 width, UInt32 height, Bool fullScreen = false ) override;
