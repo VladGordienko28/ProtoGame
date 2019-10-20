@@ -49,6 +49,22 @@
       <Configuration>Scorpio_Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Scorpio_Release|ARM">
+      <Configuration>Scorpio_Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Scorpio_Release|ARM64">
+      <Configuration>Scorpio_Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Scorpio_Release|Win32">
+      <Configuration>Scorpio_Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Scorpio_Release|x64">
+      <Configuration>Scorpio_Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{ec8c445a-86b5-4b96-b60e-45ad89f2522a}</ProjectGuid>
@@ -112,7 +128,21 @@
     <PlatformToolset>v141</PlatformToolset>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|ARM'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -126,7 +156,21 @@
     <PlatformToolset>v141</PlatformToolset>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|ARM64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -148,6 +192,9 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -155,6 +202,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|ARM'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
@@ -166,6 +216,9 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|ARM64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -173,6 +226,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -194,6 +250,11 @@
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration) $(PlatformShortName)\</IntDir>
     <TargetName>FluX</TargetName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|ARM'">
+    <OutDir>$(SolutionDir)..\Bin\XBox\</OutDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration) $(PlatformShortName)\</IntDir>
+    <TargetName>FluX</TargetName>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <OutDir>$(SolutionDir)..\Bin\XBox\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration) $(PlatformShortName)\</IntDir>
@@ -205,6 +266,11 @@
     <TargetName>flu_x</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <OutDir>$(SolutionDir)..\Bin\XBox\</OutDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration) $(PlatformShortName)\</IntDir>
+    <TargetName>FluX</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|ARM64'">
     <OutDir>$(SolutionDir)..\Bin\XBox\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration) $(PlatformShortName)\</IntDir>
     <TargetName>FluX</TargetName>
@@ -224,6 +290,11 @@
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration) $(PlatformShortName)\</IntDir>
     <TargetName>FluX</TargetName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|Win32'">
+    <OutDir>$(SolutionDir)..\Bin\XBox\</OutDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration) $(PlatformShortName)\</IntDir>
+    <TargetName>FluX</TargetName>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)..\Bin\XBox\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration) $(PlatformShortName)\</IntDir>
@@ -235,6 +306,11 @@
     <TargetName>flu_x</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)..\Bin\XBox\</OutDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration) $(PlatformShortName)\</IntDir>
+    <TargetName>FluX</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|x64'">
     <OutDir>$(SolutionDir)..\Bin\XBox\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration) $(PlatformShortName)\</IntDir>
     <TargetName>FluX</TargetName>
@@ -268,6 +344,20 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <Link>
+      <AdditionalDependencies>d2d1.lib;d3d11.lib;dxgi.lib;windowscodecs.lib;dwrite.lib;..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Render\$(Configuration) $(PlatformShortName)\Render.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\Intermediate\FFX\$(Configuration) $(PlatformShortName)\FFX.lib;..\Intermediate\DirectX11\$(Configuration) $(PlatformShortName)\DirectX11.lib;..\Intermediate\Resource\$(Configuration) $(PlatformShortName)\Resource.lib;..\Intermediate\Image\$(Configuration) $(PlatformShortName)\Image.lib;..\Intermediate\Font\$(Configuration) $(PlatformShortName)\Font.lib;..\Intermediate\Input\$(Configuration) $(PlatformShortName)\Input.lib;..\Intermediate\lodepng\$(Configuration) $(PlatformShortName)\lodepng.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\arm; $(VCInstallDir)\lib\arm</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|ARM'">
     <Link>
       <AdditionalDependencies>d2d1.lib;d3d11.lib;dxgi.lib;windowscodecs.lib;dwrite.lib;..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Render\$(Configuration) $(PlatformShortName)\Render.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\Intermediate\FFX\$(Configuration) $(PlatformShortName)\FFX.lib;..\Intermediate\DirectX11\$(Configuration) $(PlatformShortName)\DirectX11.lib;..\Intermediate\Resource\$(Configuration) $(PlatformShortName)\Resource.lib;..\Intermediate\Image\$(Configuration) $(PlatformShortName)\Image.lib;..\Intermediate\Font\$(Configuration) $(PlatformShortName)\Font.lib;..\Intermediate\Input\$(Configuration) $(PlatformShortName)\Input.lib;..\Intermediate\lodepng\$(Configuration) $(PlatformShortName)\lodepng.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\arm; $(VCInstallDir)\lib\arm</AdditionalLibraryDirectories>
@@ -323,6 +413,20 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|ARM64'">
+    <Link>
+      <AdditionalDependencies>d2d1.lib;d3d11.lib;dxgi.lib;windowscodecs.lib;dwrite.lib;..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Render\$(Configuration) $(PlatformShortName)\Render.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\Intermediate\FFX\$(Configuration) $(PlatformShortName)\FFX.lib;..\Intermediate\DirectX11\$(Configuration) $(PlatformShortName)\DirectX11.lib;..\Intermediate\Resource\$(Configuration) $(PlatformShortName)\Resource.lib;..\Intermediate\Image\$(Configuration) $(PlatformShortName)\Image.lib;..\Intermediate\Font\$(Configuration) $(PlatformShortName)\Font.lib;..\Intermediate\Input\$(Configuration) $(PlatformShortName)\Input.lib;..\Intermediate\lodepng\$(Configuration) $(PlatformShortName)\lodepng.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\arm64; $(VCInstallDir)\lib\arm64</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Link>
       <AdditionalDependencies>d2d1.lib;d3d11.lib;dxgi.lib;windowscodecs.lib;dwrite.lib;..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Render\$(Configuration) $(PlatformShortName)\Render.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\Intermediate\FFX\$(Configuration) $(PlatformShortName)\FFX.lib;..\Intermediate\DirectX11\$(Configuration) $(PlatformShortName)\DirectX11.lib;..\Intermediate\Resource\$(Configuration) $(PlatformShortName)\Resource.lib;..\Intermediate\Image\$(Configuration) $(PlatformShortName)\Image.lib;..\Intermediate\Font\$(Configuration) $(PlatformShortName)\Font.lib;..\Intermediate\Input\$(Configuration) $(PlatformShortName)\Input.lib;..\Intermediate\lodepng\$(Configuration) $(PlatformShortName)\lodepng.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -352,6 +456,20 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Link>
+      <AdditionalDependencies>d2d1.lib;d3d11.lib;dxgi.lib;windowscodecs.lib;dwrite.lib;..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Render\$(Configuration) $(PlatformShortName)\Render.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\Intermediate\FFX\$(Configuration) $(PlatformShortName)\FFX.lib;..\Intermediate\DirectX11\$(Configuration) $(PlatformShortName)\DirectX11.lib;..\Intermediate\Resource\$(Configuration) $(PlatformShortName)\Resource.lib;..\Intermediate\Image\$(Configuration) $(PlatformShortName)\Image.lib;..\Intermediate\Font\$(Configuration) $(PlatformShortName)\Font.lib;..\Intermediate\Input\$(Configuration) $(PlatformShortName)\Input.lib;..\Intermediate\lodepng\$(Configuration) $(PlatformShortName)\lodepng.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store; $(VCInstallDir)\lib</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|Win32'">
     <Link>
       <AdditionalDependencies>d2d1.lib;d3d11.lib;dxgi.lib;windowscodecs.lib;dwrite.lib;..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Render\$(Configuration) $(PlatformShortName)\Render.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\Intermediate\FFX\$(Configuration) $(PlatformShortName)\FFX.lib;..\Intermediate\DirectX11\$(Configuration) $(PlatformShortName)\DirectX11.lib;..\Intermediate\Resource\$(Configuration) $(PlatformShortName)\Resource.lib;..\Intermediate\Image\$(Configuration) $(PlatformShortName)\Image.lib;..\Intermediate\Font\$(Configuration) $(PlatformShortName)\Font.lib;..\Intermediate\Input\$(Configuration) $(PlatformShortName)\Input.lib;..\Intermediate\lodepng\$(Configuration) $(PlatformShortName)\lodepng.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store; $(VCInstallDir)\lib</AdditionalLibraryDirectories>
@@ -407,6 +525,20 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|x64'">
+    <Link>
+      <AdditionalDependencies>d2d1.lib;d3d11.lib;dxgi.lib;windowscodecs.lib;dwrite.lib;..\Intermediate\Core\$(Configuration) $(PlatformShortName)\Core.lib;..\Intermediate\Math\$(Configuration) $(PlatformShortName)\Math.lib;..\Intermediate\Render\$(Configuration) $(PlatformShortName)\Render.lib;..\Intermediate\Engine\$(Configuration) $(PlatformShortName)\Engine.lib;..\Intermediate\Network\$(Configuration) $(PlatformShortName)\Network.lib;..\Intermediate\Window\$(Configuration) $(PlatformShortName)\Window.lib;..\Intermediate\FFX\$(Configuration) $(PlatformShortName)\FFX.lib;..\Intermediate\DirectX11\$(Configuration) $(PlatformShortName)\DirectX11.lib;..\Intermediate\Resource\$(Configuration) $(PlatformShortName)\Resource.lib;..\Intermediate\Image\$(Configuration) $(PlatformShortName)\Image.lib;..\Intermediate\Font\$(Configuration) $(PlatformShortName)\Font.lib;..\Intermediate\Input\$(Configuration) $(PlatformShortName)\Input.lib;..\Intermediate\lodepng\$(Configuration) $(PlatformShortName)\lodepng.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories); $(VCInstallDir)\lib\store\amd64; $(VCInstallDir)\lib\amd64</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <PreprocessorDefinitions>NDEBUG;_SCORPIO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
     <Image Include="Assets\SplashScreen.scale-200.png" />
@@ -437,15 +569,19 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Scorpio_Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Scorpio_Debug|ARM'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|ARM'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Scorpio_Debug|ARM64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|ARM64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Scorpio_Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
