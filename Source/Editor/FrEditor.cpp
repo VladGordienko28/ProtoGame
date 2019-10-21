@@ -307,6 +307,7 @@ void CEditor::Exit()
 	WWindow::Font2 = nullptr;
 	WWindow::Icons = nullptr;
 
+
 	delete GUIWindow;
 	delete GUIRender;
 

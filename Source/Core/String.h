@@ -459,7 +459,7 @@ namespace flu
 
 		static StringBase<MANAGER_TYPE, MANAGER> format( StringBase<MANAGER_TYPE, MANAGER> fmt, ... )
 		{
-			Char buffer[4096];
+			CHAR_TYPE buffer[4096];
 			va_list argsPtr;
 
 			va_start( argsPtr, fmt );

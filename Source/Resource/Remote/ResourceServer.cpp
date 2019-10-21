@@ -252,6 +252,7 @@ namespace res
 		{
 			client.resourceData = compiledResource.data;
 			client.resourceBytesRemain = compiledResource.data.size();
+			client.transferStartTime = time::cycles64();
 
 			OwningBufferWriter writer;
 			writer << compiledResource.data.size();
@@ -265,6 +266,11 @@ namespace res
 			{	
 				info( L"\ttransferring: %d/%d bytes..", client.resourceData.size() - client.resourceBytesRemain, client.resourceData.size() );
 				client.resourceBytesRemain -= bytesToSend;
+
+				if( client.resourceBytesRemain == 0 )
+				{
+					info( L"\tdone at %.4f sec", time::elapsedSecFrom( client.transferStartTime ) );
+				}
 				return true;
 			}
 			else
@@ -293,6 +299,11 @@ namespace res
 
 				client.resourceBytesRemain -= bytesToSend;
 				assert( client.resourceBytesRemain >= 0 );
+
+				if( client.resourceBytesRemain == 0 )
+				{
+					info( L"\tdone at %.4f sec", time::elapsedSecFrom( client.transferStartTime ) );
+				}
 
 				return true;
 			}

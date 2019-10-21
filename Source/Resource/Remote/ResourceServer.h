@@ -39,6 +39,7 @@ namespace res
 			// resource transfer
 			Array<UInt8> resourceData;
 			Int32 resourceBytesRemain = 0;
+			UInt64 transferStartTime = 0;
 		};
 
 	private:

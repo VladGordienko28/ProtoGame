@@ -30,7 +30,7 @@ namespace dx11 {
 				m_object->AddRef();
 			}
 		}
-
+		
 		DxRef( DxRef<T>&& other )
 		{
 			m_object = other.m_object;
@@ -109,12 +109,6 @@ namespace dx11 {
 			{
 				m_object->AddRef();
 			}
-		}
-
-		inline void operator=( DxRef<T>&& other )
-		{
-			m_object = other.m_object;
-			other.m_object = nullptr;
 		}
 
 	private:

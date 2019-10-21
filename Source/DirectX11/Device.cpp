@@ -111,8 +111,8 @@ namespace dx11
 	{
 		m_userDefinedAnnotation = nullptr;
 
-		m_immediateContext->ClearState();
-		m_immediateContext = nullptr;
+		m_defaultRasterState = nullptr;
+		m_scissorRasterState = nullptr;
 
 		m_samplerStates.empty();
 		m_vertexDeclarations.empty();
@@ -120,6 +120,19 @@ namespace dx11
 		m_depthStencilStates.empty();
 
 		m_swapChain = nullptr;
+
+		m_immediateContext->ClearState();
+		m_immediateContext = nullptr;
+
+#if FLU_DEBUG
+		ID3D11Debug* dxDebug;
+		m_device->QueryInterface( __uuidof(ID3D11Debug), reinterpret_cast<void**>( &dxDebug ) );
+
+		dxDebug->ReportLiveDeviceObjects( D3D11_RLDO_DETAIL );
+
+		dxDebug->Release();
+#endif
+
 		m_device = nullptr;
 	}
 	
@@ -493,11 +506,13 @@ namespace dx11
 			firstRT.BlendOpAlpha = fluorineBlendOpToDirectX( blendState.getAlphaOp() );
 			firstRT.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-			DxRef<ID3D11BlendState> dxBlendState;
+			ID3D11BlendState* dxBlendState;
 			HRESULT result = m_device->CreateBlendState( &blendDescription, &dxBlendState );
 			assert( SUCCEEDED( result ) );
 
 			m_blendStates.put( requiredBlendHash, dxBlendState );
+			dxBlendState->Release();
+
 			return requiredBlendHash;
 		}
 	}
@@ -676,11 +691,14 @@ namespace dx11
 			samplerDescription.MinLOD = 0.f;
 			samplerDescription.MaxLOD = D3D11_FLOAT32_MAX;
 
-			DxRef<ID3D11SamplerState> dxSamplerState;
+			ID3D11SamplerState* dxSamplerState;
 			HRESULT result = m_device->CreateSamplerState( &samplerDescription, &dxSamplerState );
 			assert( SUCCEEDED( result ) );
 
+
 			m_samplerStates.put( requiredSamplerHash, dxSamplerState );
+			dxSamplerState->Release();
+
 			return requiredSamplerHash;
 		}
 	}
