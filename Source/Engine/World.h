@@ -13,7 +13,7 @@ namespace flu
 	public:
 		using UPtr = UniquePtr<World>;
 
-		World( rend::Device* renderDevice, in::Device* inputDevice );
+		World( rend::Device* renderDevice, aud::Device* audioDevice, in::Device* inputDevice );
 		~World();
 
 		//virtual void onUpdate();
@@ -35,6 +35,9 @@ namespace flu
 
 		// input system
 		in::Device* m_inputDevice;
+
+		// audio system
+		aud::Device* m_audioDevice;
 
 		EngineChart::UPtr m_engineChart;
 

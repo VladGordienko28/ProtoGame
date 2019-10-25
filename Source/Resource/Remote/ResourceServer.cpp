@@ -62,9 +62,11 @@ namespace res
 		instance().m_localStorage->registerCompiler( type, compiler ); 
 	}
 
-	void ResourceServer::update()
+	Bool ResourceServer::processRequests()
 	{
 		assert( instance().m_isInitialized );
+
+		Bool wasProcessed = false;
 
 		// poll new clients
 		instance().pollClients();
@@ -93,7 +95,7 @@ namespace res
 		{
 			Client& client = instance().m_clients[i];
 
-			if( instance().serveClient( client, changedResources ) )
+			if( instance().serveClient( client, changedResources, wasProcessed ) )
 			{
 				// client served successfully
 				++i;
@@ -103,8 +105,12 @@ namespace res
 				// client was disconnected
 				warn( L"Client: \"%s\" %s was disconnected", *client.name, *client.address.toString() );
 				instance().m_clients.removeShift( i );
+				
+				wasProcessed = true;
 			}
 		}
+
+		return wasProcessed;
 	}
 
 	ResourceServer::ResourceServer()
@@ -125,15 +131,15 @@ namespace res
 		}
 	}
 
-	Bool ResourceServer::serveClient( Client& client, const Array<ResourceId>& changedResources )
+	Bool ResourceServer::serveClient( Client& client, const Array<ResourceId>& changedResources, Bool& wasProcessed )
 	{
 		switch( client.status )
 		{
 			case Client::EStatus::Unverified:
-				return serveUnverified( client );
+				return serveUnverified( client, wasProcessed );
 
 			case Client::EStatus::Accepted:
-				return serveAccepted( client, changedResources );
+				return serveAccepted( client, changedResources, wasProcessed );
 
 			default:
 				assert( false && "Unknown client status" );
@@ -141,7 +147,7 @@ namespace res
 		}
 	}
 
-	Bool ResourceServer::serveUnverified( Client& client )
+	Bool ResourceServer::serveUnverified( Client& client, Bool& wasProcessed )
 	{
 		ClientMessageHeader header;
 		Array<UInt8> data;
@@ -162,6 +168,8 @@ namespace res
 
 			info( L"Client: \"%s\" %s accepted", *clientInfo, *client.address.toString() );
 			client.status = Client::EStatus::Accepted;
+
+			wasProcessed = true;
 			return true;
 		}
 		else
@@ -171,7 +179,7 @@ namespace res
 		}
 	}
 
-	Bool ResourceServer::serveAccepted( Client& client, const Array<ResourceId>& changedResources )
+	Bool ResourceServer::serveAccepted( Client& client, const Array<ResourceId>& changedResources, Bool& wasProcessed )
 	{
 		// Handle all requests
 		{
@@ -182,6 +190,8 @@ namespace res
 
 			if( result == EReceiveResult::Ok )
 			{
+				wasProcessed = true;
+
 				switch( header.message )
 				{
 					case EClientMessage::RequestResourceById:
@@ -208,6 +218,8 @@ namespace res
 		// Send changes notification
 		if( changedResources.size() > 0 )
 		{
+			wasProcessed = true;
+
 			OwningBufferWriter writer;
 			writer << changedResources;
 
@@ -269,7 +281,7 @@ namespace res
 
 				if( client.resourceBytesRemain == 0 )
 				{
-					info( L"\tdone at %.4f sec", time::elapsedSecFrom( client.transferStartTime ) );
+					info( L"\tdone in %.4f sec", time::elapsedSecFrom( client.transferStartTime ) );
 				}
 				return true;
 			}
@@ -302,7 +314,7 @@ namespace res
 
 				if( client.resourceBytesRemain == 0 )
 				{
-					info( L"\tdone at %.4f sec", time::elapsedSecFrom( client.transferStartTime ) );
+					info( L"\tdone in %.4f sec", time::elapsedSecFrom( client.transferStartTime ) );
 				}
 
 				return true;

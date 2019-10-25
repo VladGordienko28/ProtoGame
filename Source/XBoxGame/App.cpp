@@ -370,6 +370,33 @@ void dipsToPixels( float inW, float inH, int& outW, int& outH )
 }
 
 
+class MyTestInt: public in::InputClient
+{
+public:
+	MyTestInt( aud::Device* dev, String sndName )
+	{
+		device = dev;
+		sound = res::ResourceManager::get<aud::Sound>( L"Experimental.Bola", res::EFailPolicy::FATAL );
+	}
+
+
+	Bool onGamepadDown( in::GamepadId id, in::EGamepadButton button )
+	{
+		if( button == in::EGamepadButton::GB_A )
+		{
+			device->playSFX( sound->getHandle(), 1.f, 1.5f );
+			return true;
+		}
+	}
+
+private:
+	aud::Device* device;
+	aud::Sound::Ptr sound;
+};
+
+MyTestInt* g_testInt;
+
+
 // Called when the CoreWindow object is created (or re-created).
 void App::SetWindow(CoreWindow^ window)
 {
@@ -395,13 +422,18 @@ void App::SetWindow(CoreWindow^ window)
 
 	//----------------------------------------------
 	assert( !m_renderDevice.hasObject() );
+	assert( !m_audioDevice.hasObject() );
 
 	int realW, realH;
 	dipsToPixels( window->Bounds.Width,  window->Bounds.Height, realW, realH );
 
 	m_renderDevice = new flu::dx11::Device( reinterpret_cast<IUnknown*>( window ), realW, realH, false );
+	m_audioDevice = new flu::xa2::Device();
 
-	m_world = new World( m_renderDevice.get(), m_inputDevice.get() );
+	m_world = new World( m_renderDevice.get(), m_audioDevice.get(), m_inputDevice.get() );
+
+	g_testInt = new MyTestInt( m_audioDevice.get(), L"" );
+	m_inputDevice->addClient( g_testInt );
 
 	m_grid = new flu::gfx::GridDrawer( flu::math::colors::GREEN, 515 );
 	m_textDrawer = new flu::gfx::TextDrawer();

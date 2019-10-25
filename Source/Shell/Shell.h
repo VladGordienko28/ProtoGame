@@ -1,17 +1,18 @@
-/*=============================================================================
-	Shell.h: Shell general include file.
-	Copyright Apr.2018 Vlad Gordienko.
-=============================================================================*/
+//-----------------------------------------------------------------------------
+//	Shell.h: A shell main include file
+//	Created by Vlad Gordienko, 2018
+//-----------------------------------------------------------------------------
 #pragma once
 
-// Flu includes.
-#include "Engine\Engine.h"
-#include "Compiler\Compiler.h"
-#include "Window\Window.h"
+// Fluorine includes
+#include "Core/Core.h"
+#include "Resource/Resource.h"
+#include "Engine/Engine.h"
+#include "Window/Window.h"
 #include "Network/Network.h"
 #include "DirectX11/DirectX11.h"
 
-// C++ includes.
+// Std includes
 #include <io.h>
 #include <stdio.h>
 #include <fcntl.h>
@@ -26,15 +27,6 @@
 #pragma comment(lib, "dbghelp.lib")
 #pragma pack( pop ) 
 
-#undef DrawText
-#undef LoadBitmap
-#undef FindText
-
-
-
-// Shell includes.
-#include "FrShell.h"
-
-/*-----------------------------------------------------------------------------
-	The End.
------------------------------------------------------------------------------*/
+// Shell includes
+#include "IApp.h"
+#include "ResourceServerApp.h"

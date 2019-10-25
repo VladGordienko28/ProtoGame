@@ -24,7 +24,7 @@ CBlockManager::CBlockManager()
 		FileName(),
 		ResFile( nullptr )
 {
-	assert(GIsEditor);
+	//assert(GIsEditor);
 }
 
 
@@ -49,7 +49,7 @@ CBlockManager::CBlockManager( String InFileName )
 CBlockManager::~CBlockManager()
 {
 	// Close file if any.
-	if( !GIsEditor )
+	if( false /*!GIsEditor*/ )
 	{
 		ResFile = nullptr;
 	}
@@ -105,7 +105,7 @@ UInt32 CBlockManager::GetBlockSize( Int32 iBlock )
 //
 Int32 CBlockManager::AllocateBlock( Int32 BytesCount, UInt32 ExtraFlags )
 {
-	assert(GIsEditor);
+	//assert(GIsEditor);
 	assert(BytesCount>0);
 
 	// Allocate and initialize block.
@@ -159,7 +159,7 @@ void CBlockManager::ReleaseBlock( Int32 iBlock )
 void CBlockManager::SaveAllBlocks( String InFileName )
 {
 	// Don't save resources in game.
-	assert(GIsEditor);
+	//assert(GIsEditor);
 
 	fm::IBinaryFileWriter::Ptr saver = fm::writeBinaryFile( *InFileName );
 	assert( saver.hasObject() );
@@ -289,7 +289,7 @@ void CBlockManager::SaveAllBlocks( String InFileName )
 void CBlockManager::LoadAllBlocks( String InFileName )
 {
 	// Don't load all resources in game.
-	assert(GIsEditor);
+	//assert(GIsEditor);
 
 	fm::IBinaryFileReader::Ptr loader = fm::readBinaryFile( *InFileName );
 
@@ -375,7 +375,7 @@ void CBlockManager::LoadAllBlocks( String InFileName )
 //
 void CBlockManager::Flush()
 {
-	assert(!GIsEditor);
+	//assert(!GIsEditor);
 
 	for( Int32 i=0; i<Blocks.size(); i++ )
 		if( Blocks[i] )
@@ -398,7 +398,7 @@ void CBlockManager::Flush()
 //
 void CBlockManager::LoadMetadata()
 {
-	assert(!GIsEditor);
+	//assert(!GIsEditor);
 
 	// Resources count.
 	Int32 NumRes, DbSize;
@@ -442,7 +442,7 @@ void CBlockManager::LoadMetadata()
 //
 void CBlockManager::UploadBlock( Int32 iBlock )
 {  
-	assert(!GIsEditor);
+	//assert(!GIsEditor);
 	assert(iBlock>=0 && iBlock<Blocks.size());
 	assert(Blocks[iBlock]);
 	assert(!(Blocks[iBlock]->Flags & BLOCK_Loaded));
@@ -496,7 +496,7 @@ void CBlockManager::UploadBlock( Int32 iBlock )
 //
 void CBlockManager::Tick( Float Delta )
 {
-	assert(!GIsEditor);
+	//assert(!GIsEditor);
 
 	for( Int32 i=0; i<Blocks.size(); i++ )
 		if( Blocks[i] )
@@ -582,7 +582,7 @@ TDataBlock::TDataBlock()
 //
 TDataBlock::TDataBlock( Int32 InSize )
 {
-	assert(GIsEditor);
+	//assert(GIsEditor);
 
 	Data		= mem::alloc(alignValue(InSize, 16));
 	Flags		= BLOCK_Loaded;

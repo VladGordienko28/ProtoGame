@@ -114,7 +114,7 @@ Bool CResourceBlock::ReleaseBlock()
 	if( !IsValidBlock() )
 		return false;
 
-	if( GIsEditor && iBlock != -1 )
+	if( true /*GIsEditor*/ && iBlock != -1 )
 	{
 		GProject->BlockMan->ReleaseBlock( iBlock );
 		iBlock	= -1;

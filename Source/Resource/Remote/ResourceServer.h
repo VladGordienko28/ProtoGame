@@ -18,7 +18,7 @@ namespace res
 
 		static void registerResourceType( EResourceType type, IResourceCompiler* compiler );
 
-		static void update();
+		static Bool processRequests();
 
 	private:
 		struct Client
@@ -62,10 +62,10 @@ namespace res
 
 		UInt32 pollClients();
 
-		Bool serveClient( Client& client, const Array<ResourceId>& changedResources );
+		Bool serveClient( Client& client, const Array<ResourceId>& changedResources, Bool& wasProcessed );
 
-		Bool serveUnverified( Client& client );
-		Bool serveAccepted( Client& client, const Array<ResourceId>& changedResources );
+		Bool serveUnverified( Client& client, Bool& wasProcessed );
+		Bool serveAccepted( Client& client, const Array<ResourceId>& changedResources, Bool& wasProcessed );
 
 		Bool handleRequestResource( Client& client, const ClientMessageHeader& reqHeader, const Array<UInt8>& reqData );
 		Bool handleRequestBlock( Client& client, const ClientMessageHeader& reqHeader, const Array<UInt8>& reqData );

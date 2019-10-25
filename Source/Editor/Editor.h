@@ -10,7 +10,7 @@
 #include "GUI/GUI.h"
 #include "Window/Window.h"
 #include "OpenGL/OpenGLRend.h"
-#include "OpenAL/OpenALAud.h"
+#include "XAudio2/XAudio2.h"
 #include "Compiler/Compiler.h"
 #include "Network/Network.h"
 #include "Resource/Resource.h"

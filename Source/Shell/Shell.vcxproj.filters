@@ -2,11 +2,23 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="FrShell.cpp" />
     <ClCompile Include="Shell.cpp" />
+    <ClCompile Include="ResourceServerApp.cpp">
+      <Filter>Apps</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FrShell.h" />
     <ClInclude Include="Shell.h" />
+    <ClInclude Include="IApp.h">
+      <Filter>Apps</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceServerApp.h">
+      <Filter>Apps</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Apps">
+      <UniqueIdentifier>{731d518f-d446-464c-8788-5556cefe69e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

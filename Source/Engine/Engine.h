@@ -56,6 +56,7 @@ struct TDelegate;
 #include "Image/Image.h"
 #include "Font/Font.h"
 #include "Input/Input.h"
+#include "Audio/Audio.h"
 
 using namespace flu; //todo: remove this;
 

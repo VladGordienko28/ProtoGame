@@ -1,11 +1,14 @@
 ﻿#pragma once
 
+
+#include "XAudio2/XAudio2.h"
 #include "Core/Core.h"
 #include "Math/Math.h"
 #include "Render/Render.h"
 #include "DirectX11/DirectX11.h"
 #include "Window/Window.h"
 #include "Input/Input.h"
+#include "Audio/Audio.h"
 
 
 

@@ -10,7 +10,7 @@ namespace res
 	/**
 	 *	Constants
 	 */
-	static const SizeT MAX_PACKET_SIZE = 8192;
+	static const SizeT MAX_PACKET_SIZE = 16384;
 
 	/**
 	 *	A list of messages comming from server 

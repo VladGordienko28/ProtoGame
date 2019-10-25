@@ -40,7 +40,7 @@ CApplication::~CApplication()
 //
 void CApplication::Flush()
 {
-	if( GIsEditor )
+	if( /*GIsEditor*/ true )
 	{
 		// Flush in editor.
 		GAudio->Flush();
@@ -366,7 +366,7 @@ Bool CApplication::LoadGame( String Directory, String Name )
 
 	// Save all resources to the other file.
 	String ResFile = Name + RES_FILE_EXT;
-	if( GIsEditor )
+	if( /*GIsEditor*/ true )
 	{
 		// Initialize BlockManager for editor.
 		Project->BlockMan	= new CBlockManager();

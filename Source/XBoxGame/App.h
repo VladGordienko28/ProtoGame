@@ -37,6 +37,8 @@ namespace XBoxGame
 
 	private:
 		flu::dx11::Device::UPtr m_renderDevice;
+		flu::xa2::Device::UPtr m_audioDevice;
+
 		flu::World::UPtr m_world;
 		flu::UniquePtr<CCanvas> m_canvas;
 		flu::gfx::GridDrawer::UPtr m_grid;

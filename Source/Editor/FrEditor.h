@@ -46,6 +46,7 @@ public:
 	WGameBuilderDialog*		GameBuilder;
 
 	rend::Device::UPtr		m_renderDevice;
+	aud::Device::UPtr		m_audioDevice;
 	in::Device::UPtr		m_inputDevice;
 	World::UPtr				m_world;
 

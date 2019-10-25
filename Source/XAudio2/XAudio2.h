@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-//	DirectX11.h: A DirectX render main include file
+//	XAudio2.h: A XAudio2 main include file
 //	Created by Vlad Gordienko, 2019
 //-----------------------------------------------------------------------------
 #pragma once
@@ -7,18 +7,13 @@
 // Fluorine includes
 #include "Core/Core.h"
 #include "Math/Math.h"
-#include "Render/Render.h"
+#include "Resource/Resource.h"
+#include "Audio/Audio.h"
 
 // External dependencies
-#include <windows.h>
-#include <dxgi1_4.h>
-#include <d3d11_3.h>
-#include <d3dCompiler.h>
+#include <xaudio2.h>
 
-// Render includes
+// XAudio2 includes
 #include "DxRef.h"
-#include "DxUtils.h"
-#include "DxTypes.h"
-#include "DxCompiler.h"
-#include "SwapChain.h"
+#include "Xa2Types.h"
 #include "Device.h"

@@ -8,10 +8,8 @@
 //
 // Globals.
 //
-Bool				GIsEditor	= false;
 CPlatformBase*		GPlat		= nullptr;
 UInt32				GFrameStamp = 0;
-String				GCmdLine;
 
 /*-----------------------------------------------------------------------------
     TDelegate implementation.

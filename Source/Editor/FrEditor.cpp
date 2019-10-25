@@ -63,11 +63,7 @@ CEditor::CEditor()
 	info( L"" );
 
 	// Initialize global variables.
-	GIsEditor			= true;
 	GEditor				= this;
-
-	// Parse command line.
-	GCmdLine = GetCommandLine();
 
 	// Initialize C++ stuff.
 	srand(GetTickCount() ^ 0x20162016);
@@ -164,9 +160,10 @@ void CEditor::Init( HINSTANCE InhInstance )
 
 	// Load configure file.
 	m_renderDevice = new dx11::Device( hWnd, 800, 600, false );
+	m_audioDevice = new xa2::Device();
 	m_inputDevice = new in::Device();
 
-	m_world = new World( m_renderDevice.get(), m_inputDevice.get() );
+	m_world = new World( m_renderDevice.get(), m_audioDevice.get(), m_inputDevice.get() );
 
 	res::ResourceManager::addListener( &g_resListener );
 
@@ -176,7 +173,7 @@ void CEditor::Init( HINSTANCE InhInstance )
 
 
 
-#if FLU_X64
+#if FLU_X64 || 1
 	GAudio		= new CNullAudio();
 #else
 	GAudio		= new COpenALAudio();
@@ -254,34 +251,6 @@ void CEditor::Init( HINSTANCE InhInstance )
 
 	// Notify.
 	info( L"Ed: Editor initialized" );
-
-
-	//Bool bMake = CCmdLineParser::ParseCommand( GCmdLine, 0 ) == L"make";
-	//if( bMake )
-	{
-		String Path = CCmdLineParser::ParseStringParam( GCmdLine, L"path", L"123" );
-		if( Path != L"123" )
-		{
-			OpenProjectFrom( Path );
-
-			// Allocate target directory.
-			String Directory = fm::getFilePath( *GProject->FileName ) + L"\\Release";
-			CreateDirectory( *Directory, nullptr );
-
-
-			// Now save project.
-			if( !GEditor->SaveGame( Directory, GProject->ProjName ) )
-			{
-				GUIWindow->ShowMessage( L"Couldn't save project", L"Project", true );
-				return;
-			}
-
-
-			ExitProcess(0);
-		}
-
-
-	}
 }
 
 
@@ -323,6 +292,7 @@ void CEditor::Exit()
 
 	m_world = nullptr;
 	m_renderDevice = nullptr;
+	m_audioDevice = nullptr;
 
 	net::NetworkManager::destroy();
 

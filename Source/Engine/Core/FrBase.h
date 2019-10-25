@@ -33,7 +33,5 @@ public:
     Global variables.
 -----------------------------------------------------------------------------*/
 
-extern Bool				GIsEditor;
 extern CPlatformBase*	GPlat;
 extern UInt32			GFrameStamp;
-extern String			GCmdLine;

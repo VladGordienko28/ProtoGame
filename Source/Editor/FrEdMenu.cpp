@@ -110,6 +110,13 @@ void WEditorMainMenu::OnPaint( CGUIRenderBase* Render )
 
 void WEditorMainMenu::HelpClick( WWidget* Sender )
 {
+	static aud::Sound::Ptr sound0 = res::ResourceManager::get<aud::Sound>( L"Experimental.Bola", res::EFailPolicy::FATAL );
+	static aud::Sound::Ptr sound1 = res::ResourceManager::get<aud::Sound>( L"Experimental.SGrunt", res::EFailPolicy::FATAL );
+
+	GEditor->m_audioDevice->playSFX( sound0->getHandle(), 1.f, 0.6f );
+	threading::sleep( 100 );
+	GEditor->m_audioDevice->playSFX( sound1->getHandle(), 1.f, 1.f );
+
 	Root->ShowMessage( L"Help file not found", L"Fluorine", true );
 }
 

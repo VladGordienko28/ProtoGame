@@ -213,6 +213,7 @@ namespace res
 		{
 			// unable to read header
 			fatal( L"Resource Server was disconnected" );
+			return EReceiveResult::Pending;
 		}
 	}
 

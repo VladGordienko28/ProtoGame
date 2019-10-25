@@ -7,8 +7,9 @@
 
 namespace flu
 {
-	World::World( rend::Device* renderDevice, in::Device* inputDevice )
+	World::World( rend::Device* renderDevice, aud::Device* audioDevice, in::Device* inputDevice )
 		:	m_renderDevice( renderDevice ),
+			m_audioDevice( audioDevice ),
 			m_inputDevice( inputDevice ),
 			m_drawContext( renderDevice, m_sharedConstants ),
 			m_sharedConstants( renderDevice )
@@ -39,6 +40,7 @@ namespace flu
 			ResourceManager::registerResourceType( EResourceType::Effect, new ffx::System( m_renderDevice ), new ffx::Compiler( m_renderDevice->createCompiler() ) );
 			ResourceManager::registerResourceType( EResourceType::Image, new img::System( m_renderDevice ), new img::Converter() );
 			ResourceManager::registerResourceType( EResourceType::Font, new fnt::System(), new fnt::Compiler() );
+			ResourceManager::registerResourceType( EResourceType::Sound, new aud::SoundSystem( m_audioDevice ), new aud::SoundCompiler() );
 		}
 
 		// initialize engine gfx

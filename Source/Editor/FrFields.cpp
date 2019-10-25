@@ -1797,7 +1797,7 @@ void WObjectInspector::ObjectPicked( FEntity* Picked )
 //
 void WObjectInspector::BeginWaitForPick( CInspectorItemBase* Waiter )
 {
-	assert(!bWaitForPick)
+	assert(!bWaitForPick);
 
 	WEditorPage* Page = (WEditorPage*)GEditor->EditorPages->GetActivePage();
 	if( Page && Page->PageType == PAGE_Level )
