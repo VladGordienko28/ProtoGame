@@ -35,7 +35,7 @@ namespace threading
 	public:
 		using UPtr = UniquePtr<Thread>;
 
-		static Thread* create( EntryFunction entryFunction, void* arg );
+		static Thread* create( EntryFunction entryFunction, void* arg, const AnsiChar* name );
 
 		virtual void setPriority( EThreadPriority newPriority ) = 0;
 		virtual void wait() = 0;
@@ -72,6 +72,11 @@ namespace threading
 	 *	Suspend current thread for some time
 	 */
 	extern void sleep( UInt32 milliseconds );
+
+	/**
+	 *	Yield execution to other thread
+	 */
+	extern void yield();
 
 } // namespace threading
 } // namespace flu

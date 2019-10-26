@@ -10,23 +10,28 @@ namespace concurrency
 	/**
 	 *	An atomic integer value
 	 */
-	class Atomic: public NonCopyable
+	class Atomic
 	{
 	public:
-		using UPtr = UniquePtr<Atomic>;
+		Atomic()
+			:	m_value( 0 )
+		{
+		}
 
-		virtual Int32 increment() = 0;
-		virtual Int32 decrement() = 0;
-		virtual Int32 add( Int32 amount ) = 0;
-		virtual Int32 subtract( Int32 amount ) = 0;
-		virtual Int32 setValue( Int32 newValue ) = 0;
-		virtual Int32 getValue() const = 0;
+		Atomic( Int32 value )
+			:	m_value( value )
+		{
+		}
 
-		static Atomic* create();
-		static Atomic* create( Int32 value );
+		Int32 increment();
+		Int32 decrement();
+		Int32 add( Int32 amount );
+		Int32 subtract( Int32 amount );
+		Int32 setValue( Int32 newValue );
+		Int32 getValue() const;
 
-	protected:
-		Atomic() = default;
+	private:
+		volatile Int32 m_value;
 	};
 
 } // namespace concurrency

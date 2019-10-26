@@ -296,6 +296,7 @@
     <ClInclude Include="HandleArray.h" />
     <ClInclude Include="Hash.h" />
     <ClInclude Include="Heap.h" />
+    <ClInclude Include="JobSystem\JobSystem.h" />
     <ClInclude Include="JSon\JSon.h" />
     <ClInclude Include="Lexer\Lexer.h" />
     <ClInclude Include="Lexer\Token.h" />
@@ -334,6 +335,16 @@
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="Hash.cpp" />
     <ClCompile Include="Heap.cpp" />
+    <ClCompile Include="JobSystem\JobSystem.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Core/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|Win32'">Core/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Core/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Debug|Win32'">Core/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Core/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|x64'">Core/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Core/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Debug|x64'">Core/Core.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="JSon\BinaryJSon.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Core/Core.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Debug|Win32'">Core/Core.h</PrecompiledHeaderFile>

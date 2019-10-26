@@ -103,5 +103,23 @@ namespace concurrency
 		SpinLock() = default;
 	};
 
+	/**
+	 *	A semaphore
+	 */
+	class Semaphore: public NonCopyable
+	{
+	public:
+		using UPtr = UniquePtr<Semaphore>;
+		
+		virtual void push( UInt32 count = 1 ) = 0;
+		virtual void pop() = 0;
+		virtual Bool tryPop() = 0;
+
+		static Semaphore* create( UInt32 initialCount = 0 );
+
+	protected:
+		Semaphore() = default;
+	};
+	
 } // namespace concurrency
 } // namespace flu

@@ -14,65 +14,37 @@ namespace flu
 namespace concurrency
 {
 #if FLU_PLATFORM_WINDOWS
-	/**
-	 *	A WinApi based atomic integer value
-	 */
-	class WinAtomic: public Atomic
+
+	Int32 Atomic::increment()
 	{
-	public:
-		WinAtomic()
-			:	m_value( 0 )
-		{
-		}
-
-		WinAtomic( Int32 value )
-			:	m_value( value )
-		{
-		}
-
-		Int32 increment()
-		{
-			return (Int32)InterlockedIncrement( (LPLONG)&m_value );
-		}
-
-		Int32 decrement()
-		{
-			return (Int32)InterlockedDecrement( (LPLONG)&m_value );
-		}
-
-		Int32 add( Int32 amount )
-		{
-			return (Int32)InterlockedAdd( (LPLONG)&m_value, amount );
-		}
-
-		Int32 subtract( Int32 amount )
-		{
-			return (Int32)InterlockedAdd( (LPLONG)&m_value, -amount );
-		}
-
-		Int32 setValue( Int32 newValue )
-		{
-			return (Int32)InterlockedExchange( (LPLONG)&m_value, newValue );
-		}
-
-		Int32 getValue() const
-		{
-			return m_value;
-		}
-
-	private:
-		volatile Int32 m_value;
-	};
-
-	Atomic* Atomic::create()
-	{
-		return new WinAtomic();
+		return (Int32)InterlockedIncrement( (LPLONG)&m_value );
 	}
 
-	Atomic* Atomic::create( Int32 value )
+	Int32 Atomic::decrement()
 	{
-		return new WinAtomic( value );
+		return (Int32)InterlockedDecrement( (LPLONG)&m_value );
 	}
+
+	Int32 Atomic::add( Int32 amount )
+	{
+		return (Int32)InterlockedAdd( (LPLONG)&m_value, amount );
+	}
+
+	Int32 Atomic::subtract( Int32 amount )
+	{
+		return (Int32)InterlockedAdd( (LPLONG)&m_value, -amount );
+	}
+
+	Int32 Atomic::setValue( Int32 newValue )
+	{
+		return (Int32)InterlockedExchange( (LPLONG)&m_value, newValue );
+	}
+
+	Int32 Atomic::getValue() const
+	{
+		return m_value;
+	}
+
 #else
 #error Atomic is not implemented for current platform
 #endif

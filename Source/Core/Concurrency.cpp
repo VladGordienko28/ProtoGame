@@ -168,5 +168,51 @@ namespace concurrency
 #error SpinLock is not implemented for current platform
 #endif
 
+#if FLU_PLATFORM_WINDOWS
+	/**
+	 *	A WinApi based semaphore
+	 */
+	class WinSemaphore: public Semaphore
+	{
+	public:
+		WinSemaphore( UInt32 initialCount )
+		{
+			m_semaphore = CreateSemaphore( nullptr, initialCount, MAX_COUNT, nullptr );
+		}
+
+		~WinSemaphore()
+		{
+			CloseHandle( m_semaphore );
+		}
+
+		void push( UInt32 count ) override
+		{
+			ReleaseSemaphore( m_semaphore, count, nullptr );
+		}
+
+		void pop() override
+		{
+			WaitForSingleObject( m_semaphore, INFINITE );
+		}
+
+		Bool tryPop() override
+		{
+			return WaitForSingleObject( m_semaphore, 0 ) == WAIT_OBJECT_0;
+		}
+
+	private:
+		static const UInt32 MAX_COUNT = 8192;
+
+		HANDLE m_semaphore;
+	};
+
+	Semaphore* Semaphore::create( UInt32 initialCount )
+	{
+		return new WinSemaphore( initialCount );
+	}
+#else
+#error Semaphore is not implemented for current platform
+#endif
+
 } // namespace concurrency
 } // namespace flu

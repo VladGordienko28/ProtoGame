@@ -47,6 +47,8 @@
 
 #include "JSon/JSon.h"
 
+#include "JobSystem/JobSystem.h"
+
 #include "Evaluator.h"
 
 /*-----------------------------------------------------------------------------

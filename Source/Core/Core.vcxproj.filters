@@ -84,6 +84,9 @@
     <ClInclude Include="ConfigManager.h">
       <Filter>Config</Filter>
     </ClInclude>
+    <ClInclude Include="JobSystem\JobSystem.h">
+      <Filter>JobSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp" />
@@ -136,6 +139,9 @@
     <ClCompile Include="Concurrency.cpp">
       <Filter>Multithreading</Filter>
     </ClCompile>
+    <ClCompile Include="JobSystem\JobSystem.cpp">
+      <Filter>JobSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Heap">
@@ -179,6 +185,9 @@
     </Filter>
     <Filter Include="Config">
       <UniqueIdentifier>{4fb0e5d9-cffb-45b4-a93d-4fc380c37484}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JobSystem">
+      <UniqueIdentifier>{6bfc04ed-8834-4d7f-aec9-fa51ecd8bf96}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

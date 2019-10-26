@@ -18,19 +18,53 @@ namespace threading
 #endif
 
 #if FLU_PLATFORM_WINDOWS
+
+	/**
+	 *	WinApi hack for thread naming
+	 *	see: https://docs.microsoft.com/ru-ru/visualstudio/debugger/how-to-set-a-thread-name-in-native-code
+	 */
+	void SetThreadName( DWORD dwThreadID, const char* threadName )
+	{
+		const DWORD MS_VC_EXCEPTION = 0x406D1388;
+
+#pragma pack( push, 8 )
+		typedef struct tagTHREADNAME_INFO
+		{
+			DWORD dwType; // Must be 0x1000.
+			LPCSTR szName; // Pointer to name (in user addr space).
+			DWORD dwThreadID; // Thread ID (-1=caller thread).
+			DWORD dwFlags; // Reserved for future use, must be zero.
+		} THREADNAME_INFO;
+#pragma pack( pop )
+
+		THREADNAME_INFO info;
+		info.dwType = 0x1000;
+		info.szName = threadName;
+		info.dwThreadID = dwThreadID;
+		info.dwFlags = 0;
+#pragma warning( push )
+#pragma warning( disable: 6320 6322 )
+		__try
+		{
+			RaiseException(MS_VC_EXCEPTION, 0, sizeof(info) / sizeof(ULONG_PTR), (ULONG_PTR*)&info);
+		}
+		__except ( EXCEPTION_EXECUTE_HANDLER ) {}
+#pragma warning( pop )
+	}
+
 	/**
 	 *	This is WinAPI thread
 	 */
 	class WinThread: public Thread
 	{
 	public:
-		WinThread( EntryFunction entryFunction, void* args )
+		WinThread( EntryFunction entryFunction, void* args, const AnsiChar* name )
 			:	m_entryFunction( entryFunction ),
 				m_args( args )
 		{
 			DWORD outThreadId;
 			m_thread = CreateThread( nullptr, 0, _threadEntryPoint, this, 0, &outThreadId );
-			//todo: add thread naming
+			SetThreadName( outThreadId, name );
 		}
 
 		~WinThread()
@@ -79,9 +113,9 @@ namespace threading
 		}
 	};
 
-	Thread* Thread::create( EntryFunction entryFunction, void* arg )
+	Thread* Thread::create( EntryFunction entryFunction, void* arg, const AnsiChar* name )
 	{
-		return new WinThread( entryFunction, arg );
+		return new WinThread( entryFunction, arg, name );
 	}
 
 #else
@@ -117,8 +151,21 @@ namespace threading
 
 	UInt32 getCPUCoresCount()
 	{
-		assert( false && "Not implemented" );
-		return 0;
+#if FLU_PLATFORM_WINDOWS
+		static UInt32 numCores = 0;
+
+		if( numCores == 0 )
+		{
+			SYSTEM_INFO systemInfo;
+			GetSystemInfo( &systemInfo );
+
+			numCores = systemInfo.dwNumberOfProcessors;
+		}
+
+		return numCores;
+#else
+#error threading::getCPUCoresCount is not implemented for current platform
+#endif
 	}
 
 	void sleep( UInt32 milliseconds )
@@ -127,6 +174,15 @@ namespace threading
 		Sleep( milliseconds );
 #else
 #error threading::sleep is not implemented for current platform
+#endif
+	}
+
+	void yield()
+	{
+#if FLU_PLATFORM_WINDOWS
+		SwitchToThread();
+#else
+#error threading::yield is not implemented for current platform
 #endif
 	}
 

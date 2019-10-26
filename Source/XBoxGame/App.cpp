@@ -445,6 +445,97 @@ void App::SetWindow(CoreWindow^ window)
 
 
 
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+	// job system experiments
+	{
+		job::initialize( 5 );
+
+		Array<UInt32> data[50];
+		UInt32 resulta[50], resultb[50];
+
+		for( int i = 0; i < 50; i++ )
+		{
+			data[i].setSize( 150000 );
+			for( int j = 0; j < 150000; j++ )
+				data[i][j] = i ^ j;
+		}
+
+		struct TaskContext
+		{
+			UInt32* data;
+			UInt32* result;
+		};
+
+
+		// multithread
+		{
+			UInt64 start = time::cycles64();
+			
+			job::TaskGraph graph(50);
+
+			TaskContext contexts[50];
+
+			for( UInt32 i = 0; i < 50; ++i )
+			{
+				contexts[i].data = &data[i][0];
+				contexts[i].result = &resultb[i];
+
+				graph.addTask( []( void* data )
+				{
+					TaskContext* con = reinterpret_cast<TaskContext*>(data);
+
+					UInt32 res = 0;
+
+					for( UInt32 j = 0; j < 150000; ++j )
+					{
+						res += con->data[j];
+					}
+			
+					*con->result = res;
+
+				}, &contexts[i] );
+
+			}
+
+			graph.wait();
+
+			warn( L"Multi threaded took %.4f ms", time::elapsedMsFrom( start ) );
+		}
+
+		// single thread stuff
+		{
+			UInt64 start = time::cycles64();
+			
+			for( UInt32 i = 0; i < 50; ++i )
+			{
+				UInt32 res = 0;
+				UInt32* line = &data[i][0];
+
+
+				for( UInt32 j = 0; j < 150000; ++j )
+				{
+					res += line[j];
+				}
+			
+				resulta[i] = res;
+			}
+
+			warn( L"Single threaded took %.4f ms", time::elapsedMsFrom( start ) );
+		}
+
+
+
+
+
+		job::shutdown();
+	}
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 }
 
 // Initializes scene resources, or loads a previously saved app state.

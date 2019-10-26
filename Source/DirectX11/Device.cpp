@@ -125,12 +125,16 @@ namespace dx11
 		m_immediateContext = nullptr;
 
 #if FLU_DEBUG
-		ID3D11Debug* dxDebug;
-		m_device->QueryInterface( __uuidof(ID3D11Debug), reinterpret_cast<void**>( &dxDebug ) );
+		debug( L"*****" );
+		{
+			ID3D11Debug* dxDebug;
+			m_device->QueryInterface( __uuidof(ID3D11Debug), reinterpret_cast<void**>( &dxDebug ) );
 
-		dxDebug->ReportLiveDeviceObjects( D3D11_RLDO_DETAIL );
+			dxDebug->ReportLiveDeviceObjects( D3D11_RLDO_DETAIL );
 
-		dxDebug->Release();
+			dxDebug->Release();
+		}
+		debug( L"*****" );
 #endif
 
 		m_device = nullptr;
