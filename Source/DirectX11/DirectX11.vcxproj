@@ -281,6 +281,7 @@
     <ClInclude Include="Device.h" />
     <ClInclude Include="DirectX11.h" />
     <ClInclude Include="DxCompiler.h" />
+    <ClInclude Include="DxProfiler.h" />
     <ClInclude Include="DxRef.h" />
     <ClInclude Include="DxTypes.h" />
     <ClInclude Include="DxUtils.h" />
@@ -299,6 +300,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="DxCompiler.cpp" />
+    <ClCompile Include="DxProfiler.cpp" />
     <ClCompile Include="DxTypes.cpp" />
     <ClCompile Include="SwapChain.cpp" />
   </ItemGroup>

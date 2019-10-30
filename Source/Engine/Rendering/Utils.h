@@ -36,5 +36,31 @@ namespace gfx
 	{
 		return api::getShaderResourceView( handle );
 	}
+
+	/**
+	 *	A wrapper class for GPU zone tracking
+	 */
+	class GPUZoneTracker final
+	{
+	public:
+		GPUZoneTracker( const Char* zoneName )
+		{
+			api::enterGPUProfileZone( zoneName );
+		}
+
+		~GPUZoneTracker()
+		{
+			api::leaveGPUProfileZone();
+		}
+	};
 }
 }
+
+/**
+  *	Profiler macro
+  */
+#if FLU_ENABLE_PROFILER
+	#define profile_gpu_zone( zoneName ) flu::gfx::GPUZoneTracker gpuZoneTracker( L#zoneName );
+#else
+	#define profile_gpu_zone( zoneName )
+#endif

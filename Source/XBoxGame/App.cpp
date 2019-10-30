@@ -601,16 +601,21 @@ void App::Run()
 
 			m_world->onBeginUpdate();
 
-			m_world->drawContext().pushViewInfo( view );
+
 /*
 		ViewInfo( const math::Vector& inLocation, math::Angle inRotation, const math::Vector& inFov, Float inZoom, 
 			Bool inMirage, Float inX, Float inY, Float inWidth, Float inHeight );
 */
+			{
+				m_world->drawContext().pushViewInfo( view );
+
+				profile_gpu_zone( Grid );
+				m_grid->render( view );
+
+				m_world->drawContext().popViewInfo();
+			}
 
 
-			m_grid->render( view );
-
-			m_world->drawContext().popViewInfo();
 
 			gfx::ViewInfo sview( 0, 0, m_world->drawContext().backbufferWidth(), m_world->drawContext().backbufferHeight() );
 

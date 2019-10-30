@@ -51,6 +51,9 @@ namespace api
 	extern rend::ShaderResourceView getShaderResourceView( rend::Texture2DHandle handle );
 	extern rend::ShaderResourceView getShaderResourceView( rend::RenderTargetHandle handle );
 	extern rend::ShaderResourceView getShaderResourceView( rend::DepthBufferHandle handle );
+
+	extern void enterGPUProfileZone( const Char* zoneName );
+	extern void leaveGPUProfileZone();
 }
 }
 }

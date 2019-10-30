@@ -264,17 +264,17 @@ namespace job
 		return INVALID_NODE_ID;
 	}
 
-	void TaskGraph::async()
+	void TaskGraph::async( TaskFunc finishCallback )
 	{
-		submit( false );
+		submit( false, finishCallback );
 	}
 
-	void TaskGraph::wait()
+	void TaskGraph::wait( TaskFunc finishCallback )
 	{
-		submit( true );
+		submit( true, finishCallback );
 	}
 
-	void TaskGraph::submit( Bool waitForComplete )
+	void TaskGraph::submit( Bool waitForComplete, TaskFunc finishCallback )
 	{
 		assert( m_numNodes > 0 );
 
@@ -288,7 +288,7 @@ namespace job
 		Node root;
 		root.parent = INVALID_NODE_ID;
 		root.openTasks = m_numNodes + 1;
-		root.func = []( void* ){};
+		root.func = finishCallback;
 		root.userData = nullptr;
 		m_nodes[m_numNodes++] = root;
 

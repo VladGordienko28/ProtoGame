@@ -8,12 +8,25 @@ namespace flu
 namespace profile
 {
 	/**
+	 *	A profiler metric sample
+	 */
+	struct Sample
+	{
+	public:
+		Double time = 0.0;
+		Double value = 0.0;
+	};
+
+	using Samples = Array<Sample>;
+
+	/**
 	 *	An abstraact profiler interface
 	 */
 	class IProfiler
 	{
 	public:
 		using GroupId = Int32;
+		static const GroupId INVALID_GROUP_ID = -1;
 
 		virtual ~IProfiler()
 		{
@@ -71,7 +84,7 @@ namespace profile
 
 #else
 
-	#define profile_zone( groupId, zoneName ) 
+	#define profile_zone( groupId, zoneName )
 	#define profile_counter( groupId, counterName, value )
 	#define profile_begin_frame()
 	#define profile_end_frame()

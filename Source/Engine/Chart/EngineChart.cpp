@@ -56,6 +56,7 @@ namespace flu
 			return;
 
 		profile_zone( EProfilerGroup::General, RenderChart );
+		profile_gpu_zone( Chart );
 		gfx::ScopedRenderingZone srz( TXT( "Profiler" ) );
 
 		const Float screenW = drawContext.backbufferWidth();
@@ -142,8 +143,8 @@ namespace flu
 				metricItem.Color = drawColor;
 				canvas->DrawRect( metricItem );
 
-				m_textDrawer.batchText( String::format( L"%s: %s (avg %.2f)", 
-					getGroupName(static_cast<EProfilerGroup>( groupId )), it.name, ( cumulativeValue / it.samples.size() ) ), 
+				m_textDrawer.batchText( String::format( L"%s: %s (avg %.2f; peak %.2f)", 
+					getGroupName(static_cast<EProfilerGroup>( groupId )), it.name, ( cumulativeValue / it.samples.size() ), maxMetricValue ), 
 					m_font, math::colors::WHITE, { 40.f, metricItem.Bounds.min.y + 2.f } );
 
 

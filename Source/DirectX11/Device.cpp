@@ -60,6 +60,10 @@ namespace dx11
 		m_swapChain = new SwapChain( m_device, hwnd, width, height, fullscreen );
 #endif
 
+#if FLU_PROFILE_GPU
+		m_gpuProfiler = new GPUProfiler( m_device.get(), m_immediateContext.get() );
+#endif
+
 		// set initial render target and viewport
 		rend::Viewport initialViewport = { 0.f, 0.f, Float( width ), Float( height ), 0.f, 1.f };
 
@@ -111,6 +115,8 @@ namespace dx11
 	{
 		m_userDefinedAnnotation = nullptr;
 
+		m_gpuProfiler = nullptr;
+
 		m_defaultRasterState = nullptr;
 		m_scissorRasterState = nullptr;
 
@@ -155,7 +161,6 @@ namespace dx11
 	void Device::beginFrame()
 	{
 		GPU_STAT( mem::zero( &m_drawStats, sizeof( rend::DrawStats ) ) );
-
 #if FLU_PLATFORM_XBOX
 		// Set backbuffer render target view, only for XBox due to different SwapChain settings
 		setRenderTarget( INVALID_HANDLE<rend::RenderTargetHandle>(), INVALID_HANDLE<rend::DepthBufferHandle>() );

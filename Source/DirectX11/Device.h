@@ -108,11 +108,16 @@ namespace dx11
 		rend::ShaderResourceView getShaderResourceView( rend::RenderTargetHandle handle ) override;
 		rend::ShaderResourceView getShaderResourceView( rend::DepthBufferHandle handle ) override;
 
+		Bool copyTextureToCPU( rend::Texture2DHandle handle, rend::EFormat& outFormat,
+			UInt32& outWidth, UInt32& outHeight, Array<UInt8>& outData ) override;
+
 		const rend::MemoryStats& getMemoryStats() const override;
 		const rend::DrawStats& getDrawStats() const override;
 
-		Bool copyTextureToCPU( rend::Texture2DHandle handle, rend::EFormat& outFormat,
-			UInt32& outWidth, UInt32& outHeight, Array<UInt8>& outData ) override;
+		rend::IGPUProfiler* getProfiler() const override
+		{
+			return m_gpuProfiler.get();
+		}
 
 		rend::ShaderCompiler* createCompiler() const override
 		{
@@ -185,6 +190,8 @@ namespace dx11
 		// statistics
 		rend::MemoryStats m_memoryStats;
 		rend::DrawStats m_drawStats;
+
+		GPUProfiler::UPtr m_gpuProfiler;
 
 	private:
 		template<typename VALUE_TYPE, UInt32 MAX_SLOTS> class SlotsCache: public NonCopyable

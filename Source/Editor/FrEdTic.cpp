@@ -47,6 +47,8 @@ void CEditor::Tick( Float Delta )
 			{
 				gfx::ScopedRenderingZone srz( TXT( "Editor Page" ) );
 				profile_zone( EProfilerGroup::General, RenderPage );
+				profile_gpu_zone( Page );
+
 				Active->RenderPageContent( m_legacyRender->m_canvas.get() );
 			}
 
@@ -54,6 +56,7 @@ void CEditor::Tick( Float Delta )
 			{
 				profile_zone( EProfilerGroup::General, RenderGUI );
 				gfx::ScopedRenderingZone srz( TXT( "Editor GUI" ) );
+				profile_gpu_zone( GUI );
 
 				GUIRender->BeginPaint( m_world->drawContext() );
 				{

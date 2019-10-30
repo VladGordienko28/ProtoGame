@@ -49,6 +49,12 @@ namespace flu
 
 		m_engineChart = new EngineChart();
 		m_inputDevice->addClient( m_engineChart.get() );
+
+		if( m_renderDevice->getProfiler() )
+		{
+			m_renderDevice->getProfiler()->setGroup( Int32( EProfilerGroup::Render ) ); // todo: maybe not render
+		}
+
 	}
 
 	World::~World()
@@ -85,6 +91,12 @@ namespace flu
 
 		// clear swap-chain buffer
 		m_renderDevice->beginFrame();
+
+		if( m_renderDevice->getProfiler() )
+		{
+			m_renderDevice->getProfiler()->beginFrame();
+		}
+
 		m_renderDevice->clearRenderTarget( INVALID_HANDLE<rend::RenderTargetHandle>(), math::colors::BLACK );
 	}
 
@@ -92,10 +104,16 @@ namespace flu
 	{
 		m_engineChart->render( canvas, m_drawContext );
 
+
 		updateMetrics();
 
 		profile_zone( EProfilerGroup::Render, Present );
 		m_renderDevice->endFrame( true );
+
+		if( m_renderDevice->getProfiler() )
+		{
+			m_renderDevice->getProfiler()->endFrame();
+		}
 	}
 
 	void World::onResize( UInt32 newWidth, UInt32 newHeight, Bool fullScreen )

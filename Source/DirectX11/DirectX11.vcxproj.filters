@@ -8,6 +8,7 @@
     <ClInclude Include="DxTypes.h" />
     <ClInclude Include="SwapChain.h" />
     <ClInclude Include="DxUtils.h" />
+    <ClInclude Include="DxProfiler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX11.cpp" />
@@ -15,5 +16,6 @@
     <ClCompile Include="DxTypes.cpp" />
     <ClCompile Include="Device.cpp" />
     <ClCompile Include="SwapChain.cpp" />
+    <ClCompile Include="DxProfiler.cpp" />
   </ItemGroup>
 </Project>

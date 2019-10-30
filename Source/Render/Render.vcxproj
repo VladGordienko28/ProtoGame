@@ -279,6 +279,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Device.h" />
+    <ClInclude Include="GPUProfiler.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="ShaderCompiler.h" />
     <ClInclude Include="States.h" />

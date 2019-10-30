@@ -13,5 +13,6 @@
 #include "Stats.h"
 #include "VertexDecl.h"
 #include "States.h"
+#include "GPUProfiler.h"
 #include "ShaderCompiler.h"
 #include "Device.h"

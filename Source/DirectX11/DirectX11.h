@@ -21,4 +21,5 @@
 #include "DxTypes.h"
 #include "DxCompiler.h"
 #include "SwapChain.h"
+#include "DxProfiler.h"
 #include "Device.h"

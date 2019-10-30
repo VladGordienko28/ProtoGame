@@ -8,6 +8,7 @@
     <ClInclude Include="VertexDecl.h" />
     <ClInclude Include="ShaderCompiler.h" />
     <ClInclude Include="Stats.h" />
+    <ClInclude Include="GPUProfiler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Render.cpp" />

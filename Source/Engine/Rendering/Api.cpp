@@ -155,9 +155,26 @@ namespace api
 	{
 		return g_device->getShaderResourceView( handle );
 	}
+
 	rend::ShaderResourceView getShaderResourceView( rend::DepthBufferHandle handle )
 	{
 		return g_device->getShaderResourceView( handle );
+	}
+
+	void enterGPUProfileZone( const Char* zoneName )
+	{
+		if( rend::IGPUProfiler* profiler = g_device->getProfiler() )
+		{
+			profiler->enterZone( zoneName );
+		}
+	}
+
+	void leaveGPUProfileZone()
+	{
+		if( rend::IGPUProfiler* profiler = g_device->getProfiler() )
+		{
+			profiler->leaveZone();
+		}
 	}
 }
 }

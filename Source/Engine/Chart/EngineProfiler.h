@@ -24,17 +24,11 @@ namespace profile
 
 		void updateCounter( GroupId groupId, const Char* counterName, Double value ) override;
 
-		struct Sample
-		{
-			Double time = 0.f;
-			Double value = 0.0;
-		};
-
 		struct Metric
 		{
 			const Char* name = nullptr;
 			UInt32 color = 0;
-			Array<Sample> samples;
+			Samples samples;
 		};
 
 		using Group = Array<Metric>;

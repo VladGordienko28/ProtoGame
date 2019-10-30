@@ -27,8 +27,8 @@ namespace job
 		NodeId addTask( TaskFunc func, void* userData );
 		NodeId addChildTask( NodeId parent, TaskFunc func, void* userData );
 
-		void async();
-		void wait();
+		void async( TaskFunc finishCallback = []( void* ){} );
+		void wait( TaskFunc finishCallback = []( void* ){} );
 
 	private:
 		static const UInt32 MAX_NODES = 128;
@@ -46,7 +46,7 @@ namespace job
 
 		TaskGraph() = delete;
 
-		void submit( Bool waitForComplete );
+		void submit( Bool waitForComplete, TaskFunc finishCallback );
 	};
 
 	/**
