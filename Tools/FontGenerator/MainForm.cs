@@ -85,7 +85,7 @@ namespace FontGenerator
                     stringFormat.FormatFlags = StringFormatFlags.FitBlackBox | StringFormatFlags.NoClip | StringFormatFlags.LineLimit;
                     //var stringFormat = StringFormat.GenericTypographic;
 
-                    TextFormatFlags textFlags = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
+                    TextFormatFlags textFlags = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix;
 
                     // find the biggest image size
                     int maxXSize = 0;

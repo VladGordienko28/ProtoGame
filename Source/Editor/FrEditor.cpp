@@ -288,7 +288,10 @@ void CEditor::Init( HINSTANCE InhInstance )
 	WWindow::Icons = res::ResourceManager::get<img::Image>( L"System.Editor.GuiIcons", res::EFailPolicy::FATAL );
 	WWindow::Font1 = res::ResourceManager::get<fnt::Font>( L"Fonts.RopaSans_9", res::EFailPolicy::FATAL ); // no no no no
 	WWindow::Font2 = res::ResourceManager::get<fnt::Font>( L"Fonts.Consolas_9", res::EFailPolicy::FATAL ); // no no no no
-	//WWindow::Font2 = res::ResourceManager::get<fnt::Font>( L"Fonts.Consolas_9", res::EFailPolicy::FATAL );
+
+
+	//WWindow::Font1 = res::ResourceManager::get<fnt::Font>( L"Experimental.SegoeUI_15", res::EFailPolicy::FATAL );
+	//WWindow::Font2 = res::ResourceManager::get<fnt::Font>( L"Experimental.SegoeUI_15", res::EFailPolicy::FATAL );
 
 	//res::ResourceManager::generatePackages();
 
