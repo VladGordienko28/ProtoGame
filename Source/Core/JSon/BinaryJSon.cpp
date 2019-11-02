@@ -7,7 +7,7 @@
 
 namespace flu 
 {
-	JSon::Ptr JSon::loadFromStream( IInputStream::Ptr inputStream, String* error )
+	JSon::Ptr JSon::loadFromStream( IInputStream& inputStream, String* error )
 	{
 		struct Deserializer
 		{
@@ -109,10 +109,8 @@ namespace flu
 			}
 		};
 
-		assert( inputStream.hasObject() );
-
 		String tempError;
-		JSon::Ptr result = Deserializer::deserializeJSonNode( *inputStream, tempError );
+		JSon::Ptr result = Deserializer::deserializeJSonNode( inputStream, tempError );
 
 		if( !result && error )
 		{
@@ -122,7 +120,7 @@ namespace flu
 		return result;
 	}
 
-	Bool JSon::saveToStream( IOutputStream::Ptr outputStream, JSon::Ptr json, String* error )
+	Bool JSon::saveToStream( IOutputStream& outputStream, JSon::Ptr json, String* error )
 	{
 		struct Serializer
 		{
@@ -202,11 +200,9 @@ namespace flu
 			}
 		};
 
-		assert( outputStream.hasObject() );
-
 		// todo: stream to intermediate buffer and then copy
 		String tempError;
-		Bool result = Serializer::serializeJSonNode( *outputStream, json, tempError );
+		Bool result = Serializer::serializeJSonNode( outputStream, json, tempError );
 
 		if( !result && error )
 		{

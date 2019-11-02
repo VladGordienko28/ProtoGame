@@ -103,8 +103,8 @@ namespace flu
 		static JSon::Ptr createArrayNode();
 		static JSon::Ptr createStubNode();
 
-		static JSon::Ptr loadFromStream( IInputStream::Ptr inputStream, String* error = nullptr );
-		static Bool saveToStream( IOutputStream::Ptr outputStream, JSon::Ptr json, String* error = nullptr );
+		static JSon::Ptr loadFromStream( IInputStream& inputStream, String* error = nullptr );
+		static Bool saveToStream( IOutputStream& outputStream, JSon::Ptr json, String* error = nullptr );
 
 		static JSon::Ptr loadFromText( Text::Ptr text, String* error = nullptr );
 		static Text::Ptr saveToText( JSon::Ptr json, String* error = nullptr );

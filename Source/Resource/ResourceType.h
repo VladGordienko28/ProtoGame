@@ -16,6 +16,8 @@ namespace res
 		Image,
 		Font,
 		Sound,
+		Music,
+		Layout,
 		MAX
 	};
 	ENUM_FOR_STREAM( EResourceType );

@@ -30,14 +30,17 @@ namespace flu
 	protected:
 		// rendering systems
 		rend::Device* m_renderDevice;
-		gfx::DrawContext m_drawContext;
 		gfx::SharedConstants m_sharedConstants;
+		gfx::DrawContext m_drawContext;
 
 		// input system
 		in::Device* m_inputDevice;
 
 		// audio system
 		aud::Device* m_audioDevice;
+
+		// ui system
+		ui::Root::UPtr m_uiRoot;
 
 		EngineChart::UPtr m_engineChart;
 

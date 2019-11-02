@@ -55,12 +55,40 @@ namespace flu
 			m_renderDevice->getProfiler()->setGroup( Int32( EProfilerGroup::Render ) ); // todo: maybe not render
 		}
 
+
+		m_uiRoot = new ui::Root();
+		m_inputDevice->addClient( m_uiRoot.get() );
+
+		ui::Element* elem = new ui::Element();
+		elem->m_size.width = 100;
+		elem->m_size.height = 64;
+		elem->m_horizAlign = ui::EHorizAlign::Center;
+		elem->m_vertAlign = ui::EVertAlign::Center;
+
+		m_uiRoot->addChild( elem );
+
+
+		elem = new ui::Element();
+		elem->m_size.width = 100;
+		elem->m_size.height = 64;
+		elem->m_horizAlign = ui::EHorizAlign::Left;
+		elem->m_vertAlign = ui::EVertAlign::Bottom;
+		elem->m_margin.left = 30;
+		elem->m_margin.bottom = 100;
+
+		m_uiRoot->addChild( elem );
+
+
 	}
 
 	World::~World()
 	{
 		m_inputDevice->removeClient( m_engineChart.get() );
 		m_engineChart = nullptr;
+
+		m_inputDevice->removeClient( m_uiRoot.get() );
+		m_uiRoot = nullptr;
+
 
 		gfx::api::finalize();
 		res::ResourceManager::destroy();
@@ -107,6 +135,20 @@ namespace flu
 
 		updateMetrics();
 
+		////////////////////////////////////////////////////////////////////
+		const Float screenW = m_drawContext.backbufferWidth();
+		const Float screenH = m_drawContext.backbufferHeight();
+
+		m_drawContext.pushViewInfo( gfx::ViewInfo( 
+			0.f, 0.f, screenW, screenH ) );
+
+		m_uiRoot->prepareBatches();
+		m_uiRoot->flushBatches( m_renderDevice );
+
+		m_drawContext.popViewInfo();
+		/////////////////////////////////////////////////////////////
+
+
 		profile_zone( EProfilerGroup::Render, Present );
 		m_renderDevice->endFrame( true );
 
@@ -118,6 +160,7 @@ namespace flu
 
 	void World::onResize( UInt32 newWidth, UInt32 newHeight, Bool fullScreen )
 	{
+		m_uiRoot->resize( newWidth, newHeight );
 	}
 
 

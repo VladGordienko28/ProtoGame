@@ -303,6 +303,8 @@ namespace res
 
 			Text::Ptr getTextFile( String relativeFileName ) const override
 			{
+				relativeFileName = fm::normalizeFileName( *relativeFileName );
+
 				if( !fm::isAbsoluteFileName( *relativeFileName ) )
 				{
 					String absoluteFileName = m_resourcePath + relativeFileName;
