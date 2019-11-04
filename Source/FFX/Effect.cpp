@@ -10,7 +10,7 @@ namespace flu
 namespace ffx
 {
 	Effect::Effect( String name, rend::Device* device )
-		:	m_name( name ),
+		:	Resource( name ),
 			m_device( device )
 	{
 		assert( device );

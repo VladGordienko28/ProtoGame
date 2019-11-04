@@ -35,6 +35,7 @@ namespace shell
 		res::ResourceServer::registerResourceType( res::EResourceType::Image, new img::Converter() );
 		res::ResourceServer::registerResourceType( res::EResourceType::Font, new fnt::Compiler() );
 		res::ResourceServer::registerResourceType( res::EResourceType::Sound, new aud::SoundCompiler() );
+		res::ResourceServer::registerResourceType( res::EResourceType::Layout, new ui::Compiler() );
 
 		info( L"ResourceServerApp successfully initialized" );
 		return true;

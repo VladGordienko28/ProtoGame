@@ -64,8 +64,21 @@ namespace res
 	public:
 		static const SizeT NUM_TYPES = static_cast< SizeT >( EResourceType::MAX );
 
-		Resource() = default;
+		Resource() = delete;
 		virtual ~Resource() = default;
+
+		String getName() const 
+		{
+			return m_name;
+		}
+
+	protected:
+		String m_name;
+
+		Resource( String name )
+			:	m_name( name )
+		{
+		}
 	};
 
 	/**

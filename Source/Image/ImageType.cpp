@@ -10,7 +10,7 @@ namespace flu
 namespace img
 {
 	Image::Image( String name )
-		:	m_name( name ),
+		:	Resource( name ),
 			m_handle( INVALID_HANDLE<rend::Texture2DHandle>() ),
 			m_srv(),
 			m_type( EImageType::MAX ),

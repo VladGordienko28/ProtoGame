@@ -9,162 +9,297 @@ namespace flu
 {
 namespace ui
 {
-	Root::Root()
-		:	Container(),
-			m_uiScale( 1.f )
+	Root::Root( rend::Device* device )
+		:	Container( L"UIRoot", this ),
+			InputClient(),
+			m_uiRender( new Render( device ) ),
+			m_uiScale( 1.f ),
+			m_factory( new Factory() ),
+			m_focused( nullptr ),
+			m_highlighted( nullptr )
 	{
-		m_flatShadeEffect = res::ResourceManager::get<ffx::Effect>( L"System.Shaders.UI.FlatShade", res::EFailPolicy::FATAL );
+		register_ui_product( getFactory(), Button );
 	}
 
 	Root::~Root()
 	{
+		m_uiRender = nullptr;
+		m_factory = nullptr;
 	}
 
 	void Root::resize( Float width, Float height )
 	{
-		m_size.width = width;
-		m_size.height = height;
+		m_size.width = max( width, 0.f );
+		m_size.height = max( height, 0.f );
+
+		eventResize();
 	}
 
 	void Root::update( Float delta )
 	{
+		eventUpdate( delta );
 	}
 
 	void Root::prepareBatches()
 	{
+		m_uiRender->prepareBatches( (Container*)this->m_children[0] ); ///////////////////////////// fooooooooooooooooooooooooooo
 	}
 
-	void Root::flushBatches( rend::Device* device )
+	void Root::flushBatches()
 	{
-		struct Vert
-		{
-			math::Vector pos;
-			math::Color color;
-		};
-
-		Array<Vert> verts;
-
-		for( auto& it : m_children )
-		{
-			Vert v;
-			v.color = math::colors::RED;
-
-			Float x, y, w, h;
-			switch ( it->m_horizAlign )
-			{
-			case EHorizAlign::Left:
-				x = 0 + it->m_margin.left;
-				w = it->m_size.width;
-				break;
-
-			case EHorizAlign::Right:
-				x = m_size.width - it->m_size.width - it->m_margin.right;
-				w = it->m_size.width;
-				break;
-
-			case EHorizAlign::Center:
-				x = (m_size.width - it->m_size.width) / 2.f;
-				w = it->m_size.width;
-				break;
-
-			case EHorizAlign::Stretch:
-				x = 0.f;
-				w = m_size.width;
-				break;
-			}
-
-			switch ( it->m_vertAlign )
-			{
-			case EVertAlign::Top:
-				y = 0 + it->m_margin.top;
-				h = it->m_size.height;
-				break;
-
-			case EVertAlign::Bottom:
-				y = m_size.height - it->m_size.height - it->m_margin.bottom;
-				h = it->m_size.height;
-				break;
-
-			case EVertAlign::Center:
-				y = (m_size.height - it->m_size.height) / 2.f;
-				h = it->m_size.height;
-				break;
-
-			case EVertAlign::Stretch:
-				y = 0.f;
-				h = m_size.height;
-				break;
-			}
-
-
-
-
-
-
-			v.pos = { x, y };
-			verts.push( v );
-
-			v.pos = { x, y+h };
-			verts.push( v );
-
-			v.pos = { x+w, y };
-			verts.push( v );
-
-
-
-			v.pos = { x, y+h };
-			verts.push( v );
-
-			v.pos = { x+w, y };
-			verts.push( v );
-
-			v.pos = { x+w, y+h };
-			verts.push( v );
-		}
-
-
-		if( m_vb == INVALID_HANDLE<rend::VertexBufferHandle>() )
-		{
-			m_vb = device->createVertexBuffer( sizeof(Vert), 9999, rend::EUsage::Dynamic, nullptr, "GUI_Vb" );
-		}
-
-		device->updateVertexBuffer( m_vb, &verts[0], verts.size() * sizeof(Vert) );
-
-		m_flatShadeEffect->apply();
-
-		device->setTopology( rend::EPrimitiveTopology::TriangleList );
-		device->setVertexBuffer( m_vb );
-		device->draw( verts.size(), 0 );
+		m_uiRender->flushBatches();
 	}
-
-
-/*
-
-	class Root:: final: public Container, public in::InputClient
-	{
-	public:
-		using UPtr = UniquePtr<Root>;
-
-
-
-
-
-	private:
-		Float m_uiScale;
-
-
-	};*/
-
 
 	void Root::setUIScale( Float newScale )
 	{
-		assert( false && "Not impelemented yet" );
-		// dont forget to clamp scale!!
+		static const Float MAX_UI_SCALE = 10.f;
+
+		m_uiScale = clamp( newScale, 1.f / MAX_UI_SCALE, MAX_UI_SCALE );
+		eventResize();
 	}
 
 	Float Root::getUIScale() const
 	{
 		return m_uiScale;
+	}
+
+	Element* Root::getFocused() const
+	{
+		return m_focused;
+	}
+
+	void Root::setFocused( Element* element )
+	{
+		if( element != m_focused )
+		{
+			if( m_focused )
+			{
+				m_focused->eventDeactivate();
+			}
+
+			m_focused = element;
+
+			if( element )
+			{
+				element->eventActivate();
+			}
+		}
+	}
+
+	Element* Root::getHighlighted() const
+	{
+		return m_highlighted;
+	}
+
+	void Root::setHighlighted( Element* element )
+	{
+		m_highlighted = element;
+	}
+
+	void Root::moveFocus( EDirection direction )
+	{
+		class FocusVisitor: public IVisitor
+		{
+		public:
+			FocusVisitor( Array<Element*>& elements )
+				:	m_elements( elements )
+			{
+			}
+
+			void visit( Element* element ) override
+			{
+				if( element->isFocusable() )
+				{
+					m_elements.push( element );
+				}
+			}
+
+		private:
+			Array<Element*>& m_elements;
+		};
+
+		Array<Element*> focusableElements;
+		FocusVisitor visitor( focusableElements );
+		this->visit( visitor );
+
+		// sort elements according to direction
+		Float focusX = m_focused ? m_focused->m_position.x : 0.f;
+		Float focusY = m_focused ? m_focused->m_position.y : 0.f;
+
+		Element* bestElement = nullptr;
+		Float bestWeight = 999999.9;
+
+		static const Float ADJACENT_WEIGHT = 0.0f;
+
+		switch ( direction )
+		{
+			case EDirection::Up:
+			{
+				for( auto& it : focusableElements )
+				{
+					if( it != m_focused && focusY >= it->m_position.y )
+					{
+						Float weight = focusY - it->m_position.y;
+						weight -= abs( it->m_position.x - focusX ) * ADJACENT_WEIGHT;
+					
+						if( weight < bestWeight )
+						{
+							bestWeight = weight;
+							bestElement = it;
+						}
+					}
+				}
+				break;
+			}
+			case EDirection::Left:
+			{
+				for( auto& it : focusableElements )
+				{
+					if( it != m_focused && focusX >= it->m_position.x )
+					{
+						Float weight = focusX - it->m_position.x;
+						weight -= abs( it->m_position.y - focusY ) * ADJACENT_WEIGHT;
+					
+						if( weight < bestWeight )
+						{
+							bestWeight = weight;
+							bestElement = it;
+						}
+					}
+				}
+				break;
+			}
+			case EDirection::Right:
+				for( auto& it : focusableElements )
+				{
+					if( it != m_focused && focusX <= it->m_position.x )
+					{
+						Float weight = it->m_position.x - focusX;
+						weight -= abs( it->m_position.y - focusY ) * ADJACENT_WEIGHT;
+					
+						if( weight < bestWeight )
+						{
+							bestWeight = weight;
+							bestElement = it;
+						}
+					}
+				}
+				break;
+
+			case EDirection::Down:
+				for( auto& it : focusableElements )
+				{
+					if( it != m_focused && focusY <= it->m_position.y )
+					{
+						Float weight = it->m_position.y - focusY;
+						weight -= abs( it->m_position.x - focusX ) * ADJACENT_WEIGHT;
+					
+						if( weight < bestWeight )
+						{
+							bestWeight = weight;
+							bestElement = it;
+						}
+					}
+				}
+				break;
+		}
+
+		setFocused( bestElement );
+	}
+
+	Bool Root::onMouseDown( in::EMouseButton button, Int32 x, Int32 y )
+	{
+		return eventMouseDown( button, x, y );
+	}
+
+	Bool Root::onMouseUp( in::EMouseButton button, Int32 x, Int32 y )
+	{
+		return eventMouseUp( button, x, y );
+	}
+
+	Bool Root::onMouseMove( in::EMouseButton button, Int32 x, Int32 y )
+	{
+		return eventMouseMove( button, x, y );
+	}
+
+	Bool Root::onMouseDblClick( in::EMouseButton button, Int32 x, Int32 y )
+	{
+		return 0;
+	}
+
+	Bool Root::onMouseScroll( Int32 delta )
+	{return 0;
+	}
+
+	Bool Root::onGamepadDown( in::GamepadId id, in::EGamepadButton button )
+	{
+		////////////////////////////////////////
+		if( button == in::EGamepadButton::GB_Up )
+		{
+			moveFocus( EDirection::Up );
+		}
+		if( button == in::EGamepadButton::GB_Left )
+		{
+			moveFocus( EDirection::Left );
+		}
+		if( button == in::EGamepadButton::GB_Right )
+		{
+			moveFocus( EDirection::Right );
+		}
+		if( button == in::EGamepadButton::GB_Down )
+		{
+			moveFocus( EDirection::Down );
+		}
+		
+		
+		return 0;
+	}
+
+	Bool Root::onGamepadUp( in::GamepadId id, in::EGamepadButton button )
+	{return 0;
+	}
+
+	Bool Root::onGamepadStick( in::GamepadId id, Int32 stick, const math::Vector& value )
+	{return 0;
+	}
+
+	Bool Root::onGamepadTrigger( in::GamepadId id, Int32 trigger, Float value )
+	{return 0;
+	}
+
+	Bool Root::onKeyboardDown( in::EKeyboardButton button, Bool repeat )
+	{
+		////////////////////////////////////////
+		if( button == in::EKeyboardButton::KB_Up )
+		{
+			moveFocus( EDirection::Up );
+		}
+		if( button == in::EKeyboardButton::KB_Left )
+		{
+			moveFocus( EDirection::Left );
+		}
+		if( button == in::EKeyboardButton::KB_Right )
+		{
+			moveFocus( EDirection::Right );
+		}
+		if( button == in::EKeyboardButton::KB_Down )
+		{
+			moveFocus( EDirection::Down );
+		}
+
+		
+		
+		return 0;
+
+
+	}
+
+	Bool Root::onKeyboardUp( in::EKeyboardButton button )
+	{return 0;
+	}
+
+	Bool Root::onKeyboardType( Char ch )
+	{return 0;
 	}
 }
 }

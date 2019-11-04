@@ -8,16 +8,19 @@ namespace flu
 namespace profile
 {
 	/**
-	 *	A profiler metric sample
+	 *	A profiler groups
 	 */
-	struct Sample
+	enum class EGroup
 	{
-	public:
-		Double time = 0.0;
-		Double value = 0.0;
+		Common,
+		Entity,
+		UI,
+		RAM_Memory,
+		GPU_Memory,
+		Draw_Calls,
+		Render, // todo: clarify metric
+		MAX
 	};
-
-	using Samples = Array<Sample>;
 
 	/**
 	 *	An abstraact profiler interface
@@ -25,8 +28,14 @@ namespace profile
 	class IProfiler
 	{
 	public:
-		using GroupId = Int32;
-		static const GroupId INVALID_GROUP_ID = -1;
+		struct Sample
+		{
+		public:
+			Double time = 0.0;
+			Double value = 0.0;
+		};
+
+		using Samples = Array<Sample>;
 
 		virtual ~IProfiler()
 		{
@@ -35,10 +44,10 @@ namespace profile
 		virtual void beginFrame() = 0;
 		virtual void endFrame() = 0;
 
-		virtual void enterZone( GroupId groupId, const Char* zoneName ) = 0;
+		virtual void enterZone( EGroup group, const Char* zoneName ) = 0;
 		virtual void leaveZone() = 0;
 
-		virtual void updateCounter( GroupId groupId, const Char* counterName, Double value ) = 0;
+		virtual void updateCounter( EGroup group, const Char* counterName, Double value ) = 0;
 	};
 
 	// global accessors
@@ -53,9 +62,9 @@ namespace profile
 	class ZoneTracker final
 	{
 	public:
-		ZoneTracker( IProfiler::GroupId groupId, const Char* zoneName )
+		ZoneTracker( EGroup group, const Char* zoneName )
 		{
-			getProfiler()->enterZone( groupId, zoneName );
+			getProfiler()->enterZone( group, zoneName );
 		}
 
 		~ZoneTracker()
@@ -63,6 +72,8 @@ namespace profile
 			getProfiler()->leaveZone();
 		}
 	};
+
+	extern const Char* getGroupName( EGroup group );
 
 } // namespace profile
 } // namespace flu
@@ -72,11 +83,11 @@ namespace profile
   */
 #if FLU_ENABLE_PROFILER
 
-	#define profile_zone( groupId, zoneName ) flu::profile::ZoneTracker zoneTracker( \
-		static_cast<flu::profile::IProfiler::GroupId>( groupId ), L#zoneName );
+	#define profile_zone( group, zoneName ) flu::profile::ZoneTracker zoneTracker( \
+		flu::profile::EGroup::##group, L#zoneName );
 
-	#define profile_counter( groupId, counterName, value ) flu::profile::getProfiler()->updateCounter( \
-		static_cast<flu::profile::IProfiler::GroupId>( groupId ), L#counterName, value );
+	#define profile_counter( group, counterName, value ) flu::profile::getProfiler()->updateCounter( \
+		flu::profile::EGroup::##group, L#counterName, value );
 
 	#define profile_begin_frame() flu::profile::getProfiler()->beginFrame();
 
@@ -84,8 +95,8 @@ namespace profile
 
 #else
 
-	#define profile_zone( groupId, zoneName )
-	#define profile_counter( groupId, counterName, value )
+	#define profile_zone( group, zoneName )
+	#define profile_counter( group, counterName, value )
 	#define profile_begin_frame()
 	#define profile_end_frame()
 

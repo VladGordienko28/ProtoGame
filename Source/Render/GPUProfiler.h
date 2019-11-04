@@ -17,8 +17,6 @@ namespace rend
 
 		virtual ~IGPUProfiler() = default;
 
-		virtual void setGroup( profile::IProfiler::GroupId groupId ) = 0;
-
 		virtual void beginFrame() = 0;
 		virtual void endFrame() = 0;
 

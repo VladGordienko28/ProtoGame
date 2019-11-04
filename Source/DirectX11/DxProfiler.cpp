@@ -18,7 +18,6 @@ namespace dx11
 		m_context = context;
 		m_frameCounter = 0;
 		m_numInvalidFrames = MAX_CPU_FRAMES_AHEAD;
-		m_groupId = profile::IProfiler::INVALID_GROUP_ID;
 
 		// create main queries
 		D3D11_QUERY_DESC queryDesc;
@@ -58,11 +57,6 @@ namespace dx11
 		}
 
 		m_metrics.empty();
-	}
-
-	void GPUProfiler::setGroup( profile::IProfiler::GroupId groupId )
-	{
-		m_groupId = groupId;
 	}
 
 	void GPUProfiler::beginFrame()
@@ -130,10 +124,7 @@ namespace dx11
 			const Double frameTime = static_cast<Double>( endTimestamp - startTimestamp ) / 
 				static_cast<Double>( timestampDisjoint.Frequency ) * 1000.0;
 
-			if( m_groupId != profile::IProfiler::INVALID_GROUP_ID )
-			{
-				profile::getProfiler()->updateCounter( m_groupId, TXT("Total"), frameTime );
-			}
+			profile_counter( Render, GPU_FrameTime, frameTime );
 		}
 
 		// Retrieve user's metrics time
@@ -154,10 +145,7 @@ namespace dx11
 			const Double metricTime = static_cast<Double>( endTimestamp - startTimestamp ) / 
 				static_cast<Double>( timestampDisjoint.Frequency ) * 1000.0;
 
-			if( m_groupId != profile::IProfiler::INVALID_GROUP_ID )
-			{
-				profile::getProfiler()->updateCounter( m_groupId, metric.name, metricTime );
-			}
+			profile::getProfiler()->updateCounter( profile::EGroup::Render, metric.name, metricTime );
 		}
 	}
 

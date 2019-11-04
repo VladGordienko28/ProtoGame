@@ -16,8 +16,6 @@ namespace dx11
 		GPUProfiler( ID3D11Device* device, ID3D11DeviceContext* context );
 		~GPUProfiler();
 
-		void setGroup( profile::IProfiler::GroupId groupId ) override;
-
 		void beginFrame() override;
 		void endFrame() override;
 
@@ -39,7 +37,7 @@ namespace dx11
 			const Char* name = nullptr;
 			Queries startQueries;
 			Queries endtQueries;
-			profile::Samples samples;
+			profile::IProfiler::Samples samples;
 		};
 
 		Queries m_disjointQueries;
@@ -51,8 +49,6 @@ namespace dx11
 		Array<Metric> m_metrics;
 		Int32 m_frameCounter;
 		Int32 m_numInvalidFrames;
-
-		profile::IProfiler::GroupId m_groupId;
 
 		static_assert( isPowerOfTwo( MAX_CPU_FRAMES_AHEAD ), "Number of CPU frames ahead should be power of two" );
 

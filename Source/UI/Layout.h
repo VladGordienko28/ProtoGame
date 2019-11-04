@@ -17,12 +17,22 @@ namespace ui
 
 		~Layout();
 
-		String getName() const { return m_name; }
-
 		JSon::Ptr getLayout() const;
 
+		using Callback = void( UserLayout::* )();
+
+		void addRecreateCallback( UserLayout* userLayout, Callback callback );
+		void removeRecreateCallback( UserLayout* userLayout );
+
 	private:
-		String m_name; // todo: move to res::Resource
+		struct Listener
+		{
+			UserLayout* userLayout;
+			Callback callback;
+		};
+
+		Array<Listener> m_listeners;
+
 		JSon::Ptr m_layout;
 
 		Layout() = delete;

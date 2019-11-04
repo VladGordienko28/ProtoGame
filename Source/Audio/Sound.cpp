@@ -10,7 +10,7 @@ namespace flu
 namespace aud
 {
 	Sound::Sound( String name )
-		:	m_name( name ),
+		:	Resource( name ),
 			m_handle( INVALID_HANDLE<SoundHandle>() ),
 			m_frequency( 0 ),
 			m_size( 0 ),

@@ -48,11 +48,6 @@ namespace ffx
 			setData( &value, sizeof( Bool ), offset );
 		}
 
-		String getName() const
-		{
-			return m_name;
-		}
-
 	private:
 		////////////////////////////////////////////
 		static const SizeT CONSTANT_BUFFER_SIZE = 1024;
@@ -88,7 +83,6 @@ namespace ffx
 
 		TechniqueId m_currentTechnique;
 
-		String m_name;
 		rend::Device* m_device;
 
 		Effect() = delete;

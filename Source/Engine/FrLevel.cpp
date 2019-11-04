@@ -395,20 +395,20 @@ void FLevel::Tick( Float Delta )
 	{
 		// Normally play level.
 		{
-			profile_zone( EProfilerGroup::Entity, ExecuteThread );
+			profile_zone( Entity, ExecuteThread );
 			for( Int32 i=0; i<Entities.size(); i++ )
 				if( Entities[i]->Thread )
 					Entities[i]->Thread->Tick( Delta );
 		}
 
 		{
-			profile_zone( EProfilerGroup::Entity, PreTick );
+			profile_zone( Entity, PreTick );
 			for( Int32 i=0; i<TickObjects.size(); i++ )
 				TickObjects[i]->PreTick( Delta );
 		}
 
 		{
-			profile_zone( EProfilerGroup::Entity, Tick );
+			profile_zone( Entity, Tick );
 			for( Int32 i=0; i<TickObjects.size(); i++ )
 				TickObjects[i]->Tick( Delta );
 		}
@@ -419,14 +419,14 @@ void FLevel::Tick( Float Delta )
 	else
 	{
 		// We not play, just edit level or in pause.
-		profile_zone( EProfilerGroup::Entity, TickNonPlay );
+		profile_zone( Entity, TickNonPlay );
 		for( Int32 i=0; i<TickObjects.size(); i++ )
 			TickObjects[i]->TickNonPlay( Delta );
 	}
 
 	// Destroy all marked entities.
 	{
-		profile_zone( EProfilerGroup::Entity, Cleanup );
+		profile_zone( Entity, Cleanup );
 		for( Int32 iEntity=0; iEntity<Entities.size(); )
 			if( Entities[iEntity]->Base->bDestroyed )
 			{

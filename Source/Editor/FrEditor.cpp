@@ -552,6 +552,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 			if( OldX != X || OldY != Y )
 			{
 				GEditor->GUIWindow->WidgetProc( WPE_MouseMove, TWidProcParms( Button, X, Y ) );
+				GEditor->m_inputDevice->onMouseMove( (in::EMouseButton)Button, X, Y );
 				OldX	= X;
 				OldY	= Y;
 			}
@@ -655,6 +656,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 									Message == WM_RBUTTONUP ? MB_Right : MB_Middle;
 
 			GEditor->GUIWindow->WidgetProc( WPE_MouseUp, TWidProcParms( Button, X, Y ) );
+			GEditor->m_inputDevice->onMouseUp( (in::EMouseButton)Button, X, Y );
 
 			if( bCapture && !(GEditor->GUIWindow->bLMouse || GEditor->GUIWindow->bRMouse ))
 			{
@@ -676,6 +678,7 @@ LRESULT CALLBACK WndProc( HWND HWnd, UINT Message, WPARAM WParam, LPARAM LParam 
 									Message == WM_RBUTTONDOWN ? MB_Right : MB_Middle;
 
 			GEditor->GUIWindow->WidgetProc( WPE_MouseDown, TWidProcParms( Button, X, Y ) );
+			GEditor->m_inputDevice->onMouseDown( (in::EMouseButton)Button, X, Y );
 
 			if( !bCapture )
 			{

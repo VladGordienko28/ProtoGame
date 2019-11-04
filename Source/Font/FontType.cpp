@@ -10,7 +10,7 @@ namespace flu
 namespace fnt
 {
 	Font::Font( String name )
-		:	m_name( name ),
+		:	Resource( name ),
 			m_image(),
 			m_glyphs(),
 			m_remap()

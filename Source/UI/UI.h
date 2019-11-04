@@ -16,9 +16,17 @@
 
 // UI includes
 #include "UITypes.h"
+#include "Visitor.h"
+#include "Animation.h"
+#include "Animator.h"
 #include "Element.h"
 #include "Container.h"
+#include "UIRender.h"
+#include "Factory.h"
 #include "UIRoot.h"
 #include "Layout.h"
 #include "Compiler.h"
 #include "System.h"
+
+#include "Widgets/Button.h"
+#include "Widgets/UserLayout.h"

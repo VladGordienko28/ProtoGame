@@ -10,7 +10,7 @@ namespace flu
 namespace ui
 {
 	Layout::Layout( String name )
-		:	m_name( name ),
+		:	Resource( name ),
 			m_layout()
 	{
 	}
@@ -25,6 +25,34 @@ namespace ui
 		return m_layout;
 	}
 
+	void Layout::addRecreateCallback( UserLayout* userLayout, Callback callback )
+	{
+		assert( userLayout && callback );
+
+		Listener listener;
+		listener.userLayout = userLayout;
+		listener.callback = callback;
+
+		m_listeners.push( listener );
+	}
+
+	void Layout::removeRecreateCallback( UserLayout* userLayout )
+	{
+		assert( userLayout );
+
+		for( Int32 i = 0; i < m_listeners.size(); )
+		{
+			if( m_listeners[i].userLayout == userLayout )
+			{
+				m_listeners.removeFast( i );
+			}
+			else
+			{
+				++i;
+			}
+		}
+	}
+
 	Bool Layout::create( const res::CompiledResource& compiledResource )
 	{
 		assert( compiledResource.isValid() );
@@ -37,6 +65,11 @@ namespace ui
 
 		if( m_layout.hasObject() )
 		{
+			for( const auto& it : m_listeners )
+			{
+				(( it.userLayout )->*( it.callback ))();
+			}
+
 			return true;
 		}
 		else

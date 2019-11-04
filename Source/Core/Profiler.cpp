@@ -31,7 +31,7 @@ namespace profile
 		{
 		}
 
-		void enterZone( GroupId groupId, const Char* zoneName ) override
+		void enterZone( EGroup group, const Char* zoneName ) override
 		{
 		}
 
@@ -39,7 +39,7 @@ namespace profile
 		{
 		}
 
-		void updateCounter( GroupId groupId, const Char* counterName, Double value ) override
+		void updateCounter( EGroup group, const Char* counterName, Double value ) override
 		{
 		}
 	};
@@ -66,6 +66,21 @@ namespace profile
 	Bool isDefaultProfiler()
 	{
 		return g_activeProfiler == &g_nullProfiler;
+	}
+
+	const Char* getGroupName( EGroup group )
+	{
+		switch( group )
+		{
+			case EGroup::Common:		return TXT("Common");
+			case EGroup::Entity:		return TXT("Entity");
+			case EGroup::UI:			return TXT("UI");
+			case EGroup::RAM_Memory:	return TXT("RAM Memory");
+			case EGroup::GPU_Memory:	return TXT("GPU Memory");
+			case EGroup::Draw_Calls:	return TXT("Draw Calls");
+			case EGroup::Render:		return TXT("Render");
+			default:					return TXT("Unknown");
+		}
 	}
 
 } // namespace profile

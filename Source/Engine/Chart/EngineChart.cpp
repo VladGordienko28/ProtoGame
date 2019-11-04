@@ -14,7 +14,7 @@ namespace flu
 	static const Char CHART_EFFECT_NAME[] = TXT( "System.Shaders.Colored" );
 
 	EngineChart::EngineChart()
-		:	m_profiler( static_cast<Int32>(EProfilerGroup::MAX) ),
+		:	m_profiler(),
 			m_invTimelineLength( 0.0 ),
 			m_invTimelineMaxValue( 0.f ),
 			m_enabled( false ),
@@ -30,9 +30,9 @@ namespace flu
 
 		// help
 		m_helpString = L"Press appropriate key to toggle groups: ";
-		for( Int32 i = 0; i < static_cast<Int32>(EProfilerGroup::MAX); ++i )
+		for( Int32 i = 0; i < static_cast<Int32>( profile::EGroup::MAX ); ++i )
 		{
-			m_helpString += String::format( L"[%d] %s; ", i, getGroupName( static_cast<EProfilerGroup>( i ) ) );
+			m_helpString += String::format( L"[%d] %s; ", i, getGroupName( static_cast<profile::EGroup>( i ) ) );
 		}
 
 		// obtain resources
@@ -40,7 +40,7 @@ namespace flu
 		m_effect = res::ResourceManager::get<ffx::Effect>( CHART_EFFECT_NAME, res::EFailPolicy::FATAL );
 
 		// turn on at least one group
-		m_profiler.selectGroup( static_cast<profile::IProfiler::GroupId>( EProfilerGroup::General ) );
+		m_profiler.selectGroup( static_cast<Int32>( profile::EGroup::Common ) );
 	}
 
 	EngineChart::~EngineChart()
@@ -55,8 +55,8 @@ namespace flu
 		if( !m_enabled )
 			return;
 
-		profile_zone( EProfilerGroup::General, RenderChart );
-		profile_gpu_zone( Chart );
+		profile_zone( Common, CPU_RenderChart );
+		profile_gpu_zone( GPU_Chart );
 		gfx::ScopedRenderingZone srz( TXT( "Profiler" ) );
 
 		const Float screenW = drawContext.backbufferWidth();
@@ -83,7 +83,7 @@ namespace flu
 		metricItem.Bounds.min = { 10.f, 10.f };
 		metricItem.Bounds.max = { 30.f, 30.f };
 
-		const Array<profile::EngineProfiler::Group>& groups = m_profiler.getMetrics();
+		const profile::EngineProfiler::Groups& groups = m_profiler.getMetrics();
 
 		Double maxValue = 0.0;
 		Double frameTime = time::cyclesToSec( time::cycles64() );
@@ -97,7 +97,9 @@ namespace flu
 
 		for( Int32 groupId = 0; groupId < groups.size(); ++groupId )
 		{
-			if( groupId != m_profiler.selectedGroup() )
+			profile::EGroup group = static_cast<profile::EGroup>( groupId );
+
+			if( group != m_profiler.selectedGroup() )
 			{
 				continue;
 			}
@@ -144,7 +146,7 @@ namespace flu
 				canvas->DrawRect( metricItem );
 
 				m_textDrawer.batchText( String::format( L"%s: %s (avg %.2f; peak %.2f)", 
-					getGroupName(static_cast<EProfilerGroup>( groupId )), it.name, ( cumulativeValue / it.samples.size() ), maxMetricValue ), 
+					getGroupName( group ), it.name, ( cumulativeValue / it.samples.size() ), maxMetricValue ), 
 					m_font, math::colors::WHITE, { 40.f, metricItem.Bounds.min.y + 2.f } );
 
 
@@ -252,20 +254,6 @@ namespace flu
 	Bool EngineChart::isEnabled() const
 	{
 		return m_enabled;
-	}
-
-	const Char* EngineChart::getGroupName( EProfilerGroup group )
-	{
-		switch( group )
-		{
-			case EProfilerGroup::General:	return L"General";
-			case EProfilerGroup::Entity:	return L"Entity";
-			case EProfilerGroup::Render:	return L"Render";
-			case EProfilerGroup::RAMMemory:	return L"RAM Memory";
-			case EProfilerGroup::GPUMemory:	return L"GPU Memory";
-			case EProfilerGroup::DrawCalls:	return L"Draw Calls";
-			default:						return L"Unknown";
-		}
 	}
 
 } // namespace flu

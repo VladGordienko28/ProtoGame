@@ -72,6 +72,11 @@ namespace math
 		return f - floor( f );
 	}
 
+	inline Bool isEqual( Float a, Float b, Float epsilon )
+	{
+		return abs( a - b ) < epsilon;
+	}
+
 	inline Float snap( Float grid, Float value )
 	{
 		return grid != 0.f ? round( value / grid ) * grid : value;

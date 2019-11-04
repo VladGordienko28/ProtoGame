@@ -21,6 +21,27 @@
     <ClInclude Include="Compiler.h">
       <Filter>System</Filter>
     </ClInclude>
+    <ClInclude Include="UIRender.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\Button.h">
+      <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\UserLayout.h">
+      <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="Factory.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="Visitor.h">
+      <Filter>Private</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="UI.cpp" />
@@ -39,6 +60,15 @@
     </ClCompile>
     <ClCompile Include="Compiler.cpp">
       <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="UIRender.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\UserLayout.cpp">
+      <Filter>Widgets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

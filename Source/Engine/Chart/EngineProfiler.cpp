@@ -9,13 +9,12 @@ namespace flu
 {
 namespace profile
 {
-	EngineProfiler::EngineProfiler( Int32 numGroups )
+	EngineProfiler::EngineProfiler()
 		:	m_frameEnterTime( 0.0 ),
 			m_samplesLifetime( 1.0 ),
 			m_frameLocked( false ),
-			m_selectedGroup( -1 )
+			m_selectedGroup( EGroup::Common )
 	{
-		m_groups.setSize( numGroups );
 	}
 
 	EngineProfiler::~EngineProfiler()
@@ -51,12 +50,12 @@ namespace profile
 		m_frameLocked = false;
 	}
 
-	void EngineProfiler::enterZone( GroupId groupId, const Char* zoneName )
+	void EngineProfiler::enterZone( EGroup group, const Char* zoneName )
 	{
 		Zone zone;
 		zone.enterTimeStamp = time::cycles64();
-		zone.groupId = groupId;
-		zone.metric = &findOrAddMetric( groupId, zoneName );
+		zone.groupId = group;
+		zone.metric = &findOrAddMetric( group, zoneName );
 
 		m_zonesStack.push( zone );
 	}
@@ -78,11 +77,11 @@ namespace profile
 		}
 	}
 
-	void EngineProfiler::updateCounter( GroupId groupId, const Char* counterName, Double value )
+	void EngineProfiler::updateCounter( EGroup group, const Char* counterName, Double value )
 	{
-		if( groupId == m_selectedGroup )
+		if( group == m_selectedGroup )
 		{
-			Metric& metric = findOrAddMetric( groupId, counterName );
+			Metric& metric = findOrAddMetric( group, counterName );
 
 			if( metric.samples.size() == 0 || metric.samples.last().time != m_frameEnterTime )
 			{
@@ -95,22 +94,22 @@ namespace profile
 		}
 	}
 
-	void EngineProfiler::selectGroup( GroupId groupId )
+	void EngineProfiler::selectGroup( Int32 groupId )
 	{
-		m_selectedGroup = clamp( groupId, 0, m_groups.size() );
+		m_selectedGroup = static_cast<EGroup>( clamp( groupId, 0, (Int32)EGroup::MAX ) );
 	}
 
 	void EngineProfiler::selectNextGroup()
 	{
-		m_selectedGroup = min( m_selectedGroup + 1, m_groups.size() - 1 );
+		m_selectedGroup = static_cast<EGroup>( min<Int32>( (Int32)m_selectedGroup + 1, m_groups.size() - 1 ) );
 	}
 
 	void EngineProfiler::selectPrevGroup()
 	{
-		m_selectedGroup = max( m_selectedGroup - 1, 0 );
+		m_selectedGroup = static_cast<EGroup>( max<Int32>( (Int32)m_selectedGroup - 1, 0 ) );
 	}
 
-	const Array<EngineProfiler::Group>& EngineProfiler::getMetrics() const
+	const EngineProfiler::Groups& EngineProfiler::getMetrics() const
 	{
 		return m_groups;
 	}
@@ -121,9 +120,9 @@ namespace profile
 		m_samplesLifetime = lifeTime;
 	}
 
-	EngineProfiler::Metric& EngineProfiler::findOrAddMetric( GroupId groupId, const Char* name )
+	EngineProfiler::Metric& EngineProfiler::findOrAddMetric( EGroup group, const Char* name )
 	{
-		for( auto& it : m_groups[groupId] )
+		for( auto& it : m_groups[static_cast<Int32>( group )] )
 		{
 			if( it.name == name )
 				return it;
@@ -133,8 +132,8 @@ namespace profile
 		newMetric.name = name;
 		newMetric.color = hashing::murmur32( name, cstr::length( name ) * sizeof( Char ) );
 		
-		m_groups[groupId].push( newMetric );
-		return m_groups[groupId].last();
+		m_groups[static_cast<Int32>( group )].push( newMetric );
+		return m_groups[static_cast<Int32>( group )].last();
 	}
 
 } // namespace profile

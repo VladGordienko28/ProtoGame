@@ -13,16 +13,16 @@ namespace profile
 	class EngineProfiler final: public IProfiler
 	{
 	public:
-		EngineProfiler( Int32 numGroups );
+		EngineProfiler();
 		~EngineProfiler();
 
 		void beginFrame() override;
 		void endFrame() override;
 
-		void enterZone( GroupId groupId, const Char* zoneName ) override;
+		void enterZone( EGroup group, const Char* zoneName ) override;
 		void leaveZone() override;
 
-		void updateCounter( GroupId groupId, const Char* counterName, Double value ) override;
+		void updateCounter( EGroup group, const Char* counterName, Double value ) override;
 
 		struct Metric
 		{
@@ -32,15 +32,16 @@ namespace profile
 		};
 
 		using Group = Array<Metric>;
+		using Groups = StaticArray<Group, static_cast<SizeT>( EGroup::MAX )>;
 
-		const Array<Group>& getMetrics() const;
+		const Groups& getMetrics() const;
 		void setSamplesLifetime( Double lifeTime );
 
-		void selectGroup( GroupId groupId );
+		void selectGroup( Int32 groupId );
 		void selectNextGroup();
 		void selectPrevGroup();
 
-		GroupId selectedGroup() const
+		EGroup selectedGroup() const
 		{
 			return m_selectedGroup;
 		}
@@ -52,7 +53,7 @@ namespace profile
 		{
 			Metric* metric = nullptr;
 			UInt64 enterTimeStamp = 0;
-			GroupId groupId = -1;
+			EGroup groupId = EGroup::Common;
 		};		
 		
 		Double m_frameEnterTime;
@@ -61,11 +62,10 @@ namespace profile
 
 		FixedStack<Zone, MAX_ZONES_DEPTH> m_zonesStack;
 
-		Array<Group> m_groups; // todo: needs better solution
-		GroupId m_selectedGroup;
+		Groups m_groups;
+		EGroup m_selectedGroup;
 
-		EngineProfiler() = delete;
-		Metric& findOrAddMetric( GroupId groupId, const Char* name );
+		Metric& findOrAddMetric( EGroup group, const Char* name );
 	};
 
 } // namespace profile

@@ -41,6 +41,8 @@ namespace flu
 			ResourceManager::registerResourceType( EResourceType::Image, new img::System( m_renderDevice ), new img::Converter() );
 			ResourceManager::registerResourceType( EResourceType::Font, new fnt::System(), new fnt::Compiler() );
 			ResourceManager::registerResourceType( EResourceType::Sound, new aud::SoundSystem( m_audioDevice ), new aud::SoundCompiler() );
+
+			ResourceManager::registerResourceType( EResourceType::Layout, new ui::System(), new ui::Compiler() );
 		}
 
 		// initialize engine gfx
@@ -50,34 +52,41 @@ namespace flu
 		m_engineChart = new EngineChart();
 		m_inputDevice->addClient( m_engineChart.get() );
 
-		if( m_renderDevice->getProfiler() )
-		{
-			m_renderDevice->getProfiler()->setGroup( Int32( EProfilerGroup::Render ) ); // todo: maybe not render
-		}
-
-
-		m_uiRoot = new ui::Root();
+		m_uiRoot = new ui::Root( m_renderDevice );
 		m_inputDevice->addClient( m_uiRoot.get() );
 
-		ui::Element* elem = new ui::Element();
-		elem->m_size.width = 100;
-		elem->m_size.height = 64;
-		elem->m_horizAlign = ui::EHorizAlign::Center;
-		elem->m_vertAlign = ui::EVertAlign::Center;
+
+		ui::UserLayout* elem = new ui::UserLayout( L"TestLayout", m_uiRoot.get() );
+		elem->setHorizAlign( ui::EHorizAlign::Stretch );
+		elem->setVertAlign( ui::EVertAlign::Stretch );
+		elem->load( L"Experimental.TestUI" );
+		m_uiRoot->addChild( elem );
+
+
+
+		/*
+		ui::Button* elem = new ui::Button(L"Button0",m_uiRoot.get());
+		elem->setSize( 100, 64 );
+		elem->setHorizAlign( ui::EHorizAlign::Center );
+		elem->setVertAlign( ui::EVertAlign::Center );
 
 		m_uiRoot->addChild( elem );
 
 
-		elem = new ui::Element();
-		elem->m_size.width = 100;
-		elem->m_size.height = 64;
-		elem->m_horizAlign = ui::EHorizAlign::Left;
-		elem->m_vertAlign = ui::EVertAlign::Bottom;
-		elem->m_margin.left = 30;
-		elem->m_margin.bottom = 100;
+		elem = new ui::Button(L"Button1",m_uiRoot.get());
+		elem->setSize( 100, 64 );
+		elem->setHorizAlign( ui::EHorizAlign::Stretch );
+		elem->setVertAlign( ui::EVertAlign::Bottom );
+
+		//elem->m_margin.left = 30;
+		//elem->m_margin.bottom = 100;
 
 		m_uiRoot->addChild( elem );
+		m_uiRoot->setPaddingBottom( 30.f );
+		m_uiRoot->setPaddingLeft( 10.f );
+		m_uiRoot->setPaddingRight( 10.f );
 
+		auto lay = res::ResourceManager::get<ui::Layout>( L"Experimental.TestUI" );*/
 
 	}
 
@@ -142,14 +151,16 @@ namespace flu
 		m_drawContext.pushViewInfo( gfx::ViewInfo( 
 			0.f, 0.f, screenW, screenH ) );
 
+		m_uiRoot->update( 1.f / 60.f );	// todo: fooooooooo use real delta time, not hardcoded 60 Hz
+
 		m_uiRoot->prepareBatches();
-		m_uiRoot->flushBatches( m_renderDevice );
+		m_uiRoot->flushBatches( );
 
 		m_drawContext.popViewInfo();
 		/////////////////////////////////////////////////////////////
 
 
-		profile_zone( EProfilerGroup::Render, Present );
+		profile_zone( Render, Present );
 		m_renderDevice->endFrame( true );
 
 		if( m_renderDevice->getProfiler() )
@@ -176,19 +187,19 @@ namespace flu
 	void World::updateMetrics()
 	{
 		// RAM memory stats
-		profile_counter( EProfilerGroup::RAMMemory,	Total_Kb,	mem::stats().totalAllocatedBytes / 1024 );
-		profile_counter( EProfilerGroup::RAMMemory,	Peak_Kb,	mem::stats().peakAllocatedBytes / 1024 );
+		profile_counter( RAM_Memory, Total_Kb,	mem::stats().totalAllocatedBytes / 1024 );
+		profile_counter( RAM_Memory, Peak_Kb,	mem::stats().peakAllocatedBytes / 1024 );
 
 		// GPU memory stats
-		profile_counter( EProfilerGroup::GPUMemory, Total_Kb,		m_renderDevice->getMemoryStats().totalBytes() / 1024 );
-		profile_counter( EProfilerGroup::GPUMemory, Texture_Kb,		m_renderDevice->getMemoryStats().m_texureBytes / 1024 );
-		profile_counter( EProfilerGroup::GPUMemory, Vertex_Kb,		m_renderDevice->getMemoryStats().m_vertexBufferBytes / 1024 );
-		profile_counter( EProfilerGroup::GPUMemory, Constant_Kb,	m_renderDevice->getMemoryStats().m_constantBufferBytes / 1024 );
-		profile_counter( EProfilerGroup::GPUMemory, Index_Kb,		m_renderDevice->getMemoryStats().m_indexBufferBytes / 1024 );
+		profile_counter( GPU_Memory, Total_Kb,		m_renderDevice->getMemoryStats().totalBytes() / 1024 );
+		profile_counter( GPU_Memory, Texture_Kb,	m_renderDevice->getMemoryStats().m_texureBytes / 1024 );
+		profile_counter( GPU_Memory, Vertex_Kb,		m_renderDevice->getMemoryStats().m_vertexBufferBytes / 1024 );
+		profile_counter( GPU_Memory, Constant_Kb,	m_renderDevice->getMemoryStats().m_constantBufferBytes / 1024 );
+		profile_counter( GPU_Memory, Index_Kb,		m_renderDevice->getMemoryStats().m_indexBufferBytes / 1024 );
 
 		// Draw calls stats
-		profile_counter( EProfilerGroup::DrawCalls, Draw_Calls,		m_renderDevice->getDrawStats().m_drawCalls );
-		profile_counter( EProfilerGroup::DrawCalls, BS_Switches,	m_renderDevice->getDrawStats().m_blendStateSwitches );
-		profile_counter( EProfilerGroup::DrawCalls, RS_Switches,	m_renderDevice->getDrawStats().m_renderStateSwitches );
+		profile_counter( Draw_Calls, Draw_Calls,	m_renderDevice->getDrawStats().m_drawCalls );
+		profile_counter( Draw_Calls, BS_Switches,	m_renderDevice->getDrawStats().m_blendStateSwitches );
+		profile_counter( Draw_Calls, RS_Switches,	m_renderDevice->getDrawStats().m_renderStateSwitches );
 	}
 }

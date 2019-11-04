@@ -14,7 +14,7 @@
 //
 void CEditor::Tick( Float Delta )
 {
-	profile_zone( EProfilerGroup::General, TotalTime );
+	profile_zone( Common, TotalTime );
 
 
 
@@ -22,7 +22,7 @@ void CEditor::Tick( Float Delta )
 	WEditorPage* Active = (WEditorPage*)EditorPages->GetActivePage();
 	
 	{
-		profile_zone( EProfilerGroup::General, TickTime );
+		profile_zone( Common, TickTime );
 
 		// Tick active page.
 		if( Active )
@@ -37,7 +37,7 @@ void CEditor::Tick( Float Delta )
 
 	// Render the editor.
 	{
-		profile_zone( EProfilerGroup::General, RenderTime )
+		profile_zone( Common, RenderTime )
 
 		m_world->onBeginUpdate();
 		{
@@ -46,7 +46,7 @@ void CEditor::Tick( Float Delta )
 			if( Active )
 			{
 				gfx::ScopedRenderingZone srz( TXT( "Editor Page" ) );
-				profile_zone( EProfilerGroup::General, RenderPage );
+				profile_zone( Common, RenderPage );
 				profile_gpu_zone( Page );
 
 				Active->RenderPageContent( m_legacyRender->m_canvas.get() );
@@ -54,7 +54,7 @@ void CEditor::Tick( Float Delta )
 
 			// Render editor GUI.
 			{
-				profile_zone( EProfilerGroup::General, RenderGUI );
+				profile_zone( Common, RenderGUI );
 				gfx::ScopedRenderingZone srz( TXT( "Editor GUI" ) );
 				profile_gpu_zone( GUI );
 

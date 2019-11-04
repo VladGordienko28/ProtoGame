@@ -30,6 +30,17 @@ namespace ui
 	};
 
 	/**
+	 *	A direction
+	 */
+	enum class EDirection
+	{
+		Up,
+		Left,
+		Down,
+		Right
+	};
+
+	/**
 	 *	A position
 	 */
 	struct Position
@@ -72,6 +83,7 @@ namespace ui
 	 */
 	class Element;
 		class Container;
+			class UserLayout;
 			class Root;
 }
 }

@@ -30,8 +30,6 @@ namespace img
 		DECLARE_RESOURCE( Image, System, Converter );
 
 		~Image();
-
-		String getName() const { return m_name; }
 		
 		EImageType getType() const { return m_type; }
 
@@ -45,8 +43,6 @@ namespace img
 		rend::ShaderResourceView getSRV() const { return m_srv; }
 
 	private:
-		String m_name;
-
 		rend::Texture2DHandle m_handle;
 		rend::ShaderResourceView m_srv;
 

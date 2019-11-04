@@ -6,20 +6,6 @@
 namespace flu
 {
 	/**
-	 *	A profiler groups
-	 */
-	enum class EProfilerGroup
-	{
-		General,
-		Entity,
-		Render,
-		RAMMemory,
-		GPUMemory,
-		DrawCalls,
-		MAX
-	};
-
-	/**
 	 *	An engine chart
 	 */
 	class EngineChart final: public in::InputClient, public NonCopyable
@@ -33,8 +19,6 @@ namespace flu
 		void render( CCanvas* canvas, gfx::DrawContext& drawContext );
 		
 		void setTimelineLength( Float newLength );
-
-		static const Char* getGroupName( EProfilerGroup group );
 
 	private:
 		static const SizeT COLOR_SET_SIZE = 64;

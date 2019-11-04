@@ -280,16 +280,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
+    <ClInclude Include="Animator.h" />
     <ClInclude Include="Compiler.h" />
     <ClInclude Include="Container.h" />
     <ClInclude Include="Element.h" />
+    <ClInclude Include="Factory.h" />
     <ClInclude Include="Layout.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="UIRender.h" />
     <ClInclude Include="UIRoot.h" />
     <ClInclude Include="UITypes.h" />
+    <ClInclude Include="Visitor.h" />
+    <ClInclude Include="Widgets\Button.h" />
+    <ClInclude Include="Widgets\UserLayout.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Animator.cpp" />
     <ClCompile Include="Compiler.cpp" />
     <ClCompile Include="Container.cpp" />
     <ClCompile Include="Element.cpp" />
@@ -305,7 +313,18 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="UIRender.cpp" />
     <ClCompile Include="UIRoot.cpp" />
+    <ClCompile Include="Widgets\UserLayout.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|Win32'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Debug|Win32'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|x64'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Debug|x64'">UI/UI.h</PrecompiledHeaderFile>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

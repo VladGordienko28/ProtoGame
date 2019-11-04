@@ -16,8 +16,6 @@ namespace aud
 		DECLARE_RESOURCE( Sound, SoundSystem, SoundCompiler );
 
 		~Sound();
-
-		String getName() const { return m_name; }
 		
 		ESoundFormat getFormat() const { return m_format; }
 
@@ -29,8 +27,6 @@ namespace aud
 		// todo: add duration computation
 
 	private:
-		String m_name;
-
 		aud::SoundHandle m_handle;
 
 		UInt32 m_frequency;

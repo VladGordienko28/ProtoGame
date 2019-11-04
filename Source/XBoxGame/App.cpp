@@ -376,7 +376,7 @@ public:
 	MyTestInt( aud::Device* dev, String sndName )
 	{
 		device = dev;
-		sound = res::ResourceManager::get<aud::Sound>( L"Experimental.Bola", res::EFailPolicy::FATAL );
+		//sound = res::ResourceManager::get<aud::Sound>( L"Experimental.Bola", res::EFailPolicy::FATAL );
 	}
 
 
@@ -384,7 +384,7 @@ public:
 	{
 		if( button == in::EGamepadButton::GB_A )
 		{
-			device->playSFX( sound->getHandle(), 1.f, 1.5f );
+			//device->playSFX( sound->getHandle(), 1.f, 1.5f );
 			return true;
 		}
 	}
@@ -431,6 +431,7 @@ void App::SetWindow(CoreWindow^ window)
 	m_audioDevice = new flu::xa2::Device();
 
 	m_world = new World( m_renderDevice.get(), m_audioDevice.get(), m_inputDevice.get() );
+	m_world->onResize( realW, realH, false );
 
 	g_testInt = new MyTestInt( m_audioDevice.get(), L"" );
 	m_inputDevice->addClient( g_testInt );
@@ -575,7 +576,7 @@ void App::Run()
 			}
 			else
 			{
-				profile_zone( EProfilerGroup::General, Input );
+				profile_zone( Common, Input );
 				m_inputDevice->update( 0.f ); // real dt!	
 			}
 
@@ -636,7 +637,7 @@ void App::Run()
 			m_world->onEndUpdate(m_canvas.get());
 
 			{
-				profile_zone( EProfilerGroup::General, ResourceManager );
+				profile_zone( Common, ResourceManager );
 				res::ResourceManager::update(); // todo: add timeout
 			}
 
