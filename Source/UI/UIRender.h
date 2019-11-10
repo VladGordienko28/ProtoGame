@@ -15,34 +15,12 @@ namespace ui
 	public:
 		using UPtr = UniquePtr<Render>;
 
-		~Render();
+		virtual ~Render() = default;
 
-		void prepareBatches( Container* treeRoot );
-		void flushBatches();
+		virtual void prepareBatches( Container* treeRoot ) = 0;
+		virtual void flushBatches() = 0;
 
-	private:
-		rend::Device* m_device;
-
-		// todo: wrap to some kind of queue
-			struct Vertex
-			{
-				math::Vector pos;
-				math::Color color;
-			};
-
-			ffx::Effect::Ptr m_effect;
-			rend::VertexBufferHandle m_vb;
-			UInt32 m_vbSize;
-			Array<Vertex> m_cpuBuffer;
-
-			rend::BlendStateId m_blendStateId;
-
-
-//////////////////////////////////////////////////////////
-		Render() = delete;
-		Render( rend::Device* device );
-
-		friend class Root;
+		static Render* createRender( rend::Device* device );
 	};
 }
 }

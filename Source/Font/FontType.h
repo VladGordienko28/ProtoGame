@@ -28,6 +28,7 @@ namespace fnt
 		// in pixels
 		Float maxHeight() const;
 		Float textWidth( const Char* text ) const;
+		Float textWidth( const Char* text, Int32 len ) const;
 
 	private:
 		img::Image::Ptr m_image;

@@ -49,7 +49,7 @@ namespace ui
 		void visit( IVisitor& visitor ) override;
 
 		// todo: get rid of it
-		friend class Render;
+		friend class RenderImpl;
 	};
 }
 }

@@ -51,11 +51,13 @@ namespace rend
 		virtual VertexBufferHandle createVertexBuffer( UInt32 vertexSize, UInt32 numVerts, 
 			EUsage usage = EUsage::Dynamic, const void* initialData = nullptr, const AnsiChar* debugName = nullptr  ) = 0;
 		virtual void updateVertexBuffer( VertexBufferHandle handle, const void* newData, UInt32 dataSize ) = 0;
+		virtual UInt32 getVertexBufferSize( VertexBufferHandle handle ) const = 0;
 		virtual void destroyVertexBuffer( VertexBufferHandle handle ) = 0;
 
 		virtual IndexBufferHandle createIndexBuffer( EFormat indexFormat, UInt32 numIndexes, 
 			EUsage usage = EUsage::Dynamic, const void* initialData = nullptr, const AnsiChar* debugName = nullptr  ) = 0;
 		virtual void updateIndexBuffer( IndexBufferHandle handle, const void* newData, UInt32 dataSize ) = 0;
+		virtual UInt32 getIndexBufferSize( IndexBufferHandle handle ) const = 0;
 		virtual void destroyIndexBuffer( IndexBufferHandle handle ) = 0;
 
 		virtual ConstantBufferHandle createConstantBuffer( UInt32 bufferSize, EUsage usage = EUsage::Dynamic, 

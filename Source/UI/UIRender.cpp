@@ -9,107 +9,169 @@ namespace flu
 {
 namespace ui
 {
-	static const Char FLAT_SHADE_EFFECT_NAME[] = TXT("System.Shaders.UI.FlatShade");
+	/**
+	 *	An UI render implementation
+	 */
+	class RenderImpl: public Render
+	{
+	public:
+		RenderImpl( rend::Device* device );
+		~RenderImpl();
 
-	Render::Render( rend::Device* device )
+		void prepareBatches( Container* treeRoot ) override;
+		void flushBatches() override;
+
+	private:
+		static const UInt32 MAX_LAYERS = 16;
+		using LayerList = rendering::Layer[MAX_LAYERS];
+
+		LayerList m_layers;
+		UInt32 m_numLayers;
+
+		rendering::FlatShadeStream m_flatShadeStream;
+		//...
+
+		rend::Device* m_device;
+	};
+
+	Render* Render::createRender( rend::Device* device )
+	{
+		return new RenderImpl( device );
+	}
+
+	RenderImpl::RenderImpl( rend::Device* device )
 		:	m_device( device ),
-			m_effect( nullptr ),
-			m_vb( INVALID_HANDLE<rend::VertexBufferHandle>() ),
-			m_vbSize( 0 ),
-			m_cpuBuffer()
+			m_flatShadeStream( device ),
+			m_numLayers( 0 )
 	{
 		assert( m_device );
-		m_effect = res::ResourceManager::get<ffx::Effect>( FLAT_SHADE_EFFECT_NAME, res::EFailPolicy::FATAL );
 
-		m_blendStateId = device->getBlendState( { rend::EBlendFactor::SrcAlpha, rend::EBlendFactor::InvSrcAlpha, 
-			rend::EBlendOp::Add, rend::EBlendFactor::SrcAlpha, rend::EBlendFactor::InvSrcAlpha, rend::EBlendOp::Add } );
-	}
-
-	Render::~Render()
-	{
-		m_effect = nullptr;
-		m_cpuBuffer.empty();
-
-		if( m_vb != INVALID_HANDLE<rend::VertexBufferHandle>() )
+		for( auto& layer : m_layers )
 		{
-			m_device->destroyVertexBuffer( m_vb );
+			layer.create( m_device );
 		}
 	}
 
-	void Render::prepareBatches( Container* treeRoot )
+	RenderImpl::~RenderImpl()
 	{
-		assert( treeRoot );
-		assert( m_cpuBuffer.size() == 0 );
-		
+		for( auto& layer : m_layers )
+		{
+			layer.destroy();
+		}
+	}
+
+	void RenderImpl::prepareBatches( Container* treeRoot )
+	{
 		profile_zone( UI, CPU_PrepareBatches );
 
-		for( auto& it : treeRoot->m_children )
+		assert( treeRoot );
+		m_numLayers = 0;
+
+		class DrawVisitor: public IVisitor
 		{
-			Float itX, itY, itWidth, itHeight;
-			
-			itX = it->m_position.x;
-			itY = it->m_position.y;
-			itWidth = it->m_size.width;
-			itHeight = it->m_size.height;
-			
-			//it->getBounds( treeRoot->m_size, treeRoot->m_padding, itX, itY, itWidth, itHeight );
+		public:
+			DrawVisitor( LayerList& layers, UInt32& layerDepth )
+				:	m_layers( layers ),
+					m_layerDepth( layerDepth ),
+					m_stackTop( 0 )
+			{
+			}
 
-			Vertex v;
-			v.color = it->isFocused() ? math::colors::YELLOW : /*it->isHighlighted() ? math::colors::RED :*/ math::colors::BLUE;
-			v.color.a = 255 * it->m_opacity;
+			~DrawVisitor()
+			{
+			}
 
-			v.pos = { itX, itY };
-			m_cpuBuffer.push( v );
+			void visit( Element* element ) override
+			{
+				if( m_stackTop > 0 ) // todo: fix hack for Root element
+				{
+					element->draw( m_layers[m_stackTop-1].getCanvas() );				
+				}
+			}
 
-			v.pos = { itX, itY + itHeight };
-			m_cpuBuffer.push( v );
+			void enterContainer( Container* container ) override
+			{
+				++m_stackTop;
+				m_layerDepth = max( m_layerDepth, m_stackTop );
+				assert( m_stackTop < MAX_LAYERS );
+			}
 
-			v.pos = { itX + itWidth, itY };
-			m_cpuBuffer.push( v );
+			void leaveContainer( Container* container ) override
+			{
+				assert( m_stackTop > 0 );
+				--m_stackTop;
+			}
+		
+		private:
+			LayerList& m_layers;
+			UInt32& m_layerDepth;
 
-			v.pos = { itX, itY + itHeight };
-			m_cpuBuffer.push( v );
+			UInt32 m_stackTop;
+		};
 
-			v.pos = { itX + itWidth, itY };
-			m_cpuBuffer.push( v );
+		// travers elements and fill layers with data
+		DrawVisitor drawVisitor( m_layers, m_numLayers );
+		treeRoot->visit( drawVisitor );
 
-			v.pos = { itX + itWidth, itY + itHeight };
-			m_cpuBuffer.push( v );
+		assert( m_numLayers > 0 );
+
+		// generate batches to draw
+		for( UInt32 i = 0; i < m_numLayers; ++i )
+		{
+			rendering::Layer& layer = m_layers[i];
+
+			layer.generateFlatShadeBatches( m_flatShadeStream );
+			layer.generateImageBatches();
+			layer.generateTextBatches();
 		}
 	}
 
-	void Render::flushBatches()
+	void RenderImpl::flushBatches()
 	{
-		//assert( threading::isMainThread() );
-
 		profile_zone( UI, CPU_FlushBatches );
+		m_device->enterZone( L"DrawUI" );
+		m_device->getProfiler()->enterZone( L"GPU_DrawUI" );
 
-		if( m_cpuBuffer.size() == 0 )
-		{
-			return;
-		}
+		// submit all streams
+		m_flatShadeStream.submitToGPU();
+		//...
 
-		if( m_vb == INVALID_HANDLE<rend::VertexBufferHandle>() || m_cpuBuffer.size() > m_vbSize )
+		// draw all layers
+		assert( m_numLayers > 0 );
+
+		for( UInt32 i = 0; i < m_numLayers; ++i ) // todo: flip direction and add pass support
 		{
-			if( m_vb != INVALID_HANDLE<rend::VertexBufferHandle>() )
+			rendering::Layer& layer = m_layers[i];
+
+			// flat shade ops
+			if( layer.hasFlatShadeBatches() )
 			{
-				m_device->destroyVertexBuffer( m_vb );
+				m_flatShadeStream.bindBuffers();
+				layer.drawFlatShadeBatches( m_device, m_flatShadeStream.getEffect() );
 			}
 
-			m_vb = m_device->createVertexBuffer( sizeof(Vertex), m_cpuBuffer.size(), rend::EUsage::Dynamic, nullptr, "GUI_VB" );
-			m_vbSize = m_cpuBuffer.size();
+			// image ops
+			if( layer.hasImageBatches() )
+			{
+			
+			}
+		
+			// text ops
+			if( layer.hasTextBatches() )
+			{
+
+			}
+
+			layer.clear();
 		}
+		m_numLayers = 0;
 
-		m_device->updateVertexBuffer( m_vb, &m_cpuBuffer[0], m_cpuBuffer.size() * sizeof(Vertex) );
+		// clear all CPU buffers
+		m_flatShadeStream.clearBuffers();
+		//...
 
-		m_effect->apply();
-		m_effect->setBlendState( m_blendStateId );
-
-		m_device->setTopology( rend::EPrimitiveTopology::TriangleList );
-		m_device->setVertexBuffer( m_vb );
-		m_device->draw( m_cpuBuffer.size(), 0 );
-
-		m_cpuBuffer.empty();
+		m_device->getProfiler()->leaveZone();
+		m_device->leaveZone();
 	}
 }
 }

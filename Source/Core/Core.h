@@ -29,6 +29,7 @@
 #include "Threading.h"
 #include "Stack.h"
 #include "Array.h"
+#include "GrowOnlyArray.h"
 #include "Queue.h"
 #include "Map.h"
 #include "Profiler.h"

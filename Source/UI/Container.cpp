@@ -206,7 +206,7 @@ namespace ui
 	{
 		assert( childrenArrayNode.hasObject() && childrenArrayNode->isArray() );
 
-		for( UInt32 i = 0; i < childrenArrayNode->arraySize(); ++i )
+		for( Int32 i = 0; i < childrenArrayNode->arraySize(); ++i )
 		{
 			JSon::Ptr elementNode = childrenArrayNode->getElement( i, JSon::EMissingPolicy::USE_STUB );
 			String elementType = elementNode->dotgetString( L"Type" );
@@ -237,10 +237,14 @@ namespace ui
 	{
 		Element::visit( visitor );
 
-		for( auto& it : m_children )
+		visitor.enterContainer( this );
 		{
-			it->visit( visitor );
+			for( auto& it : m_children )
+			{
+				it->visit( visitor );
+			}
 		}
+		visitor.leaveContainer( this );
 	}
 }
 }

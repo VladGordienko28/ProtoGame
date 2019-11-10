@@ -19,6 +19,9 @@ namespace ui
 		}
 
 		virtual void visit( Element* element ) = 0;
+
+		virtual void enterContainer( Container* container ) {};
+		virtual void leaveContainer( Container* container ) {};
 	};
 }
 }

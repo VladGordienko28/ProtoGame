@@ -39,8 +39,23 @@
     <ClInclude Include="Factory.h">
       <Filter>Private</Filter>
     </ClInclude>
-    <ClInclude Include="Visitor.h">
+    <ClInclude Include="ICanvas.h">
       <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Layer.h">
+      <Filter>Private\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Streams.h">
+      <Filter>Private\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Canvas.h">
+      <Filter>Private\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="IVisitor.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Operations.h">
+      <Filter>Private\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +85,15 @@
     <ClCompile Include="Widgets\UserLayout.cpp">
       <Filter>Widgets</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\Streams.cpp">
+      <Filter>Private\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Layer.cpp">
+      <Filter>Private\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Canvas.cpp">
+      <Filter>Private\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Private">
@@ -80,6 +104,9 @@
     </Filter>
     <Filter Include="Widgets">
       <UniqueIdentifier>{599a6515-4443-4495-98fb-ffac820a9332}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private\Rendering">
+      <UniqueIdentifier>{cd45e820-7f1e-4ed9-971c-75ac76a07ec9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

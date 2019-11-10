@@ -293,6 +293,7 @@
     <ClInclude Include="Evaluator.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="FrSerial.h" />
+    <ClInclude Include="GrowOnlyArray.h" />
     <ClInclude Include="HandleArray.h" />
     <ClInclude Include="Hash.h" />
     <ClInclude Include="Heap.h" />

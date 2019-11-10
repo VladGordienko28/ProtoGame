@@ -12,7 +12,7 @@ namespace ui
 	Root::Root( rend::Device* device )
 		:	Container( L"UIRoot", this ),
 			InputClient(),
-			m_uiRender( new Render( device ) ),
+			m_uiRender( Render::createRender( device ) ),
 			m_uiScale( 1.f ),
 			m_factory( new Factory() ),
 			m_focused( nullptr ),
@@ -42,7 +42,7 @@ namespace ui
 
 	void Root::prepareBatches()
 	{
-		m_uiRender->prepareBatches( (Container*)this->m_children[0] ); ///////////////////////////// fooooooooooooooooooooooooooo
+		m_uiRender->prepareBatches( this );
 	}
 
 	void Root::flushBatches()
@@ -127,7 +127,7 @@ namespace ui
 		Float focusY = m_focused ? m_focused->m_position.y : 0.f;
 
 		Element* bestElement = nullptr;
-		Float bestWeight = 999999.9;
+		Float bestWeight = 999999.9f;
 
 		static const Float ADJACENT_WEIGHT = 0.0f;
 

@@ -49,6 +49,15 @@ namespace ui
 		Float x = 0.f;
 		Float y = 0.f;
 
+		Position()
+		{
+		}
+
+		Position( Float inX, Float inY )
+			:	x( inX ), y( inY )
+		{
+		}
+
 		// todo: implement methods and operators
 	};
 

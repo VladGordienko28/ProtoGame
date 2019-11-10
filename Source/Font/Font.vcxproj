@@ -278,6 +278,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Batching.h" />
     <ClInclude Include="Compiler.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FontType.h" />
@@ -285,6 +286,7 @@
     <ClInclude Include="System.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Batching.cpp" />
     <ClCompile Include="Compiler.cpp" />
     <ClCompile Include="Font.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

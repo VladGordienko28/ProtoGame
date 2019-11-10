@@ -87,6 +87,9 @@
     <ClInclude Include="JobSystem\JobSystem.h">
       <Filter>JobSystem</Filter>
     </ClInclude>
+    <ClInclude Include="GrowOnlyArray.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp" />

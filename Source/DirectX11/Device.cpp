@@ -366,6 +366,19 @@ namespace dx11
 		m_immediateContext->Unmap( buffer.m_buffer, 0 );
 	}
 
+	UInt32 Device::getVertexBufferSize( rend::VertexBufferHandle handle ) const
+	{
+		if( handle != INVALID_HANDLE<rend::VertexBufferHandle>() )
+		{
+			const DxVertexBuffer& buffer = m_vertexBuffers.get( handle );
+			return buffer.m_numVerts;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
 	void Device::destroyVertexBuffer( rend::VertexBufferHandle handle )
 	{
 		DxVertexBuffer& vertexBuffer = m_vertexBuffers.get( handle );
@@ -401,6 +414,19 @@ namespace dx11
 			mem::copy( mappedData.pData, newData, dataSize );
 		}
 		m_immediateContext->Unmap( buffer.m_buffer, 0 );
+	}
+
+	UInt32 Device::getIndexBufferSize( rend::IndexBufferHandle handle ) const
+	{
+		if( handle != INVALID_HANDLE<rend::IndexBufferHandle>() )
+		{
+			const DxIndexBuffer& buffer = m_indexBuffers.get( handle );
+			return buffer.m_numIndexes;
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	void Device::destroyIndexBuffer( rend::IndexBufferHandle handle )

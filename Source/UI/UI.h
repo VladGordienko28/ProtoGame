@@ -16,7 +16,8 @@
 
 // UI includes
 #include "UITypes.h"
-#include "Visitor.h"
+#include "IVisitor.h"
+#include "ICanvas.h"
 #include "Animation.h"
 #include "Animator.h"
 #include "Element.h"
@@ -30,3 +31,8 @@
 
 #include "Widgets/Button.h"
 #include "Widgets/UserLayout.h"
+
+#include "Rendering/Operations.h"
+#include "Rendering/Streams.h"
+#include "Rendering/Canvas.h"
+#include "Rendering/Layer.h"

@@ -74,5 +74,19 @@ namespace fnt
 
 		return width * m_image->getUSize();
 	}
+
+	Float Font::textWidth( const Char* text, Int32 len ) const
+	{
+		assert( text );
+		assert( m_image.hasObject() );
+
+		Float width = 0.f;
+		for( Int32 i = 0; i < len; ++i )
+		{
+			width += getGlyph( text[i] ).width;
+		}
+
+		return width * m_image->getUSize();
+	}
 }
 }

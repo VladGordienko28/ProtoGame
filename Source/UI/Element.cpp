@@ -177,6 +177,14 @@ namespace ui
 		visitor.visit( this );
 	}
 
+	void Element::draw( ICanvas& canvas )
+	{
+	}
+
+	void Element::drawDebug( ICanvas& canvas )
+	{
+	}
+
 	Bool Element::isFocused() const
 	{
 		return m_root->getFocused() == this;

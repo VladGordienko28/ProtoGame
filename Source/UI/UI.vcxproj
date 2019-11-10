@@ -286,13 +286,18 @@
     <ClInclude Include="Container.h" />
     <ClInclude Include="Element.h" />
     <ClInclude Include="Factory.h" />
+    <ClInclude Include="ICanvas.h" />
     <ClInclude Include="Layout.h" />
+    <ClInclude Include="Rendering\Canvas.h" />
+    <ClInclude Include="Rendering\Layer.h" />
+    <ClInclude Include="Rendering\Operations.h" />
+    <ClInclude Include="Rendering\Streams.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="UIRender.h" />
     <ClInclude Include="UIRoot.h" />
     <ClInclude Include="UITypes.h" />
-    <ClInclude Include="Visitor.h" />
+    <ClInclude Include="IVisitor.h" />
     <ClInclude Include="Widgets\Button.h" />
     <ClInclude Include="Widgets\UserLayout.h" />
   </ItemGroup>
@@ -302,6 +307,36 @@
     <ClCompile Include="Container.cpp" />
     <ClCompile Include="Element.cpp" />
     <ClCompile Include="Layout.cpp" />
+    <ClCompile Include="Rendering\Canvas.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|Win32'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Debug|Win32'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|x64'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Debug|x64'">UI/UI.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Rendering\Layer.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|Win32'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Debug|Win32'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|x64'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Debug|x64'">UI/UI.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Rendering\Streams.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|Win32'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Debug|Win32'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Release|x64'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UI/UI.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Scorpio_Debug|x64'">UI/UI.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="System.cpp" />
     <ClCompile Include="UI.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

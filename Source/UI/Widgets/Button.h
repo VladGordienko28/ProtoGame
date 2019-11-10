@@ -79,6 +79,17 @@ namespace ui
 			m_animator.play( anim, EBlendType::ContinueInv );
 			return false;
 		}
+
+		void draw( ICanvas& canvas ) override
+		{
+			math::Color drawColor = isFocused() ? math::colors::RED : math::colors::ORANGE;
+			math::Color borderColor = math::colors::BLACK;
+			drawColor.a = 255 * m_opacity;
+			borderColor.a = 255 * m_opacity;
+
+			canvas.drawBorderRect( m_position, m_size, 2.f, drawColor, borderColor );
+			//canvas.drawRect( m_position, m_size, math::colors::WHITE );
+		}
 	};
 }
 }

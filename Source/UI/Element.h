@@ -124,13 +124,15 @@ namespace ui
 
 		virtual void resizeInteral( const Size& parentSize, const Thickness& parentPadding );
 		virtual void visit( IVisitor& visitor );
+		virtual void draw( ICanvas& canvas );
+		virtual void drawDebug( ICanvas& canvas );
 
 		friend class Root;
 		friend class Container;
 		friend class Animator;
 
 		// todo: get rid of it
-		friend class Render;
+		friend class RenderImpl;
 	};
 }
 }

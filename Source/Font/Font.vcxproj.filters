@@ -6,11 +6,13 @@
     <ClInclude Include="FontType.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="Compiler.h" />
+    <ClInclude Include="Batching.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FontType.cpp" />
     <ClCompile Include="Compiler.cpp" />
     <ClCompile Include="System.cpp" />
+    <ClCompile Include="Batching.cpp" />
   </ItemGroup>
 </Project>

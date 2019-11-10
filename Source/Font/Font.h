@@ -16,3 +16,4 @@
 #include "FontType.h"
 #include "Compiler.h"
 #include "System.h"
+#include "Batching.h"

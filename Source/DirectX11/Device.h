@@ -53,11 +53,13 @@ namespace dx11
 		rend::VertexBufferHandle createVertexBuffer( UInt32 vertexSize, UInt32 numVerts, 
 			rend::EUsage usage, const void* initialData, const AnsiChar* debugName  ) override;
 		void updateVertexBuffer( rend::VertexBufferHandle handle, const void* newData, UInt32 dataSize ) override;
+		UInt32 getVertexBufferSize( rend::VertexBufferHandle handle ) const override;
 		void destroyVertexBuffer( rend::VertexBufferHandle handle ) override;
 
 		rend::IndexBufferHandle createIndexBuffer( rend::EFormat indexFormat, UInt32 numIndexes, 
 			rend::EUsage usage, const void* initialData, const AnsiChar* debugName ) override;
 		void updateIndexBuffer( rend::IndexBufferHandle handle, const void* newData, UInt32 dataSize ) override;
+		UInt32 getIndexBufferSize( rend::IndexBufferHandle handle ) const override;
 		void destroyIndexBuffer( rend::IndexBufferHandle handle ) override;
 
 		rend::ConstantBufferHandle createConstantBuffer( UInt32 bufferSize, rend::EUsage usage, 
