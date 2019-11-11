@@ -57,6 +57,7 @@
     <ClInclude Include="Rendering\Operations.h">
       <Filter>Private\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="UIUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="UI.cpp" />

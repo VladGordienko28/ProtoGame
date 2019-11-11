@@ -20,6 +20,16 @@ namespace rendering
 	FlatShadeStream::~FlatShadeStream()
 	{
 	}
+
+	TextStream::TextStream( rend::Device* device )
+		:	StreamBase<TextStream, TextOp::Vertex>( device )
+	{
+		// read techniques and variables offset
+	}
+
+	TextStream::~TextStream()
+	{
+	}
 }
 }
 }

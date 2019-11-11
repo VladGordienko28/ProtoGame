@@ -1,0 +1,59 @@
+{
+	Children:
+	[
+		{
+			Type: "Button",
+			Name: "Vlad!",
+			Size: { W: 100, H: 64 },
+			Margin: { T: 30, L: 30, B: 30, R: 30},
+			HorizAlign: "Left",
+			VertAlign: "Bottom",
+			Opacity: 0.3
+		},
+		{
+			Type: "Button",
+			Name: "Button1",
+			Size: { W: 100, H: 100 },
+			Margin: { T: 30, L: 30, B: 30, R: 30},
+			HorizAlign: "Center",
+			VertAlign: "Center",
+			Opacity: 0.3
+		},
+		{
+			Type: "Button",
+			Name: "Button2",
+			Size: { W: 100, H: 64 },
+			Margin: { T: 30, L: 160, B: 30, R: 30},
+			HorizAlign: "Left",
+			VertAlign: "Bottom",
+			Opacity: 0.3
+		},
+		{
+			Type: "Button",
+			Name: "Button3",
+			Size: { W: 100, H: 64 },
+			Margin: { T: 30, L: 290, B: 30, R: 30},
+			HorizAlign: "Left",
+			VertAlign: "Bottom",
+			Opacity: 0.3
+		},
+		{
+			Type: "Button",
+			Name: "Button4",
+			Size: { W: 100, H: 64 },
+			Margin: { T: 30, L: 420, B: 30, R: 30},
+			HorizAlign: "Left",
+			VertAlign: "Bottom",
+			Opacity: 0.3
+		},
+		{
+			Type: "Button",
+			Name: "Button5",
+			Size: { W: 100, H: 64 },
+			Margin: { T: 30, L: 550, B: 30, R: 30},
+			HorizAlign: "Right",
+			VertAlign: "Bottom",
+			Opacity: 0.3
+		}
+	]
+}

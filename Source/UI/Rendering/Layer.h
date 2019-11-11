@@ -32,7 +32,7 @@ namespace rendering
 
 		void generateFlatShadeBatches( FlatShadeStream& stream );
 		void generateImageBatches(){}
-		void generateTextBatches(){}
+		void generateTextBatches( TextStream& stream );
 
 		void drawFlatShadeBatches( rend::Device* device, ffx::Effect::Ptr effect );
 		void drawImageBatches( rend::Device* device, ffx::Effect::Ptr effect );
@@ -76,7 +76,9 @@ namespace rendering
 		struct TextBatch
 		{
 		public:
-			int stub;////////////////////////////////////////////////////
+			UInt32 firstIndex;
+			UInt32 numIndices;
+			rend::ShaderResourceView srv;
 		};
 
 		GrowOnlyArray<FlatShadeBatch> m_flatShadeBatches;
@@ -85,6 +87,8 @@ namespace rendering
 
 		rend::BlendStateId m_blendStateNone;
 		rend::BlendStateId m_blendStateAlpha;
+
+		rend::SamplerStateId m_samplerStateLinearWrap;
 
 		Canvas m_canvas;
 	};

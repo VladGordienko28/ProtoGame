@@ -58,6 +58,7 @@ namespace FontGenerator
         private void buildButton_Click(object sender, EventArgs e)
         {
             var font = fontDialog.Font;
+            int padding = (int)paddingSpinner.Value;
 
             string name = string.Format("{0}_{1}", font.Name.Replace(" ", ""), (int)font.Size);
             string fileName = name + ".ffnt";
@@ -101,6 +102,10 @@ namespace FontGenerator
                         maxYSize = size.Height > maxYSize ? (int)size.Height : maxYSize;
                     }
 
+                    // add padding to maximum glyph size
+                    maxXSize += padding;
+                    maxYSize += padding;
+
                     // compute final atlas size
                     int charsPerRow = (int)Math.Ceiling( Math.Sqrt(glyphs.Length) );
                     int atlasXSize = roundToNextPowOfTwo(charsPerRow * maxXSize);
@@ -113,7 +118,7 @@ namespace FontGenerator
                     Graphics finalGraphics = Graphics.FromImage(finalImage);
                     finalGraphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
-                    int walkX = 0, walkY = 0;
+                    int walkX = padding, walkY = padding;
 
                     for (int i = 0; i < glyphs.Length; i++)
                     {
@@ -127,7 +132,7 @@ namespace FontGenerator
                         // check line overflow
                         if( walkX + sizeX > atlasXSize)
                         {
-                            walkX = 0;
+                            walkX = padding;
                             walkY += maxYSize;
                         }
 

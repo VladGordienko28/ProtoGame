@@ -1,0 +1,53 @@
+//-----------------------------------------------------------------------------
+//	Text.ffx: A text rendering shader
+//	Created by Vlad Gordienko, 2018
+//-----------------------------------------------------------------------------
+
+#include "../Common.ffxh"
+
+Texture2D<float4> fontAtlas : register( t0 );
+SamplerState fontAtlasSampler : register( s0 );
+
+vertex_decl VertexDecl_XYUVRGBA
+{
+	["RG32_F", "Position", 0, 0],
+	["RG32_F", "TexCoord", 0, 8],
+    ["RGBA8_UNORM", "Color", 0, 16]
+}
+
+struct VsInput
+{
+	float2 position : POSITION;
+	float2 tCoord : TEXCOORD0;
+    float4 color : COLOR0;
+};
+
+struct VsOutput
+{
+	float4 position : SV_Position;
+	float2 tCoord : TEXCOORD0;
+    float4 color : COLOR0;
+};
+
+VsOutput vsMain( in VsInput input )
+{
+	VsOutput output;
+
+	output.position = mul( float4( input.position, 0.f, 1.f ), g_viewProjectionMatrix );
+	output.tCoord = input.tCoord;
+    output.color = input.color;
+
+	return output;
+}
+
+float4 psMain( in VsOutput input ) : SV_Target
+{
+    const float4 texColor = fontAtlas.Sample( fontAtlasSampler, input.tCoord );
+    return texColor * input.color;
+}
+
+technique Main
+{
+	vertex_shader = vsMain;
+	pixel_shader = psMain;
+}

@@ -48,6 +48,7 @@ namespace rendering
 
 		void clearOps();
 		FlatShadeOp* getFlatShadeOps( UInt32& count );
+		TextOp* getTextOps( UInt32& count );
 
 		void setOrigin( const Position& newOrigin )
 		{
@@ -68,6 +69,9 @@ namespace rendering
 		};
 
 		StaticArray<FlatShadeOp, FSO_MAX> m_flatShadeOps;
+		Array<TextOp> m_textOps; // todo: replace with GrowOnlyArray
+
+		TextOp& findOrCreateTextOp( rend::ShaderResourceView srv );
 
 	private:
 		Position m_origin;

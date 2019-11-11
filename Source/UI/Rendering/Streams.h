@@ -78,7 +78,7 @@ namespace rendering
 				{
 					m_device->updateVertexBuffer( m_gpuVB, 
 						&m_cpuVB[0], m_cpuVB.size() * sizeof( VERTEX_TYPE ) );
-				}			
+				}
 			}
 
 			// submit index buffer to GPU
@@ -157,6 +157,19 @@ namespace rendering
 
 
 
+
+
+	/**
+	 *	A text batches stream
+	 */
+	class TextStream: public StreamBase<TextStream, TextOp::Vertex>
+	{
+	public:
+		static constexpr const Char EFFECT_NAME[] = TXT("System.Shaders.UI.Text");
+
+		TextStream( rend::Device* device );
+		~TextStream();
+	};
 }
 }
 }

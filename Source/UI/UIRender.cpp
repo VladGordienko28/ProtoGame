@@ -30,6 +30,7 @@ namespace ui
 
 		rendering::FlatShadeStream m_flatShadeStream;
 		//...
+		rendering::TextStream m_textStream;
 
 		rend::Device* m_device;
 	};
@@ -42,6 +43,7 @@ namespace ui
 	RenderImpl::RenderImpl( rend::Device* device )
 		:	m_device( device ),
 			m_flatShadeStream( device ),
+			m_textStream( device ),
 			m_numLayers( 0 )
 	{
 		assert( m_device );
@@ -122,7 +124,7 @@ namespace ui
 
 			layer.generateFlatShadeBatches( m_flatShadeStream );
 			layer.generateImageBatches();
-			layer.generateTextBatches();
+			layer.generateTextBatches( m_textStream );
 		}
 	}
 
@@ -135,6 +137,7 @@ namespace ui
 		// submit all streams
 		m_flatShadeStream.submitToGPU();
 		//...
+		m_textStream.submitToGPU();
 
 		// draw all layers
 		assert( m_numLayers > 0 );
@@ -159,7 +162,8 @@ namespace ui
 			// text ops
 			if( layer.hasTextBatches() )
 			{
-
+				m_textStream.bindBuffers();
+				layer.drawTextBatches( m_device, m_textStream.getEffect() );
 			}
 
 			layer.clear();
@@ -169,6 +173,7 @@ namespace ui
 		// clear all CPU buffers
 		m_flatShadeStream.clearBuffers();
 		//...
+		m_textStream.clearBuffers();
 
 		m_device->getProfiler()->leaveZone();
 		m_device->leaveZone();

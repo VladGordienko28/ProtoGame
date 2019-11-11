@@ -298,6 +298,7 @@
     <ClInclude Include="UIRoot.h" />
     <ClInclude Include="UITypes.h" />
     <ClInclude Include="IVisitor.h" />
+    <ClInclude Include="UIUtils.h" />
     <ClInclude Include="Widgets\Button.h" />
     <ClInclude Include="Widgets\UserLayout.h" />
   </ItemGroup>

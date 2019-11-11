@@ -26,6 +26,10 @@ namespace rendering
 
 		m_blendStateAlpha = device->getBlendState( { rend::EBlendFactor::SrcAlpha, rend::EBlendFactor::InvSrcAlpha, 
 			rend::EBlendOp::Add, rend::EBlendFactor::SrcAlpha, rend::EBlendFactor::InvSrcAlpha, rend::EBlendOp::Add } );
+
+		// create sampler states
+		m_samplerStateLinearWrap = device->getSamplerState( 
+			{ rend::ESamplerFilter::Linear, rend::ESamplerAddressMode::Wrap } );
 	}
 
 	void Layer::destroy()
@@ -75,6 +79,40 @@ namespace rendering
 		}
 	}
 
+	void Layer::generateTextBatches( TextStream& stream )
+	{
+		UInt32 numOps;
+		TextOp* ops = m_canvas.getTextOps( numOps );
+
+		for( UInt32 i = 0; i < numOps; ++i )
+		{
+			TextOp* op = &ops[i];
+
+			if( op->indices.size() > 0 && op->vertices.size() > 0 )
+			{
+				UInt32 firstVtxIndex = stream.getVertexCount();	
+				UInt32 firstIdxIndex = stream.getIndexCount();
+
+				// copy vertices
+				mem::copy( stream.obtainVertices( op->vertices.size() ), 
+					&op->vertices[0], op->vertices.size() * sizeof( TextOp::Vertex ) );
+
+				// copy indices
+				UInt16* destIndices = stream.obtainIndices( op->indices.size() );
+				for( Int32 i = 0; i < op->indices.size(); ++i )
+				{
+					destIndices[i] = firstVtxIndex + op->indices[i];
+				}
+
+				TextBatch batch;
+				batch.firstIndex = firstIdxIndex;
+				batch.numIndices = op->indices.size();
+				batch.srv = op->srv;
+				m_textBatches.push( batch );
+			}
+		}
+	}
+
 	void Layer::drawFlatShadeBatches( rend::Device* device, ffx::Effect::Ptr effect )
 	{
 		assert( device && effect.hasObject() );
@@ -96,6 +134,20 @@ namespace rendering
 
 	void Layer::drawTextBatches( rend::Device* device, ffx::Effect::Ptr effect )
 	{
+		assert( device && effect.hasObject() );
+
+		device->setTopology( rend::EPrimitiveTopology::TriangleList );
+		
+		effect->setBlendState( m_blendStateAlpha );
+		effect->setSamplerState( 0, m_samplerStateLinearWrap );
+
+		for( auto& it : m_textBatches )
+		{
+			effect->setSRV( 0, it.srv );
+			effect->apply();
+
+			device->drawIndexed( it.numIndices, it.firstIndex, 0 );
+		}
 	}
 }
 }

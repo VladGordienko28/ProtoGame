@@ -28,6 +28,7 @@
 #include "Layout.h"
 #include "Compiler.h"
 #include "System.h"
+#include "UIUtils.h"
 
 #include "Widgets/Button.h"
 #include "Widgets/UserLayout.h"

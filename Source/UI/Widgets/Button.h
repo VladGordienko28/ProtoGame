@@ -16,6 +16,7 @@ namespace ui
 		Button( String name, Root* root )
 			:	Element( name, root )
 		{
+			m_tempFont = res::ResourceManager::get<fnt::Font>( L"Fonts.Verdana_14", res::EFailPolicy::FATAL );
 		}
 
 		~Button()
@@ -88,8 +89,17 @@ namespace ui
 			borderColor.a = 255 * m_opacity;
 
 			canvas.drawBorderRect( m_position, m_size, 2.f, drawColor, borderColor );
+
+			const Float SCALE = 1.0f;
+
+			canvas.drawTextLine( utils::getCenterTextPosition( m_position, m_size, m_tempFont, *m_name, m_name.len(), SCALE, SCALE ), 
+				*m_name, m_name.len(), math::colors::BLACK, m_tempFont, SCALE, SCALE );
+
 			//canvas.drawRect( m_position, m_size, math::colors::WHITE );
 		}
+
+	private:
+		fnt::Font::Ptr m_tempFont;
 	};
 }
 }

@@ -28,6 +28,22 @@ namespace rendering
 	};
 
 
+
+
+
+
+	/**
+	 *	A text draw operation
+	 */
+	struct TextOp
+	{
+	public:
+		using Vertex = fnt::TextVertex;
+
+		GrowOnlyArray<Vertex> vertices;
+		GrowOnlyArray<UInt16> indices;
+		rend::ShaderResourceView srv;
+	};
 }
 }
 }

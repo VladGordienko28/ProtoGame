@@ -10,8 +10,8 @@ namespace flu
 namespace fnt
 {
 	void batchLine( const Char* text, Int32 len, Font::Ptr font, math::Color color, 
-		TextVertex* vb, UInt32& vbSize, UInt16* ib, UInt32& ibSize,
-		const math::Vector& from, Float xScale, Float yScale )
+		TextVertex* vb, UInt32 firstVtxIndex, UInt16* ib, const math::Vector& from, 
+		Float xScale, Float yScale )
 	{
 		assert( font.hasObject() );
 		assert( vb && ib );
@@ -27,7 +27,7 @@ namespace fnt
 		const Float atlasUSize = static_cast<Float>( atlas->getUSize() );
 		const Float atlasVSize = static_cast<Float>( atlas->getVSize() );
 
-		const UInt16 firstVertId = vbSize;
+		const UInt16 firstVertId = firstVtxIndex;
 
 		math::Vector walker = from;
 

@@ -92,6 +92,14 @@ namespace rendering
 	void Canvas::drawTextLine( const Position& pos, const Char* text, Int32 len, math::Color color,
 		fnt::Font::Ptr font, Float xScale, Float yScale )
 	{
+		TextOp& op = findOrCreateTextOp( font->getImage()->getSRV() );
+
+		UInt32 firstVtxIndex = op.vertices.size();
+
+		auto vertices = op.vertices.obtainRaw( fnt::getBatchVertexCount( len ) );
+		auto indices = op.indices.obtainRaw( fnt::getBatchIndexCount( len ) );
+
+		fnt::batchLine( text, len, font, color, vertices, firstVtxIndex, indices, {pos.x, pos.y}, xScale, yScale );
 	}
 
 	void Canvas::drawLine( const Position& from, const Position& to, math::Color color )
@@ -114,13 +122,37 @@ namespace rendering
 			it.vertices.empty();
 		}
 
-
+		m_textOps.empty();
 	}
 
 	FlatShadeOp* Canvas::getFlatShadeOps( UInt32& count )
 	{
 		count = FSO_MAX;
 		return &m_flatShadeOps[0];
+	}
+
+	TextOp* Canvas::getTextOps( UInt32& count )
+	{
+		count = m_textOps.size();
+		return count > 0 ? &m_textOps[0] : nullptr;
+	}
+
+	TextOp& Canvas::findOrCreateTextOp( rend::ShaderResourceView srv )
+	{
+		// O(n) is ok, still we have only a couple fonts per layout
+		for( Int32 i = 0; i < m_textOps.size(); ++i )
+		{
+			if( m_textOps[i].srv == srv )
+			{
+				return m_textOps[i];
+			}
+		}
+
+		TextOp newOp;
+		newOp.srv = srv;
+		m_textOps.push( newOp );
+
+		return m_textOps.last();
 	}
 }
 }

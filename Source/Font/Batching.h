@@ -23,8 +23,8 @@ namespace fnt
 	 *	assumed it enoght space for data
 	 */
 	extern void batchLine( const Char* text, Int32 len, Font::Ptr font, math::Color color, 
-		TextVertex* vb, UInt32& vbSize, UInt16* ib, UInt32& ibSize,
-		const math::Vector& from, Float xScale = 1.f, Float yScale = 1.f );
+		TextVertex* vb, UInt32 firstVtxIndex, UInt16* ib, const math::Vector& from, 
+		Float xScale = 1.f, Float yScale = 1.f );
 
 	/**
 	 *	Returns the height of the line of the text to draw
