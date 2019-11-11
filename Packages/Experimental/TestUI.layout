@@ -3,7 +3,7 @@
 	[
 		{
 			Type: "Button",
-			Name: "Vlad!",
+			Name: "Play",
 			Size: { W: 100, H: 64 },
 			Margin: { T: 30, L: 30, B: 30, R: 30},
 			HorizAlign: "Left",
@@ -21,7 +21,7 @@
 		},
 		{
 			Type: "Button",
-			Name: "Button2",
+			Name: "Continue",
 			Size: { W: 100, H: 64 },
 			Margin: { T: 30, L: 160, B: 30, R: 30},
 			HorizAlign: "Left",
@@ -30,7 +30,7 @@
 		},
 		{
 			Type: "Button",
-			Name: "Button3",
+			Name: "Settings",
 			Size: { W: 100, H: 64 },
 			Margin: { T: 30, L: 290, B: 30, R: 30},
 			HorizAlign: "Left",
@@ -39,7 +39,7 @@
 		},
 		{
 			Type: "Button",
-			Name: "Button4",
+			Name: "Quit",
 			Size: { W: 100, H: 64 },
 			Margin: { T: 30, L: 420, B: 30, R: 30},
 			HorizAlign: "Left",

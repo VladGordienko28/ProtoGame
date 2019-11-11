@@ -31,7 +31,7 @@ namespace rendering
 		void clear();
 
 		void generateFlatShadeBatches( FlatShadeStream& stream );
-		void generateImageBatches(){}
+		void generateImageBatches( ImageStream& stream );
 		void generateTextBatches( TextStream& stream );
 
 		void drawFlatShadeBatches( rend::Device* device, ffx::Effect::Ptr effect );
@@ -70,7 +70,9 @@ namespace rendering
 		struct ImageBatch
 		{
 		public:
-			int stub;/////////////////////////////////////////////////
+			UInt32 firstIndex;
+			UInt32 numIndices;
+			rend::ShaderResourceView srv;
 		};
 
 		struct TextBatch

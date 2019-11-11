@@ -21,6 +21,16 @@ namespace rendering
 	{
 	}
 
+	ImageStream::ImageStream( rend::Device* device )
+		:	StreamBase<ImageStream, ImageOp::Vertex>( device )
+	{
+		// read techniques and variables offset
+	}
+
+	ImageStream::~ImageStream()
+	{
+	}
+
 	TextStream::TextStream( rend::Device* device )
 		:	StreamBase<TextStream, TextOp::Vertex>( device )
 	{

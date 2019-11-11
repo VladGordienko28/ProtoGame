@@ -77,6 +77,37 @@ namespace rendering
 	void Canvas::drawImageRect( const Position& pos, const Size& size,
 		const math::Vector& tc0, const math::Vector& tc1, img::Image::Ptr image )
 	{
+		// experimental!!
+		ImageOp& op = findOrCreateImageOp( image->getSRV() );
+
+		UInt32 firstVtxIndex = op.vertices.size();
+
+		auto vertices = op.vertices.obtainRaw( 4 );
+		auto indices = op.indices.obtainRaw( 6 );
+
+		vertices[0].pos = { pos.x, pos.y };
+		vertices[0].tc = { tc0.x, tc0.y };
+		vertices[0].color = math::colors::WHITE;
+
+		vertices[1].pos = { pos.x, pos.y + size.height };
+		vertices[1].tc = { tc0.x, tc1.y };
+		vertices[1].color = math::colors::WHITE;
+
+		vertices[2].pos = { pos.x + size.width, pos.y + size.height };
+		vertices[2].tc = { tc1.x, tc1.y };
+		vertices[2].color = math::colors::WHITE;
+
+		vertices[3].pos = { pos.x + size.width, pos.y };
+		vertices[3].tc = { tc1.x, tc0.y };
+		vertices[3].color = math::colors::WHITE;
+
+		indices[0] = firstVtxIndex + 0;
+		indices[1] = firstVtxIndex + 1;
+		indices[2] = firstVtxIndex + 2;
+
+		indices[3] = firstVtxIndex + 0;
+		indices[4] = firstVtxIndex + 3;
+		indices[5] = firstVtxIndex + 2;
 	}
 
 	void Canvas::drawImageRect( const Position& pos, const Size& size,
@@ -123,12 +154,19 @@ namespace rendering
 		}
 
 		m_textOps.empty();
+		m_imageOps.empty();
 	}
 
 	FlatShadeOp* Canvas::getFlatShadeOps( UInt32& count )
 	{
 		count = FSO_MAX;
 		return &m_flatShadeOps[0];
+	}
+
+	ImageOp* Canvas::getImageOps( UInt32& count )
+	{
+		count = m_imageOps.size();
+		return count > 0 ? &m_imageOps[0] : nullptr;
 	}
 
 	TextOp* Canvas::getTextOps( UInt32& count )
@@ -153,6 +191,24 @@ namespace rendering
 		m_textOps.push( newOp );
 
 		return m_textOps.last();
+	}
+
+	ImageOp& Canvas::findOrCreateImageOp( rend::ShaderResourceView srv )
+	{
+		// todo: O(n) is not ok, needs better solution
+		for( Int32 i = 0; i < m_imageOps.size(); ++i )
+		{
+			if( m_imageOps[i].srv == srv )
+			{
+				return m_imageOps[i];
+			}
+		}
+
+		ImageOp newOp;
+		newOp.srv = srv;
+		m_imageOps.push( newOp );
+
+		return m_imageOps.last();
 	}
 }
 }

@@ -17,6 +17,7 @@ namespace ui
 			:	Element( name, root )
 		{
 			m_tempFont = res::ResourceManager::get<fnt::Font>( L"Fonts.Verdana_14", res::EFailPolicy::FATAL );
+			m_tempImage = res::ResourceManager::get<img::Image>( L"Experimental.UIBack", res::EFailPolicy::FATAL );
 		}
 
 		~Button()
@@ -84,22 +85,24 @@ namespace ui
 		void draw( ICanvas& canvas ) override
 		{
 			math::Color drawColor = isFocused() ? math::colors::RED : math::colors::ORANGE;
-			math::Color borderColor = math::colors::BLACK;
+			math::Color borderColor = math::colors::WHITE;
 			drawColor.a = 255 * m_opacity;
 			borderColor.a = 255 * m_opacity;
 
-			canvas.drawBorderRect( m_position, m_size, 2.f, drawColor, borderColor );
+			canvas.drawImageRect( m_position, m_size, {0.f, 0.f}, {1.f, 1.f}, m_tempImage );
+			//canvas.drawBorderRect( m_position, m_size, 2.f, drawColor, borderColor );
 
 			const Float SCALE = 1.0f;
 
 			canvas.drawTextLine( utils::getCenterTextPosition( m_position, m_size, m_tempFont, *m_name, m_name.len(), SCALE, SCALE ), 
-				*m_name, m_name.len(), math::colors::BLACK, m_tempFont, SCALE, SCALE );
+				*m_name, m_name.len(), math::colors::WHITE, m_tempFont, SCALE, SCALE );
 
 			//canvas.drawRect( m_position, m_size, math::colors::WHITE );
 		}
 
 	private:
 		fnt::Font::Ptr m_tempFont;
+		img::Image::Ptr m_tempImage;
 	};
 }
 }

@@ -153,11 +153,17 @@ namespace rendering
 		~FlatShadeStream();
 	};
 
+	/**
+	 *	A colored rects batches stream
+	 */
+	class ImageStream: public StreamBase<ImageStream, ImageOp::Vertex>
+	{
+	public:
+		static constexpr const Char EFFECT_NAME[] = TXT("System.Shaders.UI.Image");
 
-
-
-
-
+		ImageStream( rend::Device* device );
+		~ImageStream();
+	};
 
 	/**
 	 *	A text batches stream

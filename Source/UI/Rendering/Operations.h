@@ -27,10 +27,25 @@ namespace rendering
 		Bool alphaEnabled;
 	};
 
+	/**
+	 *	A image rect draw operation
+	 */
+	struct ImageOp
+	{
+	public:
+		struct Vertex
+		{
+		public:
+			math::Vector pos;
+			math::Vector tc;
+			math::Color color;
+		};
 
-
-
-
+		GrowOnlyArray<Vertex> vertices;
+		GrowOnlyArray<UInt16> indices;
+		rend::ShaderResourceView srv;
+		// todo: add blend mode also
+	};
 
 	/**
 	 *	A text draw operation

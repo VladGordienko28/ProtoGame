@@ -79,6 +79,40 @@ namespace rendering
 		}
 	}
 
+	void Layer::generateImageBatches( ImageStream& stream )
+	{
+		UInt32 numOps;
+		ImageOp* ops = m_canvas.getImageOps( numOps );
+
+		for( UInt32 i = 0; i < numOps; ++i )
+		{
+			ImageOp* op = &ops[i];
+
+			if( op->indices.size() > 0 && op->vertices.size() > 0 )
+			{
+				UInt32 firstVtxIndex = stream.getVertexCount();	
+				UInt32 firstIdxIndex = stream.getIndexCount();
+
+				// copy vertices
+				mem::copy( stream.obtainVertices( op->vertices.size() ), 
+					&op->vertices[0], op->vertices.size() * sizeof( TextOp::Vertex ) );
+
+				// copy indices
+				UInt16* destIndices = stream.obtainIndices( op->indices.size() );
+				for( Int32 i = 0; i < op->indices.size(); ++i )
+				{
+					destIndices[i] = firstVtxIndex + op->indices[i];
+				}
+
+				ImageBatch batch;
+				batch.firstIndex = firstIdxIndex;
+				batch.numIndices = op->indices.size();
+				batch.srv = op->srv;
+				m_imageBatches.push( batch );
+			}
+		}
+	}
+
 	void Layer::generateTextBatches( TextStream& stream )
 	{
 		UInt32 numOps;
@@ -130,6 +164,20 @@ namespace rendering
 
 	void Layer::drawImageBatches( rend::Device* device, ffx::Effect::Ptr effect )
 	{
+		assert( device && effect.hasObject() );
+
+		device->setTopology( rend::EPrimitiveTopology::TriangleList );
+		
+		effect->setBlendState( m_blendStateAlpha );
+		effect->setSamplerState( 0, m_samplerStateLinearWrap );
+
+		for( auto& it : m_imageBatches )
+		{
+			effect->setSRV( 0, it.srv );
+			effect->apply();
+
+			device->drawIndexed( it.numIndices, it.firstIndex, 0 );
+		}
 	}
 
 	void Layer::drawTextBatches( rend::Device* device, ffx::Effect::Ptr effect )

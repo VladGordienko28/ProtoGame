@@ -29,7 +29,7 @@ namespace ui
 		UInt32 m_numLayers;
 
 		rendering::FlatShadeStream m_flatShadeStream;
-		//...
+		rendering::ImageStream m_imageStream;
 		rendering::TextStream m_textStream;
 
 		rend::Device* m_device;
@@ -43,6 +43,7 @@ namespace ui
 	RenderImpl::RenderImpl( rend::Device* device )
 		:	m_device( device ),
 			m_flatShadeStream( device ),
+			m_imageStream( device ),
 			m_textStream( device ),
 			m_numLayers( 0 )
 	{
@@ -123,7 +124,7 @@ namespace ui
 			rendering::Layer& layer = m_layers[i];
 
 			layer.generateFlatShadeBatches( m_flatShadeStream );
-			layer.generateImageBatches();
+			layer.generateImageBatches( m_imageStream );
 			layer.generateTextBatches( m_textStream );
 		}
 	}
@@ -136,7 +137,7 @@ namespace ui
 
 		// submit all streams
 		m_flatShadeStream.submitToGPU();
-		//...
+		m_imageStream.submitToGPU();
 		m_textStream.submitToGPU();
 
 		// draw all layers
@@ -156,7 +157,8 @@ namespace ui
 			// image ops
 			if( layer.hasImageBatches() )
 			{
-			
+				m_imageStream.bindBuffers();
+				layer.drawImageBatches( m_device, m_imageStream.getEffect() );
 			}
 		
 			// text ops
@@ -172,7 +174,7 @@ namespace ui
 
 		// clear all CPU buffers
 		m_flatShadeStream.clearBuffers();
-		//...
+		m_imageStream.clearBuffers();
 		m_textStream.clearBuffers();
 
 		m_device->getProfiler()->leaveZone();
